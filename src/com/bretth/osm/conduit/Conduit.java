@@ -8,7 +8,7 @@ import com.bretth.osm.conduit.xml.XmlReader;
 import com.bretth.osm.conduit.xml.XmlWriter;
 
 
-public class Main {
+public class Conduit {
 	
 	public static void main(String[] args) {
 		if (false) {
