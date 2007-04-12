@@ -2,7 +2,7 @@ package com.bretth.osm.conduit.xml.impl;
 
 import java.util.Date;
 
-import com.bretth.osm.conduit.pipeline.OsmSink;
+import com.bretth.osm.conduit.task.OsmSink;
 
 
 public abstract class BaseElementProcessor implements ElementProcessor {

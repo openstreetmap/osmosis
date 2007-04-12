@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bretth.osm.conduit.ConduitRuntimeException;
 import com.bretth.osm.conduit.data.Node;
 import com.bretth.osm.conduit.data.Segment;
 import com.bretth.osm.conduit.data.SegmentReference;
 import com.bretth.osm.conduit.data.Tag;
 import com.bretth.osm.conduit.data.Way;
-import com.bretth.osm.conduit.pipeline.OsmSink;
-import com.bretth.osm.conduit.pipeline.PipelineRuntimeException;
+import com.bretth.osm.conduit.task.OsmSink;
 
 
 public class XmlWriter implements OsmSink {
@@ -41,7 +41,16 @@ public class XmlWriter implements OsmSink {
 	private BufferedWriter writer;
 	
 	
+	public XmlWriter() {
+	}
+	
+	
 	public XmlWriter(File file) {
+		this.file = file;
+	}
+	
+	
+	public void setFile(File file) {
 		this.file = file;
 	}
 	
@@ -84,7 +93,7 @@ public class XmlWriter implements OsmSink {
 			writer.write(data);
 			
 		} catch (IOException e) {
-			throw new PipelineRuntimeException("Unable to write data.", e);
+			throw new ConduitRuntimeException("Unable to write data.", e);
 		}
 	}
 	
@@ -94,7 +103,7 @@ public class XmlWriter implements OsmSink {
 			writer.newLine();
 			
 		} catch (IOException e) {
-			throw new PipelineRuntimeException("Unable to write data.", e);
+			throw new ConduitRuntimeException("Unable to write data.", e);
 		}
 	}
 	
@@ -105,7 +114,7 @@ public class XmlWriter implements OsmSink {
 				writer = new BufferedWriter(new FileWriter(file));
 				
 			} catch (IOException e) {
-				throw new PipelineRuntimeException("Unable to open file for writing.", e);
+				throw new ConduitRuntimeException("Unable to open file for writing.", e);
 			}
 			
 			initialized = true;

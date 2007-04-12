@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bretth.osm.conduit.ConduitRuntimeException;
 import com.bretth.osm.conduit.data.Node;
 import com.bretth.osm.conduit.data.Segment;
 import com.bretth.osm.conduit.data.SegmentReference;
@@ -13,8 +14,7 @@ import com.bretth.osm.conduit.data.Way;
 import com.bretth.osm.conduit.mysql.impl.DatabaseContext;
 import com.bretth.osm.conduit.mysql.impl.WaySegment;
 import com.bretth.osm.conduit.mysql.impl.WayTag;
-import com.bretth.osm.conduit.pipeline.OsmSink;
-import com.bretth.osm.conduit.pipeline.PipelineRuntimeException;
+import com.bretth.osm.conduit.task.OsmSink;
 
 
 public class DatabaseWriter implements OsmSink {
@@ -165,7 +165,7 @@ public class DatabaseWriter implements OsmSink {
 			statement.setString(prmIndex++, tagBuffer.toString());
 			
 		} catch (SQLException e) {
-			throw new PipelineRuntimeException("Unable to set a prepared statement parameter for a node.", e);
+			throw new ConduitRuntimeException("Unable to set a prepared statement parameter for a node.", e);
 		}
 	}
 	
@@ -188,7 +188,7 @@ public class DatabaseWriter implements OsmSink {
 			statement.setString(prmIndex++, tagBuffer.toString());
 			
 		} catch (SQLException e) {
-			throw new PipelineRuntimeException("Unable to set a prepared statement parameter for a segment.", e);
+			throw new ConduitRuntimeException("Unable to set a prepared statement parameter for a segment.", e);
 		}
 	}
 	
@@ -202,7 +202,7 @@ public class DatabaseWriter implements OsmSink {
 			statement.setLong(prmIndex++, way.getId());
 			
 		} catch (SQLException e) {
-			throw new PipelineRuntimeException("Unable to set a prepared statement parameter for a way.", e);
+			throw new ConduitRuntimeException("Unable to set a prepared statement parameter for a way.", e);
 		}
 	}
 	
@@ -218,7 +218,7 @@ public class DatabaseWriter implements OsmSink {
 			statement.setString(prmIndex++, wayTag.getValue());
 			
 		} catch (SQLException e) {
-			throw new PipelineRuntimeException("Unable to set a prepared statement parameter for a way tag.", e);
+			throw new ConduitRuntimeException("Unable to set a prepared statement parameter for a way tag.", e);
 		}
 	}
 	
@@ -234,7 +234,7 @@ public class DatabaseWriter implements OsmSink {
 			statement.setInt(prmIndex++, waySegment.getSequenceId());
 			
 		} catch (SQLException e) {
-			throw new PipelineRuntimeException("Unable to set a prepared statement parameter for a way segment.", e);
+			throw new ConduitRuntimeException("Unable to set a prepared statement parameter for a way segment.", e);
 		}
 	}
 	
@@ -257,7 +257,7 @@ public class DatabaseWriter implements OsmSink {
 			try {
 				bulkNodeStatement.executeUpdate();
 			} catch (SQLException e) {
-				throw new PipelineRuntimeException("Unable to bulk insert nodes into the database.", e);
+				throw new ConduitRuntimeException("Unable to bulk insert nodes into the database.", e);
 			}
 		}
 		
@@ -273,7 +273,7 @@ public class DatabaseWriter implements OsmSink {
 				try {
 					singleNodeStatement.executeUpdate();
 				} catch (SQLException e) {
-					throw new PipelineRuntimeException("Unable to insert a node into the database.", e);
+					throw new ConduitRuntimeException("Unable to insert a node into the database.", e);
 				}
 			}
 		}
@@ -298,7 +298,7 @@ public class DatabaseWriter implements OsmSink {
 			try {
 				bulkSegmentStatement.executeUpdate();
 			} catch (SQLException e) {
-				throw new PipelineRuntimeException("Unable to bulk insert segments into the database.", e);
+				throw new ConduitRuntimeException("Unable to bulk insert segments into the database.", e);
 			}
 		}
 		
@@ -314,7 +314,7 @@ public class DatabaseWriter implements OsmSink {
 				try {
 					singleSegmentStatement.executeUpdate();
 				} catch (SQLException e) {
-					throw new PipelineRuntimeException("Unable to insert a segment into the database.", e);
+					throw new ConduitRuntimeException("Unable to insert a segment into the database.", e);
 				}
 			}
 		}
@@ -347,7 +347,7 @@ public class DatabaseWriter implements OsmSink {
 			try {
 				bulkWayStatement.executeUpdate();
 			} catch (SQLException e) {
-				throw new PipelineRuntimeException("Unable to bulk insert ways into the database.", e);
+				throw new ConduitRuntimeException("Unable to bulk insert ways into the database.", e);
 			}
 			
 			for (Way way : processedWays) {
@@ -372,7 +372,7 @@ public class DatabaseWriter implements OsmSink {
 				try {
 					singleWayStatement.executeUpdate();
 				} catch (SQLException e) {
-					throw new PipelineRuntimeException("Unable to insert a way into the database.", e);
+					throw new ConduitRuntimeException("Unable to insert a way into the database.", e);
 				}
 
 				addWayTags(way);
@@ -400,7 +400,7 @@ public class DatabaseWriter implements OsmSink {
 			try {
 				bulkWayTagStatement.executeUpdate();
 			} catch (SQLException e) {
-				throw new PipelineRuntimeException("Unable to bulk insert way tags into the database.", e);
+				throw new ConduitRuntimeException("Unable to bulk insert way tags into the database.", e);
 			}
 		}
 		
@@ -416,7 +416,7 @@ public class DatabaseWriter implements OsmSink {
 				try {
 					singleWayTagStatement.executeUpdate();
 				} catch (SQLException e) {
-					throw new PipelineRuntimeException("Unable to insert a way tag into the database.", e);
+					throw new ConduitRuntimeException("Unable to insert a way tag into the database.", e);
 				}
 			}
 		}
@@ -441,7 +441,7 @@ public class DatabaseWriter implements OsmSink {
 			try {
 				bulkWaySegmentStatement.executeUpdate();
 			} catch (SQLException e) {
-				throw new PipelineRuntimeException("Unable to bulk insert way segments into the database.", e);
+				throw new ConduitRuntimeException("Unable to bulk insert way segments into the database.", e);
 			}
 		}
 		
@@ -457,7 +457,7 @@ public class DatabaseWriter implements OsmSink {
 				try {
 					singleWaySegmentStatement.executeUpdate();
 				} catch (SQLException e) {
-					throw new PipelineRuntimeException("Unable to insert a way segment into the database.", e);
+					throw new ConduitRuntimeException("Unable to insert a way segment into the database.", e);
 				}
 			}
 		}

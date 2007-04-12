@@ -4,8 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
+import com.bretth.osm.conduit.ConduitRuntimeException;
 import com.bretth.osm.conduit.data.Node;
-import com.bretth.osm.conduit.pipeline.PipelineRuntimeException;
 
 
 public class NodeReader extends EmbeddedTagEntityReader<Node> {
@@ -29,7 +29,7 @@ public class NodeReader extends EmbeddedTagEntityReader<Node> {
 			tags = resultSet.getString("tags");
 			
 		} catch (SQLException e) {
-			throw new PipelineRuntimeException("Unable to read node fields.", e);
+			throw new ConduitRuntimeException("Unable to read node fields.", e);
 		}
 		
 		node = new Node(id, timestamp, latitude, longitude);

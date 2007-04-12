@@ -3,7 +3,9 @@ package com.bretth.osm.conduit;
 import java.io.File;
 
 import com.bretth.osm.conduit.mysql.DatabaseReader;
+import com.bretth.osm.conduit.mysql.DatabaseReaderBuilder;
 import com.bretth.osm.conduit.mysql.DatabaseWriter;
+import com.bretth.osm.conduit.mysql.DatabaseWriterBuilder;
 import com.bretth.osm.conduit.xml.XmlReader;
 import com.bretth.osm.conduit.xml.XmlWriter;
 
@@ -11,12 +13,20 @@ import com.bretth.osm.conduit.xml.XmlWriter;
 public class Conduit {
 	
 	public static void main(String[] args) {
+		registerTasks();
+		
 		if (false) {
 			doLoad();
 		}
 		if (true) {
 			doDump();
 		}
+	}
+	
+	
+	private static void registerTasks() {
+		new DatabaseReaderBuilder();
+		new DatabaseWriterBuilder();
 	}
 	
 	
@@ -30,8 +40,9 @@ public class Conduit {
 		
 		databaseWriter = new DatabaseWriter();
 		loader = new XmlReader(databaseWriter);
+		loader.setFile(file);
 		
-		loader.process(file);
+		loader.run();
 	}
 	
 	
@@ -45,6 +56,6 @@ public class Conduit {
 		xmlWriter = new XmlWriter(file);
 		databaseReader = new DatabaseReader(xmlWriter);
 		
-		databaseReader.process();
+		databaseReader.run();
 	}
 }

@@ -3,8 +3,8 @@ package com.bretth.osm.conduit.mysql.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.bretth.osm.conduit.ConduitRuntimeException;
 import com.bretth.osm.conduit.data.Segment;
-import com.bretth.osm.conduit.pipeline.PipelineRuntimeException;
 
 
 public class SegmentReader extends EmbeddedTagEntityReader<Segment> {
@@ -26,7 +26,7 @@ public class SegmentReader extends EmbeddedTagEntityReader<Segment> {
 			tags = resultSet.getString("tags");
 			
 		} catch (SQLException e) {
-			throw new PipelineRuntimeException("Unable to read segment fields.", e);
+			throw new ConduitRuntimeException("Unable to read segment fields.", e);
 		}
 		
 		segment = new Segment(id, from, to);

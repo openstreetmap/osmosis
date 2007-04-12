@@ -2,7 +2,7 @@ package com.bretth.osm.conduit.xml.impl;
 
 import org.xml.sax.Attributes;
 
-import com.bretth.osm.conduit.pipeline.OsmSink;
+import com.bretth.osm.conduit.task.OsmSink;
 
 
 public class OsmElementProcessor extends BaseElementProcessor {

@@ -5,8 +5,8 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.bretth.osm.conduit.pipeline.OsmSink;
-import com.bretth.osm.conduit.pipeline.PipelineRuntimeException;
+import com.bretth.osm.conduit.ConduitRuntimeException;
+import com.bretth.osm.conduit.task.OsmSink;
 
 
 public class OsmHandler extends DefaultHandler {
@@ -56,7 +56,7 @@ public class OsmHandler extends DefaultHandler {
 		} else if (ELEMENT_NAME_OSM.equals(qName)) {
 			elementProcessor = osmElementProcessor;
 		} else {
-			throw new PipelineRuntimeException("This does not appear to be an OSM XML file.");
+			throw new ConduitRuntimeException("This does not appear to be an OSM XML file.");
 		}
 		
 		elementProcessor.begin(attributes);

@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.bretth.osm.conduit.pipeline.PipelineRuntimeException;
+import com.bretth.osm.conduit.ConduitRuntimeException;
 
 
 public class DatabaseContext {
@@ -23,7 +23,7 @@ public class DatabaseContext {
 				Class.forName("com.mysql.jdbc.Driver");
 				
 			} catch (ClassNotFoundException e) {
-				throw new PipelineRuntimeException("Unable to find database driver.", e);
+				throw new ConduitRuntimeException("Unable to find database driver.", e);
 			}
 			
 			driverLoaded = true;
@@ -43,7 +43,7 @@ public class DatabaseContext {
 			    );
 				
 			} catch (SQLException e) {
-				throw new PipelineRuntimeException("Unable to establish a database connection.", e);
+				throw new ConduitRuntimeException("Unable to establish a database connection.", e);
 			}
 		}
 		
@@ -78,7 +78,7 @@ public class DatabaseContext {
 			return preparedStatement;
 			
 		} catch (SQLException e) {
-			throw new PipelineRuntimeException("Unable to create database prepared statement.", e);
+			throw new ConduitRuntimeException("Unable to create database prepared statement.", e);
 		}
 	}
 	
@@ -113,7 +113,7 @@ public class DatabaseContext {
 			return resultSet;
 			
 		} catch (SQLException e) {
-			throw new PipelineRuntimeException("Unable to create streaming resultset statement.", e);
+			throw new ConduitRuntimeException("Unable to create streaming resultset statement.", e);
 		}
 	}
 	

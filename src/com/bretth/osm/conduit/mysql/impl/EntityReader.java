@@ -3,7 +3,7 @@ package com.bretth.osm.conduit.mysql.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.bretth.osm.conduit.pipeline.PipelineRuntimeException;
+import com.bretth.osm.conduit.ConduitRuntimeException;
 
 
 public abstract class EntityReader<E> {
@@ -37,7 +37,7 @@ public abstract class EntityReader<E> {
 			}
 			
 		} catch (SQLException e) {
-			throw new PipelineRuntimeException("Unable to move to next record.", e);
+			throw new ConduitRuntimeException("Unable to move to next record.", e);
 		}
 	}
 	
@@ -53,10 +53,10 @@ public abstract class EntityReader<E> {
 	
 	public E peekNext() {
 		if (resultSet == null) {
-			throw new PipelineRuntimeException("hasNext must be called first.");
+			throw new ConduitRuntimeException("hasNext must be called first.");
 		}
 		if (nextValue == null) {
-			throw new PipelineRuntimeException("No value is available.");
+			throw new ConduitRuntimeException("No value is available.");
 		}
 		
 		return nextValue;

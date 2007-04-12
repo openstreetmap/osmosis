@@ -3,7 +3,7 @@ package com.bretth.osm.conduit.mysql.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.bretth.osm.conduit.pipeline.PipelineRuntimeException;
+import com.bretth.osm.conduit.ConduitRuntimeException;
 
 
 public class WayTagReader extends EntityReader<WayTag> {
@@ -22,7 +22,7 @@ public class WayTagReader extends EntityReader<WayTag> {
 			value = resultSet.getString("v");
 			
 		} catch (SQLException e) {
-			throw new PipelineRuntimeException("Unable to read way tag fields.", e);
+			throw new ConduitRuntimeException("Unable to read way tag fields.", e);
 		}
 		
 		return new WayTag(wayId, key, value);

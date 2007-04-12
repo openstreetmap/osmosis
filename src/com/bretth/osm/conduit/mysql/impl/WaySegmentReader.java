@@ -3,7 +3,7 @@ package com.bretth.osm.conduit.mysql.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.bretth.osm.conduit.pipeline.PipelineRuntimeException;
+import com.bretth.osm.conduit.ConduitRuntimeException;
 
 
 public class WaySegmentReader extends EntityReader<WaySegment> {
@@ -22,7 +22,7 @@ public class WaySegmentReader extends EntityReader<WaySegment> {
 			sequenceId = resultSet.getInt("sequence_id");
 			
 		} catch (SQLException e) {
-			throw new PipelineRuntimeException("Unable to read way segment fields.", e);
+			throw new ConduitRuntimeException("Unable to read way segment fields.", e);
 		}
 		
 		return new WaySegment(wayId, segmentId, sequenceId);

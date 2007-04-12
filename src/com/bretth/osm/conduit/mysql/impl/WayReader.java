@@ -4,8 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
+import com.bretth.osm.conduit.ConduitRuntimeException;
 import com.bretth.osm.conduit.data.Way;
-import com.bretth.osm.conduit.pipeline.PipelineRuntimeException;
 
 
 public class WayReader extends EntityReader<Way> {
@@ -21,7 +21,7 @@ public class WayReader extends EntityReader<Way> {
 			id = resultSet.getLong("id");
 			timestamp = resultSet.getTimestamp("timestamp");
 		} catch (SQLException e) {
-			throw new PipelineRuntimeException("Unable to read way fields.", e);
+			throw new ConduitRuntimeException("Unable to read way fields.", e);
 		}
 		
 		return new Way(id, timestamp);

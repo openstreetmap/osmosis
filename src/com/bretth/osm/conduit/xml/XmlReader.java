@@ -9,15 +9,16 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.SAXException;
 
-import com.bretth.osm.conduit.pipeline.OsmSink;
-import com.bretth.osm.conduit.pipeline.OsmSource;
-import com.bretth.osm.conduit.pipeline.PipelineRuntimeException;
+import com.bretth.osm.conduit.ConduitRuntimeException;
+import com.bretth.osm.conduit.task.OsmSink;
+import com.bretth.osm.conduit.task.OsmSource;
 import com.bretth.osm.conduit.xml.impl.OsmHandler;
 
 
 public class XmlReader implements OsmSource {
 	
 	private OsmSink osmSink;
+	private File file;
 	
 	
 	public XmlReader() {
@@ -34,7 +35,12 @@ public class XmlReader implements OsmSource {
 	}
 	
 	
-	public void process(File file) {
+	public void setFile(File file) {
+		this.file = file;
+	}
+	
+	
+	public void run() {
 		try {
 			SAXParser parser;
 			
@@ -45,9 +51,9 @@ public class XmlReader implements OsmSource {
 			osmSink.complete();
 			
 		} catch (SAXException e) {
-			throw new PipelineRuntimeException("Unable to parse XML.", e);
+			throw new ConduitRuntimeException("Unable to parse XML.", e);
 		} catch (IOException e) {
-			throw new PipelineRuntimeException("Unable to read XML file.", e);
+			throw new ConduitRuntimeException("Unable to read XML file.", e);
 		} finally {
 			osmSink.release();
 		}
@@ -59,9 +65,9 @@ public class XmlReader implements OsmSource {
 			return SAXParserFactory.newInstance().newSAXParser();
 			
 		} catch (ParserConfigurationException e) {
-			throw new PipelineRuntimeException("Unable to create SAX Parser.", e);
+			throw new ConduitRuntimeException("Unable to create SAX Parser.", e);
 		} catch (SAXException e) {
-			throw new PipelineRuntimeException("Unable to create SAX Parser.", e);
+			throw new ConduitRuntimeException("Unable to create SAX Parser.", e);
 		}
 	}
 }
