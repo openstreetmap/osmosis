@@ -7,16 +7,20 @@ import com.bretth.osm.conduit.task.OsmSource;
 import com.bretth.osm.conduit.task.Task;
 
 
-public abstract class OsmSourceManager extends TaskManager {
+public class OsmSourceManager extends TaskManager {
+	private OsmSource task;
 	private Thread thread;
 	
 	
-	public static void connectTaskImpl(Task task, String taskName, Map<String, Task> pipeTasks, Map<String, String> pipeArgs) {
-		OsmSource source;
-		String pipeName;
+	public OsmSourceManager(String taskType, OsmSource task, Map<String, String> pipeArgs) {
+		super(taskType, pipeArgs);
 		
-		// Cast the task to the correct type.
-		source = (OsmSource) task;
+		this.task = task;
+	}
+	
+	
+	public static void connectImpl(OsmSource task, String taskType, Map<String, Task> pipeTasks, Map<String, String> pipeArgs) {
+		String pipeName;
 		
 		// Get the name of the output pipe for this source.
 		if (pipeArgs.containsKey(PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX)) {
@@ -27,37 +31,31 @@ public abstract class OsmSourceManager extends TaskManager {
 		
 		// Verify that the output pipe is not already taken.
 		if (pipeTasks.containsKey(pipeName)) {
-			throw new ConduitRuntimeException("Task " + taskName + " cannot write to pipe " + pipeName + " because the pipe is already being written to.");
+			throw new ConduitRuntimeException("Task " + taskType + " cannot write to pipe " + pipeName + " because the pipe is already being written to.");
 		}
 		
 		// Register the task as writing to the pipe.
-		pipeTasks.put(pipeName, source);
+		pipeTasks.put(pipeName, task);
 	}
 	
 	
-	public void connectTask(Task task, Map<String, Task> pipeTasks,
-			Map<String, String> pipeArgs) {
-		connectTaskImpl(task, getTaskName(), pipeTasks, pipeArgs);
+	public void connect(Map<String, Task> pipeTasks) {
+		connectImpl(task, getTaskName(), pipeTasks, getPipeArgs());
 	}
 	
 	
-	public void runTask(Task task) {
-		OsmSource source;
-		
-		// Cast the task to the correct type.
-		source = (OsmSource) task;
-		
+	public void run() {
 		if (thread != null) {
 			throw new ConduitRuntimeException("Task " + getTaskName() + " is already running.");
 		}
 		
-		thread = new Thread(source);
+		thread = new Thread(task);
 		
 		thread.start();
 	}
 	
 	
-	public void waitOnTask(Task task) {
+	public void waitForCompletion() {
 		if (thread != null) {
 			try {
 				thread.join();

@@ -8,16 +8,24 @@ import com.bretth.osm.conduit.task.OsmSource;
 import com.bretth.osm.conduit.task.Task;
 
 
-public abstract class OsmSinkManager extends TaskManager {
+public class OsmSinkManager extends TaskManager {
+	private OsmSink task;
 	
-	public void connectTask(Task task, Map<String, Task> pipeTasks, Map<String, String> pipeArgs) {
-		OsmSink sink;
+	
+	public OsmSinkManager(String taskType, OsmSink task, Map<String, String> pipeArgs) {
+		super(taskType, pipeArgs);
+		
+		this.task = task;
+	}
+	
+	
+	public void connect(Map<String, Task> pipeTasks) {
+		Map<String, String> pipeArgs;
 		String pipeName;
 		Task pipeWriter;
 		OsmSource source;
 		
-		// Cast the task to the correct type.
-		sink = (OsmSink) task;
+		pipeArgs = getPipeArgs();
 		
 		// Get the name of the input pipe for this sink.
 		if (pipeArgs.containsKey(PipelineConstants.IN_PIPE_ARGUMENT_PREFIX)) {
@@ -39,16 +47,16 @@ public abstract class OsmSinkManager extends TaskManager {
 		source = (OsmSource) pipeWriter;
 		
 		// Connect the tasks.
-		source.setOsmSink(sink);
+		source.setOsmSink(task);
 	}
 	
 	
-	public void runTask(Task task) {
+	public void run() {
 		// Nothing to do for a sink because it passively receives data.
 	}
 	
 	
-	public void waitOnTask(Task task) {
+	public void waitForCompletion() {
 		// Nothing to do for a sink because it passively receives data.
 	}
 }

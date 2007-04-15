@@ -1,47 +1,36 @@
 package com.bretth.osm.conduit.pipeline;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import com.bretth.osm.conduit.ConduitRuntimeException;
 import com.bretth.osm.conduit.task.Task;
 
 
 public abstract class TaskManager {
+	private String taskName;
+	private Map<String, String> pipeArgs;
 	
-	private static Map<String, TaskManager> taskBuilderMap;
 	
-	
-	static {
-		taskBuilderMap = new HashMap<String, TaskManager>();
+	protected TaskManager(String taskName, Map<String, String> pipeArgs) {
+		this.taskName = taskName;
+		this.pipeArgs = pipeArgs;
 	}
 	
 	
-	public static TaskManager getInstance(String taskName) {
-		if (!taskBuilderMap.containsKey(taskName)) {
-			throw new ConduitRuntimeException("Pipeline task " + taskName + " doesn't exist.");
-		}
-		
-		return taskBuilderMap.get(taskName);
+	protected Map<String, String> getPipeArgs() {
+		return pipeArgs;
 	}
 	
 	
-	protected TaskManager() {
-		taskBuilderMap.put(getTaskName(), this);
+	protected String getTaskName() {
+		return taskName;
 	}
 	
 	
-	protected abstract String getTaskName();
+	public abstract void connect(Map<String, Task> pipeTasks);
 	
 	
-	public abstract Task createTask(Map<String, String> args);
+	public abstract void run();
 	
 	
-	public abstract void connectTask(Task task, Map<String, Task> pipeTasks, Map<String, String> pipeArgs);
-	
-	
-	public abstract void runTask(Task task);
-	
-	
-	public abstract void waitOnTask(Task task);
+	public abstract void waitForCompletion();
 }

@@ -5,7 +5,7 @@ import java.util.Map;
 import com.bretth.osm.conduit.pipeline.OsmSourceManager;
 
 
-public class DatabaseReaderBuilder extends OsmSourceManager {
+public class DatabaseReaderManager extends OsmSourceManager {
 	private static final String TASK_NAME = "read-mysql";
 	
 	
