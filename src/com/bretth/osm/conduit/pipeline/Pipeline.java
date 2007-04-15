@@ -11,11 +11,11 @@ import com.bretth.osm.conduit.task.Task;
 
 public class Pipeline {
 	
-	public List<Node> nodes;
+	public List<TaskManager> taskManagers;
 	
 	
 	public Pipeline() {
-		nodes = new ArrayList<Node>();
+		taskManagers = new ArrayList<TaskManager>();
 	}
 	
 	
@@ -24,7 +24,7 @@ public class Pipeline {
 	 * correct task with all task parameters set. The tasks will not be
 	 * connected together.
 	 * 
-	 * @param taskName
+	 * @param taskType
 	 *            The name of the task to be created.
 	 * @param programArgs
 	 *            The command line arguments passed to this application.
@@ -32,7 +32,7 @@ public class Pipeline {
 	 *            The current offset through the command line arguments.
 	 * @return The new offset through the command line arguments.
 	 */
-	private int buildNode(String taskName, String [] programArgs, int offset) {
+	private int buildNode(String taskType, String [] programArgs, int offset) {
 		int i;
 		Map<String, String> taskArgs;
 		Map<String, String> pipeArgs;
@@ -87,7 +87,10 @@ public class Pipeline {
 			}
 		}
 		
-		nodes.add(new Node(taskName, taskArgs, pipeArgs));
+		// Create the new task manager and add to the pipeline.
+		taskManagers.add(
+			TaskManagerFactory.createTaskManager(taskType, taskArgs, pipeArgs)
+		);
 		
 		return i;
 	}
@@ -109,11 +112,11 @@ public class Pipeline {
 			arg = programArgs[i];
 			
 			if (arg.indexOf(PipelineConstants.TASK_ARGUMENT_PREFIX) == 0) {
-				String taskName;
+				String taskType;
 				
-				taskName = arg.substring(PipelineConstants.TASK_ARGUMENT_PREFIX.length());
+				taskType = arg.substring(PipelineConstants.TASK_ARGUMENT_PREFIX.length());
 				
-				i = buildNode(taskName, programArgs, ++i);
+				i = buildNode(taskType, programArgs, ++i);
 				
 			} else {
 				throw new ConduitRuntimeException("Expected argument " + (i + 1) + " to be a task name.");
@@ -134,8 +137,8 @@ public class Pipeline {
 		
 		// Request each node to perform connection, each node will update the
 		// pipe tasks as it provides and consumes pipes.
-		for (Node node : nodes) {
-			node.connect(pipeTasks);
+		for (TaskManager taskManager : taskManagers) {
+			taskManager.connect(pipeTasks);
 		}
 		
 		// Validate that no pipes are left without sinks.
@@ -167,16 +170,16 @@ public class Pipeline {
 	
 	public void run() {
 		// Initiate execution of all nodes.
-		for (Node node : nodes) {
-			node.run();
+		for (TaskManager taskManager: taskManagers) {
+			taskManager.run();
 		}
 	}
 	
 	
 	public void waitForCompletion() {
 		// Wait for completion of all nodes.
-		for (Node node : nodes) {
-			node.waitForCompletion();
+		for (TaskManager taskManager: taskManagers) {
+			taskManager.waitForCompletion();
 		}
 	}
 }

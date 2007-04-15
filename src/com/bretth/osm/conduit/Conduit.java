@@ -3,9 +3,9 @@ package com.bretth.osm.conduit;
 import java.io.File;
 
 import com.bretth.osm.conduit.mysql.DatabaseReader;
-import com.bretth.osm.conduit.mysql.DatabaseReaderManager;
+import com.bretth.osm.conduit.mysql.DatabaseReaderFactory;
 import com.bretth.osm.conduit.mysql.DatabaseWriter;
-import com.bretth.osm.conduit.mysql.DatabaseWriterManager;
+import com.bretth.osm.conduit.mysql.DatabaseWriterFactory;
 import com.bretth.osm.conduit.xml.XmlReader;
 import com.bretth.osm.conduit.xml.XmlWriter;
 
@@ -25,8 +25,8 @@ public class Conduit {
 	
 	
 	private static void registerTasks() {
-		new DatabaseReaderManager();
-		new DatabaseWriterManager();
+		new DatabaseReaderFactory();
+		new DatabaseWriterFactory();
 	}
 	
 	

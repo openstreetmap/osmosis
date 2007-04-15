@@ -6,7 +6,7 @@ import com.bretth.osm.conduit.task.OsmTransformer;
 import com.bretth.osm.conduit.task.Task;
 
 
-public abstract class OsmTransformerManager extends OsmSinkManager {
+public class OsmTransformerManager extends OsmSinkManager {
 	private OsmTransformer task;
 	
 	public OsmTransformerManager(String taskType, OsmTransformer task, Map<String, String> pipeArgs) {
@@ -15,7 +15,7 @@ public abstract class OsmTransformerManager extends OsmSinkManager {
 		this.task = task;
 	}
 	
-
+	
 	public void connect(Map<String, Task> pipeTasks) {
 		super.connect(pipeTasks);
 		
