@@ -15,6 +15,10 @@ import com.bretth.osm.conduit.task.OsmSource;
 public class DatabaseReader implements OsmSource {
 	
 	private OsmSink osmSink;
+	private String host;
+	private String database;
+	private String user;
+	private String password;
 	
 	
 	public DatabaseReader() {

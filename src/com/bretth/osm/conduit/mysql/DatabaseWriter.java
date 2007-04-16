@@ -122,8 +122,8 @@ public class DatabaseWriter implements OsmSink {
 	private PreparedStatement bulkWaySegmentStatement;
 	
 	
-	public DatabaseWriter() {
-		dbCtx = new DatabaseContext();
+	public DatabaseWriter(String host, String database, String user, String password) {
+		dbCtx = new DatabaseContext(host, database, user, password);
 
 		nodeBuffer = new ArrayList<Node>();
 		segmentBuffer = new ArrayList<Segment>();

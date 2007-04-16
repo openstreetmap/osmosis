@@ -12,6 +12,11 @@ public class SegmentReader extends EmbeddedTagEntityReader<Segment> {
 		"SELECT id, node_a, node_b, tags FROM segments ORDER BY id";
 	
 	
+	public SegmentReader(String host, String database, String user, String password) {
+		super(host, database, user, password);
+	}
+	
+	
 	protected Segment createNextValue(ResultSet resultSet) {
 		long id;
 		long from;

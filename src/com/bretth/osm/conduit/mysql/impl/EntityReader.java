@@ -13,8 +13,8 @@ public abstract class EntityReader<E> {
 	private E nextValue;
 	
 	
-	public EntityReader() {
-		dbCtx = new DatabaseContext();
+	public EntityReader(String host, String database, String user, String password) {
+		dbCtx = new DatabaseContext(host, database, user, password);
 	}
 	
 	

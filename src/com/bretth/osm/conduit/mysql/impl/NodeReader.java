@@ -13,6 +13,11 @@ public class NodeReader extends EmbeddedTagEntityReader<Node> {
 		"SELECT id, timestamp, latitude, longitude, tags FROM nodes ORDER BY id";
 	
 	
+	public NodeReader(String host, String database, String user, String password) {
+		super(host, database, user, password);
+	}
+	
+	
 	protected Node createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;

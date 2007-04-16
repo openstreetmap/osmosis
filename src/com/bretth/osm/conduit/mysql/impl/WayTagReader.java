@@ -11,6 +11,11 @@ public class WayTagReader extends EntityReader<WayTag> {
 		"SELECT id, k, v FROM way_tags ORDER BY id";
 	
 	
+	public WayTagReader(String host, String database, String user, String password) {
+		super(host, database, user, password);
+	}
+	
+	
 	protected WayTag createNextValue(ResultSet resultSet) {
 		long wayId;
 		String key;

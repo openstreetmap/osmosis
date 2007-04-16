@@ -13,6 +13,11 @@ public class WayReader extends EntityReader<Way> {
 		"SELECT id, timestamp FROM ways ORDER BY id";
 	
 	
+	public WayReader(String host, String database, String user, String password) {
+		super(host, database, user, password);
+	}
+	
+	
 	protected Way createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;

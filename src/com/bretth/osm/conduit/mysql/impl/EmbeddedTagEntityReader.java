@@ -9,6 +9,11 @@ import com.bretth.osm.conduit.data.Tag;
 
 public abstract class EmbeddedTagEntityReader<E> extends EntityReader<E> {
 	
+	public EmbeddedTagEntityReader(String host, String database, String user, String password) {
+		super(host, database, user, password);
+	}
+	
+	
 	protected List<Tag> parseTags(String tags) {
 		StringTokenizer tokenizer;
 		List<Tag> tagList;

@@ -12,21 +12,41 @@ import com.bretth.osm.conduit.ConduitRuntimeException;
 
 public class DatabaseContext {
 	private static boolean driverLoaded;
+	
+	private String host;
+	private String database;
+	private String user;
+	private String password;
 	private Connection connection;
 	private Statement statement;
 	private ResultSet resultSet;
 	
 	
-	private void loadDatabaseDriver() {
+	public DatabaseContext(String host, String database, String user, String password) {
+		this.host = host;
+		this.database = database;
+		this.user = user;
+		this.password = password;
+	}
+	
+	
+	private static void loadDatabaseDriver() {
 		if (!driverLoaded) {
-			try {
-				Class.forName("com.mysql.jdbc.Driver");
-				
-			} catch (ClassNotFoundException e) {
-				throw new ConduitRuntimeException("Unable to find database driver.", e);
+			// Lock to ensure two threads don't try to load the driver at the same time.
+			synchronized (DatabaseContext.class) {
+				// Check again to ensure another thread hasn't loaded the driver
+				// while we waited for the lock.
+				if (!driverLoaded) {
+					try {
+						Class.forName("com.mysql.jdbc.Driver");
+						
+					} catch (ClassNotFoundException e) {
+						throw new ConduitRuntimeException("Unable to find database driver.", e);
+					}
+					
+					driverLoaded = true;
+				}
 			}
-			
-			driverLoaded = true;
 		}
 	}
 	
@@ -38,8 +58,8 @@ public class DatabaseContext {
 			
 			try {
 				connection = DriverManager.getConnection(
-					"jdbc:mysql://localhost/osm2?"
-			    	+ "user=osm&password=14brett13"
+					"jdbc:mysql://" + host + "/" + database + "?"
+			    	+ "user=" + user + "&password=" + password
 			    );
 				
 			} catch (SQLException e) {

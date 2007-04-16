@@ -11,6 +11,11 @@ public class WaySegmentReader extends EntityReader<WaySegment> {
 		"SELECT id AS way_id, segment_id, sequence_id FROM way_segments ORDER BY way_id, sequence_id";
 	
 	
+	public WaySegmentReader(String host, String database, String user, String password) {
+		super(host, database, user, password);
+	}
+	
+	
 	protected WaySegment createNextValue(ResultSet resultSet) {
 		long wayId;
 		long segmentId;
