@@ -10,9 +10,9 @@ import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
 public class DatabaseReaderFactory extends TaskManagerFactory {
 	private static final String TASK_TYPE = "read-mysql";
 	private static final String ARG_HOST = "host";
-	private static final String ARG_DATABASE = "host";
-	private static final String ARG_USER = "host";
-	private static final String ARG_PASSWORD = "host";
+	private static final String ARG_DATABASE = "database";
+	private static final String ARG_USER = "user";
+	private static final String ARG_PASSWORD = "password";
 	private static final String DEFAULT_HOST = "localhost";
 	private static final String DEFAULT_DATABASE = "osm";
 	private static final String DEFAULT_USER = "osm";
