@@ -44,47 +44,46 @@ public class Pipeline {
 		pipeArgs = new HashMap<String, String>();
 		while (i < programArgs.length) {
 			String arg;
+			int equalsIndex;
+			String argName;
+			String argValue;
 			
 			arg = programArgs[i];
 			
 			if (arg.indexOf(PipelineConstants.TASK_ARGUMENT_PREFIX) == 0) {
-				return i;
-			} else {
-				int equalsIndex;
-				String argName;
-				String argValue;
-				
-				equalsIndex = arg.indexOf("=");
-				
-				// Check if the equals exists.
-				if (equalsIndex < 0) {
-					throw new ConduitRuntimeException("Expected argument " + (i + 1) + " to be a name value pair (ie. name=value).");
-				}
-				
-				// Check if the name component of the argument exists.
-				if (equalsIndex == 0) {
-					throw new ConduitRuntimeException("Argument " + (i + 1) + " doesn't contain a name before the '=' (ie. name=value).");
-				}
-				
-				// Check if the value component of the argument exists.
-				if (equalsIndex >= (arg.length() - 1)) {
-					throw new ConduitRuntimeException("Argument " + (i + 1) + " doesn't contain a value after the '=' (ie. name=value).");
-				}
-				
-				// Split the argument into name and value.
-				argName = arg.substring(0, equalsIndex);
-				argValue = arg.substring(equalsIndex + 1);
-				
-				// Add pipeline arguments to pipeArgs, all other arguments to taskArgs.
-				// A pipeline arg is inPipe, inPipe.x, outPipe or outPipe.x.
-				if (PipelineConstants.IN_PIPE_ARGUMENT_PREFIX.equals(argName) || argName.indexOf(PipelineConstants.IN_PIPE_ARGUMENT_PREFIX + ".") == 0 || PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX.equals(argName) || argName.indexOf(PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX + ".") == 0) {
-					pipeArgs.put(argName, argValue);
-				} else {
-					taskArgs.put(argName, argValue);
-				}
-				
-				i++;
+				break;
 			}
+			
+			equalsIndex = arg.indexOf("=");
+			
+			// Check if the equals exists.
+			if (equalsIndex < 0) {
+				throw new ConduitRuntimeException("Expected argument " + (i + 1) + " to be a name value pair (ie. name=value).");
+			}
+			
+			// Check if the name component of the argument exists.
+			if (equalsIndex == 0) {
+				throw new ConduitRuntimeException("Argument " + (i + 1) + " doesn't contain a name before the '=' (ie. name=value).");
+			}
+			
+			// Check if the value component of the argument exists.
+			if (equalsIndex >= (arg.length() - 1)) {
+				throw new ConduitRuntimeException("Argument " + (i + 1) + " doesn't contain a value after the '=' (ie. name=value).");
+			}
+			
+			// Split the argument into name and value.
+			argName = arg.substring(0, equalsIndex);
+			argValue = arg.substring(equalsIndex + 1);
+			
+			// Add pipeline arguments to pipeArgs, all other arguments to taskArgs.
+			// A pipeline arg is inPipe, inPipe.x, outPipe or outPipe.x.
+			if (PipelineConstants.IN_PIPE_ARGUMENT_PREFIX.equals(argName) || argName.indexOf(PipelineConstants.IN_PIPE_ARGUMENT_PREFIX + ".") == 0 || PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX.equals(argName) || argName.indexOf(PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX + ".") == 0) {
+				pipeArgs.put(argName, argValue);
+			} else {
+				taskArgs.put(argName, argValue);
+			}
+			
+			i++;
 		}
 		
 		// Create the new task manager and add to the pipeline.

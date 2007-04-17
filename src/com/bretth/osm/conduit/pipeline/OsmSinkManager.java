@@ -36,9 +36,9 @@ public class OsmSinkManager extends TaskManager {
 		
 		// Get the task writing to the input pipe.
 		if (!pipeTasks.containsKey(pipeName)) {
-			throw new ConduitRuntimeException("No pipe named " + pipeName + "is available as input for task " + getTaskName() + ".");
+			throw new ConduitRuntimeException("No pipe named " + pipeName + " is available as input for task " + getTaskName() + ".");
 		}
-		pipeWriter = pipeTasks.get(pipeName);
+		pipeWriter = pipeTasks.remove(pipeName);
 		
 		// Cast the input feed to the correct type.
 		if (!(pipeWriter instanceof OsmSource)) {
