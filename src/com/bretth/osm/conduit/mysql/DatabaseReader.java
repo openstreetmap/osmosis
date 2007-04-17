@@ -21,7 +21,11 @@ public class DatabaseReader implements OsmSource {
 	private String password;
 	
 	
-	public DatabaseReader() {
+	public DatabaseReader(String host, String database, String user, String password) {
+		this.host = host;
+		this.database = database;
+		this.user = user;
+		this.password = password;
 	}
 	
 	
@@ -38,7 +42,7 @@ public class DatabaseReader implements OsmSource {
 	private void processNodes() {
 		NodeReader reader;
 		
-		reader = new NodeReader();
+		reader = new NodeReader(host, database, user, password);
 		
 		try {
 			while (reader.hasNext()) {
@@ -54,7 +58,7 @@ public class DatabaseReader implements OsmSource {
 	private void processSegments() {
 		SegmentReader reader;
 		
-		reader = new SegmentReader();
+		reader = new SegmentReader(host, database, user, password);
 		
 		try {
 			while (reader.hasNext()) {
@@ -72,9 +76,9 @@ public class DatabaseReader implements OsmSource {
 		WaySegmentReader waySegmentReader;
 		WayTagReader wayTagReader;
 		
-		wayReader = new WayReader();
-		waySegmentReader = new WaySegmentReader();
-		wayTagReader = new WayTagReader();
+		wayReader = new WayReader(host, database, user, password);
+		waySegmentReader = new WaySegmentReader(host, database, user, password);
+		wayTagReader = new WayTagReader(host, database, user, password);
 		
 		try {
 			while (wayReader.hasNext()) {
