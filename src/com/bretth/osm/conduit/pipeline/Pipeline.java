@@ -36,6 +36,7 @@ public class Pipeline {
 		int i;
 		Map<String, String> taskArgs;
 		Map<String, String> pipeArgs;
+		String taskId;
 		
 		i = offset;
 		
@@ -86,9 +87,12 @@ public class Pipeline {
 			i++;
 		}
 		
+		// Build a unique task id.
+		taskId = (taskManagers.size() + 1) + "-" + taskType;
+		
 		// Create the new task manager and add to the pipeline.
 		taskManagers.add(
-			TaskManagerFactory.createTaskManager(taskType, taskArgs, pipeArgs)
+			TaskManagerFactory.createTaskManager(taskType, taskId, taskArgs, pipeArgs)
 		);
 		
 		return i;

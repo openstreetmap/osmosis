@@ -33,10 +33,10 @@ public abstract class TaskManagerFactory {
 	protected abstract String getTaskType();
 	
 	
-	protected abstract TaskManager createTaskManagerImpl(Map<String, String> taskArgs, Map<String, String> pipeArgs);
+	protected abstract TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs);
 	
 	
-	public static TaskManager createTaskManager(String taskType, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
-		return getInstance(taskType).createTaskManagerImpl(taskArgs, pipeArgs);
+	public static TaskManager createTaskManager(String taskType, String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+		return getInstance(taskType).createTaskManagerImpl(taskId, taskArgs, pipeArgs);
 	}
 }

@@ -19,7 +19,7 @@ public class DatabaseReaderFactory extends TaskManagerFactory {
 	private static final String DEFAULT_PASSWORD = "";
 	
 	
-	protected TaskManager createTaskManagerImpl(Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
 		String host;
 		String database;
 		String user;
@@ -48,7 +48,7 @@ public class DatabaseReaderFactory extends TaskManagerFactory {
 		}
 		
 		return new OsmSourceManager(
-			TASK_TYPE,
+			taskId,
 			new DatabaseReader(host, database, user, password),
 			pipeArgs
 		);

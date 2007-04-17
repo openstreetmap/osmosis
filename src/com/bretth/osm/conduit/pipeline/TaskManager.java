@@ -6,12 +6,12 @@ import com.bretth.osm.conduit.task.Task;
 
 
 public abstract class TaskManager {
-	private String taskName;
+	private String taskId;
 	private Map<String, String> pipeArgs;
 	
 	
-	protected TaskManager(String taskName, Map<String, String> pipeArgs) {
-		this.taskName = taskName;
+	protected TaskManager(String taskId, Map<String, String> pipeArgs) {
+		this.taskId = taskId;
 		this.pipeArgs = pipeArgs;
 	}
 	
@@ -21,8 +21,8 @@ public abstract class TaskManager {
 	}
 	
 	
-	protected String getTaskName() {
-		return taskName;
+	protected String getTaskId() {
+		return taskId;
 	}
 	
 	

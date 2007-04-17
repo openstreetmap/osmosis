@@ -12,8 +12,8 @@ public class OsmSourceManager extends TaskManager {
 	private Thread thread;
 	
 	
-	public OsmSourceManager(String taskType, OsmSource task, Map<String, String> pipeArgs) {
-		super(taskType, pipeArgs);
+	public OsmSourceManager(String taskId, OsmSource task, Map<String, String> pipeArgs) {
+		super(taskId, pipeArgs);
 		
 		this.task = task;
 	}
@@ -40,13 +40,13 @@ public class OsmSourceManager extends TaskManager {
 	
 	
 	public void connect(Map<String, Task> pipeTasks) {
-		connectImpl(task, getTaskName(), pipeTasks, getPipeArgs());
+		connectImpl(task, getTaskId(), pipeTasks, getPipeArgs());
 	}
 	
 	
 	public void run() {
 		if (thread != null) {
-			throw new ConduitRuntimeException("Task " + getTaskName() + " is already running.");
+			throw new ConduitRuntimeException("Task " + getTaskId() + " is already running.");
 		}
 		
 		thread = new Thread(task);

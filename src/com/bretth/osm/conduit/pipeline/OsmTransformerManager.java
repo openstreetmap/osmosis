@@ -19,6 +19,6 @@ public class OsmTransformerManager extends OsmSinkManager {
 	public void connect(Map<String, Task> pipeTasks) {
 		super.connect(pipeTasks);
 		
-		OsmSourceManager.connectImpl(task, getTaskName(), pipeTasks, getPipeArgs());
+		OsmSourceManager.connectImpl(task, getTaskId(), pipeTasks, getPipeArgs());
 	}
 }

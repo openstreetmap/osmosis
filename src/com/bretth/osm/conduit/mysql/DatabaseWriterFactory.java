@@ -19,7 +19,7 @@ public class DatabaseWriterFactory extends TaskManagerFactory {
 	private static final String DEFAULT_PASSWORD = "";
 	
 	
-	protected TaskManager createTaskManagerImpl(Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
 		String host;
 		String database;
 		String user;
@@ -48,7 +48,7 @@ public class DatabaseWriterFactory extends TaskManagerFactory {
 		}
 		
 		return new OsmSinkManager(
-			TASK_TYPE,
+			taskId,
 			new DatabaseWriter(host, database, user, password),
 			pipeArgs
 		);
