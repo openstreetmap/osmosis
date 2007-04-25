@@ -6,6 +6,7 @@ public class ConduitRuntimeException extends RuntimeException {
 	
 
 	public ConduitRuntimeException() {
+		super();
 	}
 
 	public ConduitRuntimeException(String message) {

@@ -3,7 +3,7 @@ package com.bretth.osm.conduit.xml;
 import java.io.File;
 import java.util.Map;
 
-import com.bretth.osm.conduit.pipeline.OsmSourceManager;
+import com.bretth.osm.conduit.pipeline.OsmRunnableSourceManager;
 import com.bretth.osm.conduit.pipeline.TaskManager;
 import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
 
@@ -14,6 +14,7 @@ public class XmlReaderFactory extends TaskManagerFactory {
 	private static final String DEFAULT_FILE_NAME = "dump.osm";
 	
 	
+	@Override
 	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
 		String fileName;
 		File file;
@@ -29,10 +30,11 @@ public class XmlReaderFactory extends TaskManagerFactory {
 		task = new XmlReader();
 		task.setFile(file);
 		
-		return new OsmSourceManager(taskId, task, pipeArgs);
+		return new OsmRunnableSourceManager(taskId, task, pipeArgs);
 	}
 	
 	
+	@Override
 	protected String getTaskType() {
 		return TASK_TYPE;
 	}

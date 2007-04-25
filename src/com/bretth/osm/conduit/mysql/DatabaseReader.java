@@ -8,11 +8,11 @@ import com.bretth.osm.conduit.mysql.impl.WaySegment;
 import com.bretth.osm.conduit.mysql.impl.WaySegmentReader;
 import com.bretth.osm.conduit.mysql.impl.WayTag;
 import com.bretth.osm.conduit.mysql.impl.WayTagReader;
+import com.bretth.osm.conduit.task.OsmRunnableSource;
 import com.bretth.osm.conduit.task.OsmSink;
-import com.bretth.osm.conduit.task.OsmSource;
 
 
-public class DatabaseReader implements OsmSource {
+public class DatabaseReader implements OsmRunnableSource {
 	
 	private OsmSink osmSink;
 	private String host;

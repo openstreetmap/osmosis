@@ -18,6 +18,7 @@ public class NodeReader extends EmbeddedTagEntityReader<Node> {
 	}
 	
 	
+	@Override
 	protected Node createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
@@ -44,6 +45,7 @@ public class NodeReader extends EmbeddedTagEntityReader<Node> {
 	}
 	
 	
+	@Override
 	protected String getQuerySql() {
 		return SELECT_SQL;
 	} 

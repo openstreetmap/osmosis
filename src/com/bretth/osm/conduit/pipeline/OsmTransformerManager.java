@@ -9,6 +9,7 @@ import com.bretth.osm.conduit.task.Task;
 public class OsmTransformerManager extends OsmSinkManager {
 	private OsmTransformer task;
 	
+	
 	public OsmTransformerManager(String taskType, OsmTransformer task, Map<String, String> pipeArgs) {
 		super(taskType, task, pipeArgs);
 		
@@ -16,9 +17,12 @@ public class OsmTransformerManager extends OsmSinkManager {
 	}
 	
 	
+	@Override
 	public void connect(Map<String, Task> pipeTasks) {
+		// Connect the pipeline inputs.
 		super.connect(pipeTasks);
 		
-		OsmSourceManager.connectImpl(task, getTaskId(), pipeTasks, getPipeArgs());
+		// Connect the pipeline outputs.
+		OsmRunnableSourceManager.connectImpl(task, getTaskId(), pipeTasks, getPipeArgs());
 	}
 }

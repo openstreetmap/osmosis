@@ -18,6 +18,7 @@ public class WayReader extends EntityReader<Way> {
 	}
 	
 	
+	@Override
 	protected Way createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
@@ -33,6 +34,7 @@ public class WayReader extends EntityReader<Way> {
 	}
 	
 	
+	@Override
 	protected String getQuerySql() {
 		return SELECT_SQL;
 	} 

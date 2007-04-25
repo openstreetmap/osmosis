@@ -37,11 +37,6 @@ public class OsmHandler extends DefaultHandler {
 	
 	
 	@Override
-	public void endDocument() throws SAXException {
-	}
-	
-	
-	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		if (elementProcessor != null) {
 			elementProcessor = elementProcessor.getChild(uri, localName, qName);

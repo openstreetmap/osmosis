@@ -160,6 +160,7 @@ public class DatabaseContext {
 	}
 	
 	
+	@Override
 	protected void finalize() throws Throwable {
 		release();
 		

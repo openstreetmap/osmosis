@@ -16,6 +16,7 @@ public class WaySegmentReader extends EntityReader<WaySegment> {
 	}
 	
 	
+	@Override
 	protected WaySegment createNextValue(ResultSet resultSet) {
 		long wayId;
 		long segmentId;
@@ -34,6 +35,7 @@ public class WaySegmentReader extends EntityReader<WaySegment> {
 	}
 	
 	
+	@Override
 	protected String getQuerySql() {
 		return SELECT_SQL;
 	} 

@@ -42,6 +42,7 @@ public class XmlWriter implements OsmSink {
 	
 	
 	public XmlWriter() {
+		// Nothing to do here.
 	}
 	
 	

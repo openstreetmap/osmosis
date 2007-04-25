@@ -19,6 +19,7 @@ public class DummyElementProcessor extends BaseElementProcessor {
 	
 	
 	public void begin(Attributes attributes) {
+		// Nothing to do because we're not processing this element.
 	}
 	
 	
@@ -29,6 +30,7 @@ public class DummyElementProcessor extends BaseElementProcessor {
 	}
 	
 	
+	@Override
 	public ElementProcessor getParent() {
 		if (nestedElementCount > 0) {
 			nestedElementCount--;
@@ -40,5 +42,6 @@ public class DummyElementProcessor extends BaseElementProcessor {
 	
 	
 	public void end() {
+		// Nothing to do because we're not processing this element.
 	}
 }

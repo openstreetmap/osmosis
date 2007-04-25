@@ -19,6 +19,7 @@ public class BoundingBoxFilterFactory extends TaskManagerFactory {
 	private static final String DEFAULT_BOTTOM = "-90";
 	
 	
+	@Override
 	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
 		double left;
 		double right;
@@ -39,6 +40,7 @@ public class BoundingBoxFilterFactory extends TaskManagerFactory {
 	}
 	
 	
+	@Override
 	protected String getTaskType() {
 		return TASK_TYPE;
 	}

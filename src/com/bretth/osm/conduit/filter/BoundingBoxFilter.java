@@ -129,10 +129,6 @@ public class BoundingBoxFilter implements OsmTransformer {
 	}
 	
 	
-	public void run() {
-	}
-	
-	
 	public void setOsmSink(OsmSink osmSink) {
 		this.osmSink = osmSink;
 	}

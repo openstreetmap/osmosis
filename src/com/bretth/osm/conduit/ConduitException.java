@@ -6,6 +6,7 @@ public abstract class ConduitException extends Exception {
 	
 
 	public ConduitException() {
+		super();
 	}
 
 	public ConduitException(String message) {

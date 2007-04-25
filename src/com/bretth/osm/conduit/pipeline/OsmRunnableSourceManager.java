@@ -3,16 +3,17 @@ package com.bretth.osm.conduit.pipeline;
 import java.util.Map;
 
 import com.bretth.osm.conduit.ConduitRuntimeException;
+import com.bretth.osm.conduit.task.OsmRunnableSource;
 import com.bretth.osm.conduit.task.OsmSource;
 import com.bretth.osm.conduit.task.Task;
 
 
-public class OsmSourceManager extends TaskManager {
-	private OsmSource task;
+public class OsmRunnableSourceManager extends TaskManager {
+	private OsmRunnableSource task;
 	private Thread thread;
 	
 	
-	public OsmSourceManager(String taskId, OsmSource task, Map<String, String> pipeArgs) {
+	public OsmRunnableSourceManager(String taskId, OsmRunnableSource task, Map<String, String> pipeArgs) {
 		super(taskId, pipeArgs);
 		
 		this.task = task;
@@ -39,11 +40,13 @@ public class OsmSourceManager extends TaskManager {
 	}
 	
 	
+	@Override
 	public void connect(Map<String, Task> pipeTasks) {
 		connectImpl(task, getTaskId(), pipeTasks, getPipeArgs());
 	}
 	
 	
+	@Override
 	public void run() {
 		if (thread != null) {
 			throw new ConduitRuntimeException("Task " + getTaskId() + " is already running.");
@@ -55,6 +58,7 @@ public class OsmSourceManager extends TaskManager {
 	}
 	
 	
+	@Override
 	public void waitForCompletion() {
 		if (thread != null) {
 			try {

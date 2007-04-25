@@ -14,6 +14,7 @@ public class XmlWriterFactory extends TaskManagerFactory {
 	private static final String DEFAULT_FILE_NAME = "dump.osm";
 	
 	
+	@Override
 	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
 		String fileName;
 		File file;
@@ -33,6 +34,7 @@ public class XmlWriterFactory extends TaskManagerFactory {
 	}
 	
 	
+	@Override
 	protected String getTaskType() {
 		return TASK_TYPE;
 	}

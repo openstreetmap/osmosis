@@ -19,6 +19,7 @@ public class DatabaseWriterFactory extends TaskManagerFactory {
 	private static final String DEFAULT_PASSWORD = "";
 	
 	
+	@Override
 	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
 		String host;
 		String database;
@@ -39,6 +40,7 @@ public class DatabaseWriterFactory extends TaskManagerFactory {
 	}
 	
 	
+	@Override
 	protected String getTaskType() {
 		return TASK_TYPE;
 	}

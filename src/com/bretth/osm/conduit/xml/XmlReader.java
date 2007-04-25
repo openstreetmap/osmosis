@@ -10,18 +10,19 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXException;
 
 import com.bretth.osm.conduit.ConduitRuntimeException;
+import com.bretth.osm.conduit.task.OsmRunnableSource;
 import com.bretth.osm.conduit.task.OsmSink;
-import com.bretth.osm.conduit.task.OsmSource;
 import com.bretth.osm.conduit.xml.impl.OsmHandler;
 
 
-public class XmlReader implements OsmSource {
+public class XmlReader implements OsmRunnableSource {
 	
 	private OsmSink osmSink;
 	private File file;
 	
 	
 	public XmlReader() {
+		// Nothing to do here.
 	}
 	
 	

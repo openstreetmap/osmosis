@@ -16,6 +16,7 @@ public class WayTagReader extends EntityReader<WayTag> {
 	}
 	
 	
+	@Override
 	protected WayTag createNextValue(ResultSet resultSet) {
 		long wayId;
 		String key;
@@ -34,6 +35,7 @@ public class WayTagReader extends EntityReader<WayTag> {
 	}
 	
 	
+	@Override
 	protected String getQuerySql() {
 		return SELECT_SQL;
 	} 

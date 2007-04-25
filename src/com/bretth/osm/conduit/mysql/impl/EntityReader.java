@@ -21,7 +21,7 @@ public abstract class EntityReader<E> {
 	protected abstract String getQuerySql();
 	
 	
-	protected abstract E createNextValue(ResultSet resultSet);
+	protected abstract E createNextValue(ResultSet activeResultSet);
 	
 	
 	private void readNextValue() {

@@ -30,13 +30,14 @@ public class OsmElementProcessor extends BaseElementProcessor {
 	}
 	
 	
+	@Override
 	protected OsmSink getOsmSink() {
 		return osmSink;
 	}
 	
 	
 	public void reset() {
-		
+		// This class maintains no state and doesn't require a reset.
 	}
 	
 	
@@ -68,6 +69,7 @@ public class OsmElementProcessor extends BaseElementProcessor {
 	
 	
 	public void end() {
-		
+		// This class produces no data and therefore doesn't need to do anything
+		// when the end of the element is reached.
 	}
 }

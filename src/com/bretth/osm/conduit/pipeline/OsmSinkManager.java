@@ -19,6 +19,7 @@ public class OsmSinkManager extends TaskManager {
 	}
 	
 	
+	@Override
 	public void connect(Map<String, Task> pipeTasks) {
 		Map<String, String> pipeArgs;
 		String pipeName;
@@ -51,11 +52,13 @@ public class OsmSinkManager extends TaskManager {
 	}
 	
 	
+	@Override
 	public void run() {
 		// Nothing to do for a sink because it passively receives data.
 	}
 	
 	
+	@Override
 	public void waitForCompletion() {
 		// Nothing to do for a sink because it passively receives data.
 	}

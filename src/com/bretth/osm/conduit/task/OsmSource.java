@@ -1,9 +1,6 @@
 package com.bretth.osm.conduit.task;
 
 
-
-public interface OsmSource extends Task, Runnable {
+public interface OsmSource extends Task {
 	void setOsmSink(OsmSink osmSink);
-	
-	void run();
 }

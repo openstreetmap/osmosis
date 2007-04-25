@@ -17,6 +17,7 @@ public class SegmentReader extends EmbeddedTagEntityReader<Segment> {
 	}
 	
 	
+	@Override
 	protected Segment createNextValue(ResultSet resultSet) {
 		long id;
 		long from;
@@ -41,6 +42,7 @@ public class SegmentReader extends EmbeddedTagEntityReader<Segment> {
 	}
 	
 	
+	@Override
 	protected String getQuerySql() {
 		return SELECT_SQL;
 	} 
