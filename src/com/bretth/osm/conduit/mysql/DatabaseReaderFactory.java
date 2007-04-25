@@ -26,26 +26,10 @@ public class DatabaseReaderFactory extends TaskManagerFactory {
 		String password;
 		
 		// Get the task arguments.
-		if (taskArgs.containsKey(ARG_HOST)) {
-			host = taskArgs.get(ARG_HOST);
-		} else {
-			host = DEFAULT_HOST;
-		}
-		if (taskArgs.containsKey(ARG_DATABASE)) {
-			database = taskArgs.get(ARG_DATABASE);
-		} else {
-			database = DEFAULT_DATABASE;
-		}
-		if (taskArgs.containsKey(ARG_USER)) {
-			user = taskArgs.get(ARG_USER);
-		} else {
-			user = DEFAULT_USER;
-		}
-		if (taskArgs.containsKey(ARG_PASSWORD)) {
-			password = taskArgs.get(ARG_PASSWORD);
-		} else {
-			password = DEFAULT_PASSWORD;
-		}
+		host = getStringArgument(taskArgs, ARG_HOST, DEFAULT_HOST);
+		database = getStringArgument(taskArgs, ARG_DATABASE, DEFAULT_DATABASE);
+		user = getStringArgument(taskArgs, ARG_USER, DEFAULT_USER);
+		password = getStringArgument(taskArgs, ARG_PASSWORD, DEFAULT_PASSWORD);
 		
 		return new OsmSourceManager(
 			taskId,

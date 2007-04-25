@@ -20,11 +20,7 @@ public class XmlWriterFactory extends TaskManagerFactory {
 		XmlWriter task;
 		
 		// Get the task arguments.
-		if (taskArgs.containsKey(ARG_FILE_NAME)) {
-			fileName = taskArgs.get(ARG_FILE_NAME);
-		} else {
-			fileName = DEFAULT_FILE_NAME;
-		}
+		fileName = getStringArgument(taskArgs, ARG_FILE_NAME, DEFAULT_FILE_NAME);
 		
 		// Create a file object from the file name provided.
 		file = new File(fileName);
