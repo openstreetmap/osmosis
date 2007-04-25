@@ -1,7 +1,6 @@
 package com.bretth.osm.conduit.xml.impl;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -13,7 +12,6 @@ public class OsmHandler extends DefaultHandler {
 	private static final String ELEMENT_NAME_OSM = "osm";
 	
 	
-	private Locator documentLocator;
 	private ElementProcessor elementProcessor;
 	private ElementProcessor osmElementProcessor;
 	
@@ -29,12 +27,6 @@ public class OsmHandler extends DefaultHandler {
 	private void reset() {
 		elementProcessor = null;
 		osmElementProcessor.reset();
-	}
-	
-	
-	@Override
-	public void setDocumentLocator(Locator locator) {
-		this.documentLocator = locator;
 	}
 	
 	
