@@ -1,5 +1,6 @@
 package com.bretth.osm.conduit; 
 
+import com.bretth.osm.conduit.filter.BoundingBoxFilterFactory;
 import com.bretth.osm.conduit.mysql.DatabaseReaderFactory;
 import com.bretth.osm.conduit.mysql.DatabaseWriterFactory;
 import com.bretth.osm.conduit.pipeline.Pipeline;
@@ -29,5 +30,6 @@ public class Conduit {
 		new DatabaseWriterFactory();
 		new XmlReaderFactory();
 		new XmlWriterFactory();
+		new BoundingBoxFilterFactory();
 	}
 }

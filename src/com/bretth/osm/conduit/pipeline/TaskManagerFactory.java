@@ -25,6 +25,11 @@ public abstract class TaskManagerFactory {
 	}
 	
 	
+	public static TaskManager createTaskManager(String taskType, String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+		return getInstance(taskType).createTaskManagerImpl(taskId, taskArgs, pipeArgs);
+	}
+	
+	
 	protected TaskManagerFactory() {
 		factoryMap.put(getTaskType(), this);
 	}
@@ -36,7 +41,20 @@ public abstract class TaskManagerFactory {
 	protected abstract TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs);
 	
 	
-	public static TaskManager createTaskManager(String taskType, String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
-		return getInstance(taskType).createTaskManagerImpl(taskId, taskArgs, pipeArgs);
+	protected String getStringArgument(Map<String, String> taskArgs, String argName, String defaultValue) {
+		if (taskArgs.containsKey(argName)) {
+			return taskArgs.get(argName);
+		} else {
+			return defaultValue;
+		}
+	}
+	
+	
+	protected double getDoubleArgument(Map<String, String> taskArgs, String argName, String defaultValue) {
+		String rawValue;
+		
+		rawValue = getStringArgument(taskArgs, argName, defaultValue);
+		
+		return Double.parseDouble(rawValue);
 	}
 }
