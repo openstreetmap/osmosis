@@ -1,24 +1,57 @@
 package com.bretth.osm.conduit;
 
+
+/**
+ * The root of the checked exception hierarchy for the conduit application. All
+ * typed exceptions subclass this exception.
+ * 
+ * @author Brett Henderson
+ */
 public abstract class ConduitException extends Exception {
 	
 	private static final long serialVersionUID = 1L; 
 	
-
-	public ConduitException() {
+	
+	/**
+     * Constructs a new exception with <code>null</code> as its detail message.
+     */
+    public ConduitException() {
 		super();
 	}
-
-	public ConduitException(String message) {
+	
+	
+    /**
+     * Constructs a new exception with the specified detail message.  The
+     * cause is not initialized, and may subsequently be initialized by
+     * a call to {@link #initCause}.
+     *
+     * @param message the detail message.
+     */
+    public ConduitException(String message) {
 		super(message);
 	}
-
-	public ConduitException(Throwable cause) {
+	
+    
+    /**
+     * Constructs a new exception with the specified cause and a detail
+     * message of <tt>(cause==null ? null : cause.toString())</tt> (which
+     * typically contains the class and detail message of <tt>cause</tt>).
+     * 
+     * @param cause the cause.
+     */
+    public ConduitException(Throwable cause) {
 		super(cause);
 	}
-
-	public ConduitException(String message, Throwable cause) {
+	
+	
+    /**
+     * Constructs a new exception with the specified detail message and
+     * cause.
+     * 
+     * @param message the detail message.
+     * @param cause the cause.
+     */
+    public ConduitException(String message, Throwable cause) {
 		super(message, cause);
 	}
-
 }

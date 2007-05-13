@@ -7,6 +7,11 @@ import com.bretth.osm.conduit.pipeline.TaskManager;
 import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
 
 
+/**
+ * The task manager factory for a bounding box filter.
+ * 
+ * @author Brett Henderson
+ */
 public class BoundingBoxFilterFactory extends TaskManagerFactory {
 	private static final String TASK_TYPE = "bounding-box";
 	private static final String ARG_LEFT = "left";
@@ -19,6 +24,9 @@ public class BoundingBoxFilterFactory extends TaskManagerFactory {
 	private static final String DEFAULT_BOTTOM = "-90";
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
 		double left;
@@ -40,6 +48,9 @@ public class BoundingBoxFilterFactory extends TaskManagerFactory {
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected String getTaskType() {
 		return TASK_TYPE;

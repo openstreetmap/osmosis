@@ -5,6 +5,11 @@ import org.xml.sax.Attributes;
 import com.bretth.osm.conduit.data.SegmentReference;
 
 
+/**
+ * Provides an element processor implementation for a segment reference.
+ * 
+ * @author Brett Henderson
+ */
 public class SegmentReferenceElementProcessor extends BaseElementProcessor {
 	private static final String ATTRIBUTE_NAME_ID = "id";
 	
@@ -12,6 +17,14 @@ public class SegmentReferenceElementProcessor extends BaseElementProcessor {
 	private SegmentReference segmentReference;
 	
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param parentProcessor
+	 *            The parent element processor.
+	 * @param segmentReferenceListener
+	 *            The segment reference listener for receiving created tags.
+	 */
 	public SegmentReferenceElementProcessor(BaseElementProcessor parentProcessor, SegmentReferenceListener segmentReferenceListener) {
 		super(parentProcessor);
 		
@@ -19,11 +32,9 @@ public class SegmentReferenceElementProcessor extends BaseElementProcessor {
 	}
 	
 	
-	public void reset() {
-		segmentReference = null;
-	}
-	
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void begin(Attributes attributes) {
 		long id;
 		
@@ -33,12 +44,11 @@ public class SegmentReferenceElementProcessor extends BaseElementProcessor {
 	}
 	
 	
-	public ElementProcessor getChild(String uri, String localName, String qName) {
-		return getDummyChildProcessor();
-	}
-	
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void end() {
 		segmentReferenceListener.processSegmentReference(segmentReference);
+		segmentReference = null;
 	}
 }

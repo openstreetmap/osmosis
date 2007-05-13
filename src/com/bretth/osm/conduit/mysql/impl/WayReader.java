@@ -8,16 +8,36 @@ import com.bretth.osm.conduit.ConduitRuntimeException;
 import com.bretth.osm.conduit.data.Way;
 
 
+/**
+ * Provides iterator like behaviour for reading ways from a database.
+ * 
+ * @author Brett Henderson
+ */
 public class WayReader extends EntityReader<Way> {
 	private static final String SELECT_SQL =
 		"SELECT id, timestamp FROM ways ORDER BY id";
 	
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param host
+	 *            The server hosting the database.
+	 * @param database
+	 *            The database instance.
+	 * @param user
+	 *            The user name for authentication.
+	 * @param password
+	 *            The password for authentication.
+	 */
 	public WayReader(String host, String database, String user, String password) {
 		super(host, database, user, password);
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Way createNextValue(ResultSet resultSet) {
 		long id;
@@ -34,6 +54,9 @@ public class WayReader extends EntityReader<Way> {
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected String getQuerySql() {
 		return SELECT_SQL;

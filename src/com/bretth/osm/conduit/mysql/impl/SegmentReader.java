@@ -7,16 +7,36 @@ import com.bretth.osm.conduit.ConduitRuntimeException;
 import com.bretth.osm.conduit.data.Segment;
 
 
+/**
+ * Provides iterator like behaviour for reading segments from a database.
+ * 
+ * @author Brett Henderson
+ */
 public class SegmentReader extends EmbeddedTagEntityReader<Segment> {
 	private static final String SELECT_SQL =
 		"SELECT id, node_a, node_b, tags FROM segments ORDER BY id";
 	
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param host
+	 *            The server hosting the database.
+	 * @param database
+	 *            The database instance.
+	 * @param user
+	 *            The user name for authentication.
+	 * @param password
+	 *            The password for authentication.
+	 */
 	public SegmentReader(String host, String database, String user, String password) {
 		super(host, database, user, password);
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected Segment createNextValue(ResultSet resultSet) {
 		long id;
@@ -42,6 +62,9 @@ public class SegmentReader extends EmbeddedTagEntityReader<Segment> {
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected String getQuerySql() {
 		return SELECT_SQL;

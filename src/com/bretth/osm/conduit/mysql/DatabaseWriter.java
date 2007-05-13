@@ -17,6 +17,12 @@ import com.bretth.osm.conduit.mysql.impl.WayTag;
 import com.bretth.osm.conduit.task.OsmSink;
 
 
+/**
+ * An OSM data sink for storing all data to a database. This task is intended
+ * for writing to an empty database.
+ * 
+ * @author Brett Henderson
+ */
 public class DatabaseWriter implements OsmSink {
 	private static final String INSERT_SQL_NODE =
 		"INSERT INTO nodes(id, latitude, longitude, tags)";
@@ -52,6 +58,17 @@ public class DatabaseWriter implements OsmSink {
 	private static final String INSERT_SQL_BULK_WAY_SEGMENT;
 	
 	
+	/**
+	 * Builds a multi-row SQL insert statement.
+	 * 
+	 * @param baseSql
+	 *            The basic query without value bind variables.
+	 * @param parameterCount
+	 *            The number of parameters to be inserted.
+	 * @param rowCount
+	 *            The number of rows to insert in a single query.
+	 * @return The generated SQL statement.
+	 */
 	private static String buildSqlInsertStatement(String baseSql, int parameterCount, int rowCount) {
 		StringBuilder buffer;
 		
@@ -122,6 +139,18 @@ public class DatabaseWriter implements OsmSink {
 	private PreparedStatement bulkWaySegmentStatement;
 	
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param host
+	 *            The server hosting the database.
+	 * @param database
+	 *            The database instance.
+	 * @param user
+	 *            The user name for authentication.
+	 * @param password
+	 *            The password for authentication.
+	 */
 	public DatabaseWriter(String host, String database, String user, String password) {
 		dbCtx = new DatabaseContext(host, database, user, password);
 
@@ -133,6 +162,10 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Removes references to all statements. They aren't closed because this is
+	 * handled by the underlying database context.
+	 */
 	private void clearStatements() {
 		singleNodeStatement = null;
 		bulkNodeStatement = null;
@@ -147,6 +180,16 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Sets node values as bind variable parameters to a node insert query.
+	 * 
+	 * @param statement
+	 *            The prepared statement to add the values to.
+	 * @param initialIndex
+	 *            The offset index of the first variable to set.
+	 * @param node
+	 *            The node containing the data to be inserted.
+	 */
 	private void populateNodeParameters(PreparedStatement statement, int initialIndex, Node node) {
 		StringBuilder tagBuffer;
 		int prmIndex;
@@ -170,6 +213,16 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Sets segment values as bind variable parameters to a segment insert query.
+	 * 
+	 * @param statement
+	 *            The prepared statement to add the values to.
+	 * @param initialIndex
+	 *            The offset index of the first variable to set.
+	 * @param segment
+	 *            The segment containing the data to be inserted.
+	 */
 	private void populateSegmentParameters(PreparedStatement statement, int initialIndex, Segment segment) {
 		StringBuilder tagBuffer;
 		int prmIndex;
@@ -193,6 +246,16 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Sets way values as bind variable parameters to a way insert query.
+	 * 
+	 * @param statement
+	 *            The prepared statement to add the values to.
+	 * @param initialIndex
+	 *            The offset index of the first variable to set.
+	 * @param way
+	 *            The way containing the data to be inserted.
+	 */
 	private void populateWayParameters(PreparedStatement statement, int initialIndex, Way way) {
 		int prmIndex;
 		
@@ -207,6 +270,16 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Sets tag values as bind variable parameters to a way tag insert query.
+	 * 
+	 * @param statement
+	 *            The prepared statement to add the values to.
+	 * @param initialIndex
+	 *            The offset index of the first variable to set.
+	 * @param wayTag
+	 *            The way tag containing the data to be inserted.
+	 */
 	private void populateWayTagParameters(PreparedStatement statement, int initialIndex, WayTag wayTag) {
 		int prmIndex;
 		
@@ -223,6 +296,16 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Sets segment reference values as bind variable parameters to a way segment insert query.
+	 * 
+	 * @param statement
+	 *            The prepared statement to add the values to.
+	 * @param initialIndex
+	 *            The offset index of the first variable to set.
+	 * @param waySegment
+	 *            The way segment containing the data to be inserted.
+	 */
 	private void populateWaySegmentParameters(PreparedStatement statement, int initialIndex, WaySegment waySegment) {
 		int prmIndex;
 		
@@ -239,6 +322,16 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Flushes nodes to the database. If complete is false, this will only write
+	 * nodes until the remaining node count is less than the multi-row insert
+	 * statement row count. If complete is true, all remaining rows will be
+	 * written using single row insert statements.
+	 * 
+	 * @param complete
+	 *            If true, all data will be written to the database. If false,
+	 *            some data may be left until more data is available.
+	 */
 	private void flushNodes(boolean complete) {
 		while (nodeBuffer.size() >= INSERT_BULK_ROW_COUNT_NODE) {
 			int prmIndex;
@@ -280,6 +373,16 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Flushes segments to the database. If complete is false, this will only
+	 * write segments until the remaining segment count is less than the
+	 * multi-row insert statement row count. If complete is true, all remaining
+	 * rows will be written using single row insert statements.
+	 * 
+	 * @param complete
+	 *            If true, all data will be written to the database. If false,
+	 *            some data may be left until more data is available.
+	 */
 	private void flushSegments(boolean complete) {
 		while (segmentBuffer.size() >= INSERT_BULK_ROW_COUNT_SEGMENT) {
 			int prmIndex;
@@ -321,6 +424,16 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Flushes ways to the database. If complete is false, this will only write
+	 * ways until the remaining way count is less than the multi-row insert
+	 * statement row count. If complete is true, all remaining rows will be
+	 * written using single row insert statements.
+	 * 
+	 * @param complete
+	 *            If true, all data will be written to the database. If false,
+	 *            some data may be left until more data is available.
+	 */
 	private void flushWays(boolean complete) {
 		while (wayBuffer.size() >= INSERT_BULK_ROW_COUNT_WAY) {
 			List<Way> processedWays;
@@ -374,7 +487,7 @@ public class DatabaseWriter implements OsmSink {
 				} catch (SQLException e) {
 					throw new ConduitRuntimeException("Unable to insert a way into the database.", e);
 				}
-
+				
 				addWayTags(way);
 				addWaySegments(way);
 			}
@@ -382,6 +495,16 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Flushes way tags to the database. If complete is false, this will only
+	 * write way tags until the remaining way tag count is less than the
+	 * multi-row insert statement row count. If complete is true, all remaining
+	 * rows will be written using single row insert statements.
+	 * 
+	 * @param complete
+	 *            If true, all data will be written to the database. If false,
+	 *            some data may be left until more data is available.
+	 */
 	private void flushWayTags(boolean complete) {
 		while (wayTagBuffer.size() >= INSERT_BULK_ROW_COUNT_WAY_TAG) {
 			int prmIndex;
@@ -423,6 +546,16 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Flushes way segments to the database. If complete is false, this will only write
+	 * way segments until the remaining way segment count is less than the multi-row insert
+	 * statement row count. If complete is true, all remaining rows will be
+	 * written using single row insert statements.
+	 * 
+	 * @param complete
+	 *            If true, all data will be written to the database. If false,
+	 *            some data may be left until more data is available.
+	 */
 	private void flushWaySegments(boolean complete) {
 		while (waySegmentBuffer.size() >= INSERT_BULK_ROW_COUNT_WAY_SEGMENT) {
 			int prmIndex;
@@ -464,6 +597,9 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Writes any buffered data to the database and commits. 
+	 */
 	public void complete() {
 		flushNodes(true);
 		flushSegments(true);
@@ -475,6 +611,9 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Releases all database resources.
+	 */
 	public void release() {
 		clearStatements();
 		
@@ -482,6 +621,9 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void addNode(Node node) {
 		nodeBuffer.add(node);
 		
@@ -489,6 +631,9 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void addSegment(Segment segment) {
 		flushNodes(true);
 		
@@ -498,6 +643,9 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void addWay(Way way) {
 		flushSegments(true);
 		
@@ -507,22 +655,38 @@ public class DatabaseWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Process the way tags.
+	 * 
+	 * @param way
+	 *            The way to be processed.
+	 */
 	private void addWayTags(Way way) {
 		for (Tag tag: way.getTagList()) {
-			wayTagBuffer.add(new WayTag(way.getId(), tag));
+			wayTagBuffer.add(new WayTag(way.getId(), tag.getKey(), tag.getValue()));
 		}
 		
 		flushWayTags(false);
 	}
 	
 	
+	/**
+	 * Process the way segments.
+	 * 
+	 * @param way
+	 *            The way to be processed.
+	 */
 	private void addWaySegments(Way way) {
 		List<SegmentReference> segmentReferenceList;
 		
 		segmentReferenceList = way.getSegmentReferenceList();
 		
 		for (int i = 0; i < segmentReferenceList.size(); i++) {
-			waySegmentBuffer.add(new WaySegment(way.getId(), segmentReferenceList.get(i), i + 1));
+			waySegmentBuffer.add(new WaySegment(
+				way.getId(),
+				segmentReferenceList.get(i).getSegmentId(),
+				i + 1
+			));
 		}
 		
 		flushWaySegments(false);

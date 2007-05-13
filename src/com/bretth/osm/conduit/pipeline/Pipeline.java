@@ -9,11 +9,21 @@ import com.bretth.osm.conduit.ConduitRuntimeException;
 import com.bretth.osm.conduit.task.Task;
 
 
+/**
+ * Manages a processing pipeline from parsing of arguments, to creating and
+ * instantiating tasks, running of the pipeline, and waiting until pipeline
+ * completion.
+ * 
+ * @author Brett Henderson
+ */
 public class Pipeline {
 	
-	public List<TaskManager> taskManagers;
+	private List<TaskManager> taskManagers;
 	
 	
+	/**
+	 * Creates a new instance.
+	 */
 	public Pipeline() {
 		taskManagers = new ArrayList<TaskManager>();
 	}
@@ -162,6 +172,12 @@ public class Pipeline {
 	}
 	
 	
+	/**
+	 * Instantiates and configures all tasks within the pipeline.
+	 * 
+	 * @param programArgs
+	 *            The command line arguments for configuring the pipeline.
+	 */
 	public void prepare(String [] programArgs) {
 		// Process the command line arguments to build all nodes in the pipeline.
 		buildNodes(programArgs);
@@ -171,6 +187,10 @@ public class Pipeline {
 	}
 	
 	
+	/**
+	 * Launches the execution of the tasks within the pipeline.
+	 *
+	 */
 	public void run() {
 		// Initiate execution of all nodes.
 		for (TaskManager taskManager: taskManagers) {
@@ -179,6 +199,9 @@ public class Pipeline {
 	}
 	
 	
+	/**
+	 * Waits for all tasks within the pipeline to complete.
+	 */
 	public void waitForCompletion() {
 		// Wait for completion of all nodes.
 		for (TaskManager taskManager: taskManagers) {

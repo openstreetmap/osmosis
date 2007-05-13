@@ -10,6 +10,12 @@ import java.sql.Statement;
 import com.bretth.osm.conduit.ConduitRuntimeException;
 
 
+/**
+ * This class manages the lifecycle of JDBC objects to minimise the risk of
+ * connection leaks and to support a consistent approach to database access.
+ * 
+ * @author Brett Henderson
+ */
 public class DatabaseContext {
 	private static boolean driverLoaded;
 	
@@ -22,6 +28,18 @@ public class DatabaseContext {
 	private ResultSet resultSet;
 	
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param host
+	 *            The server hosting the database.
+	 * @param database
+	 *            The database instance.
+	 * @param user
+	 *            The user name for authentication.
+	 * @param password
+	 *            The password for authentication.
+	 */
 	public DatabaseContext(String host, String database, String user, String password) {
 		this.host = host;
 		this.database = database;
@@ -30,6 +48,9 @@ public class DatabaseContext {
 	}
 	
 	
+	/**
+	 * Utility method for ensuring that the database driver is registered.
+	 */
 	private static void loadDatabaseDriver() {
 		if (!driverLoaded) {
 			// Lock to ensure two threads don't try to load the driver at the same time.
@@ -51,6 +72,12 @@ public class DatabaseContext {
 	}
 	
 	
+	/**
+	 * If no database connection is open, a new connection is opened. The
+	 * database connection is then returned.
+	 * 
+	 * @return The database connection.
+	 */
 	private Connection getConnection() {
 		if (connection == null) {
 			
@@ -71,6 +98,9 @@ public class DatabaseContext {
 	}
 	
 	
+	/**
+	 * Releases any open database statement.
+	 */
 	private void releaseStatement() {
 		if (statement != null) {
 			try {
@@ -85,6 +115,14 @@ public class DatabaseContext {
 	}
 	
 	
+	/**
+	 * Creates a new database prepared statement. Any existing statement will be
+	 * closed.
+	 * 
+	 * @param sql
+	 *            The statement to be created.
+	 * @return The newly created statement.
+	 */
 	public PreparedStatement prepareStatement(String sql) {
 		releaseStatement();
 		
@@ -103,6 +141,9 @@ public class DatabaseContext {
 	}
 	
 	
+	/**
+	 * Releases any open result set.
+	 */
 	private void releaseResultSet() {
 		if (resultSet != null) {
 			try {
@@ -117,6 +158,14 @@ public class DatabaseContext {
 	}
 	
 	
+	/**
+	 * Creates a result set that is configured to stream results from the
+	 * database.  Any existing result set will be closed.
+	 * 
+	 * @param sql
+	 *            The query to invoke.
+	 * @return The result set.
+	 */
 	public ResultSet executeStreamingQuery(String sql) {
 		releaseResultSet();
 		releaseStatement();
@@ -138,11 +187,19 @@ public class DatabaseContext {
 	}
 	
 	
+	/**
+	 * Commits any outstanding transaction.
+	 */
 	public void commit() {
 		// Not using transactions yet.
 	}
 	
 	
+	/**
+	 * Releases all database resources. This method is guaranteed not to throw
+	 * transactions and should always be called in a finally block whenever this
+	 * class is used.
+	 */
 	public void release() {
 		releaseResultSet();
 		releaseStatement();
@@ -160,6 +217,11 @@ public class DatabaseContext {
 	}
 	
 	
+	/**
+	 * Enforces cleanup of any remaining resources during garbage collection.
+	 * This is a safeguard and should not be required if release is called
+	 * appropriately.
+	 */
 	@Override
 	protected void finalize() throws Throwable {
 		release();

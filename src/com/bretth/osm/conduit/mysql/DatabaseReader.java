@@ -12,6 +12,11 @@ import com.bretth.osm.conduit.task.OsmRunnableSource;
 import com.bretth.osm.conduit.task.OsmSink;
 
 
+/**
+ * An OSM data source reading from a database.  The entire contents of the database are read.
+ * 
+ * @author Brett Henderson
+ */
 public class DatabaseReader implements OsmRunnableSource {
 	
 	private OsmSink osmSink;
@@ -21,6 +26,18 @@ public class DatabaseReader implements OsmRunnableSource {
 	private String password;
 	
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param host
+	 *            The server hosting the database.
+	 * @param database
+	 *            The database instance.
+	 * @param user
+	 *            The user name for authentication.
+	 * @param password
+	 *            The password for authentication.
+	 */
 	public DatabaseReader(String host, String database, String user, String password) {
 		this.host = host;
 		this.database = database;
@@ -29,16 +46,17 @@ public class DatabaseReader implements OsmRunnableSource {
 	}
 	
 	
-	public DatabaseReader(OsmSink osmSink) {
-		this.osmSink = osmSink;
-	}
-	
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setOsmSink(OsmSink osmSink) {
 		this.osmSink = osmSink;
 	}
 	
 	
+	/**
+	 * Reads all nodes from the database and sends to the sink.
+	 */
 	private void processNodes() {
 		NodeReader reader;
 		
@@ -55,6 +73,9 @@ public class DatabaseReader implements OsmRunnableSource {
 	}
 	
 	
+	/**
+	 * Reads all segments from the database and sends to the sink.
+	 */
 	private void processSegments() {
 		SegmentReader reader;
 		
@@ -71,6 +92,9 @@ public class DatabaseReader implements OsmRunnableSource {
 	}
 	
 	
+	/**
+	 * Reads all ways from the database and sends to the sink.
+	 */
 	private void processWays() {
 		WayReader wayReader;
 		WaySegmentReader waySegmentReader;
@@ -124,6 +148,9 @@ public class DatabaseReader implements OsmRunnableSource {
 	}
 	
 	
+	/**
+	 * Reads all data from the database and send it to the sink.
+	 */
 	public void run() {
 		try {
 			processNodes();

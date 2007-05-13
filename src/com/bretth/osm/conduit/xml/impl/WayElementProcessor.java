@@ -9,6 +9,11 @@ import com.bretth.osm.conduit.data.Tag;
 import com.bretth.osm.conduit.data.Way;
 
 
+/**
+ * Provides an element processor implementation for a way.
+ * 
+ * @author Brett Henderson
+ */
 public class WayElementProcessor extends BaseElementProcessor implements TagListener, SegmentReferenceListener {
 	private static final String ELEMENT_NAME_TAG = "tag";
 	private static final String ELEMENT_NAME_SEGMENT = "seg";
@@ -20,6 +25,12 @@ public class WayElementProcessor extends BaseElementProcessor implements TagList
 	private Way way;
 	
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param parentProcessor
+	 *            The parent element processor.
+	 */
 	public WayElementProcessor(BaseElementProcessor parentProcessor) {
 		super(parentProcessor);
 		
@@ -28,11 +39,9 @@ public class WayElementProcessor extends BaseElementProcessor implements TagList
 	}
 	
 	
-	public void reset() {
-		way = null;
-	}
-	
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void begin(Attributes attributes) {
 		long id;
 		Date timestamp;
@@ -44,28 +53,58 @@ public class WayElementProcessor extends BaseElementProcessor implements TagList
 	}
 	
 	
+	/**
+	 * Retrieves the appropriate child element processor for the newly
+	 * encountered nested element.
+	 * 
+	 * @param uri
+	 *            The element uri.
+	 * @param localName
+	 *            The element localName.
+	 * @param qName
+	 *            The element qName.
+	 * @return The appropriate element processor for the nested element.
+	 */
+	@Override
 	public ElementProcessor getChild(String uri, String localName, String qName) {
 		if (ELEMENT_NAME_SEGMENT.equals(qName)) {
 			return segmentReferenceElementProcessor;
 		} else if (ELEMENT_NAME_TAG.equals(qName)) {
-				return tagElementProcessor;
-		} else {
-			return getDummyChildProcessor();
+			return tagElementProcessor;
 		}
+		
+		return super.getChild(uri, localName, qName);
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void end() {
 		getOsmSink().addWay(way);
-		reset();
+		way = null;
 	}
 	
 	
+	/**
+	 * This is called by child element processors when a tag object is
+	 * encountered.
+	 * 
+	 * @param tag
+	 *            The tag to be processed.
+	 */
 	public void processTag(Tag tag) {
 		way.addTag(tag);
 	}
 
 
+	/**
+	 * This is called by child element processors when a segment reference
+	 * object is encountered.
+	 * 
+	 * @param segmentReference
+	 *            The segmentReference to be processed.
+	 */
 	public void processSegmentReference(SegmentReference segmentReference) {
 		way.addSegmentReference(segmentReference);	
 	}

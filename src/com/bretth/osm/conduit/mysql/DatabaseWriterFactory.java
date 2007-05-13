@@ -7,6 +7,11 @@ import com.bretth.osm.conduit.pipeline.TaskManager;
 import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
 
 
+/**
+ * The task manager factory for a database writer.
+ * 
+ * @author Brett Henderson
+ */
 public class DatabaseWriterFactory extends TaskManagerFactory {
 	private static final String TASK_TYPE = "write-mysql";
 	private static final String ARG_HOST = "host";
@@ -19,6 +24,9 @@ public class DatabaseWriterFactory extends TaskManagerFactory {
 	private static final String DEFAULT_PASSWORD = "";
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
 		String host;
@@ -40,6 +48,9 @@ public class DatabaseWriterFactory extends TaskManagerFactory {
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected String getTaskType() {
 		return TASK_TYPE;

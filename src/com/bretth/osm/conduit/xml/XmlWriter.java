@@ -18,11 +18,20 @@ import com.bretth.osm.conduit.data.Way;
 import com.bretth.osm.conduit.task.OsmSink;
 
 
+/**
+ * An OSM data sink for storing all data to an xml file.
+ * 
+ * @author Brett Henderson
+ */
 public class XmlWriter implements OsmSink {
 	
+	/**
+	 * Defines the characters that must be replaced by an encoded string when writing to XML.
+	 */
 	private final static Map<Character, String> xmlEncoding;
 	
 	static {
+		// Define all the characters and their encodings.
 		xmlEncoding = new HashMap<Character, String>();
 		
 		xmlEncoding.put(new Character('<'), "&lt;");
@@ -41,21 +50,26 @@ public class XmlWriter implements OsmSink {
 	private BufferedWriter writer;
 	
 	
-	public XmlWriter() {
-		// Nothing to do here.
-	}
-	
-	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param file
+	 *            The file to write.
+	 */
 	public XmlWriter(File file) {
 		this.file = file;
 	}
 	
 	
-	public void setFile(File file) {
-		this.file = file;
-	}
-	
-	
+	/**
+	 * A utility method for encoding data in XML format.
+	 * 
+	 * @param data
+	 *            The data to be formatted.
+	 * 
+	 * @return The formatted data. This may be the input string if no changes
+	 *         are required.
+	 */
 	private String escapeData(String data) {
 		StringBuffer buffer = null;
 		
@@ -79,6 +93,14 @@ public class XmlWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * A utility method for encoding a data in the correct OSM format.
+	 * 
+	 * @param date
+	 *            The date to be formatted.
+	 * 
+	 * @return The string representing the date.
+	 */
 	private String formatDate(Date date) {
 		if (date != null) {
 			// TODO: Complete data formatting.
@@ -89,6 +111,12 @@ public class XmlWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Writes data to the output file.
+	 * 
+	 * @param data
+	 *            The data to be written.
+	 */
 	private void write(String data) {
 		try {
 			writer.write(data);
@@ -99,6 +127,9 @@ public class XmlWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Writes a new line in the output file.
+	 */
 	private void writeNewLine() {
 		try {
 			writer.newLine();
@@ -109,6 +140,9 @@ public class XmlWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Initialises the output file for writing.
+	 */
 	private void initialize() {
 		if (!initialized) {
 			try {
@@ -128,6 +162,12 @@ public class XmlWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Writes tags to the output file as xml.
+	 * 
+	 * @param tags
+	 *            The tags to be written.
+	 */
 	private void writeTags(List<Tag> tags) {
 		for (Tag tag : tags) {
 			write(
@@ -139,6 +179,12 @@ public class XmlWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Writes segment references to the output file as xml.
+	 * 
+	 * @param segRefs
+	 *            The segment references to be written.
+	 */
 	private void writeSegmentReferences(List<SegmentReference> segRefs) {
 		for (SegmentReference segRef : segRefs) {
 			write(
@@ -149,6 +195,12 @@ public class XmlWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Writes a node to the output file.
+	 * 
+	 * @param node
+	 *            The node to be written.
+	 */
 	public void addNode(Node node) {
 		initialize();
 		
@@ -175,6 +227,12 @@ public class XmlWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Writes a segment to the output file.
+	 * 
+	 * @param segment
+	 *            The segment to be written.
+	 */
 	public void addSegment(Segment segment) {
 		initialize();
 		
@@ -200,6 +258,12 @@ public class XmlWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Writes a way to the output file.
+	 * 
+	 * @param way
+	 *            The way to be written.
+	 */
 	public void addWay(Way way) {
 		initialize();
 		
@@ -225,6 +289,9 @@ public class XmlWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Writes the closing XML tags and closes the output file.
+	 */
 	public void complete() {
 		try {
 			write("</osm>");
@@ -241,7 +308,20 @@ public class XmlWriter implements OsmSink {
 	}
 	
 	
+	/**
+	 * Cleans up any open file handles.
+	 */
 	public void release() {
-		// Do nothing.
+		try {
+			if (writer != null) {
+				writer.close();
+			}
+			
+		} catch (Exception e) {
+			// Do nothing
+		} finally {
+			writer = null;
+			initialized = false;
+		}
 	}
 }

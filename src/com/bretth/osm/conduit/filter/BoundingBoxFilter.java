@@ -12,6 +12,12 @@ import com.bretth.osm.conduit.task.OsmSink;
 import com.bretth.osm.conduit.task.OsmTransformer;
 
 
+/**
+ * Provides a filter for extracting all elements that lie within a specific
+ * geographical box identified by latitude and longitude coordinates.
+ * 
+ * @author Brett Henderson
+ */
 public class BoundingBoxFilter implements OsmTransformer {
 	private OsmSink osmSink;
 	private double left;
@@ -22,6 +28,19 @@ public class BoundingBoxFilter implements OsmTransformer {
 	private BitSet availableSegments;
 	
 	
+	/**
+	 * Creates a new instance with the specified geographical coordinates. When
+	 * filtering, nodes right on the edge of the box will be included.
+	 * 
+	 * @param left
+	 *            The longitude marking the left edge of the bounding box.
+	 * @param right
+	 *            The longitude marking the right edge of the bounding box.
+	 * @param top
+	 *            The latitude marking the top edge of the bounding box.
+	 * @param bottom
+	 *            The latitude marking the bottom edge of the bounding box.
+	 */
 	public BoundingBoxFilter(double left, double right, double top, double bottom) {
 		this.left = left;
 		this.right = right;
@@ -33,6 +52,9 @@ public class BoundingBoxFilter implements OsmTransformer {
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void addNode(Node node) {
 		long nodeId;
 		double latitude;
@@ -56,6 +78,9 @@ public class BoundingBoxFilter implements OsmTransformer {
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void addSegment(Segment segment) {
 		long segmentId;
 		long nodeIdFrom;
@@ -76,21 +101,24 @@ public class BoundingBoxFilter implements OsmTransformer {
 			throw new ConduitRuntimeException("The bounding box filter can only handle node identifiers up to " + Integer.MAX_VALUE + ".");
 		}
 		
-		// Only add the segment if at least one of its nodes are within the bounding box.
-		if (availableNodes.get((int) nodeIdFrom) || availableNodes.get((int) nodeIdTo)) {
+		// Only add the segment if both of its nodes are within the bounding box.
+		if (availableNodes.get((int) nodeIdFrom) && availableNodes.get((int) nodeIdTo)) {
 			osmSink.addSegment(segment);
 			availableSegments.set((int) segmentId);
 		}
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void addWay(Way way) {
 		Way filteredWay;
 		
 		// Create a new way object to contain only items within the bounding box.
 		filteredWay = new Way(way.getId(), way.getTimestamp());
 		
-		// Only add segment references to segments that aren't within the bounding box.
+		// Only add segment references to segments that are within the bounding box.
 		for (SegmentReference segmentReference : way.getSegmentReferenceList()) {
 			long segmentId;
 			
@@ -114,21 +142,30 @@ public class BoundingBoxFilter implements OsmTransformer {
 				filteredWay.addTag(tag);
 			}
 			
-			osmSink.addWay(way);
+			osmSink.addWay(filteredWay);
 		}
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void complete() {
 		osmSink.complete();
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void release() {
 		osmSink.release();
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setOsmSink(OsmSink osmSink) {
 		this.osmSink = osmSink;
 	}

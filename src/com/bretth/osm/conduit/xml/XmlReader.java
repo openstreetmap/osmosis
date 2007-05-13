@@ -14,33 +14,56 @@ import com.bretth.osm.conduit.task.OsmRunnableSource;
 import com.bretth.osm.conduit.task.OsmSink;
 import com.bretth.osm.conduit.xml.impl.OsmHandler;
 
-
+/**
+ * An OSM data source reading from an xml file. The entire contents of the file
+ * are read.
+ * 
+ * @author Brett Henderson
+ */
 public class XmlReader implements OsmRunnableSource {
-	
 	private OsmSink osmSink;
 	private File file;
 	
 	
-	public XmlReader() {
-		// Nothing to do here.
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param file
+	 *            The file to read.
+	 */
+	public XmlReader(File file) {
+		this.file = file;
 	}
 	
 	
-	public XmlReader(OsmSink osmSink) {
-		this.osmSink = osmSink;
-	}
-	
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setOsmSink(OsmSink osmSink) {
 		this.osmSink = osmSink;
 	}
 	
 	
-	public void setFile(File file) {
-		this.file = file;
+	/**
+	 * Creates a new SAX parser.
+	 * 
+	 * @return The newly created SAX parser.
+	 */
+	private SAXParser createParser() {
+		try {
+			return SAXParserFactory.newInstance().newSAXParser();
+			
+		} catch (ParserConfigurationException e) {
+			throw new ConduitRuntimeException("Unable to create SAX Parser.", e);
+		} catch (SAXException e) {
+			throw new ConduitRuntimeException("Unable to create SAX Parser.", e);
+		}
 	}
 	
 	
+	/**
+	 * Reads all data from the file and send it to the sink.
+	 */
 	public void run() {
 		try {
 			SAXParser parser;
@@ -57,18 +80,6 @@ public class XmlReader implements OsmRunnableSource {
 			throw new ConduitRuntimeException("Unable to read XML file.", e);
 		} finally {
 			osmSink.release();
-		}
-	}
-	
-	
-	private SAXParser createParser() {
-		try {
-			return SAXParserFactory.newInstance().newSAXParser();
-			
-		} catch (ParserConfigurationException e) {
-			throw new ConduitRuntimeException("Unable to create SAX Parser.", e);
-		} catch (SAXException e) {
-			throw new ConduitRuntimeException("Unable to create SAX Parser.", e);
 		}
 	}
 }

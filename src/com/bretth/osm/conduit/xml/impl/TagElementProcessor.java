@@ -5,6 +5,11 @@ import org.xml.sax.Attributes;
 import com.bretth.osm.conduit.data.Tag;
 
 
+/**
+ * Provides an element processor implementation for a tag.
+ * 
+ * @author Brett Henderson
+ */
 public class TagElementProcessor extends BaseElementProcessor {
 	private static final String ATTRIBUTE_NAME_KEY = "k";
 	private static final String ATTRIBUTE_NAME_VALUE = "v";
@@ -13,6 +18,14 @@ public class TagElementProcessor extends BaseElementProcessor {
 	private Tag tag;
 	
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param parentProcessor
+	 *            The parent element processor.
+	 * @param tagListener
+	 *            The tag listener for receiving created tags.
+	 */
 	public TagElementProcessor(BaseElementProcessor parentProcessor, TagListener tagListener) {
 		super(parentProcessor);
 		
@@ -20,11 +33,9 @@ public class TagElementProcessor extends BaseElementProcessor {
 	}
 	
 	
-	public void reset() {
-		tag = null;
-	}
-	
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void begin(Attributes attributes) {
 		String key;
 		String value;
@@ -36,12 +47,11 @@ public class TagElementProcessor extends BaseElementProcessor {
 	}
 	
 	
-	public ElementProcessor getChild(String uri, String localName, String qName) {
-		return getDummyChildProcessor();
-	}
-	
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void end() {
 		tagListener.processTag(tag);
+		tag = null;
 	}
 }

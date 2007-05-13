@@ -5,6 +5,11 @@ import org.xml.sax.Attributes;
 import com.bretth.osm.conduit.task.OsmSink;
 
 
+/**
+ * Provides an element processor implementation for an osm root element.
+ * 
+ * @author Brett Henderson
+ */
 public class OsmElementProcessor extends BaseElementProcessor {
 	private static final String ELEMENT_NAME_NODE = "node";
 	private static final String ELEMENT_NAME_SEGMENT = "segment";
@@ -19,6 +24,12 @@ public class OsmElementProcessor extends BaseElementProcessor {
 	private WayElementProcessor wayElementProcessor;
 	
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param osmSink
+	 *            The destination for all processed data.
+	 */
 	public OsmElementProcessor(OsmSink osmSink) {
 		super(null);
 		
@@ -30,17 +41,20 @@ public class OsmElementProcessor extends BaseElementProcessor {
 	}
 	
 	
+	/**
+	 * Returns the destination for all processed data.
+	 * 
+	 * @return The osm sink.
+	 */
 	@Override
 	protected OsmSink getOsmSink() {
 		return osmSink;
 	}
 	
 	
-	public void reset() {
-		// This class maintains no state and doesn't require a reset.
-	}
-	
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void begin(Attributes attributes) {
 		String fileVersion;
 		
@@ -55,6 +69,19 @@ public class OsmElementProcessor extends BaseElementProcessor {
 	}
 	
 	
+	/**
+	 * Retrieves the appropriate child element processor for the newly
+	 * encountered nested element.
+	 * 
+	 * @param uri
+	 *            The element uri.
+	 * @param localName
+	 *            The element localName.
+	 * @param qName
+	 *            The element qName.
+	 * @return The appropriate element processor for the nested element.
+	 */
+	@Override
 	public ElementProcessor getChild(String uri, String localName, String qName) {
 		if (ELEMENT_NAME_NODE.equals(qName)) {
 			return nodeElementProcessor;
@@ -62,12 +89,15 @@ public class OsmElementProcessor extends BaseElementProcessor {
 			return segmentElementProcessor;
 		} else if (ELEMENT_NAME_WAY.equals(qName)) {
 			return wayElementProcessor;
-		} else {
-			return getDummyChildProcessor();
 		}
+		
+		return super.getChild(uri, localName, qName);
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void end() {
 		// This class produces no data and therefore doesn't need to do anything
 		// when the end of the element is reached.

@@ -8,12 +8,20 @@ import com.bretth.osm.conduit.pipeline.TaskManager;
 import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
 
 
+/**
+ * The task manager factory for an xml reader.
+ * 
+ * @author Brett Henderson
+ */
 public class XmlReaderFactory extends TaskManagerFactory {
 	private static final String TASK_TYPE = "read-osm";
 	private static final String ARG_FILE_NAME = "file";
 	private static final String DEFAULT_FILE_NAME = "dump.osm";
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
 		String fileName;
@@ -27,13 +35,15 @@ public class XmlReaderFactory extends TaskManagerFactory {
 		file = new File(fileName);
 		
 		// Build the task object.
-		task = new XmlReader();
-		task.setFile(file);
+		task = new XmlReader(file);
 		
 		return new OsmRunnableSourceManager(taskId, task, pipeArgs);
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected String getTaskType() {
 		return TASK_TYPE;

@@ -8,6 +8,11 @@ import com.bretth.osm.conduit.data.Node;
 import com.bretth.osm.conduit.data.Tag;
 
 
+/**
+ * Provides an element processor implementation for a node.
+ * 
+ * @author Brett Henderson
+ */
 public class NodeElementProcessor extends BaseElementProcessor implements TagListener {
 	private static final String ELEMENT_NAME_TAG = "tag";
 	private static final String ATTRIBUTE_NAME_ID = "id";
@@ -19,6 +24,12 @@ public class NodeElementProcessor extends BaseElementProcessor implements TagLis
 	private Node node;
 	
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param parentProcessor
+	 *            The parent element processor.
+	 */
 	public NodeElementProcessor(BaseElementProcessor parentProcessor) {
 		super(parentProcessor);
 		
@@ -26,11 +37,9 @@ public class NodeElementProcessor extends BaseElementProcessor implements TagLis
 	}
 	
 	
-	public void reset() {
-		node = null;
-	}
-	
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void begin(Attributes attributes) {
 		long id;
 		Date timestamp;
@@ -46,21 +55,44 @@ public class NodeElementProcessor extends BaseElementProcessor implements TagLis
 	}
 	
 	
+	/**
+	 * Retrieves the appropriate child element processor for the newly
+	 * encountered nested element.
+	 * 
+	 * @param uri
+	 *            The element uri.
+	 * @param localName
+	 *            The element localName.
+	 * @param qName
+	 *            The element qName.
+	 * @return The appropriate element processor for the nested element.
+	 */
+	@Override
 	public ElementProcessor getChild(String uri, String localName, String qName) {
 		if (ELEMENT_NAME_TAG.equals(qName)) {
 			return tagElementProcessor;
-		} else {
-			return getDummyChildProcessor();
 		}
+		
+		return super.getChild(uri, localName, qName);
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void end() {
 		getOsmSink().addNode(node);
-		reset();
+		node = null;
 	}
 	
 	
+	/**
+	 * This is called by child element processors when a tag object is
+	 * encountered.
+	 * 
+	 * @param tag
+	 *            The tag to be processed.
+	 */
 	public void processTag(Tag tag) {
 		node.addTag(tag);
 	}
