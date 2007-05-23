@@ -11,10 +11,8 @@ import java.util.List;
  * 
  * @author Brett Henderson
  */
-public class Way {
-	private long id;
+public class Way extends OsmElement implements Comparable<Way> {
 	private Date timestamp;
-	private List<Tag> tagList;
 	private List<SegmentReference> segmentReferenceList;
 	
 	
@@ -27,19 +25,96 @@ public class Way {
 	 *            The last updated timestamp.
 	 */
 	public Way(long id, Date timestamp) {
-		this.id = id;
+		super(id);
+		
 		this.timestamp = timestamp;
 		
-		tagList = new ArrayList<Tag>();
 		segmentReferenceList = new ArrayList<SegmentReference>();
 	}
 	
 	
 	/**
-	 * @return The id. 
+	 * Compares this tag list to the specified tag list. The tag comparison is
+	 * based on a comparison of key and value in that order.
+	 * 
+	 * @param comparisonSegmentReferenceList
+	 *            The segment reference list to compare to.
+	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
+	 *         "bigger".
 	 */
-	public long getId() {
-		return id;
+	protected int compareSegmentReferences(List<SegmentReference> comparisonSegmentReferenceList) {
+		List<SegmentReference> list1;
+		List<SegmentReference> list2;
+		
+		list1 = new ArrayList<SegmentReference>(segmentReferenceList);
+		list2 = new ArrayList<SegmentReference>(comparisonSegmentReferenceList);
+		
+		Collections.sort(list1);
+		Collections.sort(list2);
+		
+		// The list with the most elements is considered bigger.
+		if (list1.size() != list2.size()) {
+			return list1.size() - list2.size();
+		}
+		
+		// Check the individual segment references.
+		for (int i = 0; i < list1.size(); i++) {
+			int result = list1.get(i).compareTo(list2.get(i));
+			
+			if (result != 0) {
+				return result;
+			}
+		}
+		
+		// There are no differences.
+		return 0;
+	}
+
+
+	/**
+	 * Compares this way to the specified way. The way comparison is based on a
+	 * comparison of id, timestamp, segmentReferenceList and tags in that order.
+	 * 
+	 * @param comparisonWay
+	 *            The way to compare to.
+	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
+	 *         "bigger".
+	 */
+	public int compareTo(Way comparisonWay) {
+		int segmentReferenceListResult;
+		
+		if (this.getId() < comparisonWay.getId()) {
+			return -1;
+		}
+		if (this.getId() > comparisonWay.getId()) {
+			return 1;
+		}
+		
+		if (this.timestamp == null && comparisonWay.timestamp != null) {
+			return -1;
+		}
+		if (this.timestamp != null && comparisonWay.timestamp == null) {
+			return 1;
+		}
+		if (this.timestamp != null && comparisonWay.timestamp != null) {
+			int result;
+			
+			result = this.timestamp.compareTo(comparisonWay.timestamp);
+			
+			if (result != 0) {
+				return result;
+			}
+		}
+		
+		segmentReferenceListResult = compareSegmentReferences(
+			comparisonWay.getSegmentReferenceList()
+		);
+		
+		if (segmentReferenceListResult != 0) {
+			return segmentReferenceListResult;
+		}
+		
+		return compareTags(comparisonWay.getTagList());
 	}
 	
 	
@@ -52,16 +127,6 @@ public class Way {
 	
 	
 	/**
-	 * Returns the attached list of tags. The returned list is read-only.
-	 * 
-	 * @return The tagList.
-	 */
-	public List<Tag> getTagList() {
-		return Collections.unmodifiableList(tagList);
-	}
-	
-	
-	/**
 	 * Returns the attached list of segment references. The returned list is
 	 * read-only.
 	 * 
@@ -69,17 +134,6 @@ public class Way {
 	 */
 	public List<SegmentReference> getSegmentReferenceList() {
 		return Collections.unmodifiableList(segmentReferenceList);
-	}
-	
-	
-	/**
-	 * Adds a new tag.
-	 * 
-	 * @param tag
-	 *            The tag to add.
-	 */
-	public void addTag(Tag tag) {
-		tagList.add(tag);
 	}
 	
 	

@@ -3,7 +3,7 @@ package com.bretth.osm.conduit.xml;
 import java.io.File;
 import java.util.Map;
 
-import com.bretth.osm.conduit.pipeline.OsmRunnableSourceManager;
+import com.bretth.osm.conduit.pipeline.RunnableSourceManager;
 import com.bretth.osm.conduit.pipeline.TaskManager;
 import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
 
@@ -37,7 +37,7 @@ public class XmlReaderFactory extends TaskManagerFactory {
 		// Build the task object.
 		task = new XmlReader(file);
 		
-		return new OsmRunnableSourceManager(taskId, task, pipeArgs);
+		return new RunnableSourceManager(taskId, task, pipeArgs);
 	}
 	
 	

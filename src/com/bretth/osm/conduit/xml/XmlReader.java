@@ -10,8 +10,8 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXException;
 
 import com.bretth.osm.conduit.ConduitRuntimeException;
-import com.bretth.osm.conduit.task.OsmRunnableSource;
-import com.bretth.osm.conduit.task.OsmSink;
+import com.bretth.osm.conduit.task.RunnableSource;
+import com.bretth.osm.conduit.task.Sink;
 import com.bretth.osm.conduit.xml.impl.OsmHandler;
 
 /**
@@ -20,8 +20,8 @@ import com.bretth.osm.conduit.xml.impl.OsmHandler;
  * 
  * @author Brett Henderson
  */
-public class XmlReader implements OsmRunnableSource {
-	private OsmSink osmSink;
+public class XmlReader implements RunnableSource {
+	private Sink sink;
 	private File file;
 	
 	
@@ -39,8 +39,8 @@ public class XmlReader implements OsmRunnableSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setOsmSink(OsmSink osmSink) {
-		this.osmSink = osmSink;
+	public void setSink(Sink sink) {
+		this.sink = sink;
 	}
 	
 	
@@ -70,16 +70,16 @@ public class XmlReader implements OsmRunnableSource {
 			
 			parser = createParser();
 			
-			parser.parse(file, new OsmHandler(osmSink));
+			parser.parse(file, new OsmHandler(sink));
 			
-			osmSink.complete();
+			sink.complete();
 			
 		} catch (SAXException e) {
 			throw new ConduitRuntimeException("Unable to parse XML.", e);
 		} catch (IOException e) {
 			throw new ConduitRuntimeException("Unable to read XML file.", e);
 		} finally {
-			osmSink.release();
+			sink.release();
 		}
 	}
 }

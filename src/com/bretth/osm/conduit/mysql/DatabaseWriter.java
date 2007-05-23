@@ -14,7 +14,7 @@ import com.bretth.osm.conduit.data.Way;
 import com.bretth.osm.conduit.mysql.impl.DatabaseContext;
 import com.bretth.osm.conduit.mysql.impl.WaySegment;
 import com.bretth.osm.conduit.mysql.impl.WayTag;
-import com.bretth.osm.conduit.task.OsmSink;
+import com.bretth.osm.conduit.task.Sink;
 
 
 /**
@@ -23,7 +23,7 @@ import com.bretth.osm.conduit.task.OsmSink;
  * 
  * @author Brett Henderson
  */
-public class DatabaseWriter implements OsmSink {
+public class DatabaseWriter implements Sink {
 	private static final String INSERT_SQL_NODE =
 		"INSERT INTO nodes(id, latitude, longitude, tags)";
 	private static final int INSERT_PRM_COUNT_NODE = 4;

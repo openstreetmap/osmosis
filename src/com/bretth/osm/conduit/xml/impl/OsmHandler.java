@@ -5,7 +5,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.bretth.osm.conduit.ConduitRuntimeException;
-import com.bretth.osm.conduit.task.OsmSink;
+import com.bretth.osm.conduit.task.Sink;
 
 
 /**
@@ -32,7 +32,7 @@ public class OsmHandler extends DefaultHandler {
 	/**
 	 * @param osmSink The new osmSink to write data to.
 	 */
-	public OsmHandler(OsmSink osmSink) {
+	public OsmHandler(Sink osmSink) {
 		osmElementProcessor = new OsmElementProcessor(osmSink);
 	}
 	

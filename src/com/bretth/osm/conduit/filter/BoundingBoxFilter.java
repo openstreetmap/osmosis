@@ -8,8 +8,8 @@ import com.bretth.osm.conduit.data.Segment;
 import com.bretth.osm.conduit.data.SegmentReference;
 import com.bretth.osm.conduit.data.Tag;
 import com.bretth.osm.conduit.data.Way;
-import com.bretth.osm.conduit.task.OsmSink;
-import com.bretth.osm.conduit.task.OsmTransformer;
+import com.bretth.osm.conduit.task.Sink;
+import com.bretth.osm.conduit.task.SinkSource;
 
 
 /**
@@ -18,8 +18,8 @@ import com.bretth.osm.conduit.task.OsmTransformer;
  * 
  * @author Brett Henderson
  */
-public class BoundingBoxFilter implements OsmTransformer {
-	private OsmSink osmSink;
+public class BoundingBoxFilter implements SinkSource {
+	private Sink osmSink;
 	private double left;
 	private double right;
 	private double top;
@@ -166,7 +166,7 @@ public class BoundingBoxFilter implements OsmTransformer {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setOsmSink(OsmSink osmSink) {
+	public void setSink(Sink osmSink) {
 		this.osmSink = osmSink;
 	}
 }

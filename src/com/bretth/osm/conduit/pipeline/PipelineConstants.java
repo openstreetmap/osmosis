@@ -7,7 +7,7 @@ package com.bretth.osm.conduit.pipeline;
  * @author Brett Henderson
  */
 public interface PipelineConstants {
-	
+
 	/**
 	 * Defines the prefix used for command line task arguments.
 	 */
@@ -24,8 +24,8 @@ public interface PipelineConstants {
 	final String OUT_PIPE_ARGUMENT_PREFIX = "outPipe";
 
 	/**
-	 * Defines the name of the default pipe name to be used when no pipe is
+	 * Defines the prefix for default pipe names used when no pipes are
 	 * specified.
 	 */
-	final String DEFAULT_PIPE_NAME = "default";
+	final String DEFAULT_PIPE_PREFIX = "default";
 }

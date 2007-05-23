@@ -1,5 +1,7 @@
 package com.bretth.osm.conduit; 
 
+import com.bretth.osm.conduit.change.ChangeApplierFactory;
+import com.bretth.osm.conduit.change.ChangeDeriverFactory;
 import com.bretth.osm.conduit.filter.BoundingBoxFilterFactory;
 import com.bretth.osm.conduit.mysql.DatabaseReaderFactory;
 import com.bretth.osm.conduit.mysql.DatabaseWriterFactory;
@@ -44,5 +46,7 @@ public class Conduit {
 		new XmlReaderFactory();
 		new XmlWriterFactory();
 		new BoundingBoxFilterFactory();
+		new ChangeDeriverFactory();
+		new ChangeApplierFactory();
 	}
 }

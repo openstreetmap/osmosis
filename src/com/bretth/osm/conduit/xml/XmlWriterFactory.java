@@ -3,7 +3,7 @@ package com.bretth.osm.conduit.xml;
 import java.io.File;
 import java.util.Map;
 
-import com.bretth.osm.conduit.pipeline.OsmSinkManager;
+import com.bretth.osm.conduit.pipeline.SinkManager;
 import com.bretth.osm.conduit.pipeline.TaskManager;
 import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
 
@@ -37,7 +37,7 @@ public class XmlWriterFactory extends TaskManagerFactory {
 		// Build the task object.
 		task = new XmlWriter(file);
 		
-		return new OsmSinkManager(taskId, task, pipeArgs);
+		return new SinkManager(taskId, task, pipeArgs);
 	}
 	
 	

@@ -8,7 +8,7 @@ package com.bretth.osm.conduit.task;
  * 
  * @author Brett Henderson
  */
-public interface OsmRunnableSource extends OsmSource, Runnable {
+public interface RunnableSource extends Source, Runnable {
 	// This interface combines OsmSource and Runnable but doesn't introduce
 	// methods of its own.
 }

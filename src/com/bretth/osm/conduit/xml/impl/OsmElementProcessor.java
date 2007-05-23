@@ -2,7 +2,7 @@ package com.bretth.osm.conduit.xml.impl;
 
 import org.xml.sax.Attributes;
 
-import com.bretth.osm.conduit.task.OsmSink;
+import com.bretth.osm.conduit.task.Sink;
 
 
 /**
@@ -18,7 +18,7 @@ public class OsmElementProcessor extends BaseElementProcessor {
 	private static final String ATTRIBUTE_VALUE_VERSION = "0.3";
 	
 	
-	private OsmSink osmSink;
+	private Sink osmSink;
 	private NodeElementProcessor nodeElementProcessor;
 	private SegmentElementProcessor segmentElementProcessor;
 	private WayElementProcessor wayElementProcessor;
@@ -30,7 +30,7 @@ public class OsmElementProcessor extends BaseElementProcessor {
 	 * @param osmSink
 	 *            The destination for all processed data.
 	 */
-	public OsmElementProcessor(OsmSink osmSink) {
+	public OsmElementProcessor(Sink osmSink) {
 		super(null);
 		
 		this.osmSink = osmSink;
@@ -47,7 +47,7 @@ public class OsmElementProcessor extends BaseElementProcessor {
 	 * @return The osm sink.
 	 */
 	@Override
-	protected OsmSink getOsmSink() {
+	protected Sink getOsmSink() {
 		return osmSink;
 	}
 	

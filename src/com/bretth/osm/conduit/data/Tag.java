@@ -6,7 +6,7 @@ package com.bretth.osm.conduit.data;
  * 
  * @author Brett Henderson
  */
-public class Tag {
+public class Tag implements Comparable<Tag> {
 	private String key;
 	private String value;
 	
@@ -22,6 +22,28 @@ public class Tag {
 	public Tag(String key, String value) {
 		this.key = key;
 		this.value = value;
+	}
+	
+	
+	/**
+	 * Compares this tag to the specified tag. The tag comparison is based on
+	 * a comparison of key and value in that order.
+	 * 
+	 * @param tag
+	 *            The tag to compare to.
+	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
+	 *         "bigger".
+	 */
+	public int compareTo(Tag tag) {
+		int keyResult;
+		
+		keyResult = this.key.compareTo(tag.key);
+		
+		if (keyResult != 0) {
+			return keyResult;
+		}
+		
+		return this.value.compareTo(tag.value);
 	}
 	
 	

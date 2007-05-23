@@ -15,7 +15,7 @@ import com.bretth.osm.conduit.data.Segment;
 import com.bretth.osm.conduit.data.SegmentReference;
 import com.bretth.osm.conduit.data.Tag;
 import com.bretth.osm.conduit.data.Way;
-import com.bretth.osm.conduit.task.OsmSink;
+import com.bretth.osm.conduit.task.Sink;
 
 
 /**
@@ -23,7 +23,7 @@ import com.bretth.osm.conduit.task.OsmSink;
  * 
  * @author Brett Henderson
  */
-public class XmlWriter implements OsmSink {
+public class XmlWriter implements Sink {
 	
 	/**
 	 * Defines the characters that must be replaced by an encoded string when writing to XML.

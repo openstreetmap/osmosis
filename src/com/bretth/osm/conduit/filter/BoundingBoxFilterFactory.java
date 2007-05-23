@@ -2,7 +2,7 @@ package com.bretth.osm.conduit.filter;
 
 import java.util.Map;
 
-import com.bretth.osm.conduit.pipeline.OsmTransformerManager;
+import com.bretth.osm.conduit.pipeline.SinkSourceManager;
 import com.bretth.osm.conduit.pipeline.TaskManager;
 import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
 
@@ -40,7 +40,7 @@ public class BoundingBoxFilterFactory extends TaskManagerFactory {
 		top = getDoubleArgument(taskArgs, ARG_TOP, DEFAULT_TOP);
 		bottom = getDoubleArgument(taskArgs, ARG_BOTTOM, DEFAULT_BOTTOM);
 		
-		return new OsmTransformerManager(
+		return new SinkSourceManager(
 			taskId,
 			new BoundingBoxFilter(left, right, top, bottom),
 			pipeArgs

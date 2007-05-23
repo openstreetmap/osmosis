@@ -8,8 +8,8 @@ import com.bretth.osm.conduit.mysql.impl.WaySegment;
 import com.bretth.osm.conduit.mysql.impl.WaySegmentReader;
 import com.bretth.osm.conduit.mysql.impl.WayTag;
 import com.bretth.osm.conduit.mysql.impl.WayTagReader;
-import com.bretth.osm.conduit.task.OsmRunnableSource;
-import com.bretth.osm.conduit.task.OsmSink;
+import com.bretth.osm.conduit.task.RunnableSource;
+import com.bretth.osm.conduit.task.Sink;
 
 
 /**
@@ -17,9 +17,9 @@ import com.bretth.osm.conduit.task.OsmSink;
  * 
  * @author Brett Henderson
  */
-public class DatabaseReader implements OsmRunnableSource {
+public class DatabaseReader implements RunnableSource {
 	
-	private OsmSink osmSink;
+	private Sink sink;
 	private String host;
 	private String database;
 	private String user;
@@ -49,8 +49,8 @@ public class DatabaseReader implements OsmRunnableSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setOsmSink(OsmSink osmSink) {
-		this.osmSink = osmSink;
+	public void setSink(Sink sink) {
+		this.sink = sink;
 	}
 	
 	
@@ -64,7 +64,7 @@ public class DatabaseReader implements OsmRunnableSource {
 		
 		try {
 			while (reader.hasNext()) {
-				osmSink.addNode(reader.next());
+				sink.addNode(reader.next());
 			}
 			
 		} finally {
@@ -83,7 +83,7 @@ public class DatabaseReader implements OsmRunnableSource {
 		
 		try {
 			while (reader.hasNext()) {
-				osmSink.addSegment(reader.next());
+				sink.addSegment(reader.next());
 			}
 			
 		} finally {
@@ -137,7 +137,7 @@ public class DatabaseReader implements OsmRunnableSource {
 					}
 				}
 				
-				osmSink.addWay(way);
+				sink.addWay(way);
 			}
 			
 		} finally {
@@ -156,10 +156,10 @@ public class DatabaseReader implements OsmRunnableSource {
 			processNodes();
 			processSegments();
 			processWays();
-			osmSink.complete();
+			sink.complete();
 			
 		} finally {
-			osmSink.release();
+			sink.release();
 		}
 	}
 }

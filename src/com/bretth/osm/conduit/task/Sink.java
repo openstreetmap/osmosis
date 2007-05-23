@@ -10,7 +10,7 @@ import com.bretth.osm.conduit.data.Way;
  * 
  * @author Brett Henderson
  */
-public interface OsmSink extends Task {
+public interface Sink extends Task {
 	
 	/**
 	 * Process the node.

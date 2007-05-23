@@ -1,10 +1,6 @@
 package com.bretth.osm.conduit.data;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -12,12 +8,10 @@ import java.util.List;
  * 
  * @author Brett Henderson
  */
-public class Node {
-	private long id;
+public class Node extends OsmElement implements Comparable<Node> {
 	private Date timestamp;
 	private double latitude;
 	private double longitude;
-	private List<Tag> tagList;
 	
 	
 	/**
@@ -33,20 +27,57 @@ public class Node {
 	 *            The geographic longitude.
 	 */
 	public Node(long id, Date timestamp, double latitude, double longitude) {
-		this.id = id;
+		super(id);
+		
 		this.timestamp = timestamp;
 		this.latitude = latitude;
 		this.longitude = longitude;
-		
-		tagList = new ArrayList<Tag>();
 	}
-	
-	
+
+
 	/**
-	 * @return The id. 
+	 * Compares this node to the specified node. The node comparison is based on
+	 * a comparison of id, latitude, longitude and tags in that order.
+	 * 
+	 * @param comparisonNode
+	 *            The node to compare to.
+	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
+	 *         "bigger".
 	 */
-	public long getId() {
-		return id;
+	public int compareTo(Node comparisonNode) {
+		if (this.getId() < comparisonNode.getId()) {
+			return -1;
+		}
+		
+		if (this.getId() > comparisonNode.getId()) {
+			return 1;
+		}
+		
+		if (this.latitude < comparisonNode.latitude) {
+			return -1;
+		}
+		
+		if (this.latitude > comparisonNode.latitude) {
+			return 1;
+		}
+		
+		if (this.timestamp == null && comparisonNode.timestamp != null) {
+			return -1;
+		}
+		if (this.timestamp != null && comparisonNode.timestamp == null) {
+			return 1;
+		}
+		if (this.timestamp != null && comparisonNode.timestamp != null) {
+			int result;
+			
+			result = this.timestamp.compareTo(comparisonNode.timestamp);
+			
+			if (result != 0) {
+				return result;
+			}
+		}
+		
+		return compareTags(comparisonNode.getTagList());
 	}
 	
 	
@@ -71,37 +102,5 @@ public class Node {
 	 */
 	public double getLongitude() {
 		return longitude;
-	}
-	
-	
-	/**
-	 * Returns the attached list of tags. The returned list is read-only.
-	 * 
-	 * @return The tagList.
-	 */
-	public List<Tag> getTagList() {
-		return Collections.unmodifiableList(tagList);
-	}
-	
-	
-	/**
-	 * Adds a new tag.
-	 * 
-	 * @param tag
-	 *            The tag to add.
-	 */
-	public void addTag(Tag tag) {
-		tagList.add(tag);
-	}
-	
-	
-	/**
-	 * Adds all tags in the collection to the node.
-	 * 
-	 * @param tags
-	 *            The collection of tags to be added.
-	 */
-	public void addTags(Collection<Tag> tags) {
-		tagList.addAll(tags);
 	}
 }

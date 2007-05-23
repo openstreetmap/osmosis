@@ -2,7 +2,7 @@ package com.bretth.osm.conduit.xml.impl;
 
 import java.util.Date;
 
-import com.bretth.osm.conduit.task.OsmSink;
+import com.bretth.osm.conduit.task.Sink;
 
 
 /**
@@ -32,7 +32,7 @@ public abstract class BaseElementProcessor implements ElementProcessor {
 	/**
 	 * @return The osmSink.
 	 */
-	protected OsmSink getOsmSink() {
+	protected Sink getOsmSink() {
 		return parentProcessor.getOsmSink();
 	}
 	

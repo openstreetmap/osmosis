@@ -6,13 +6,13 @@ package com.bretth.osm.conduit.task;
  * 
  * @author Brett Henderson
  */
-public interface OsmSource extends Task {
+public interface Source extends Task {
 	
 	/**
 	 * Sets the osm sink to send data to.
 	 * 
-	 * @param osmSink
+	 * @param sink
 	 *            The sink for receiving all produced data.
 	 */
-	void setOsmSink(OsmSink osmSink);
+	void setSink(Sink sink);
 }

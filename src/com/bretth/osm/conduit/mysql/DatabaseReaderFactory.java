@@ -2,7 +2,7 @@ package com.bretth.osm.conduit.mysql;
 
 import java.util.Map;
 
-import com.bretth.osm.conduit.pipeline.OsmRunnableSourceManager;
+import com.bretth.osm.conduit.pipeline.RunnableSourceManager;
 import com.bretth.osm.conduit.pipeline.TaskManager;
 import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
 
@@ -40,7 +40,7 @@ public class DatabaseReaderFactory extends TaskManagerFactory {
 		user = getStringArgument(taskArgs, ARG_USER, DEFAULT_USER);
 		password = getStringArgument(taskArgs, ARG_PASSWORD, DEFAULT_PASSWORD);
 		
-		return new OsmRunnableSourceManager(
+		return new RunnableSourceManager(
 			taskId,
 			new DatabaseReader(host, database, user, password),
 			pipeArgs
