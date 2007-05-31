@@ -63,18 +63,13 @@ public abstract class TaskManagerFactory {
 
 	/**
 	 * Creates a new instance and adds the class to the global register.
-	 */
-	protected TaskManagerFactory() {
-		factoryMap.put(getTaskType(), this);
-	}
-
-	/**
-	 * Returns the identifier for the task type represented by this factory
-	 * instance.
 	 * 
-	 * @return The task type identifier.
+	 * @param taskType
+	 *            The name to register the type against.
 	 */
-	protected abstract String getTaskType();
+	protected TaskManagerFactory(String taskType) {
+		factoryMap.put(taskType, this);
+	}
 
 	/**
 	 * Create a new task manager containing a task instance.

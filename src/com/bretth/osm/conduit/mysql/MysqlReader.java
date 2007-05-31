@@ -17,7 +17,7 @@ import com.bretth.osm.conduit.task.Sink;
  * 
  * @author Brett Henderson
  */
-public class DatabaseReader implements RunnableSource {
+public class MysqlReader implements RunnableSource {
 	
 	private Sink sink;
 	private String host;
@@ -38,7 +38,7 @@ public class DatabaseReader implements RunnableSource {
 	 * @param password
 	 *            The password for authentication.
 	 */
-	public DatabaseReader(String host, String database, String user, String password) {
+	public MysqlReader(String host, String database, String user, String password) {
 		this.host = host;
 		this.database = database;
 		this.user = user;

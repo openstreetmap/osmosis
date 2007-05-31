@@ -13,8 +13,16 @@ import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
  * @author Brett Henderson
  */
 public class ChangeDeriverFactory extends TaskManagerFactory {
-	private static final String TASK_TYPE = "derive-change";
 	
+	/**
+	 * Creates a new instance and adds the class to the global register.
+	 * 
+	 * @param taskType
+	 *            The name to register the type against.
+	 */
+	public ChangeDeriverFactory(String taskType) {
+		super(taskType);
+	}
 	
 	/**
 	 * {@inheritDoc}
@@ -26,14 +34,5 @@ public class ChangeDeriverFactory extends TaskManagerFactory {
 			new ChangeDeriver(),
 			pipeArgs
 		);
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String getTaskType() {
-		return TASK_TYPE;
 	}
 }

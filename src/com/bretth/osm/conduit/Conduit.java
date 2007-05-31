@@ -3,9 +3,11 @@ package com.bretth.osm.conduit;
 import com.bretth.osm.conduit.change.ChangeApplierFactory;
 import com.bretth.osm.conduit.change.ChangeDeriverFactory;
 import com.bretth.osm.conduit.filter.BoundingBoxFilterFactory;
-import com.bretth.osm.conduit.mysql.DatabaseReaderFactory;
-import com.bretth.osm.conduit.mysql.DatabaseWriterFactory;
+import com.bretth.osm.conduit.mysql.MysqlReaderFactory;
+import com.bretth.osm.conduit.mysql.MysqlWriterFactory;
 import com.bretth.osm.conduit.pipeline.Pipeline;
+import com.bretth.osm.conduit.xml.XmlChangeReaderFactory;
+import com.bretth.osm.conduit.xml.XmlChangeWriterFactory;
 import com.bretth.osm.conduit.xml.XmlReaderFactory;
 import com.bretth.osm.conduit.xml.XmlWriterFactory;
 
@@ -41,12 +43,14 @@ public class Conduit {
 	 * Registers all task type factories available for use.
 	 */
 	private static void registerTasks() {
-		new DatabaseReaderFactory();
-		new DatabaseWriterFactory();
-		new XmlReaderFactory();
-		new XmlWriterFactory();
-		new BoundingBoxFilterFactory();
-		new ChangeDeriverFactory();
-		new ChangeApplierFactory();
+		new MysqlReaderFactory("read-mysql");
+		new MysqlWriterFactory("write-mysql");
+		new XmlReaderFactory("read-xml");
+		new XmlWriterFactory("write-xml");
+		new BoundingBoxFilterFactory("bounding-box");
+		new ChangeDeriverFactory("derive-change");
+		new ChangeApplierFactory("apply-change");
+		new XmlChangeReaderFactory("read-xml-change");
+		new XmlChangeWriterFactory("write-xml-change");
 	}
 }

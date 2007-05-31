@@ -6,6 +6,7 @@ import org.xml.sax.Attributes;
 
 import com.bretth.osm.conduit.data.Node;
 import com.bretth.osm.conduit.data.Tag;
+import com.bretth.osm.conduit.task.Sink;
 
 
 /**
@@ -13,7 +14,7 @@ import com.bretth.osm.conduit.data.Tag;
  * 
  * @author Brett Henderson
  */
-public class NodeElementProcessor extends BaseElementProcessor implements TagListener {
+public class NodeElementProcessor extends SourceElementProcessor implements TagListener {
 	private static final String ELEMENT_NAME_TAG = "tag";
 	private static final String ATTRIBUTE_NAME_ID = "id";
 	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
@@ -28,10 +29,12 @@ public class NodeElementProcessor extends BaseElementProcessor implements TagLis
 	 * Creates a new instance.
 	 * 
 	 * @param parentProcessor
-	 *            The parent element processor.
+	 *            The parent of this element processor.
+	 * @param sink
+	 *            The sink for receiving processed data.
 	 */
-	public NodeElementProcessor(BaseElementProcessor parentProcessor) {
-		super(parentProcessor);
+	public NodeElementProcessor(BaseElementProcessor parentProcessor, Sink sink) {
+		super(parentProcessor, sink);
 		
 		tagElementProcessor = new TagElementProcessor(this, this);
 	}
@@ -81,7 +84,7 @@ public class NodeElementProcessor extends BaseElementProcessor implements TagLis
 	 * {@inheritDoc}
 	 */
 	public void end() {
-		getOsmSink().addNode(node);
+		getSink().addNode(node);
 		node = null;
 	}
 	

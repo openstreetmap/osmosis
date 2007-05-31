@@ -13,7 +13,16 @@ import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
  * @author Brett Henderson
  */
 public class ChangeApplierFactory extends TaskManagerFactory {
-	private static final String TASK_TYPE = "apply-change";
+	
+	/**
+	 * Creates a new instance and adds the class to the global register.
+	 * 
+	 * @param taskType
+	 *            The name to register the type against.
+	 */
+	public ChangeApplierFactory(String taskType) {
+		super(taskType);
+	}
 	
 	
 	/**
@@ -26,14 +35,5 @@ public class ChangeApplierFactory extends TaskManagerFactory {
 			new ChangeApplier(),
 			pipeArgs
 		);
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String getTaskType() {
-		return TASK_TYPE;
 	}
 }

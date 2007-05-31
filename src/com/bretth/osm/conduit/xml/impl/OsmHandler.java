@@ -33,7 +33,7 @@ public class OsmHandler extends DefaultHandler {
 	 * @param osmSink The new osmSink to write data to.
 	 */
 	public OsmHandler(Sink osmSink) {
-		osmElementProcessor = new OsmElementProcessor(osmSink);
+		osmElementProcessor = new OsmElementProcessor(null, osmSink);
 	}
 	
 	

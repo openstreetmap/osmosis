@@ -23,7 +23,7 @@ import com.bretth.osm.conduit.task.Sink;
  * 
  * @author Brett Henderson
  */
-public class DatabaseWriter implements Sink {
+public class MysqlWriter implements Sink {
 	private static final String INSERT_SQL_NODE =
 		"INSERT INTO nodes(id, latitude, longitude, tags)";
 	private static final int INSERT_PRM_COUNT_NODE = 4;
@@ -151,7 +151,7 @@ public class DatabaseWriter implements Sink {
 	 * @param password
 	 *            The password for authentication.
 	 */
-	public DatabaseWriter(String host, String database, String user, String password) {
+	public MysqlWriter(String host, String database, String user, String password) {
 		dbCtx = new DatabaseContext(host, database, user, password);
 
 		nodeBuffer = new ArrayList<Node>();

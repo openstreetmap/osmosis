@@ -14,9 +14,19 @@ import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
  * @author Brett Henderson
  */
 public class XmlWriterFactory extends TaskManagerFactory {
-	private static final String TASK_TYPE = "write-osm";
 	private static final String ARG_FILE_NAME = "file";
 	private static final String DEFAULT_FILE_NAME = "dump.osm";
+
+	
+	/**
+	 * Creates a new instance and adds the class to the global register.
+	 * 
+	 * @param taskType
+	 *            The name to register the type against.
+	 */
+	public XmlWriterFactory(String taskType) {
+		super(taskType);
+	}
 	
 	
 	/**
@@ -38,14 +48,5 @@ public class XmlWriterFactory extends TaskManagerFactory {
 		task = new XmlWriter(file);
 		
 		return new SinkManager(taskId, task, pipeArgs);
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String getTaskType() {
-		return TASK_TYPE;
 	}
 }

@@ -12,8 +12,7 @@ import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
  * 
  * @author Brett Henderson
  */
-public class DatabaseReaderFactory extends TaskManagerFactory {
-	private static final String TASK_TYPE = "read-mysql";
+public class MysqlReaderFactory extends TaskManagerFactory {
 	private static final String ARG_HOST = "host";
 	private static final String ARG_DATABASE = "database";
 	private static final String ARG_USER = "user";
@@ -22,6 +21,17 @@ public class DatabaseReaderFactory extends TaskManagerFactory {
 	private static final String DEFAULT_DATABASE = "osm";
 	private static final String DEFAULT_USER = "osm";
 	private static final String DEFAULT_PASSWORD = "";
+	
+	
+	/**
+	 * Creates a new instance and adds the class to the global register.
+	 * 
+	 * @param taskType
+	 *            The name to register the type against.
+	 */
+	public MysqlReaderFactory(String taskType) {
+		super(taskType);
+	}
 	
 	
 	/**
@@ -42,17 +52,8 @@ public class DatabaseReaderFactory extends TaskManagerFactory {
 		
 		return new RunnableSourceManager(
 			taskId,
-			new DatabaseReader(host, database, user, password),
+			new MysqlReader(host, database, user, password),
 			pipeArgs
 		);
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String getTaskType() {
-		return TASK_TYPE;
 	}
 }

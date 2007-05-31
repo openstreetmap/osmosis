@@ -6,11 +6,11 @@ import com.bretth.osm.conduit.task.Sink;
 
 
 /**
- * Provides an element processor implementation for an osm root element.
+ * Provides an element processor implementation for an osm element.
  * 
  * @author Brett Henderson
  */
-public class OsmElementProcessor extends BaseElementProcessor {
+public class OsmElementProcessor extends SourceElementProcessor {
 	private static final String ELEMENT_NAME_NODE = "node";
 	private static final String ELEMENT_NAME_SEGMENT = "segment";
 	private static final String ELEMENT_NAME_WAY = "way";
@@ -18,7 +18,6 @@ public class OsmElementProcessor extends BaseElementProcessor {
 	private static final String ATTRIBUTE_VALUE_VERSION = "0.3";
 	
 	
-	private Sink osmSink;
 	private NodeElementProcessor nodeElementProcessor;
 	private SegmentElementProcessor segmentElementProcessor;
 	private WayElementProcessor wayElementProcessor;
@@ -27,28 +26,17 @@ public class OsmElementProcessor extends BaseElementProcessor {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param osmSink
-	 *            The destination for all processed data.
+	 * @param parentProcessor
+	 *            The parent of this element processor.
+	 * @param sink
+	 *            The sink for receiving processed data.
 	 */
-	public OsmElementProcessor(Sink osmSink) {
-		super(null);
+	public OsmElementProcessor(BaseElementProcessor parentProcessor, Sink sink) {
+		super(parentProcessor, sink);
 		
-		this.osmSink = osmSink;
-		
-		nodeElementProcessor = new NodeElementProcessor(this);
-		segmentElementProcessor = new SegmentElementProcessor(this);
-		wayElementProcessor = new WayElementProcessor(this);
-	}
-	
-	
-	/**
-	 * Returns the destination for all processed data.
-	 * 
-	 * @return The osm sink.
-	 */
-	@Override
-	protected Sink getOsmSink() {
-		return osmSink;
+		nodeElementProcessor = new NodeElementProcessor(this, getSink());
+		segmentElementProcessor = new SegmentElementProcessor(this, getSink());
+		wayElementProcessor = new WayElementProcessor(this, getSink());
 	}
 	
 	

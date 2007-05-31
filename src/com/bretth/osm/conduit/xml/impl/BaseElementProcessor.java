@@ -2,8 +2,6 @@ package com.bretth.osm.conduit.xml.impl;
 
 import java.util.Date;
 
-import com.bretth.osm.conduit.task.Sink;
-
 
 /**
  * Provides common functionality shared by element processor implementations.
@@ -26,14 +24,6 @@ public abstract class BaseElementProcessor implements ElementProcessor {
 		this.parentProcessor = parentProcessor;
 		
 		//dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	}
-	
-	
-	/**
-	 * @return The osmSink.
-	 */
-	protected Sink getOsmSink() {
-		return parentProcessor.getOsmSink();
 	}
 	
 	

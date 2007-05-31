@@ -13,7 +13,6 @@ import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
  * @author Brett Henderson
  */
 public class BoundingBoxFilterFactory extends TaskManagerFactory {
-	private static final String TASK_TYPE = "bounding-box";
 	private static final String ARG_LEFT = "left";
 	private static final String ARG_RIGHT = "right";
 	private static final String ARG_TOP = "top";
@@ -22,6 +21,17 @@ public class BoundingBoxFilterFactory extends TaskManagerFactory {
 	private static final String DEFAULT_RIGHT = "180";
 	private static final String DEFAULT_TOP = "90";
 	private static final String DEFAULT_BOTTOM = "-90";
+
+	
+	/**
+	 * Creates a new instance and adds the class to the global register.
+	 * 
+	 * @param taskType
+	 *            The name to register the type against.
+	 */
+	public BoundingBoxFilterFactory(String taskType) {
+		super(taskType);
+	}
 	
 	
 	/**
@@ -45,14 +55,5 @@ public class BoundingBoxFilterFactory extends TaskManagerFactory {
 			new BoundingBoxFilter(left, right, top, bottom),
 			pipeArgs
 		);
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String getTaskType() {
-		return TASK_TYPE;
 	}
 }

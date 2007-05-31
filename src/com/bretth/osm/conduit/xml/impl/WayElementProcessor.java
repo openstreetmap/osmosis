@@ -7,6 +7,7 @@ import org.xml.sax.Attributes;
 import com.bretth.osm.conduit.data.SegmentReference;
 import com.bretth.osm.conduit.data.Tag;
 import com.bretth.osm.conduit.data.Way;
+import com.bretth.osm.conduit.task.Sink;
 
 
 /**
@@ -14,7 +15,7 @@ import com.bretth.osm.conduit.data.Way;
  * 
  * @author Brett Henderson
  */
-public class WayElementProcessor extends BaseElementProcessor implements TagListener, SegmentReferenceListener {
+public class WayElementProcessor extends SourceElementProcessor implements TagListener, SegmentReferenceListener {
 	private static final String ELEMENT_NAME_TAG = "tag";
 	private static final String ELEMENT_NAME_SEGMENT = "seg";
 	private static final String ATTRIBUTE_NAME_ID = "id";
@@ -29,10 +30,12 @@ public class WayElementProcessor extends BaseElementProcessor implements TagList
 	 * Creates a new instance.
 	 * 
 	 * @param parentProcessor
-	 *            The parent element processor.
+	 *            The parent of this element processor.
+	 * @param sink
+	 *            The sink for receiving processed data.
 	 */
-	public WayElementProcessor(BaseElementProcessor parentProcessor) {
-		super(parentProcessor);
+	public WayElementProcessor(BaseElementProcessor parentProcessor, Sink sink) {
+		super(parentProcessor, sink);
 		
 		tagElementProcessor = new TagElementProcessor(this, this);
 		segmentReferenceElementProcessor = new SegmentReferenceElementProcessor(this, this);
@@ -81,7 +84,7 @@ public class WayElementProcessor extends BaseElementProcessor implements TagList
 	 * {@inheritDoc}
 	 */
 	public void end() {
-		getOsmSink().addWay(way);
+		getSink().addWay(way);
 		way = null;
 	}
 	

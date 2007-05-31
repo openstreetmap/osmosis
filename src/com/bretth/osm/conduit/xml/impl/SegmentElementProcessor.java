@@ -4,6 +4,7 @@ import org.xml.sax.Attributes;
 
 import com.bretth.osm.conduit.data.Segment;
 import com.bretth.osm.conduit.data.Tag;
+import com.bretth.osm.conduit.task.Sink;
 
 
 /**
@@ -11,7 +12,7 @@ import com.bretth.osm.conduit.data.Tag;
  * 
  * @author Brett Henderson
  */
-public class SegmentElementProcessor extends BaseElementProcessor implements TagListener {
+public class SegmentElementProcessor extends SourceElementProcessor implements TagListener {
 	private static final String ELEMENT_NAME_TAG = "tag";
 	private static final String ATTRIBUTE_NAME_ID = "id";
 	private static final String ATTRIBUTE_NAME_FROM = "from";
@@ -25,10 +26,12 @@ public class SegmentElementProcessor extends BaseElementProcessor implements Tag
 	 * Creates a new instance.
 	 * 
 	 * @param parentProcessor
-	 *            The parent element processor.
+	 *            The parent of this element processor.
+	 * @param sink
+	 *            The sink for receiving processed data.
 	 */
-	public SegmentElementProcessor(BaseElementProcessor parentProcessor) {
-		super(parentProcessor);
+	public SegmentElementProcessor(BaseElementProcessor parentProcessor, Sink sink) {
+		super(parentProcessor, sink);
 		
 		tagElementProcessor = new TagElementProcessor(this, this);
 	}
@@ -76,7 +79,7 @@ public class SegmentElementProcessor extends BaseElementProcessor implements Tag
 	 * {@inheritDoc}
 	 */
 	public void end() {
-		getOsmSink().addSegment(segment);
+		getSink().addSegment(segment);
 		segment = null;
 	}
 	
