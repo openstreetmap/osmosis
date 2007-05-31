@@ -19,7 +19,7 @@ import com.bretth.osm.conduit.task.SinkSource;
  * @author Brett Henderson
  */
 public class BoundingBoxFilter implements SinkSource {
-	private Sink osmSink;
+	private Sink sink;
 	private double left;
 	private double right;
 	private double top;
@@ -55,7 +55,7 @@ public class BoundingBoxFilter implements SinkSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addNode(Node node) {
+	public void processNode(Node node) {
 		long nodeId;
 		double latitude;
 		double longitude;
@@ -66,7 +66,7 @@ public class BoundingBoxFilter implements SinkSource {
 		
 		// Only add the node if it lies within the box boundaries.
 		if (top >= latitude && bottom <= latitude && left <= longitude && right >= longitude) {
-			osmSink.addNode(node);
+			sink.processNode(node);
 			
 			// Ensure that the node identifier can be represented as an integer.
 			if (nodeId > Integer.MAX_VALUE) {
@@ -81,7 +81,7 @@ public class BoundingBoxFilter implements SinkSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addSegment(Segment segment) {
+	public void processSegment(Segment segment) {
 		long segmentId;
 		long nodeIdFrom;
 		long nodeIdTo;
@@ -103,7 +103,7 @@ public class BoundingBoxFilter implements SinkSource {
 		
 		// Only add the segment if both of its nodes are within the bounding box.
 		if (availableNodes.get((int) nodeIdFrom) && availableNodes.get((int) nodeIdTo)) {
-			osmSink.addSegment(segment);
+			sink.processSegment(segment);
 			availableSegments.set((int) segmentId);
 		}
 	}
@@ -112,7 +112,7 @@ public class BoundingBoxFilter implements SinkSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addWay(Way way) {
+	public void processWay(Way way) {
 		Way filteredWay;
 		
 		// Create a new way object to contain only items within the bounding box.
@@ -142,7 +142,7 @@ public class BoundingBoxFilter implements SinkSource {
 				filteredWay.addTag(tag);
 			}
 			
-			osmSink.addWay(filteredWay);
+			sink.processWay(filteredWay);
 		}
 	}
 	
@@ -151,7 +151,7 @@ public class BoundingBoxFilter implements SinkSource {
 	 * {@inheritDoc}
 	 */
 	public void complete() {
-		osmSink.complete();
+		sink.complete();
 	}
 	
 	
@@ -159,14 +159,14 @@ public class BoundingBoxFilter implements SinkSource {
 	 * {@inheritDoc}
 	 */
 	public void release() {
-		osmSink.release();
+		sink.release();
 	}
 	
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setSink(Sink osmSink) {
-		this.osmSink = osmSink;
+	public void setSink(Sink sink) {
+		this.sink = sink;
 	}
 }

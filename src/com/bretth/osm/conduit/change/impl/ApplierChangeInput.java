@@ -67,7 +67,7 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 				// This element doesn't exist in the "base" source therefore we
 				// are expecting an add.
 				if (action.equals(ChangeAction.Create)) {
-					sharedInputState.sink.addNode(sharedInputState.lastChangeNode);
+					sharedInputState.sink.processNode(sharedInputState.lastChangeNode);
 					
 				} else {
 					throw new ConduitRuntimeException(
@@ -81,7 +81,7 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 				// The same element exists in both sources therefore we are
 				// expecting a modify or delete.
 				if (action.equals(ChangeAction.Modify)) {
-					sharedInputState.sink.addNode(sharedInputState.lastChangeNode);
+					sharedInputState.sink.processNode(sharedInputState.lastChangeNode);
 					
 				} else if (action.equals(ChangeAction.Delete)) {
 					// We don't need to do anything for delete.
@@ -145,7 +145,7 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 				// This element doesn't exist in the "base" source therefore we
 				// are expecting an add.
 				if (action.equals(ChangeAction.Create)) {
-					sharedInputState.sink.addSegment(sharedInputState.lastChangeSegment);
+					sharedInputState.sink.processSegment(sharedInputState.lastChangeSegment);
 					
 				} else {
 					throw new ConduitRuntimeException(
@@ -159,7 +159,7 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 				// The same element exists in both sources therefore we are
 				// expecting a modify or delete.
 				if (action.equals(ChangeAction.Modify)) {
-					sharedInputState.sink.addSegment(sharedInputState.lastChangeSegment);
+					sharedInputState.sink.processSegment(sharedInputState.lastChangeSegment);
 					
 				} else if (action.equals(ChangeAction.Delete)) {
 					// We don't need to do anything for delete.
@@ -223,7 +223,7 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 				// This element doesn't exist in the "base" source therefore we
 				// are expecting an add.
 				if (action.equals(ChangeAction.Create)) {
-					sharedInputState.sink.addWay(sharedInputState.lastChangeWay);
+					sharedInputState.sink.processWay(sharedInputState.lastChangeWay);
 					
 				} else {
 					throw new ConduitRuntimeException(
@@ -237,7 +237,7 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 				// The same element exists in both sources therefore we are
 				// expecting a modify or delete.
 				if (action.equals(ChangeAction.Modify)) {
-					sharedInputState.sink.addWay(sharedInputState.lastChangeWay);
+					sharedInputState.sink.processWay(sharedInputState.lastChangeWay);
 					
 				} else if (action.equals(ChangeAction.Delete)) {
 					// We don't need to do anything for delete.

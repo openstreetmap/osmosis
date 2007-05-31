@@ -84,7 +84,7 @@ public class NodeElementProcessor extends SourceElementProcessor implements TagL
 	 * {@inheritDoc}
 	 */
 	public void end() {
-		getSink().addNode(node);
+		getSink().processNode(node);
 		node = null;
 	}
 	

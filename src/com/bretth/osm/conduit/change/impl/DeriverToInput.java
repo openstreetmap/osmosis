@@ -30,7 +30,7 @@ public class DeriverToInput extends DeriverInput {
 	 * @param node
 	 *            The node to examine.
 	 */
-	public void addNode(Node node) {
+	public void processNode(Node node) {
 		sharedInputState.lock.lock();
 
 		try {
@@ -97,7 +97,7 @@ public class DeriverToInput extends DeriverInput {
 	 * @param segment
 	 *            The segment to examine.
 	 */
-	public void addSegment(Segment segment) {
+	public void processSegment(Segment segment) {
 		sharedInputState.lock.lock();
 
 		try {
@@ -164,7 +164,7 @@ public class DeriverToInput extends DeriverInput {
 	 * @param way
 	 *            The way to examine.
 	 */
-	public void addWay(Way way) {
+	public void processWay(Way way) {
 		sharedInputState.lock.lock();
 
 		try {

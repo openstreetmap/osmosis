@@ -30,7 +30,7 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 	 * @param node
 	 *            The node to examine.
 	 */
-	public void addNode(Node node) {
+	public void processNode(Node node) {
 		sharedInputState.lock.lock();
 
 		try {
@@ -67,7 +67,7 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 			if (comparisonOutcome == ComparisonOutcome.DifferentElement) {
 				// This element doesn't exist in the "change" source therefore it
 				// is unchanged and must be passed to the destination.
-				sharedInputState.sink.addNode(
+				sharedInputState.sink.processNode(
 					sharedInputState.lastBaseNode
 				);
 			}
@@ -87,7 +87,7 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 	 * @param segment
 	 *            The segment to examine.
 	 */
-	public void addSegment(Segment segment) {
+	public void processSegment(Segment segment) {
 		sharedInputState.lock.lock();
 
 		try {
@@ -124,7 +124,7 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 			if (comparisonOutcome == ComparisonOutcome.DifferentElement) {
 				// This element doesn't exist in the "change" source therefore it
 				// is unchanged and must be passed to the destination.
-				sharedInputState.sink.addSegment(
+				sharedInputState.sink.processSegment(
 					sharedInputState.lastBaseSegment
 				);
 			}
@@ -144,7 +144,7 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 	 * @param way
 	 *            The way to examine.
 	 */
-	public void addWay(Way way) {
+	public void processWay(Way way) {
 		sharedInputState.lock.lock();
 
 		try {
@@ -181,7 +181,7 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 			if (comparisonOutcome == ComparisonOutcome.DifferentElement) {
 				// This element doesn't exist in the "change" source therefore it
 				// is unchanged and must be passed to the destination.
-				sharedInputState.sink.addWay(
+				sharedInputState.sink.processWay(
 					sharedInputState.lastBaseWay
 				);
 			}

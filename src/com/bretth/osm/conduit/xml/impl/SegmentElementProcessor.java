@@ -79,7 +79,7 @@ public class SegmentElementProcessor extends SourceElementProcessor implements T
 	 * {@inheritDoc}
 	 */
 	public void end() {
-		getSink().addSegment(segment);
+		getSink().processSegment(segment);
 		segment = null;
 	}
 	

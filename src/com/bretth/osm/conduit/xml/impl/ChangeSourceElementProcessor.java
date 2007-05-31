@@ -122,7 +122,7 @@ public class ChangeSourceElementProcessor extends BaseElementProcessor {
 		/**
 		 * {@inheritDoc}
 		 */
-		public void addNode(Node node) {
+		public void processNode(Node node) {
 			changeSink.processNode(node, action);
 		}
 
@@ -130,7 +130,7 @@ public class ChangeSourceElementProcessor extends BaseElementProcessor {
 		/**
 		 * {@inheritDoc}
 		 */
-		public void addSegment(Segment segment) {
+		public void processSegment(Segment segment) {
 			changeSink.processSegment(segment, action);
 		}
 
@@ -138,7 +138,7 @@ public class ChangeSourceElementProcessor extends BaseElementProcessor {
 		/**
 		 * {@inheritDoc}
 		 */
-		public void addWay(Way way) {
+		public void processWay(Way way) {
 			changeSink.processWay(way, action);
 		}
 

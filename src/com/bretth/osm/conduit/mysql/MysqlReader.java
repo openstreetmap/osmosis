@@ -64,7 +64,7 @@ public class MysqlReader implements RunnableSource {
 		
 		try {
 			while (reader.hasNext()) {
-				sink.addNode(reader.next());
+				sink.processNode(reader.next());
 			}
 			
 		} finally {
@@ -83,7 +83,7 @@ public class MysqlReader implements RunnableSource {
 		
 		try {
 			while (reader.hasNext()) {
-				sink.addSegment(reader.next());
+				sink.processSegment(reader.next());
 			}
 			
 		} finally {
@@ -137,7 +137,7 @@ public class MysqlReader implements RunnableSource {
 					}
 				}
 				
-				sink.addWay(way);
+				sink.processWay(way);
 			}
 			
 		} finally {

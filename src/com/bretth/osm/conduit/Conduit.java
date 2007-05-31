@@ -3,6 +3,8 @@ package com.bretth.osm.conduit;
 import com.bretth.osm.conduit.change.ChangeApplierFactory;
 import com.bretth.osm.conduit.change.ChangeDeriverFactory;
 import com.bretth.osm.conduit.filter.BoundingBoxFilterFactory;
+import com.bretth.osm.conduit.misc.NullChangeWriterFactory;
+import com.bretth.osm.conduit.misc.NullWriterFactory;
 import com.bretth.osm.conduit.mysql.MysqlReaderFactory;
 import com.bretth.osm.conduit.mysql.MysqlWriterFactory;
 import com.bretth.osm.conduit.pipeline.Pipeline;
@@ -52,5 +54,7 @@ public class Conduit {
 		new ChangeApplierFactory("apply-change");
 		new XmlChangeReaderFactory("read-xml-change");
 		new XmlChangeWriterFactory("write-xml-change");
+		new NullWriterFactory("write-null");
+		new NullChangeWriterFactory("write-null-change");
 	}
 }

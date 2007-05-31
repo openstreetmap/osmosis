@@ -624,7 +624,7 @@ public class MysqlWriter implements Sink {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addNode(Node node) {
+	public void processNode(Node node) {
 		nodeBuffer.add(node);
 		
 		flushNodes(false);
@@ -634,7 +634,7 @@ public class MysqlWriter implements Sink {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addSegment(Segment segment) {
+	public void processSegment(Segment segment) {
 		flushNodes(true);
 		
 		segmentBuffer.add(segment);
@@ -646,7 +646,7 @@ public class MysqlWriter implements Sink {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addWay(Way way) {
+	public void processWay(Way way) {
 		flushSegments(true);
 		
 		wayBuffer.add(way);

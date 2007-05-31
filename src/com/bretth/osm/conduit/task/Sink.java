@@ -18,7 +18,7 @@ public interface Sink extends Task {
 	 * @param node
 	 *            The node to be processed.
 	 */
-	public void addNode(Node node);
+	public void processNode(Node node);
 	
 	/**
 	 * Process the segment.
@@ -26,7 +26,7 @@ public interface Sink extends Task {
 	 * @param segment
 	 *            The segment to be processed.
 	 */
-	public void addSegment(Segment segment);
+	public void processSegment(Segment segment);
 	
 	/**
 	 * Process the way.
@@ -34,7 +34,7 @@ public interface Sink extends Task {
 	 * @param way
 	 *            The way to be processed.
 	 */
-	public void addWay(Way way);
+	public void processWay(Way way);
 	
 	/**
 	 * Performs finalisation tasks such as database commits as necessary to

@@ -84,7 +84,7 @@ public class WayElementProcessor extends SourceElementProcessor implements TagLi
 	 * {@inheritDoc}
 	 */
 	public void end() {
-		getSink().addWay(way);
+		getSink().processWay(way);
 		way = null;
 	}
 	

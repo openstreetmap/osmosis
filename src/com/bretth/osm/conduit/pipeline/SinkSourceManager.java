@@ -8,7 +8,8 @@ import com.bretth.osm.conduit.task.Task;
 
 
 /**
- * A task manager implementation for Transformer task implementations.
+ * A task manager implementation for task performing sink and source
+ * functionality.
  * 
  * @author Brett Henderson
  */

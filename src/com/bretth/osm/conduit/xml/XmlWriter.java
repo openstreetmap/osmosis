@@ -96,7 +96,7 @@ public class XmlWriter implements Sink {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addNode(Node node) {
+	public void processNode(Node node) {
 		initialize();
 		osmWriter.processNode(writer, node);
 	}
@@ -105,7 +105,7 @@ public class XmlWriter implements Sink {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addSegment(Segment segment) {
+	public void processSegment(Segment segment) {
 		initialize();
 		osmWriter.processSegment(writer, segment);
 	}
@@ -114,7 +114,7 @@ public class XmlWriter implements Sink {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addWay(Way way) {
+	public void processWay(Way way) {
 		initialize();
 		osmWriter.processWay(writer, way);
 	}
