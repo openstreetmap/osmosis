@@ -27,4 +27,4 @@ public enum InputStatus {
 	 * The source has been completed sending all data.
 	 */
 	COMPLETE();
-};
+}
