@@ -4,7 +4,6 @@ import java.util.Map;
 
 import com.bretth.osm.conduit.task.ChangeSink;
 import com.bretth.osm.conduit.task.ChangeSource;
-import com.bretth.osm.conduit.task.Task;
 
 
 /**
@@ -40,7 +39,7 @@ public class ChangeSinkManager extends TaskManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void connect(Map<String, Task> pipeTasks) {
+	public void connect(PipeTasks pipeTasks) {
 		ChangeSource source;
 		
 		// Get the input task. A sink only has one input, this corresponds to

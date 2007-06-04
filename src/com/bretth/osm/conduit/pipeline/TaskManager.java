@@ -1,7 +1,6 @@
 package com.bretth.osm.conduit.pipeline;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.bretth.osm.conduit.ConduitRuntimeException;
@@ -18,8 +17,8 @@ import com.bretth.osm.conduit.task.Task;
  */
 public abstract class TaskManager {
 	private String taskId;
-	private List<String> inputPipes;
-	private List<String> outputPipes;
+	private Map<Integer, String> inputPipeNames;
+	private Map<Integer, String> outputPipeNames;
 	
 	
 	/**
@@ -36,8 +35,8 @@ public abstract class TaskManager {
 	protected TaskManager(String taskId, Map<String, String> pipeArgs) {
 		this.taskId = taskId;
 		
-		inputPipes = buildPipes(pipeArgs, true);
-		outputPipes = buildPipes(pipeArgs, false);
+		inputPipeNames = buildPipes(pipeArgs, true);
+		outputPipeNames = buildPipes(pipeArgs, false);
 	}
 	
 	
@@ -91,7 +90,7 @@ public abstract class TaskManager {
 	
 	
 	/**
-	 * Builds a list of pipes ordered by their specified index.
+	 * Builds a list of pipe names keyed by their specified index.
 	 * 
 	 * @param pipeArgs
 	 *            The task pipe arguments.
@@ -99,12 +98,12 @@ public abstract class TaskManager {
 	 *            If true will build the list of input pipes, else output pipes.
 	 * @return The list of pipe argument values.
 	 */
-	private List<String> buildPipes(Map<String, String> pipeArgs, boolean buildInputPipes) {
+	private Map<Integer, String> buildPipes(Map<String, String> pipeArgs, boolean buildInputPipes) {
 		String pipeArgumentPrefix;
 		String pipeType;
-		List<String> pipes;
+		Map<Integer, String> pipes;
 		
-		pipes = new ArrayList<String>();
+		pipes = new HashMap<Integer, String>();
 		
 		// Setup processing variables based on whether we're building input or
 		// output pipes.
@@ -116,7 +115,7 @@ public abstract class TaskManager {
 			pipeType = "output";
 		}
 		
-		// Iterate through all the pipes searching for input pipe definitions.
+		// Iterate through all the pipes searching for the required pipe definitions.
 		for (String pipeArgName : pipeArgs.keySet()) {
 			// It is an input pipe definition if starts with the input pipe prefix.
 			if (pipeArgName.indexOf(pipeArgumentPrefix) == 0) {
@@ -127,24 +126,12 @@ public abstract class TaskManager {
 				);
 				
 				// Ensure that there aren't two pipes with the same index.
-				if (pipes.size() > pipeIndex && pipes.get(pipeIndex) != null) {
+				if (pipes.containsKey(pipeIndex)) {
 					throw new ConduitRuntimeException("Task " + taskId + " has a duplicate " + pipeType + " pipe with index " + pipeIndex + ".");
 				}
 				
-				// Increase the list size to cater for the new pipe index if required.
-				for (int i = pipes.size(); i <= pipeIndex; i++) {
-					pipes.add(null);
-				}
-				
-				// The pipe is valid, so add it to the list of pipes at the correct index.
-				pipes.set(pipeIndex, pipeArgs.get(pipeArgName));
-			}
-			
-			// Verify that we have no null elements left in the list.
-			for (int i = 0; i < pipes.size(); i++) {
-				if (pipes.get(i) == null) {
-					throw new ConduitRuntimeException("Task " + taskId + " is missing " + pipeType + " pipe with index " + i + ".");
-				}
+				// The pipe is valid, so add it to the pipe map keyed by its index.
+				pipes.put(pipeIndex, pipeArgs.get(pipeArgName));
 			}
 		}
 		
@@ -164,27 +151,15 @@ public abstract class TaskManager {
 	 *            The required type of the input task.
 	 * @return The task to be used as input at the specified index.
 	 */
-	protected Task getInputTask(Map<String, Task> pipeTasks, int pipeIndex, Class<? extends Task> requiredTaskType) {
-		String pipeName;
+	protected Task getInputTask(PipeTasks pipeTasks, int pipeIndex, Class<? extends Task> requiredTaskType) {
 		Task inputTask;
 		
-		// If the name for the specified pipe index is not available, we need to
-		// generate a default pipe name.
-		if (inputPipes.size() > (pipeIndex + 1)) {
-			pipeName = inputPipes.get(pipeIndex);
+		// We use the specified pipe name if it exists, otherwise we get the
+		// next available default pipe.
+		if (inputPipeNames.containsKey(pipeIndex)) {
+			inputTask = pipeTasks.retrieveTask(taskId, inputPipeNames.get(pipeIndex), requiredTaskType);
 		} else {
-			pipeName = PipelineConstants.DEFAULT_PIPE_PREFIX + "." + pipeIndex;
-		}
-		
-		// Get the task writing to the input pipe.
-		if (!pipeTasks.containsKey(pipeName)) {
-			throw new ConduitRuntimeException("No pipe named " + pipeName + " is available as input for task " + taskId + ".");
-		}
-		inputTask = pipeTasks.remove(pipeName);
-		
-		// Ensure that the input task is of the correct type.
-		if (!requiredTaskType.isInstance(inputTask)) {
-			throw new ConduitRuntimeException("Task " + taskId + " does not support data provided by input pipe " + pipeName + ".");
+			inputTask = pipeTasks.retrieveTask(taskId, requiredTaskType);
 		}
 		
 		return inputTask;
@@ -201,26 +176,14 @@ public abstract class TaskManager {
 	 * @param pipeIndex
 	 *            The index of the pipe on the current task.
 	 */
-	protected void setOutputTask(Map<String, Task> pipeTasks, Task outputTask, int pipeIndex) {
-		String pipeName;
-		
-		// If the name for the specified pipe index is not available, we need to
-		// generate a default pipe name.
-		if (outputPipes.size() > (pipeIndex + 1)) {
-			pipeName = outputPipes.get(pipeIndex);
+	protected void setOutputTask(PipeTasks pipeTasks, Task outputTask, int pipeIndex) {
+		// We use the specified pipe name if it exists, otherwise we register
+		// using the next available default pipe name.
+		if (outputPipeNames.containsKey(pipeIndex)) {
+			pipeTasks.putTask(taskId, outputPipeNames.get(pipeIndex), outputTask);
 		} else {
-			pipeName = PipelineConstants.DEFAULT_PIPE_PREFIX + "." + pipeIndex;
+			pipeTasks.putTask(taskId, outputTask);
 		}
-		
-		// Verify that the output pipe is not already taken.
-		if (pipeTasks.containsKey(pipeName)) {
-			throw new ConduitRuntimeException("Task " + taskId
-					+ " cannot write to pipe " + pipeName
-					+ " because the pipe is already being written to.");
-		}
-		
-		// Register the task as writing to the pipe.
-		pipeTasks.put(pipeName, outputTask);
 	}
 	
 	
@@ -241,7 +204,7 @@ public abstract class TaskManager {
 	 *            The currently registered pipe tasks. This will be modified to
 	 *            remove any consumed inputs, and modified to add new outputs.
 	 */
-	public abstract void connect(Map<String, Task> pipeTasks);
+	public abstract void connect(PipeTasks pipeTasks);
 	
 	
 	/**

@@ -7,7 +7,6 @@ import com.bretth.osm.conduit.task.ChangeSource;
 import com.bretth.osm.conduit.task.Sink;
 import com.bretth.osm.conduit.task.SinkChangeSinkSource;
 import com.bretth.osm.conduit.task.Source;
-import com.bretth.osm.conduit.task.Task;
 
 
 /**
@@ -43,7 +42,7 @@ public class SinkChangeSinkSourceManager extends TaskManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void connect(Map<String, Task> pipeTasks) {
+	public void connect(PipeTasks pipeTasks) {
 		// A multi sink receives multiple streams of data, so we must connect
 		// them up one by one. In this case we will connect the sinks and then
 		// the change sinks.

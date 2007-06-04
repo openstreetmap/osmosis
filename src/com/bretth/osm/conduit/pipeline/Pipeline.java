@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.bretth.osm.conduit.ConduitRuntimeException;
-import com.bretth.osm.conduit.task.Task;
 
 
 /**
@@ -17,6 +18,7 @@ import com.bretth.osm.conduit.task.Task;
  * @author Brett Henderson
  */
 public class Pipeline {
+	private static final Logger log = Logger.getLogger(Pipeline.class.getName());
 	
 	private List<TaskManager> taskManagers;
 	
@@ -105,6 +107,10 @@ public class Pipeline {
 			TaskManagerFactory.createTaskManager(taskType, taskId, taskArgs, pipeArgs)
 		);
 		
+		if (log.isLoggable(Level.INFO)) {
+			log.info("Created task \"" + taskId + "\"");
+		}
+		
 		return i;
 	}
 	
@@ -117,7 +123,7 @@ public class Pipeline {
 	 * @param programArgs
 	 *            The command line arguments passed to this application.
 	 */
-	private void buildNodes(String [] programArgs) {
+	private void buildTasks(String [] programArgs) {
 		// Process the command line arguments to build all nodes in the pipeline.
 		for (int i = 0; i < programArgs.length; ) {
 			String arg;
@@ -141,17 +147,21 @@ public class Pipeline {
 	/**
 	 * Uses the pipe arguments specified for each task to connect the tasks appropriately.
 	 */
-	private void connectNodes() {
-		Map<String, Task> pipeTasks;
+	private void connectTasks() {
+		PipeTasks pipeTasks;
 		
 		// Create a container to map between the pipe name and the task that has
 		// last written to it.
-		pipeTasks = new HashMap<String, Task>();
+		pipeTasks = new PipeTasks();
 		
 		// Request each node to perform connection, each node will update the
 		// pipe tasks as it provides and consumes pipes.
 		for (TaskManager taskManager : taskManagers) {
 			taskManager.connect(pipeTasks);
+			
+			if (log.isLoggable(Level.INFO)) {
+				log.info("Connected task \"" + taskManager.getTaskId() + "\"");
+			}
 		}
 		
 		// Validate that no pipes are left without sinks.
@@ -160,7 +170,7 @@ public class Pipeline {
 			
 			// Build a list of pipes to include in the error.
 			pipes = new StringBuilder();
-			for (String pipeName : pipeTasks.keySet()) {
+			for (String pipeName : pipeTasks.getPipeNames()) {
 				if (pipes.length() > 0) {
 					pipes.append(", ");
 				}
@@ -179,11 +189,13 @@ public class Pipeline {
 	 *            The command line arguments for configuring the pipeline.
 	 */
 	public void prepare(String [] programArgs) {
-		// Process the command line arguments to build all nodes in the pipeline.
-		buildNodes(programArgs);
+		// Process the command line arguments to build all tasks in the pipeline.
+		log.fine("Building tasks.");
+		buildTasks(programArgs);
 		
 		// Connect the nodes in the pipeline.
-		connectNodes();
+		log.fine("Connecting tasks.");
+		connectTasks();
 	}
 	
 	

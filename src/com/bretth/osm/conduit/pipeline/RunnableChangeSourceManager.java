@@ -4,7 +4,6 @@ import java.util.Map;
 
 import com.bretth.osm.conduit.ConduitRuntimeException;
 import com.bretth.osm.conduit.task.RunnableChangeSource;
-import com.bretth.osm.conduit.task.Task;
 
 
 /**
@@ -43,7 +42,7 @@ public class RunnableChangeSourceManager extends TaskManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void connect(Map<String, Task> pipeTasks) {
+	public void connect(PipeTasks pipeTasks) {
 		// Register the task as an output. A source only has one output, this
 		// corresponds to pipe index 0.
 		setOutputTask(pipeTasks, task, 0);

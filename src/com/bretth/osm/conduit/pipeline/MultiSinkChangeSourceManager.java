@@ -5,7 +5,6 @@ import java.util.Map;
 import com.bretth.osm.conduit.task.MultiSinkChangeSource;
 import com.bretth.osm.conduit.task.Sink;
 import com.bretth.osm.conduit.task.Source;
-import com.bretth.osm.conduit.task.Task;
 
 
 /**
@@ -41,7 +40,7 @@ public class MultiSinkChangeSourceManager extends TaskManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void connect(Map<String, Task> pipeTasks) {
+	public void connect(PipeTasks pipeTasks) {
 		// A multi sink receives multiple streams of data, so we must connect
 		// them up one by one.
 		for (int i = 0; i < task.getSinkCount(); i++) {
