@@ -37,9 +37,6 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 		try {
 			ComparisonOutcome comparisonOutcome;
 			
-			// Ensure no errors have occurred.
-			validateNoErrors();
-			
 			// Ensure the new processing state and data are valid.
 			validateState(
 				sharedInputState.baseStatus,
@@ -51,6 +48,9 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 			// Update the state to match the new data.
 			sharedInputState.baseStatus = InputStatus.NODE_STAGE;
 			sharedInputState.lastBaseNode = node;
+			
+			// Notify the other source that new data is available.
+			sharedInputState.lockCondition.signal();
 
 			// Perform the comparison.
 			comparisonOutcome = performElementComparison(
@@ -68,6 +68,9 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastChangeNode;
 					}
+					public void validateNoErrors() {
+						validateNoErrors();
+					}
 				},
 				true
 			);
@@ -82,9 +85,6 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 					sharedInputState.lastBaseNode
 				);
 			}
-			
-			// Notify the other source that new data is available.
-			sharedInputState.lockCondition.signal();
 			
 		} finally {
 			sharedInputState.lock.unlock();
@@ -104,9 +104,6 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 		try {
 			ComparisonOutcome comparisonOutcome;
 			
-			// Ensure no errors have occurred.
-			validateNoErrors();
-			
 			// Ensure the new processing state and data are valid.
 			validateState(
 				sharedInputState.baseStatus,
@@ -118,6 +115,9 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 			// Update the state to match the new data.
 			sharedInputState.baseStatus = InputStatus.SEGMENT_STAGE;
 			sharedInputState.lastBaseSegment = segment;
+			
+			// Notify the other source that new data is available.
+			sharedInputState.lockCondition.signal();
 			
 			// Perform the comparison.
 			comparisonOutcome = performElementComparison(
@@ -135,6 +135,9 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastChangeSegment;
 					}
+					public void validateNoErrors() {
+						validateNoErrors();
+					}
 				},
 				true
 			);
@@ -149,9 +152,6 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 					sharedInputState.lastBaseSegment
 				);
 			}
-			
-			// Notify the other source that new data is available.
-			sharedInputState.lockCondition.signal();
 			
 		} finally {
 			sharedInputState.lock.unlock();
@@ -171,9 +171,6 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 		try {
 			ComparisonOutcome comparisonOutcome;
 			
-			// Ensure no errors have occurred.
-			validateNoErrors();
-			
 			// Ensure the new processing state and data are valid.
 			validateState(
 				sharedInputState.baseStatus,
@@ -185,6 +182,9 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 			// Update the state to match the new data.
 			sharedInputState.baseStatus = InputStatus.WAY_STAGE;
 			sharedInputState.lastBaseWay = way;
+			
+			// Notify the other source that new data is available.
+			sharedInputState.lockCondition.signal();
 			
 			// Perform the comparison.
 			comparisonOutcome = performElementComparison(
@@ -202,6 +202,9 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastChangeWay;
 					}
+					public void validateNoErrors() {
+						validateNoErrors();
+					}
 				},
 				true
 			);
@@ -216,9 +219,6 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 					sharedInputState.lastBaseWay
 				);
 			}
-			
-			// Notify the other source that new data is available.
-			sharedInputState.lockCondition.signal();
 			
 		} finally {
 			sharedInputState.lock.unlock();
@@ -245,6 +245,9 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 				sharedInputState.baseStatus = InputStatus.COMPLETE;
 			}
 			
+			// Notify the other source that new data is available.
+			sharedInputState.lockCondition.signal();
+			
 		} finally {
 			sharedInputState.lock.unlock();
 		}
@@ -266,6 +269,10 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 
 				sharedInputState.baseReleased = true;
 			}
+			
+			// Notify the other source that new data is available.
+			sharedInputState.lockCondition.signal();
+			
 		} finally {
 			sharedInputState.lock.unlock();
 		}

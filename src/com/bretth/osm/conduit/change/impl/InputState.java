@@ -19,9 +19,9 @@ public interface InputState {
 	
 	
 	/**
-	 * Gets the source status for the input being compared against.
+	 * Gets the source status for the other input.
 	 * 
-	 * @return The status
+	 * @return The status.
 	 */
 	public InputStatus getComparisonSourceStatus();
 	
@@ -35,10 +35,15 @@ public interface InputState {
 	
 	
 	/**
-	 * Gets the current element being processed by the source being compared
-	 * against.
+	 * Gets the current element being processed by the other source.
 	 * 
-	 * @return The current element of the comparison source.
+	 * @return The current element of the other source.
 	 */
 	public OsmElement getComparisonSourceElement();
+	
+	
+	/**
+	 * Ensures that no errors have occurred on the other input.
+	 */
+	public void validateNoErrors();
 }

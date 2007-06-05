@@ -36,9 +36,6 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 		try {
 			ComparisonOutcome comparisonOutcome;
 			
-			// Ensure no errors have occurred.
-			validateNoErrors();
-			
 			// Ensure the new processing state and data are valid.
 			validateState(
 				sharedInputState.changeStatus,
@@ -50,6 +47,9 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 			// Update the state to match the new data.
 			sharedInputState.changeStatus = InputStatus.NODE_STAGE;
 			sharedInputState.lastChangeNode = node;
+			
+			// Notify the other source that new data is available.
+			sharedInputState.lockCondition.signal();
 			
 			// Perform the comparison.
 			comparisonOutcome = performElementComparison(
@@ -67,6 +67,9 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastBaseNode;
 					}
+					public void validateNoErrors() {
+						validateNoErrors();
+					}
 				},
 				true
 			);
@@ -106,9 +109,6 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 				}
 			}
 			
-			// Notify the other source that new data is available.
-			sharedInputState.lockCondition.signal();
-			
 		} finally {
 			sharedInputState.lock.unlock();
 		}
@@ -124,9 +124,6 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 		try {
 			ComparisonOutcome comparisonOutcome;
 			
-			// Ensure no errors have occurred.
-			validateNoErrors();
-			
 			// Ensure the new processing state and data are valid.
 			validateState(
 				sharedInputState.changeStatus,
@@ -138,6 +135,9 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 			// Update the state to match the new data.
 			sharedInputState.changeStatus = InputStatus.SEGMENT_STAGE;
 			sharedInputState.lastChangeSegment = segment;
+			
+			// Notify the other source that new data is available.
+			sharedInputState.lockCondition.signal();
 			
 			// Perform the comparison.
 			comparisonOutcome = performElementComparison(
@@ -155,6 +155,9 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastBaseSegment;
 					}
+					public void validateNoErrors() {
+						validateNoErrors();
+					}
 				},
 				true
 			);
@@ -194,9 +197,6 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 				}
 			}
 			
-			// Notify the other source that new data is available.
-			sharedInputState.lockCondition.signal();
-			
 		} finally {
 			sharedInputState.lock.unlock();
 		}
@@ -212,9 +212,6 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 		try {
 			ComparisonOutcome comparisonOutcome;
 			
-			// Ensure no errors have occurred.
-			validateNoErrors();
-			
 			// Ensure the new processing state and data are valid.
 			validateState(
 				sharedInputState.changeStatus,
@@ -226,6 +223,9 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 			// Update the state to match the new data.
 			sharedInputState.changeStatus = InputStatus.WAY_STAGE;
 			sharedInputState.lastChangeWay = way;
+			
+			// Notify the other source that new data is available.
+			sharedInputState.lockCondition.signal();
 			
 			// Perform the comparison.
 			comparisonOutcome = performElementComparison(
@@ -243,6 +243,9 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastBaseWay;
 					}
+					public void validateNoErrors() {
+						validateNoErrors();
+					}
 				},
 				true
 			);
@@ -281,9 +284,6 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 					);
 				}
 			}
-			
-			// Notify the other source that new data is available.
-			sharedInputState.lockCondition.signal();
 			
 		} finally {
 			sharedInputState.lock.unlock();
@@ -310,6 +310,9 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 				sharedInputState.changeStatus = InputStatus.COMPLETE;
 			}
 			
+			// Notify the other source that new data is available.
+			sharedInputState.lockCondition.signal();
+			
 		} finally {
 			sharedInputState.lock.unlock();
 		}
@@ -331,6 +334,10 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 
 				sharedInputState.changeReleased = true;
 			}
+			
+			// Notify the other source that new data is available.
+			sharedInputState.lockCondition.signal();
+			
 		} finally {
 			sharedInputState.lock.unlock();
 		}

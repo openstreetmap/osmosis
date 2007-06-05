@@ -111,6 +111,10 @@ public abstract class BaseInput {
 		
 		// Loop until the other source reaches a point where we can continue.
 		for (;;) {
+			
+			// Ensure no errors have occurred.
+			inputState.validateNoErrors();
+			
 			// Check if we're at a lesser element than the other source.
 			if (
 					(inputState.getThisSourceStatus().compareTo(inputState.getComparisonSourceStatus()) < 0)
@@ -144,6 +148,7 @@ public abstract class BaseInput {
 			// No decisions can be made until the other source progresses
 			// further, we must wait.
 			try {
+				lockCondition.signal();
 				lockCondition.await();
 			} catch (InterruptedException e) {
 				throw new ConduitRuntimeException("Thread was interrupted.", e);

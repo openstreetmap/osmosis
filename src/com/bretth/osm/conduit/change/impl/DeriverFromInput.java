@@ -37,9 +37,6 @@ public class DeriverFromInput extends DeriverInput {
 		try {
 			ComparisonOutcome comparisonOutcome;
 			
-			// Ensure no errors have occurred.
-			validateNoErrors();
-			
 			// Ensure the new processing state and data are valid.
 			validateState(
 				sharedInputState.fromStatus,
@@ -70,6 +67,9 @@ public class DeriverFromInput extends DeriverInput {
 					}
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastToNode;
+					}
+					public void validateNoErrors() {
+						validateNoErrors();
 					}
 				},
 				true
@@ -105,9 +105,6 @@ public class DeriverFromInput extends DeriverInput {
 		try {
 			ComparisonOutcome comparisonOutcome;
 			
-			// Ensure no errors have occurred.
-			validateNoErrors();
-			
 			// Ensure the new processing state and data are valid.
 			validateState(
 				sharedInputState.fromStatus,
@@ -138,6 +135,9 @@ public class DeriverFromInput extends DeriverInput {
 					}
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastToSegment;
+					}
+					public void validateNoErrors() {
+						validateNoErrors();
 					}
 				},
 				true
@@ -173,9 +173,6 @@ public class DeriverFromInput extends DeriverInput {
 		try {
 			ComparisonOutcome comparisonOutcome;
 			
-			// Ensure no errors have occurred.
-			validateNoErrors();
-			
 			// Ensure the new processing state and data are valid.
 			validateState(
 				sharedInputState.fromStatus,
@@ -206,6 +203,9 @@ public class DeriverFromInput extends DeriverInput {
 					}
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastToWay;
+					}
+					public void validateNoErrors() {
+						validateNoErrors();
 					}
 				},
 				true
