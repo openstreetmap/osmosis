@@ -67,7 +67,7 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastBaseNode;
 					}
-					public void validateNoErrors() {
+					public void checkForErrors() {
 						validateNoErrors();
 					}
 				},
@@ -155,7 +155,7 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastBaseSegment;
 					}
-					public void validateNoErrors() {
+					public void checkForErrors() {
 						validateNoErrors();
 					}
 				},
@@ -243,7 +243,7 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastBaseWay;
 					}
-					public void validateNoErrors() {
+					public void checkForErrors() {
 						validateNoErrors();
 					}
 				},

@@ -68,7 +68,7 @@ public class DeriverToInput extends DeriverInput {
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastFromNode;
 					}
-					public void validateNoErrors() {
+					public void checkForErrors() {
 						validateNoErrors();
 					}
 				},
@@ -145,7 +145,7 @@ public class DeriverToInput extends DeriverInput {
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastFromSegment;
 					}
-					public void validateNoErrors() {
+					public void checkForErrors() {
 						validateNoErrors();
 					}
 				},
@@ -222,7 +222,7 @@ public class DeriverToInput extends DeriverInput {
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastFromWay;
 					}
-					public void validateNoErrors() {
+					public void checkForErrors() {
 						validateNoErrors();
 					}
 				},

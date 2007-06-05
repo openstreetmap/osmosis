@@ -68,7 +68,7 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastChangeNode;
 					}
-					public void validateNoErrors() {
+					public void checkForErrors() {
 						validateNoErrors();
 					}
 				},
@@ -135,7 +135,7 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastChangeSegment;
 					}
-					public void validateNoErrors() {
+					public void checkForErrors() {
 						validateNoErrors();
 					}
 				},
@@ -202,7 +202,7 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 					public OsmElement getComparisonSourceElement() {
 						return sharedInputState.lastChangeWay;
 					}
-					public void validateNoErrors() {
+					public void checkForErrors() {
 						validateNoErrors();
 					}
 				},

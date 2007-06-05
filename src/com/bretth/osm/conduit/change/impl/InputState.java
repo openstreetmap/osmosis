@@ -45,5 +45,5 @@ public interface InputState {
 	/**
 	 * Ensures that no errors have occurred on the other input.
 	 */
-	public void validateNoErrors();
+	public void checkForErrors();
 }

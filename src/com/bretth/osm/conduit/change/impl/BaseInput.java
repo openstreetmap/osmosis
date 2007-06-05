@@ -113,7 +113,7 @@ public abstract class BaseInput {
 		for (;;) {
 			
 			// Ensure no errors have occurred.
-			inputState.validateNoErrors();
+			inputState.checkForErrors();
 			
 			// Check if we're at a lesser element than the other source.
 			if (
