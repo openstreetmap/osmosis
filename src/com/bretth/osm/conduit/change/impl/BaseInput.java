@@ -91,14 +91,8 @@ public abstract class BaseInput {
 	 *            This condition is used to relinquish control of the main lock
 	 *            until the other source performs an action requiring this
 	 *            thread to wake up and continue.
-	 * @param thisSourceStatus
-	 *            The current status of this source.
-	 * @param comparisonSourceStatus
-	 *            The current status of the other source.
-	 * @param thisSourceElement
-	 *            The current element of this source.
-	 * @param comparisonSourceElement
-	 *            The current element of the other source.
+	 * @param inputState
+	 *            The state associated with the input source.
 	 * @param blockOnSameElement
 	 *            If true, we will block if the other source is at the same
 	 *            element, only one source should set this flag or deadlock will
@@ -107,8 +101,7 @@ public abstract class BaseInput {
 	 */
 	protected ComparisonOutcome performElementComparison(
 			Condition lockCondition,
-			InputStatus thisSourceStatus, InputStatus comparisonSourceStatus,
-			OsmElement thisSourceElement, OsmElement comparisonSourceElement,
+			InputState inputState,
 			boolean blockOnSameElement) {
 		boolean sameElementDetected;
 		
@@ -120,11 +113,11 @@ public abstract class BaseInput {
 		for (;;) {
 			// Check if we're at a lesser element than the other source.
 			if (
-					(thisSourceStatus.compareTo(comparisonSourceStatus) < 0)
+					(inputState.getThisSourceStatus().compareTo(inputState.getComparisonSourceStatus()) < 0)
 					||
 					(
-							(thisSourceStatus.equals(comparisonSourceStatus)) &&
-							(thisSourceElement.getId() < comparisonSourceElement.getId())
+						(inputState.getThisSourceStatus().equals(inputState.getComparisonSourceStatus())) &&
+						(inputState.getThisSourceElement().getId() < inputState.getComparisonSourceElement().getId())
 					)
 				) {
 				// If the same element was reached on a previous iteration there
@@ -137,7 +130,7 @@ public abstract class BaseInput {
 			}
 			
 			// Check if we're at the same element as the other source.
-			if (thisSourceStatus == comparisonSourceStatus && thisSourceElement.getId() == comparisonSourceElement.getId()) {
+			if (inputState.getThisSourceStatus() == inputState.getComparisonSourceStatus() && inputState.getThisSourceElement().getId() == inputState.getComparisonSourceElement().getId()) {
 				// If we don't need to block on the same element we notify
 				// instantly, otherwise we set the same element flag and
 				// continue to the block point.

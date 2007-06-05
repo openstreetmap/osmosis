@@ -1,6 +1,7 @@
 package com.bretth.osm.conduit.change.impl;
 
 import com.bretth.osm.conduit.data.Node;
+import com.bretth.osm.conduit.data.OsmElement;
 import com.bretth.osm.conduit.data.Segment;
 import com.bretth.osm.conduit.data.Way;
 import com.bretth.osm.conduit.task.ChangeAction;
@@ -51,14 +52,27 @@ public class DeriverToInput extends DeriverInput {
 			sharedInputState.toStatus = InputStatus.NODE_STAGE;
 			sharedInputState.lastToNode = node;
 			
+			// Notify the other source that new data is available.
+			sharedInputState.lockCondition.signal();
+			
 			// Perform the comparison.
 			comparisonOutcome = performElementComparison(
 				sharedInputState.lockCondition,
-				sharedInputState.toStatus,
-				sharedInputState.fromStatus,
-				sharedInputState.lastToNode,
-				sharedInputState.lastFromNode,
-				true
+				new InputState() {
+					public InputStatus getThisSourceStatus() {
+						return sharedInputState.toStatus;
+					}				
+					public OsmElement getThisSourceElement() {
+						return sharedInputState.lastToNode;
+					}
+					public InputStatus getComparisonSourceStatus() {
+						return sharedInputState.fromStatus;
+					}
+					public OsmElement getComparisonSourceElement() {
+						return sharedInputState.lastFromNode;
+					}
+				},
+				false
 			);
 			
 			// The "from" source only cares about elements that don't exist in
@@ -81,9 +95,6 @@ public class DeriverToInput extends DeriverInput {
 					);
 				}
 			}
-			
-			// Notify the other source that new data is available.
-			sharedInputState.lockCondition.signal();
 			
 		} finally {
 			sharedInputState.lock.unlock();
@@ -118,13 +129,26 @@ public class DeriverToInput extends DeriverInput {
 			sharedInputState.toStatus = InputStatus.SEGMENT_STAGE;
 			sharedInputState.lastToSegment = segment;
 			
+			// Notify the other source that new data is available.
+			sharedInputState.lockCondition.signal();
+			
 			// Perform the comparison.
 			comparisonOutcome = performElementComparison(
 				sharedInputState.lockCondition,
-				sharedInputState.toStatus,
-				sharedInputState.fromStatus,
-				sharedInputState.lastToSegment,
-				sharedInputState.lastFromSegment,
+				new InputState() {
+					public InputStatus getThisSourceStatus() {
+						return sharedInputState.toStatus;
+					}				
+					public OsmElement getThisSourceElement() {
+						return sharedInputState.lastToSegment;
+					}
+					public InputStatus getComparisonSourceStatus() {
+						return sharedInputState.fromStatus;
+					}
+					public OsmElement getComparisonSourceElement() {
+						return sharedInputState.lastFromSegment;
+					}
+				},
 				true
 			);
 			
@@ -148,9 +172,6 @@ public class DeriverToInput extends DeriverInput {
 					);
 				}
 			}
-			
-			// Notify the other source that new data is available.
-			sharedInputState.lockCondition.signal();
 			
 		} finally {
 			sharedInputState.lock.unlock();
@@ -185,13 +206,26 @@ public class DeriverToInput extends DeriverInput {
 			sharedInputState.toStatus = InputStatus.WAY_STAGE;
 			sharedInputState.lastToWay = way;
 			
+			// Notify the other source that new data is available.
+			sharedInputState.lockCondition.signal();
+			
 			// Perform the comparison.
 			comparisonOutcome = performElementComparison(
 				sharedInputState.lockCondition,
-				sharedInputState.toStatus,
-				sharedInputState.fromStatus,
-				sharedInputState.lastToWay,
-				sharedInputState.lastFromWay,
+				new InputState() {
+					public InputStatus getThisSourceStatus() {
+						return sharedInputState.toStatus;
+					}				
+					public OsmElement getThisSourceElement() {
+						return sharedInputState.lastToWay;
+					}
+					public InputStatus getComparisonSourceStatus() {
+						return sharedInputState.fromStatus;
+					}
+					public OsmElement getComparisonSourceElement() {
+						return sharedInputState.lastFromWay;
+					}
+				},
 				true
 			);
 			
@@ -215,9 +249,6 @@ public class DeriverToInput extends DeriverInput {
 					);
 				}
 			}
-			
-			// Notify the other source that new data is available.
-			sharedInputState.lockCondition.signal();
 			
 		} finally {
 			sharedInputState.lock.unlock();
@@ -244,6 +275,9 @@ public class DeriverToInput extends DeriverInput {
 				sharedInputState.toStatus = InputStatus.COMPLETE;
 			}
 			
+			// Notify the other source that new data is available.
+			sharedInputState.lockCondition.signal();
+			
 		} finally {
 			sharedInputState.lock.unlock();
 		}
@@ -265,6 +299,10 @@ public class DeriverToInput extends DeriverInput {
 
 				sharedInputState.toReleased = true;
 			}
+			
+			// Notify the other source that new data is available.
+			sharedInputState.lockCondition.signal();
+			
 		} finally {
 			sharedInputState.lock.unlock();
 		}

@@ -2,6 +2,7 @@ package com.bretth.osm.conduit.change.impl;
 
 import com.bretth.osm.conduit.ConduitRuntimeException;
 import com.bretth.osm.conduit.data.Node;
+import com.bretth.osm.conduit.data.OsmElement;
 import com.bretth.osm.conduit.data.Segment;
 import com.bretth.osm.conduit.data.Way;
 import com.bretth.osm.conduit.task.ChangeAction;
@@ -53,10 +54,20 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 			// Perform the comparison.
 			comparisonOutcome = performElementComparison(
 				sharedInputState.lockCondition,
-				sharedInputState.changeStatus,
-				sharedInputState.baseStatus,
-				sharedInputState.lastChangeNode,
-				sharedInputState.lastBaseNode,
+				new InputState() {
+					public InputStatus getThisSourceStatus() {
+						return sharedInputState.changeStatus;
+					}				
+					public OsmElement getThisSourceElement() {
+						return sharedInputState.lastChangeNode;
+					}
+					public InputStatus getComparisonSourceStatus() {
+						return sharedInputState.baseStatus;
+					}
+					public OsmElement getComparisonSourceElement() {
+						return sharedInputState.lastBaseNode;
+					}
+				},
 				true
 			);
 			
@@ -131,10 +142,20 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 			// Perform the comparison.
 			comparisonOutcome = performElementComparison(
 				sharedInputState.lockCondition,
-				sharedInputState.changeStatus,
-				sharedInputState.baseStatus,
-				sharedInputState.lastChangeSegment,
-				sharedInputState.lastBaseSegment,
+				new InputState() {
+					public InputStatus getThisSourceStatus() {
+						return sharedInputState.changeStatus;
+					}				
+					public OsmElement getThisSourceElement() {
+						return sharedInputState.lastChangeSegment;
+					}
+					public InputStatus getComparisonSourceStatus() {
+						return sharedInputState.baseStatus;
+					}
+					public OsmElement getComparisonSourceElement() {
+						return sharedInputState.lastBaseSegment;
+					}
+				},
 				true
 			);
 			
@@ -209,10 +230,20 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 			// Perform the comparison.
 			comparisonOutcome = performElementComparison(
 				sharedInputState.lockCondition,
-				sharedInputState.changeStatus,
-				sharedInputState.baseStatus,
-				sharedInputState.lastChangeWay,
-				sharedInputState.lastBaseWay,
+				new InputState() {
+					public InputStatus getThisSourceStatus() {
+						return sharedInputState.changeStatus;
+					}				
+					public OsmElement getThisSourceElement() {
+						return sharedInputState.lastChangeWay;
+					}
+					public InputStatus getComparisonSourceStatus() {
+						return sharedInputState.baseStatus;
+					}
+					public OsmElement getComparisonSourceElement() {
+						return sharedInputState.lastBaseWay;
+					}
+				},
 				true
 			);
 			

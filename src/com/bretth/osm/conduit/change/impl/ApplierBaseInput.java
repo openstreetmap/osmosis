@@ -1,6 +1,7 @@
 package com.bretth.osm.conduit.change.impl;
 
 import com.bretth.osm.conduit.data.Node;
+import com.bretth.osm.conduit.data.OsmElement;
 import com.bretth.osm.conduit.data.Segment;
 import com.bretth.osm.conduit.data.Way;
 import com.bretth.osm.conduit.task.Sink;
@@ -50,14 +51,24 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 			// Update the state to match the new data.
 			sharedInputState.baseStatus = InputStatus.NODE_STAGE;
 			sharedInputState.lastBaseNode = node;
-			
+
 			// Perform the comparison.
 			comparisonOutcome = performElementComparison(
 				sharedInputState.lockCondition,
-				sharedInputState.baseStatus,
-				sharedInputState.changeStatus,
-				sharedInputState.lastBaseNode,
-				sharedInputState.lastChangeNode,
+				new InputState() {
+					public InputStatus getThisSourceStatus() {
+						return sharedInputState.baseStatus;
+					}				
+					public OsmElement getThisSourceElement() {
+						return sharedInputState.lastBaseNode;
+					}
+					public InputStatus getComparisonSourceStatus() {
+						return sharedInputState.changeStatus;
+					}
+					public OsmElement getComparisonSourceElement() {
+						return sharedInputState.lastChangeNode;
+					}
+				},
 				true
 			);
 			
@@ -111,10 +122,20 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 			// Perform the comparison.
 			comparisonOutcome = performElementComparison(
 				sharedInputState.lockCondition,
-				sharedInputState.baseStatus,
-				sharedInputState.changeStatus,
-				sharedInputState.lastBaseSegment,
-				sharedInputState.lastChangeSegment,
+				new InputState() {
+					public InputStatus getThisSourceStatus() {
+						return sharedInputState.baseStatus;
+					}				
+					public OsmElement getThisSourceElement() {
+						return sharedInputState.lastBaseSegment;
+					}
+					public InputStatus getComparisonSourceStatus() {
+						return sharedInputState.changeStatus;
+					}
+					public OsmElement getComparisonSourceElement() {
+						return sharedInputState.lastChangeSegment;
+					}
+				},
 				true
 			);
 			
@@ -168,10 +189,20 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 			// Perform the comparison.
 			comparisonOutcome = performElementComparison(
 				sharedInputState.lockCondition,
-				sharedInputState.baseStatus,
-				sharedInputState.changeStatus,
-				sharedInputState.lastBaseWay,
-				sharedInputState.lastChangeWay,
+				new InputState() {
+					public InputStatus getThisSourceStatus() {
+						return sharedInputState.baseStatus;
+					}				
+					public OsmElement getThisSourceElement() {
+						return sharedInputState.lastBaseWay;
+					}
+					public InputStatus getComparisonSourceStatus() {
+						return sharedInputState.changeStatus;
+					}
+					public OsmElement getComparisonSourceElement() {
+						return sharedInputState.lastChangeWay;
+					}
+				},
 				true
 			);
 			
