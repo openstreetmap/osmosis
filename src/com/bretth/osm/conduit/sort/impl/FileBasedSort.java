@@ -3,7 +3,6 @@ package com.bretth.osm.conduit.sort.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -29,7 +28,7 @@ public class FileBasedSort<DataType> implements Releasable {
 	
 	
 	private Comparator<DataType> comparator;
-	private IndexedObjectStore<DataType> indexedElementStore;
+	private ChunkedObjectStore<DataType> indexedElementStore;
 	private List<DataType> addBuffer;
 	
 	
@@ -42,7 +41,7 @@ public class FileBasedSort<DataType> implements Releasable {
 	public FileBasedSort(Comparator<DataType> comparator) {
 		this.comparator = comparator;
 		
-		indexedElementStore = new IndexedObjectStore<DataType>("emta", "idx");
+		indexedElementStore = new ChunkedObjectStore<DataType>("emta", "idx");
 		addBuffer = new ArrayList<DataType>(MAX_MEMORY_SORT_COUNT);
 	}
 	
@@ -62,6 +61,10 @@ public class FileBasedSort<DataType> implements Releasable {
 			}
 			
 			addBuffer.clear();
+			
+			// Close the chunk in the underlying data store so that it can be
+			// read separately.
+			indexedElementStore.closeChunk();
 		}
 	}
 	
@@ -171,27 +174,10 @@ public class FileBasedSort<DataType> implements Releasable {
 			// If we are down to a small number of elements, we retrieve each source from file.
 			// Otherwise we recurse and split the number of elements down into smaller chunks.
 			if (chunkCount <= MAX_FILE_SORT_COUNT) {
-				long maxObjectIndex;
-				
-				maxObjectIndex = indexedElementStore.getStoredObjectCount();
-				
-				for (long chunk = beginChunkIndex; chunk < (beginChunkIndex + chunkCount); chunk++) {
-					long firstObject;
-					long objectCount;
-					
-					// Calculate the first object to read for this chunk.
-					firstObject = chunk * MAX_MEMORY_SORT_COUNT;
-					
-					// Calculate the number of objects to read for this chunk,
-					// in most cases it will be MAX_MEMORY_SORT_COUNT, but the
-					// last chunk may be smaller.
-					if ((firstObject + MAX_MEMORY_SORT_COUNT) > maxObjectIndex) {
-						objectCount = maxObjectIndex - firstObject;
-					} else {
-						objectCount = MAX_MEMORY_SORT_COUNT;
-					}
-					
-					sources.add(indexedElementStore.iterate(firstObject, objectCount));
+				for (int i = 0; i < chunkCount; i++) {
+					sources.add(
+						indexedElementStore.iterate(beginChunkIndex + i)
+					);
 				}
 				
 			} else {
@@ -252,25 +238,10 @@ public class FileBasedSort<DataType> implements Releasable {
 	 * 
 	 * @return An iterator providing access to the sorted elements.
 	 */
-	public Iterator<DataType> iterate() {
-		long objectCount;
-		long chunkCount;
-		
+	public ReleasableIterator<DataType> iterate() {
 		flushAddBuffer();
 		
-		// Break the number of objects down into chunks the size of
-		// MAX_MEMORY_SORT_COUNT. These chunks area already sorted in the main
-		// object store so we need to retrieve them in the correct sized chunks.
-		objectCount = indexedElementStore.getStoredObjectCount();
-		chunkCount = objectCount / MAX_MEMORY_SORT_COUNT;
-		
-		// If there is an incomplete chunk (ie. object count wasn't exactly
-		// divisible by the memory sorting size), add one to the chunk count.
-		if ((chunkCount * MAX_MEMORY_SORT_COUNT) != objectCount) {
-			chunkCount++;
-		}
-		
-		return iterate(0, 0, chunkCount);
+		return iterate(0, 0, indexedElementStore.getChunkCount());
 	}
 	
 	

@@ -73,6 +73,8 @@ public class ElementSorter implements SinkSource {
 		ReleasableIterator<OsmElement> iterator = null;
 		
 		try {
+			iterator = fileBasedSort.iterate();
+			
 			while (iterator.hasNext()) {
 				OsmElement element;
 				
@@ -102,6 +104,7 @@ public class ElementSorter implements SinkSource {
 	 * {@inheritDoc}
 	 */
 	public void release() {
+		fileBasedSort.release();
 		sink.release();
 	}
 }

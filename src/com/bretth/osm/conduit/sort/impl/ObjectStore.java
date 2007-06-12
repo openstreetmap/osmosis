@@ -14,6 +14,8 @@ import com.bretth.osm.conduit.ConduitRuntimeException;
 /**
  * Provides a store for writing objects to a file for later retrieval. The
  * number of objects is limited only by disk space.
+ * <p>
+ * This class supports chunking where the stream is broken into segments.  This is achieved by calling the createChunk method between add calls.
  * 
  * @param <DataType>
  *            The object type to be sorted.
@@ -41,11 +43,6 @@ public class ObjectStore<DataType> implements Releasable {
 		fileSize = 0;
 		
 		arrayOutStream = new ByteArrayOutputStream();
-		try {
-			objOutStream = new ObjectOutputStream(arrayOutStream);
-		} catch (IOException e) {
-			throw new ConduitRuntimeException("Unable to create object stream.", e);
-		}
 	}
 	
 	
@@ -75,11 +72,23 @@ public class ObjectStore<DataType> implements Releasable {
 			}
 		}
 		
+		// Create an object output stream if none exists.
+		if (objOutStream == null) {
+			try {
+				objOutStream = new ObjectOutputStream(arrayOutStream);
+			} catch (IOException e) {
+				throw new ConduitRuntimeException("Unable to create object stream.", e);
+			}
+		}
+		
+		// Write the object to a buffer, update the file position based on the
+		// buffer size, write the buffer to file, and clear the buffer.
 		try {
 			objOutStream.writeObject(data);
 			fileSize += arrayOutStream.size();
 			
 			arrayOutStream.writeTo(fileOutStream);
+			arrayOutStream.reset();
 			
 		} catch (IOException e) {
 			throw new ConduitRuntimeException("Unable to write object to file.", e);
@@ -88,11 +97,36 @@ public class ObjectStore<DataType> implements Releasable {
 	
 	
 	/**
-	 * Returns the size of the underlying storage file.
+	 * Closes the current object stream and creates a new one. This allows read
+	 * operations to begin at offsets within the file. This can only be called
+	 * while adding to the store, not once reads are begun. Read operations must
+	 * begin at offsets created by this method.
 	 * 
-	 * @return The file size.
+	 * @return The start position of the new chunk within the file.
 	 */
-	public long getFileSize() {
+	public long closeChunk() {
+		// We can only create an interval if we are in add mode.
+		if (stage.compareTo(StorageStage.Add) != 0) {
+			throw new ConduitRuntimeException("Cannot create interval in stage " + stage + ".");
+		}
+		
+		// Nothing needs to be done if no objects have been written for the current chunk.
+		if (objOutStream != null) {
+			try {
+				objOutStream.close();
+				fileSize += arrayOutStream.size();
+				
+				arrayOutStream.writeTo(fileOutStream);
+				arrayOutStream.reset();
+				
+				// Subsequent writes must begin a new object stream.
+				objOutStream = null;
+				
+			} catch (IOException e) {
+				throw new ConduitRuntimeException("Unable to create a new interval.", e);
+			}
+		}
+		
 		return fileSize;
 	}
 	
@@ -121,7 +155,19 @@ public class ObjectStore<DataType> implements Releasable {
 			stage = StorageStage.Reading;
 			
 			try {
+				// An object stream may not exist if a chunk was ended.
+				if (objOutStream != null) {
+					objOutStream.close();
+					objOutStream = null;
+				}
+				fileSize += arrayOutStream.size();
+				
+				arrayOutStream.writeTo(fileOutStream);
+				arrayOutStream.reset();
+				arrayOutStream = null;
+				
 				fileOutStream.close();
+				
 			} catch (IOException e) {
 				throw new ConduitRuntimeException("Unable to close output stream.", e);
 			}

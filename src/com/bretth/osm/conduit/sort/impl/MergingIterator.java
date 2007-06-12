@@ -28,7 +28,7 @@ public class MergingIterator<DataType> implements ReleasableIterator<DataType> {
 	 *            The comparator to be used for sorting.
 	 */
 	public MergingIterator(List<ReleasableIterator<DataType>> sources, Comparator<DataType> comparator) {
-		this.sources = sources;
+		this.sources = new ArrayList<ReleasableIterator<DataType>>(sources);
 		this.comparator = comparator;
 	}
 	
