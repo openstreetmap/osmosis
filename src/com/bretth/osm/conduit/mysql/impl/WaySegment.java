@@ -10,6 +10,9 @@ import com.bretth.osm.conduit.data.SegmentReference;
  * @author Brett Henderson
  */
 public class WaySegment extends SegmentReference {
+	private static final long serialVersionUID = 1L;
+	
+	
 	private long wayId;
 	private int sequenceId;
 	

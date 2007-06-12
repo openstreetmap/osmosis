@@ -10,6 +10,9 @@ import com.bretth.osm.conduit.data.Tag;
  * @author Brett Henderson
  */
 public class WayTag extends Tag {
+	private static final long serialVersionUID = 1L;
+	
+	
 	private long wayId;
 	
 	
