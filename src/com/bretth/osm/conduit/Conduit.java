@@ -14,6 +14,8 @@ import com.bretth.osm.conduit.mysql.MysqlReaderFactory;
 import com.bretth.osm.conduit.mysql.MysqlWriterFactory;
 import com.bretth.osm.conduit.pipeline.Pipeline;
 import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
+import com.bretth.osm.conduit.sort.ElementSorterFactory;
+import com.bretth.osm.conduit.sort.TypeThenIdComparator;
 import com.bretth.osm.conduit.xml.XmlChangeReaderFactory;
 import com.bretth.osm.conduit.xml.XmlChangeWriterFactory;
 import com.bretth.osm.conduit.xml.XmlReaderFactory;
@@ -89,6 +91,13 @@ public class Conduit {
 	 * Registers all task type factories available for use.
 	 */
 	private static void registerTasks() {
+		ElementSorterFactory elementSorterFactory;
+		
+		// Configure factories that require additional information.
+		elementSorterFactory = new ElementSorterFactory();
+		elementSorterFactory.registerComparator("TypeThenId", new TypeThenIdComparator());
+		
+		// Register factories.
 		TaskManagerFactory.register("read-mysql", new MysqlReaderFactory());
 		TaskManagerFactory.register("write-mysql", new MysqlWriterFactory());
 		TaskManagerFactory.register("read-xml", new XmlReaderFactory());
@@ -100,5 +109,6 @@ public class Conduit {
 		TaskManagerFactory.register("write-xml-change", new XmlChangeWriterFactory());
 		TaskManagerFactory.register("write-null", new NullWriterFactory());
 		TaskManagerFactory.register("write-null-change", new NullChangeWriterFactory());
+		TaskManagerFactory.register("sort", elementSorterFactory);
 	}
 }

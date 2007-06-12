@@ -12,6 +12,9 @@ import java.util.List;
  * @author Brett Henderson
  */
 public class Way extends OsmElement implements Comparable<Way> {
+	private static final long serialVersionUID = 1L;
+	
+	
 	private Date timestamp;
 	private List<SegmentReference> segmentReferenceList;
 	

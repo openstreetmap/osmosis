@@ -1,12 +1,17 @@
 package com.bretth.osm.conduit.data;
 
+import java.io.Serializable;
+
 
 /**
  * A data class representing a reference to an OSM segment.
  * 
  * @author Brett Henderson
  */
-public class SegmentReference implements Comparable<SegmentReference> {
+public class SegmentReference implements Comparable<SegmentReference>, Serializable {
+	private static final long serialVersionUID = 1L;
+	
+	
 	private long segmentId;
 	
 	

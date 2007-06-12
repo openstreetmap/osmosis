@@ -9,6 +9,9 @@ import java.util.Date;
  * @author Brett Henderson
  */
 public class Node extends OsmElement implements Comparable<Node> {
+	private static final long serialVersionUID = 1L;
+	
+	
 	private Date timestamp;
 	private double latitude;
 	private double longitude;

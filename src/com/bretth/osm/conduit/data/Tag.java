@@ -1,12 +1,16 @@
 package com.bretth.osm.conduit.data;
 
+import java.io.Serializable;
+
 
 /**
  * A data class representing a single OSM tag.
  * 
  * @author Brett Henderson
  */
-public class Tag implements Comparable<Tag> {
+public class Tag implements Comparable<Tag>, Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private String key;
 	private String value;
 	
