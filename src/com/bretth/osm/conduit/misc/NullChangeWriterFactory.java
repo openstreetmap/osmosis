@@ -15,17 +15,6 @@ import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
 public class NullChangeWriterFactory extends TaskManagerFactory {
 	
 	/**
-	 * Creates a new instance and adds the class to the global register.
-	 * 
-	 * @param taskType
-	 *            The name to register the type against.
-	 */
-	public NullChangeWriterFactory(String taskType) {
-		super(taskType);
-	}
-	
-	
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override

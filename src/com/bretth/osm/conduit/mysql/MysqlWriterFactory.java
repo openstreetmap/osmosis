@@ -24,17 +24,6 @@ public class MysqlWriterFactory extends TaskManagerFactory {
 
 	
 	/**
-	 * Creates a new instance and adds the class to the global register.
-	 * 
-	 * @param taskType
-	 *            The name to register the type against.
-	 */
-	public MysqlWriterFactory(String taskType) {
-		super(taskType);
-	}
-	
-	
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override

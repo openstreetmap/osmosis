@@ -19,17 +19,6 @@ public class XmlReaderFactory extends TaskManagerFactory {
 
 	
 	/**
-	 * Creates a new instance and adds the class to the global register.
-	 * 
-	 * @param taskType
-	 *            The name to register the type against.
-	 */
-	public XmlReaderFactory(String taskType) {
-		super(taskType);
-	}
-	
-	
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override

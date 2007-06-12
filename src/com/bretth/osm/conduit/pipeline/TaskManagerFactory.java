@@ -25,6 +25,24 @@ public abstract class TaskManagerFactory {
 	static {
 		factoryMap = new HashMap<String, TaskManagerFactory>();
 	}
+	
+	
+	/**
+	 * Registers a new factory.
+	 * 
+	 * @param taskType
+	 *            The name the factory is identified by.
+	 * @param factory
+	 *            The factory to be registered.
+	 */
+	public static void register(String taskType, TaskManagerFactory factory) {
+		if (factoryMap.containsKey(taskType)) {
+			throw new ConduitRuntimeException("Task type \"" + taskType + "\" already exists.");
+		}
+		
+		factoryMap.put(taskType, factory);
+	}
+	
 
 	/**
 	 * Get a task manager factory from the register.
@@ -60,16 +78,7 @@ public abstract class TaskManagerFactory {
 		return getInstance(taskType).createTaskManagerImpl(taskId, taskArgs,
 				pipeArgs);
 	}
-
-	/**
-	 * Creates a new instance and adds the class to the global register.
-	 * 
-	 * @param taskType
-	 *            The name to register the type against.
-	 */
-	protected TaskManagerFactory(String taskType) {
-		factoryMap.put(taskType, this);
-	}
+	
 
 	/**
 	 * Create a new task manager containing a task instance.
