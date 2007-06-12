@@ -44,4 +44,18 @@ public class SubObjectStreamIterator<DataType> extends ObjectStreamIterator<Data
 		
 		return super.hasNext();
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public DataType next() {
+		DataType result;
+		
+		result = super.next();
+		objectCount++;
+		
+		return result;
+	}
 }
