@@ -1,5 +1,6 @@
 package com.bretth.osm.conduit.sort.impl;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.NoSuchElementException;
@@ -41,7 +42,11 @@ public class ObjectStreamIterator<DataType> implements ReleasableIterator<DataTy
 				return true;
 			}
 			
-			nextElement = (DataType) inStream.readObject();
+			try {
+				nextElement = (DataType) inStream.readObject();
+			} catch (EOFException e) {
+				return false;
+			}
 			
 			return true;
 			
