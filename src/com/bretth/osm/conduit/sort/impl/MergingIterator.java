@@ -3,6 +3,7 @@ package com.bretth.osm.conduit.sort.impl;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 /**
@@ -75,7 +76,11 @@ public class MergingIterator<DataType> implements ReleasableIterator<DataType> {
 		ReleasableIterator<DataType> source;
 		
 		initialize();
-				
+		
+		if (!hasNext()) {
+			throw new NoSuchElementException();
+		}
+		
 		dataMinimum = sourceData.get(0);
 		indexMinimum = 0;
 		
