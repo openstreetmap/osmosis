@@ -161,6 +161,9 @@ public class ElementWriter {
 	 */
 	protected void endOpenElement(BufferedWriter writer, boolean closeElement) {
 		try {
+			if (closeElement) {
+				writer.append('/');
+			}
 			writer.append('>');
 			
 			writer.newLine();
