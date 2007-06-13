@@ -35,9 +35,11 @@ public class ChunkedObjectStore<DataType> implements Releasable {
 	 *            The prefix of the storage file name.
 	 * @param indexFilePrefix
 	 *            The prefix of the index file name.
+	 * @param useCompression
+	 *            If true, the storage file will be compressed.
 	 */
-	public ChunkedObjectStore(String storageFilePrefix, String indexFilePrefix) {
-		objectStore = new ObjectStore<DataType>(storageFilePrefix);
+	public ChunkedObjectStore(String storageFilePrefix, String indexFilePrefix, boolean useCompression) {
+		objectStore = new ObjectStore<DataType>(storageFilePrefix, useCompression);
 		indexStore = new IndexStore(indexFilePrefix);
 		
 		chunkCount = 0;

@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import com.bretth.osm.conduit.ConduitRuntimeException;
 
@@ -28,6 +30,7 @@ public class ObjectStore<DataType> implements Releasable {
 	private FileOutputStream fileOutStream;
 	private ObjectOutputStream objOutStream;
 	private ByteArrayOutputStream arrayOutStream;
+	private boolean useCompression;
 	private long fileSize;
 	
 	
@@ -35,9 +38,13 @@ public class ObjectStore<DataType> implements Releasable {
 	 * Creates a new instance.
 	 * 
 	 * @param storageFilePrefix
+	 *            The prefix of the storage file.
+	 * @param useCompression
+	 *            If true, the storage file will be compressed.
 	 */
-	public ObjectStore(String storageFilePrefix) {
+	public ObjectStore(String storageFilePrefix, boolean useCompression) {
 		this.storageFilePrefix = storageFilePrefix;
+		this.useCompression = useCompression;
 		
 		stage = StorageStage.NotStarted;
 		fileSize = 0;
@@ -75,7 +82,11 @@ public class ObjectStore<DataType> implements Releasable {
 		// Create an object output stream if none exists.
 		if (objOutStream == null) {
 			try {
-				objOutStream = new ObjectOutputStream(arrayOutStream);
+				if (useCompression) {
+					objOutStream = new ObjectOutputStream(new GZIPOutputStream(arrayOutStream));
+				} else {
+					objOutStream = new ObjectOutputStream(arrayOutStream);
+				}
 			} catch (IOException e) {
 				throw new ConduitRuntimeException("Unable to create object stream.", e);
 			}
@@ -230,7 +241,11 @@ public class ObjectStore<DataType> implements Releasable {
 			
 			// Create the object input stream.
 			try {
-				objStream = new ObjectInputStream(fileStream);
+				if (useCompression) {
+					objStream = new ObjectInputStream(new GZIPInputStream(fileStream));
+				} else {
+					objStream = new ObjectInputStream(fileStream);
+				}
 				
 			} catch (IOException e) {
 				throw new ConduitRuntimeException("Unable to open object stream.", e);

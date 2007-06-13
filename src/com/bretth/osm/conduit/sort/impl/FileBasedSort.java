@@ -17,19 +17,36 @@ import java.util.List;
 public class FileBasedSort<DataType> implements Releasable {
 	/**
 	 * The maximum number of elements to perform memory-based sorting on,
-	 * amounts larger than this will be sorted by merging files.
+	 * amounts larger than this will be split into chunks of this size, the
+	 * chunks sorted in memory before writing to file, and all the results
+	 * merged using the merge sort algorithm.
 	 */
-	private static final int MAX_MEMORY_SORT_COUNT = 10000;
+	private static final int MAX_MEMORY_SORT_COUNT = 16384;
 	
 	/**
-	 * The maximum number of files to merge at a single time.
+	 * The maximum number of sources to merge together at a single level of the
+	 * merge sort hierarchy. Must be 2 or higher. A standard merge sort is 2.
 	 */
-	private static final int MAX_FILE_SORT_COUNT = 50;
+	private static final int MAX_MERGE_SOURCE_COUNT = 2;
+	
+	
+	/**
+	 * The number of levels in the merge sort hierarchy to perform in memory
+	 * before persisting to a file. By persisting to file at regular hierarchy
+	 * levels, the number of file handles is minimised. File handle count is
+	 * likely to be an issue before memory usage due to the small number of
+	 * in-flight objects at any point in time.
+	 * <p>
+	 * The number of file handles will be MAX_MERGE_SOURCE_COUNT raised to the
+	 * power of MAX_MEMORY_SORT_DEPTH.
+	 */
+	private static final int MAX_MEMORY_SORT_DEPTH = 8;
 	
 	
 	private Comparator<DataType> comparator;
 	private ChunkedObjectStore<DataType> indexedElementStore;
 	private List<DataType> addBuffer;
+	private boolean useCompression;
 	
 	
 	/**
@@ -37,11 +54,14 @@ public class FileBasedSort<DataType> implements Releasable {
 	 * 
 	 * @param comparator
 	 *            The comparator to be used for sorting the results.
+	 * @param useCompression
+	 *            If true, the storage files will be compressed.
 	 */
-	public FileBasedSort(Comparator<DataType> comparator) {
+	public FileBasedSort(Comparator<DataType> comparator, boolean useCompression) {
 		this.comparator = comparator;
+		this.useCompression = useCompression;
 		
-		indexedElementStore = new ChunkedObjectStore<DataType>("emta", "idx");
+		indexedElementStore = new ChunkedObjectStore<DataType>("emta", "idx", useCompression);
 		addBuffer = new ArrayList<DataType>(MAX_MEMORY_SORT_COUNT);
 	}
 	
@@ -114,7 +134,7 @@ public class FileBasedSort<DataType> implements Releasable {
 			sourceIterator = iterate(nestLevel, beginChunkIndex, chunkCount);
 			
 			// Create a persistent object store.
-			objectStorage = new ObjectStore<DataType>("emtb");
+			objectStorage = new ObjectStore<DataType>("emtb", useCompression);
 			
 			// Write the source data to disk.
 			while (sourceIterator.hasNext()) {
@@ -173,7 +193,7 @@ public class FileBasedSort<DataType> implements Releasable {
 			
 			// If we are down to a small number of elements, we retrieve each source from file.
 			// Otherwise we recurse and split the number of elements down into smaller chunks.
-			if (chunkCount <= MAX_FILE_SORT_COUNT) {
+			if (chunkCount <= MAX_MERGE_SOURCE_COUNT) {
 				for (int i = 0; i < chunkCount; i++) {
 					sources.add(
 						indexedElementStore.iterate(beginChunkIndex + i)
@@ -187,13 +207,13 @@ public class FileBasedSort<DataType> implements Releasable {
 				// The current chunk count must be divided by
 				// MAX_FILE_SORT_COUNT and we must recurse for each
 				// of those sub chunk counts.
-				subChunkCount = chunkCount / MAX_FILE_SORT_COUNT;
+				subChunkCount = chunkCount / MAX_MERGE_SOURCE_COUNT;
 				
 				// If the sub chunk count is now less than MAX_FILE_SORT_COUNT,
 				// increase it to that value to minimise the number of files
 				// created.
-				if (subChunkCount < MAX_FILE_SORT_COUNT) {
-					subChunkCount = MAX_FILE_SORT_COUNT;
+				if (subChunkCount < MAX_MERGE_SOURCE_COUNT) {
+					subChunkCount = MAX_MERGE_SOURCE_COUNT;
 				}
 				
 				// We can never pass beyond the chunk boundaries specified for
@@ -207,12 +227,16 @@ public class FileBasedSort<DataType> implements Releasable {
 						subChunkCount = maxChunkIndex - subFirstChunk;
 					}
 					
-					// Call the persistent version of this function which will
-					// break the chunks down to the next level and write the
-					// results before returning.
-					sources.add(
-						iteratePersisted(nestLevel + 1, subFirstChunk, subChunkCount)
-					);
+					// Either call the persistent or standard version of the recursive iterate based on whether this nesting level requires persistence.
+					if (((nestLevel + 1) % MAX_MEMORY_SORT_DEPTH) == 0) {
+						sources.add(
+							iteratePersisted(nestLevel + 1, subFirstChunk, subChunkCount)
+						);
+					} else {
+						sources.add(
+							iterate(nestLevel + 1, subFirstChunk, subChunkCount)
+						);
+					}
 				}
 			}
 			

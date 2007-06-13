@@ -30,7 +30,7 @@ public class ElementSorter implements SinkSource {
 	 *            The comparator to use for sorting.
 	 */
 	public ElementSorter(Comparator<OsmElement> comparator) {
-		fileBasedSort = new FileBasedSort<OsmElement>(comparator);
+		fileBasedSort = new FileBasedSort<OsmElement>(comparator, false);
 	}
 	
 	
