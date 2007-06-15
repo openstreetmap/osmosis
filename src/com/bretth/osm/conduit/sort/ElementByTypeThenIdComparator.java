@@ -15,7 +15,7 @@ import com.bretth.osm.conduit.data.Way;
  * 
  * @author Brett Henderson
  */
-public class TypeThenIdComparator implements Comparator<OsmElement> {
+public class ElementByTypeThenIdComparator implements Comparator<OsmElement> {
 	
 	/**
 	 * Allocates a score to an element based upon its type for sorting purposes.

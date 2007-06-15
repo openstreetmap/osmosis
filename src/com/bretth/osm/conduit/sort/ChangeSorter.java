@@ -9,19 +9,20 @@ import com.bretth.osm.conduit.data.Segment;
 import com.bretth.osm.conduit.data.Way;
 import com.bretth.osm.conduit.sort.impl.FileBasedSort;
 import com.bretth.osm.conduit.sort.impl.ReleasableIterator;
-import com.bretth.osm.conduit.task.Sink;
-import com.bretth.osm.conduit.task.SinkSource;
+import com.bretth.osm.conduit.task.ChangeAction;
+import com.bretth.osm.conduit.task.ChangeSink;
+import com.bretth.osm.conduit.task.ChangeSinkChangeSource;
 
 
 /**
- * A data stream filter that sorts elements. The sort order is specified by
+ * A change stream filter that sorts changes. The sort order is specified by
  * comparator provided during instantiation.
  * 
  * @author Brett Henderson
  */
-public class ElementSorter implements SinkSource {
-	private FileBasedSort<OsmElement> fileBasedSort;
-	private Sink sink;
+public class ChangeSorter implements ChangeSinkChangeSource {
+	private FileBasedSort<ChangeElement> fileBasedSort;
+	private ChangeSink sink;
 	
 	
 	/**
@@ -30,39 +31,39 @@ public class ElementSorter implements SinkSource {
 	 * @param comparator
 	 *            The comparator to use for sorting.
 	 */
-	public ElementSorter(Comparator<OsmElement> comparator) {
-		fileBasedSort = new FileBasedSort<OsmElement>(comparator, true);
+	public ChangeSorter(Comparator<ChangeElement> comparator) {
+		fileBasedSort = new FileBasedSort<ChangeElement>(comparator, true);
 	}
 	
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void processNode(Node node) {
-		fileBasedSort.add(node);
+	public void processNode(Node node, ChangeAction action) {
+		fileBasedSort.add(new ChangeElement(node, action));
 	}
 	
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void processSegment(Segment segment) {
-		fileBasedSort.add(segment);
+	public void processSegment(Segment segment, ChangeAction action) {
+		fileBasedSort.add(new ChangeElement(segment, action));
 	}
 	
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void processWay(Way way) {
-		fileBasedSort.add(way);
+	public void processWay(Way way, ChangeAction action) {
+		fileBasedSort.add(new ChangeElement(way, action));
 	}
 	
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setSink(Sink sink) {
+	public void setChangeSink(ChangeSink sink) {
 		this.sink = sink;
 	}
 	
@@ -71,22 +72,22 @@ public class ElementSorter implements SinkSource {
 	 * {@inheritDoc}
 	 */
 	public void complete() {
-		ReleasableIterator<OsmElement> iterator = null;
+		ReleasableIterator<ChangeElement> iterator = null;
 		
 		try {
 			iterator = fileBasedSort.iterate();
 			
 			while (iterator.hasNext()) {
-				OsmElement element;
-				
-				element = iterator.next();
+				ChangeElement changeElement = iterator.next();
+				OsmElement element = changeElement.getElement();
+				ChangeAction action = changeElement.getAction();
 				
 				if (element instanceof Node) {
-					sink.processNode((Node) element);
+					sink.processNode((Node) element, action);
 				} else if (element instanceof Segment) {
-					sink.processSegment((Segment) element);
+					sink.processSegment((Segment) element, action);
 				} else if (element instanceof Way) {
-					sink.processWay((Way) element);
+					sink.processWay((Way) element, action);
 				} else {
 					throw new ConduitRuntimeException("Element type " + element.getClass().getName() + " is unrecognised.");
 				}

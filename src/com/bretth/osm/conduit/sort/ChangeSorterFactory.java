@@ -5,29 +5,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.bretth.osm.conduit.ConduitRuntimeException;
-import com.bretth.osm.conduit.data.OsmElement;
-import com.bretth.osm.conduit.pipeline.SinkSourceManager;
+import com.bretth.osm.conduit.pipeline.ChangeSinkChangeSourceManager;
 import com.bretth.osm.conduit.pipeline.TaskManager;
 import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
 
 
 /**
- * The task manager factory for an element sorter.
+ * The task manager factory for a change sorter.
  * 
  * @author Brett Henderson
  */
-public class ElementSorterFactory extends TaskManagerFactory {
+public class ChangeSorterFactory extends TaskManagerFactory {
 	private static final String ARG_COMPARATOR_TYPE = "type";
 	
-	private Map<String, Comparator<OsmElement>> comparatorMap;
+	private Map<String, Comparator<ChangeElement>> comparatorMap;
 	private String defaultComparatorType;
 	
 	
 	/**
 	 * Creates a new instance.
 	 */
-	public ElementSorterFactory() {
-		comparatorMap = new HashMap<String, Comparator<OsmElement>>();
+	public ChangeSorterFactory() {
+		comparatorMap = new HashMap<String, Comparator<ChangeElement>>();
 	}
 	
 	
@@ -42,7 +41,7 @@ public class ElementSorterFactory extends TaskManagerFactory {
 	 *            If true, this will be set to be the default comparator if no
 	 *            comparator is specified.
 	 */
-	public void registerComparator(String comparatorType, Comparator<OsmElement> comparator, boolean setAsDefault) {
+	public void registerComparator(String comparatorType, Comparator<ChangeElement> comparator, boolean setAsDefault) {
 		if (comparatorMap.containsKey(comparatorType)) {
 			throw new ConduitRuntimeException("Comparator type \"" + comparatorType + "\" already exists.");
 		}
@@ -62,7 +61,7 @@ public class ElementSorterFactory extends TaskManagerFactory {
 	 *            The comparator to be retrieved.
 	 * @return The comparator.
 	 */
-	private Comparator<OsmElement> getComparator(String comparatorType) {
+	private Comparator<ChangeElement> getComparator(String comparatorType) {
 		if (!comparatorMap.containsKey(comparatorType)) {
 			throw new ConduitRuntimeException("Comparator type " + comparatorType
 					+ " doesn't exist.");
@@ -78,16 +77,16 @@ public class ElementSorterFactory extends TaskManagerFactory {
 	@Override
 	protected TaskManager createTaskManagerImpl(String taskId,
 			Map<String, String> taskArgs, Map<String, String> pipeArgs) {
-		Comparator<OsmElement> comparator;
+		Comparator<ChangeElement> comparator;
 		
 		// Get the comparator.
 		comparator = getComparator(
 			getStringArgument(taskArgs, ARG_COMPARATOR_TYPE, defaultComparatorType)
 		);
 		
-		return new SinkSourceManager(
+		return new ChangeSinkChangeSourceManager(
 			taskId,
-			new ElementSorter(comparator),
+			new ChangeSorter(comparator),
 			pipeArgs
 		);
 	}

@@ -14,8 +14,11 @@ import com.bretth.osm.conduit.mysql.MysqlReaderFactory;
 import com.bretth.osm.conduit.mysql.MysqlWriterFactory;
 import com.bretth.osm.conduit.pipeline.Pipeline;
 import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
+import com.bretth.osm.conduit.sort.ChangeForSeekableApplierComparator;
+import com.bretth.osm.conduit.sort.ChangeForStreamableApplierComparator;
+import com.bretth.osm.conduit.sort.ChangeSorterFactory;
 import com.bretth.osm.conduit.sort.ElementSorterFactory;
-import com.bretth.osm.conduit.sort.TypeThenIdComparator;
+import com.bretth.osm.conduit.sort.ElementByTypeThenIdComparator;
 import com.bretth.osm.conduit.xml.XmlChangeReaderFactory;
 import com.bretth.osm.conduit.xml.XmlChangeWriterFactory;
 import com.bretth.osm.conduit.xml.XmlReaderFactory;
@@ -92,10 +95,15 @@ public class Conduit {
 	 */
 	private static void registerTasks() {
 		ElementSorterFactory elementSorterFactory;
+		ChangeSorterFactory changeSorterFactory;
+		
 		
 		// Configure factories that require additional information.
 		elementSorterFactory = new ElementSorterFactory();
-		elementSorterFactory.registerComparator("TypeThenId", new TypeThenIdComparator());
+		elementSorterFactory.registerComparator("TypeThenId", new ElementByTypeThenIdComparator(), true);
+		changeSorterFactory = new ChangeSorterFactory();
+		changeSorterFactory.registerComparator("streamable", new ChangeForStreamableApplierComparator(), true);
+		changeSorterFactory.registerComparator("seekable", new ChangeForSeekableApplierComparator(), false);
 		
 		// Register factories.
 		TaskManagerFactory.register("read-mysql", new MysqlReaderFactory());
@@ -110,5 +118,6 @@ public class Conduit {
 		TaskManagerFactory.register("write-null", new NullWriterFactory());
 		TaskManagerFactory.register("write-null-change", new NullChangeWriterFactory());
 		TaskManagerFactory.register("sort", elementSorterFactory);
+		TaskManagerFactory.register("sort-change", changeSorterFactory);
 	}
 }
