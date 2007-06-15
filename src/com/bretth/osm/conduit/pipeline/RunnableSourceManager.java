@@ -59,7 +59,7 @@ public class RunnableSourceManager extends TaskManager {
 					+ " is already running.");
 		}
 
-		thread = new Thread(task);
+		thread = new Thread(task, "Thread-" + getTaskId());
 
 		thread.start();
 	}
