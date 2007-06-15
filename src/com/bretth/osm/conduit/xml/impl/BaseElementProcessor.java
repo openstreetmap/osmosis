@@ -12,6 +12,7 @@ public abstract class BaseElementProcessor implements ElementProcessor {
 	private BaseElementProcessor parentProcessor;
 	private ElementProcessor dummyChildProcessor;
 	//private DateFormat dateFormat;
+	private static final Date dummyDate = new Date();
 	
 	
 	/**
@@ -70,7 +71,7 @@ public abstract class BaseElementProcessor implements ElementProcessor {
 			// TODO: Fix date format so it doesn't break on the planet file.
 			// TODO: Fix the timezones so that it treats value as GMT.
 			//return dateFormat.parse(data);
-			return new Date();
+			return dummyDate;
 			
 		//} catch (ParseException e) {
 		//	throw new OsmLoaderRuntimeException("Unable to parse date from data (" + data + ")");
