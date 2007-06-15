@@ -149,7 +149,7 @@ public class DeriverToInput extends DeriverInput {
 						validateNoErrors();
 					}
 				},
-				true
+				false
 			);
 			
 			// The "from" source only cares about elements that don't exist in
@@ -226,7 +226,7 @@ public class DeriverToInput extends DeriverInput {
 						validateNoErrors();
 					}
 				},
-				true
+				false
 			);
 			
 			// The "from" source only cares about elements that don't exist in
