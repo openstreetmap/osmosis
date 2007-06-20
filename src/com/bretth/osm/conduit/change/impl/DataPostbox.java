@@ -1,39 +1,51 @@
 package com.bretth.osm.conduit.change.impl;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.bretth.osm.conduit.ConduitRuntimeException;
-import com.bretth.osm.conduit.data.Element;
 
 
 /**
  * This class provides a mechanism for a thread to pass data to another thread.
  * Both threads will block until the other is ready.
  * 
- * @author Brett Henderson
+ * @param <T> The type of data held in the postbox.
  */
-public class DataPostbox {
+public class DataPostbox<T> {
+	private int capacity;
 	private Lock lock;
 	private Condition dataWaitCondition;
-	private Element data;
+	private Queue<T> queue;
 	private boolean released;
 	private boolean complete;
-	private boolean dataPosted;
 	private boolean outputOkay;
 	
 	
 	/**
 	 * Creates a new instance.
+	 * 
+	 * @param capacity
+	 *            The maximum number of objects to hold in the postbox before
+	 *            blocking.
 	 */
-	public DataPostbox() {
+	public DataPostbox(int capacity) {
+		if (capacity <= 0) {
+			throw new ConduitRuntimeException(
+				"A capacity of " + capacity
+				+ " is invalid, must be greater than 0."
+			);
+		}
+		
+		this.capacity = capacity;
 		lock = new ReentrantLock();
 		dataWaitCondition = lock.newCondition();
-		data = null;
+		queue = new LinkedList<T>();
 		released = false;
 		complete = false;
-		dataPosted = false;
 		outputOkay = true;
 	}
 	
@@ -69,6 +81,7 @@ public class DataPostbox {
 	private void waitForUpdate() {
 		try {
 			dataWaitCondition.await();
+			
 		} catch (InterruptedException e) {
 			throw new ConduitRuntimeException("Thread was interrupted.", e);
 		}
@@ -84,21 +97,26 @@ public class DataPostbox {
 	}
 	
 	
-	public void put(Element element) {
+	/**
+	 * Adds a new object to the postbox.
+	 * 
+	 * @param o
+	 *            The object to be added.
+	 */
+	public void put(T o) {
 		lock.lock();
 		
 		try {
 			checkForOutputErrors();
 			
 			// Wait until the currently posted data is cleared.
-			while (dataPosted) {
+			while (queue.size() >= capacity) {
 				waitForUpdate();
 				checkForOutputErrors();
 			}
 			
 			// Post the new data.
-			data = element;
-			dataPosted = true;
+			queue.add(o);
 			signalUpdate();
 			
 		} finally {
@@ -107,6 +125,9 @@ public class DataPostbox {
 	}
 	
 	
+	/**
+	 * Marks input is complete.
+	 */
 	public void complete() {
 		lock.lock();
 		
@@ -121,6 +142,10 @@ public class DataPostbox {
 	}
 	
 	
+	/**
+	 * Must be called at the end of input processing regardless of whether
+	 * errors have occurred.
+	 */
 	public void release() {
 		lock.lock();
 		
@@ -134,6 +159,13 @@ public class DataPostbox {
 	}
 	
 	
+	/**
+	 * Indicates if data is available for output. This will block until either
+	 * data is available, input processing has completed, or an input error
+	 * occurs.
+	 * 
+	 * @return True if data is available.
+	 */
 	public boolean hasNext() {
 		lock.lock();
 		
@@ -141,12 +173,12 @@ public class DataPostbox {
 			checkForInputErrors();
 			
 			// Wait until data is available.
-			while (!(dataPosted || complete)) {
+			while (!((queue.size() > 0) || complete)) {
 				waitForUpdate();
 				checkForInputErrors();
 			}
 			
-			return dataPosted;
+			return queue.size() > 0;
 			
 		} finally {
 			lock.unlock();
@@ -154,15 +186,23 @@ public class DataPostbox {
 	}
 	
 	
-	public Element getNext() {
+	/**
+	 * Returns the next available object from the postbox. This should be
+	 * preceeded by a call to hasNext.
+	 * 
+	 * @return The next available object.
+	 */
+	public T getNext() {
 		lock.lock();
 		
 		try {
 			if (hasNext()) {
-				dataPosted = false;
+				T result;
+				
+				result = queue.remove();
 				signalUpdate();
 				
-				return data;
+				return result;
 				
 			} else {
 				throw new ConduitRuntimeException("No data is available, should call hasNext first.");
@@ -174,6 +214,10 @@ public class DataPostbox {
 	}
 	
 	
+	/**
+	 * Allows an output thread to signal that it has failed, this will cause
+	 * exceptions to be thrown if more data is sent by input input threads.
+	 */
 	public void setOutputError() {
 		lock.lock();
 		
