@@ -36,6 +36,7 @@ public class ObjectStreamIterator<DataType> implements ReleasableIterator<DataTy
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean hasNext() {
 		try {
 			if (nextElement != null) {
