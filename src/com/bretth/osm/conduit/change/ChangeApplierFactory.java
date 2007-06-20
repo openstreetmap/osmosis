@@ -2,7 +2,7 @@ package com.bretth.osm.conduit.change;
 
 import java.util.Map;
 
-import com.bretth.osm.conduit.pipeline.SinkChangeSinkSourceManager;
+import com.bretth.osm.conduit.pipeline.MultiSinkMultiChangeSinkRunnableSourceManager;
 import com.bretth.osm.conduit.pipeline.TaskManager;
 import com.bretth.osm.conduit.pipeline.TaskManagerFactory;
 
@@ -19,9 +19,9 @@ public class ChangeApplierFactory extends TaskManagerFactory {
 	 */
 	@Override
 	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
-		return new SinkChangeSinkSourceManager(
+		return new MultiSinkMultiChangeSinkRunnableSourceManager(
 			taskId,
-			new ChangeApplier(),
+			new ChangeApplier(10),
 			pipeArgs
 		);
 	}

@@ -8,6 +8,6 @@ package com.bretth.osm.conduit.task;
  * 
  * @author Brett Henderson
  */
-public interface SinkChangeSinkSource extends MultiSink, MultiChangeSink, Source {
+public interface MultiSinkMultiChangeSinkRunnableSource extends MultiSink, MultiChangeSink, RunnableSource {
 	// Interface only combines functionality of its extended interfaces.
 }

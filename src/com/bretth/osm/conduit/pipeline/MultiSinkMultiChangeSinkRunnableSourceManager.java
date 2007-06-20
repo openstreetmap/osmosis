@@ -2,10 +2,11 @@ package com.bretth.osm.conduit.pipeline;
 
 import java.util.Map;
 
+import com.bretth.osm.conduit.ConduitRuntimeException;
 import com.bretth.osm.conduit.task.ChangeSink;
 import com.bretth.osm.conduit.task.ChangeSource;
 import com.bretth.osm.conduit.task.Sink;
-import com.bretth.osm.conduit.task.SinkChangeSinkSource;
+import com.bretth.osm.conduit.task.MultiSinkMultiChangeSinkRunnableSource;
 import com.bretth.osm.conduit.task.Source;
 
 
@@ -14,8 +15,9 @@ import com.bretth.osm.conduit.task.Source;
  * 
  * @author Brett Henderson
  */
-public class SinkChangeSinkSourceManager extends TaskManager {
-	private SinkChangeSinkSource task;
+public class MultiSinkMultiChangeSinkRunnableSourceManager extends TaskManager {
+	private MultiSinkMultiChangeSinkRunnableSource task;
+	private Thread thread;
 	
 	
 	/**
@@ -31,7 +33,7 @@ public class SinkChangeSinkSourceManager extends TaskManager {
 	 *            pipes are a logical concept for identifying how the tasks are
 	 *            connected together.
 	 */
-	public SinkChangeSinkSourceManager(String taskId, SinkChangeSinkSource task, Map<String, String> pipeArgs) {
+	public MultiSinkMultiChangeSinkRunnableSourceManager(String taskId, MultiSinkMultiChangeSinkRunnableSource task, Map<String, String> pipeArgs) {
 		super(taskId, pipeArgs);
 		
 		this.task = task;
@@ -87,7 +89,14 @@ public class SinkChangeSinkSourceManager extends TaskManager {
 	 */
 	@Override
 	public void run() {
-		// Nothing to do for a sink because it passively receives data.
+		if (thread != null) {
+			throw new ConduitRuntimeException("Task " + getTaskId()
+					+ " is already running.");
+		}
+
+		thread = new Thread(task, "Thread-" + getTaskId());
+
+		thread.start();
 	}
 	
 	
@@ -96,6 +105,14 @@ public class SinkChangeSinkSourceManager extends TaskManager {
 	 */
 	@Override
 	public void waitForCompletion() {
-		// Nothing to do for a sink because it passively receives data.
+		if (thread != null) {
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				// Do nothing.
+			}
+
+			thread = null;
+		}
 	}
 }

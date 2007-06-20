@@ -32,7 +32,7 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 	 * Creates a new instance.
 	 * 
 	 * @param inputBufferCapacity
-	 *            The size of the buffers to use for input comparison sources.
+	 *            The size of the buffers to use for input sources.
 	 */
 	public ChangeDeriver(int inputBufferCapacity) {
 		fromPostbox = new DataPostbox<ElementContainer>(inputBufferCapacity);
