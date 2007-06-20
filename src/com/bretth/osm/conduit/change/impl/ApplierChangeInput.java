@@ -2,7 +2,7 @@ package com.bretth.osm.conduit.change.impl;
 
 import com.bretth.osm.conduit.ConduitRuntimeException;
 import com.bretth.osm.conduit.data.Node;
-import com.bretth.osm.conduit.data.OsmElement;
+import com.bretth.osm.conduit.data.Element;
 import com.bretth.osm.conduit.data.Segment;
 import com.bretth.osm.conduit.data.Way;
 import com.bretth.osm.conduit.task.ChangeAction;
@@ -58,13 +58,13 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 					public InputStatus getThisSourceStatus() {
 						return sharedInputState.changeStatus;
 					}				
-					public OsmElement getThisSourceElement() {
+					public Element getThisSourceElement() {
 						return sharedInputState.lastChangeNode;
 					}
 					public InputStatus getComparisonSourceStatus() {
 						return sharedInputState.baseStatus;
 					}
-					public OsmElement getComparisonSourceElement() {
+					public Element getComparisonSourceElement() {
 						return sharedInputState.lastBaseNode;
 					}
 					public void checkForErrors() {
@@ -146,13 +146,13 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 					public InputStatus getThisSourceStatus() {
 						return sharedInputState.changeStatus;
 					}				
-					public OsmElement getThisSourceElement() {
+					public Element getThisSourceElement() {
 						return sharedInputState.lastChangeSegment;
 					}
 					public InputStatus getComparisonSourceStatus() {
 						return sharedInputState.baseStatus;
 					}
-					public OsmElement getComparisonSourceElement() {
+					public Element getComparisonSourceElement() {
 						return sharedInputState.lastBaseSegment;
 					}
 					public void checkForErrors() {
@@ -234,13 +234,13 @@ public class ApplierChangeInput extends ApplierInput implements ChangeSink {
 					public InputStatus getThisSourceStatus() {
 						return sharedInputState.changeStatus;
 					}				
-					public OsmElement getThisSourceElement() {
+					public Element getThisSourceElement() {
 						return sharedInputState.lastChangeWay;
 					}
 					public InputStatus getComparisonSourceStatus() {
 						return sharedInputState.baseStatus;
 					}
-					public OsmElement getComparisonSourceElement() {
+					public Element getComparisonSourceElement() {
 						return sharedInputState.lastBaseWay;
 					}
 					public void checkForErrors() {

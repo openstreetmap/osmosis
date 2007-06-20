@@ -1,7 +1,7 @@
 package com.bretth.osm.conduit.change.impl;
 
 import com.bretth.osm.conduit.data.Node;
-import com.bretth.osm.conduit.data.OsmElement;
+import com.bretth.osm.conduit.data.Element;
 import com.bretth.osm.conduit.data.Segment;
 import com.bretth.osm.conduit.data.Way;
 import com.bretth.osm.conduit.task.ChangeAction;
@@ -59,13 +59,13 @@ public class DeriverFromInput extends DeriverInput {
 					public InputStatus getThisSourceStatus() {
 						return sharedInputState.fromStatus;
 					}				
-					public OsmElement getThisSourceElement() {
+					public Element getThisSourceElement() {
 						return sharedInputState.lastFromNode;
 					}
 					public InputStatus getComparisonSourceStatus() {
 						return sharedInputState.toStatus;
 					}
-					public OsmElement getComparisonSourceElement() {
+					public Element getComparisonSourceElement() {
 						return sharedInputState.lastToNode;
 					}
 					public void checkForErrors() {
@@ -127,13 +127,13 @@ public class DeriverFromInput extends DeriverInput {
 					public InputStatus getThisSourceStatus() {
 						return sharedInputState.fromStatus;
 					}				
-					public OsmElement getThisSourceElement() {
+					public Element getThisSourceElement() {
 						return sharedInputState.lastFromSegment;
 					}
 					public InputStatus getComparisonSourceStatus() {
 						return sharedInputState.toStatus;
 					}
-					public OsmElement getComparisonSourceElement() {
+					public Element getComparisonSourceElement() {
 						return sharedInputState.lastToSegment;
 					}
 					public void checkForErrors() {
@@ -195,13 +195,13 @@ public class DeriverFromInput extends DeriverInput {
 					public InputStatus getThisSourceStatus() {
 						return sharedInputState.fromStatus;
 					}				
-					public OsmElement getThisSourceElement() {
+					public Element getThisSourceElement() {
 						return sharedInputState.lastFromWay;
 					}
 					public InputStatus getComparisonSourceStatus() {
 						return sharedInputState.toStatus;
 					}
-					public OsmElement getComparisonSourceElement() {
+					public Element getComparisonSourceElement() {
 						return sharedInputState.lastToWay;
 					}
 					public void checkForErrors() {

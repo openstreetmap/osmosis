@@ -13,7 +13,7 @@ import java.util.List;
  * 
  * @author Brett Henderson
  */
-public abstract class OsmElement implements Serializable {
+public abstract class Element implements Serializable {
 	private long id;
 	private List<Tag> tagList;
 	
@@ -24,7 +24,7 @@ public abstract class OsmElement implements Serializable {
 	 * @param id
 	 *            The unique identifier.
 	 */
-	public OsmElement(long id) {
+	public Element(long id) {
 		this.id = id;
 		
 		tagList = new ArrayList<Tag>();
@@ -67,6 +67,14 @@ public abstract class OsmElement implements Serializable {
 		// There are no differences.
 		return 0;
 	}
+	
+	
+	/**
+	 * Returns the specific data type represented by this element.
+	 * 
+	 * @return The element type enum value.
+	 */
+	public abstract ElementType getElementType();
 	
 	
 	/**

@@ -3,10 +3,8 @@ package com.bretth.osm.conduit.sort;
 import java.util.Comparator;
 
 import com.bretth.osm.conduit.ConduitRuntimeException;
-import com.bretth.osm.conduit.data.Node;
-import com.bretth.osm.conduit.data.OsmElement;
-import com.bretth.osm.conduit.data.Segment;
-import com.bretth.osm.conduit.data.Way;
+import com.bretth.osm.conduit.data.ElementType;
+import com.bretth.osm.conduit.data.Element;
 import com.bretth.osm.conduit.task.ChangeAction;
 
 
@@ -41,9 +39,9 @@ public class ChangeForSeekableApplierComparator implements Comparator<ChangeElem
 	 */
 	private int calculateSortWeight(ChangeElement changeElement) {
 		ChangeAction action = changeElement.getAction();
-		OsmElement element = changeElement.getElement();
+		Element element = changeElement.getElement();
 		
-		if (element instanceof Node) {
+		if (element.getElementType().equals(ElementType.Node)) {
 			if (action.equals(ChangeAction.Create)) {
 				return 1;
 			}
@@ -53,7 +51,7 @@ public class ChangeForSeekableApplierComparator implements Comparator<ChangeElem
 			if (action.equals(ChangeAction.Delete)) {
 				return 9;
 			}
-		} else if (element instanceof Segment) {
+		} else if (element.getElementType().equals(ElementType.Segment)) {
 			if (action.equals(ChangeAction.Create)) {
 				return 2;
 			}
@@ -63,7 +61,7 @@ public class ChangeForSeekableApplierComparator implements Comparator<ChangeElem
 			if (action.equals(ChangeAction.Delete)) {
 				return 8;
 			}
-		} else if (element instanceof Way) {
+		} else if (element.getElementType().equals(ElementType.Way)) {
 			if (action.equals(ChangeAction.Create)) {
 				return 3;
 			}
@@ -77,7 +75,8 @@ public class ChangeForSeekableApplierComparator implements Comparator<ChangeElem
 		
 		throw new ConduitRuntimeException(
 			"The change element with action " + action
-			+ " and element " + element
+			+ " type " + element.getElementType()
+			+ " and id " + element.getId()
 			+ " was not recognised."
 		);
 	}

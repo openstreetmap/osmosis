@@ -1,6 +1,6 @@
 package com.bretth.osm.conduit.sort;
 
-import com.bretth.osm.conduit.data.OsmElement;
+import com.bretth.osm.conduit.data.Element;
 import com.bretth.osm.conduit.task.ChangeAction;
 
 
@@ -10,7 +10,7 @@ import com.bretth.osm.conduit.task.ChangeAction;
  * @author Brett Henderson
  */
 public class ChangeElement {
-	private OsmElement element;
+	private Element element;
 	private ChangeAction action;
 	
 	
@@ -22,7 +22,7 @@ public class ChangeElement {
 	 * @param action
 	 *            The action.
 	 */
-	public ChangeElement(OsmElement element, ChangeAction action) {
+	public ChangeElement(Element element, ChangeAction action) {
 		this.element = element;
 		this.action = action;
 	}
@@ -31,7 +31,7 @@ public class ChangeElement {
 	/**
 	 * @return The element. 
 	 */
-	public OsmElement getElement() {
+	public Element getElement() {
 		return element;
 	}
 	

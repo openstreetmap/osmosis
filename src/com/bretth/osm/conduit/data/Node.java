@@ -8,7 +8,7 @@ import java.util.Date;
  * 
  * @author Brett Henderson
  */
-public class Node extends OsmElement implements Comparable<Node> {
+public class Node extends Element implements Comparable<Node> {
 	private static final long serialVersionUID = 1L;
 	
 	
@@ -35,6 +35,15 @@ public class Node extends OsmElement implements Comparable<Node> {
 		this.timestamp = timestamp;
 		this.latitude = latitude;
 		this.longitude = longitude;
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ElementType getElementType() {
+		return ElementType.Node;
 	}
 
 

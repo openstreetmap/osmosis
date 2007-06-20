@@ -2,11 +2,7 @@ package com.bretth.osm.conduit.sort;
 
 import java.util.Comparator;
 
-import com.bretth.osm.conduit.ConduitRuntimeException;
-import com.bretth.osm.conduit.data.Node;
-import com.bretth.osm.conduit.data.OsmElement;
-import com.bretth.osm.conduit.data.Segment;
-import com.bretth.osm.conduit.data.Way;
+import com.bretth.osm.conduit.data.Element;
 
 
 /**
@@ -15,44 +11,19 @@ import com.bretth.osm.conduit.data.Way;
  * 
  * @author Brett Henderson
  */
-public class ElementByTypeThenIdComparator implements Comparator<OsmElement> {
-	
-	/**
-	 * Allocates a score to an element based upon its type for sorting purposes.
-	 * Sort order is nodes, followed by segments, followed by ways.
-	 * 
-	 * @param element
-	 *            The element to be evaluated.
-	 * @return The score.
-	 */
-	private int calculateTypeScore(OsmElement element) {
-		if (element instanceof Node) {
-			return 1;
-		}
-		if (element instanceof Segment) {
-			return 2;
-		}
-		if (element instanceof Way) {
-			return 3;
-		}
-		
-		throw new ConduitRuntimeException("Element type " + element.getClass().getName() + " is not recognized.");
-	}
-	
+public class ElementByTypeThenIdComparator implements Comparator<Element> {
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public int compare(OsmElement o1, OsmElement o2) {
-		int o1TypeScore;
-		int o2TypeScore;
+	public int compare(Element o1, Element o2) {
+		int typeDiff;
 		long idDiff;
 		
 		// Perform a type comparison.
-		o1TypeScore = calculateTypeScore(o1);
-		o2TypeScore = calculateTypeScore(o2);
-		if (o1TypeScore != o2TypeScore) {
-			return o1TypeScore - o2TypeScore;
+		typeDiff = o1.getElementType().compareTo(o2.getElementType());
+		if (typeDiff != 0) {
+			return typeDiff;
 		}
 		
 		// Perform an identifier comparison.

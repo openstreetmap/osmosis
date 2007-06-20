@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 import com.bretth.osm.conduit.ConduitRuntimeException;
 import com.bretth.osm.conduit.data.Node;
-import com.bretth.osm.conduit.data.OsmElement;
+import com.bretth.osm.conduit.data.Element;
 import com.bretth.osm.conduit.data.Segment;
 import com.bretth.osm.conduit.data.Way;
 import com.bretth.osm.conduit.sort.impl.FileBasedSort;
@@ -20,7 +20,7 @@ import com.bretth.osm.conduit.task.SinkSource;
  * @author Brett Henderson
  */
 public class ElementSorter implements SinkSource {
-	private FileBasedSort<OsmElement> fileBasedSort;
+	private FileBasedSort<Element> fileBasedSort;
 	private Sink sink;
 	
 	
@@ -30,8 +30,8 @@ public class ElementSorter implements SinkSource {
 	 * @param comparator
 	 *            The comparator to use for sorting.
 	 */
-	public ElementSorter(Comparator<OsmElement> comparator) {
-		fileBasedSort = new FileBasedSort<OsmElement>(comparator, true);
+	public ElementSorter(Comparator<Element> comparator) {
+		fileBasedSort = new FileBasedSort<Element>(comparator, true);
 	}
 	
 	
@@ -71,13 +71,13 @@ public class ElementSorter implements SinkSource {
 	 * {@inheritDoc}
 	 */
 	public void complete() {
-		ReleasableIterator<OsmElement> iterator = null;
+		ReleasableIterator<Element> iterator = null;
 		
 		try {
 			iterator = fileBasedSort.iterate();
 			
 			while (iterator.hasNext()) {
-				OsmElement element;
+				Element element;
 				
 				element = iterator.next();
 				

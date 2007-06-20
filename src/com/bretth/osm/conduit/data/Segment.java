@@ -6,7 +6,7 @@ package com.bretth.osm.conduit.data;
  * 
  * @author Brett Henderson
  */
-public class Segment extends OsmElement implements Comparable<Segment> {
+public class Segment extends Element implements Comparable<Segment> {
 	private static final long serialVersionUID = 1L;
 	
 	
@@ -29,6 +29,15 @@ public class Segment extends OsmElement implements Comparable<Segment> {
 		
 		this.from = from;
 		this.to = to;
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ElementType getElementType() {
+		return ElementType.Segment;
 	}
 
 

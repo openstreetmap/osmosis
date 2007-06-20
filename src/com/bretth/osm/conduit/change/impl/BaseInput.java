@@ -3,7 +3,7 @@ package com.bretth.osm.conduit.change.impl;
 import java.util.concurrent.locks.Condition;
 
 import com.bretth.osm.conduit.ConduitRuntimeException;
-import com.bretth.osm.conduit.data.OsmElement;
+import com.bretth.osm.conduit.data.Element;
 
 
 /**
@@ -48,7 +48,7 @@ public abstract class BaseInput {
 	 *            The newly received data element.
 	 */
 	protected void validateState(InputStatus oldStatus,
-			InputStatus newStatus, OsmElement oldElement, OsmElement newElement) {
+			InputStatus newStatus, Element oldElement, Element newElement) {
 		// Make sure we haven't gone past the processing stage for the new data
 		// element.
 		if (newStatus.compareTo(oldStatus) < 0) {

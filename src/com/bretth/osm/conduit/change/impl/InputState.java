@@ -1,6 +1,6 @@
 package com.bretth.osm.conduit.change.impl;
 
-import com.bretth.osm.conduit.data.OsmElement;
+import com.bretth.osm.conduit.data.Element;
 
 
 /**
@@ -31,7 +31,7 @@ public interface InputState {
 	 * 
 	 * @return The current element.
 	 */
-	public OsmElement getThisSourceElement();
+	public Element getThisSourceElement();
 	
 	
 	/**
@@ -39,7 +39,7 @@ public interface InputState {
 	 * 
 	 * @return The current element of the other source.
 	 */
-	public OsmElement getComparisonSourceElement();
+	public Element getComparisonSourceElement();
 	
 	
 	/**

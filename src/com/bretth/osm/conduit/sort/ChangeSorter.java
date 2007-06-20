@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 import com.bretth.osm.conduit.ConduitRuntimeException;
 import com.bretth.osm.conduit.data.Node;
-import com.bretth.osm.conduit.data.OsmElement;
+import com.bretth.osm.conduit.data.Element;
 import com.bretth.osm.conduit.data.Segment;
 import com.bretth.osm.conduit.data.Way;
 import com.bretth.osm.conduit.sort.impl.FileBasedSort;
@@ -79,7 +79,7 @@ public class ChangeSorter implements ChangeSinkChangeSource {
 			
 			while (iterator.hasNext()) {
 				ChangeElement changeElement = iterator.next();
-				OsmElement element = changeElement.getElement();
+				Element element = changeElement.getElement();
 				ChangeAction action = changeElement.getAction();
 				
 				if (element instanceof Node) {

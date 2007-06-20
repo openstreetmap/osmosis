@@ -1,7 +1,7 @@
 package com.bretth.osm.conduit.change.impl;
 
 import com.bretth.osm.conduit.data.Node;
-import com.bretth.osm.conduit.data.OsmElement;
+import com.bretth.osm.conduit.data.Element;
 import com.bretth.osm.conduit.data.Segment;
 import com.bretth.osm.conduit.data.Way;
 import com.bretth.osm.conduit.task.Sink;
@@ -59,13 +59,13 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 					public InputStatus getThisSourceStatus() {
 						return sharedInputState.baseStatus;
 					}				
-					public OsmElement getThisSourceElement() {
+					public Element getThisSourceElement() {
 						return sharedInputState.lastBaseNode;
 					}
 					public InputStatus getComparisonSourceStatus() {
 						return sharedInputState.changeStatus;
 					}
-					public OsmElement getComparisonSourceElement() {
+					public Element getComparisonSourceElement() {
 						return sharedInputState.lastChangeNode;
 					}
 					public void checkForErrors() {
@@ -126,13 +126,13 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 					public InputStatus getThisSourceStatus() {
 						return sharedInputState.baseStatus;
 					}				
-					public OsmElement getThisSourceElement() {
+					public Element getThisSourceElement() {
 						return sharedInputState.lastBaseSegment;
 					}
 					public InputStatus getComparisonSourceStatus() {
 						return sharedInputState.changeStatus;
 					}
-					public OsmElement getComparisonSourceElement() {
+					public Element getComparisonSourceElement() {
 						return sharedInputState.lastChangeSegment;
 					}
 					public void checkForErrors() {
@@ -193,13 +193,13 @@ public class ApplierBaseInput extends ApplierInput implements Sink {
 					public InputStatus getThisSourceStatus() {
 						return sharedInputState.baseStatus;
 					}				
-					public OsmElement getThisSourceElement() {
+					public Element getThisSourceElement() {
 						return sharedInputState.lastBaseWay;
 					}
 					public InputStatus getComparisonSourceStatus() {
 						return sharedInputState.changeStatus;
 					}
-					public OsmElement getComparisonSourceElement() {
+					public Element getComparisonSourceElement() {
 						return sharedInputState.lastChangeWay;
 					}
 					public void checkForErrors() {
