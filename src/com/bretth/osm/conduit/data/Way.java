@@ -46,6 +46,19 @@ public class Way extends Element implements Comparable<Way> {
 	
 	
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Way) {
+			return compareTo((Way) o) == 0;
+		} else {
+			return false;
+		}
+	}
+	
+	
+	/**
 	 * Compares this tag list to the specified tag list. The tag comparison is
 	 * based on a comparison of key and value in that order.
 	 * 

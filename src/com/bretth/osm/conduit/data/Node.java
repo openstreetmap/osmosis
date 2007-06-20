@@ -45,11 +45,25 @@ public class Node extends Element implements Comparable<Node> {
 	public ElementType getElementType() {
 		return ElementType.Node;
 	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Node) {
+			return compareTo((Node) o) == 0;
+		} else {
+			return false;
+		}
+	}
 
 
 	/**
 	 * Compares this node to the specified node. The node comparison is based on
-	 * a comparison of id, latitude, longitude and tags in that order.
+	 * a comparison of id, latitude, longitude, timestamp and tags in that
+	 * order.
 	 * 
 	 * @param comparisonNode
 	 *            The node to compare to.
@@ -70,6 +84,14 @@ public class Node extends Element implements Comparable<Node> {
 		}
 		
 		if (this.latitude > comparisonNode.latitude) {
+			return 1;
+		}
+		
+		if (this.longitude < comparisonNode.longitude) {
+			return -1;
+		}
+		
+		if (this.longitude > comparisonNode.longitude) {
 			return 1;
 		}
 		

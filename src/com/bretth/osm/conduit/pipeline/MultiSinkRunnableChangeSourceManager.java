@@ -2,7 +2,8 @@ package com.bretth.osm.conduit.pipeline;
 
 import java.util.Map;
 
-import com.bretth.osm.conduit.task.MultiSinkChangeSource;
+import com.bretth.osm.conduit.ConduitRuntimeException;
+import com.bretth.osm.conduit.task.MultiSinkRunnableChangeSource;
 import com.bretth.osm.conduit.task.Sink;
 import com.bretth.osm.conduit.task.Source;
 
@@ -12,8 +13,9 @@ import com.bretth.osm.conduit.task.Source;
  * 
  * @author Brett Henderson
  */
-public class MultiSinkChangeSourceManager extends TaskManager {
-	private MultiSinkChangeSource task;
+public class MultiSinkRunnableChangeSourceManager extends TaskManager {
+	private MultiSinkRunnableChangeSource task;
+	private Thread thread;
 	
 	
 	/**
@@ -29,7 +31,7 @@ public class MultiSinkChangeSourceManager extends TaskManager {
 	 *            pipes are a logical concept for identifying how the tasks are
 	 *            connected together.
 	 */
-	public MultiSinkChangeSourceManager(String taskId, MultiSinkChangeSource task, Map<String, String> pipeArgs) {
+	public MultiSinkRunnableChangeSourceManager(String taskId, MultiSinkRunnableChangeSource task, Map<String, String> pipeArgs) {
 		super(taskId, pipeArgs);
 		
 		this.task = task;
@@ -67,7 +69,14 @@ public class MultiSinkChangeSourceManager extends TaskManager {
 	 */
 	@Override
 	public void run() {
-		// Nothing to do for a sink because it passively receives data.
+		if (thread != null) {
+			throw new ConduitRuntimeException("Task " + getTaskId()
+					+ " is already running.");
+		}
+
+		thread = new Thread(task, "Thread-" + getTaskId());
+
+		thread.start();
 	}
 	
 	
@@ -76,6 +85,14 @@ public class MultiSinkChangeSourceManager extends TaskManager {
 	 */
 	@Override
 	public void waitForCompletion() {
-		// Nothing to do for a sink because it passively receives data.
+		if (thread != null) {
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				// Do nothing.
+			}
+
+			thread = null;
+		}
 	}
 }

@@ -39,6 +39,19 @@ public class Segment extends Element implements Comparable<Segment> {
 	public ElementType getElementType() {
 		return ElementType.Segment;
 	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Segment) {
+			return compareTo((Segment) o) == 0;
+		} else {
+			return false;
+		}
+	}
 
 
 	/**
