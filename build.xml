@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="Osmosis" default="all" basedir=".">
+	<description>
+		Builds the Osmosis data translation library.
+	</description>
+	
+	<!-- set global properties for this build -->
+	<property name="project.name" value="osmosis"/>
+	<property name="project.version" value="0.1"/>
+	
+	<target name="init" description="Perform initialisation required by all other build steps.">
+		<!-- Create the time stamp -->
+		<tstamp/>
+	</target>	
+	
+	<target name="build" depends="init" description="Compile source code into class files.">
+		<!-- Create the build directory structure. -->
+		<mkdir dir="build"/>
+		<!-- Compile the java code from src into build -->
+		<javac srcdir="src" destdir="build" debug="on" debuglevel="lines,vars,source"/>
+		<!-- Put a version number file in the build directory. -->
+		<touch file="build/version-${project.version}"/>
+	</target>
+	
+	<!-- Produces javadoc output from the source code. -->
+	<target name="javadoc" depends="init" description="Products javadoc documentation from the source code.">
+		<javadoc packagenames="*" sourcepath="src" destdir="doc/api"/>
+	</target>
+	
+	<target name="dist_binary" depends="build" description="Generates the binaries for the distribution.">
+		<!-- Create the distribution build directory -->
+		<mkdir dir="dist/result"/>
+		
+		<!-- Create a directory to hold the generated manifest files. -->
+		<mkdir dir="dist/manifest"/>
+		
+		<!-- Create a manifest for the jar file. -->
+		<manifest file="dist/manifest/jar.txt">
+			<attribute name="Built-By" value="${user.name}"/>
+			<attribute name="Implementation-Title" value="Osmosis Library"/>
+			<attribute name="Implementation-Version" value="${project.version} (${TODAY})"/> 
+			<attribute name="Implementation-Vendor" value="Brett Henderson"/>
+		</manifest>
+		
+		<!-- Create the jar archive. -->
+		<jar
+			destfile="dist/result/${project.name}.jar"
+			basedir="build"
+			manifest="dist/manifest/jar.txt"/>
+	</target>
+	
+	<target name="dist" depends="dist_binary,javadoc" description="Generate the distribution.">
+		<!-- Copy the documentation into the distribution. -->
+		<copy todir="dist/result/doc">
+			<fileset dir="doc"/>
+		</copy>
+		
+		<!-- Copy the source into the distribution. -->
+		<copy todir="dist/result/src">
+			<fileset dir="src"/>
+		</copy>
+		
+		<!-- Copy changes file. -->
+		<copy todir="dist/result" file="changes.txt"/>
+		<!-- Copy distribution file. -->
+		<copy todir="dist/result" file="build.xml"/>
+		
+		<!-- Create the distribution zip file. -->
+		<zip destfile="dist/${project.name}-${project.version}.zip">
+			<zipfileset prefix="${project.name}-${project.version}" dir="dist/result"/>
+		</zip>
+	</target>
+	
+	<target name="build_test" depends="dist" description="Compile test source code into class files.">
+		<!-- Create the build directory structure. -->
+		<mkdir dir="build_test"/>
+		<!-- Compile the java test code with the main project classes as a dependency. -->
+		<javac srcdir="test" destdir="build_test" classpath="dist/result/${project.name}.jar" debug="on" debuglevel="lines,vars,source"/>
+	</target>
+	
+	<!-- Runs all of the unit tests in the application.  Uses the AllTests suite to achieve this. -->
+	<target name="test" depends="build_test" description="Run automated test cases.">
+		<junit printsummary="on" haltonerror="on" haltonfailure="on" filtertrace="on">
+			<formatter type="plain" usefile="true"/>
+			<classpath>
+				<pathelement path="build_test"/>
+				<fileset dir="dist/result">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+			<test name="com.bretth.codec.AllTests" todir="build_test"/>
+		</junit>
+	</target>
+	
+	<!-- Executes all major build targets. -->
+	<!-- <target name="all" depends="test"/> -->
+	<target name="all" depends="dist"/>
+	
+	<target name="clean" description="Clean up the project tree.">
+		<!-- Delete the build and dist directory trees. -->
+		<delete dir="build"/>
+		<delete dir="dist"/>
+		<!-- Delete the ${doc}/api directory tree. -->
+		<delete dir="doc/api"/>
+		<!-- Delete the test directory tree. -->
+		<delete dir="build_test"/>
+	</target>
+</project>
