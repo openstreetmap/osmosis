@@ -6,7 +6,7 @@
 	
 	<!-- set global properties for this build -->
 	<property name="project.name" value="osmosis"/>
-	<property name="project.version" value="0.1"/>
+	<property name="project.version" value="0.2"/>
 	
 	<target name="init" description="Perform initialisation required by all other build steps.">
 		<!-- Create the time stamp -->
@@ -36,6 +36,7 @@
 		
 		<!-- Create a manifest for the jar file. -->
 		<manifest file="dist/manifest/jar.txt">
+			<attribute name="Main-Class" value="com.bretth.osmosis.Osmosis"/>
 			<attribute name="Built-By" value="${user.name}"/>
 			<attribute name="Implementation-Title" value="Osmosis Library"/>
 			<attribute name="Implementation-Version" value="${project.version} (${TODAY})"/> 
