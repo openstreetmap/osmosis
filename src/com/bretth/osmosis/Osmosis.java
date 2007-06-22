@@ -5,24 +5,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.bretth.osmosis.change.ChangeApplierFactory;
-import com.bretth.osmosis.change.ChangeDeriverFactory;
-import com.bretth.osmosis.filter.BoundingBoxFilterFactory;
-import com.bretth.osmosis.misc.NullChangeWriterFactory;
-import com.bretth.osmosis.misc.NullWriterFactory;
-import com.bretth.osmosis.mysql.MysqlReaderFactory;
-import com.bretth.osmosis.mysql.MysqlWriterFactory;
 import com.bretth.osmosis.pipeline.Pipeline;
-import com.bretth.osmosis.pipeline.TaskManagerFactory;
-import com.bretth.osmosis.sort.ChangeForSeekableApplierComparator;
-import com.bretth.osmosis.sort.ChangeForStreamableApplierComparator;
-import com.bretth.osmosis.sort.ChangeSorterFactory;
-import com.bretth.osmosis.sort.ElementByTypeThenIdComparator;
-import com.bretth.osmosis.sort.ElementSorterFactory;
-import com.bretth.osmosis.xml.XmlChangeReaderFactory;
-import com.bretth.osmosis.xml.XmlChangeWriterFactory;
-import com.bretth.osmosis.xml.XmlReaderFactory;
-import com.bretth.osmosis.xml.XmlWriterFactory;
 
 
 /**
@@ -48,7 +31,7 @@ public class Osmosis {
 			initializeLogging();
 			
 			log.info("Conduit Version " + VERSION);
-			registerTasks();
+			TaskRegistrar.initialize();
 			
 			pipeline = new Pipeline();
 			
@@ -87,37 +70,5 @@ public class Osmosis {
 		
 		// Set the required logging level.
 		rootLogger.setLevel(Level.ALL);
-	}
-	
-	
-	/**
-	 * Registers all task type factories available for use.
-	 */
-	private static void registerTasks() {
-		ElementSorterFactory elementSorterFactory;
-		ChangeSorterFactory changeSorterFactory;
-		
-		
-		// Configure factories that require additional information.
-		elementSorterFactory = new ElementSorterFactory();
-		elementSorterFactory.registerComparator("TypeThenId", new ElementByTypeThenIdComparator(), true);
-		changeSorterFactory = new ChangeSorterFactory();
-		changeSorterFactory.registerComparator("streamable", new ChangeForStreamableApplierComparator(), true);
-		changeSorterFactory.registerComparator("seekable", new ChangeForSeekableApplierComparator(), false);
-		
-		// Register factories.
-		TaskManagerFactory.register("read-mysql", new MysqlReaderFactory());
-		TaskManagerFactory.register("write-mysql", new MysqlWriterFactory());
-		TaskManagerFactory.register("read-xml", new XmlReaderFactory());
-		TaskManagerFactory.register("write-xml", new XmlWriterFactory());
-		TaskManagerFactory.register("bounding-box", new BoundingBoxFilterFactory());
-		TaskManagerFactory.register("derive-change", new ChangeDeriverFactory());
-		TaskManagerFactory.register("apply-change", new ChangeApplierFactory());
-		TaskManagerFactory.register("read-xml-change", new XmlChangeReaderFactory());
-		TaskManagerFactory.register("write-xml-change", new XmlChangeWriterFactory());
-		TaskManagerFactory.register("write-null", new NullWriterFactory());
-		TaskManagerFactory.register("write-null-change", new NullChangeWriterFactory());
-		TaskManagerFactory.register("sort", elementSorterFactory);
-		TaskManagerFactory.register("sort-change", changeSorterFactory);
 	}
 }
