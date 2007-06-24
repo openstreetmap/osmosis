@@ -1,2 +1,5 @@
+0.2
+Added Main-Class feature to the jar manifest simplifying program launch.
+
 0.1
 Initial version.
