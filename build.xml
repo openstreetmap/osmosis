@@ -6,7 +6,7 @@
 	
 	<!-- set global properties for this build -->
 	<property name="project.name" value="osmosis"/>
-	<property name="project.version" value="0.2"/>
+	<property name="project.version" value="0.1.5"/>
 	
 	<target name="init" description="Perform initialisation required by all other build steps.">
 		<!-- Create the time stamp -->
@@ -61,6 +61,18 @@
 			<fileset dir="src"/>
 		</copy>
 		
+		<!-- Copy the libraries into the distribution. -->
+		<copy todir="dist/result/lib">
+			<fileset dir="lib"/>
+		</copy>
+		
+		<!-- Copy scripts into the distribution. -->
+		<copy todir="dist/result/bin">
+			<fileset dir="bin"/>
+		</copy>
+		
+		<!-- Copy readme file. -->
+		<copy todir="dist/result" file="readme.txt"/>
 		<!-- Copy changes file. -->
 		<copy todir="dist/result" file="changes.txt"/>
 		<!-- Copy distribution file. -->

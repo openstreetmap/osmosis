@@ -1,5 +1,7 @@
 0.2
 Added Main-Class feature to the jar manifest simplifying program launch.
+Added a shell launch script to simplify running on unix/linux.
+Added a readme with basic installation instructions.
 
 0.1
 Initial version.
