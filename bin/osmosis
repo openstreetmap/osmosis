@@ -27,18 +27,16 @@ while [ -h "$PRG" ] ; do
   fi
 done
 
-echo "PRG: "$PRG
-
 # make it fully qualified
 saveddir=`pwd`
 MYAPP_HOME=`dirname "$PRG"`/..
 MYAPP_HOME=`cd "$MYAPP_HOME" && pwd`
 cd "$saveddir"
 
-echo "myapp is installed in $MYAPP_HOME"
+#echo "myapp is installed in $MYAPP_HOME"
 
 MAINCLASS=com.bretth.osmosis.Osmosis
 EXEC="$JAVACMD -cp $MYAPP_HOME/osmosis.jar:$MYAPP_HOME/lib/mysql-connector-java-5.0.5-bin.jar $MAINCLASS $@"
 
-echo $EXEC
+#echo $EXEC
 exec $EXEC
