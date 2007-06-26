@@ -14,6 +14,13 @@
 	</target>	
 	
 	<target name="build" depends="init" description="Compile source code into class files.">
+		<!-- Update the version number in the main class. -->
+		<replaceregexp
+			byline="true"
+			file="src/com/bretth/osmosis/Osmosis.java"
+			match="private static final String VERSION = &quot;(.*)&quot;"
+			replace="private static final String VERSION = &quot;${project.version}&quot;"
+		/>
 		<!-- Create the build directory structure. -->
 		<mkdir dir="build"/>
 		<!-- Compile the java code from src into build -->
