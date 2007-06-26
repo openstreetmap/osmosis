@@ -2,6 +2,8 @@ package com.bretth.osmosis.xml.impl;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +45,7 @@ public class ElementWriter {
 	
 	private String elementName;
 	private int indentLevel;
+	private DateFormat dateFormatter;
 	
 	
 	/**
@@ -56,6 +59,8 @@ public class ElementWriter {
 	protected ElementWriter(String elementName, int indentLevel) {
 		this.elementName = elementName;
 		this.indentLevel = indentLevel;
+		
+		dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	}
 	
 	
@@ -120,8 +125,7 @@ public class ElementWriter {
 	 */
 	protected String formatDate(Date date) {
 		if (date != null) {
-			// TODO: Complete data formatting.
-			return date.toString();
+			return dateFormatter.format(date);
 		} else {
 			return "";
 		}

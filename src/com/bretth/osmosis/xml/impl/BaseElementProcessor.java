@@ -11,8 +11,7 @@ import java.util.Date;
 public abstract class BaseElementProcessor implements ElementProcessor {
 	private BaseElementProcessor parentProcessor;
 	private ElementProcessor dummyChildProcessor;
-	//private DateFormat dateFormat;
-	private static final Date dummyDate = new Date();
+	private DateParser dateParser;
 	
 	
 	/**
@@ -24,7 +23,7 @@ public abstract class BaseElementProcessor implements ElementProcessor {
 	protected BaseElementProcessor(BaseElementProcessor parentProcessor) {
 		this.parentProcessor = parentProcessor;
 		
-		//dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		dateParser = new DateParser();
 	}
 	
 	
@@ -67,14 +66,6 @@ public abstract class BaseElementProcessor implements ElementProcessor {
 	 * @return The parsed date.
 	 */
 	protected Date parseTimestamp(String data) {
-		//try {
-			// TODO: Fix date format so it doesn't break on the planet file.
-			// TODO: Fix the timezones so that it treats value as GMT.
-			//return dateFormat.parse(data);
-			return dummyDate;
-			
-		//} catch (ParseException e) {
-		//	throw new OsmLoaderRuntimeException("Unable to parse date from data (" + data + ")");
-		//}
+		return dateParser.parse(data);
 	}
 }
