@@ -2,7 +2,6 @@ package com.bretth.osmosis.pipeline;
 
 import java.util.Map;
 
-import com.bretth.osmosis.OsmosisRuntimeException;
 import com.bretth.osmosis.task.RunnableSource;
 
 
@@ -11,10 +10,8 @@ import com.bretth.osmosis.task.RunnableSource;
  * 
  * @author Brett Henderson
  */
-public class RunnableSourceManager extends TaskManager {
+public class RunnableSourceManager extends ActiveTaskManager {
 	private RunnableSource task;
-	
-	private Thread thread;
 	
 	
 	/**
@@ -53,31 +50,7 @@ public class RunnableSourceManager extends TaskManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void run() {
-		if (thread != null) {
-			throw new OsmosisRuntimeException("Task " + getTaskId()
-					+ " is already running.");
-		}
-
-		thread = new Thread(task, "Thread-" + getTaskId());
-
-		thread.start();
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void waitForCompletion() {
-		if (thread != null) {
-			try {
-				thread.join();
-			} catch (InterruptedException e) {
-				// Do nothing.
-			}
-
-			thread = null;
-		}
+	protected Runnable getTask() {
+		return task;
 	}
 }

@@ -14,7 +14,7 @@ import com.bretth.osmosis.pipeline.Pipeline;
  * @author Brett Henderson
  */
 public class Osmosis {
-	private static final String VERSION = "0.1";
+	private static final String VERSION = "0.1.5";
 	
 	private static final Logger log = Logger.getLogger(Osmosis.class.getName());
 	
@@ -39,7 +39,7 @@ public class Osmosis {
 			pipeline.prepare(args);
 			
 			log.fine("Executing pipeline.");
-			pipeline.run();
+			pipeline.execute();
 			
 			log.fine("Pipeline executing, waiting for completion.");
 			pipeline.waitForCompletion();

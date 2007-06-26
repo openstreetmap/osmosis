@@ -201,12 +201,11 @@ public class Pipeline {
 	
 	/**
 	 * Launches the execution of the tasks within the pipeline.
-	 *
 	 */
-	public void run() {
+	public void execute() {
 		// Initiate execution of all nodes.
 		for (TaskManager taskManager: taskManagers) {
-			taskManager.run();
+			taskManager.execute();
 		}
 	}
 	

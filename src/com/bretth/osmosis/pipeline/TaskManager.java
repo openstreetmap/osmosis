@@ -211,7 +211,7 @@ public abstract class TaskManager {
 	 * Begins execution of the task. For many sink tasks, this will not do
 	 * anything. Source tasks are likely to begin execution within a new thread.
 	 */
-	public abstract void run();
+	public abstract void execute();
 	
 	
 	/**

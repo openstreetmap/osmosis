@@ -11,7 +11,7 @@ import com.bretth.osmosis.task.ChangeSource;
  * 
  * @author Brett Henderson
  */
-public class ChangeSinkManager extends TaskManager {
+public class ChangeSinkManager extends PassiveTaskManager {
 	private ChangeSink task;
 	
 	
@@ -49,23 +49,5 @@ public class ChangeSinkManager extends TaskManager {
 		// Cast the input feed to the correct type.
 		// Connect the tasks.
 		source.setChangeSink(task);
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void run() {
-		// Nothing to do for a sink because it passively receives data.
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void waitForCompletion() {
-		// Nothing to do for a sink because it passively receives data.
 	}
 }

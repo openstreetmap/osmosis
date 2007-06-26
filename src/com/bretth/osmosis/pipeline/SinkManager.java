@@ -11,7 +11,7 @@ import com.bretth.osmosis.task.Source;
  * 
  * @author Brett Henderson
  */
-public class SinkManager extends TaskManager {
+public class SinkManager extends PassiveTaskManager {
 	private Sink task;
 	
 	
@@ -49,23 +49,5 @@ public class SinkManager extends TaskManager {
 		// Cast the input feed to the correct type.
 		// Connect the tasks.
 		source.setSink(task);
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void run() {
-		// Nothing to do for a sink because it passively receives data.
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void waitForCompletion() {
-		// Nothing to do for a sink because it passively receives data.
 	}
 }

@@ -2,7 +2,6 @@ package com.bretth.osmosis.pipeline;
 
 import java.util.Map;
 
-import com.bretth.osmosis.OsmosisRuntimeException;
 import com.bretth.osmosis.task.MultiSinkRunnableChangeSource;
 import com.bretth.osmosis.task.Sink;
 import com.bretth.osmosis.task.Source;
@@ -13,9 +12,8 @@ import com.bretth.osmosis.task.Source;
  * 
  * @author Brett Henderson
  */
-public class MultiSinkRunnableChangeSourceManager extends TaskManager {
+public class MultiSinkRunnableChangeSourceManager extends ActiveTaskManager {
 	private MultiSinkRunnableChangeSource task;
-	private Thread thread;
 	
 	
 	/**
@@ -68,31 +66,7 @@ public class MultiSinkRunnableChangeSourceManager extends TaskManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void run() {
-		if (thread != null) {
-			throw new OsmosisRuntimeException("Task " + getTaskId()
-					+ " is already running.");
-		}
-
-		thread = new Thread(task, "Thread-" + getTaskId());
-
-		thread.start();
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void waitForCompletion() {
-		if (thread != null) {
-			try {
-				thread.join();
-			} catch (InterruptedException e) {
-				// Do nothing.
-			}
-
-			thread = null;
-		}
+	protected Runnable getTask() {
+		return task;
 	}
 }

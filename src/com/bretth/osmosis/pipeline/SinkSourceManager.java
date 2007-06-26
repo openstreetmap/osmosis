@@ -12,7 +12,7 @@ import com.bretth.osmosis.task.Source;
  * 
  * @author Brett Henderson
  */
-public class SinkSourceManager extends TaskManager {
+public class SinkSourceManager extends PassiveTaskManager {
 	private SinkSource task;
 	
 	
@@ -54,23 +54,5 @@ public class SinkSourceManager extends TaskManager {
 		// Register the task as an output. A source only has one output, this
 		// corresponds to pipe index 0.
 		setOutputTask(pipeTasks, task, 0);
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void run() {
-		// Nothing to do for a sink because it passively receives data.
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void waitForCompletion() {
-		// Nothing to do for a sink because it passively receives data.
 	}
 }
