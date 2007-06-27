@@ -6,8 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
 
@@ -22,7 +20,7 @@ import com.bretth.osmosis.OsmosisRuntimeException;
 public class DateParser {
 	
 	private static final String[] formats = {
-		"yyyy-MM-dd'T'HH:mm:ss'Z'",
+	    "yyyy-MM-dd'T'HH:mm:ss'Z'",
 		"yyyy-MM-dd'T'HH:mm:ssZ",
 		"yyyy-MM-dd'T'HH:mm:ss",
 		"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
@@ -39,7 +37,7 @@ public class DateParser {
 	
 	
 	private List<DateFormat> dateParsers;
-	private Pattern pattern;
+	private int activeDateParser;
 	
 	
 	/**
@@ -52,7 +50,8 @@ public class DateParser {
 			dateParsers.add(new SimpleDateFormat(formats[i]));
 		}
 		
-		pattern = Pattern.compile("(....-..-..T..:..:..[+-]..):(..)");
+		// We haven't selected a date parser yet.
+		activeDateParser = -1;
 	}
 	
 	
@@ -67,21 +66,43 @@ public class DateParser {
 	 *             formats.
 	 */
 	public Date parse(String date) {
-		Matcher matcher;
 		String correctedDate;
 		
-		// first try to fix ruby's broken xmlschema - format
-		matcher = pattern.matcher(date);
-		if (matcher.matches()) {
-			correctedDate = matcher.group(1) + matcher.group(2);
+		// Try to fix ruby's broken xmlschema - format
+		// Replace this:
+		// 2007-02-12T18:43:01+00:00
+		// With this:
+		// 2007-02-12T18:43:01+0000
+		if (date.length() == 25 && date.charAt(22) == ':') {
+			correctedDate = date.substring(0, 22) + date.substring(23, 25);
 		} else {
 			correctedDate = date;
 		}
 		
-		// Try the date parsers one by one until a suitable format is found.
-		for (DateFormat dateParser : dateParsers) {
+		// If we have previously successfully used a date parser, we'll try it
+		// first.
+		if (activeDateParser >= 0) {
 			try {
-				return dateParser.parse(correctedDate);
+				return dateParsers.get(activeDateParser).parse(correctedDate);
+			} catch (ParseException e) {
+				// The currently active parser didn't work, so we must clear it
+				// and find a new appropriate parser.
+				activeDateParser = -1;
+			}
+		}
+		
+		// Try the date parsers one by one until a suitable format is found.
+		for (int i = 0; i < dateParsers.size(); i++) {
+			try {
+				Date result;
+				
+				// Attempt to parse with the current parser, if successful we
+				// store its index for next time.
+				result = dateParsers.get(i).parse(correctedDate);
+				activeDateParser = i;
+				
+				return result;
+				
 			} catch (ParseException pe) {
 				// Ignore parsing errors and try the next pattern.
 			}
