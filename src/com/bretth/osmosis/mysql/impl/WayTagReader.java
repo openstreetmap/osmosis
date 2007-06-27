@@ -13,7 +13,7 @@ import com.bretth.osmosis.OsmosisRuntimeException;
  */
 public class WayTagReader extends EntityReader<WayTag> {
 	private static final String SELECT_SQL =
-		"SELECT id, k, v FROM way_tags ORDER BY id";
+		"SELECT id, k, v FROM current_way_tags ORDER BY id";
 	
 	
 	/**

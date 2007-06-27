@@ -13,7 +13,7 @@ import com.bretth.osmosis.OsmosisRuntimeException;
  */
 public class WaySegmentReader extends EntityReader<WaySegment> {
 	private static final String SELECT_SQL =
-		"SELECT id AS way_id, segment_id, sequence_id FROM way_segments ORDER BY way_id, sequence_id";
+		"SELECT id AS way_id, segment_id, sequence_id FROM current_way_segments ORDER BY way_id, sequence_id";
 	
 	
 	/**
