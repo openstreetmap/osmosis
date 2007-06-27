@@ -122,6 +122,7 @@ public class FileBasedSort<DataType> implements Releasable {
 	 *            The number of chunks to sort.
 	 * @return An iterator providing access to the sort result.
 	 */
+	@SuppressWarnings("null")
 	private ReleasableIterator<DataType> iteratePersisted(int nestLevel, long beginChunkIndex, long chunkCount) {
 		ReleasableIterator<DataType> sourceIterator = null;
 		ObjectStore<DataType> objectStorage = null;
@@ -140,6 +141,10 @@ public class FileBasedSort<DataType> implements Releasable {
 			while (sourceIterator.hasNext()) {
 				objectStorage.add(sourceIterator.next());
 			}
+			
+			// Release the source iterator.
+			sourceIterator.release();
+			sourceIterator = null;
 			
 			// Open a new iterator on the persisted data.
 			storageIterator = objectStorage.iterate();

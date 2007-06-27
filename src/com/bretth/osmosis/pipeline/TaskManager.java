@@ -119,10 +119,10 @@ public abstract class TaskManager {
 		for (String pipeArgName : pipeArgs.keySet()) {
 			// It is an input pipe definition if starts with the input pipe prefix.
 			if (pipeArgName.indexOf(pipeArgumentPrefix) == 0) {
-				int pipeIndex;
+				Integer pipeIndex;
 				
-				pipeIndex = getPipeIndex(
-					pipeArgName.substring(pipeArgumentPrefix.length())
+				pipeIndex = new Integer(
+					getPipeIndex(pipeArgName.substring(pipeArgumentPrefix.length()))
 				);
 				
 				// Ensure that there aren't two pipes with the same index.
@@ -153,11 +153,12 @@ public abstract class TaskManager {
 	 */
 	protected Task getInputTask(PipeTasks pipeTasks, int pipeIndex, Class<? extends Task> requiredTaskType) {
 		Task inputTask;
+		Integer pipeIndexO = new Integer(pipeIndex);
 		
 		// We use the specified pipe name if it exists, otherwise we get the
 		// next available default pipe.
-		if (inputPipeNames.containsKey(pipeIndex)) {
-			inputTask = pipeTasks.retrieveTask(taskId, inputPipeNames.get(pipeIndex), requiredTaskType);
+		if (inputPipeNames.containsKey(pipeIndexO)) {
+			inputTask = pipeTasks.retrieveTask(taskId, inputPipeNames.get(pipeIndexO), requiredTaskType);
 		} else {
 			inputTask = pipeTasks.retrieveTask(taskId, requiredTaskType);
 		}
@@ -177,10 +178,12 @@ public abstract class TaskManager {
 	 *            The index of the pipe on the current task.
 	 */
 	protected void setOutputTask(PipeTasks pipeTasks, Task outputTask, int pipeIndex) {
+		Integer pipeIndexO = new Integer(pipeIndex);
+		
 		// We use the specified pipe name if it exists, otherwise we register
 		// using the next available default pipe name.
-		if (outputPipeNames.containsKey(pipeIndex)) {
-			pipeTasks.putTask(taskId, outputPipeNames.get(pipeIndex), outputTask);
+		if (outputPipeNames.containsKey(pipeIndexO)) {
+			pipeTasks.putTask(taskId, outputPipeNames.get(pipeIndexO), outputTask);
 		} else {
 			pipeTasks.putTask(taskId, outputTask);
 		}
