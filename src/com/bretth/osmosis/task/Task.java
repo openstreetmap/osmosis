@@ -2,8 +2,7 @@ package com.bretth.osmosis.task;
 
 
 /**
- * Defines the root of the interface inheritance hierarchy for all Conduit task
- * types.
+ * Defines the root of the interface inheritance hierarchy for all task types.
  * 
  * @author Brett Henderson
  */

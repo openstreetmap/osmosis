@@ -9,7 +9,7 @@ import com.bretth.osmosis.pipeline.Pipeline;
 
 
 /**
- * The main entry point for the Conduit application.
+ * The main entry point for the application.
  * 
  * @author Brett Henderson
  */
@@ -30,7 +30,7 @@ public class Osmosis {
 			
 			initializeLogging();
 			
-			log.info("Conduit Version " + VERSION);
+			log.info("Osmosis Version " + VERSION);
 			TaskRegistrar.initialize();
 			
 			pipeline = new Pipeline();

@@ -45,7 +45,7 @@ public class OsmWriter extends ElementWriter {
 	public void begin(BufferedWriter writer) {
 		beginOpenElement(writer);
 		addAttribute(writer, "version", "0.3");
-		addAttribute(writer, "generator", "Conduit");
+		addAttribute(writer, "generator", "Osmosis");
 		endOpenElement(writer, false);
 	}
 	

@@ -2,8 +2,8 @@ package com.bretth.osmosis;
 
 
 /**
- * The root of the unchecked exception hierarchy for the conduit application. All
- * typed runtime exceptions subclass this exception.
+ * The root of the unchecked exception hierarchy for the application. All typed
+ * runtime exceptions subclass this exception.
  * 
  * @author Brett Henderson
  */

@@ -2,8 +2,8 @@ package com.bretth.osmosis;
 
 
 /**
- * The root of the checked exception hierarchy for the conduit application. All
- * typed exceptions subclass this exception.
+ * The root of the checked exception hierarchy for the application. All typed
+ * exceptions subclass this exception.
  * 
  * @author Brett Henderson
  */
