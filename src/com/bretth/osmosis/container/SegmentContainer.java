@@ -9,6 +9,9 @@ import com.bretth.osmosis.data.Segment;
  * @author Brett Henderson
  */
 public class SegmentContainer extends EntityContainer {
+	private static final long serialVersionUID = 1L;
+	
+	
 	private Segment segment;
 	
 	

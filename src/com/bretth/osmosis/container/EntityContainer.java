@@ -1,5 +1,7 @@
 package com.bretth.osmosis.container;
 
+import java.io.Serializable;
+
 import com.bretth.osmosis.data.Entity;
 
 
@@ -9,7 +11,7 @@ import com.bretth.osmosis.data.Entity;
  * 
  * @author Brett Henderson
  */
-public abstract class EntityContainer {
+public abstract class EntityContainer implements Serializable {
 	/**
 	 * Calls the appropriate process method with the contained entity.
 	 * 

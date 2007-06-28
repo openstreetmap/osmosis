@@ -9,6 +9,9 @@ import com.bretth.osmosis.data.Way;
  * @author Brett Henderson
  */
 public class WayContainer extends EntityContainer {
+	private static final long serialVersionUID = 1L;
+	
+	
 	private Way way;
 	
 	

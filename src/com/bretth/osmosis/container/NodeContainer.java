@@ -9,6 +9,9 @@ import com.bretth.osmosis.data.Node;
  * @author Brett Henderson
  */
 public class NodeContainer extends EntityContainer {
+	private static final long serialVersionUID = 1L;
+	
+	
 	private Node node;
 	
 	
