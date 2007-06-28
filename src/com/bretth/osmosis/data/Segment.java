@@ -6,7 +6,7 @@ package com.bretth.osmosis.data;
  * 
  * @author Brett Henderson
  */
-public class Segment extends Element implements Comparable<Segment> {
+public class Segment extends Entity implements Comparable<Segment> {
 	private static final long serialVersionUID = 1L;
 	
 	
@@ -36,8 +36,8 @@ public class Segment extends Element implements Comparable<Segment> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ElementType getElementType() {
-		return ElementType.Segment;
+	public EntityType getType() {
+		return EntityType.Segment;
 	}
 	
 	

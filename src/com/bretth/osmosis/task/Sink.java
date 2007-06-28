@@ -1,6 +1,6 @@
 package com.bretth.osmosis.task;
 
-import com.bretth.osmosis.container.ElementContainer;
+import com.bretth.osmosis.container.EntityContainer;
 
 
 /**
@@ -11,12 +11,12 @@ import com.bretth.osmosis.container.ElementContainer;
 public interface Sink extends Task {
 	
 	/**
-	 * Process the element.
+	 * Process the entity.
 	 * 
-	 * @param elementContainer
-	 *            The element to be processed.
+	 * @param entityContainer
+	 *            The entity to be processed.
 	 */
-	public void process(ElementContainer elementContainer);
+	public void process(EntityContainer entityContainer);
 	
 	/**
 	 * Performs finalisation tasks such as database commits as necessary to

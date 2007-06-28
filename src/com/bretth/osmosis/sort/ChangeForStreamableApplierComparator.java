@@ -19,7 +19,7 @@ import com.bretth.osmosis.container.ChangeContainer;
  * @author Brett Henderson
  */
 public class ChangeForStreamableApplierComparator implements Comparator<ChangeContainer> {
-	private ElementByTypeThenIdComparator comparator = new ElementByTypeThenIdComparator();
+	private EntityByTypeThenIdComparator comparator = new EntityByTypeThenIdComparator();
 	
 	
 	/**
@@ -27,7 +27,7 @@ public class ChangeForStreamableApplierComparator implements Comparator<ChangeCo
 	 */
 	public int compare(ChangeContainer o1, ChangeContainer o2) {
 		// Changes aren't involved, so we can delegate directly to a standard
-		// element comparator.
-		return comparator.compare(o1.getElement(), o2.getElement());
+		// entity comparator.
+		return comparator.compare(o1.getEntityContainer(), o2.getEntityContainer());
 	}
 }

@@ -9,17 +9,17 @@ package com.bretth.osmosis.task;
  */
 public enum ChangeAction {
 	/**
-	 * Represents the creation of a new data element.
+	 * Represents the creation of a new entity.
 	 */
 	Create,
 	
 	/**
-	 * Represents the modification of an existing data element.
+	 * Represents the modification of an existing entity.
 	 */
 	Modify,
 	
 	/**
-	 * Represents the deletion of an existing data element.
+	 * Represents the deletion of an existing entity.
 	 */
 	Delete
 }

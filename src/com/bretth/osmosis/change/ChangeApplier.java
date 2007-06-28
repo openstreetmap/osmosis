@@ -3,8 +3,8 @@ package com.bretth.osmosis.change;
 import com.bretth.osmosis.OsmosisRuntimeException;
 import com.bretth.osmosis.change.impl.DataPostbox;
 import com.bretth.osmosis.container.ChangeContainer;
-import com.bretth.osmosis.container.ElementContainer;
-import com.bretth.osmosis.sort.ElementByTypeThenIdComparator;
+import com.bretth.osmosis.container.EntityContainer;
+import com.bretth.osmosis.sort.EntityByTypeThenIdComparator;
 import com.bretth.osmosis.task.ChangeAction;
 import com.bretth.osmosis.task.ChangeSink;
 import com.bretth.osmosis.task.MultiSinkMultiChangeSinkRunnableSource;
@@ -19,7 +19,7 @@ import com.bretth.osmosis.task.Sink;
 public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 	
 	private Sink sink;
-	private DataPostbox<ElementContainer> basePostbox;
+	private DataPostbox<EntityContainer> basePostbox;
 	private DataPostbox<ChangeContainer> changePostbox;
 	
 	
@@ -30,7 +30,7 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 	 *            The size of the buffers to use for input sources.
 	 */
 	public ChangeApplier(int inputBufferCapacity) {
-		basePostbox = new DataPostbox<ElementContainer>(inputBufferCapacity);
+		basePostbox = new DataPostbox<EntityContainer>(inputBufferCapacity);
 		changePostbox = new DataPostbox<ChangeContainer>(inputBufferCapacity);
 	}
 	
@@ -39,7 +39,7 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 	 * {@inheritDoc}
 	 */
 	public Sink getSink(int instance) {
-		final DataPostbox<ElementContainer> destinationPostbox = basePostbox;
+		final DataPostbox<EntityContainer> destinationPostbox = basePostbox;
 		
 		if (instance != 0) {
 			throw new OsmosisRuntimeException("Sink instance " + instance
@@ -47,10 +47,10 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 		}
 		
 		return new Sink() {
-			private DataPostbox<ElementContainer> postbox = destinationPostbox;
+			private DataPostbox<EntityContainer> postbox = destinationPostbox;
 			
-			public void process(ElementContainer elementContainer) {
-				postbox.put(elementContainer);
+			public void process(EntityContainer entityContainer) {
+				postbox.put(entityContainer);
 			}
 			public void complete() {
 				postbox.complete();
@@ -125,12 +125,12 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 		boolean completed = false;
 		
 		try {
-			ElementByTypeThenIdComparator comparator;
-			ElementContainer base = null;
+			EntityByTypeThenIdComparator comparator;
+			EntityContainer base = null;
 			ChangeContainer change = null;
 			
-			// Create a comparator for comparing two elements by type and identifier.
-			comparator = new ElementByTypeThenIdComparator();
+			// Create a comparator for comparing two entities by type and identifier.
+			comparator = new EntityByTypeThenIdComparator();
 			
 			// We continue in the comparison loop while both sources still have data.
 			while ((base != null || basePostbox.hasNext()) && (change != null || changePostbox.hasNext())) {
@@ -145,22 +145,22 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 				}
 				
 				// Compare the two sources.
-				comparisonResult = comparator.compare(base, change.getElement());
+				comparisonResult = comparator.compare(base, change.getEntityContainer());
 				
 				if (comparisonResult < 0) {
-					// The base element doesn't exist on the change source therefore we simply pass it through.
+					// The base entity doesn't exist on the change source therefore we simply pass it through.
 					sink.process(base);
 					base = null;
 				} else if (comparisonResult > 0) {
-					// This element doesn't exist in the "base" source therefore we
+					// This entity doesn't exist in the "base" source therefore we
 					// are expecting an add.
 					if (change.getAction().equals(ChangeAction.Create)) {
-						sink.process(change.getElement());
+						sink.process(change.getEntityContainer());
 						
 					} else {
 						throw new OsmosisRuntimeException(
 							"Cannot perform action " + change.getAction() + " on node with id="
-							+ change.getElement().getElement().getId()
+							+ change.getEntityContainer().getEntity().getId()
 							+ " because it doesn't exist in the base source."
 						);
 					}
@@ -168,10 +168,10 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 					change = null;
 					
 				} else {
-					// The same element exists in both sources therefore we are
+					// The same entity exists in both sources therefore we are
 					// expecting a modify or delete.
 					if (change.getAction().equals(ChangeAction.Modify)) {
-						sink.process(change.getElement());
+						sink.process(change.getEntityContainer());
 						
 					} else if (change.getAction().equals(ChangeAction.Delete)) {
 						// We don't need to do anything for delete.
@@ -179,7 +179,7 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 					} else {
 						throw new OsmosisRuntimeException(
 							"Cannot perform action " + change.getAction() + " on node with id="
-							+ change.getElement().getElement().getId()
+							+ change.getEntityContainer().getEntity().getId()
 							+ " because it exists in the base source."
 						);
 					}
@@ -189,7 +189,7 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 				}
 			}
 			
-			// Any remaining "base" elements are unmodified.
+			// Any remaining "base" entities are unmodified.
 			while (base != null || basePostbox.hasNext()) {
 				if (base == null) {
 					base = basePostbox.getNext();
@@ -197,20 +197,20 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 				sink.process(base);
 				base = null;
 			}
-			// Any remaining "change" elements must be creates.
+			// Any remaining "change" entities must be creates.
 			while (change != null || changePostbox.hasNext()) {
 				if (change == null) {
 					change = changePostbox.getNext();
 				}
-				// This element doesn't exist in the "base" source therefore we
+				// This entity doesn't exist in the "base" source therefore we
 				// are expecting an add.
 				if (change.getAction().equals(ChangeAction.Create)) {
-					sink.process(change.getElement());
+					sink.process(change.getEntityContainer());
 					
 				} else {
 					throw new OsmosisRuntimeException(
 						"Cannot perform action " + change.getAction() + " on node with id="
-						+ change.getElement().getElement().getId()
+						+ change.getEntityContainer().getEntity().getId()
 						+ " because it doesn't exist in the base source."
 					);
 				}

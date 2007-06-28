@@ -3,8 +3,8 @@ package com.bretth.osmosis.change;
 import com.bretth.osmosis.OsmosisRuntimeException;
 import com.bretth.osmosis.change.impl.DataPostbox;
 import com.bretth.osmosis.container.ChangeContainer;
-import com.bretth.osmosis.container.ElementContainer;
-import com.bretth.osmosis.sort.ElementByTypeThenIdComparator;
+import com.bretth.osmosis.container.EntityContainer;
+import com.bretth.osmosis.sort.EntityByTypeThenIdComparator;
 import com.bretth.osmosis.task.ChangeAction;
 import com.bretth.osmosis.task.ChangeSink;
 import com.bretth.osmosis.task.MultiSinkRunnableChangeSource;
@@ -19,8 +19,8 @@ import com.bretth.osmosis.task.Sink;
 public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 
 	private ChangeSink changeSink;
-	private DataPostbox<ElementContainer> fromPostbox;
-	private DataPostbox<ElementContainer> toPostbox;
+	private DataPostbox<EntityContainer> fromPostbox;
+	private DataPostbox<EntityContainer> toPostbox;
 	
 	
 	/**
@@ -30,8 +30,8 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 	 *            The size of the buffers to use for input sources.
 	 */
 	public ChangeDeriver(int inputBufferCapacity) {
-		fromPostbox = new DataPostbox<ElementContainer>(inputBufferCapacity);
-		toPostbox = new DataPostbox<ElementContainer>(inputBufferCapacity);
+		fromPostbox = new DataPostbox<EntityContainer>(inputBufferCapacity);
+		toPostbox = new DataPostbox<EntityContainer>(inputBufferCapacity);
 	}
 
 
@@ -39,7 +39,7 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 	 * {@inheritDoc}
 	 */
 	public Sink getSink(int instance) {
-		final DataPostbox<ElementContainer> destinationPostbox;
+		final DataPostbox<EntityContainer> destinationPostbox;
 		
 		switch (instance) {
 		case 0:
@@ -54,10 +54,10 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 		}
 		
 		return new Sink() {
-			private DataPostbox<ElementContainer> postbox = destinationPostbox;
+			private DataPostbox<EntityContainer> postbox = destinationPostbox;
 			
-			public void process(ElementContainer elementContainer) {
-				postbox.put(elementContainer);
+			public void process(EntityContainer entityContainer) {
+				postbox.put(entityContainer);
 			}
 			public void complete() {
 				postbox.complete();
@@ -94,66 +94,66 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 		boolean completed = false;
 		
 		try {
-			ElementByTypeThenIdComparator comparator;
-			ElementContainer fromElement = null;
-			ElementContainer toElement = null;
+			EntityByTypeThenIdComparator comparator;
+			EntityContainer fromEntityContainer = null;
+			EntityContainer toEntityContainer = null;
 			
-			// Create a comparator for comparing two elements by type and identifier.
-			comparator = new ElementByTypeThenIdComparator();
+			// Create a comparator for comparing two entities by type and identifier.
+			comparator = new EntityByTypeThenIdComparator();
 			
 			// We continue in the comparison loop while both sources still have data.
-			while ((fromElement != null || fromPostbox.hasNext()) && (toElement != null || toPostbox.hasNext())) {
+			while ((fromEntityContainer != null || fromPostbox.hasNext()) && (toEntityContainer != null || toPostbox.hasNext())) {
 				int comparisonResult;
 				
 				// Get the next input data where required.
-				if (fromElement == null) {
-					fromElement = fromPostbox.getNext();
+				if (fromEntityContainer == null) {
+					fromEntityContainer = fromPostbox.getNext();
 				}
-				if (toElement == null) {
-					toElement = toPostbox.getNext();
+				if (toEntityContainer == null) {
+					toEntityContainer = toPostbox.getNext();
 				}
 				
 				// Compare the two sources.
-				comparisonResult = comparator.compare(fromElement, toElement);
+				comparisonResult = comparator.compare(fromEntityContainer, toEntityContainer);
 				
 				if (comparisonResult < 0) {
-					// The from element doesn't exist on the to source therefore has
+					// The from entity doesn't exist on the to source therefore has
 					// been deleted.
-					changeSink.process(new ChangeContainer(fromElement, ChangeAction.Delete));
-					fromElement = null;
+					changeSink.process(new ChangeContainer(fromEntityContainer, ChangeAction.Delete));
+					fromEntityContainer = null;
 				} else if (comparisonResult > 0) {
-					// The to element doesn't exist on the from source therefore has
+					// The to entity doesn't exist on the from source therefore has
 					// been created.
-					changeSink.process(new ChangeContainer(toElement, ChangeAction.Create));
-					toElement = null;
+					changeSink.process(new ChangeContainer(toEntityContainer, ChangeAction.Create));
+					toEntityContainer = null;
 				} else {
-					// The element exists on both sources, therefore we must
+					// The entity exists on both sources, therefore we must
 					// compare
-					// the elements directly. If there is a difference, the
-					// element has been modified.
-					if (!fromElement.getElement().equals(toElement.getElement())) {
-						changeSink.process(new ChangeContainer(toElement, ChangeAction.Modify));
+					// the entities directly. If there is a difference, the
+					// entity has been modified.
+					if (!fromEntityContainer.getEntity().equals(toEntityContainer.getEntity())) {
+						changeSink.process(new ChangeContainer(toEntityContainer, ChangeAction.Modify));
 					}
-					fromElement = null;
-					toElement = null;
+					fromEntityContainer = null;
+					toEntityContainer = null;
 				}
 			}
 			
-			// Any remaining "from" elements are deletes.
-			while (fromElement != null || fromPostbox.hasNext()) {
-				if (fromElement == null) {
-					fromElement = fromPostbox.getNext();
+			// Any remaining "from" entities are deletes.
+			while (fromEntityContainer != null || fromPostbox.hasNext()) {
+				if (fromEntityContainer == null) {
+					fromEntityContainer = fromPostbox.getNext();
 				}
-				changeSink.process(new ChangeContainer(fromElement, ChangeAction.Delete));
-				fromElement = null;
+				changeSink.process(new ChangeContainer(fromEntityContainer, ChangeAction.Delete));
+				fromEntityContainer = null;
 			}
-			// Any remaining "to" elements are creates.
-			while (toElement != null || toPostbox.hasNext()) {
-				if (toElement == null) {
-					toElement = toPostbox.getNext();
+			// Any remaining "to" entities are creates.
+			while (toEntityContainer != null || toPostbox.hasNext()) {
+				if (toEntityContainer == null) {
+					toEntityContainer = toPostbox.getNext();
 				}
-				changeSink.process(new ChangeContainer(toElement, ChangeAction.Create));
-				toElement = null;
+				changeSink.process(new ChangeContainer(toEntityContainer, ChangeAction.Create));
+				toEntityContainer = null;
 			}
 			
 			changeSink.complete();

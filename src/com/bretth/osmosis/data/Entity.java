@@ -8,12 +8,12 @@ import java.util.List;
 
 
 /**
- * A data class representing a single OSM element. All top level data types
+ * A data class representing a single OSM entity. All top level data types
  * inherit from this class.
  * 
  * @author Brett Henderson
  */
-public abstract class Element implements Serializable {
+public abstract class Entity implements Serializable {
 	private long id;
 	private List<Tag> tagList;
 	
@@ -24,7 +24,7 @@ public abstract class Element implements Serializable {
 	 * @param id
 	 *            The unique identifier.
 	 */
-	public Element(long id) {
+	public Entity(long id) {
 		this.id = id;
 		
 		tagList = new ArrayList<Tag>();
@@ -70,11 +70,11 @@ public abstract class Element implements Serializable {
 	
 	
 	/**
-	 * Returns the specific data type represented by this element.
+	 * Returns the specific data type represented by this entity.
 	 * 
-	 * @return The element type enum value.
+	 * @return The entity type enum value.
 	 */
-	public abstract ElementType getElementType();
+	public abstract EntityType getType();
 	
 	
 	/**

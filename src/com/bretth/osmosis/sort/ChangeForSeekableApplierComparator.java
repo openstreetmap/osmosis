@@ -4,8 +4,8 @@ import java.util.Comparator;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
 import com.bretth.osmosis.container.ChangeContainer;
-import com.bretth.osmosis.data.Element;
-import com.bretth.osmosis.data.ElementType;
+import com.bretth.osmosis.data.Entity;
+import com.bretth.osmosis.data.EntityType;
 import com.bretth.osmosis.task.ChangeAction;
 
 
@@ -34,15 +34,15 @@ public class ChangeForSeekableApplierComparator implements Comparator<ChangeCont
 	 * Create a weighting for the change. The weighting is the index into the
 	 * sorting list implemented by this class.
 	 * 
-	 * @param changeElement
+	 * @param changeEntity
 	 *            The change to be analysed.
 	 * @return The sort weighting.
 	 */
-	private int calculateSortWeight(ChangeContainer changeElement) {
-		ChangeAction action = changeElement.getAction();
-		Element element = changeElement.getElement().getElement();
+	private int calculateSortWeight(ChangeContainer changeEntity) {
+		ChangeAction action = changeEntity.getAction();
+		Entity entity = changeEntity.getEntityContainer().getEntity();
 		
-		if (element.getElementType().equals(ElementType.Node)) {
+		if (entity.getType().equals(EntityType.Node)) {
 			if (action.equals(ChangeAction.Create)) {
 				return 1;
 			}
@@ -52,7 +52,7 @@ public class ChangeForSeekableApplierComparator implements Comparator<ChangeCont
 			if (action.equals(ChangeAction.Delete)) {
 				return 9;
 			}
-		} else if (element.getElementType().equals(ElementType.Segment)) {
+		} else if (entity.getType().equals(EntityType.Segment)) {
 			if (action.equals(ChangeAction.Create)) {
 				return 2;
 			}
@@ -62,7 +62,7 @@ public class ChangeForSeekableApplierComparator implements Comparator<ChangeCont
 			if (action.equals(ChangeAction.Delete)) {
 				return 8;
 			}
-		} else if (element.getElementType().equals(ElementType.Way)) {
+		} else if (entity.getType().equals(EntityType.Way)) {
 			if (action.equals(ChangeAction.Create)) {
 				return 3;
 			}
@@ -75,9 +75,9 @@ public class ChangeForSeekableApplierComparator implements Comparator<ChangeCont
 		}
 		
 		throw new OsmosisRuntimeException(
-			"The change element with action " + action
-			+ " type " + element.getElementType()
-			+ " and id " + element.getId()
+			"The change entity with action " + action
+			+ " type " + entity.getType()
+			+ " and id " + entity.getId()
 			+ " was not recognised."
 		);
 	}

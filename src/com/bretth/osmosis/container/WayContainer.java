@@ -4,11 +4,11 @@ import com.bretth.osmosis.data.Way;
 
 
 /**
- * Element container implementation for ways.
+ * Entity container implementation for ways.
  * 
  * @author Brett Henderson
  */
-public class WayContainer extends ElementContainer {
+public class WayContainer extends EntityContainer {
 	private Way way;
 	
 	
@@ -27,7 +27,7 @@ public class WayContainer extends ElementContainer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void process(ElementProcessor processor) {
+	public void process(EntityProcessor processor) {
 		processor.process(this);
 	}
 	
@@ -36,7 +36,7 @@ public class WayContainer extends ElementContainer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Way getElement() {
+	public Way getEntity() {
 		return way;
 	}
 }

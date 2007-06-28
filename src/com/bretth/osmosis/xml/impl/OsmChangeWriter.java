@@ -116,6 +116,6 @@ public class OsmChangeWriter extends ElementWriter {
 	 */
 	public void process(BufferedWriter writer, ChangeContainer changeContainer) {
 		updateActiveOsmWriter(writer, changeContainer.getAction());
-		activeOsmWriter.process(writer, changeContainer.getElement());
+		activeOsmWriter.process(writer, changeContainer.getEntityContainer());
 	}
 }

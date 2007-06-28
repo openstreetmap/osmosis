@@ -10,13 +10,13 @@ import java.util.List;
  * Allows a large number of objects to be sorted by writing them all to disk
  * then sorting using a merge sort algorithm.
  * 
- * @param <DataType>
+ * @param <T>
  *            The object type to be sorted.
  * @author Brett Henderson
  */
-public class FileBasedSort<DataType> implements Releasable {
+public class FileBasedSort<T> implements Releasable {
 	/**
-	 * The maximum number of elements to perform memory-based sorting on,
+	 * The maximum number of entities to perform memory-based sorting on,
 	 * amounts larger than this will be split into chunks of this size, the
 	 * chunks sorted in memory before writing to file, and all the results
 	 * merged using the merge sort algorithm.
@@ -43,9 +43,9 @@ public class FileBasedSort<DataType> implements Releasable {
 	private static final int MAX_MEMORY_SORT_DEPTH = 8;
 	
 	
-	private Comparator<DataType> comparator;
-	private ChunkedObjectStore<DataType> indexedElementStore;
-	private List<DataType> addBuffer;
+	private Comparator<T> comparator;
+	private ChunkedObjectStore<T> indexedEntityStore;
+	private List<T> addBuffer;
 	private boolean useCompression;
 	
 	
@@ -57,12 +57,12 @@ public class FileBasedSort<DataType> implements Releasable {
 	 * @param useCompression
 	 *            If true, the storage files will be compressed.
 	 */
-	public FileBasedSort(Comparator<DataType> comparator, boolean useCompression) {
+	public FileBasedSort(Comparator<T> comparator, boolean useCompression) {
 		this.comparator = comparator;
 		this.useCompression = useCompression;
 		
-		indexedElementStore = new ChunkedObjectStore<DataType>("emta", "idx", useCompression);
-		addBuffer = new ArrayList<DataType>(MAX_MEMORY_SORT_COUNT);
+		indexedEntityStore = new ChunkedObjectStore<T>("emta", "idx", useCompression);
+		addBuffer = new ArrayList<T>(MAX_MEMORY_SORT_COUNT);
 	}
 	
 	
@@ -75,16 +75,16 @@ public class FileBasedSort<DataType> implements Releasable {
 			// Sort the chunk prior to writing.
 			Collections.sort(addBuffer, comparator);
 			
-			// Write all elements in the buffer to element storage.
-			for (DataType element : addBuffer) {
-				indexedElementStore.add(element);
+			// Write all entities in the buffer to entity storage.
+			for (T entity : addBuffer) {
+				indexedEntityStore.add(entity);
 			}
 			
 			addBuffer.clear();
 			
 			// Close the chunk in the underlying data store so that it can be
 			// read separately.
-			indexedElementStore.closeChunk();
+			indexedEntityStore.closeChunk();
 		}
 	}
 	
@@ -95,11 +95,11 @@ public class FileBasedSort<DataType> implements Releasable {
 	 * @param value
 	 *            The data object.
 	 */
-	public void add(DataType value) {
-		// Add the new data element to the add buffer.
+	public void add(T value) {
+		// Add the new data entity to the add buffer.
 		addBuffer.add(value);
 		
-		// If the add buffer is full, it must be sorted and written to element
+		// If the add buffer is full, it must be sorted and written to entity
 		// storage.
 		if (addBuffer.size() >= MAX_MEMORY_SORT_COUNT) {
 			flushAddBuffer();
@@ -123,19 +123,19 @@ public class FileBasedSort<DataType> implements Releasable {
 	 * @return An iterator providing access to the sort result.
 	 */
 	@SuppressWarnings("null")
-	private ReleasableIterator<DataType> iteratePersisted(int nestLevel, long beginChunkIndex, long chunkCount) {
-		ReleasableIterator<DataType> sourceIterator = null;
-		ObjectStore<DataType> objectStorage = null;
-		ReleasableIterator<DataType> storageIterator = null;
+	private ReleasableIterator<T> iteratePersisted(int nestLevel, long beginChunkIndex, long chunkCount) {
+		ReleasableIterator<T> sourceIterator = null;
+		ObjectStore<T> objectStorage = null;
+		ReleasableIterator<T> storageIterator = null;
 		
 		try {
-			ReleasableIterator<DataType> resultIterator;
+			ReleasableIterator<T> resultIterator;
 			
 			// Open the underlying source iterator.
 			sourceIterator = iterate(nestLevel, beginChunkIndex, chunkCount);
 			
 			// Create a persistent object store.
-			objectStorage = new ObjectStore<DataType>("emtb", useCompression);
+			objectStorage = new ObjectStore<T>("emtb", useCompression);
 			
 			// Write the source data to disk.
 			while (sourceIterator.hasNext()) {
@@ -151,7 +151,7 @@ public class FileBasedSort<DataType> implements Releasable {
 			
 			// Create a result iterator which will close the object storage when
 			// the iterator is released.
-			resultIterator = new StoreReleasingIterator<DataType>(storageIterator, objectStorage);
+			resultIterator = new StoreReleasingIterator<T>(storageIterator, objectStorage);
 			
 			// Clear the references to the object storage and storage iterator
 			// so they won't be released on method exit.
@@ -188,20 +188,20 @@ public class FileBasedSort<DataType> implements Releasable {
 	 *            The number of chunks to sort.
 	 * @return An iterator providing access to the sort result.
 	 */
-	private ReleasableIterator<DataType> iterate(int nestLevel, long beginChunkIndex, long chunkCount) {
-		List<ReleasableIterator<DataType>> sources;
+	private ReleasableIterator<T> iterate(int nestLevel, long beginChunkIndex, long chunkCount) {
+		List<ReleasableIterator<T>> sources;
 		
-		sources = new ArrayList<ReleasableIterator<DataType>>();
+		sources = new ArrayList<ReleasableIterator<T>>();
 		
 		try {
-			MergingIterator<DataType> mergingIterator;
+			MergingIterator<T> mergingIterator;
 			
-			// If we are down to a small number of elements, we retrieve each source from file.
-			// Otherwise we recurse and split the number of elements down into smaller chunks.
+			// If we are down to a small number of entities, we retrieve each source from file.
+			// Otherwise we recurse and split the number of entities down into smaller chunks.
 			if (chunkCount <= MAX_MERGE_SOURCE_COUNT) {
 				for (int i = 0; i < chunkCount; i++) {
 					sources.add(
-						indexedElementStore.iterate(beginChunkIndex + i)
+						indexedEntityStore.iterate(beginChunkIndex + i)
 					);
 				}
 				
@@ -246,7 +246,7 @@ public class FileBasedSort<DataType> implements Releasable {
 			}
 			
 			// Create a merging iterator to merge all of the sources.
-			mergingIterator = new MergingIterator<DataType>(sources, comparator);
+			mergingIterator = new MergingIterator<T>(sources, comparator);
 			
 			// The merging iterator owns the sources now, so we clear our copy
 			// of them to prevent them being released on method exit.
@@ -255,7 +255,7 @@ public class FileBasedSort<DataType> implements Releasable {
 			return mergingIterator;
 			
 		} finally {
-			for (ReleasableIterator<DataType> source : sources) {
+			for (ReleasableIterator<T> source : sources) {
 				source.release();
 			}
 		}
@@ -265,12 +265,12 @@ public class FileBasedSort<DataType> implements Releasable {
 	/**
 	 * Sorts and returns the contents of the sorter.
 	 * 
-	 * @return An iterator providing access to the sorted elements.
+	 * @return An iterator providing access to the sorted entities.
 	 */
-	public ReleasableIterator<DataType> iterate() {
+	public ReleasableIterator<T> iterate() {
 		flushAddBuffer();
 		
-		return iterate(0, 0, indexedElementStore.getChunkCount());
+		return iterate(0, 0, indexedEntityStore.getChunkCount());
 	}
 	
 	
@@ -278,6 +278,6 @@ public class FileBasedSort<DataType> implements Releasable {
 	 * {@inheritDoc}
 	 */
 	public void release() {
-		indexedElementStore.release();
+		indexedEntityStore.release();
 	}
 }

@@ -3,7 +3,7 @@ package com.bretth.osmosis.xml.impl;
 import org.xml.sax.Attributes;
 
 import com.bretth.osmosis.container.ChangeContainer;
-import com.bretth.osmosis.container.ElementContainer;
+import com.bretth.osmosis.container.EntityContainer;
 import com.bretth.osmosis.task.ChangeAction;
 import com.bretth.osmosis.task.ChangeSink;
 import com.bretth.osmosis.task.Sink;
@@ -121,8 +121,8 @@ public class ChangeSourceElementProcessor extends BaseElementProcessor {
 		/**
 		 * {@inheritDoc}
 		 */
-		public void process(ElementContainer elementContainer) {
-			changeSink.process(new ChangeContainer(elementContainer, action));
+		public void process(EntityContainer entityContainer) {
+			changeSink.process(new ChangeContainer(entityContainer, action));
 		}
 
 		

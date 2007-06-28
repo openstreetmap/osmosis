@@ -2,12 +2,12 @@ package com.bretth.osmosis.container;
 
 
 /**
- * ElementContainer implementations call implementations of this class to
- * perform element type specific processing.
+ * EntityContainer implementations call implementations of this class to
+ * perform entity type specific processing.
  * 
  * @author Brett Henderson
  */
-public interface ElementProcessor {
+public interface EntityProcessor {
 	
 	/**
 	 * Process the node.

@@ -8,7 +8,7 @@ import com.bretth.osmosis.OsmosisRuntimeException;
 
 
 /**
- * Manages a file containing a series of long data elements. These long values
+ * Manages a file containing a series of long data entities. These long values
  * will be used as indexes into a main data file allowing the main data file to
  * be broken into chunks.
  * 

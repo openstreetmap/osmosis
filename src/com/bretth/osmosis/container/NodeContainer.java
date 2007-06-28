@@ -4,11 +4,11 @@ import com.bretth.osmosis.data.Node;
 
 
 /**
- * Element container implementation for nodes.
+ * Entity container implementation for nodes.
  * 
  * @author Brett Henderson
  */
-public class NodeContainer extends ElementContainer {
+public class NodeContainer extends EntityContainer {
 	private Node node;
 	
 	
@@ -27,7 +27,7 @@ public class NodeContainer extends ElementContainer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void process(ElementProcessor processor) {
+	public void process(EntityProcessor processor) {
 		processor.process(this);
 	}
 	
@@ -36,7 +36,7 @@ public class NodeContainer extends ElementContainer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Node getElement() {
+	public Node getEntity() {
 		return node;
 	}
 }

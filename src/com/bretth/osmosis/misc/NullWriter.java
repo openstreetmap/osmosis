@@ -1,6 +1,6 @@
 package com.bretth.osmosis.misc;
 
-import com.bretth.osmosis.container.ElementContainer;
+import com.bretth.osmosis.container.EntityContainer;
 import com.bretth.osmosis.task.Sink;
 
 
@@ -15,7 +15,7 @@ public class NullWriter implements Sink {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void process(ElementContainer element) {
+	public void process(EntityContainer entityContainer) {
 		// Discard the data.
 	}
 	

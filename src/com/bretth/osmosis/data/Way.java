@@ -11,7 +11,7 @@ import java.util.List;
  * 
  * @author Brett Henderson
  */
-public class Way extends Element implements Comparable<Way> {
+public class Way extends Entity implements Comparable<Way> {
 	private static final long serialVersionUID = 1L;
 	
 	
@@ -40,8 +40,8 @@ public class Way extends Element implements Comparable<Way> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ElementType getElementType() {
-		return ElementType.Way;
+	public EntityType getType() {
+		return EntityType.Way;
 	}
 	
 	
@@ -77,7 +77,7 @@ public class Way extends Element implements Comparable<Way> {
 		Collections.sort(list1);
 		Collections.sort(list2);
 		
-		// The list with the most elements is considered bigger.
+		// The list with the most entities is considered bigger.
 		if (list1.size() != list2.size()) {
 			return list1.size() - list2.size();
 		}

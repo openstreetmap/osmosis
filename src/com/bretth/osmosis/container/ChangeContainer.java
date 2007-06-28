@@ -4,36 +4,36 @@ import com.bretth.osmosis.task.ChangeAction;
 
 
 /**
- * Holds an ElementContainer and an associated action.
+ * Holds an EntityContainer and an associated action.
  * 
  * @author Brett Henderson
  */
 public class ChangeContainer {
-	private ElementContainer element;
+	private EntityContainer entityContainer;
 	private ChangeAction action;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param element
-	 *            The element to store.
+	 * @param entityContainer
+	 *            The entity to store.
 	 * @param action
 	 *            The action to store.
 	 */
-	public ChangeContainer(ElementContainer element, ChangeAction action) {
-		this.element = element;
+	public ChangeContainer(EntityContainer entityContainer, ChangeAction action) {
+		this.entityContainer = entityContainer;
 		this.action = action;
 	}
 	
 	
 	/**
-	 * Returns the contained element.
+	 * Returns the contained entity.
 	 * 
-	 * @return The element.
+	 * @return The entity.
 	 */
-	public ElementContainer getElement() {
-		return element;
+	public EntityContainer getEntityContainer() {
+		return entityContainer;
 	}
 	
 	

@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
-import com.bretth.osmosis.container.ElementContainer;
+import com.bretth.osmosis.container.EntityContainer;
 import com.bretth.osmosis.task.Sink;
 import com.bretth.osmosis.xml.impl.OsmWriter;
 
@@ -94,10 +94,10 @@ public class XmlWriter implements Sink {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void process(ElementContainer element) {
+	public void process(EntityContainer entityContainer) {
 		initialize();
 		
-		osmWriter.process(writer, element);
+		osmWriter.process(writer, entityContainer);
 	}
 	
 	

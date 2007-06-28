@@ -12,14 +12,14 @@ import com.bretth.osmosis.OsmosisRuntimeException;
  * This class reads objects from an ObjectInputStream until the end of stream is
  * reached.
  * 
- * @param <DataType>
+ * @param <T>
  *            The type of data to be returned by the iterator.
  * @author Brett Henderson
  */
-public class ObjectStreamIterator<DataType> implements ReleasableIterator<DataType> {
+public class ObjectStreamIterator<T> implements ReleasableIterator<T> {
 	
 	private ObjectInputStream inStream;
-	private DataType nextElement;
+	private T nextElement;
 	
 	
 	/**
@@ -44,7 +44,7 @@ public class ObjectStreamIterator<DataType> implements ReleasableIterator<DataTy
 			}
 			
 			try {
-				nextElement = (DataType) inStream.readObject();
+				nextElement = (T) inStream.readObject();
 			} catch (EOFException e) {
 				return false;
 			}
@@ -62,9 +62,9 @@ public class ObjectStreamIterator<DataType> implements ReleasableIterator<DataTy
 	/**
 	 * {@inheritDoc}
 	 */
-	public DataType next() {
+	public T next() {
 		if (hasNext()) {
-			DataType result;
+			T result;
 			
 			result = nextElement;
 			nextElement = null;

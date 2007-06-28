@@ -6,7 +6,7 @@ package com.bretth.osmosis.data;
  * 
  * @author Brett Henderson
  */
-public enum ElementType {
+public enum EntityType {
 	/**
 	 * Represents a geographical point.
 	 */

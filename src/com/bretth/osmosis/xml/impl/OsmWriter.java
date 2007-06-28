@@ -2,8 +2,8 @@ package com.bretth.osmosis.xml.impl;
 
 import java.io.BufferedWriter;
 
-import com.bretth.osmosis.container.ElementContainer;
-import com.bretth.osmosis.container.ElementProcessor;
+import com.bretth.osmosis.container.EntityContainer;
+import com.bretth.osmosis.container.EntityProcessor;
 import com.bretth.osmosis.container.NodeContainer;
 import com.bretth.osmosis.container.SegmentContainer;
 import com.bretth.osmosis.container.WayContainer;
@@ -66,12 +66,12 @@ public class OsmWriter extends ElementWriter {
 	 * 
 	 * @param writer
 	 *            The writer to send the xml to.
-	 * @param elementContainer
-	 *            The container holding the element.
+	 * @param entityContainer
+	 *            The container holding the entity.
 	 */
-	public void process(BufferedWriter writer, ElementContainer elementContainer) {
+	public void process(BufferedWriter writer, EntityContainer entityContainer) {
 		subElementWriter.setWriter(writer);
-		elementContainer.process(subElementWriter);
+		entityContainer.process(subElementWriter);
 	}
 	
 	
@@ -80,7 +80,7 @@ public class OsmWriter extends ElementWriter {
 	 * 
 	 * @author Brett Henderson
 	 */
-	private class SubElementWriter implements ElementProcessor {
+	private class SubElementWriter implements EntityProcessor {
 		private BufferedWriter writer;
 		private NodeWriter nodeWriter;
 		private SegmentWriter segmentWriter;
@@ -115,7 +115,7 @@ public class OsmWriter extends ElementWriter {
 		 * {@inheritDoc}
 		 */
 		public void process(NodeContainer node) {
-			nodeWriter.process(writer, node.getElement());
+			nodeWriter.process(writer, node.getEntity());
 		}
 		
 		
@@ -123,7 +123,7 @@ public class OsmWriter extends ElementWriter {
 		 * {@inheritDoc}
 		 */
 		public void process(SegmentContainer segment) {
-			segmentWriter.process(writer, segment.getElement());
+			segmentWriter.process(writer, segment.getEntity());
 		}
 		
 		
@@ -131,7 +131,7 @@ public class OsmWriter extends ElementWriter {
 		 * {@inheritDoc}
 		 */
 		public void process(WayContainer way) {
-			wayWriter.process(writer, way.getElement());
+			wayWriter.process(writer, way.getEntity());
 		}
 	}
 }

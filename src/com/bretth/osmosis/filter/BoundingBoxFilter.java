@@ -3,8 +3,8 @@ package com.bretth.osmosis.filter;
 import java.util.BitSet;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
-import com.bretth.osmosis.container.ElementContainer;
-import com.bretth.osmosis.container.ElementProcessor;
+import com.bretth.osmosis.container.EntityContainer;
+import com.bretth.osmosis.container.EntityProcessor;
 import com.bretth.osmosis.container.NodeContainer;
 import com.bretth.osmosis.container.SegmentContainer;
 import com.bretth.osmosis.container.WayContainer;
@@ -18,12 +18,12 @@ import com.bretth.osmosis.task.SinkSource;
 
 
 /**
- * Provides a filter for extracting all elements that lie within a specific
+ * Provides a filter for extracting all entities that lie within a specific
  * geographical box identified by latitude and longitude coordinates.
  * 
  * @author Brett Henderson
  */
-public class BoundingBoxFilter implements SinkSource, ElementProcessor {
+public class BoundingBoxFilter implements SinkSource, EntityProcessor {
 	private Sink sink;
 	private double left;
 	private double right;
@@ -60,10 +60,10 @@ public class BoundingBoxFilter implements SinkSource, ElementProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void process(ElementContainer elementContainer) {
-		// Ask the element container to invoke the appropriate processing method
-		// for the element type.
-		elementContainer.process(this);
+	public void process(EntityContainer entityContainer) {
+		// Ask the entity container to invoke the appropriate processing method
+		// for the entity type.
+		entityContainer.process(this);
 	}
 	
 	
@@ -76,7 +76,7 @@ public class BoundingBoxFilter implements SinkSource, ElementProcessor {
 		double latitude;
 		double longitude;
 		
-		node = container.getElement();
+		node = container.getEntity();
 		nodeId = node.getId();
 		latitude = node.getLatitude();
 		longitude = node.getLongitude();
@@ -104,7 +104,7 @@ public class BoundingBoxFilter implements SinkSource, ElementProcessor {
 		long nodeIdFrom;
 		long nodeIdTo;
 		
-		segment = container.getElement();
+		segment = container.getEntity();
 		segmentId = segment.getId();
 		nodeIdFrom = segment.getFrom();
 		nodeIdTo = segment.getTo();
@@ -135,7 +135,7 @@ public class BoundingBoxFilter implements SinkSource, ElementProcessor {
 		Way way;
 		Way filteredWay;
 		
-		way = container.getElement();
+		way = container.getEntity();
 		
 		// Create a new way object to contain only items within the bounding box.
 		filteredWay = new Way(way.getId(), way.getTimestamp());

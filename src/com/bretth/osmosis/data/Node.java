@@ -8,7 +8,7 @@ import java.util.Date;
  * 
  * @author Brett Henderson
  */
-public class Node extends Element implements Comparable<Node> {
+public class Node extends Entity implements Comparable<Node> {
 	private static final long serialVersionUID = 1L;
 	
 	
@@ -42,8 +42,8 @@ public class Node extends Element implements Comparable<Node> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ElementType getElementType() {
-		return ElementType.Node;
+	public EntityType getType() {
+		return EntityType.Node;
 	}
 	
 	

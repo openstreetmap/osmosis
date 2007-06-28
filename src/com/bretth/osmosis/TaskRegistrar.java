@@ -11,8 +11,8 @@ import com.bretth.osmosis.pipeline.TaskManagerFactory;
 import com.bretth.osmosis.sort.ChangeForSeekableApplierComparator;
 import com.bretth.osmosis.sort.ChangeForStreamableApplierComparator;
 import com.bretth.osmosis.sort.ChangeSorterFactory;
-import com.bretth.osmosis.sort.ElementByTypeThenIdComparator;
-import com.bretth.osmosis.sort.ElementSorterFactory;
+import com.bretth.osmosis.sort.EntityByTypeThenIdComparator;
+import com.bretth.osmosis.sort.EntitySorterFactory;
 import com.bretth.osmosis.xml.XmlChangeReaderFactory;
 import com.bretth.osmosis.xml.XmlChangeWriterFactory;
 import com.bretth.osmosis.xml.XmlReaderFactory;
@@ -29,12 +29,12 @@ public class TaskRegistrar {
 	 * Initialises factories for all tasks.
 	 */
 	public static void initialize() {
-		ElementSorterFactory elementSorterFactory;
+		EntitySorterFactory entitySorterFactory;
 		ChangeSorterFactory changeSorterFactory;
 		
 		// Configure factories that require additional information.
-		elementSorterFactory = new ElementSorterFactory();
-		elementSorterFactory.registerComparator("TypeThenId", new ElementByTypeThenIdComparator(), true);
+		entitySorterFactory = new EntitySorterFactory();
+		entitySorterFactory.registerComparator("TypeThenId", new EntityByTypeThenIdComparator(), true);
 		changeSorterFactory = new ChangeSorterFactory();
 		changeSorterFactory.registerComparator("streamable", new ChangeForStreamableApplierComparator(), true);
 		changeSorterFactory.registerComparator("seekable", new ChangeForSeekableApplierComparator(), false);
@@ -51,7 +51,7 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("write-xml-change", new XmlChangeWriterFactory());
 		TaskManagerFactory.register("write-null", new NullWriterFactory());
 		TaskManagerFactory.register("write-null-change", new NullChangeWriterFactory());
-		TaskManagerFactory.register("sort", elementSorterFactory);
+		TaskManagerFactory.register("sort", entitySorterFactory);
 		TaskManagerFactory.register("sort-change", changeSorterFactory);
 	}
 }

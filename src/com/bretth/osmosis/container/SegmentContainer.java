@@ -4,11 +4,11 @@ import com.bretth.osmosis.data.Segment;
 
 
 /**
- * Element container implementation for segments.
+ * Entity container implementation for segments.
  * 
  * @author Brett Henderson
  */
-public class SegmentContainer extends ElementContainer {
+public class SegmentContainer extends EntityContainer {
 	private Segment segment;
 	
 	
@@ -27,7 +27,7 @@ public class SegmentContainer extends ElementContainer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void process(ElementProcessor processor) {
+	public void process(EntityProcessor processor) {
 		processor.process(this);
 	}
 	
@@ -36,7 +36,7 @@ public class SegmentContainer extends ElementContainer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Segment getElement() {
+	public Segment getEntity() {
 		return segment;
 	}
 }

@@ -2,7 +2,7 @@ package com.bretth.osmosis.sort;
 
 import java.util.Comparator;
 
-import com.bretth.osmosis.container.ElementContainer;
+import com.bretth.osmosis.container.EntityContainer;
 import com.bretth.osmosis.sort.impl.FileBasedSort;
 import com.bretth.osmosis.sort.impl.ReleasableIterator;
 import com.bretth.osmosis.task.Sink;
@@ -10,13 +10,13 @@ import com.bretth.osmosis.task.SinkSource;
 
 
 /**
- * A data stream filter that sorts elements. The sort order is specified by
+ * A data stream filter that sorts entities. The sort order is specified by
  * comparator provided during instantiation.
  * 
  * @author Brett Henderson
  */
-public class ElementSorter implements SinkSource {
-	private FileBasedSort<ElementContainer> fileBasedSort;
+public class EntitySorter implements SinkSource {
+	private FileBasedSort<EntityContainer> fileBasedSort;
 	private Sink sink;
 	
 	
@@ -26,16 +26,16 @@ public class ElementSorter implements SinkSource {
 	 * @param comparator
 	 *            The comparator to use for sorting.
 	 */
-	public ElementSorter(Comparator<ElementContainer> comparator) {
-		fileBasedSort = new FileBasedSort<ElementContainer>(comparator, true);
+	public EntitySorter(Comparator<EntityContainer> comparator) {
+		fileBasedSort = new FileBasedSort<EntityContainer>(comparator, true);
 	}
 	
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void process(ElementContainer element) {
-		fileBasedSort.add(element);
+	public void process(EntityContainer entityContainer) {
+		fileBasedSort.add(entityContainer);
 	}
 	
 	
@@ -51,7 +51,7 @@ public class ElementSorter implements SinkSource {
 	 * {@inheritDoc}
 	 */
 	public void complete() {
-		ReleasableIterator<ElementContainer> iterator = null;
+		ReleasableIterator<EntityContainer> iterator = null;
 		
 		try {
 			iterator = fileBasedSort.iterate();

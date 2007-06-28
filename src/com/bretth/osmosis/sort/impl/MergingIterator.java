@@ -39,7 +39,7 @@ public class MergingIterator<DataType> implements ReleasableIterator<DataType> {
 	 */
 	private void initialize() {
 		if (sourceData == null) {
-			// Get the first element from each source.  Delete any empty sources.
+			// Get the first entity from each source.  Delete any empty sources.
 			sourceData = new ArrayList<DataType>(sources.size());
 			for (int sourceIndex = 0; sourceIndex < sources.size(); ) {
 				ReleasableIterator<DataType> source;
@@ -84,18 +84,18 @@ public class MergingIterator<DataType> implements ReleasableIterator<DataType> {
 		dataMinimum = sourceData.get(0);
 		indexMinimum = 0;
 		
-		// Find the minimum element.
+		// Find the minimum entity.
 		for (int indexCurrent = 1; indexCurrent < sources.size(); indexCurrent++) {
 			DataType dataCurrent = sourceData.get(indexCurrent);
 			
-			// Check if the current data element is less than the existing minimum.
+			// Check if the current data entity is less than the existing minimum.
 			if (comparator.compare(dataMinimum, dataCurrent) > 0) {
 				dataMinimum = dataCurrent;
 				indexMinimum = indexCurrent;
 			}
 		}
 		
-		// Get the next element from the source if available.
+		// Get the next entity from the source if available.
 		// Otherwise remove the source and its current data.
 		source = sources.get(indexMinimum);
 		if (source.hasNext()) {

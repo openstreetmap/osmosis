@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
-import com.bretth.osmosis.container.ElementContainer;
-import com.bretth.osmosis.container.ElementProcessor;
+import com.bretth.osmosis.container.EntityContainer;
+import com.bretth.osmosis.container.EntityProcessor;
 import com.bretth.osmosis.container.NodeContainer;
 import com.bretth.osmosis.container.SegmentContainer;
 import com.bretth.osmosis.container.WayContainer;
@@ -28,7 +28,7 @@ import com.bretth.osmosis.task.Sink;
  * 
  * @author Brett Henderson
  */
-public class MysqlWriter implements Sink, ElementProcessor {
+public class MysqlWriter implements Sink, EntityProcessor {
 	private static final String INSERT_SQL_NODE =
 		"INSERT INTO nodes(id, latitude, longitude, tags)";
 	private static final int INSERT_PRM_COUNT_NODE = 4;
@@ -629,8 +629,8 @@ public class MysqlWriter implements Sink, ElementProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void process(ElementContainer element) {
-		element.process(this);
+	public void process(EntityContainer entityContainer) {
+		entityContainer.process(this);
 	}
 	
 	
@@ -638,7 +638,7 @@ public class MysqlWriter implements Sink, ElementProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(NodeContainer node) {
-		nodeBuffer.add(node.getElement());
+		nodeBuffer.add(node.getEntity());
 		
 		flushNodes(false);
 	}
@@ -650,7 +650,7 @@ public class MysqlWriter implements Sink, ElementProcessor {
 	public void process(SegmentContainer segment) {
 		flushNodes(true);
 		
-		segmentBuffer.add(segment.getElement());
+		segmentBuffer.add(segment.getEntity());
 		
 		flushSegments(false);
 	}
@@ -662,7 +662,7 @@ public class MysqlWriter implements Sink, ElementProcessor {
 	public void process(WayContainer way) {
 		flushSegments(true);
 		
-		wayBuffer.add(way.getElement());
+		wayBuffer.add(way.getEntity());
 		
 		flushWays(false);
 	}
