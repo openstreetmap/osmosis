@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.xml.sax.Attributes;
 
+import com.bretth.osmosis.container.WayContainer;
 import com.bretth.osmosis.data.SegmentReference;
 import com.bretth.osmosis.data.Tag;
 import com.bretth.osmosis.data.Way;
@@ -84,7 +85,7 @@ public class WayElementProcessor extends SourceElementProcessor implements TagLi
 	 * {@inheritDoc}
 	 */
 	public void end() {
-		getSink().processWay(way);
+		getSink().process(new WayContainer(way));
 		way = null;
 	}
 	

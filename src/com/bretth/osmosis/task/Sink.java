@@ -1,8 +1,6 @@
 package com.bretth.osmosis.task;
 
-import com.bretth.osmosis.data.Node;
-import com.bretth.osmosis.data.Segment;
-import com.bretth.osmosis.data.Way;
+import com.bretth.osmosis.container.ElementContainer;
 
 
 /**
@@ -13,28 +11,12 @@ import com.bretth.osmosis.data.Way;
 public interface Sink extends Task {
 	
 	/**
-	 * Process the node.
+	 * Process the element.
 	 * 
-	 * @param node
-	 *            The node to be processed.
+	 * @param elementContainer
+	 *            The element to be processed.
 	 */
-	public void processNode(Node node);
-	
-	/**
-	 * Process the segment.
-	 * 
-	 * @param segment
-	 *            The segment to be processed.
-	 */
-	public void processSegment(Segment segment);
-	
-	/**
-	 * Process the way.
-	 * 
-	 * @param way
-	 *            The way to be processed.
-	 */
-	public void processWay(Way way);
+	public void process(ElementContainer elementContainer);
 	
 	/**
 	 * Performs finalisation tasks such as database commits as necessary to

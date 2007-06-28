@@ -33,7 +33,7 @@ public class TagWriter extends ElementWriter {
 	 * @param tag
 	 *            The tag to be processed.
 	 */
-	public void processTag(BufferedWriter writer, Tag tag) {
+	public void process(BufferedWriter writer, Tag tag) {
 		beginOpenElement(writer);
 		addAttribute(writer, "k", tag.getKey());
 		addAttribute(writer, "v", tag.getValue());

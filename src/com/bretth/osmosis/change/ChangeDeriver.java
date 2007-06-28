@@ -2,13 +2,8 @@ package com.bretth.osmosis.change;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
 import com.bretth.osmosis.change.impl.DataPostbox;
-import com.bretth.osmosis.change.impl.ElementContainer;
-import com.bretth.osmosis.change.impl.NodeContainer;
-import com.bretth.osmosis.change.impl.SegmentContainer;
-import com.bretth.osmosis.change.impl.WayContainer;
-import com.bretth.osmosis.data.Node;
-import com.bretth.osmosis.data.Segment;
-import com.bretth.osmosis.data.Way;
+import com.bretth.osmosis.container.ChangeContainer;
+import com.bretth.osmosis.container.ElementContainer;
 import com.bretth.osmosis.sort.ElementByTypeThenIdComparator;
 import com.bretth.osmosis.task.ChangeAction;
 import com.bretth.osmosis.task.ChangeSink;
@@ -60,14 +55,9 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 		
 		return new Sink() {
 			private DataPostbox<ElementContainer> postbox = destinationPostbox;
-			public void processNode(Node node) {
-				postbox.put(new NodeContainer(node));
-			}
-			public void processSegment(Segment segment) {
-				postbox.put(new SegmentContainer(segment));
-			}
-			public void processWay(Way way) {
-				postbox.put(new WayContainer(way));
+			
+			public void process(ElementContainer elementContainer) {
+				postbox.put(elementContainer);
 			}
 			public void complete() {
 				postbox.complete();
@@ -124,17 +114,17 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 				}
 				
 				// Compare the two sources.
-				comparisonResult = comparator.compare(fromElement.getElement(), toElement.getElement());
+				comparisonResult = comparator.compare(fromElement, toElement);
 				
 				if (comparisonResult < 0) {
 					// The from element doesn't exist on the to source therefore has
 					// been deleted.
-					fromElement.processChange(changeSink, ChangeAction.Delete);
+					changeSink.process(new ChangeContainer(fromElement, ChangeAction.Delete));
 					fromElement = null;
 				} else if (comparisonResult > 0) {
 					// The to element doesn't exist on the from source therefore has
 					// been created.
-					toElement.processChange(changeSink, ChangeAction.Create);
+					changeSink.process(new ChangeContainer(toElement, ChangeAction.Create));
 					toElement = null;
 				} else {
 					// The element exists on both sources, therefore we must
@@ -142,7 +132,7 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 					// the elements directly. If there is a difference, the
 					// element has been modified.
 					if (!fromElement.getElement().equals(toElement.getElement())) {
-						toElement.processChange(changeSink, ChangeAction.Modify);
+						changeSink.process(new ChangeContainer(toElement, ChangeAction.Modify));
 					}
 					fromElement = null;
 					toElement = null;
@@ -154,7 +144,7 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 				if (fromElement == null) {
 					fromElement = fromPostbox.getNext();
 				}
-				fromElement.processChange(changeSink, ChangeAction.Delete);
+				changeSink.process(new ChangeContainer(fromElement, ChangeAction.Delete));
 				fromElement = null;
 			}
 			// Any remaining "to" elements are creates.
@@ -162,7 +152,7 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 				if (toElement == null) {
 					toElement = toPostbox.getNext();
 				}
-				toElement.processChange(changeSink, ChangeAction.Create);
+				changeSink.process(new ChangeContainer(toElement, ChangeAction.Create));
 				toElement = null;
 			}
 			

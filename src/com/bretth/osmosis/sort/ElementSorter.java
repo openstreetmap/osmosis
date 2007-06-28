@@ -2,11 +2,7 @@ package com.bretth.osmosis.sort;
 
 import java.util.Comparator;
 
-import com.bretth.osmosis.OsmosisRuntimeException;
-import com.bretth.osmosis.data.Element;
-import com.bretth.osmosis.data.Node;
-import com.bretth.osmosis.data.Segment;
-import com.bretth.osmosis.data.Way;
+import com.bretth.osmosis.container.ElementContainer;
 import com.bretth.osmosis.sort.impl.FileBasedSort;
 import com.bretth.osmosis.sort.impl.ReleasableIterator;
 import com.bretth.osmosis.task.Sink;
@@ -20,7 +16,7 @@ import com.bretth.osmosis.task.SinkSource;
  * @author Brett Henderson
  */
 public class ElementSorter implements SinkSource {
-	private FileBasedSort<Element> fileBasedSort;
+	private FileBasedSort<ElementContainer> fileBasedSort;
 	private Sink sink;
 	
 	
@@ -30,32 +26,16 @@ public class ElementSorter implements SinkSource {
 	 * @param comparator
 	 *            The comparator to use for sorting.
 	 */
-	public ElementSorter(Comparator<Element> comparator) {
-		fileBasedSort = new FileBasedSort<Element>(comparator, true);
+	public ElementSorter(Comparator<ElementContainer> comparator) {
+		fileBasedSort = new FileBasedSort<ElementContainer>(comparator, true);
 	}
 	
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void processNode(Node node) {
-		fileBasedSort.add(node);
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void processSegment(Segment segment) {
-		fileBasedSort.add(segment);
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void processWay(Way way) {
-		fileBasedSort.add(way);
+	public void process(ElementContainer element) {
+		fileBasedSort.add(element);
 	}
 	
 	
@@ -71,25 +51,13 @@ public class ElementSorter implements SinkSource {
 	 * {@inheritDoc}
 	 */
 	public void complete() {
-		ReleasableIterator<Element> iterator = null;
+		ReleasableIterator<ElementContainer> iterator = null;
 		
 		try {
 			iterator = fileBasedSort.iterate();
 			
 			while (iterator.hasNext()) {
-				Element element;
-				
-				element = iterator.next();
-				
-				if (element instanceof Node) {
-					sink.processNode((Node) element);
-				} else if (element instanceof Segment) {
-					sink.processSegment((Segment) element);
-				} else if (element instanceof Way) {
-					sink.processWay((Way) element);
-				} else {
-					throw new OsmosisRuntimeException("Element type " + element.getClass().getName() + " is unrecognised.");
-				}
+				sink.process(iterator.next());
 			}
 			
 			sink.complete();

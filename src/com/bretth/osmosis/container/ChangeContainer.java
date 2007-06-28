@@ -1,7 +1,6 @@
-package com.bretth.osmosis.change.impl;
+package com.bretth.osmosis.container;
 
 import com.bretth.osmosis.task.ChangeAction;
-import com.bretth.osmosis.task.ChangeSink;
 
 
 /**
@@ -25,18 +24,6 @@ public class ChangeContainer {
 	public ChangeContainer(ElementContainer element, ChangeAction action) {
 		this.element = element;
 		this.action = action;
-	}
-	
-	
-	/**
-	 * Calls the appropriate change sink method with the contained element and
-	 * action.
-	 * 
-	 * @param changeSink
-	 *            The change sink to invoke.
-	 */
-	public void processChange(ChangeSink changeSink) {
-		element.processChange(changeSink, action);
 	}
 	
 	

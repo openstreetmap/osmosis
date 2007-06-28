@@ -6,9 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
-import com.bretth.osmosis.data.Node;
-import com.bretth.osmosis.data.Segment;
-import com.bretth.osmosis.data.Way;
+import com.bretth.osmosis.container.ElementContainer;
 import com.bretth.osmosis.task.Sink;
 import com.bretth.osmosis.xml.impl.OsmWriter;
 
@@ -45,7 +43,7 @@ public class XmlWriter implements Sink {
 	 * @param data
 	 *            The data to be written.
 	 */
-	protected void write(String data) {
+	private void write(String data) {
 		try {
 			writer.write(data);
 			
@@ -92,31 +90,14 @@ public class XmlWriter implements Sink {
 		}
 	}
 	
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void processNode(Node node) {
+	public void process(ElementContainer element) {
 		initialize();
-		osmWriter.processNode(writer, node);
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void processSegment(Segment segment) {
-		initialize();
-		osmWriter.processSegment(writer, segment);
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void processWay(Way way) {
-		initialize();
-		osmWriter.processWay(writer, way);
+		
+		osmWriter.process(writer, element);
 	}
 	
 	

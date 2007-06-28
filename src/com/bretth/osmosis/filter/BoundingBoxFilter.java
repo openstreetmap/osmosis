@@ -3,6 +3,11 @@ package com.bretth.osmosis.filter;
 import java.util.BitSet;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
+import com.bretth.osmosis.container.ElementContainer;
+import com.bretth.osmosis.container.ElementProcessor;
+import com.bretth.osmosis.container.NodeContainer;
+import com.bretth.osmosis.container.SegmentContainer;
+import com.bretth.osmosis.container.WayContainer;
 import com.bretth.osmosis.data.Node;
 import com.bretth.osmosis.data.Segment;
 import com.bretth.osmosis.data.SegmentReference;
@@ -18,7 +23,7 @@ import com.bretth.osmosis.task.SinkSource;
  * 
  * @author Brett Henderson
  */
-public class BoundingBoxFilter implements SinkSource {
+public class BoundingBoxFilter implements SinkSource, ElementProcessor {
 	private Sink sink;
 	private double left;
 	private double right;
@@ -55,18 +60,30 @@ public class BoundingBoxFilter implements SinkSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void processNode(Node node) {
+	public void process(ElementContainer elementContainer) {
+		// Ask the element container to invoke the appropriate processing method
+		// for the element type.
+		elementContainer.process(this);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void process(NodeContainer container) {
+		Node node;
 		long nodeId;
 		double latitude;
 		double longitude;
 		
+		node = container.getElement();
 		nodeId = node.getId();
 		latitude = node.getLatitude();
 		longitude = node.getLongitude();
 		
 		// Only add the node if it lies within the box boundaries.
 		if (top >= latitude && bottom <= latitude && left <= longitude && right >= longitude) {
-			sink.processNode(node);
+			sink.process(container);
 			
 			// Ensure that the node identifier can be represented as an integer.
 			if (nodeId > Integer.MAX_VALUE) {
@@ -81,11 +98,13 @@ public class BoundingBoxFilter implements SinkSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void processSegment(Segment segment) {
+	public void process(SegmentContainer container) {
+		Segment segment;
 		long segmentId;
 		long nodeIdFrom;
 		long nodeIdTo;
 		
+		segment = container.getElement();
 		segmentId = segment.getId();
 		nodeIdFrom = segment.getFrom();
 		nodeIdTo = segment.getTo();
@@ -103,7 +122,7 @@ public class BoundingBoxFilter implements SinkSource {
 		
 		// Only add the segment if both of its nodes are within the bounding box.
 		if (availableNodes.get((int) nodeIdFrom) && availableNodes.get((int) nodeIdTo)) {
-			sink.processSegment(segment);
+			sink.process(container);
 			availableSegments.set((int) segmentId);
 		}
 	}
@@ -112,8 +131,11 @@ public class BoundingBoxFilter implements SinkSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void processWay(Way way) {
+	public void process(WayContainer container) {
+		Way way;
 		Way filteredWay;
+		
+		way = container.getElement();
 		
 		// Create a new way object to contain only items within the bounding box.
 		filteredWay = new Way(way.getId(), way.getTimestamp());
@@ -142,7 +164,7 @@ public class BoundingBoxFilter implements SinkSource {
 				filteredWay.addTag(tag);
 			}
 			
-			sink.processWay(filteredWay);
+			sink.process(container);
 		}
 	}
 	

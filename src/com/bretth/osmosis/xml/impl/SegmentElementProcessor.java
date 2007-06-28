@@ -2,6 +2,7 @@ package com.bretth.osmosis.xml.impl;
 
 import org.xml.sax.Attributes;
 
+import com.bretth.osmosis.container.SegmentContainer;
 import com.bretth.osmosis.data.Segment;
 import com.bretth.osmosis.data.Tag;
 import com.bretth.osmosis.task.Sink;
@@ -79,7 +80,7 @@ public class SegmentElementProcessor extends SourceElementProcessor implements T
 	 * {@inheritDoc}
 	 */
 	public void end() {
-		getSink().processSegment(segment);
+		getSink().process(new SegmentContainer(segment));
 		segment = null;
 	}
 	

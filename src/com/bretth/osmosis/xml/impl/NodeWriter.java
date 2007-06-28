@@ -39,7 +39,7 @@ public class NodeWriter extends ElementWriter {
 	 * @param node
 	 *            The node to be processed.
 	 */
-	public void processNode(BufferedWriter writer, Node node) {
+	public void process(BufferedWriter writer, Node node) {
 		List<Tag> tags;
 		
 		beginOpenElement(writer);
@@ -54,7 +54,7 @@ public class NodeWriter extends ElementWriter {
 			endOpenElement(writer, false);
 			
 			for (Tag tag : tags) {
-				tagWriter.processTag(writer, tag);
+				tagWriter.process(writer, tag);
 			}
 			
 			closeElement(writer);

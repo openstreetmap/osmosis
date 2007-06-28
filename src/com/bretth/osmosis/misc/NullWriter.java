@@ -1,8 +1,6 @@
 package com.bretth.osmosis.misc;
 
-import com.bretth.osmosis.data.Node;
-import com.bretth.osmosis.data.Segment;
-import com.bretth.osmosis.data.Way;
+import com.bretth.osmosis.container.ElementContainer;
 import com.bretth.osmosis.task.Sink;
 
 
@@ -17,23 +15,7 @@ public class NullWriter implements Sink {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void processNode(Node node) {
-		// Discard the data.
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void processSegment(Segment segment) {
-		// Discard the data.
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void processWay(Way way) {
+	public void process(ElementContainer element) {
 		// Discard the data.
 	}
 	

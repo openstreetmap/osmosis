@@ -1,5 +1,8 @@
 package com.bretth.osmosis.mysql;
 
+import com.bretth.osmosis.container.NodeContainer;
+import com.bretth.osmosis.container.SegmentContainer;
+import com.bretth.osmosis.container.WayContainer;
 import com.bretth.osmosis.data.Way;
 import com.bretth.osmosis.mysql.impl.NodeReader;
 import com.bretth.osmosis.mysql.impl.SegmentReader;
@@ -64,7 +67,7 @@ public class MysqlReader implements RunnableSource {
 		
 		try {
 			while (reader.hasNext()) {
-				sink.processNode(reader.next());
+				sink.process(new NodeContainer(reader.next()));
 			}
 			
 		} finally {
@@ -83,7 +86,7 @@ public class MysqlReader implements RunnableSource {
 		
 		try {
 			while (reader.hasNext()) {
-				sink.processSegment(reader.next());
+				sink.process(new SegmentContainer(reader.next()));
 			}
 			
 		} finally {
@@ -137,7 +140,7 @@ public class MysqlReader implements RunnableSource {
 					}
 				}
 				
-				sink.processWay(way);
+				sink.process(new WayContainer(way));
 			}
 			
 		} finally {

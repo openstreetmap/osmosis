@@ -1,9 +1,6 @@
 package com.bretth.osmosis.misc;
 
-import com.bretth.osmosis.data.Node;
-import com.bretth.osmosis.data.Segment;
-import com.bretth.osmosis.data.Way;
-import com.bretth.osmosis.task.ChangeAction;
+import com.bretth.osmosis.container.ChangeContainer;
 import com.bretth.osmosis.task.ChangeSink;
 
 
@@ -18,23 +15,7 @@ public class NullChangeWriter implements ChangeSink {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void processNode(Node node, ChangeAction action) {
-		// Discard the data.
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void processSegment(Segment segment, ChangeAction action) {
-		// Discard the data.
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void processWay(Way way, ChangeAction action) {
+	public void process(ChangeContainer change) {
 		// Discard the data.
 	}
 	

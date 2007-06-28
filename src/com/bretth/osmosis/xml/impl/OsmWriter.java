@@ -2,9 +2,11 @@ package com.bretth.osmosis.xml.impl;
 
 import java.io.BufferedWriter;
 
-import com.bretth.osmosis.data.Node;
-import com.bretth.osmosis.data.Segment;
-import com.bretth.osmosis.data.Way;
+import com.bretth.osmosis.container.ElementContainer;
+import com.bretth.osmosis.container.ElementProcessor;
+import com.bretth.osmosis.container.NodeContainer;
+import com.bretth.osmosis.container.SegmentContainer;
+import com.bretth.osmosis.container.WayContainer;
 
 
 /**
@@ -14,9 +16,7 @@ import com.bretth.osmosis.data.Way;
  */
 public class OsmWriter extends ElementWriter {
 	
-	private NodeWriter nodeWriter;
-	private SegmentWriter segmentWriter;
-	private WayWriter wayWriter;
+	private SubElementWriter subElementWriter;
 	
 	
 	/**
@@ -30,9 +30,9 @@ public class OsmWriter extends ElementWriter {
 	public OsmWriter(String elementName, int indentLevel) {
 		super(elementName, indentLevel);
 		
-		nodeWriter = new NodeWriter("node", indentLevel + 1);
-		segmentWriter = new SegmentWriter("segment", indentLevel + 1);
-		wayWriter = new WayWriter("way", indentLevel + 1);
+		// Create the sub-element writer which calls the appropriate element
+		// writer based on data type.
+		subElementWriter = new SubElementWriter(indentLevel + 1);
 	}
 	
 	
@@ -62,40 +62,76 @@ public class OsmWriter extends ElementWriter {
 	
 	
 	/**
-	 * Writes the node.
+	 * Writes the element in the container.
 	 * 
 	 * @param writer
 	 *            The writer to send the xml to.
-	 * @param node
-	 *            The node to be processed.
+	 * @param elementContainer
+	 *            The container holding the element.
 	 */
-	public void processNode(BufferedWriter writer, Node node) {
-		nodeWriter.processNode(writer, node);
+	public void process(BufferedWriter writer, ElementContainer elementContainer) {
+		subElementWriter.setWriter(writer);
+		elementContainer.process(subElementWriter);
 	}
 	
 	
 	/**
-	 * Writes the segment.
+	 * Directs data to the appropriate underlying element writer.
 	 * 
-	 * @param writer
-	 *            The writer to send the xml to.
-	 * @param segment
-	 *            The segment to be processed.
+	 * @author Brett Henderson
 	 */
-	public void processSegment(BufferedWriter writer, Segment segment) {
-		segmentWriter.processSegment(writer, segment);
-	}
-	
-	
-	/**
-	 * Writes the way.
-	 * 
-	 * @param writer
-	 *            The writer to send the xml to.
-	 * @param way
-	 *            The way to be processed.
-	 */
-	public void processWay(BufferedWriter writer, Way way) {
-		wayWriter.processWay(writer, way);
+	private class SubElementWriter implements ElementProcessor {
+		private BufferedWriter writer;
+		private NodeWriter nodeWriter;
+		private SegmentWriter segmentWriter;
+		private WayWriter wayWriter;
+		
+		
+		/**
+		 * Creates a new instance.
+		 * 
+		 * @param indentLevel
+		 *            The indent level of the sub-elements.
+		 */
+		public SubElementWriter(int indentLevel) {
+			nodeWriter = new NodeWriter("node", indentLevel);
+			segmentWriter = new SegmentWriter("segment", indentLevel);
+			wayWriter = new WayWriter("way", indentLevel);
+		}
+		
+		
+		/**
+		 * Updates the underlying writer.
+		 * 
+		 * @param writer
+		 *            The writer to be used for all output xml.
+		 */
+		public void setWriter(BufferedWriter writer) {
+			this.writer = writer;
+		}
+		
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public void process(NodeContainer node) {
+			nodeWriter.process(writer, node.getElement());
+		}
+		
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public void process(SegmentContainer segment) {
+			segmentWriter.process(writer, segment.getElement());
+		}
+		
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public void process(WayContainer way) {
+			wayWriter.process(writer, way.getElement());
+		}
 	}
 }

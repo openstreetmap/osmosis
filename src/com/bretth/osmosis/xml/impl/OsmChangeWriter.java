@@ -3,9 +3,7 @@ package com.bretth.osmosis.xml.impl;
 import java.io.BufferedWriter;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
-import com.bretth.osmosis.data.Node;
-import com.bretth.osmosis.data.Segment;
-import com.bretth.osmosis.data.Way;
+import com.bretth.osmosis.container.ChangeContainer;
 import com.bretth.osmosis.task.ChangeAction;
 
 
@@ -109,49 +107,15 @@ public class OsmChangeWriter extends ElementWriter {
 	
 	
 	/**
-	 * Writes the node.
+	 * Writes the change in the container.
 	 * 
 	 * @param writer
 	 *            The writer to send the xml to.
-	 * @param node
-	 *            The node to be processed.
-	 * @param action
-	 *            The particular change action to be performed.
+	 * @param changeContainer
+	 *            The container holding the change.
 	 */
-	public void processNode(BufferedWriter writer, Node node, ChangeAction action) {
-		updateActiveOsmWriter(writer, action);
-		activeOsmWriter.processNode(writer, node);
-	}
-	
-	
-	/**
-	 * Writes the segment.
-	 * 
-	 * @param writer
-	 *            The writer to send the xml to.
-	 * @param segment
-	 *            The segment to be processed.
-	 * @param action
-	 *            The particular change action to be performed.
-	 */
-	public void processSegment(BufferedWriter writer, Segment segment, ChangeAction action) {
-		updateActiveOsmWriter(writer, action);
-		activeOsmWriter.processSegment(writer, segment);
-	}
-	
-	
-	/**
-	 * Writes the way.
-	 * 
-	 * @param writer
-	 *            The writer to send the xml to.
-	 * @param way
-	 *            The way to be processed.
-	 * @param action
-	 *            The particular change action to be performed.
-	 */
-	public void processWay(BufferedWriter writer, Way way, ChangeAction action) {
-		updateActiveOsmWriter(writer, action);
-		activeOsmWriter.processWay(writer, way);
+	public void process(BufferedWriter writer, ChangeContainer changeContainer) {
+		updateActiveOsmWriter(writer, changeContainer.getAction());
+		activeOsmWriter.process(writer, changeContainer.getElement());
 	}
 }

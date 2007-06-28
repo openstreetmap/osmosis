@@ -1,15 +1,9 @@
 package com.bretth.osmosis.change;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
-import com.bretth.osmosis.change.impl.ChangeContainer;
 import com.bretth.osmosis.change.impl.DataPostbox;
-import com.bretth.osmosis.change.impl.ElementContainer;
-import com.bretth.osmosis.change.impl.NodeContainer;
-import com.bretth.osmosis.change.impl.SegmentContainer;
-import com.bretth.osmosis.change.impl.WayContainer;
-import com.bretth.osmosis.data.Node;
-import com.bretth.osmosis.data.Segment;
-import com.bretth.osmosis.data.Way;
+import com.bretth.osmosis.container.ChangeContainer;
+import com.bretth.osmosis.container.ElementContainer;
 import com.bretth.osmosis.sort.ElementByTypeThenIdComparator;
 import com.bretth.osmosis.task.ChangeAction;
 import com.bretth.osmosis.task.ChangeSink;
@@ -54,14 +48,9 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 		
 		return new Sink() {
 			private DataPostbox<ElementContainer> postbox = destinationPostbox;
-			public void processNode(Node node) {
-				postbox.put(new NodeContainer(node));
-			}
-			public void processSegment(Segment segment) {
-				postbox.put(new SegmentContainer(segment));
-			}
-			public void processWay(Way way) {
-				postbox.put(new WayContainer(way));
+			
+			public void process(ElementContainer elementContainer) {
+				postbox.put(elementContainer);
 			}
 			public void complete() {
 				postbox.complete();
@@ -96,14 +85,9 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 		
 		return new ChangeSink() {
 			private DataPostbox<ChangeContainer> postbox = destinationPostbox;
-			public void processNode(Node node, ChangeAction action) {
-				postbox.put(new ChangeContainer(new NodeContainer(node), action));
-			}
-			public void processSegment(Segment segment, ChangeAction action) {
-				postbox.put(new ChangeContainer(new SegmentContainer(segment), action));
-			}
-			public void processWay(Way way, ChangeAction action) {
-				postbox.put(new ChangeContainer(new WayContainer(way), action));
+
+			public void process(ChangeContainer change) {
+				postbox.put(change);
 			}
 			public void complete() {
 				postbox.complete();
@@ -161,17 +145,17 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 				}
 				
 				// Compare the two sources.
-				comparisonResult = comparator.compare(base.getElement(), change.getElement().getElement());
+				comparisonResult = comparator.compare(base, change.getElement());
 				
 				if (comparisonResult < 0) {
 					// The base element doesn't exist on the change source therefore we simply pass it through.
-					base.process(sink);
+					sink.process(base);
 					base = null;
 				} else if (comparisonResult > 0) {
 					// This element doesn't exist in the "base" source therefore we
 					// are expecting an add.
 					if (change.getAction().equals(ChangeAction.Create)) {
-						change.getElement().process(sink);
+						sink.process(change.getElement());
 						
 					} else {
 						throw new OsmosisRuntimeException(
@@ -187,7 +171,7 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 					// The same element exists in both sources therefore we are
 					// expecting a modify or delete.
 					if (change.getAction().equals(ChangeAction.Modify)) {
-						change.getElement().process(sink);
+						sink.process(change.getElement());
 						
 					} else if (change.getAction().equals(ChangeAction.Delete)) {
 						// We don't need to do anything for delete.
@@ -210,7 +194,7 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 				if (base == null) {
 					base = basePostbox.getNext();
 				}
-				base.process(sink);
+				sink.process(base);
 				base = null;
 			}
 			// Any remaining "change" elements must be creates.
@@ -221,7 +205,7 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 				// This element doesn't exist in the "base" source therefore we
 				// are expecting an add.
 				if (change.getAction().equals(ChangeAction.Create)) {
-					change.getElement().process(sink);
+					sink.process(change.getElement());
 					
 				} else {
 					throw new OsmosisRuntimeException(

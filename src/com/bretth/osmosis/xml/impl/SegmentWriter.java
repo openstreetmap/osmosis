@@ -39,7 +39,7 @@ public class SegmentWriter extends ElementWriter {
 	 * @param segment
 	 *            The segment to be processed.
 	 */
-	public void processSegment(BufferedWriter writer, Segment segment) {
+	public void process(BufferedWriter writer, Segment segment) {
 		List<Tag> tags;
 		
 		beginOpenElement(writer);
@@ -53,7 +53,7 @@ public class SegmentWriter extends ElementWriter {
 			endOpenElement(writer, false);
 			
 			for (Tag tag : tags) {
-				tagWriter.processTag(writer, tag);
+				tagWriter.process(writer, tag);
 			}
 			
 			closeElement(writer);

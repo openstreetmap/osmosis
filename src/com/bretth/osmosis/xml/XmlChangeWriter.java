@@ -6,10 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
-import com.bretth.osmosis.data.Node;
-import com.bretth.osmosis.data.Segment;
-import com.bretth.osmosis.data.Way;
-import com.bretth.osmosis.task.ChangeAction;
+import com.bretth.osmosis.container.ChangeContainer;
 import com.bretth.osmosis.task.ChangeSink;
 import com.bretth.osmosis.xml.impl.OsmChangeWriter;
 
@@ -97,27 +94,9 @@ public class XmlChangeWriter implements ChangeSink {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void processNode(Node node, ChangeAction action) {
+	public void process(ChangeContainer changeContainer) {
 		initialize();
-		osmChangeWriter.processNode(writer, node, action);
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void processSegment(Segment segment, ChangeAction action) {
-		initialize();
-		osmChangeWriter.processSegment(writer, segment, action);
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void processWay(Way way, ChangeAction action) {
-		initialize();
-		osmChangeWriter.processWay(writer, way, action);
+		osmChangeWriter.process(writer, changeContainer);
 	}
 	
 	

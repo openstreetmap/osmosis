@@ -1,10 +1,6 @@
-package com.bretth.osmosis.change.impl;
+package com.bretth.osmosis.container;
 
-import com.bretth.osmosis.data.Element;
 import com.bretth.osmosis.data.Way;
-import com.bretth.osmosis.task.ChangeAction;
-import com.bretth.osmosis.task.ChangeSink;
-import com.bretth.osmosis.task.Sink;
 
 
 /**
@@ -31,8 +27,8 @@ public class WayContainer extends ElementContainer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void process(Sink sink) {
-		sink.processWay(way);
+	public void process(ElementProcessor processor) {
+		processor.process(this);
 	}
 	
 	
@@ -40,16 +36,7 @@ public class WayContainer extends ElementContainer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void processChange(ChangeSink changeSink, ChangeAction action) {
-		changeSink.processWay(way, action);
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Element getElement() {
+	public Way getElement() {
 		return way;
 	}
 }

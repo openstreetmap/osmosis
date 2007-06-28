@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
-import com.bretth.osmosis.data.Element;
+import com.bretth.osmosis.container.ElementContainer;
 import com.bretth.osmosis.pipeline.SinkSourceManager;
 import com.bretth.osmosis.pipeline.TaskManager;
 import com.bretth.osmosis.pipeline.TaskManagerFactory;
@@ -19,7 +19,7 @@ import com.bretth.osmosis.pipeline.TaskManagerFactory;
 public class ElementSorterFactory extends TaskManagerFactory {
 	private static final String ARG_COMPARATOR_TYPE = "type";
 	
-	private Map<String, Comparator<Element>> comparatorMap;
+	private Map<String, Comparator<ElementContainer>> comparatorMap;
 	private String defaultComparatorType;
 	
 	
@@ -27,7 +27,7 @@ public class ElementSorterFactory extends TaskManagerFactory {
 	 * Creates a new instance.
 	 */
 	public ElementSorterFactory() {
-		comparatorMap = new HashMap<String, Comparator<Element>>();
+		comparatorMap = new HashMap<String, Comparator<ElementContainer>>();
 	}
 	
 	
@@ -42,7 +42,7 @@ public class ElementSorterFactory extends TaskManagerFactory {
 	 *            If true, this will be set to be the default comparator if no
 	 *            comparator is specified.
 	 */
-	public void registerComparator(String comparatorType, Comparator<Element> comparator, boolean setAsDefault) {
+	public void registerComparator(String comparatorType, Comparator<ElementContainer> comparator, boolean setAsDefault) {
 		if (comparatorMap.containsKey(comparatorType)) {
 			throw new OsmosisRuntimeException("Comparator type \"" + comparatorType + "\" already exists.");
 		}
@@ -62,7 +62,7 @@ public class ElementSorterFactory extends TaskManagerFactory {
 	 *            The comparator to be retrieved.
 	 * @return The comparator.
 	 */
-	private Comparator<Element> getComparator(String comparatorType) {
+	private Comparator<ElementContainer> getComparator(String comparatorType) {
 		if (!comparatorMap.containsKey(comparatorType)) {
 			throw new OsmosisRuntimeException("Comparator type " + comparatorType
 					+ " doesn't exist.");
@@ -78,7 +78,7 @@ public class ElementSorterFactory extends TaskManagerFactory {
 	@Override
 	protected TaskManager createTaskManagerImpl(String taskId,
 			Map<String, String> taskArgs, Map<String, String> pipeArgs) {
-		Comparator<Element> comparator;
+		Comparator<ElementContainer> comparator;
 		
 		// Get the comparator.
 		comparator = getComparator(

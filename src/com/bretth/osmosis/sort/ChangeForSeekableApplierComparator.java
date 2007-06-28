@@ -3,6 +3,7 @@ package com.bretth.osmosis.sort;
 import java.util.Comparator;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
+import com.bretth.osmosis.container.ChangeContainer;
 import com.bretth.osmosis.data.Element;
 import com.bretth.osmosis.data.ElementType;
 import com.bretth.osmosis.task.ChangeAction;
@@ -27,7 +28,7 @@ import com.bretth.osmosis.task.ChangeAction;
  * 
  * @author Brett Henderson
  */
-public class ChangeForSeekableApplierComparator implements Comparator<ChangeElement> {
+public class ChangeForSeekableApplierComparator implements Comparator<ChangeContainer> {
 	
 	/**
 	 * Create a weighting for the change. The weighting is the index into the
@@ -37,9 +38,9 @@ public class ChangeForSeekableApplierComparator implements Comparator<ChangeElem
 	 *            The change to be analysed.
 	 * @return The sort weighting.
 	 */
-	private int calculateSortWeight(ChangeElement changeElement) {
+	private int calculateSortWeight(ChangeContainer changeElement) {
 		ChangeAction action = changeElement.getAction();
-		Element element = changeElement.getElement();
+		Element element = changeElement.getElement().getElement();
 		
 		if (element.getElementType().equals(ElementType.Node)) {
 			if (action.equals(ChangeAction.Create)) {
@@ -85,7 +86,7 @@ public class ChangeForSeekableApplierComparator implements Comparator<ChangeElem
 	/**
 	 * {@inheritDoc}
 	 */
-	public int compare(ChangeElement o1, ChangeElement o2) {
+	public int compare(ChangeContainer o1, ChangeContainer o2) {
 		return calculateSortWeight(o1) - calculateSortWeight(o2);
 	}
 

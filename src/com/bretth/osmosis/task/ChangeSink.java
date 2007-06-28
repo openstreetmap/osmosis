@@ -1,8 +1,6 @@
 package com.bretth.osmosis.task;
 
-import com.bretth.osmosis.data.Node;
-import com.bretth.osmosis.data.Segment;
-import com.bretth.osmosis.data.Way;
+import com.bretth.osmosis.container.ChangeContainer;
 
 
 /**
@@ -13,34 +11,12 @@ import com.bretth.osmosis.data.Way;
 public interface ChangeSink extends Task {
 	
 	/**
-	 * Process the node.
+	 * Process the change.
 	 * 
-	 * @param node
-	 *            The node to be processed.
-	 * @param action
-	 *            The particular change action to be performed.
+	 * @param change
+	 *            The change to be processed.
 	 */
-	public void processNode(Node node, ChangeAction action);
-	
-	/**
-	 * Process the segment.
-	 * 
-	 * @param segment
-	 *            The segment to be processed.
-	 * @param action
-	 *            The particular change action to be performed.
-	 */
-	public void processSegment(Segment segment, ChangeAction action);
-	
-	/**
-	 * Process the way.
-	 * 
-	 * @param way
-	 *            The way to be processed.
-	 * @param action
-	 *            The particular change action to be performed.
-	 */
-	public void processWay(Way way, ChangeAction action);
+	public void process(ChangeContainer change);
 	
 	/**
 	 * Performs finalisation tasks such as database commits as necessary to

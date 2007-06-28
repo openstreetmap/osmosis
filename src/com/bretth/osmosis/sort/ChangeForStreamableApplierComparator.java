@@ -2,6 +2,8 @@ package com.bretth.osmosis.sort;
 
 import java.util.Comparator;
 
+import com.bretth.osmosis.container.ChangeContainer;
+
 
 /**
  * Orders changes in such a way that they can be applied to an ordered data
@@ -16,14 +18,14 @@ import java.util.Comparator;
  * 
  * @author Brett Henderson
  */
-public class ChangeForStreamableApplierComparator implements Comparator<ChangeElement> {
+public class ChangeForStreamableApplierComparator implements Comparator<ChangeContainer> {
 	private ElementByTypeThenIdComparator comparator = new ElementByTypeThenIdComparator();
 	
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public int compare(ChangeElement o1, ChangeElement o2) {
+	public int compare(ChangeContainer o1, ChangeContainer o2) {
 		// Changes aren't involved, so we can delegate directly to a standard
 		// element comparator.
 		return comparator.compare(o1.getElement(), o2.getElement());

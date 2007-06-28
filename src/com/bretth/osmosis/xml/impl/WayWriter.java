@@ -42,7 +42,7 @@ public class WayWriter extends ElementWriter {
 	 * @param way
 	 *            The way to be processed.
 	 */
-	public void processWay(BufferedWriter writer, Way way) {
+	public void process(BufferedWriter writer, Way way) {
 		List<SegmentReference> segmentReferences;
 		List<Tag> tags;
 		
@@ -61,7 +61,7 @@ public class WayWriter extends ElementWriter {
 			}
 			
 			for (Tag tag : tags) {
-				tagWriter.processTag(writer, tag);
+				tagWriter.process(writer, tag);
 			}
 			
 			closeElement(writer);

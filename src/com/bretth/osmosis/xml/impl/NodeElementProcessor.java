@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.xml.sax.Attributes;
 
+import com.bretth.osmosis.container.NodeContainer;
 import com.bretth.osmosis.data.Node;
 import com.bretth.osmosis.data.Tag;
 import com.bretth.osmosis.task.Sink;
@@ -84,7 +85,7 @@ public class NodeElementProcessor extends SourceElementProcessor implements TagL
 	 * {@inheritDoc}
 	 */
 	public void end() {
-		getSink().processNode(node);
+		getSink().process(new NodeContainer(node));
 		node = null;
 	}
 	

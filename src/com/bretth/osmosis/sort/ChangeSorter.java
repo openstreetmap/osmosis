@@ -2,14 +2,9 @@ package com.bretth.osmosis.sort;
 
 import java.util.Comparator;
 
-import com.bretth.osmosis.OsmosisRuntimeException;
-import com.bretth.osmosis.data.Element;
-import com.bretth.osmosis.data.Node;
-import com.bretth.osmosis.data.Segment;
-import com.bretth.osmosis.data.Way;
+import com.bretth.osmosis.container.ChangeContainer;
 import com.bretth.osmosis.sort.impl.FileBasedSort;
 import com.bretth.osmosis.sort.impl.ReleasableIterator;
-import com.bretth.osmosis.task.ChangeAction;
 import com.bretth.osmosis.task.ChangeSink;
 import com.bretth.osmosis.task.ChangeSinkChangeSource;
 
@@ -21,7 +16,7 @@ import com.bretth.osmosis.task.ChangeSinkChangeSource;
  * @author Brett Henderson
  */
 public class ChangeSorter implements ChangeSinkChangeSource {
-	private FileBasedSort<ChangeElement> fileBasedSort;
+	private FileBasedSort<ChangeContainer> fileBasedSort;
 	private ChangeSink sink;
 	
 	
@@ -31,32 +26,16 @@ public class ChangeSorter implements ChangeSinkChangeSource {
 	 * @param comparator
 	 *            The comparator to use for sorting.
 	 */
-	public ChangeSorter(Comparator<ChangeElement> comparator) {
-		fileBasedSort = new FileBasedSort<ChangeElement>(comparator, true);
+	public ChangeSorter(Comparator<ChangeContainer> comparator) {
+		fileBasedSort = new FileBasedSort<ChangeContainer>(comparator, true);
 	}
 	
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void processNode(Node node, ChangeAction action) {
-		fileBasedSort.add(new ChangeElement(node, action));
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void processSegment(Segment segment, ChangeAction action) {
-		fileBasedSort.add(new ChangeElement(segment, action));
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void processWay(Way way, ChangeAction action) {
-		fileBasedSort.add(new ChangeElement(way, action));
+	public void process(ChangeContainer change) {
+		fileBasedSort.add(change);
 	}
 	
 	
@@ -72,25 +51,13 @@ public class ChangeSorter implements ChangeSinkChangeSource {
 	 * {@inheritDoc}
 	 */
 	public void complete() {
-		ReleasableIterator<ChangeElement> iterator = null;
+		ReleasableIterator<ChangeContainer> iterator = null;
 		
 		try {
 			iterator = fileBasedSort.iterate();
 			
 			while (iterator.hasNext()) {
-				ChangeElement changeElement = iterator.next();
-				Element element = changeElement.getElement();
-				ChangeAction action = changeElement.getAction();
-				
-				if (element instanceof Node) {
-					sink.processNode((Node) element, action);
-				} else if (element instanceof Segment) {
-					sink.processSegment((Segment) element, action);
-				} else if (element instanceof Way) {
-					sink.processWay((Way) element, action);
-				} else {
-					throw new OsmosisRuntimeException("Element type " + element.getClass().getName() + " is unrecognised.");
-				}
+				sink.process(iterator.next());
 			}
 			
 			sink.complete();

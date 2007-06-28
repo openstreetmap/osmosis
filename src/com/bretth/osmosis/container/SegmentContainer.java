@@ -1,10 +1,6 @@
-package com.bretth.osmosis.change.impl;
+package com.bretth.osmosis.container;
 
-import com.bretth.osmosis.data.Element;
 import com.bretth.osmosis.data.Segment;
-import com.bretth.osmosis.task.ChangeAction;
-import com.bretth.osmosis.task.ChangeSink;
-import com.bretth.osmosis.task.Sink;
 
 
 /**
@@ -31,8 +27,8 @@ public class SegmentContainer extends ElementContainer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void process(Sink sink) {
-		sink.processSegment(segment);
+	public void process(ElementProcessor processor) {
+		processor.process(this);
 	}
 	
 	
@@ -40,16 +36,7 @@ public class SegmentContainer extends ElementContainer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void processChange(ChangeSink changeSink, ChangeAction action) {
-		changeSink.processSegment(segment, action);
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Element getElement() {
+	public Segment getElement() {
 		return segment;
 	}
 }
