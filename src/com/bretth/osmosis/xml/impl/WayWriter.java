@@ -37,37 +37,47 @@ public class WayWriter extends ElementWriter {
 	/**
 	 * Writes the way.
 	 * 
-	 * @param writer
-	 *            The writer to send the xml to.
 	 * @param way
 	 *            The way to be processed.
 	 */
-	public void process(BufferedWriter writer, Way way) {
+	public void process(Way way) {
 		List<SegmentReference> segmentReferences;
 		List<Tag> tags;
 		
-		beginOpenElement(writer);
-		addAttribute(writer, "id", Long.toString(way.getId()));
-		addAttribute(writer, "timestamp", formatDate(way.getTimestamp()));
+		beginOpenElement();
+		addAttribute("id", Long.toString(way.getId()));
+		addAttribute("timestamp", formatDate(way.getTimestamp()));
 		
 		segmentReferences = way.getSegmentReferenceList();
 		tags = way.getTagList();
 		
 		if (segmentReferences.size() > 0 || tags.size() > 0) {
-			endOpenElement(writer, false);
+			endOpenElement(false);
 
 			for (SegmentReference segmentReference : segmentReferences) {
-				segmentReferenceWriter.processSegmentReference(writer, segmentReference);
+				segmentReferenceWriter.processSegmentReference(segmentReference);
 			}
 			
 			for (Tag tag : tags) {
-				tagWriter.process(writer, tag);
+				tagWriter.process(tag);
 			}
 			
-			closeElement(writer);
+			closeElement();
 			
 		} else {
-			endOpenElement(writer, true);
+			endOpenElement(true);
 		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setWriter(BufferedWriter writer) {
+		super.setWriter(writer);
+		
+		segmentReferenceWriter.setWriter(writer);
+		tagWriter.setWriter(writer);
 	}
 }

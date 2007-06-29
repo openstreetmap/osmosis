@@ -81,12 +81,14 @@ public class XmlWriter implements Sink {
 				throw new OsmosisRuntimeException("Unable to open file for writing.", e);
 			}
 			
+			osmWriter.setWriter(writer);
+			
 			initialized = true;
 			
 			write("<?xml version='1.0' encoding='UTF-8'?>");
 			writeNewLine();
 			
-			osmWriter.begin(writer);
+			osmWriter.begin();
 		}
 	}
 	
@@ -97,7 +99,7 @@ public class XmlWriter implements Sink {
 	public void process(EntityContainer entityContainer) {
 		initialize();
 		
-		osmWriter.process(writer, entityContainer);
+		osmWriter.process(entityContainer);
 	}
 	
 	
@@ -107,7 +109,7 @@ public class XmlWriter implements Sink {
 	public void complete() {
 		try {
 			if (writer != null) {
-				osmWriter.end(writer);
+				osmWriter.end();
 				
 				writer.flush();
 			}

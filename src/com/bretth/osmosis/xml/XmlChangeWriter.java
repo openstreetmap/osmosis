@@ -81,12 +81,14 @@ public class XmlChangeWriter implements ChangeSink {
 				throw new OsmosisRuntimeException("Unable to open file for writing.", e);
 			}
 			
+			osmChangeWriter.setWriter(writer);
+			
 			initialized = true;
 			
 			write("<?xml version='1.0' encoding='UTF-8'?>");
 			writeNewLine();
 			
-			osmChangeWriter.begin(writer);
+			osmChangeWriter.begin();
 		}
 	}
 	
@@ -96,7 +98,7 @@ public class XmlChangeWriter implements ChangeSink {
 	 */
 	public void process(ChangeContainer changeContainer) {
 		initialize();
-		osmChangeWriter.process(writer, changeContainer);
+		osmChangeWriter.process(changeContainer);
 	}
 	
 	
@@ -106,7 +108,7 @@ public class XmlChangeWriter implements ChangeSink {
 	public void complete() {
 		try {
 			if (writer != null) {
-				osmChangeWriter.end(writer);
+				osmChangeWriter.end();
 				
 				writer.flush();
 			}

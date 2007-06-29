@@ -43,6 +43,10 @@ public class ElementWriter {
 	}
 	
 	
+	/**
+	 * The output destination for writing all xml.
+	 */
+	protected BufferedWriter writer;
 	private String elementName;
 	private int indentLevel;
 	private DateFormat dateFormatter;
@@ -65,6 +69,17 @@ public class ElementWriter {
 	
 	
 	/**
+	 * Sets the writer used as the xml output destination.
+	 * 
+	 * @param writer
+	 *            The writer.
+	 */
+	public void setWriter(BufferedWriter writer) {
+		this.writer = writer;
+	}
+	
+	
+	/**
 	 * Writes a series of spaces to indent the current line.
 	 * 
 	 * @param writer
@@ -72,7 +87,7 @@ public class ElementWriter {
 	 * @throws IOException
 	 *             if an error occurs.
 	 */
-	private void writeIndent(BufferedWriter writer) throws IOException {
+	private void writeIndent() throws IOException {
 		int indentSpaceCount;
 		
 		indentSpaceCount = indentLevel * INDENT_SPACES_PER_LEVEL;
@@ -141,9 +156,9 @@ public class ElementWriter {
 	 * @throws IOException
 	 *             if an error occurs.
 	 */
-	protected void beginOpenElement(BufferedWriter writer) {
+	protected void beginOpenElement() {
 		try {
-			writeIndent(writer);
+			writeIndent();
 			
 			writer.append('<');
 			writer.append(elementName);
@@ -157,13 +172,11 @@ public class ElementWriter {
 	/**
 	 * Writes out the opening tag of the element.
 	 * 
-	 * @param writer
-	 *            The underlying writer.
 	 * @param closeElement
 	 *            If true, the element will be closed immediately and written as
 	 *            a single tag in the output xml file.
 	 */
-	protected void endOpenElement(BufferedWriter writer, boolean closeElement) {
+	protected void endOpenElement(boolean closeElement) {
 		try {
 			if (closeElement) {
 				writer.append('/');
@@ -181,14 +194,12 @@ public class ElementWriter {
 	/**
 	 * Adds an attribute to the element.
 	 * 
-	 * @param writer
-	 *            The underlying writer.
 	 * @param name
 	 *            The name of the attribute.
 	 * @param value
 	 *            The value of the attribute.
 	 */
-	protected void addAttribute(BufferedWriter writer, String name, String value) {
+	protected void addAttribute(String name, String value) {
 		try {
 			writer.append(' ');
 			writer.append(name);
@@ -206,13 +217,10 @@ public class ElementWriter {
 	
 	/**
 	 * Writes the closing tag of the element.
-	 * 
-	 * @param writer
-	 *            The underlying writer.
 	 */
-	protected void closeElement(BufferedWriter writer) {
+	protected void closeElement() {
 		try {
-			writeIndent(writer);
+			writeIndent();
 			
 			writer.append("</");
 			writer.append(elementName);

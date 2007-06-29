@@ -1,7 +1,5 @@
 package com.bretth.osmosis.xml.impl;
 
-import java.io.BufferedWriter;
-
 import com.bretth.osmosis.data.Tag;
 
 
@@ -28,15 +26,13 @@ public class TagWriter extends ElementWriter {
 	/**
 	 * Writes the tag.
 	 * 
-	 * @param writer
-	 *            The writer to send the xml to.
 	 * @param tag
 	 *            The tag to be processed.
 	 */
-	public void process(BufferedWriter writer, Tag tag) {
-		beginOpenElement(writer);
-		addAttribute(writer, "k", tag.getKey());
-		addAttribute(writer, "v", tag.getValue());
-		endOpenElement(writer, true);
+	public void process(Tag tag) {
+		beginOpenElement();
+		addAttribute("k", tag.getKey());
+		addAttribute("v", tag.getValue());
+		endOpenElement(true);
 	}
 }

@@ -41,33 +41,40 @@ public class OsmChangeWriter extends ElementWriter {
 	
 	
 	/**
-	 * Begins an element.
-	 * 
-	 * @param writer
-	 *            The writer to send the xml to.
+	 * {@inheritDoc}
 	 */
-	public void begin(BufferedWriter writer) {
-		beginOpenElement(writer);
-		addAttribute(writer, "version", "0.3");
-		addAttribute(writer, "generator", "Osmosis");
-		endOpenElement(writer, false);
+	@Override
+	public void setWriter(BufferedWriter writer) {
+		super.setWriter(writer);
+		
+		osmCreateWriter.setWriter(writer);
+		osmModifyWriter.setWriter(writer);
+		osmDeleteWriter.setWriter(writer);
+	}
+	
+	
+	/**
+	 * Begins an element.
+	 */
+	public void begin() {
+		beginOpenElement();
+		addAttribute("version", "0.3");
+		addAttribute("generator", "Osmosis");
+		endOpenElement(false);
 	}
 	
 	
 	/**
 	 * Ends an element.
-	 * 
-	 * @param writer
-	 *            The writer to send the xml to.
 	 */
-	public void end(BufferedWriter writer) {
+	public void end() {
 		if (activeOsmWriter != null) {
-			activeOsmWriter.end(writer);
+			activeOsmWriter.end();
 			activeOsmWriter = null;
 		}
 		
 		lastAction = null;
-		closeElement(writer);
+		closeElement();
 	}
 	
 	
@@ -91,15 +98,15 @@ public class OsmChangeWriter extends ElementWriter {
 	}
 	
 	
-	private void updateActiveOsmWriter(BufferedWriter writer, ChangeAction action) {
+	private void updateActiveOsmWriter(ChangeAction action) {
 		if (action != lastAction) {
 			if (activeOsmWriter != null) {
-				activeOsmWriter.end(writer);
+				activeOsmWriter.end();
 			}
 			
 			activeOsmWriter = getWriterForAction(action);
 			
-			activeOsmWriter.begin(writer);
+			activeOsmWriter.begin();
 			
 			lastAction = action;
 		}
@@ -109,13 +116,11 @@ public class OsmChangeWriter extends ElementWriter {
 	/**
 	 * Writes the change in the container.
 	 * 
-	 * @param writer
-	 *            The writer to send the xml to.
 	 * @param changeContainer
 	 *            The container holding the change.
 	 */
-	public void process(BufferedWriter writer, ChangeContainer changeContainer) {
-		updateActiveOsmWriter(writer, changeContainer.getAction());
-		activeOsmWriter.process(writer, changeContainer.getEntityContainer());
+	public void process(ChangeContainer changeContainer) {
+		updateActiveOsmWriter(changeContainer.getAction());
+		activeOsmWriter.process(changeContainer.getEntityContainer());
 	}
 }

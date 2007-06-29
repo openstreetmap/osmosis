@@ -34,33 +34,42 @@ public class NodeWriter extends ElementWriter {
 	/**
 	 * Writes the node.
 	 * 
-	 * @param writer
-	 *            The writer to send the xml to.
 	 * @param node
 	 *            The node to be processed.
 	 */
-	public void process(BufferedWriter writer, Node node) {
+	public void process(Node node) {
 		List<Tag> tags;
 		
-		beginOpenElement(writer);
-		addAttribute(writer, "id", Long.toString(node.getId()));
-		addAttribute(writer, "timestamp", formatDate(node.getTimestamp()));
-		addAttribute(writer, "lat", Double.toString(node.getLatitude()));
-		addAttribute(writer, "lon", Double.toString(node.getLongitude()));
+		beginOpenElement();
+		addAttribute("id", Long.toString(node.getId()));
+		addAttribute("timestamp", formatDate(node.getTimestamp()));
+		addAttribute("lat", Double.toString(node.getLatitude()));
+		addAttribute("lon", Double.toString(node.getLongitude()));
 		
 		tags = node.getTagList();
 		
 		if (tags.size() > 0) {
-			endOpenElement(writer, false);
+			endOpenElement(false);
 			
 			for (Tag tag : tags) {
-				tagWriter.process(writer, tag);
+				tagWriter.process(tag);
 			}
 			
-			closeElement(writer);
+			closeElement();
 			
 		} else {
-			endOpenElement(writer, true);
+			endOpenElement(true);
 		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setWriter(BufferedWriter writer) {
+		super.setWriter(writer);
+		
+		tagWriter.setWriter(writer);
 	}
 }

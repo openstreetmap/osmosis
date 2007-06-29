@@ -1,7 +1,5 @@
 package com.bretth.osmosis.xml.impl;
 
-import java.io.BufferedWriter;
-
 import com.bretth.osmosis.data.SegmentReference;
 
 
@@ -28,14 +26,12 @@ public class SegmentReferenceWriter extends ElementWriter {
 	/**
 	 * Writes the tag.
 	 * 
-	 * @param writer
-	 *            The writer to send the xml to.
 	 * @param segmentReference
 	 *            The segmentReference to be processed.
 	 */
-	public void processSegmentReference(BufferedWriter writer, SegmentReference segmentReference) {
-		beginOpenElement(writer);
-		addAttribute(writer, "id", Long.toString(segmentReference.getSegmentId()));
-		endOpenElement(writer, true);
+	public void processSegmentReference(SegmentReference segmentReference) {
+		beginOpenElement();
+		addAttribute("id", Long.toString(segmentReference.getSegmentId()));
+		endOpenElement(true);
 	}
 }

@@ -38,50 +38,56 @@ public class OsmWriter extends ElementWriter {
 	
 	/**
 	 * Begins an element.
-	 * 
-	 * @param writer
-	 *            The writer to send the xml to.
 	 */
-	public void begin(BufferedWriter writer) {
-		beginOpenElement(writer);
-		addAttribute(writer, "version", "0.3");
-		addAttribute(writer, "generator", "Osmosis");
-		endOpenElement(writer, false);
+	public void begin() {
+		beginOpenElement();
+		addAttribute("version", "0.3");
+		addAttribute("generator", "Osmosis");
+		endOpenElement(false);
 	}
 	
 	
 	/**
 	 * Ends an element.
-	 * 
-	 * @param writer
-	 *            The writer to send the xml to.
 	 */
-	public void end(BufferedWriter writer) {
-		closeElement(writer);
+	public void end() {
+		closeElement();
 	}
 	
 	
 	/**
 	 * Writes the element in the container.
 	 * 
-	 * @param writer
-	 *            The writer to send the xml to.
 	 * @param entityContainer
 	 *            The container holding the entity.
 	 */
-	public void process(BufferedWriter writer, EntityContainer entityContainer) {
-		subElementWriter.setWriter(writer);
+	public void process(EntityContainer entityContainer) {
 		entityContainer.process(subElementWriter);
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setWriter(BufferedWriter writer) {
+		super.setWriter(writer);
+		
+		// Tell the sub element writer that a new writer is available. This will
+		// cause the underlying entity writing classes to be updated.
+		subElementWriter.updateWriter();
+	}
+
+
+
+
+
 	/**
 	 * Directs data to the appropriate underlying element writer.
 	 * 
 	 * @author Brett Henderson
 	 */
 	private class SubElementWriter implements EntityProcessor {
-		private BufferedWriter writer;
 		private NodeWriter nodeWriter;
 		private SegmentWriter segmentWriter;
 		private WayWriter wayWriter;
@@ -106,8 +112,10 @@ public class OsmWriter extends ElementWriter {
 		 * @param writer
 		 *            The writer to be used for all output xml.
 		 */
-		public void setWriter(BufferedWriter writer) {
-			this.writer = writer;
+		public void updateWriter() {
+			nodeWriter.setWriter(writer);
+			segmentWriter.setWriter(writer);
+			wayWriter.setWriter(writer);
 		}
 		
 		
@@ -115,7 +123,7 @@ public class OsmWriter extends ElementWriter {
 		 * {@inheritDoc}
 		 */
 		public void process(NodeContainer node) {
-			nodeWriter.process(writer, node.getEntity());
+			nodeWriter.process(node.getEntity());
 		}
 		
 		
@@ -123,7 +131,7 @@ public class OsmWriter extends ElementWriter {
 		 * {@inheritDoc}
 		 */
 		public void process(SegmentContainer segment) {
-			segmentWriter.process(writer, segment.getEntity());
+			segmentWriter.process(segment.getEntity());
 		}
 		
 		
@@ -131,7 +139,7 @@ public class OsmWriter extends ElementWriter {
 		 * {@inheritDoc}
 		 */
 		public void process(WayContainer way) {
-			wayWriter.process(writer, way.getEntity());
+			wayWriter.process(way.getEntity());
 		}
 	}
 }

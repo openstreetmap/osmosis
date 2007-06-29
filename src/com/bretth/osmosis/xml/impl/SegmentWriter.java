@@ -34,32 +34,41 @@ public class SegmentWriter extends ElementWriter {
 	/**
 	 * Writes the segment.
 	 * 
-	 * @param writer
-	 *            The writer to send the xml to.
 	 * @param segment
 	 *            The segment to be processed.
 	 */
-	public void process(BufferedWriter writer, Segment segment) {
+	public void process(Segment segment) {
 		List<Tag> tags;
 		
-		beginOpenElement(writer);
-		addAttribute(writer, "id", Long.toString(segment.getId()));
-		addAttribute(writer, "from", Long.toString(segment.getFrom()));
-		addAttribute(writer, "to", Long.toString(segment.getTo()));
+		beginOpenElement();
+		addAttribute("id", Long.toString(segment.getId()));
+		addAttribute("from", Long.toString(segment.getFrom()));
+		addAttribute("to", Long.toString(segment.getTo()));
 		
 		tags = segment.getTagList();
 		
 		if (tags.size() > 0) {
-			endOpenElement(writer, false);
+			endOpenElement(false);
 			
 			for (Tag tag : tags) {
-				tagWriter.process(writer, tag);
+				tagWriter.process(tag);
 			}
 			
-			closeElement(writer);
+			closeElement();
 			
 		} else {
-			endOpenElement(writer, true);
+			endOpenElement(true);
 		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setWriter(BufferedWriter writer) {
+		super.setWriter(writer);
+		
+		tagWriter.setWriter(writer);
 	}
 }
