@@ -11,14 +11,14 @@ import com.bretth.osmosis.OsmosisRuntimeException;
  * 
  * @author Brett Henderson
  * 
- * @param <EntityType>
+ * @param <T>
  *            The type of entity to retrieved.
  */
-public abstract class EntityReader<EntityType> {
+public abstract class EntityReader<T> {
 	
 	private DatabaseContext dbCtx;
 	private ResultSet resultSet;
-	private EntityType nextValue;
+	private T nextValue;
 	
 	
 	/**
@@ -53,7 +53,7 @@ public abstract class EntityReader<EntityType> {
 	 *            The record set to retrieve the data from.
 	 * @return The entity object.
 	 */
-	protected abstract EntityType createNextValue(ResultSet activeResultSet);
+	protected abstract T createNextValue(ResultSet activeResultSet);
 	
 	
 	/**
@@ -98,7 +98,7 @@ public abstract class EntityReader<EntityType> {
 	 * 
 	 * @return The next available entity.
 	 */
-	public EntityType peekNext() {
+	public T peekNext() {
 		if (resultSet == null) {
 			throw new OsmosisRuntimeException("hasNext must be called first.");
 		}
@@ -115,8 +115,8 @@ public abstract class EntityReader<EntityType> {
 	 * 
 	 * @return The next available entity.
 	 */
-	public EntityType next() {
-		EntityType result;
+	public T next() {
+		T result;
 		
 		result = peekNext();
 		

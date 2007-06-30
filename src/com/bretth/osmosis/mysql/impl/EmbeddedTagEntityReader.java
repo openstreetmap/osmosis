@@ -13,10 +13,10 @@ import com.bretth.osmosis.data.Tag;
  * 
  * @author Brett Henderson
  * 
- * @param <EntityType>
+ * @param <T>
  *            The type of entity to retrieved.
  */
-public abstract class EmbeddedTagEntityReader<EntityType> extends EntityReader<EntityType> {
+public abstract class EmbeddedTagEntityReader<T> extends EntityReader<T> {
 	
 	/**
 	 * Creates a new instance.
