@@ -1,40 +1,40 @@
 package com.bretth.osmosis.mysql.impl;
 
-import com.bretth.osmosis.data.Node;
+import com.bretth.osmosis.data.Segment;
 
 
 /**
- * A data class representing a node history record.
+ * A data class representing a segment history record.
  * 
  * @author Brett Henderson
  */
-public class NodeHistory {
+public class SegmentHistory {
 	
-	private Node node;
+	private Segment segment;
 	private boolean visible;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param node
+	 * @param segment
 	 *            The contained node.
 	 * @param visible
 	 *            The visible field.
 	 */
-	public NodeHistory(Node node, boolean visible) {
-		this.node = node;
+	public SegmentHistory(Segment segment, boolean visible) {
+		this.segment = segment;
 		this.visible = visible;
 	}
 	
 	
 	/**
-	 * Gets the contained node.
+	 * Gets the contained segment.
 	 * 
-	 * @return The node.
+	 * @return The segment.
 	 */
-	public Node getNode() {
-		return node;
+	public Segment getSegment() {
+		return segment;
 	}
 	
 	

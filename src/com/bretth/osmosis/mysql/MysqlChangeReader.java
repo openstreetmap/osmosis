@@ -3,6 +3,7 @@ package com.bretth.osmosis.mysql;
 import java.util.Date;
 
 import com.bretth.osmosis.mysql.impl.NodeChangeReader;
+import com.bretth.osmosis.mysql.impl.SegmentChangeReader;
 import com.bretth.osmosis.task.ChangeSink;
 import com.bretth.osmosis.task.RunnableChangeSource;
 
@@ -77,11 +78,29 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	
 	
 	/**
+	 * Reads all segment changes and sends them to the change sink.
+	 */
+	private void processSegments() {
+		SegmentChangeReader reader = new SegmentChangeReader(host, database, user, password, intervalBegin, intervalEnd);
+		
+		try {
+			while (reader.hasNext()) {
+				changeSink.process(reader.next());
+			}
+			
+		} finally {
+			reader.release();
+		}
+	}
+	
+	
+	/**
 	 * Reads all data from the file and send it to the sink.
 	 */
 	public void run() {
 		try {
 			processNodes();
+			processSegments();
 			
 		} finally {
 			changeSink.release();
