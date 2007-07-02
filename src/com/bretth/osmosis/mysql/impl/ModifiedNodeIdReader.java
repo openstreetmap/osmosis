@@ -17,7 +17,7 @@ import com.bretth.osmosis.OsmosisRuntimeException;
  */
 public class ModifiedNodeIdReader extends EntityReader<Long> {
 	private static final String SELECT_SQL =
-		"SELECT id FROM nodes WHERE timestamp <= ? AND timestamp < ? ORDER BY id";	
+		"SELECT id FROM nodes WHERE timestamp >= ? AND timestamp < ? ORDER BY id";	
 	
 	private Date intervalBegin;
 	private Date intervalEnd;

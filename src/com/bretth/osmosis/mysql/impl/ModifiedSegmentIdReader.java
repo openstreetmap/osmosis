@@ -17,7 +17,7 @@ import com.bretth.osmosis.OsmosisRuntimeException;
  */
 public class ModifiedSegmentIdReader extends EntityReader<Long> {
 	private static final String SELECT_SQL =
-		"SELECT id FROM segments WHERE timestamp <= ? AND timestamp < ? ORDER BY id";	
+		"SELECT id FROM segments WHERE timestamp >= ? AND timestamp < ? GROUP BY id ORDER BY id";	
 	
 	private Date intervalBegin;
 	private Date intervalEnd;
