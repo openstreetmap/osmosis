@@ -151,8 +151,6 @@ public class ElementWriter {
 	 * Writes an element opening line without the final closing portion of the
 	 * tag.
 	 * 
-	 * @param writer
-	 *            The underlying writer.
 	 * @throws IOException
 	 *             if an error occurs.
 	 */
