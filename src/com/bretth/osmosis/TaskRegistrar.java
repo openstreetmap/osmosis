@@ -5,6 +5,7 @@ import com.bretth.osmosis.change.ChangeDeriverFactory;
 import com.bretth.osmosis.filter.BoundingBoxFilterFactory;
 import com.bretth.osmosis.misc.NullChangeWriterFactory;
 import com.bretth.osmosis.misc.NullWriterFactory;
+import com.bretth.osmosis.mysql.MysqlChangeReaderFactory;
 import com.bretth.osmosis.mysql.MysqlReaderFactory;
 import com.bretth.osmosis.mysql.MysqlWriterFactory;
 import com.bretth.osmosis.pipeline.TaskManagerFactory;
@@ -40,18 +41,19 @@ public class TaskRegistrar {
 		changeSorterFactory.registerComparator("seekable", new ChangeForSeekableApplierComparator(), false);
 		
 		// Register factories.
-		TaskManagerFactory.register("read-mysql", new MysqlReaderFactory());
-		TaskManagerFactory.register("write-mysql", new MysqlWriterFactory());
-		TaskManagerFactory.register("read-xml", new XmlReaderFactory());
-		TaskManagerFactory.register("write-xml", new XmlWriterFactory());
+		TaskManagerFactory.register("apply-change", new ChangeApplierFactory());
 		TaskManagerFactory.register("bounding-box", new BoundingBoxFilterFactory());
 		TaskManagerFactory.register("derive-change", new ChangeDeriverFactory());
-		TaskManagerFactory.register("apply-change", new ChangeApplierFactory());
+		TaskManagerFactory.register("read-mysql", new MysqlReaderFactory());
+		TaskManagerFactory.register("read-mysql-change", new MysqlChangeReaderFactory());
+		TaskManagerFactory.register("read-xml", new XmlReaderFactory());
 		TaskManagerFactory.register("read-xml-change", new XmlChangeReaderFactory());
+		TaskManagerFactory.register("sort", entitySorterFactory);
+		TaskManagerFactory.register("sort-change", changeSorterFactory);
+		TaskManagerFactory.register("write-mysql", new MysqlWriterFactory());
+		TaskManagerFactory.register("write-xml", new XmlWriterFactory());
 		TaskManagerFactory.register("write-xml-change", new XmlChangeWriterFactory());
 		TaskManagerFactory.register("write-null", new NullWriterFactory());
 		TaskManagerFactory.register("write-null-change", new NullChangeWriterFactory());
-		TaskManagerFactory.register("sort", entitySorterFactory);
-		TaskManagerFactory.register("sort-change", changeSorterFactory);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.Date;
 import com.bretth.osmosis.OsmosisRuntimeException;
 import com.bretth.osmosis.container.ChangeContainer;
 import com.bretth.osmosis.container.SegmentContainer;
+import com.bretth.osmosis.data.Segment;
 import com.bretth.osmosis.task.ChangeAction;
 
 
@@ -16,7 +17,6 @@ import com.bretth.osmosis.task.ChangeAction;
  */
 public class SegmentChangeReader {
 	
-	private ModifiedSegmentIdReader segmentIdReader;
 	private SegmentHistoryReader segmentHistoryReader;
 	private ChangeContainer nextValue;
 	
@@ -39,45 +39,30 @@ public class SegmentChangeReader {
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
 	public SegmentChangeReader(String host, String database, String user, String password, Date intervalBegin, Date intervalEnd) {
-		segmentIdReader = new ModifiedSegmentIdReader(host, database, user, password, intervalBegin, intervalEnd);
-		
-		segmentHistoryReader = new SegmentHistoryReader(host, database, user, password);
-		segmentHistoryReader.setIntervalEnd(intervalEnd);
+		segmentHistoryReader = new SegmentHistoryReader(host, database, user, password, intervalBegin, intervalEnd);
 	}
 	
 	
 	/**
-	 * Reads the history of the specified entity and builds a change object.
-	 * 
-	 * @param segmentId
-	 *            The segment to examine.
-	 * @return The change.
+	 * Reads the history of the next entity and builds a change object.
 	 */
-	private ChangeContainer readChange(long segmentId) {
-		int recordCount = 0;
-		SegmentHistory mostRecentHistory = null;
+	private ChangeContainer readChange() {
+		int recordCount;
+		EntityHistory<Segment> mostRecentHistory;
 		SegmentContainer segmentContainer;
-		
-		segmentHistoryReader.reset();
-		segmentHistoryReader.setSegmentId(segmentId);
 		
 		// Read the entire segment history, we need to know how many records there
 		// are and the details of the most recent change.
-		while (segmentHistoryReader.hasNext()) {
-			SegmentHistory nextHistory = segmentHistoryReader.next();
-			
+		mostRecentHistory = segmentHistoryReader.next();
+		recordCount = 1;
+		while (segmentHistoryReader.hasNext() &&
+				(segmentHistoryReader.peekNext().getEntity().getId() == mostRecentHistory.getEntity().getId())) {
+			mostRecentHistory = segmentHistoryReader.next();
 			recordCount++;
-			mostRecentHistory = nextHistory;
-		}
-		
-		// We must have at least one record, we shouldn't have identified the
-		// segment if no history elements exist.
-		if (recordCount <= 0) {
-			throw new OsmosisRuntimeException("No history elements exist for segment with id=" + segmentId + ".");
 		}
 		
 		// The segment in the result must be wrapped in a container.
-		segmentContainer = new SegmentContainer(mostRecentHistory.getSegment());
+		segmentContainer = new SegmentContainer(mostRecentHistory.getEntity());
 		
 		// If only one history element exists, it must be a create.
 		// Else, if the most recent change leaves it visible it is a modify.
@@ -85,7 +70,10 @@ public class SegmentChangeReader {
 		if (recordCount == 1) {
 			// By definition, a create must be visible but we'll double check to be sure.
 			if (!mostRecentHistory.isVisible()) {
-				throw new OsmosisRuntimeException("Segment with id=" + segmentId + " only has one history element but it is not visible.");
+				throw new OsmosisRuntimeException(
+					"Segment with id="
+					+ mostRecentHistory.getEntity().getId()
+					+ " only has one history element but it is not visible.");
 			}
 			
 			return new ChangeContainer(segmentContainer, ChangeAction.Create);
@@ -106,12 +94,8 @@ public class SegmentChangeReader {
 	 */
 	public boolean hasNext() {
 		if (nextValue == null) {
-			if (segmentIdReader.hasNext()) {
-				long segmentId;
-				
-				segmentId = segmentIdReader.next().longValue();
-				
-				nextValue = readChange(segmentId);
+			if (segmentHistoryReader.hasNext()) {
+				readChange();
 			}
 		}
 		
@@ -125,11 +109,16 @@ public class SegmentChangeReader {
 	 * @return The next available entity.
 	 */
 	public ChangeContainer next() {
+		ChangeContainer result;
+		
 		if (!hasNext()) {
 			throw new OsmosisRuntimeException("No records are available, call hasNext first.");
 		}
 		
-		return nextValue;
+		result = nextValue;
+		nextValue = null;
+		
+		return result;
 	}
 	
 	
@@ -141,7 +130,6 @@ public class SegmentChangeReader {
 	public void release() {
 		nextValue = null;
 		
-		segmentIdReader.release();
 		segmentHistoryReader.release();
 	}
 }

@@ -10,14 +10,23 @@ import com.bretth.osmosis.OsmosisRuntimeException;
 
 
 /**
- * Reads the ids of all segments that have been modified within a particular time
- * interval.
+ * Reads the set of way segment changes from a database that have occurred within a
+ * time interval.
  * 
  * @author Brett Henderson
  */
-public class ModifiedSegmentIdReader extends EntityReader<Long> {
+public class WaySegmentHistoryReader extends EntityReader<EntityHistory<WaySegment>> {
 	private static final String SELECT_SQL =
-		"SELECT id FROM segments WHERE timestamp >= ? AND timestamp < ? GROUP BY id ORDER BY id";	
+		"SELECT ws.id AS way_id, ws.segment_id, ws.sequence_id, version"
+		+ " FROM way_segments ws"
+		+ " INNER JOIN"
+		+ " ("
+		+ "SELECT id, MAX(version) AS version"
+		+ " FROM ways"
+		+ " WHERE timestamp >= ? AND timestamp < ?"
+		+ " GROUP BY id"
+		+ ") w"
+		+ " ON ws.id = w.id AND ws.version = w.version;";
 	
 	private Date intervalBegin;
 	private Date intervalEnd;
@@ -40,7 +49,7 @@ public class ModifiedSegmentIdReader extends EntityReader<Long> {
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public ModifiedSegmentIdReader(String host, String database, String user, String password, Date intervalBegin, Date intervalEnd) {
+	public WaySegmentHistoryReader(String host, String database, String user, String password, Date intervalBegin, Date intervalEnd) {
 		super(host, database, user, password);
 		
 		this.intervalBegin = intervalBegin;
@@ -72,16 +81,22 @@ public class ModifiedSegmentIdReader extends EntityReader<Long> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Long createNextValue(ResultSet resultSet) {
-		long id;
+	protected EntityHistory<WaySegment> createNextValue(ResultSet resultSet) {
+		long wayId;
+		long segmentId;
+		int sequenceId;
+		int version;
 		
 		try {
-			id = resultSet.getLong("id");
+			wayId = resultSet.getLong("way_id");
+			segmentId = resultSet.getLong("segment_id");
+			sequenceId = resultSet.getInt("sequence_id");
+			version = resultSet.getInt("version");
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to read segment fields.", e);
+			throw new OsmosisRuntimeException("Unable to read way segment fields.", e);
 		}
 		
-		return Long.valueOf(id);
+		return new EntityHistory<WaySegment>(new WaySegment(wayId, segmentId, sequenceId), version, true);
 	}
 }

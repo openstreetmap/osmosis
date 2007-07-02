@@ -5,6 +5,7 @@ import java.util.Date;
 import com.bretth.osmosis.OsmosisRuntimeException;
 import com.bretth.osmosis.container.ChangeContainer;
 import com.bretth.osmosis.container.NodeContainer;
+import com.bretth.osmosis.data.Node;
 import com.bretth.osmosis.task.ChangeAction;
 
 
@@ -16,7 +17,6 @@ import com.bretth.osmosis.task.ChangeAction;
  */
 public class NodeChangeReader {
 	
-	private ModifiedNodeIdReader nodeIdReader;
 	private NodeHistoryReader nodeHistoryReader;
 	private ChangeContainer nextValue;
 	
@@ -39,45 +39,30 @@ public class NodeChangeReader {
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
 	public NodeChangeReader(String host, String database, String user, String password, Date intervalBegin, Date intervalEnd) {
-		nodeIdReader = new ModifiedNodeIdReader(host, database, user, password, intervalBegin, intervalEnd);
-		
-		nodeHistoryReader = new NodeHistoryReader(host, database, user, password);
-		nodeHistoryReader.setIntervalEnd(intervalEnd);
+		nodeHistoryReader = new NodeHistoryReader(host, database, user, password, intervalBegin, intervalEnd);
 	}
 	
 	
 	/**
-	 * Reads the history of the specified entity and builds a change object.
-	 * 
-	 * @param nodeId
-	 *            The node to examine.
-	 * @return The change.
+	 * Reads the history of the next entity and builds a change object.
 	 */
-	private ChangeContainer readChange(long nodeId) {
-		int recordCount = 0;
-		NodeHistory mostRecentHistory = null;
+	private ChangeContainer readChange() {
+		int recordCount;
+		EntityHistory<Node> mostRecentHistory;
 		NodeContainer nodeContainer;
-		
-		nodeHistoryReader.reset();
-		nodeHistoryReader.setNodeId(nodeId);
 		
 		// Read the entire node history, we need to know how many records there
 		// are and the details of the most recent change.
-		while (nodeHistoryReader.hasNext()) {
-			NodeHistory nextHistory = nodeHistoryReader.next();
-			
+		mostRecentHistory = nodeHistoryReader.next();
+		recordCount = 1;
+		while (nodeHistoryReader.hasNext() &&
+				(nodeHistoryReader.peekNext().getEntity().getId() == mostRecentHistory.getEntity().getId())) {
+			mostRecentHistory = nodeHistoryReader.next();
 			recordCount++;
-			mostRecentHistory = nextHistory;
-		}
-		
-		// We must have at least one record, we shouldn't have identified the
-		// node if no history elements exist.
-		if (recordCount <= 0) {
-			throw new OsmosisRuntimeException("No history elements exist for node with id=" + nodeId + ".");
 		}
 		
 		// The node in the result must be wrapped in a container.
-		nodeContainer = new NodeContainer(mostRecentHistory.getNode());
+		nodeContainer = new NodeContainer(mostRecentHistory.getEntity());
 		
 		// If only one history element exists, it must be a create.
 		// Else, if the most recent change leaves it visible it is a modify.
@@ -85,7 +70,10 @@ public class NodeChangeReader {
 		if (recordCount == 1) {
 			// By definition, a create must be visible but we'll double check to be sure.
 			if (!mostRecentHistory.isVisible()) {
-				throw new OsmosisRuntimeException("Node with id=" + nodeId + " only has one history element but it is not visible.");
+				throw new OsmosisRuntimeException(
+					"Node with id="
+					+ mostRecentHistory.getEntity().getId()
+					+ " only has one history element but it is not visible.");
 			}
 			
 			return new ChangeContainer(nodeContainer, ChangeAction.Create);
@@ -106,12 +94,8 @@ public class NodeChangeReader {
 	 */
 	public boolean hasNext() {
 		if (nextValue == null) {
-			if (nodeIdReader.hasNext()) {
-				long nodeId;
-				
-				nodeId = nodeIdReader.next().longValue();
-				
-				nextValue = readChange(nodeId);
+			if (nodeHistoryReader.hasNext()) {
+				readChange();
 			}
 		}
 		
@@ -125,11 +109,16 @@ public class NodeChangeReader {
 	 * @return The next available entity.
 	 */
 	public ChangeContainer next() {
+		ChangeContainer result;
+		
 		if (!hasNext()) {
 			throw new OsmosisRuntimeException("No records are available, call hasNext first.");
 		}
 		
-		return nextValue;
+		result = nextValue;
+		nextValue = null;
+		
+		return result;
 	}
 	
 	
@@ -141,7 +130,6 @@ public class NodeChangeReader {
 	public void release() {
 		nextValue = null;
 		
-		nodeIdReader.release();
 		nodeHistoryReader.release();
 	}
 }

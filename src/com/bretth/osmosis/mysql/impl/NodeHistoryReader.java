@@ -11,19 +11,27 @@ import com.bretth.osmosis.data.Node;
 
 
 /**
- * Reads all node history items for a single node from a database ordered by
- * their identifier.
+ * Reads node history records for nodes that have been modified within a time
+ * interval. All history items will be returned for the node from node creation
+ * up to the end of the time interval.
  * 
  * @author Brett Henderson
  */
-public class NodeHistoryReader extends EntityReader<NodeHistory> {
+public class NodeHistoryReader extends EntityReader<EntityHistory<Node>> {
+	// The sub-select identifies the nodes that have been modified within the
+	// time interval. The outer query then queries all node history items up to
+	// the end of the time interval.
 	private static final String SELECT_SQL =
-		"SELECT id, timestamp, latitude, longitude, tags, visible FROM nodes WHERE id = ? AND timestamp < ? ORDER BY timestamp";
+		"SELECT id, timestamp, latitude, longitude, tags, visible"
+		+ " FROM nodes"
+		+ " WHERE id IN ("
+		+ "SELECT id FROM nodes WHERE timestamp >= ? AND timestamp < ?"
+		+ ") AND timestamp < ?"
+		+ " ORDER BY id, timestamp";
 	
 	private EmbeddedTagParser tagParser;
-	private Long nodeId;
+	private Date intervalBegin;
 	private Date intervalEnd;
-	private PreparedStatement statement;
 	
 	
 	/**
@@ -37,33 +45,19 @@ public class NodeHistoryReader extends EntityReader<NodeHistory> {
 	 *            The user name for authentication.
 	 * @param password
 	 *            The password for authentication.
+	 * @param intervalBegin
+	 *            Marks the beginning (inclusive) of the time interval to be
+	 *            checked.
+	 * @param intervalEnd
+	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public NodeHistoryReader(String host, String database, String user, String password) {
+	public NodeHistoryReader(String host, String database, String user, String password, Date intervalBegin, Date intervalEnd) {
 		super(host, database, user, password);
 		
-		tagParser = new EmbeddedTagParser();
-	}
-	
-	
-	/**
-	 * Specifies the id of the node to query history for.
-	 * 
-	 * @param nodeId
-	 *            The node identifier.
-	 */
-	public void setNodeId(long nodeId) {
-		this.nodeId = nodeId;
-	}
-	
-	
-	/**
-	 * Specifies the end of the period for which we should search history for.
-	 * 
-	 * @param intervalEnd
-	 *            The end of the time interval.
-	 */
-	public void setIntervalEnd(Date intervalEnd) {
+		this.intervalBegin = intervalBegin;
 		this.intervalEnd = intervalEnd;
+		
+		tagParser = new EmbeddedTagParser();
 	}
 	
 	
@@ -73,12 +67,13 @@ public class NodeHistoryReader extends EntityReader<NodeHistory> {
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		try {
-			if (statement == null) {
-				statement = queryDbCtx.prepareStatementForStreaming(SELECT_SQL);
-			}
+			PreparedStatement statement;
 			
-			statement.setLong(1, nodeId);
+			statement = queryDbCtx.prepareStatementForStreaming(SELECT_SQL);
+			
+			statement.setTimestamp(1, new Timestamp(intervalBegin.getTime()));
 			statement.setTimestamp(2, new Timestamp(intervalEnd.getTime()));
+			statement.setTimestamp(3, new Timestamp(intervalEnd.getTime()));
 			
 			return statement.executeQuery();
 			
@@ -92,7 +87,7 @@ public class NodeHistoryReader extends EntityReader<NodeHistory> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected NodeHistory createNextValue(ResultSet resultSet) {
+	protected EntityHistory<Node> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
 		double latitude;
@@ -100,7 +95,7 @@ public class NodeHistoryReader extends EntityReader<NodeHistory> {
 		String tags;
 		boolean visible;
 		Node node;
-		NodeHistory nodeHistory;
+		EntityHistory<Node> nodeHistory;
 		
 		try {
 			id = resultSet.getLong("id");
@@ -117,7 +112,7 @@ public class NodeHistoryReader extends EntityReader<NodeHistory> {
 		node = new Node(id, timestamp, latitude, longitude);
 		node.addTags(tagParser.parseTags(tags));
 		
-		nodeHistory = new NodeHistory(node, visible);
+		nodeHistory = new EntityHistory<Node>(node, 0, visible);
 		
 		return nodeHistory;
 	}

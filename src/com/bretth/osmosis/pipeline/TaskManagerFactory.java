@@ -1,5 +1,8 @@
 package com.bretth.osmosis.pipeline;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +18,8 @@ import com.bretth.osmosis.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public abstract class TaskManagerFactory {
-
+	private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	
 	/**
 	 * The global register of task manager factories, keyed by a unique
 	 * identifier.
@@ -136,5 +140,39 @@ public abstract class TaskManagerFactory {
 		rawValue = getStringArgument(taskArgs, argName, defaultValue);
 
 		return Double.parseDouble(rawValue);
+	}
+	
+	
+	/**
+	 * Utility method for retrieving a date argument value from a Map of task
+	 * arguments.
+	 * 
+	 * @param taskArgs
+	 *            The task arguments.
+	 * @param argName
+	 *            The name of the argument.
+	 * @param defaultValue
+	 *            The default value of the argument if not value is available.
+	 * @return The value of the argument.
+	 */
+	protected Date getDateArgument(Map<String, String> taskArgs,
+			String argName, String defaultValue) {
+		String rawValue;
+		SimpleDateFormat dateFormat;
+		
+		dateFormat = new SimpleDateFormat(DATE_FORMAT);
+		
+		rawValue = getStringArgument(taskArgs, argName, defaultValue);
+		
+		try {
+			return dateFormat.parse(rawValue);
+			
+		} catch (ParseException e) {
+			throw new OsmosisRuntimeException(
+					"Unable to parse date ("
+					+ rawValue
+					+ "), must be in format " + DATE_FORMAT + ".",
+					e);
+		}
 	}
 }

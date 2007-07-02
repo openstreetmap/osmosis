@@ -7,17 +7,27 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
+import com.bretth.osmosis.data.Way;
 
 
 /**
- * Reads the ids of all nodes that have been modified within a particular time
- * interval.
+ * Reads the set of way changes from a database that have occurred within a
+ * time interval.
  * 
  * @author Brett Henderson
  */
-public class ModifiedNodeIdReader extends EntityReader<Long> {
+public class WayHistoryReader extends EntityReader<EntityHistory<Way>> {
 	private static final String SELECT_SQL =
-		"SELECT id FROM nodes WHERE timestamp >= ? AND timestamp < ? ORDER BY id";	
+		"SELECT w.id AS id, w.timestamp AS timestamp, w.version AS version, w.visible AS visible"
+		+ " FROM ways w"
+		+ " INNER JOIN"
+		+ " ("
+		+ "SELECT id, MAX(version) AS version"
+		+ " FROM ways"
+		+ " WHERE timestamp >= ? AND timestamp < ?"
+		+ " GROUP BY id"
+		+ ") w2"
+		+ " ON w.id = w2.id AND w.version = w2.version;";
 	
 	private Date intervalBegin;
 	private Date intervalEnd;
@@ -40,7 +50,7 @@ public class ModifiedNodeIdReader extends EntityReader<Long> {
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public ModifiedNodeIdReader(String host, String database, String user, String password, Date intervalBegin, Date intervalEnd) {
+	public WayHistoryReader(String host, String database, String user, String password, Date intervalBegin, Date intervalEnd) {
 		super(host, database, user, password);
 		
 		this.intervalBegin = intervalBegin;
@@ -72,16 +82,22 @@ public class ModifiedNodeIdReader extends EntityReader<Long> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Long createNextValue(ResultSet resultSet) {
+	protected EntityHistory<Way> createNextValue(ResultSet resultSet) {
 		long id;
+		Date timestamp;
+		int version;
+		boolean visible;
 		
 		try {
 			id = resultSet.getLong("id");
+			timestamp = resultSet.getTimestamp("timestamp");
+			version = resultSet.getInt("version");
+			visible = resultSet.getBoolean("visible");
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read node fields.", e);
 		}
 		
-		return Long.valueOf(id);
+		return new EntityHistory<Way>(new Way(id, timestamp), version, visible);
 	}
 }
