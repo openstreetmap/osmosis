@@ -39,11 +39,13 @@ public abstract class EntityReader<T> {
 	
 	
 	/**
-	 * Provides the sql query to retrieve the entity records from the database.
+	 * Builds the result set that the reader will iterate over.
 	 * 
-	 * @return The sql query.
+	 * @param queryDbCtx
+	 *            The database context to query against.
+	 * @return A result set positioned before the first record.
 	 */
-	protected abstract String getQuerySql();
+	protected abstract ResultSet createResultSet(DatabaseContext queryDbCtx);
 	
 	
 	/**
@@ -63,7 +65,7 @@ public abstract class EntityReader<T> {
 	 */
 	private void readNextValue() {
 		if (resultSet == null) {
-			resultSet = dbCtx.executeStreamingQuery(getQuerySql());
+			resultSet = createResultSet(dbCtx);
 		}
 		
 		try {
@@ -107,6 +109,25 @@ public abstract class EntityReader<T> {
 		}
 		
 		return nextValue;
+	}
+	
+	
+	/**
+	 * Resets the state of the reader to the starting state. This allows a query
+	 * to be re-issued without instantiating a new instance. Sub-classes may
+	 * utilise this functionality to re-use existing prepared statements.
+	 */
+	public void reset() {
+		if (resultSet != null) {
+			try {
+				resultSet.close();
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to close the existing result set.", e);
+			}
+		}
+		
+		resultSet = null;
+		nextValue = null;
 	}
 	
 	

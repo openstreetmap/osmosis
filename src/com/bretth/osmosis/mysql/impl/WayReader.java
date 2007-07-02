@@ -9,7 +9,7 @@ import com.bretth.osmosis.data.Way;
 
 
 /**
- * Provides iterator like behaviour for reading ways from a database.
+ * Reads all ways from a database ordered by their identifier.
  * 
  * @author Brett Henderson
  */
@@ -39,6 +39,15 @@ public class WayReader extends EntityReader<Way> {
 	 * {@inheritDoc}
 	 */
 	@Override
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	protected Way createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
@@ -52,13 +61,4 @@ public class WayReader extends EntityReader<Way> {
 		
 		return new Way(id, timestamp);
 	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String getQuerySql() {
-		return SELECT_SQL;
-	} 
 }

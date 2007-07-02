@@ -7,7 +7,7 @@ import com.bretth.osmosis.OsmosisRuntimeException;
 
 
 /**
- * Provides iterator like behaviour for reading way tags from a database.
+ * Reads all way tags from a database ordered by the way identifier.
  * 
  * @author Brett Henderson
  */
@@ -37,6 +37,15 @@ public class WayTagReader extends EntityReader<WayTag> {
 	 * {@inheritDoc}
 	 */
 	@Override
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	protected WayTag createNextValue(ResultSet resultSet) {
 		long wayId;
 		String key;
@@ -53,13 +62,4 @@ public class WayTagReader extends EntityReader<WayTag> {
 		
 		return new WayTag(wayId, key, value);
 	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String getQuerySql() {
-		return SELECT_SQL;
-	} 
 }

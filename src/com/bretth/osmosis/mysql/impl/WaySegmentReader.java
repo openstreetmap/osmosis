@@ -7,7 +7,8 @@ import com.bretth.osmosis.OsmosisRuntimeException;
 
 
 /**
- * Provides iterator like behaviour for reading way segments from a database.
+ * Reads all way segments from a database ordered by the way identifier and
+ * their sequence.
  * 
  * @author Brett Henderson
  */
@@ -37,6 +38,15 @@ public class WaySegmentReader extends EntityReader<WaySegment> {
 	 * {@inheritDoc}
 	 */
 	@Override
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	protected WaySegment createNextValue(ResultSet resultSet) {
 		long wayId;
 		long segmentId;
@@ -53,13 +63,4 @@ public class WaySegmentReader extends EntityReader<WaySegment> {
 		
 		return new WaySegment(wayId, segmentId, sequenceId);
 	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String getQuerySql() {
-		return SELECT_SQL;
-	} 
 }

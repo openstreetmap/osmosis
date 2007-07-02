@@ -8,13 +8,15 @@ import com.bretth.osmosis.data.Segment;
 
 
 /**
- * Provides iterator like behaviour for reading segments from a database.
+ * Reads all segments from a database ordered by their identifier.
  * 
  * @author Brett Henderson
  */
-public class SegmentReader extends EmbeddedTagEntityReader<Segment> {
+public class SegmentReader extends EntityReader<Segment> {
 	private static final String SELECT_SQL =
 		"SELECT id, node_a, node_b, tags FROM current_segments ORDER BY id";
+	
+	private EmbeddedTagParser tagParser;
 	
 	
 	/**
@@ -31,6 +33,17 @@ public class SegmentReader extends EmbeddedTagEntityReader<Segment> {
 	 */
 	public SegmentReader(String host, String database, String user, String password) {
 		super(host, database, user, password);
+		
+		tagParser = new EmbeddedTagParser();
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
 	}
 	
 	
@@ -56,17 +69,8 @@ public class SegmentReader extends EmbeddedTagEntityReader<Segment> {
 		}
 		
 		segment = new Segment(id, from, to);
-		segment.addTags(parseTags(tags));
+		segment.addTags(tagParser.parseTags(tags));
 		
 		return segment;
 	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected String getQuerySql() {
-		return SELECT_SQL;
-	} 
 }

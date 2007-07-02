@@ -8,32 +8,12 @@ import com.bretth.osmosis.data.Tag;
 
 
 /**
- * Extends basic entity reader functionality with features for reading tag
- * objects embedded within a single field in the same database record.
+ * Provides functionality for extracting lists of tags from entities where
+ * they're stored embedded in a single string field.
  * 
  * @author Brett Henderson
- * 
- * @param <T>
- *            The type of entity to retrieved.
  */
-public abstract class EmbeddedTagEntityReader<T> extends EntityReader<T> {
-	
-	/**
-	 * Creates a new instance.
-	 * 
-	 * @param host
-	 *            The server hosting the database.
-	 * @param database
-	 *            The database instance.
-	 * @param user
-	 *            The user name for authentication.
-	 * @param password
-	 *            The password for authentication.
-	 */
-	public EmbeddedTagEntityReader(String host, String database, String user, String password) {
-		super(host, database, user, password);
-	}
-	
+public class EmbeddedTagParser {
 	
 	/**
 	 * Parses the specified tag string and produces corresponding tag objects.
@@ -42,7 +22,7 @@ public abstract class EmbeddedTagEntityReader<T> extends EntityReader<T> {
 	 *            The tag string.
 	 * @return The tag objects.
 	 */
-	protected List<Tag> parseTags(String tags) {
+	public List<Tag> parseTags(String tags) {
 		StringTokenizer tokenizer;
 		List<Tag> tagList;
 		

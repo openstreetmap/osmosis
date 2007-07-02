@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
 
@@ -24,8 +23,6 @@ public class DatabaseContext {
 	private String user;
 	private String password;
 	private Connection connection;
-	private Statement statement;
-	private ResultSet resultSet;
 	
 	
 	/**
@@ -99,39 +96,17 @@ public class DatabaseContext {
 	
 	
 	/**
-	 * Releases any open database statement.
-	 */
-	private void releaseStatement() {
-		if (statement != null) {
-			try {
-				statement.close();
-				
-			} catch (SQLException e) {
-				// Do nothing.
-			}
-			
-			statement = null;
-		}
-	}
-	
-	
-	/**
-	 * Creates a new database prepared statement. Any existing statement will be
-	 * closed.
+	 * Creates a new database prepared statement.
 	 * 
 	 * @param sql
 	 *            The statement to be created.
 	 * @return The newly created statement.
 	 */
 	public PreparedStatement prepareStatement(String sql) {
-		releaseStatement();
-		
 		try {
 			PreparedStatement preparedStatement;
 			
 			preparedStatement = getConnection().prepareStatement(sql);
-			
-			statement = preparedStatement;
 			
 			return preparedStatement;
 			
@@ -142,47 +117,59 @@ public class DatabaseContext {
 	
 	
 	/**
-	 * Releases any open result set.
+	 * Creates a new database statement that is configured so that any result
+	 * sets created using it will stream data from the database instead of
+	 * returning all records at once and storing in memory.
+	 * <p>
+	 * If no input parameters need to be set on the statement, use the
+	 * executeStreamingQuery method instead.
+	 * 
+	 * @param sql
+	 *            The statement to be created. This must be a select statement.
+	 * @return The newly created statement.
 	 */
-	private void releaseResultSet() {
-		if (resultSet != null) {
-			try {
-				resultSet.close();
-				
-			} catch (SQLException e) {
-				// Do nothing.
-			}
+	public PreparedStatement prepareStatementForStreaming(String sql) {
+		try {
+			PreparedStatement statement;
 			
-			resultSet = null;
+			// Create a statement for returning streaming results.
+			statement = getConnection().prepareStatement(
+					sql,
+					ResultSet.TYPE_FORWARD_ONLY,
+					ResultSet.CONCUR_READ_ONLY);
+			
+			statement.setFetchSize(Integer.MIN_VALUE);
+			
+			return statement;
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to create streaming resultset statement.", e);
 		}
 	}
 	
 	
 	/**
 	 * Creates a result set that is configured to stream results from the
-	 * database.  Any existing result set will be closed.
+	 * database.
 	 * 
 	 * @param sql
 	 *            The query to invoke.
 	 * @return The result set.
 	 */
 	public ResultSet executeStreamingQuery(String sql) {
-		releaseResultSet();
-		releaseStatement();
-		
 		try {
-			// Create a statement for returning streaming results.
-			statement = getConnection().createStatement(
-					ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+			PreparedStatement statement;
+			ResultSet resultSet;
 			
-			statement.setFetchSize(Integer.MIN_VALUE);
+			statement = prepareStatementForStreaming(sql);
+			resultSet = statement.executeQuery();
 			
-			resultSet = statement.executeQuery(sql);
+			statement.close();
 			
 			return resultSet;
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to create streaming resultset statement.", e);
+			throw new OsmosisRuntimeException("Unable to create streaming resultset.", e);
 		}
 	}
 	
@@ -201,9 +188,6 @@ public class DatabaseContext {
 	 * class is used.
 	 */
 	public void release() {
-		releaseResultSet();
-		releaseStatement();
-		
 		if (connection != null) {
 			try {
 				connection.close();
