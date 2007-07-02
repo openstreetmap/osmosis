@@ -4,6 +4,7 @@ Added a shell launch script to simplify running on unix/linux.
 Added a readme with basic installation instructions.
 Added xml date parsing support.
 Fixed database dump code to read the "current" tables.
+Added a task for reading changes from a database.
 
 0.1
 Initial version.
