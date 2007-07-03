@@ -6,7 +6,7 @@
 	
 	<!-- set global properties for this build -->
 	<property name="project.name" value="osmosis"/>
-	<property name="project.version" value="0.1.7"/>
+	<property name="project.version" value="0.1.8"/>
 	
 	<target name="init" description="Perform initialisation required by all other build steps.">
 		<!-- Create the time stamp -->
