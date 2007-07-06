@@ -103,6 +103,8 @@ public abstract class TaskManagerFactory {
 	 * Utility method for retrieving a String argument value from a Map of task
 	 * arguments.
 	 * 
+	 * @param taskId
+	 *            The identifier for the task retrieving the parameter.
 	 * @param taskArgs
 	 *            The task arguments.
 	 * @param argName
@@ -111,7 +113,7 @@ public abstract class TaskManagerFactory {
 	 *            The default value of the argument if not value is available.
 	 * @return The value of the argument.
 	 */
-	protected String getStringArgument(Map<String, String> taskArgs,
+	protected String getStringArgument(String taskId, Map<String, String> taskArgs,
 			String argName, String defaultValue) {
 		if (taskArgs.containsKey(argName)) {
 			return taskArgs.get(argName);
@@ -125,6 +127,8 @@ public abstract class TaskManagerFactory {
 	 * Utility method for retrieving a double argument value from a Map of task
 	 * arguments.
 	 * 
+	 * @param taskId
+	 *            The identifier for the task retrieving the parameter.
 	 * @param taskArgs
 	 *            The task arguments.
 	 * @param argName
@@ -133,13 +137,23 @@ public abstract class TaskManagerFactory {
 	 *            The default value of the argument if not value is available.
 	 * @return The value of the argument.
 	 */
-	protected double getDoubleArgument(Map<String, String> taskArgs,
-			String argName, String defaultValue) {
-		String rawValue;
-
-		rawValue = getStringArgument(taskArgs, argName, defaultValue);
-
-		return Double.parseDouble(rawValue);
+	protected double getDoubleArgument(String taskId, Map<String, String> taskArgs,
+			String argName, double defaultValue) {
+		double result;
+		
+		if (taskArgs.containsKey(argName)) {
+			try {
+				result = Double.parseDouble(taskArgs.get(argName));
+			} catch (NumberFormatException e) {
+				throw new OsmosisRuntimeException(
+					"Argument " + argName + " for task " + taskId
+					+ " must be a decimal number.", e);
+			}
+		} else {
+			result = defaultValue;
+		}
+		
+		return result;
 	}
 	
 	
@@ -147,6 +161,8 @@ public abstract class TaskManagerFactory {
 	 * Utility method for retrieving a date argument value from a Map of task
 	 * arguments.
 	 * 
+	 * @param taskId
+	 *            The identifier for the task retrieving the parameter.
 	 * @param taskArgs
 	 *            The task arguments.
 	 * @param argName
@@ -155,25 +171,28 @@ public abstract class TaskManagerFactory {
 	 *            The default value of the argument if not value is available.
 	 * @return The value of the argument.
 	 */
-	protected Date getDateArgument(Map<String, String> taskArgs,
-			String argName, String defaultValue) {
-		String rawValue;
-		SimpleDateFormat dateFormat;
+	protected Date getDateArgument(String taskId, Map<String, String> taskArgs,
+			String argName, Date defaultValue) {
+		Date result;
 		
-		dateFormat = new SimpleDateFormat(DATE_FORMAT);
-		
-		rawValue = getStringArgument(taskArgs, argName, defaultValue);
-		
-		try {
-			return dateFormat.parse(rawValue);
-			
-		} catch (ParseException e) {
-			throw new OsmosisRuntimeException(
-					"Unable to parse date ("
-					+ rawValue
-					+ "), must be in format " + DATE_FORMAT + ".",
-					e);
+		if (taskArgs.containsKey(argName)) {
+			try {
+				SimpleDateFormat dateFormat;
+				
+				dateFormat = new SimpleDateFormat(DATE_FORMAT);
+				
+				result = dateFormat.parse(taskArgs.get(argName));
+				
+			} catch (ParseException e) {
+				throw new OsmosisRuntimeException(
+					"Argument " + argName + " for task " + taskId
+					+ " must be a date in format " + DATE_FORMAT + ".", e);
+			}
+		} else {
+			result = defaultValue;
 		}
+		
+		return result;
 	}
 	
 	
@@ -181,6 +200,8 @@ public abstract class TaskManagerFactory {
 	 * Utility method for retrieving a boolean argument value from a Map of task
 	 * arguments.
 	 * 
+	 * @param taskId
+	 *            The identifier for the task retrieving the parameter.
 	 * @param taskArgs
 	 *            The task arguments.
 	 * @param argName
@@ -189,27 +210,31 @@ public abstract class TaskManagerFactory {
 	 *            The default value of the argument if not value is available.
 	 * @return The value of the argument.
 	 */
-	protected boolean getBooleanArgument(Map<String, String> taskArgs,
-			String argName, String defaultValue) {
-		String rawValue;
-		String lowerRawValue;
+	protected boolean getBooleanArgument(String taskId, Map<String, String> taskArgs,
+			String argName, boolean defaultValue) {
+		boolean result;
 		
-		rawValue = getStringArgument(taskArgs, argName, defaultValue);
-		
-		// For simplicity we will perform a case-insensitive comparison.
-		lowerRawValue = rawValue.toLowerCase();
-		
-		if ("true".equals(lowerRawValue) || "yes".equals(lowerRawValue)) {
-			return true;
+		if (taskArgs.containsKey(argName)) {
+			String rawValue;
 			
-		} else if ("false".equals(lowerRawValue) || "no".equals(lowerRawValue)) {
-			return false;
+			rawValue = taskArgs.get(argName).toLowerCase();
+			
+			if ("true".equals(rawValue) || "yes".equals(rawValue)) {
+				result = true;
+				
+			} else if ("false".equals(rawValue) || "no".equals(rawValue)) {
+				result = false;
+				
+			} else {
+				throw new OsmosisRuntimeException(
+					"Argument " + argName + " for task " + taskId
+					+ " must be one of yes, no, true or false.");
+			}
 			
 		} else {
-			throw new OsmosisRuntimeException(
-				"Unable to parse boolean ("
-				+ rawValue
-				+ "), must be one of yes, no, true or false.");
+			result = defaultValue;
 		}
+		
+		return result;
 	}
 }

@@ -82,7 +82,7 @@ public class ChangeSorterFactory extends TaskManagerFactory {
 		
 		// Get the comparator.
 		comparator = getComparator(
-			getStringArgument(taskArgs, ARG_COMPARATOR_TYPE, defaultComparatorType)
+			getStringArgument(taskId, taskArgs, ARG_COMPARATOR_TYPE, defaultComparatorType)
 		);
 		
 		return new ChangeSinkChangeSourceManager(

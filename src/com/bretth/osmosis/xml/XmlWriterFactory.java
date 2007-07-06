@@ -28,7 +28,7 @@ public class XmlWriterFactory extends TaskManagerFactory {
 		XmlWriter task;
 		
 		// Get the task arguments.
-		fileName = getStringArgument(taskArgs, ARG_FILE_NAME, DEFAULT_FILE_NAME);
+		fileName = getStringArgument(taskId, taskArgs, ARG_FILE_NAME, DEFAULT_FILE_NAME);
 		
 		// Create a file object from the file name provided.
 		file = new File(fileName);

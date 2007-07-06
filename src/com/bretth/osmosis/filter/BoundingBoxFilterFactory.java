@@ -17,10 +17,10 @@ public class BoundingBoxFilterFactory extends TaskManagerFactory {
 	private static final String ARG_RIGHT = "right";
 	private static final String ARG_TOP = "top";
 	private static final String ARG_BOTTOM = "bottom";
-	private static final String DEFAULT_LEFT = "-180";
-	private static final String DEFAULT_RIGHT = "180";
-	private static final String DEFAULT_TOP = "90";
-	private static final String DEFAULT_BOTTOM = "-90";
+	private static final double DEFAULT_LEFT = -180;
+	private static final double DEFAULT_RIGHT = 180;
+	private static final double DEFAULT_TOP = 90;
+	private static final double DEFAULT_BOTTOM = -90;
 
 	
 	/**
@@ -34,10 +34,10 @@ public class BoundingBoxFilterFactory extends TaskManagerFactory {
 		double bottom;
 		
 		// Get the task arguments.
-		left = getDoubleArgument(taskArgs, ARG_LEFT, DEFAULT_LEFT);
-		right = getDoubleArgument(taskArgs, ARG_RIGHT, DEFAULT_RIGHT);
-		top = getDoubleArgument(taskArgs, ARG_TOP, DEFAULT_TOP);
-		bottom = getDoubleArgument(taskArgs, ARG_BOTTOM, DEFAULT_BOTTOM);
+		left = getDoubleArgument(taskId, taskArgs, ARG_LEFT, DEFAULT_LEFT);
+		right = getDoubleArgument(taskId, taskArgs, ARG_RIGHT, DEFAULT_RIGHT);
+		top = getDoubleArgument(taskId, taskArgs, ARG_TOP, DEFAULT_TOP);
+		bottom = getDoubleArgument(taskId, taskArgs, ARG_BOTTOM, DEFAULT_BOTTOM);
 		
 		return new SinkSourceManager(
 			taskId,

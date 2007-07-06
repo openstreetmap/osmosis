@@ -1,8 +1,9 @@
 package com.bretth.osmosis.mysql;
 
+import java.util.Date;
 import java.util.Map;
 
-import com.bretth.osmosis.pipeline.RunnableSourceManager;
+import com.bretth.osmosis.pipeline.RunnableChangeSourceManager;
 import com.bretth.osmosis.pipeline.TaskManager;
 import com.bretth.osmosis.pipeline.TaskManagerFactory;
 
@@ -17,6 +18,8 @@ public class MysqlChangeReaderFactory extends TaskManagerFactory {
 	private static final String ARG_DATABASE = "database";
 	private static final String ARG_USER = "user";
 	private static final String ARG_PASSWORD = "password";
+	private static final String ARG_INTERVAL_BEGIN = "intervalBegin";
+	private static final String ARG_INTERVAL_END = "intervalEnd";
 	private static final String DEFAULT_HOST = "localhost";
 	private static final String DEFAULT_DATABASE = "osm";
 	private static final String DEFAULT_USER = "osm";
@@ -32,16 +35,20 @@ public class MysqlChangeReaderFactory extends TaskManagerFactory {
 		String database;
 		String user;
 		String password;
+		Date intervalBegin;
+		Date intervalEnd;
 		
 		// Get the task arguments.
-		host = getStringArgument(taskArgs, ARG_HOST, DEFAULT_HOST);
-		database = getStringArgument(taskArgs, ARG_DATABASE, DEFAULT_DATABASE);
-		user = getStringArgument(taskArgs, ARG_USER, DEFAULT_USER);
-		password = getStringArgument(taskArgs, ARG_PASSWORD, DEFAULT_PASSWORD);
+		host = getStringArgument(taskId, taskArgs, ARG_HOST, DEFAULT_HOST);
+		database = getStringArgument(taskId, taskArgs, ARG_DATABASE, DEFAULT_DATABASE);
+		user = getStringArgument(taskId, taskArgs, ARG_USER, DEFAULT_USER);
+		password = getStringArgument(taskId, taskArgs, ARG_PASSWORD, DEFAULT_PASSWORD);
+		intervalBegin = getDateArgument(taskId, taskArgs, ARG_INTERVAL_BEGIN, new Date(0));
+		intervalEnd = getDateArgument(taskId, taskArgs, ARG_INTERVAL_END, new Date());
 		
-		return new RunnableSourceManager(
+		return new RunnableChangeSourceManager(
 			taskId,
-			new MysqlReader(host, database, user, password),
+			new MysqlChangeReader(host, database, user, password, intervalBegin, intervalEnd),
 			pipeArgs
 		);
 	}

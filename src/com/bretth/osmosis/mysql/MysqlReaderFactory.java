@@ -34,10 +34,10 @@ public class MysqlReaderFactory extends TaskManagerFactory {
 		String password;
 		
 		// Get the task arguments.
-		host = getStringArgument(taskArgs, ARG_HOST, DEFAULT_HOST);
-		database = getStringArgument(taskArgs, ARG_DATABASE, DEFAULT_DATABASE);
-		user = getStringArgument(taskArgs, ARG_USER, DEFAULT_USER);
-		password = getStringArgument(taskArgs, ARG_PASSWORD, DEFAULT_PASSWORD);
+		host = getStringArgument(taskId, taskArgs, ARG_HOST, DEFAULT_HOST);
+		database = getStringArgument(taskId, taskArgs, ARG_DATABASE, DEFAULT_DATABASE);
+		user = getStringArgument(taskId, taskArgs, ARG_USER, DEFAULT_USER);
+		password = getStringArgument(taskId, taskArgs, ARG_PASSWORD, DEFAULT_PASSWORD);
 		
 		return new RunnableSourceManager(
 			taskId,
