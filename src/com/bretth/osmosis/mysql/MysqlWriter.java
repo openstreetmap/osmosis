@@ -17,6 +17,7 @@ import com.bretth.osmosis.data.SegmentReference;
 import com.bretth.osmosis.data.Tag;
 import com.bretth.osmosis.data.Way;
 import com.bretth.osmosis.mysql.impl.DatabaseContext;
+import com.bretth.osmosis.mysql.impl.EmbeddedTagProcessor;
 import com.bretth.osmosis.mysql.impl.WaySegment;
 import com.bretth.osmosis.mysql.impl.WayTag;
 import com.bretth.osmosis.task.Sink;
@@ -29,6 +30,8 @@ import com.bretth.osmosis.task.Sink;
  * @author Brett Henderson
  */
 public class MysqlWriter implements Sink, EntityProcessor {
+	// These SQL strings are the prefix to statements that will be built based
+	// on how many rows of data are to be inserted at a time.
 	private static final String INSERT_SQL_NODE =
 		"INSERT INTO nodes(id, latitude, longitude, tags)";
 	private static final int INSERT_PRM_COUNT_NODE = 4;
@@ -45,12 +48,35 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		"INSERT INTO way_segments (id, segment_id, sequence_id)";
 	private static final int INSERT_PRM_COUNT_WAY_SEGMENT = 3;
 	
+	// These SQL statements will be invoked prior to loading data to disable
+	// indexes.
+	private static final String INVOKE_DISABLE_KEYS_NODE = "ALTER TABLE nodes DISABLE KEYS";
+	private static final String INVOKE_DISABLE_KEYS_SEGMENT = "ALTER TABLE segments DISABLE KEYS";
+	private static final String INVOKE_DISABLE_KEYS_WAY = "ALTER TABLE ways DISABLE KEYS";
+	private static final String INVOKE_DISABLE_KEYS_WAY_TAG = "ALTER TABLE way_tags DISABLE KEYS";
+	private static final String INVOKE_DISABLE_KEYS_WAY_SEGMENT = "ALTER TABLE way_segments DISABLE KEYS";
+	
+	// These SQL statements will be invoked after loading data to re-enable
+	// indexes.
+	private static final String INVOKE_ENABLE_KEYS_NODE = "ALTER TABLE nodes ENABLE KEYS";
+	private static final String INVOKE_ENABLE_KEYS_SEGMENT = "ALTER TABLE segments ENABLE KEYS";
+	private static final String INVOKE_ENABLE_KEYS_WAY = "ALTER TABLE ways ENABLE KEYS";
+	private static final String INVOKE_ENABLE_KEYS_WAY_TAG = "ALTER TABLE way_tags ENABLE KEYS";
+	private static final String INVOKE_ENABLE_KEYS_WAY_SEGMENT = "ALTER TABLE way_segments ENABLE KEYS";
+
+	// These SQL statements will be invoked to lock and unlock tables.
+	private static final String INVOKE_LOCK_TABLES = "LOCK TABLES nodes WRITE, segments WRITE, ways WRITE, way_tags WRITE, way_segments WRITE";
+	private static final String INVOKE_UNLOCK_TABLES = "UNLOCK TABLES";
+	
+	// These constants define how many rows of each data type will be inserted
+	// with single insert statements.
 	private static final int INSERT_BULK_ROW_COUNT_NODE = 100;
 	private static final int INSERT_BULK_ROW_COUNT_SEGMENT = 100;
 	private static final int INSERT_BULK_ROW_COUNT_WAY = 100;
 	private static final int INSERT_BULK_ROW_COUNT_WAY_TAG = 100;
 	private static final int INSERT_BULK_ROW_COUNT_WAY_SEGMENT = 100;
 	
+	// These constants will be configured by a static code block.
 	private static final String INSERT_SQL_SINGLE_NODE;
 	private static final String INSERT_SQL_BULK_NODE;
 	private static final String INSERT_SQL_SINGLE_SEGMENT;
@@ -127,11 +153,14 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	
 	
 	private DatabaseContext dbCtx;
+	private boolean lockTables;
 	private List<Node> nodeBuffer;
 	private List<Segment> segmentBuffer;
 	private List<Way> wayBuffer;
 	private List<WayTag> wayTagBuffer;
 	private List<WaySegment> waySegmentBuffer;
+	private EmbeddedTagProcessor tagProcessor;
+	private boolean initialized;
 	private PreparedStatement singleNodeStatement;
 	private PreparedStatement bulkNodeStatement;
 	private PreparedStatement singleSegmentStatement;
@@ -155,15 +184,57 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 *            The user name for authentication.
 	 * @param password
 	 *            The password for authentication.
+	 * @param lockTables
+	 *            If true, all tables will be locked during loading.
 	 */
-	public MysqlWriter(String host, String database, String user, String password) {
+	public MysqlWriter(String host, String database, String user, String password, boolean lockTables) {
 		dbCtx = new DatabaseContext(host, database, user, password);
-
+		
+		this.lockTables = lockTables;
+		
 		nodeBuffer = new ArrayList<Node>();
 		segmentBuffer = new ArrayList<Segment>();
 		wayBuffer = new ArrayList<Way>();
 		wayTagBuffer = new ArrayList<WayTag>();
 		waySegmentBuffer = new ArrayList<WaySegment>();
+		
+		tagProcessor = new EmbeddedTagProcessor();
+		
+		initialized = false;
+	}
+	
+	
+	/**
+	 * Initialises prepared statements and obtains database locks. Can be called
+	 * multiple times.
+	 */
+	private void initialize() {
+		if (!initialized) {
+			bulkNodeStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_NODE);
+			singleNodeStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_NODE);
+			bulkSegmentStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_SEGMENT);
+			singleSegmentStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_SEGMENT);
+			bulkWayStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_WAY);
+			singleWayStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_WAY);
+			bulkWayTagStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_WAY_TAG);
+			singleWayTagStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_WAY_TAG);
+			bulkWaySegmentStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_WAY_SEGMENT);
+			singleWaySegmentStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_WAY_SEGMENT);
+			
+			// Disable indexes to improve load performance.
+			dbCtx.executeStatement(INVOKE_DISABLE_KEYS_NODE);
+			dbCtx.executeStatement(INVOKE_DISABLE_KEYS_SEGMENT);
+			dbCtx.executeStatement(INVOKE_DISABLE_KEYS_WAY);
+			dbCtx.executeStatement(INVOKE_DISABLE_KEYS_WAY_TAG);
+			dbCtx.executeStatement(INVOKE_DISABLE_KEYS_WAY_SEGMENT);
+			
+			// Lock tables if required to improve load performance.
+			if (lockTables) {
+				dbCtx.executeStatement(INVOKE_LOCK_TABLES);
+			}
+			
+			initialized = true;
+		}
 	}
 	
 	
@@ -178,13 +249,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 *            The node containing the data to be inserted.
 	 */
 	private void populateNodeParameters(PreparedStatement statement, int initialIndex, Node node) {
-		StringBuilder tagBuffer;
 		int prmIndex;
-		
-		tagBuffer = new StringBuilder();
-		for (Tag tag : node.getTagList()) {
-			tagBuffer.append(";").append(tag.getKey()).append("=").append(tag.getValue());
-		}
 		
 		prmIndex = initialIndex;
 		
@@ -192,7 +257,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			statement.setLong(prmIndex++, node.getId());
 			statement.setDouble(prmIndex++, node.getLatitude());
 			statement.setDouble(prmIndex++, node.getLongitude());
-			statement.setString(prmIndex++, tagBuffer.toString());
+			statement.setString(prmIndex++, tagProcessor.format(node.getTagList()));
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a node.", e);
@@ -211,13 +276,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 *            The segment containing the data to be inserted.
 	 */
 	private void populateSegmentParameters(PreparedStatement statement, int initialIndex, Segment segment) {
-		StringBuilder tagBuffer;
 		int prmIndex;
-		
-		tagBuffer = new StringBuilder();
-		for (Tag tag : segment.getTagList()) {
-			tagBuffer.append(";").append(tag.getKey()).append("=").append(tag.getValue());
-		}
 		
 		prmIndex = initialIndex;
 		
@@ -225,7 +284,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			statement.setLong(prmIndex++, segment.getId());
 			statement.setDouble(prmIndex++, segment.getFrom());
 			statement.setDouble(prmIndex++, segment.getTo());
-			statement.setString(prmIndex++, tagBuffer.toString());
+			statement.setString(prmIndex++, tagProcessor.format(segment.getTagList()));
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a segment.", e);
@@ -323,10 +382,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		while (nodeBuffer.size() >= INSERT_BULK_ROW_COUNT_NODE) {
 			int prmIndex;
 			
-			if (bulkNodeStatement == null) {
-				bulkNodeStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_NODE);
-			}
-			
 			prmIndex = 1;
 			for (int i = 0; i < INSERT_BULK_ROW_COUNT_NODE; i++) {
 				populateNodeParameters(bulkNodeStatement, prmIndex, nodeBuffer.remove(0));
@@ -342,10 +397,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		
 		if (complete) {
 			while (nodeBuffer.size() > 0) {
-				if (singleNodeStatement == null) {
-					singleNodeStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_NODE);
-				}
-				
 				populateNodeParameters(singleNodeStatement, 1, nodeBuffer.remove(0));
 				
 				try {
@@ -372,10 +423,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		while (segmentBuffer.size() >= INSERT_BULK_ROW_COUNT_SEGMENT) {
 			int prmIndex;
 			
-			if (bulkSegmentStatement == null) {
-				bulkSegmentStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_SEGMENT);
-			}
-			
 			prmIndex = 1;
 			for (int i = 0; i < INSERT_BULK_ROW_COUNT_SEGMENT; i++) {
 				populateSegmentParameters(bulkSegmentStatement, prmIndex, segmentBuffer.remove(0));
@@ -391,10 +438,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		
 		if (complete) {
 			while (segmentBuffer.size() > 0) {
-				if (singleSegmentStatement == null) {
-					singleSegmentStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_SEGMENT);
-				}
-				
 				populateSegmentParameters(singleSegmentStatement, 1, segmentBuffer.remove(0));
 				
 				try {
@@ -423,10 +466,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			int prmIndex;
 			
 			processedWays = new ArrayList<Way>(INSERT_BULK_ROW_COUNT_WAY);
-			
-			if (bulkWayStatement == null) {
-				bulkWayStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_WAY);
-			}
 			
 			prmIndex = 1;
 			for (int i = 0; i < INSERT_BULK_ROW_COUNT_WAY; i++) {
@@ -457,10 +496,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 				
 				way = wayBuffer.remove(0);
 				
-				if (singleWayStatement == null) {
-					singleWayStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_WAY);
-				}
-				
 				populateWayParameters(singleWayStatement, 1, way);
 				
 				try {
@@ -490,10 +525,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		while (wayTagBuffer.size() >= INSERT_BULK_ROW_COUNT_WAY_TAG) {
 			int prmIndex;
 			
-			if (bulkWayTagStatement == null) {
-				bulkWayTagStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_WAY_TAG);
-			}
-			
 			prmIndex = 1;
 			for (int i = 0; i < INSERT_BULK_ROW_COUNT_WAY_TAG; i++) {
 				populateWayTagParameters(bulkWayTagStatement, prmIndex, wayTagBuffer.remove(0));
@@ -509,10 +540,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		
 		if (complete) {
 			while (wayTagBuffer.size() > 0) {
-				if (singleWayTagStatement == null) {
-					singleWayTagStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_WAY_TAG);
-				}
-				
 				populateWayTagParameters(singleWayTagStatement, 1, wayTagBuffer.remove(0));
 				
 				try {
@@ -539,10 +566,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		while (waySegmentBuffer.size() >= INSERT_BULK_ROW_COUNT_WAY_SEGMENT) {
 			int prmIndex;
 			
-			if (bulkWaySegmentStatement == null) {
-				bulkWaySegmentStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_WAY_SEGMENT);
-			}
-			
 			prmIndex = 1;
 			for (int i = 0; i < INSERT_BULK_ROW_COUNT_WAY_SEGMENT; i++) {
 				populateWaySegmentParameters(bulkWaySegmentStatement, prmIndex, waySegmentBuffer.remove(0));
@@ -558,10 +581,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		
 		if (complete) {
 			while (waySegmentBuffer.size() > 0) {
-				if (singleWaySegmentStatement == null) {
-					singleWaySegmentStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_WAY_SEGMENT);
-				}
-				
 				populateWaySegmentParameters(singleWaySegmentStatement, 1, waySegmentBuffer.remove(0));
 				
 				try {
@@ -584,6 +603,18 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		flushWayTags(true);
 		flushWaySegments(true);
 		
+		// Re-enable indexes now that the load has completed.
+		dbCtx.executeStatement(INVOKE_ENABLE_KEYS_NODE);
+		dbCtx.executeStatement(INVOKE_ENABLE_KEYS_SEGMENT);
+		dbCtx.executeStatement(INVOKE_ENABLE_KEYS_WAY);
+		dbCtx.executeStatement(INVOKE_ENABLE_KEYS_WAY_TAG);
+		dbCtx.executeStatement(INVOKE_ENABLE_KEYS_WAY_SEGMENT);
+		
+		// Unlock tables (if they were locked) now that we have completed.
+		if (lockTables) {
+			dbCtx.executeStatement(INVOKE_UNLOCK_TABLES);
+		}
+		
 		dbCtx.commit();
 	}
 	
@@ -600,6 +631,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(EntityContainer entityContainer) {
+		initialize();
+		
 		entityContainer.process(this);
 	}
 	

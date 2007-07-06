@@ -17,11 +17,13 @@ public class MysqlWriterFactory extends TaskManagerFactory {
 	private static final String ARG_DATABASE = "database";
 	private static final String ARG_USER = "user";
 	private static final String ARG_PASSWORD = "password";
+	private static final String ARG_LOCK_TABLES = "lockTables";
 	private static final String DEFAULT_HOST = "localhost";
 	private static final String DEFAULT_DATABASE = "osm";
 	private static final String DEFAULT_USER = "osm";
 	private static final String DEFAULT_PASSWORD = "";
-
+	private static final String DEFAULT_LOCK_TABLES = "true";
+	
 	
 	/**
 	 * {@inheritDoc}
@@ -32,16 +34,18 @@ public class MysqlWriterFactory extends TaskManagerFactory {
 		String database;
 		String user;
 		String password;
+		boolean lockTables;
 		
 		// Get the task arguments.
 		host = getStringArgument(taskArgs, ARG_HOST, DEFAULT_HOST);
 		database = getStringArgument(taskArgs, ARG_DATABASE, DEFAULT_DATABASE);
 		user = getStringArgument(taskArgs, ARG_USER, DEFAULT_USER);
 		password = getStringArgument(taskArgs, ARG_PASSWORD, DEFAULT_PASSWORD);
+		lockTables = getBooleanArgument(taskArgs, ARG_LOCK_TABLES, DEFAULT_LOCK_TABLES);
 		
 		return new SinkManager(
 			taskId,
-			new MysqlWriter(host, database, user, password),
+			new MysqlWriter(host, database, user, password, lockTables),
 			pipeArgs
 		);
 	}

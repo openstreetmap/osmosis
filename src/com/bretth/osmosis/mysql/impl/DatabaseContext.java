@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
 
@@ -92,6 +93,26 @@ public class DatabaseContext {
 		}
 		
 		return connection;
+	}
+	
+	
+	/**
+	 * Executes a sql statement against the database.
+	 * 
+	 * @param sql
+	 *            The sql statement to be invoked.
+	 */
+	public void executeStatement(String sql) {
+		try {
+			Statement statement;
+			
+			statement = getConnection().createStatement();
+			
+			statement.execute(sql);
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to execute statement.", e);
+		}
 	}
 	
 	

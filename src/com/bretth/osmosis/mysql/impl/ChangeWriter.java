@@ -355,7 +355,7 @@ public class ChangeWriter {
 	 * Flushes all changes to the database.
 	 */
 	public void complete() {
-		// Nothing to do, no transactions are being used.
+		dbCtx.commit();
 	}
 	
 	

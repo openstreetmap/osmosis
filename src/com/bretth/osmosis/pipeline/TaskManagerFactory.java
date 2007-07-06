@@ -175,4 +175,41 @@ public abstract class TaskManagerFactory {
 					e);
 		}
 	}
+	
+	
+	/**
+	 * Utility method for retrieving a boolean argument value from a Map of task
+	 * arguments.
+	 * 
+	 * @param taskArgs
+	 *            The task arguments.
+	 * @param argName
+	 *            The name of the argument.
+	 * @param defaultValue
+	 *            The default value of the argument if not value is available.
+	 * @return The value of the argument.
+	 */
+	protected boolean getBooleanArgument(Map<String, String> taskArgs,
+			String argName, String defaultValue) {
+		String rawValue;
+		String lowerRawValue;
+		
+		rawValue = getStringArgument(taskArgs, argName, defaultValue);
+		
+		// For simplicity we will perform a case-insensitive comparison.
+		lowerRawValue = rawValue.toLowerCase();
+		
+		if ("true".equals(lowerRawValue) || "yes".equals(lowerRawValue)) {
+			return true;
+			
+		} else if ("false".equals(lowerRawValue) || "no".equals(lowerRawValue)) {
+			return false;
+			
+		} else {
+			throw new OsmosisRuntimeException(
+				"Unable to parse boolean ("
+				+ rawValue
+				+ "), must be one of yes, no, true or false.");
+		}
+	}
 }
