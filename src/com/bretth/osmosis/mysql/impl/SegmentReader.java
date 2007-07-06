@@ -16,7 +16,7 @@ public class SegmentReader extends EntityReader<Segment> {
 	private static final String SELECT_SQL =
 		"SELECT id, node_a, node_b, tags FROM current_segments ORDER BY id";
 	
-	private EmbeddedTagParser tagParser;
+	private EmbeddedTagProcessor tagParser;
 	
 	
 	/**
@@ -34,7 +34,7 @@ public class SegmentReader extends EntityReader<Segment> {
 	public SegmentReader(String host, String database, String user, String password) {
 		super(host, database, user, password);
 		
-		tagParser = new EmbeddedTagParser();
+		tagParser = new EmbeddedTagProcessor();
 	}
 	
 	

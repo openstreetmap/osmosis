@@ -17,7 +17,7 @@ public class NodeReader extends EntityReader<Node> {
 	private static final String SELECT_SQL =
 		"SELECT id, timestamp, latitude, longitude, tags FROM current_nodes ORDER BY id";
 	
-	private EmbeddedTagParser tagParser;
+	private EmbeddedTagProcessor tagParser;
 	
 	
 	/**
@@ -35,7 +35,7 @@ public class NodeReader extends EntityReader<Node> {
 	public NodeReader(String host, String database, String user, String password) {
 		super(host, database, user, password);
 		
-		tagParser = new EmbeddedTagParser();
+		tagParser = new EmbeddedTagProcessor();
 	}
 	
 	

@@ -29,7 +29,7 @@ public class NodeHistoryReader extends EntityReader<EntityHistory<Node>> {
 		+ ") AND timestamp < ?"
 		+ " ORDER BY id, timestamp";
 	
-	private EmbeddedTagParser tagParser;
+	private EmbeddedTagProcessor tagParser;
 	private Date intervalBegin;
 	private Date intervalEnd;
 	
@@ -57,7 +57,7 @@ public class NodeHistoryReader extends EntityReader<EntityHistory<Node>> {
 		this.intervalBegin = intervalBegin;
 		this.intervalEnd = intervalEnd;
 		
-		tagParser = new EmbeddedTagParser();
+		tagParser = new EmbeddedTagProcessor();
 	}
 	
 	

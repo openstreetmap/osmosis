@@ -8,12 +8,12 @@ import com.bretth.osmosis.data.Tag;
 
 
 /**
- * Provides functionality for extracting lists of tags from entities where
- * they're stored embedded in a single string field.
+ * Provides functionality for working with tags on entities where they're stored
+ * embedded in a single string field.
  * 
  * @author Brett Henderson
  */
-public class EmbeddedTagParser {
+public class EmbeddedTagProcessor {
 	
 	/**
 	 * Parses the specified tag string and produces corresponding tag objects.
@@ -54,5 +54,28 @@ public class EmbeddedTagParser {
 		}
 		
 		return tagList;
+	}
+	
+	
+	/**
+	 * Produces a string representing the complete list of tags.
+	 * 
+	 * @param tags
+	 *            The list of tag objects.
+	 * @return A single string representing all tags.
+	 */
+	public String format(List<Tag> tags) {
+		StringBuilder tagBuffer;
+		
+		tagBuffer = new StringBuilder();
+		for (Tag tag : tags) {
+			if (tagBuffer.length() > 0) {
+				tagBuffer.append(';');
+			}
+			
+			tagBuffer.append(tag.getKey()).append("=").append(tag.getValue());
+		}
+		
+		return tagBuffer.toString();
 	}
 }
