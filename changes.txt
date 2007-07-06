@@ -5,6 +5,9 @@ Added a readme with basic installation instructions.
 Added xml date parsing support.
 Fixed database dump code to read the "current" tables.
 Added a task for reading changes from a database.
+Added a task for writing changes to a database.
+Added a task for truncating database tables.
+Improved mysql import performance by disabling indexes and locking tables.
 
 0.1
 Initial version.
