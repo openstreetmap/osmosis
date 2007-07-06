@@ -168,24 +168,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	
 	
 	/**
-	 * Removes references to all statements. They aren't closed because this is
-	 * handled by the underlying database context.
-	 */
-	private void clearStatements() {
-		singleNodeStatement = null;
-		bulkNodeStatement = null;
-		singleSegmentStatement = null;
-		bulkSegmentStatement = null;
-		singleWayStatement = null;
-		bulkWayStatement = null;
-		singleWayTagStatement = null;
-		bulkWayTagStatement = null;
-		singleWaySegmentStatement = null;
-		bulkWaySegmentStatement = null;
-	}
-	
-	
-	/**
 	 * Sets node values as bind variable parameters to a node insert query.
 	 * 
 	 * @param statement
@@ -342,7 +324,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			int prmIndex;
 			
 			if (bulkNodeStatement == null) {
-				clearStatements();
 				bulkNodeStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_NODE);
 			}
 			
@@ -362,7 +343,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		if (complete) {
 			while (nodeBuffer.size() > 0) {
 				if (singleNodeStatement == null) {
-					clearStatements();
 					singleNodeStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_NODE);
 				}
 				
@@ -393,7 +373,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			int prmIndex;
 			
 			if (bulkSegmentStatement == null) {
-				clearStatements();
 				bulkSegmentStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_SEGMENT);
 			}
 			
@@ -413,7 +392,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		if (complete) {
 			while (segmentBuffer.size() > 0) {
 				if (singleSegmentStatement == null) {
-					clearStatements();
 					singleSegmentStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_SEGMENT);
 				}
 				
@@ -447,7 +425,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			processedWays = new ArrayList<Way>(INSERT_BULK_ROW_COUNT_WAY);
 			
 			if (bulkWayStatement == null) {
-				clearStatements();
 				bulkWayStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_WAY);
 			}
 			
@@ -481,7 +458,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 				way = wayBuffer.remove(0);
 				
 				if (singleWayStatement == null) {
-					clearStatements();
 					singleWayStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_WAY);
 				}
 				
@@ -515,7 +491,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			int prmIndex;
 			
 			if (bulkWayTagStatement == null) {
-				clearStatements();
 				bulkWayTagStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_WAY_TAG);
 			}
 			
@@ -535,7 +510,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		if (complete) {
 			while (wayTagBuffer.size() > 0) {
 				if (singleWayTagStatement == null) {
-					clearStatements();
 					singleWayTagStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_WAY_TAG);
 				}
 				
@@ -566,7 +540,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			int prmIndex;
 			
 			if (bulkWaySegmentStatement == null) {
-				clearStatements();
 				bulkWaySegmentStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_WAY_SEGMENT);
 			}
 			
@@ -586,7 +559,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		if (complete) {
 			while (waySegmentBuffer.size() > 0) {
 				if (singleWaySegmentStatement == null) {
-					clearStatements();
 					singleWaySegmentStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_WAY_SEGMENT);
 				}
 				
@@ -620,8 +592,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * Releases all database resources.
 	 */
 	public void release() {
-		clearStatements();
-		
 		dbCtx.release();
 	}
 	
