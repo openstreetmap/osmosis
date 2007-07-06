@@ -6,6 +6,7 @@ import com.bretth.osmosis.filter.BoundingBoxFilterFactory;
 import com.bretth.osmosis.misc.NullChangeWriterFactory;
 import com.bretth.osmosis.misc.NullWriterFactory;
 import com.bretth.osmosis.mysql.MysqlChangeReaderFactory;
+import com.bretth.osmosis.mysql.MysqlChangeWriterFactory;
 import com.bretth.osmosis.mysql.MysqlReaderFactory;
 import com.bretth.osmosis.mysql.MysqlWriterFactory;
 import com.bretth.osmosis.pipeline.TaskManagerFactory;
@@ -51,6 +52,7 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("sort", entitySorterFactory);
 		TaskManagerFactory.register("sort-change", changeSorterFactory);
 		TaskManagerFactory.register("write-mysql", new MysqlWriterFactory());
+		TaskManagerFactory.register("write-mysql-change", new MysqlChangeWriterFactory());
 		TaskManagerFactory.register("write-xml", new XmlWriterFactory());
 		TaskManagerFactory.register("write-xml-change", new XmlChangeWriterFactory());
 		TaskManagerFactory.register("write-null", new NullWriterFactory());
