@@ -2,6 +2,7 @@ package com.bretth.osmosis.mysql.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
 import com.bretth.osmosis.data.Segment;
@@ -14,7 +15,7 @@ import com.bretth.osmosis.data.Segment;
  */
 public class SegmentReader extends EntityReader<Segment> {
 	private static final String SELECT_SQL =
-		"SELECT id, node_a, node_b, tags FROM current_segments ORDER BY id";
+		"SELECT id, timestamp, node_a, node_b, tags FROM current_segments ORDER BY id";
 	
 	private EmbeddedTagProcessor tagParser;
 	
@@ -53,6 +54,7 @@ public class SegmentReader extends EntityReader<Segment> {
 	@Override
 	protected Segment createNextValue(ResultSet resultSet) {
 		long id;
+		Date timestamp;
 		long from;
 		long to;
 		String tags;
@@ -60,6 +62,7 @@ public class SegmentReader extends EntityReader<Segment> {
 		
 		try {
 			id = resultSet.getLong("id");
+			timestamp = resultSet.getTimestamp("timestamp");
 			from = resultSet.getLong("node_a");
 			to = resultSet.getLong("node_b");
 			tags = resultSet.getString("tags");
@@ -68,7 +71,7 @@ public class SegmentReader extends EntityReader<Segment> {
 			throw new OsmosisRuntimeException("Unable to read segment fields.", e);
 		}
 		
-		segment = new Segment(id, from, to);
+		segment = new Segment(id, timestamp, from, to);
 		segment.addTags(tagParser.parseTags(tags));
 		
 		return segment;

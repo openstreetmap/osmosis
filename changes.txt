@@ -1,3 +1,7 @@
+0.3
+Added mysql table truncator task.
+Updated segment xml processing code to handle timestamps.
+
 0.2
 Added Main-Class feature to the jar manifest simplifying program launch.
 Added a shell launch script to simplify running on unix/linux.

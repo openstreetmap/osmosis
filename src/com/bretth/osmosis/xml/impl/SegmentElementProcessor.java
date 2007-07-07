@@ -1,5 +1,7 @@
 package com.bretth.osmosis.xml.impl;
 
+import java.util.Date;
+
 import org.xml.sax.Attributes;
 
 import com.bretth.osmosis.container.SegmentContainer;
@@ -16,6 +18,7 @@ import com.bretth.osmosis.task.Sink;
 public class SegmentElementProcessor extends SourceElementProcessor implements TagListener {
 	private static final String ELEMENT_NAME_TAG = "tag";
 	private static final String ATTRIBUTE_NAME_ID = "id";
+	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
 	private static final String ATTRIBUTE_NAME_FROM = "from";
 	private static final String ATTRIBUTE_NAME_TO = "to";
 	
@@ -43,14 +46,16 @@ public class SegmentElementProcessor extends SourceElementProcessor implements T
 	 */
 	public void begin(Attributes attributes) {
 		long id;
+		Date timestamp;
 		long from;
 		long to;
 		
 		id = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_ID));
+		timestamp = parseTimestamp(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
 		from = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_FROM));
 		to = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_TO));
 		
-		segment = new Segment(id, from, to);
+		segment = new Segment(id, timestamp, from, to);
 	}
 	
 	

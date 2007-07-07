@@ -1,5 +1,7 @@
 package com.bretth.osmosis.data;
 
+import java.util.Date;
+
 
 /**
  * A data class representing a single OSM segment.
@@ -10,6 +12,7 @@ public class Segment extends Entity implements Comparable<Segment> {
 	private static final long serialVersionUID = 1L;
 	
 	
+	private Date timestamp;
 	private long from;
 	private long to;
 	
@@ -19,14 +22,17 @@ public class Segment extends Entity implements Comparable<Segment> {
 	 * 
 	 * @param id
 	 *            The unique identifier.
+	 * @param timestamp
+	 *            The last updated timestamp.
 	 * @param from
 	 *            The id of the node marking the beginning of the segment.
 	 * @param to
 	 *            The id of the node marking the end of the segment.
 	 */
-	public Segment(long id, long from, long to) {
+	public Segment(long id, Date timestamp, long from, long to) {
 		super(id);
 		
+		this.timestamp = timestamp;
 		this.from = from;
 		this.to = to;
 	}
@@ -86,6 +92,14 @@ public class Segment extends Entity implements Comparable<Segment> {
 		}
 		
 		return compareTags(comparisonSegment.getTagList());
+	}
+	
+	
+	/**
+	 * @return The timestamp. 
+	 */
+	public Date getTimestamp() {
+		return timestamp;
 	}
 	
 	

@@ -22,7 +22,7 @@ public class SegmentHistoryReader extends EntityReader<EntityHistory<Segment>> {
 	// time interval. The outer query then queries all segment history items up to
 	// the end of the time interval.
 	private static final String SELECT_SQL =
-		"SELECT id, node_a, node_b, tags, visible"
+		"SELECT id, timestamp, node_a, node_b, tags, visible"
 		+ " FROM segments"
 		+ " WHERE id IN ("
 		+ "SELECT id FROM segments WHERE timestamp >= ? AND timestamp < ?"
@@ -89,6 +89,7 @@ public class SegmentHistoryReader extends EntityReader<EntityHistory<Segment>> {
 	@Override
 	protected EntityHistory<Segment> createNextValue(ResultSet resultSet) {
 		long id;
+		Date timestamp;
 		long from;
 		long to;
 		String tags;
@@ -98,6 +99,7 @@ public class SegmentHistoryReader extends EntityReader<EntityHistory<Segment>> {
 		
 		try {
 			id = resultSet.getLong("id");
+			timestamp = resultSet.getTimestamp("timestamp");
 			from = resultSet.getLong("node_a");
 			to = resultSet.getLong("node_b");
 			tags = resultSet.getString("tags");
@@ -107,7 +109,7 @@ public class SegmentHistoryReader extends EntityReader<EntityHistory<Segment>> {
 			throw new OsmosisRuntimeException("Unable to read segment fields.", e);
 		}
 		
-		segment = new Segment(id, from, to);
+		segment = new Segment(id, timestamp, from, to);
 		segment.addTags(tagParser.parseTags(tags));
 		
 		segmentHistory = new EntityHistory<Segment>(segment, 0, visible);
