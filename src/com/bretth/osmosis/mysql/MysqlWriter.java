@@ -50,20 +50,24 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	
 	// These SQL statements will be invoked prior to loading data to disable
 	// indexes.
-	private static final String INVOKE_DISABLE_KEYS_NODE = "ALTER TABLE nodes DISABLE KEYS";
-	private static final String INVOKE_DISABLE_KEYS_SEGMENT = "ALTER TABLE segments DISABLE KEYS";
-	private static final String INVOKE_DISABLE_KEYS_WAY = "ALTER TABLE ways DISABLE KEYS";
-	private static final String INVOKE_DISABLE_KEYS_WAY_TAG = "ALTER TABLE way_tags DISABLE KEYS";
-	private static final String INVOKE_DISABLE_KEYS_WAY_SEGMENT = "ALTER TABLE way_segments DISABLE KEYS";
+	private static final String[] INVOKE_DISABLE_KEYS = {
+		"ALTER TABLE nodes DISABLE KEYS",
+		"ALTER TABLE segments DISABLE KEYS",
+		"ALTER TABLE ways DISABLE KEYS",
+		"ALTER TABLE way_tags DISABLE KEYS",
+		"ALTER TABLE way_segments DISABLE KEYS"
+	};
 	
 	// These SQL statements will be invoked after loading data to re-enable
 	// indexes.
-	private static final String INVOKE_ENABLE_KEYS_NODE = "ALTER TABLE nodes ENABLE KEYS";
-	private static final String INVOKE_ENABLE_KEYS_SEGMENT = "ALTER TABLE segments ENABLE KEYS";
-	private static final String INVOKE_ENABLE_KEYS_WAY = "ALTER TABLE ways ENABLE KEYS";
-	private static final String INVOKE_ENABLE_KEYS_WAY_TAG = "ALTER TABLE way_tags ENABLE KEYS";
-	private static final String INVOKE_ENABLE_KEYS_WAY_SEGMENT = "ALTER TABLE way_segments ENABLE KEYS";
-
+	private static final String[] INVOKE_ENABLE_KEYS = {
+		"ALTER TABLE nodes ENABLE KEYS",
+		"ALTER TABLE segments ENABLE KEYS",
+		"ALTER TABLE ways ENABLE KEYS",
+		"ALTER TABLE way_tags ENABLE KEYS",
+		"ALTER TABLE way_segments ENABLE KEYS"
+	};
+	
 	// These SQL statements will be invoked to lock and unlock tables.
 	private static final String INVOKE_LOCK_TABLES = "LOCK TABLES nodes WRITE, segments WRITE, ways WRITE, way_tags WRITE, way_segments WRITE";
 	private static final String INVOKE_UNLOCK_TABLES = "UNLOCK TABLES";
@@ -222,11 +226,9 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			singleWaySegmentStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_WAY_SEGMENT);
 			
 			// Disable indexes to improve load performance.
-			dbCtx.executeStatement(INVOKE_DISABLE_KEYS_NODE);
-			dbCtx.executeStatement(INVOKE_DISABLE_KEYS_SEGMENT);
-			dbCtx.executeStatement(INVOKE_DISABLE_KEYS_WAY);
-			dbCtx.executeStatement(INVOKE_DISABLE_KEYS_WAY_TAG);
-			dbCtx.executeStatement(INVOKE_DISABLE_KEYS_WAY_SEGMENT);
+			for (int i = 0; i < INVOKE_DISABLE_KEYS.length; i++) {
+				dbCtx.executeStatement(INVOKE_DISABLE_KEYS[i]);
+			}
 			
 			// Lock tables if required to improve load performance.
 			if (lockTables) {
@@ -604,11 +606,9 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		flushWaySegments(true);
 		
 		// Re-enable indexes now that the load has completed.
-		dbCtx.executeStatement(INVOKE_ENABLE_KEYS_NODE);
-		dbCtx.executeStatement(INVOKE_ENABLE_KEYS_SEGMENT);
-		dbCtx.executeStatement(INVOKE_ENABLE_KEYS_WAY);
-		dbCtx.executeStatement(INVOKE_ENABLE_KEYS_WAY_TAG);
-		dbCtx.executeStatement(INVOKE_ENABLE_KEYS_WAY_SEGMENT);
+		for (int i = 0; i < INVOKE_DISABLE_KEYS.length; i++) {
+			dbCtx.executeStatement(INVOKE_ENABLE_KEYS[i]);
+		}
 		
 		// Unlock tables (if they were locked) now that we have completed.
 		if (lockTables) {
