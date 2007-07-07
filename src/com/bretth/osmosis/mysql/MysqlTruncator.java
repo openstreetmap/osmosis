@@ -18,6 +18,11 @@ public class MysqlTruncator implements RunnableTask {
 	private static final String INVOKE_TRUNCATE_WAY = "TRUNCATE ways";
 	private static final String INVOKE_TRUNCATE_WAY_TAG = "TRUNCATE way_tags";
 	private static final String INVOKE_TRUNCATE_WAY_SEGMENT = "TRUNCATE way_segments";
+	private static final String INVOKE_TRUNCATE_NODE_CURRENT = "TRUNCATE current_nodes";
+	private static final String INVOKE_TRUNCATE_SEGMENT_CURRENT = "TRUNCATE current_segments";
+	private static final String INVOKE_TRUNCATE_WAY_CURRENT = "TRUNCATE current_ways";
+	private static final String INVOKE_TRUNCATE_WAY_TAG_CURRENT = "TRUNCATE current_way_tags";
+	private static final String INVOKE_TRUNCATE_WAY_SEGMENT_CURRENT = "TRUNCATE current_way_segments";
 	
 	
 	private DatabaseContext dbCtx;
@@ -45,6 +50,11 @@ public class MysqlTruncator implements RunnableTask {
 	 */
 	public void run() {
 		try {
+			dbCtx.executeStatement(INVOKE_TRUNCATE_WAY_TAG_CURRENT);
+			dbCtx.executeStatement(INVOKE_TRUNCATE_WAY_SEGMENT_CURRENT);
+			dbCtx.executeStatement(INVOKE_TRUNCATE_WAY_CURRENT);
+			dbCtx.executeStatement(INVOKE_TRUNCATE_SEGMENT_CURRENT);
+			dbCtx.executeStatement(INVOKE_TRUNCATE_NODE_CURRENT);
 			dbCtx.executeStatement(INVOKE_TRUNCATE_WAY_TAG);
 			dbCtx.executeStatement(INVOKE_TRUNCATE_WAY_SEGMENT);
 			dbCtx.executeStatement(INVOKE_TRUNCATE_WAY);
