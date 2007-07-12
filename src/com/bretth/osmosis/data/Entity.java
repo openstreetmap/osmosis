@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 
@@ -15,6 +16,7 @@ import java.util.List;
  */
 public abstract class Entity implements Serializable {
 	private long id;
+	private Date timestamp;
 	private List<Tag> tagList;
 	
 	
@@ -23,9 +25,12 @@ public abstract class Entity implements Serializable {
 	 * 
 	 * @param id
 	 *            The unique identifier.
+	 * @param timestamp
+	 *            The last updated timestamp.
 	 */
-	public Entity(long id) {
+	public Entity(long id, Date timestamp) {
 		this.id = id;
+		this.timestamp = timestamp;
 		
 		tagList = new ArrayList<Tag>();
 	}
@@ -82,6 +87,14 @@ public abstract class Entity implements Serializable {
 	 */
 	public long getId() {
 		return id;
+	}
+	
+	
+	/**
+	 * @return The timestamp. 
+	 */
+	public Date getTimestamp() {
+		return timestamp;
 	}
 	
 	

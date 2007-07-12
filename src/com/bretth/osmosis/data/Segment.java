@@ -12,7 +12,6 @@ public class Segment extends Entity implements Comparable<Segment> {
 	private static final long serialVersionUID = 1L;
 	
 	
-	private Date timestamp;
 	private long from;
 	private long to;
 	
@@ -30,9 +29,8 @@ public class Segment extends Entity implements Comparable<Segment> {
 	 *            The id of the node marking the end of the segment.
 	 */
 	public Segment(long id, Date timestamp, long from, long to) {
-		super(id);
+		super(id, timestamp);
 		
-		this.timestamp = timestamp;
 		this.from = from;
 		this.to = to;
 	}
@@ -91,15 +89,23 @@ public class Segment extends Entity implements Comparable<Segment> {
 			return 1;
 		}
 		
+		if (this.getTimestamp() == null && comparisonSegment.getTimestamp() != null) {
+			return -1;
+		}
+		if (this.getTimestamp() != null && comparisonSegment.getTimestamp() == null) {
+			return 1;
+		}
+		if (this.getTimestamp() != null && comparisonSegment.getTimestamp() != null) {
+			int result;
+			
+			result = this.getTimestamp().compareTo(comparisonSegment.getTimestamp());
+			
+			if (result != 0) {
+				return result;
+			}
+		}
+		
 		return compareTags(comparisonSegment.getTagList());
-	}
-	
-	
-	/**
-	 * @return The timestamp. 
-	 */
-	public Date getTimestamp() {
-		return timestamp;
 	}
 	
 	

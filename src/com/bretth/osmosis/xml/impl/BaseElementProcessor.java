@@ -66,6 +66,10 @@ public abstract class BaseElementProcessor implements ElementProcessor {
 	 * @return The parsed date.
 	 */
 	protected Date parseTimestamp(String data) {
-		return dateParser.parse(data);
+		if (data != null && data.length() > 0) {
+			return dateParser.parse(data);
+		} else {
+			return null;
+		}
 	}
 }

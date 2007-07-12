@@ -15,7 +15,6 @@ public class Way extends Entity implements Comparable<Way> {
 	private static final long serialVersionUID = 1L;
 	
 	
-	private Date timestamp;
 	private List<SegmentReference> segmentReferenceList;
 	
 	
@@ -28,9 +27,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            The last updated timestamp.
 	 */
 	public Way(long id, Date timestamp) {
-		super(id);
-		
-		this.timestamp = timestamp;
+		super(id, timestamp);
 		
 		segmentReferenceList = new ArrayList<SegmentReference>();
 	}
@@ -115,16 +112,16 @@ public class Way extends Entity implements Comparable<Way> {
 			return 1;
 		}
 		
-		if (this.timestamp == null && comparisonWay.timestamp != null) {
+		if (this.getTimestamp() == null && comparisonWay.getTimestamp() != null) {
 			return -1;
 		}
-		if (this.timestamp != null && comparisonWay.timestamp == null) {
+		if (this.getTimestamp() != null && comparisonWay.getTimestamp() == null) {
 			return 1;
 		}
-		if (this.timestamp != null && comparisonWay.timestamp != null) {
+		if (this.getTimestamp() != null && comparisonWay.getTimestamp() != null) {
 			int result;
 			
-			result = this.timestamp.compareTo(comparisonWay.timestamp);
+			result = this.getTimestamp().compareTo(comparisonWay.getTimestamp());
 			
 			if (result != 0) {
 				return result;
@@ -140,14 +137,6 @@ public class Way extends Entity implements Comparable<Way> {
 		}
 		
 		return compareTags(comparisonWay.getTagList());
-	}
-	
-	
-	/**
-	 * @return The timestamp. 
-	 */
-	public Date getTimestamp() {
-		return timestamp;
 	}
 	
 	

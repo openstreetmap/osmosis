@@ -12,7 +12,6 @@ public class Node extends Entity implements Comparable<Node> {
 	private static final long serialVersionUID = 1L;
 	
 	
-	private Date timestamp;
 	private double latitude;
 	private double longitude;
 	
@@ -30,9 +29,8 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            The geographic longitude.
 	 */
 	public Node(long id, Date timestamp, double latitude, double longitude) {
-		super(id);
+		super(id, timestamp);
 		
-		this.timestamp = timestamp;
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
@@ -95,16 +93,16 @@ public class Node extends Entity implements Comparable<Node> {
 			return 1;
 		}
 		
-		if (this.timestamp == null && comparisonNode.timestamp != null) {
+		if (this.getTimestamp() == null && comparisonNode.getTimestamp() != null) {
 			return -1;
 		}
-		if (this.timestamp != null && comparisonNode.timestamp == null) {
+		if (this.getTimestamp() != null && comparisonNode.getTimestamp() == null) {
 			return 1;
 		}
-		if (this.timestamp != null && comparisonNode.timestamp != null) {
+		if (this.getTimestamp() != null && comparisonNode.getTimestamp() != null) {
 			int result;
 			
-			result = this.timestamp.compareTo(comparisonNode.timestamp);
+			result = this.getTimestamp().compareTo(comparisonNode.getTimestamp());
 			
 			if (result != 0) {
 				return result;
@@ -112,14 +110,6 @@ public class Node extends Entity implements Comparable<Node> {
 		}
 		
 		return compareTags(comparisonNode.getTagList());
-	}
-	
-	
-	/**
-	 * @return The timestamp. 
-	 */
-	public Date getTimestamp() {
-		return timestamp;
 	}
 	
 	
