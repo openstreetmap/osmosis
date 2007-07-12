@@ -627,7 +627,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		
 		// Copy data into the current tables.
 		for (int i = 0; i < LOAD_CURRENT_TABLES.length; i++) {
-			dbCtx.executeStatement(LOAD_CURRENT_TABLES[i]);
+			//dbCtx.executeStatement(LOAD_CURRENT_TABLES[i]);
 		}
 		
 		// Re-enable indexes now that the load has completed.
