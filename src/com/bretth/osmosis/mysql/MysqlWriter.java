@@ -34,20 +34,20 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	// These SQL strings are the prefix to statements that will be built based
 	// on how many rows of data are to be inserted at a time.
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO nodes(id, timestamp, latitude, longitude, tags)";
-	private static final int INSERT_PRM_COUNT_NODE = 5;
+		"INSERT INTO nodes(id, timestamp, latitude, longitude, tags, visible)";
+	private static final int INSERT_PRM_COUNT_NODE = 6;
 	private static final String INSERT_SQL_SEGMENT =
-		"INSERT INTO segments (id, timestamp, node_a, node_b, tags)";
-	private static final int INSERT_PRM_COUNT_SEGMENT = 5;
+		"INSERT INTO segments (id, timestamp, node_a, node_b, tags, visible)";
+	private static final int INSERT_PRM_COUNT_SEGMENT = 6;
 	private static final String INSERT_SQL_WAY =
-		"INSERT INTO ways (id, timestamp)";
-	private static final int INSERT_PRM_COUNT_WAY = 2;
+		"INSERT INTO ways (id, timestamp, version, visible)";
+	private static final int INSERT_PRM_COUNT_WAY = 4;
 	private static final String INSERT_SQL_WAY_TAG =
-		"INSERT INTO way_tags (id, k, v)";
-	private static final int INSERT_PRM_COUNT_WAY_TAG = 3;
+		"INSERT INTO way_tags (id, k, v, version)";
+	private static final int INSERT_PRM_COUNT_WAY_TAG = 4;
 	private static final String INSERT_SQL_WAY_SEGMENT =
-		"INSERT INTO way_segments (id, segment_id, sequence_id)";
-	private static final int INSERT_PRM_COUNT_WAY_SEGMENT = 3;
+		"INSERT INTO way_segments (id, segment_id, sequence_id, version)";
+	private static final int INSERT_PRM_COUNT_WAY_SEGMENT = 4;
 	
 	// These SQL statements will be invoked prior to loading data to disable
 	// indexes.
@@ -72,11 +72,11 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	// These SQL statements will be invoked after loading history tables to
 	// populate the current tables.
 	private static final String[] LOAD_CURRENT_TABLES = {
-		"INSERT INTO nodes_current SELECT * FROM nodes",
-		"INSERT INTO segments_current SELECT * FROM segments",
-		"INSERT INTO ways_current SELECT * FROM ways",
-		"INSERT INTO way_tags_current SELECT * FROM way_tags",
-		"INSERT INTO way_segments_current SELECT * FROM way_segments"
+		"INSERT INTO current_nodes SELECT * FROM nodes",
+		"INSERT INTO current_segments SELECT * FROM segments",
+		"INSERT INTO current_ways SELECT * FROM ways",
+		"INSERT INTO current_way_tags SELECT * FROM way_tags",
+		"INSERT INTO current_way_segments SELECT * FROM way_segments"
 	};
 	
 	// These SQL statements will be invoked to lock and unlock tables.
@@ -272,6 +272,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			statement.setDouble(prmIndex++, node.getLatitude());
 			statement.setDouble(prmIndex++, node.getLongitude());
 			statement.setString(prmIndex++, tagProcessor.format(node.getTagList()));
+			statement.setBoolean(prmIndex++, true);
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a node.", e);
@@ -297,9 +298,10 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		try {
 			statement.setLong(prmIndex++, segment.getId());
 			statement.setTimestamp(prmIndex++, new Timestamp(segment.getTimestamp().getTime()));
-			statement.setDouble(prmIndex++, segment.getFrom());
-			statement.setDouble(prmIndex++, segment.getTo());
+			statement.setLong(prmIndex++, segment.getFrom());
+			statement.setLong(prmIndex++, segment.getTo());
 			statement.setString(prmIndex++, tagProcessor.format(segment.getTagList()));
+			statement.setBoolean(prmIndex++, true);
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a segment.", e);
@@ -325,6 +327,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		try {
 			statement.setLong(prmIndex++, way.getId());
 			statement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
+			statement.setInt(prmIndex++, 1);
+			statement.setBoolean(prmIndex++, true);
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a way.", e);
@@ -351,6 +355,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			statement.setLong(prmIndex++, wayTag.getWayId());
 			statement.setString(prmIndex++, wayTag.getKey());
 			statement.setString(prmIndex++, wayTag.getValue());
+			statement.setInt(prmIndex++, 1);
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a way tag.", e);
@@ -377,6 +382,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			statement.setLong(prmIndex++, waySegment.getWayId());
 			statement.setLong(prmIndex++, waySegment.getSegmentId());
 			statement.setInt(prmIndex++, waySegment.getSequenceId());
+			statement.setInt(prmIndex++, 1);
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a way segment.", e);
