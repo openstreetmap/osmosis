@@ -2,11 +2,14 @@ package com.bretth.osmosis.xml.impl;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
 
@@ -49,8 +52,8 @@ public class ElementWriter {
 	protected BufferedWriter writer;
 	private String elementName;
 	private int indentLevel;
-	private DateFormat dateFormatter;
-	
+	private GregorianCalendar calendar;
+	private DatatypeFactory datatypeFactory;
 	
 	/**
 	 * Creates a new instance.
@@ -64,7 +67,14 @@ public class ElementWriter {
 		this.elementName = elementName;
 		this.indentLevel = indentLevel;
 		
-		dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		calendar = new GregorianCalendar();
+		
+		try {
+			datatypeFactory = DatatypeFactory.newInstance();
+			
+		} catch (DatatypeConfigurationException e) {
+			throw new OsmosisRuntimeException("Unable to instantiate a new XML datatype factory.", e);
+		}
 	}
 	
 	
@@ -140,7 +150,14 @@ public class ElementWriter {
 	 */
 	protected String formatDate(Date date) {
 		if (date != null) {
-			return dateFormatter.format(date);
+			XMLGregorianCalendar xmlCalendar;
+			
+			calendar.setTime(date);
+			
+			xmlCalendar = datatypeFactory.newXMLGregorianCalendar(calendar);
+			
+			return xmlCalendar.toXMLFormat();
+			
 		} else {
 			return "";
 		}

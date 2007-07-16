@@ -33,9 +33,12 @@ public class NodeElementProcessor extends SourceElementProcessor implements TagL
 	 *            The parent of this element processor.
 	 * @param sink
 	 *            The sink for receiving processed data.
+	 * @param enableDateParsing
+	 *            If true, dates will be parsed from xml data, else the current
+	 *            date will be used thus saving parsing time.
 	 */
-	public NodeElementProcessor(BaseElementProcessor parentProcessor, Sink sink) {
-		super(parentProcessor, sink);
+	public NodeElementProcessor(BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing) {
+		super(parentProcessor, sink, enableDateParsing);
 		
 		tagElementProcessor = new TagElementProcessor(this, this);
 	}

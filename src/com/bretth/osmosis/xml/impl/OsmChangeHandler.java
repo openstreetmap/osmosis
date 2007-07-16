@@ -33,9 +33,12 @@ public class OsmChangeHandler extends DefaultHandler {
 	/**
 	 * @param changeSink
 	 *            The changeSink to write data to.
+	 * @param enableDateParsing
+	 *            If true, dates will be parsed from xml data, else the current
+	 *            date will be used thus saving parsing time.
 	 */
-	public OsmChangeHandler(ChangeSink changeSink) {
-		changeSourceElementProcessor = new ChangeSourceElementProcessor(null, changeSink);
+	public OsmChangeHandler(ChangeSink changeSink, boolean enableDateParsing) {
+		changeSourceElementProcessor = new ChangeSourceElementProcessor(null, changeSink, enableDateParsing);
 	}
 	
 	

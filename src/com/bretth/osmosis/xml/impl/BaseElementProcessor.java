@@ -12,6 +12,7 @@ public abstract class BaseElementProcessor implements ElementProcessor {
 	private BaseElementProcessor parentProcessor;
 	private ElementProcessor dummyChildProcessor;
 	private DateParser dateParser;
+	private boolean enableDateParsing;
 	
 	
 	/**
@@ -19,9 +20,13 @@ public abstract class BaseElementProcessor implements ElementProcessor {
 	 * 
 	 * @param parentProcessor
 	 *            The parent of this element processor.
+	 * @param enableDateParsing
+	 *            If true, dates will be parsed from xml data, else the current
+	 *            date will be used thus saving parsing time.
 	 */
-	protected BaseElementProcessor(BaseElementProcessor parentProcessor) {
+	protected BaseElementProcessor(BaseElementProcessor parentProcessor, boolean enableDateParsing) {
 		this.parentProcessor = parentProcessor;
+		this.enableDateParsing = enableDateParsing;
 		
 		dateParser = new DateParser();
 	}
@@ -66,10 +71,14 @@ public abstract class BaseElementProcessor implements ElementProcessor {
 	 * @return The parsed date.
 	 */
 	protected Date parseTimestamp(String data) {
-		if (data != null && data.length() > 0) {
-			return dateParser.parse(data);
+		if (enableDateParsing) {
+			if (data != null && data.length() > 0) {
+				return dateParser.parse(data);
+			} else {
+				return null;
+			}
 		} else {
-			return null;
+			return new Date();
 		}
 	}
 }

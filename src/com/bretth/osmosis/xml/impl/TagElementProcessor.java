@@ -27,7 +27,7 @@ public class TagElementProcessor extends BaseElementProcessor {
 	 *            The tag listener for receiving created tags.
 	 */
 	public TagElementProcessor(BaseElementProcessor parentProcessor, TagListener tagListener) {
-		super(parentProcessor);
+		super(parentProcessor, true);
 		
 		this.tagListener = tagListener;
 	}

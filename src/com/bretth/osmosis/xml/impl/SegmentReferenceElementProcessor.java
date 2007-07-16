@@ -26,7 +26,7 @@ public class SegmentReferenceElementProcessor extends BaseElementProcessor {
 	 *            The segment reference listener for receiving created tags.
 	 */
 	public SegmentReferenceElementProcessor(BaseElementProcessor parentProcessor, SegmentReferenceListener segmentReferenceListener) {
-		super(parentProcessor);
+		super(parentProcessor, true);
 		
 		this.segmentReferenceListener = segmentReferenceListener;
 	}

@@ -34,16 +34,19 @@ public class ChangeSourceElementProcessor extends BaseElementProcessor {
 	 *            The parent of this element processor.
 	 * @param changeSink
 	 *            The changeSink for receiving processed data.
+	 * @param enableDateParsing
+	 *            If true, dates will be parsed from xml data, else the current
+	 *            date will be used thus saving parsing time.
 	 */
-	public ChangeSourceElementProcessor(BaseElementProcessor parentProcessor, ChangeSink changeSink) {
-		super(parentProcessor);
+	public ChangeSourceElementProcessor(BaseElementProcessor parentProcessor, ChangeSink changeSink, boolean enableDateParsing) {
+		super(parentProcessor, enableDateParsing);
 		
 		createElementProcessor =
-			new OsmElementProcessor(this, new ChangeSinkAdapter(changeSink, ChangeAction.Create));
+			new OsmElementProcessor(this, new ChangeSinkAdapter(changeSink, ChangeAction.Create), enableDateParsing);
 		modifyElementProcessor =
-			new OsmElementProcessor(this, new ChangeSinkAdapter(changeSink, ChangeAction.Modify));
+			new OsmElementProcessor(this, new ChangeSinkAdapter(changeSink, ChangeAction.Modify), enableDateParsing);
 		deleteElementProcessor =
-			new OsmElementProcessor(this, new ChangeSinkAdapter(changeSink, ChangeAction.Delete));
+			new OsmElementProcessor(this, new ChangeSinkAdapter(changeSink, ChangeAction.Delete), enableDateParsing);
 	}
 	
 	

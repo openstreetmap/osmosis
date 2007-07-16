@@ -33,9 +33,12 @@ public class SegmentElementProcessor extends SourceElementProcessor implements T
 	 *            The parent of this element processor.
 	 * @param sink
 	 *            The sink for receiving processed data.
+	 * @param enableDateParsing
+	 *            If true, dates will be parsed from xml data, else the current
+	 *            date will be used thus saving parsing time.
 	 */
-	public SegmentElementProcessor(BaseElementProcessor parentProcessor, Sink sink) {
-		super(parentProcessor, sink);
+	public SegmentElementProcessor(BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing) {
+		super(parentProcessor, sink, enableDateParsing);
 		
 		tagElementProcessor = new TagElementProcessor(this, this);
 	}

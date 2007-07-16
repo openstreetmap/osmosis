@@ -30,13 +30,16 @@ public class OsmElementProcessor extends SourceElementProcessor {
 	 *            The parent of this element processor.
 	 * @param sink
 	 *            The sink for receiving processed data.
+	 * @param enableDateParsing
+	 *            If true, dates will be parsed from xml data, else the current
+	 *            date will be used thus saving parsing time.
 	 */
-	public OsmElementProcessor(BaseElementProcessor parentProcessor, Sink sink) {
-		super(parentProcessor, sink);
+	public OsmElementProcessor(BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing) {
+		super(parentProcessor, sink, enableDateParsing);
 		
-		nodeElementProcessor = new NodeElementProcessor(this, getSink());
-		segmentElementProcessor = new SegmentElementProcessor(this, getSink());
-		wayElementProcessor = new WayElementProcessor(this, getSink());
+		nodeElementProcessor = new NodeElementProcessor(this, getSink(), enableDateParsing);
+		segmentElementProcessor = new SegmentElementProcessor(this, getSink(), enableDateParsing);
+		wayElementProcessor = new WayElementProcessor(this, getSink(), enableDateParsing);
 	}
 	
 	

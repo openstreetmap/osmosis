@@ -23,6 +23,7 @@ import com.bretth.osmosis.xml.impl.OsmHandler;
 public class XmlReader implements RunnableSource {
 	private Sink sink;
 	private File file;
+	private boolean enableDateParsing;
 	
 	
 	/**
@@ -30,9 +31,13 @@ public class XmlReader implements RunnableSource {
 	 * 
 	 * @param file
 	 *            The file to read.
+	 * @param enableDateParsing
+	 *            If true, dates will be parsed from xml data, else the current
+	 *            date will be used thus saving parsing time.
 	 */
-	public XmlReader(File file) {
+	public XmlReader(File file, boolean enableDateParsing) {
 		this.file = file;
+		this.enableDateParsing = enableDateParsing;
 	}
 	
 	
@@ -70,7 +75,7 @@ public class XmlReader implements RunnableSource {
 			
 			parser = createParser();
 			
-			parser.parse(file, new OsmHandler(sink));
+			parser.parse(file, new OsmHandler(sink, enableDateParsing));
 			
 			sink.complete();
 			

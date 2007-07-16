@@ -21,7 +21,7 @@ public class DummyElementProcessor extends BaseElementProcessor {
 	 *            The parent of this element processor.
 	 */
 	public DummyElementProcessor(BaseElementProcessor parentProcessor) {
-		super(parentProcessor);
+		super(parentProcessor, false);
 	}
 	
 	

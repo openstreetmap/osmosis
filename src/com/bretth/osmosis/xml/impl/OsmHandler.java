@@ -1,7 +1,11 @@
 package com.bretth.osmosis.xml.impl;
 
+import java.util.logging.Logger;
+
 import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
@@ -15,6 +19,7 @@ import com.bretth.osmosis.task.Sink;
  * @author Brett Henderson
  */
 public class OsmHandler extends DefaultHandler {
+	private static final Logger log = Logger.getLogger(OsmHandler.class.getName());
 	private static final String ELEMENT_NAME_OSM = "osm";
 	
 	/**
@@ -30,10 +35,23 @@ public class OsmHandler extends DefaultHandler {
 	
 	
 	/**
-	 * @param osmSink The new osmSink to write data to.
+	 * Provides location information about the current position in the file
+	 * which is useful for reporting errors.
 	 */
-	public OsmHandler(Sink osmSink) {
-		osmElementProcessor = new OsmElementProcessor(null, osmSink);
+	private Locator locator;
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param osmSink
+	 *            The new osmSink to write data to.
+	 * @param enableDateParsing
+	 *            If true, dates will be parsed from xml data, else the current
+	 *            date will be used thus saving parsing time.
+	 */
+	public OsmHandler(Sink osmSink, boolean enableDateParsing) {
+		osmElementProcessor = new OsmElementProcessor(null, osmSink, enableDateParsing);
 	}
 	
 	
@@ -90,5 +108,31 @@ public class OsmHandler extends DefaultHandler {
 		
 		// Set the active element processor to the parent of the existing processor.
 		elementProcessor = elementProcessor.getParent();
+	}
+
+	
+	/**
+	 * Sets the document locator which is used to report the position in the
+	 * file when errors occur.
+	 */
+	@Override
+	public void setDocumentLocator(Locator locator) {
+		this.locator = locator;
+	}
+	
+	
+	/**
+	 * Called by the SAX parser when an error occurs. Used by this class to
+	 * report the current position in the file.
+	 */
+	@Override
+	public void error(SAXParseException e) throws SAXException {
+		log.severe(
+			"Unable to parse xml file.  publicId=(" + locator.getPublicId()
+			+ "), systemId=(" + locator.getSystemId()
+			+ "), lineNumber=" + locator.getLineNumber()
+			+ ", columnNumber=" + locator.getColumnNumber() + ".");
+		
+		super.error(e);
 	}
 }

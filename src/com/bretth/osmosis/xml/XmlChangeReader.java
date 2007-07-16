@@ -24,6 +24,7 @@ import com.bretth.osmosis.xml.impl.OsmChangeHandler;
 public class XmlChangeReader implements RunnableChangeSource {
 	private ChangeSink changeSink;
 	private File file;
+	private boolean enableDateParsing;
 	
 	
 	/**
@@ -31,9 +32,13 @@ public class XmlChangeReader implements RunnableChangeSource {
 	 * 
 	 * @param file
 	 *            The file to read.
+	 * @param enableDateParsing
+	 *            If true, dates will be parsed from xml data, else the current
+	 *            date will be used thus saving parsing time.
 	 */
-	public XmlChangeReader(File file) {
+	public XmlChangeReader(File file, boolean enableDateParsing) {
 		this.file = file;
+		this.enableDateParsing = enableDateParsing;
 	}
 	
 	
@@ -71,7 +76,7 @@ public class XmlChangeReader implements RunnableChangeSource {
 			
 			parser = createParser();
 			
-			parser.parse(file, new OsmChangeHandler(changeSink));
+			parser.parse(file, new OsmChangeHandler(changeSink, enableDateParsing));
 			
 			changeSink.complete();
 			
