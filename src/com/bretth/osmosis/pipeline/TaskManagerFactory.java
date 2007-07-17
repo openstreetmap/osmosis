@@ -124,6 +124,40 @@ public abstract class TaskManagerFactory {
 	
 	
 	/**
+	 * Utility method for retrieving an integer argument value from a Map of
+	 * task arguments.
+	 * 
+	 * @param taskId
+	 *            The identifier for the task retrieving the parameter.
+	 * @param taskArgs
+	 *            The task arguments.
+	 * @param argName
+	 *            The name of the argument.
+	 * @param defaultValue
+	 *            The default value of the argument if not value is available.
+	 * @return The value of the argument.
+	 */
+	protected int getIntegerArgument(String taskId, Map<String, String> taskArgs,
+			String argName, int defaultValue) {
+		int result;
+		
+		if (taskArgs.containsKey(argName)) {
+			try {
+				result = Integer.parseInt(taskArgs.get(argName));
+			} catch (NumberFormatException e) {
+				throw new OsmosisRuntimeException(
+					"Argument " + argName + " for task " + taskId
+					+ " must be an integer number.", e);
+			}
+		} else {
+			result = defaultValue;
+		}
+		
+		return result;
+	}
+	
+	
+	/**
 	 * Utility method for retrieving a double argument value from a Map of task
 	 * arguments.
 	 * 

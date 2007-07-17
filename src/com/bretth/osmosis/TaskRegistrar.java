@@ -1,5 +1,7 @@
 package com.bretth.osmosis;
 
+import com.bretth.osmosis.buffer.ChangeBufferFactory;
+import com.bretth.osmosis.buffer.EntityBufferFactory;
 import com.bretth.osmosis.change.ChangeApplierFactory;
 import com.bretth.osmosis.change.ChangeDeriverFactory;
 import com.bretth.osmosis.filter.BoundingBoxFilterFactory;
@@ -59,5 +61,7 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("write-xml-change", new XmlChangeWriterFactory());
 		TaskManagerFactory.register("write-null", new NullWriterFactory());
 		TaskManagerFactory.register("write-null-change", new NullChangeWriterFactory());
+		TaskManagerFactory.register("buffer", new EntityBufferFactory());
+		TaskManagerFactory.register("buffer-change", new ChangeBufferFactory());
 	}
 }

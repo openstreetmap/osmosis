@@ -1,6 +1,8 @@
 0.3
 Added mysql table truncator task.
 Updated segment xml processing code to handle timestamps.
+Made xml date processing during xml reading optional to improve performance.
+Added buffer tasks to allow pipeline processing to be split across multiple threads.
 
 0.2
 Added Main-Class feature to the jar manifest simplifying program launch.
