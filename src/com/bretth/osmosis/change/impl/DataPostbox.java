@@ -55,8 +55,8 @@ public class DataPostbox<T> {
 	 * occurred on the output thread.
 	 */
 	private void checkForOutputErrors() {
-		// Check for writing thread error.
-		if (released && (!complete)) {
+		// Check for reading thread error.
+		if (!outputOkay) {
 			throw new OsmosisRuntimeException("An output error has occurred, aborting.");
 		}
 	}
@@ -67,8 +67,8 @@ public class DataPostbox<T> {
 	 * occurred on the input thread.
 	 */
 	private void checkForInputErrors() {
-		// Check for reading thread error.
-		if (!outputOkay) {
+		// Check for writing thread error.
+		if (released && (!complete)) {
 			throw new OsmosisRuntimeException("An input error has occurred, aborting.");
 		}
 	}
