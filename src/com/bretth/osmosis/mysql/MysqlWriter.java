@@ -266,7 +266,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			
 			// Disable indexes to improve load performance.
 			for (int i = 0; i < INVOKE_DISABLE_KEYS.length; i++) {
-				//dbCtx.executeStatement(INVOKE_DISABLE_KEYS[i]);
+				dbCtx.executeStatement(INVOKE_DISABLE_KEYS[i]);
 			}
 			
 			// Lock tables if required to improve load performance.
