@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
@@ -662,7 +661,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		
 		// Copy data into the current node tables.
 		for (int i = 0; i < maxNodeId; i += LOAD_CURRENT_NODE_ROW_COUNT) {
-			System.err.println(new Date() + " Node: " + i);
 			try {
 				loadCurrentNodesStatement.setInt(1, i);
 				loadCurrentNodesStatement.setInt(2, i + LOAD_CURRENT_NODE_ROW_COUNT);
