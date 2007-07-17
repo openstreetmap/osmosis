@@ -87,6 +87,8 @@ public class DatabaseContext {
 			    	+ "user=" + user + "&password=" + password
 			    );
 				
+				connection.setAutoCommit(false);
+				
 			} catch (SQLException e) {
 				throw new OsmosisRuntimeException("Unable to establish a database connection.", e);
 			}
@@ -199,7 +201,13 @@ public class DatabaseContext {
 	 * Commits any outstanding transaction.
 	 */
 	public void commit() {
-		// Not using transactions yet.
+		if (connection != null) {
+			try {
+				connection.commit();
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to commit changes.", e);
+			}
+		}
 	}
 	
 	

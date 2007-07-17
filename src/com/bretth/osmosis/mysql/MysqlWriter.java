@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
@@ -71,16 +72,25 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	
 	// These SQL statements will be invoked after loading history tables to
 	// populate the current tables.
-	private static final String[] LOAD_CURRENT_TABLES = {
-		"INSERT INTO current_nodes SELECT * FROM nodes",
-		"INSERT INTO current_segments SELECT * FROM segments",
-		"INSERT INTO current_ways SELECT * FROM ways",
-		"INSERT INTO current_way_tags SELECT * FROM way_tags",
-		"INSERT INTO current_way_segments SELECT * FROM way_segments"
-	};
+	private static final int LOAD_CURRENT_NODE_ROW_COUNT = 1000000;
+	private static final int LOAD_CURRENT_SEGMENT_ROW_COUNT = 1000000;
+	private static final int LOAD_CURRENT_WAY_ROW_COUNT = 100000; // There are many segment and tag records per way.
+	private static final String LOAD_CURRENT_NODES =
+		"INSERT INTO current_nodes SELECT * FROM nodes WHERE id >= ? AND id < ?";
+	private static final String LOAD_CURRENT_SEGMENTS =
+		"INSERT INTO current_segments SELECT * FROM segments WHERE id >= ? AND id < ?";
+	private static final String LOAD_CURRENT_WAYS =
+		"INSERT INTO current_ways SELECT id, user_id, timestamp, visible FROM ways WHERE id >= ? AND id < ?";
+	private static final String LOAD_CURRENT_WAY_TAGS =
+		"INSERT INTO current_way_tags SELECT id, k, v FROM way_tags WHERE id >= ? AND id < ?";
+	private static final String LOAD_CURRENT_WAY_SEGMENTS =
+		"INSERT INTO current_way_segments SELECT id, segment_id, sequence_id FROM way_segments WHERE id >= ? AND id < ?";
 	
 	// These SQL statements will be invoked to lock and unlock tables.
-	private static final String INVOKE_LOCK_TABLES = "LOCK TABLES nodes WRITE, segments WRITE, ways WRITE, way_tags WRITE, way_segments WRITE";
+	private static final String INVOKE_LOCK_TABLES =
+		"LOCK TABLES"
+		+ " nodes WRITE, segments WRITE, ways WRITE, way_tags WRITE, way_segments WRITE,"
+		+ " current_nodes WRITE, current_segments WRITE, current_ways WRITE, current_way_tags WRITE, current_way_segments WRITE";
 	private static final String INVOKE_UNLOCK_TABLES = "UNLOCK TABLES";
 	
 	// These constants define how many rows of each data type will be inserted
@@ -174,6 +184,9 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private List<Way> wayBuffer;
 	private List<WayTag> wayTagBuffer;
 	private List<WaySegment> waySegmentBuffer;
+	private long maxNodeId;
+	private long maxSegmentId;
+	private long maxWayId;
 	private EmbeddedTagProcessor tagProcessor;
 	private boolean initialized;
 	private PreparedStatement singleNodeStatement;
@@ -186,6 +199,11 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private PreparedStatement bulkWayTagStatement;
 	private PreparedStatement singleWaySegmentStatement;
 	private PreparedStatement bulkWaySegmentStatement;
+	private PreparedStatement loadCurrentNodesStatement;
+	private PreparedStatement loadCurrentSegmentsStatement;
+	private PreparedStatement loadCurrentWaysStatement;
+	private PreparedStatement loadCurrentWayTagsStatement;
+	private PreparedStatement loadCurrentWaySegmentsStatement;
 	
 	
 	/**
@@ -213,6 +231,10 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		wayTagBuffer = new ArrayList<WayTag>();
 		waySegmentBuffer = new ArrayList<WaySegment>();
 		
+		maxNodeId = 0;
+		maxSegmentId = 0;
+		maxWayId = 0;
+		
 		tagProcessor = new EmbeddedTagProcessor();
 		
 		initialized = false;
@@ -236,9 +258,15 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			bulkWaySegmentStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_WAY_SEGMENT);
 			singleWaySegmentStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_WAY_SEGMENT);
 			
+			loadCurrentNodesStatement = dbCtx.prepareStatement(LOAD_CURRENT_NODES);
+			loadCurrentSegmentsStatement = dbCtx.prepareStatement(LOAD_CURRENT_SEGMENTS);
+			loadCurrentWaysStatement = dbCtx.prepareStatement(LOAD_CURRENT_WAYS);
+			loadCurrentWayTagsStatement = dbCtx.prepareStatement(LOAD_CURRENT_WAY_TAGS);
+			loadCurrentWaySegmentsStatement = dbCtx.prepareStatement(LOAD_CURRENT_WAY_SEGMENTS);
+			
 			// Disable indexes to improve load performance.
 			for (int i = 0; i < INVOKE_DISABLE_KEYS.length; i++) {
-				dbCtx.executeStatement(INVOKE_DISABLE_KEYS[i]);
+				//dbCtx.executeStatement(INVOKE_DISABLE_KEYS[i]);
 			}
 			
 			// Lock tables if required to improve load performance.
@@ -619,20 +647,82 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * Writes any buffered data to the database and commits. 
 	 */
 	public void complete() {
+		initialize();
+		
 		flushNodes(true);
 		flushSegments(true);
 		flushWays(true);
 		flushWayTags(true);
 		flushWaySegments(true);
 		
-		// Copy data into the current tables.
-		for (int i = 0; i < LOAD_CURRENT_TABLES.length; i++) {
-			//dbCtx.executeStatement(LOAD_CURRENT_TABLES[i]);
-		}
-		
 		// Re-enable indexes now that the load has completed.
 		for (int i = 0; i < INVOKE_DISABLE_KEYS.length; i++) {
 			dbCtx.executeStatement(INVOKE_ENABLE_KEYS[i]);
+		}
+		
+		// Copy data into the current node tables.
+		for (int i = 0; i < maxNodeId; i += LOAD_CURRENT_NODE_ROW_COUNT) {
+			System.err.println(new Date() + " Node: " + i);
+			try {
+				loadCurrentNodesStatement.setInt(1, i);
+				loadCurrentNodesStatement.setInt(2, i + LOAD_CURRENT_NODE_ROW_COUNT);
+				
+				loadCurrentNodesStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to load current nodes.", e);
+			}
+			
+			dbCtx.commit();
+		}
+		for (int i = 0; i < maxSegmentId; i += LOAD_CURRENT_SEGMENT_ROW_COUNT) {
+			try {
+				loadCurrentSegmentsStatement.setInt(1, i);
+				loadCurrentSegmentsStatement.setInt(2, i + LOAD_CURRENT_SEGMENT_ROW_COUNT);
+				
+				loadCurrentSegmentsStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to load current segments.", e);
+			}
+			
+			dbCtx.commit();
+		}
+		for (int i = 0; i < maxWayId; i += LOAD_CURRENT_WAY_ROW_COUNT) {
+			// Way
+			try {
+				loadCurrentWaysStatement.setInt(1, i);
+				loadCurrentWaysStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
+				
+				loadCurrentWaysStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to load current ways.", e);
+			}
+			
+			// Way tags
+			try {
+				loadCurrentWayTagsStatement.setInt(1, i);
+				loadCurrentWayTagsStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
+				
+				loadCurrentWayTagsStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to load current way tags.", e);
+			}
+			
+			// Way segments
+			try {
+				loadCurrentWaySegmentsStatement.setInt(1, i);
+				loadCurrentWaySegmentsStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
+				
+				loadCurrentWaySegmentsStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to load current way segments.", e);
+			}
+			
+			dbCtx.commit();
 		}
 		
 		// Unlock tables (if they were locked) now that we have completed.
@@ -665,8 +755,18 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void process(NodeContainer node) {
-		nodeBuffer.add(node.getEntity());
+	public void process(NodeContainer nodeContainer) {
+		Node node;
+		long nodeId;
+		
+		node = nodeContainer.getEntity();
+		nodeId = node.getId();
+		
+		if (nodeId >= maxNodeId) {
+			maxNodeId = nodeId + 1;
+		}
+		
+		nodeBuffer.add(node);
 		
 		flushNodes(false);
 	}
@@ -675,10 +775,20 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void process(SegmentContainer segment) {
+	public void process(SegmentContainer segmentContainer) {
+		Segment segment;
+		long segmentId;
+		
 		flushNodes(true);
 		
-		segmentBuffer.add(segment.getEntity());
+		segment = segmentContainer.getEntity();
+		segmentId = segment.getId();
+		
+		if (segmentId >= maxSegmentId) {
+			maxSegmentId = segmentId + 1;
+		}
+		
+		segmentBuffer.add(segment);
 		
 		flushSegments(false);
 	}
@@ -687,10 +797,20 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void process(WayContainer way) {
+	public void process(WayContainer wayContainer) {
+		Way way;
+		long wayId;
+		
 		flushSegments(true);
 		
-		wayBuffer.add(way.getEntity());
+		way = wayContainer.getEntity();
+		wayId = way.getId();
+		
+		if (wayId >= maxWayId) {
+			maxWayId = wayId + 1;
+		}
+		
+		wayBuffer.add(way);
 		
 		flushWays(false);
 	}
