@@ -24,23 +24,33 @@ public class ChangeWriter {
 	private static final String INSERT_SQL_NODE =
 		"INSERT INTO nodes (id, timestamp, latitude, longitude, tags, visible) VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String INSERT_SQL_NODE_CURRENT =
-		"INSERT INTO nodes_current (id, timestamp, latitude, longitude, tags, visible) VALUES (?, ?, ?, ?, ?, ?)";
+		"INSERT INTO current_nodes (id, timestamp, latitude, longitude, tags, visible) VALUES (?, ?, ?, ?, ?, ?)";
+	private static final String DELETE_SQL_NODE_CURRENT =
+		"DELETE FROM current_nodes WHERE id = ?";
 	private static final String INSERT_SQL_SEGMENT =
 		"INSERT INTO segments (id, node_a, node_b, tags, visible) VALUES (?, ?, ?, ?, ?)";
 	private static final String INSERT_SQL_SEGMENT_CURRENT =
-		"INSERT INTO segments_current (id, node_a, node_b, tags, visible) VALUES (?, ?, ?, ?, ?)";
+		"INSERT INTO current_segments (id, node_a, node_b, tags, visible) VALUES (?, ?, ?, ?, ?)";
+	private static final String DELETE_SQL_SEGMENT_CURRENT =
+		"DELETE FROM current_segments WHERE id = ?";
 	private static final String INSERT_SQL_WAY =
 		"INSERT INTO ways (id, version, timestamp, visible) VALUES (?, ?, ?, ?)";
 	private static final String INSERT_SQL_WAY_CURRENT =
-		"INSERT INTO ways_current (id, timestamp, visible) VALUES (?, ?, ?)";
+		"INSERT INTO current_ways (id, timestamp, visible) VALUES (?, ?, ?)";
+	private static final String DELETE_SQL_WAY_CURRENT =
+		"DELETE FROM current_ways WHERE id = ?";
 	private static final String INSERT_SQL_WAY_TAG =
 		"INSERT INTO way_tags (id, version, k, v) VALUES (?, ?, ?, ?)";
 	private static final String INSERT_SQL_WAY_TAG_CURRENT =
-		"INSERT INTO way_tags_current (id, k, v) VALUES (?, ?, ?)";
+		"INSERT INTO current_way_tags (id, k, v) VALUES (?, ?, ?)";
+	private static final String DELETE_SQL_WAY_TAG_CURRENT =
+		"DELETE FROM current_way_tags WHERE id = ?";
 	private static final String INSERT_SQL_WAY_SEGMENT =
 		"INSERT INTO way_segments (id, version, segment_id, sequence_id) VALUES (?, ?, ?, ?)";
 	private static final String INSERT_SQL_WAY_SEGMENT_CURRENT =
-		"INSERT INTO way_segments_current (id, segment_id, sequence_id) VALUES (?, ?, ?)";
+		"INSERT INTO current_way_segments (id, segment_id, sequence_id) VALUES (?, ?, ?)";
+	private static final String DELETE_SQL_WAY_SEGMENT_CURRENT =
+		"DELETE FROM current_way_segments WHERE id = ?";
 	private static final String SELECT_SQL_WAY_CURRENT_VERSION =
 		"SELECT MAX(version) AS version FROM ways WHERE id = ?";
 	
@@ -49,14 +59,19 @@ public class ChangeWriter {
 
 	private PreparedStatement insertNodeStatement;
 	private PreparedStatement insertNodeCurrentStatement;
+	private PreparedStatement deleteNodeCurrentStatement;
 	private PreparedStatement insertSegmentStatement;
 	private PreparedStatement insertSegmentCurrentStatement;
+	private PreparedStatement deleteSegmentCurrentStatement;
 	private PreparedStatement insertWayStatement;
 	private PreparedStatement insertWayCurrentStatement;
+	private PreparedStatement deleteWayCurrentStatement;
 	private PreparedStatement insertWayTagStatement;
 	private PreparedStatement insertWayTagCurrentStatement;
+	private PreparedStatement deleteWayTagCurrentStatement;
 	private PreparedStatement insertWaySegmentStatement;
 	private PreparedStatement insertWaySegmentCurrentStatement;
+	private PreparedStatement deleteWaySegmentCurrentStatement;
 	private PreparedStatement queryWayCurrentVersion;
 	private EmbeddedTagProcessor tagFormatter;
 	
@@ -131,6 +146,7 @@ public class ChangeWriter {
 		if (insertNodeStatement == null) {
 			insertNodeStatement = dbCtx.prepareStatement(INSERT_SQL_NODE);
 			insertNodeCurrentStatement = dbCtx.prepareStatement(INSERT_SQL_NODE_CURRENT);
+			deleteNodeCurrentStatement = dbCtx.prepareStatement(DELETE_SQL_NODE_CURRENT);
 		}
 		
 		// Insert the new node into the history table.
@@ -146,6 +162,16 @@ public class ChangeWriter {
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to insert history node with id=" + node.getId() + ".", e);
+		}
+		
+		// Delete the existing node from the current table.
+		try {
+			deleteNodeCurrentStatement.setLong(1, node.getId());
+			
+			deleteNodeCurrentStatement.execute();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to delete current node with id=" + node.getId() + ".", e);
 		}
 		
 		// Insert the new node into the current table.
@@ -183,6 +209,7 @@ public class ChangeWriter {
 		if (insertSegmentStatement == null) {
 			insertSegmentStatement = dbCtx.prepareStatement(INSERT_SQL_SEGMENT);
 			insertSegmentCurrentStatement = dbCtx.prepareStatement(INSERT_SQL_SEGMENT_CURRENT);
+			deleteSegmentCurrentStatement = dbCtx.prepareStatement(DELETE_SQL_SEGMENT_CURRENT);
 		}
 		
 		// Insert the new segment into the history table.
@@ -197,6 +224,16 @@ public class ChangeWriter {
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to insert history segment with id=" + segment.getId() + ".", e);
+		}
+		
+		// Delete the existing segment from the current table.
+		try {
+			deleteSegmentCurrentStatement.setLong(1, segment.getId());
+			
+			deleteSegmentCurrentStatement.execute();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to delete current segment with id=" + segment.getId() + ".", e);
 		}
 		
 		// Insert the new node into the current table.
@@ -228,6 +265,8 @@ public class ChangeWriter {
 		int version;
 		List<SegmentReference> segmentReferenceList;
 		
+		segmentReferenceList = way.getSegmentReferenceList();
+		
 		// If this is a deletion, the entity is not visible.
 		visible = !action.equals(ChangeAction.Delete);
 		
@@ -243,10 +282,13 @@ public class ChangeWriter {
 		if (insertWayStatement == null) {
 			insertWayStatement = dbCtx.prepareStatement(INSERT_SQL_WAY);
 			insertWayCurrentStatement = dbCtx.prepareStatement(INSERT_SQL_WAY_CURRENT);
+			deleteWayCurrentStatement = dbCtx.prepareStatement(DELETE_SQL_WAY_CURRENT);
 			insertWayTagStatement = dbCtx.prepareStatement(INSERT_SQL_WAY_TAG);
 			insertWayTagCurrentStatement = dbCtx.prepareStatement(INSERT_SQL_WAY_TAG_CURRENT);
+			deleteWayTagCurrentStatement = dbCtx.prepareStatement(DELETE_SQL_WAY_TAG_CURRENT);
 			insertWaySegmentStatement = dbCtx.prepareStatement(INSERT_SQL_WAY_SEGMENT);
 			insertWaySegmentCurrentStatement = dbCtx.prepareStatement(INSERT_SQL_WAY_SEGMENT_CURRENT);
+			deleteWaySegmentCurrentStatement = dbCtx.prepareStatement(DELETE_SQL_WAY_SEGMENT_CURRENT);
 		}
 		
 		// Insert the new way into the history table.
@@ -260,18 +302,6 @@ public class ChangeWriter {
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to insert history way with id=" + way.getId() + ".", e);
-		}
-		
-		// Insert the new way into the current table.
-		try {
-			insertWayCurrentStatement.setLong(1, way.getId());
-			insertWayCurrentStatement.setTimestamp(2, new Timestamp(way.getTimestamp().getTime()));
-			insertWayCurrentStatement.setBoolean(3, visible);
-			
-			insertWayCurrentStatement.execute();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to insert current way with id=" + way.getId() + ".", e);
 		}
 		
 		// Insert the tags of the new way into the history table.
@@ -291,24 +321,7 @@ public class ChangeWriter {
 			}
 		}
 		
-		// Insert the tags of the new way into the current table.
-		for (Tag tag : way.getTagList()) {
-			try {
-				insertWayTagCurrentStatement.setLong(1, way.getId());
-				insertWayTagCurrentStatement.setString(2, tag.getKey());
-				insertWayTagCurrentStatement.setString(3, tag.getValue());
-				
-				insertWayTagCurrentStatement.execute();
-				
-			} catch (SQLException e) {
-				throw new OsmosisRuntimeException(
-					"Unable to insert current way tag with id=" + way.getId()
-					+ " and key=(" + tag.getKey() + ").", e);
-			}
-		}
-		
 		// Insert the segments of the new way into the history table.
-		segmentReferenceList = way.getSegmentReferenceList();
 		for (int i = 0; i < segmentReferenceList.size(); i++) {
 			SegmentReference segmentReference;
 			
@@ -326,6 +339,62 @@ public class ChangeWriter {
 				throw new OsmosisRuntimeException(
 					"Unable to insert history way segment with way id=" + way.getId()
 					+ " and segment id=" + segmentReference.getSegmentId() + ".", e);
+			}
+		}
+		
+		// Delete the existing way tags from the current table.
+		try {
+			deleteWayTagCurrentStatement.setLong(1, way.getId());
+			
+			deleteWayTagCurrentStatement.execute();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to delete current way tags with id=" + way.getId() + ".", e);
+		}
+		// Delete the existing way segments from the current table.
+		try {
+			deleteWaySegmentCurrentStatement.setLong(1, way.getId());
+			
+			deleteWaySegmentCurrentStatement.execute();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to delete current way segments with id=" + way.getId() + ".", e);
+		}
+		// Delete the existing way from the current table.
+		try {
+			deleteWayCurrentStatement.setLong(1, way.getId());
+			
+			deleteWayCurrentStatement.execute();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to delete current way with id=" + way.getId() + ".", e);
+		}
+		
+		// Insert the new way into the current table.
+		try {
+			insertWayCurrentStatement.setLong(1, way.getId());
+			insertWayCurrentStatement.setTimestamp(2, new Timestamp(way.getTimestamp().getTime()));
+			insertWayCurrentStatement.setBoolean(3, visible);
+			
+			insertWayCurrentStatement.execute();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to insert current way with id=" + way.getId() + ".", e);
+		}
+		
+		// Insert the tags of the new way into the current table.
+		for (Tag tag : way.getTagList()) {
+			try {
+				insertWayTagCurrentStatement.setLong(1, way.getId());
+				insertWayTagCurrentStatement.setString(2, tag.getKey());
+				insertWayTagCurrentStatement.setString(3, tag.getValue());
+				
+				insertWayTagCurrentStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException(
+					"Unable to insert current way tag with id=" + way.getId()
+					+ " and key=(" + tag.getKey() + ").", e);
 			}
 		}
 		
