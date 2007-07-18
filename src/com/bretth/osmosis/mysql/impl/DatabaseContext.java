@@ -193,12 +193,18 @@ public class DatabaseContext {
 	 */
 	public ResultSet executeStreamingQuery(String sql) {
 		try {
-			PreparedStatement statement;
+			Statement statement;
 			ResultSet resultSet;
 			
-			statement = prepareStatementForStreaming(sql);
-			resultSet = statement.executeQuery();
+
+			// Create a statement for returning streaming results.
+			statement = getConnection().createStatement(
+					ResultSet.TYPE_FORWARD_ONLY,
+					ResultSet.CONCUR_READ_ONLY);
 			
+			statement.setFetchSize(Integer.MIN_VALUE);
+			
+			resultSet = statement.executeQuery(sql);
 			statement.close();
 			
 			return resultSet;
