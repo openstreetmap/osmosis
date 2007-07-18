@@ -14,7 +14,7 @@ import com.bretth.osmosis.pipeline.Pipeline;
  * @author Brett Henderson
  */
 public class Osmosis {
-	private static final String VERSION = "0.2";
+	private static final String VERSION = "0.3";
 	
 	private static final Logger log = Logger.getLogger(Osmosis.class.getName());
 	
