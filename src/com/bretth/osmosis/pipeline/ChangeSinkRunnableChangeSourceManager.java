@@ -4,7 +4,6 @@ import java.util.Map;
 
 import com.bretth.osmosis.task.ChangeSinkRunnableChangeSource;
 import com.bretth.osmosis.task.ChangeSource;
-import com.bretth.osmosis.task.Source;
 
 
 /**
@@ -46,7 +45,7 @@ public class ChangeSinkRunnableChangeSourceManager extends ActiveTaskManager {
 		
 		// Get the input task. A sink only has one input, this corresponds to
 		// pipe index 0.
-		source = (ChangeSource) getInputTask(pipeTasks, 0, Source.class);
+		source = (ChangeSource) getInputTask(pipeTasks, 0, ChangeSource.class);
 		
 		// Connect the tasks.
 		source.setChangeSink(task);
