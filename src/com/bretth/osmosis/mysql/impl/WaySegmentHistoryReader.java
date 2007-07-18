@@ -17,7 +17,7 @@ import com.bretth.osmosis.OsmosisRuntimeException;
  */
 public class WaySegmentHistoryReader extends EntityReader<EntityHistory<WaySegment>> {
 	private static final String SELECT_SQL =
-		"SELECT ws.id AS way_id, ws.segment_id, ws.sequence_id, version"
+		"SELECT ws.id AS way_id, ws.segment_id, ws.sequence_id, ws.version"
 		+ " FROM way_segments ws"
 		+ " INNER JOIN"
 		+ " ("

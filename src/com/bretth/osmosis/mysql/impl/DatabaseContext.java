@@ -90,7 +90,7 @@ public class DatabaseContext {
 			try {
 				connection = DriverManager.getConnection(
 					"jdbc:mysql://" + host + "/" + database + "?"
-			    	+ "user=" + user + "&password=" + password
+			    	+ "user=" + user + "&password=" + password// + "&profileSql=true"
 			    );
 				
 				connection.setAutoCommit(false);

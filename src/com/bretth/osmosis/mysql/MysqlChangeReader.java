@@ -204,6 +204,8 @@ public class MysqlChangeReader implements RunnableChangeSource {
 			processSegments();
 			processWays();
 			
+			changeSink.complete();
+			
 		} finally {
 			changeSink.release();
 		}

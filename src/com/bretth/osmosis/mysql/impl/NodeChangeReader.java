@@ -95,7 +95,7 @@ public class NodeChangeReader {
 	public boolean hasNext() {
 		if (nextValue == null) {
 			if (nodeHistoryReader.hasNext()) {
-				readChange();
+				nextValue = readChange();
 			}
 		}
 		

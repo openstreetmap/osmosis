@@ -33,6 +33,7 @@ public class EntityHistory<T> {
 	 */
 	public EntityHistory(T entity, int version, boolean visible) {
 		this.entity = entity;
+		this.version = version;
 		this.visible = visible;
 	}
 	

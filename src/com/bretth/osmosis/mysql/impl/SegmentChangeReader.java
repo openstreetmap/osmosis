@@ -95,7 +95,7 @@ public class SegmentChangeReader {
 	public boolean hasNext() {
 		if (nextValue == null) {
 			if (segmentHistoryReader.hasNext()) {
-				readChange();
+				nextValue = readChange();
 			}
 		}
 		

@@ -17,7 +17,7 @@ import com.bretth.osmosis.OsmosisRuntimeException;
  */
 public class WayTagHistoryReader extends EntityReader<EntityHistory<WayTag>> {
 	private static final String SELECT_SQL =
-		"SELECT wt.id AS way_id, wt.k, wt.v, version"
+		"SELECT wt.id AS way_id, wt.k, wt.v, wt.version"
 		+ " FROM way_tags wt"
 		+ " INNER JOIN"
 		+ " ("
@@ -88,7 +88,7 @@ public class WayTagHistoryReader extends EntityReader<EntityHistory<WayTag>> {
 		int version;
 		
 		try {
-			wayId = resultSet.getLong("id");
+			wayId = resultSet.getLong("way_id");
 			key = resultSet.getString("k");
 			value = resultSet.getString("v");
 			version = resultSet.getInt("version");
