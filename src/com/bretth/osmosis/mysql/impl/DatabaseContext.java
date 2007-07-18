@@ -24,6 +24,12 @@ public class DatabaseContext {
 	private String user;
 	private String password;
 	private Connection connection;
+	/**
+	 * This statement is used by streaming result sets. It is stored globally
+	 * here to allow it to remain open after a method return. It will be closed
+	 * during release or if a new streaming result set is created.
+	 */
+	private Statement streamingStatement;
 	
 	
 	/**
@@ -193,19 +199,28 @@ public class DatabaseContext {
 	 */
 	public ResultSet executeStreamingQuery(String sql) {
 		try {
-			Statement statement;
 			ResultSet resultSet;
 			
-
+			// Close any existing streaming statement.
+			if (streamingStatement != null) {
+				try {
+					streamingStatement.close();
+					
+				} catch (SQLException e) {
+					// Do nothing.
+				}
+				
+				streamingStatement = null;
+			}
+			
 			// Create a statement for returning streaming results.
-			statement = getConnection().createStatement(
+			streamingStatement = getConnection().createStatement(
 					ResultSet.TYPE_FORWARD_ONLY,
 					ResultSet.CONCUR_READ_ONLY);
 			
-			statement.setFetchSize(Integer.MIN_VALUE);
+			streamingStatement.setFetchSize(Integer.MIN_VALUE);
 			
-			resultSet = statement.executeQuery(sql);
-			statement.close();
+			resultSet = streamingStatement.executeQuery(sql);
 			
 			return resultSet;
 			
@@ -235,6 +250,16 @@ public class DatabaseContext {
 	 * class is used.
 	 */
 	public void release() {
+		if (streamingStatement != null) {
+			try {
+				streamingStatement.close();
+				
+			} catch (SQLException e) {
+				// Do nothing.
+			}
+			
+			streamingStatement = null;
+		}
 		if (connection != null) {
 			try {
 				connection.close();
