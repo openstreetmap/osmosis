@@ -15,7 +15,7 @@ import com.bretth.osmosis.data.Way;
  */
 public class WayReader extends EntityReader<Way> {
 	private static final String SELECT_SQL =
-		"SELECT id, timestamp FROM current_ways ORDER BY id";
+		"SELECT id, timestamp FROM current_ways WHERE visible = 1 ORDER BY id";
 	
 	
 	/**

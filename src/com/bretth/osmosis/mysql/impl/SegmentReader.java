@@ -15,7 +15,7 @@ import com.bretth.osmosis.data.Segment;
  */
 public class SegmentReader extends EntityReader<Segment> {
 	private static final String SELECT_SQL =
-		"SELECT id, timestamp, node_a, node_b, tags FROM current_segments ORDER BY id";
+		"SELECT id, timestamp, node_a, node_b, tags FROM current_segments WHERE visible = 1 ORDER BY id";
 	
 	private EmbeddedTagProcessor tagParser;
 	

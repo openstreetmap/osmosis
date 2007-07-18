@@ -15,7 +15,7 @@ import com.bretth.osmosis.data.Node;
  */
 public class NodeReader extends EntityReader<Node> {
 	private static final String SELECT_SQL =
-		"SELECT id, timestamp, latitude, longitude, tags FROM current_nodes ORDER BY id";
+		"SELECT id, timestamp, latitude, longitude, tags FROM current_nodes WHERE visible = 1 ORDER BY id";
 	
 	private EmbeddedTagProcessor tagParser;
 	
