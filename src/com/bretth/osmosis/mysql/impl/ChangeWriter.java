@@ -115,11 +115,17 @@ public class ChangeWriter {
 			queryWayCurrentVersion.setLong(1, wayId);
 			resultSet = queryWayCurrentVersion.executeQuery();
 			
-			// Get the result from the first row in the recordset.
-			resultSet.next();
-			result = resultSet.getInt("version");
+			// Get the result from the first row in the recordset if it exists.
+			// If it doesn't exist, this is a create so we treat the existing
+			// version as 0.
+			if (resultSet.next()) {
+				result = resultSet.getInt("version");
+			} else {
+				result = 0;
+			}
 			
 			resultSet.close();
+			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("The version of way with id=" + wayId + " could not be loaded.", e);
 		}
@@ -270,13 +276,9 @@ public class ChangeWriter {
 		// If this is a deletion, the entity is not visible.
 		visible = !action.equals(ChangeAction.Delete);
 		
-		// If this is a new record, the version is 1.
-		// Else the version must be retrieved from the database.
-		if (action.equals(ChangeAction.Create)) {
-			version = 1;
-		} else {
-			version = getWayVersion(way.getId()) + 1;
-		}
+		// Retrieve the existing way version. If it doesn't exist, we will
+		// receive 0.
+		version = getWayVersion(way.getId()) + 1;
 		
 		// Create the prepared statements for way creation if necessary.
 		if (insertWayStatement == null) {
