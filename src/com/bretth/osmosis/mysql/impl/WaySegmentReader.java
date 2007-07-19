@@ -1,7 +1,10 @@
 package com.bretth.osmosis.mysql.impl;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
 
@@ -14,7 +17,18 @@ import com.bretth.osmosis.OsmosisRuntimeException;
  */
 public class WaySegmentReader extends EntityReader<WaySegment> {
 	private static final String SELECT_SQL =
-		"SELECT id AS way_id, segment_id, sequence_id FROM current_way_segments ORDER BY way_id, sequence_id";
+		"SELECT ws.id as way_id, ws.segment_id, ws.sequence_id"
+		+ " FROM way_segments ws"
+		+ " INNER JOIN"
+		+ " ("
+		+ "SELECT id, MAX(version) AS version"
+		+ " FROM ways"
+		+ " WHERE timestamp < ?"
+		+ " GROUP BY id"
+		+ ") w ON ws.id = w.id AND ws.version = w.version"
+		+ " ORDER BY ws.id, ws.sequence_id";
+	
+	private Date snapshotInstant;
 	
 	
 	/**
@@ -28,9 +42,14 @@ public class WaySegmentReader extends EntityReader<WaySegment> {
 	 *            The user name for authentication.
 	 * @param password
 	 *            The password for authentication.
+	 * @param snapshotInstant
+	 *            The state of the node table at this point in time will be
+	 *            dumped.  This ensures a consistent snapshot.
 	 */
-	public WaySegmentReader(String host, String database, String user, String password) {
+	public WaySegmentReader(String host, String database, String user, String password, Date snapshotInstant) {
 		super(host, database, user, password);
+		
+		this.snapshotInstant = snapshotInstant;
 	}
 	
 	
@@ -39,7 +58,17 @@ public class WaySegmentReader extends EntityReader<WaySegment> {
 	 */
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
+		try {
+			PreparedStatement statement;
+			
+			statement = queryDbCtx.prepareStatementForStreaming(SELECT_SQL);
+			statement.setTimestamp(1, new Timestamp(snapshotInstant.getTime()));
+			
+			return statement.executeQuery();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to create streaming resultset.", e);
+		}
 	}
 	
 	

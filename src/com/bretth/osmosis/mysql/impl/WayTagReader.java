@@ -1,7 +1,10 @@
 package com.bretth.osmosis.mysql.impl;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
 
@@ -13,7 +16,18 @@ import com.bretth.osmosis.OsmosisRuntimeException;
  */
 public class WayTagReader extends EntityReader<WayTag> {
 	private static final String SELECT_SQL =
-		"SELECT id, k, v FROM current_way_tags ORDER BY id";
+		"SELECT wt.id as way_id, wt.k, wt.v"
+		+ " FROM way_tags wt"
+		+ " INNER JOIN"
+		+ " ("
+		+ "SELECT id, MAX(version) AS version"
+		+ " FROM ways"
+		+ " WHERE timestamp < ?"
+		+ " GROUP BY id"
+		+ ") w ON wt.id = w.id AND wt.version = w.version"
+		+ " ORDER BY wt.id";
+	
+	private Date snapshotInstant;
 	
 	
 	/**
@@ -27,9 +41,14 @@ public class WayTagReader extends EntityReader<WayTag> {
 	 *            The user name for authentication.
 	 * @param password
 	 *            The password for authentication.
+	 * @param snapshotInstant
+	 *            The state of the node table at this point in time will be
+	 *            dumped.  This ensures a consistent snapshot.
 	 */
-	public WayTagReader(String host, String database, String user, String password) {
+	public WayTagReader(String host, String database, String user, String password, Date snapshotInstant) {
 		super(host, database, user, password);
+		
+		this.snapshotInstant = snapshotInstant;
 	}
 	
 	
@@ -38,7 +57,17 @@ public class WayTagReader extends EntityReader<WayTag> {
 	 */
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
+		try {
+			PreparedStatement statement;
+			
+			statement = queryDbCtx.prepareStatementForStreaming(SELECT_SQL);
+			statement.setTimestamp(1, new Timestamp(snapshotInstant.getTime()));
+			
+			return statement.executeQuery();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to create streaming resultset.", e);
+		}
 	}
 	
 	
@@ -52,7 +81,7 @@ public class WayTagReader extends EntityReader<WayTag> {
 		String value;
 		
 		try {
-			wayId = resultSet.getLong("id");
+			wayId = resultSet.getLong("way_id");
 			key = resultSet.getString("k");
 			value = resultSet.getString("v");
 			

@@ -1,5 +1,7 @@
 package com.bretth.osmosis.mysql;
 
+import java.util.Date;
+
 import com.bretth.osmosis.container.NodeContainer;
 import com.bretth.osmosis.container.SegmentContainer;
 import com.bretth.osmosis.container.WayContainer;
@@ -27,6 +29,7 @@ public class MysqlReader implements RunnableSource {
 	private String database;
 	private String user;
 	private String password;
+	private Date snapshotInstant;
 	
 	
 	/**
@@ -40,12 +43,16 @@ public class MysqlReader implements RunnableSource {
 	 *            The user name for authentication.
 	 * @param password
 	 *            The password for authentication.
+	 * @param snapshotInstant
+	 *            The state of the node table at this point in time will be
+	 *            dumped.  This ensures a consistent snapshot.
 	 */
-	public MysqlReader(String host, String database, String user, String password) {
+	public MysqlReader(String host, String database, String user, String password, Date snapshotInstant) {
 		this.host = host;
 		this.database = database;
 		this.user = user;
 		this.password = password;
+		this.snapshotInstant = snapshotInstant;
 	}
 	
 	
@@ -63,7 +70,7 @@ public class MysqlReader implements RunnableSource {
 	private void processNodes() {
 		NodeReader reader;
 		
-		reader = new NodeReader(host, database, user, password);
+		reader = new NodeReader(host, database, user, password, snapshotInstant);
 		
 		try {
 			while (reader.hasNext()) {
@@ -82,7 +89,7 @@ public class MysqlReader implements RunnableSource {
 	private void processSegments() {
 		SegmentReader reader;
 		
-		reader = new SegmentReader(host, database, user, password);
+		reader = new SegmentReader(host, database, user, password, snapshotInstant);
 		
 		try {
 			while (reader.hasNext()) {
@@ -103,9 +110,9 @@ public class MysqlReader implements RunnableSource {
 		WaySegmentReader waySegmentReader;
 		WayTagReader wayTagReader;
 		
-		wayReader = new WayReader(host, database, user, password);
-		waySegmentReader = new WaySegmentReader(host, database, user, password);
-		wayTagReader = new WayTagReader(host, database, user, password);
+		wayReader = new WayReader(host, database, user, password, snapshotInstant);
+		waySegmentReader = new WaySegmentReader(host, database, user, password, snapshotInstant);
+		wayTagReader = new WayTagReader(host, database, user, password, snapshotInstant);
 		
 		try {
 			while (wayReader.hasNext()) {
@@ -159,6 +166,7 @@ public class MysqlReader implements RunnableSource {
 			processNodes();
 			processSegments();
 			processWays();
+			
 			sink.complete();
 			
 		} finally {

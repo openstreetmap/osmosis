@@ -1,7 +1,9 @@
 package com.bretth.osmosis.mysql.impl;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
@@ -15,7 +17,19 @@ import com.bretth.osmosis.data.Way;
  */
 public class WayReader extends EntityReader<Way> {
 	private static final String SELECT_SQL =
-		"SELECT id, timestamp FROM current_ways WHERE visible = 1 ORDER BY id";
+		"SELECT w.id, w.timestamp"
+		+ " FROM ways w"
+		+ " INNER JOIN"
+		+ " ("
+		+ "SELECT id, MAX(version) AS version"
+		+ " FROM ways"
+		+ " WHERE timestamp < ?"
+		+ " GROUP BY id"
+		+ ") w2 ON w.id = w2.id AND w.version = w2.version"
+		+ " WHERE visible = 1"
+		+ " ORDER BY id";
+	
+	private Date snapshotInstant;
 	
 	
 	/**
@@ -29,9 +43,14 @@ public class WayReader extends EntityReader<Way> {
 	 *            The user name for authentication.
 	 * @param password
 	 *            The password for authentication.
+	 * @param snapshotInstant
+	 *            The state of the node table at this point in time will be
+	 *            dumped.  This ensures a consistent snapshot.
 	 */
-	public WayReader(String host, String database, String user, String password) {
+	public WayReader(String host, String database, String user, String password, Date snapshotInstant) {
 		super(host, database, user, password);
+		
+		this.snapshotInstant = snapshotInstant;
 	}
 	
 	
@@ -40,7 +59,17 @@ public class WayReader extends EntityReader<Way> {
 	 */
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
+		try {
+			PreparedStatement statement;
+			
+			statement = queryDbCtx.prepareStatementForStreaming(SELECT_SQL);
+			statement.setTimestamp(1, new Timestamp(snapshotInstant.getTime()));
+			
+			return statement.executeQuery();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to create streaming resultset.", e);
+		}
 	}
 	
 	

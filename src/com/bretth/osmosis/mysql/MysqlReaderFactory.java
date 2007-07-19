@@ -1,5 +1,6 @@
 package com.bretth.osmosis.mysql;
 
+import java.util.Date;
 import java.util.Map;
 
 import com.bretth.osmosis.pipeline.RunnableSourceManager;
@@ -17,6 +18,7 @@ public class MysqlReaderFactory extends TaskManagerFactory {
 	private static final String ARG_DATABASE = "database";
 	private static final String ARG_USER = "user";
 	private static final String ARG_PASSWORD = "password";
+	private static final String ARG_SNAPSHOT_INSTANT = "snapshotInstant";
 	private static final String DEFAULT_HOST = "localhost";
 	private static final String DEFAULT_DATABASE = "osm";
 	private static final String DEFAULT_USER = "osm";
@@ -32,16 +34,18 @@ public class MysqlReaderFactory extends TaskManagerFactory {
 		String database;
 		String user;
 		String password;
+		Date snapshotInstant;
 		
 		// Get the task arguments.
 		host = getStringArgument(taskId, taskArgs, ARG_HOST, DEFAULT_HOST);
 		database = getStringArgument(taskId, taskArgs, ARG_DATABASE, DEFAULT_DATABASE);
 		user = getStringArgument(taskId, taskArgs, ARG_USER, DEFAULT_USER);
 		password = getStringArgument(taskId, taskArgs, ARG_PASSWORD, DEFAULT_PASSWORD);
+		snapshotInstant = getDateArgument(taskId, taskArgs, ARG_SNAPSHOT_INSTANT, new Date());
 		
 		return new RunnableSourceManager(
 			taskId,
-			new MysqlReader(host, database, user, password),
+			new MysqlReader(host, database, user, password, snapshotInstant),
 			pipeArgs
 		);
 	}
