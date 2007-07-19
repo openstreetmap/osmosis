@@ -331,7 +331,7 @@ public class ChangeWriter {
 				insertWaySegmentStatement.setLong(1, way.getId());
 				insertWaySegmentStatement.setInt(2, version);
 				insertWaySegmentStatement.setLong(3, segmentReference.getSegmentId());
-				insertWaySegmentStatement.setLong(4, i);
+				insertWaySegmentStatement.setLong(4, i + 1);
 				
 				insertWaySegmentStatement.execute();
 				
