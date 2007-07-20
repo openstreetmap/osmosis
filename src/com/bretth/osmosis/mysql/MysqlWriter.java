@@ -178,6 +178,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	
 	private DatabaseContext dbCtx;
 	private boolean lockTables;
+	private boolean populateCurrentTables;
 	private List<Node> nodeBuffer;
 	private List<Segment> segmentBuffer;
 	private List<Way> wayBuffer;
@@ -218,11 +219,15 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 *            The password for authentication.
 	 * @param lockTables
 	 *            If true, all tables will be locked during loading.
+	 * @param populateCurrentTables
+	 *            If true, the current tables will be populated as well as
+	 *            history tables.
 	 */
-	public MysqlWriter(String host, String database, String user, String password, boolean lockTables) {
+	public MysqlWriter(String host, String database, String user, String password, boolean lockTables, boolean populateCurrentTables) {
 		dbCtx = new DatabaseContext(host, database, user, password);
 		
 		this.lockTables = lockTables;
+		this.populateCurrentTables = populateCurrentTables;
 		
 		nodeBuffer = new ArrayList<Node>();
 		segmentBuffer = new ArrayList<Segment>();
@@ -659,68 +664,70 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			dbCtx.executeStatement(INVOKE_ENABLE_KEYS[i]);
 		}
 		
-		// Copy data into the current node tables.
-		for (int i = 0; i < maxNodeId; i += LOAD_CURRENT_NODE_ROW_COUNT) {
-			try {
-				loadCurrentNodesStatement.setInt(1, i);
-				loadCurrentNodesStatement.setInt(2, i + LOAD_CURRENT_NODE_ROW_COUNT);
+		if (populateCurrentTables) {
+			// Copy data into the current node tables.
+			for (int i = 0; i < maxNodeId; i += LOAD_CURRENT_NODE_ROW_COUNT) {
+				try {
+					loadCurrentNodesStatement.setInt(1, i);
+					loadCurrentNodesStatement.setInt(2, i + LOAD_CURRENT_NODE_ROW_COUNT);
+					
+					loadCurrentNodesStatement.execute();
+					
+				} catch (SQLException e) {
+					throw new OsmosisRuntimeException("Unable to load current nodes.", e);
+				}
 				
-				loadCurrentNodesStatement.execute();
-				
-			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to load current nodes.", e);
+				dbCtx.commit();
 			}
-			
-			dbCtx.commit();
-		}
-		for (int i = 0; i < maxSegmentId; i += LOAD_CURRENT_SEGMENT_ROW_COUNT) {
-			try {
-				loadCurrentSegmentsStatement.setInt(1, i);
-				loadCurrentSegmentsStatement.setInt(2, i + LOAD_CURRENT_SEGMENT_ROW_COUNT);
+			for (int i = 0; i < maxSegmentId; i += LOAD_CURRENT_SEGMENT_ROW_COUNT) {
+				try {
+					loadCurrentSegmentsStatement.setInt(1, i);
+					loadCurrentSegmentsStatement.setInt(2, i + LOAD_CURRENT_SEGMENT_ROW_COUNT);
+					
+					loadCurrentSegmentsStatement.execute();
+					
+				} catch (SQLException e) {
+					throw new OsmosisRuntimeException("Unable to load current segments.", e);
+				}
 				
-				loadCurrentSegmentsStatement.execute();
-				
-			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to load current segments.", e);
+				dbCtx.commit();
 			}
-			
-			dbCtx.commit();
-		}
-		for (int i = 0; i < maxWayId; i += LOAD_CURRENT_WAY_ROW_COUNT) {
-			// Way
-			try {
-				loadCurrentWaysStatement.setInt(1, i);
-				loadCurrentWaysStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
+			for (int i = 0; i < maxWayId; i += LOAD_CURRENT_WAY_ROW_COUNT) {
+				// Way
+				try {
+					loadCurrentWaysStatement.setInt(1, i);
+					loadCurrentWaysStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
+					
+					loadCurrentWaysStatement.execute();
+					
+				} catch (SQLException e) {
+					throw new OsmosisRuntimeException("Unable to load current ways.", e);
+				}
 				
-				loadCurrentWaysStatement.execute();
+				// Way tags
+				try {
+					loadCurrentWayTagsStatement.setInt(1, i);
+					loadCurrentWayTagsStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
+					
+					loadCurrentWayTagsStatement.execute();
+					
+				} catch (SQLException e) {
+					throw new OsmosisRuntimeException("Unable to load current way tags.", e);
+				}
 				
-			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to load current ways.", e);
+				// Way segments
+				try {
+					loadCurrentWaySegmentsStatement.setInt(1, i);
+					loadCurrentWaySegmentsStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
+					
+					loadCurrentWaySegmentsStatement.execute();
+					
+				} catch (SQLException e) {
+					throw new OsmosisRuntimeException("Unable to load current way segments.", e);
+				}
+				
+				dbCtx.commit();
 			}
-			
-			// Way tags
-			try {
-				loadCurrentWayTagsStatement.setInt(1, i);
-				loadCurrentWayTagsStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
-				
-				loadCurrentWayTagsStatement.execute();
-				
-			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to load current way tags.", e);
-			}
-			
-			// Way segments
-			try {
-				loadCurrentWaySegmentsStatement.setInt(1, i);
-				loadCurrentWaySegmentsStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
-				
-				loadCurrentWaySegmentsStatement.execute();
-				
-			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to load current way segments.", e);
-			}
-			
-			dbCtx.commit();
 		}
 		
 		// Unlock tables (if they were locked) now that we have completed.

@@ -18,11 +18,13 @@ public class MysqlWriterFactory extends TaskManagerFactory {
 	private static final String ARG_USER = "user";
 	private static final String ARG_PASSWORD = "password";
 	private static final String ARG_LOCK_TABLES = "lockTables";
+	private static final String ARG_POPULATE_CURRENT_TABLES = "populateCurrentTables";
 	private static final String DEFAULT_HOST = "localhost";
 	private static final String DEFAULT_DATABASE = "osm";
 	private static final String DEFAULT_USER = "osm";
 	private static final String DEFAULT_PASSWORD = "";
 	private static final boolean DEFAULT_LOCK_TABLES = true;
+	private static final boolean DEFAULT_POPULATE_CURRENT_TABLES = true;
 	
 	
 	/**
@@ -35,6 +37,7 @@ public class MysqlWriterFactory extends TaskManagerFactory {
 		String user;
 		String password;
 		boolean lockTables;
+		boolean populateCurrentTables;
 		
 		// Get the task arguments.
 		host = getStringArgument(taskId, taskArgs, ARG_HOST, DEFAULT_HOST);
@@ -42,10 +45,11 @@ public class MysqlWriterFactory extends TaskManagerFactory {
 		user = getStringArgument(taskId, taskArgs, ARG_USER, DEFAULT_USER);
 		password = getStringArgument(taskId, taskArgs, ARG_PASSWORD, DEFAULT_PASSWORD);
 		lockTables = getBooleanArgument(taskId, taskArgs, ARG_LOCK_TABLES, DEFAULT_LOCK_TABLES);
+		populateCurrentTables = getBooleanArgument(taskId, taskArgs, ARG_POPULATE_CURRENT_TABLES, DEFAULT_POPULATE_CURRENT_TABLES);
 		
 		return new SinkManager(
 			taskId,
-			new MysqlWriter(host, database, user, password, lockTables),
+			new MysqlWriter(host, database, user, password, lockTables, populateCurrentTables),
 			pipeArgs
 		);
 	}
