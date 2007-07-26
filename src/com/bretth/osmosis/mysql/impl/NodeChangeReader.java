@@ -19,6 +19,7 @@ public class NodeChangeReader {
 	
 	private NodeHistoryReader nodeHistoryReader;
 	private ChangeContainer nextValue;
+	private Date intervalBegin;
 	
 	
 	/**
@@ -39,6 +40,8 @@ public class NodeChangeReader {
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
 	public NodeChangeReader(String host, String database, String user, String password, Date intervalBegin, Date intervalEnd) {
+		this.intervalBegin = intervalBegin;
+		
 		nodeHistoryReader = new NodeHistoryReader(host, database, user, password, intervalBegin, intervalEnd);
 	}
 	
@@ -47,42 +50,37 @@ public class NodeChangeReader {
 	 * Reads the history of the next entity and builds a change object.
 	 */
 	private ChangeContainer readChange() {
-		int recordCount;
+		boolean createdPreviously;
 		EntityHistory<Node> mostRecentHistory;
 		NodeContainer nodeContainer;
 		
-		// Read the entire node history, we need to know how many records there
-		// are and the details of the most recent change.
-		mostRecentHistory = nodeHistoryReader.next();
-		recordCount = 1;
-		while (nodeHistoryReader.hasNext() &&
-				(nodeHistoryReader.peekNext().getEntity().getId() == mostRecentHistory.getEntity().getId())) {
+		// Read the entire node history, if any nodes exist prior to the
+		// interval beginning, the node already existed and therefore cannot
+		// be a create.
+		createdPreviously = false;
+		do {
 			mostRecentHistory = nodeHistoryReader.next();
-			recordCount++;
-		}
+			if (mostRecentHistory.getEntity().getTimestamp().compareTo(intervalBegin) < 0) {
+				createdPreviously = true;
+			}
+		} while (nodeHistoryReader.hasNext() &&
+				(nodeHistoryReader.peekNext().getEntity().getId() == mostRecentHistory.getEntity().getId()));
 		
 		// The node in the result must be wrapped in a container.
 		nodeContainer = new NodeContainer(mostRecentHistory.getEntity());
 		
-		// If only one history element exists, it must be a create.
-		// Else, if the most recent change leaves it visible it is a modify.
-		// Else, it is a delete.
-		if (recordCount == 1) {
-			// By definition, a create must be visible but we'll double check to be sure.
-			if (!mostRecentHistory.isVisible()) {
-				throw new OsmosisRuntimeException(
-					"Node with id="
-					+ mostRecentHistory.getEntity().getId()
-					+ " only has one history element but it is not visible.");
-			}
-			
-			return new ChangeContainer(nodeContainer, ChangeAction.Create);
-			
-		} else if (mostRecentHistory.isVisible()) {
+		// The entity has been modified if it is visible and was created previously.
+		// It is a create if it is visible and was NOT created previously.
+		// It is a delete if it is NOT visible and was created previously.
+		// No action if it is NOT visible and was NOT created previously.
+		if (mostRecentHistory.isVisible() && createdPreviously) {
 			return new ChangeContainer(nodeContainer, ChangeAction.Modify);
-			
-		} else {
+		} else if (mostRecentHistory.isVisible() && !createdPreviously) {
+			return new ChangeContainer(nodeContainer, ChangeAction.Create);
+		} else if (!mostRecentHistory.isVisible() && createdPreviously) {
 			return new ChangeContainer(nodeContainer, ChangeAction.Delete);
+		} else {
+			return null;
 		}
 	}
 	
@@ -93,10 +91,8 @@ public class NodeChangeReader {
 	 * @return True if more data is available, false otherwise.
 	 */
 	public boolean hasNext() {
-		if (nextValue == null) {
-			if (nodeHistoryReader.hasNext()) {
-				nextValue = readChange();
-			}
+		while (nextValue == null && nodeHistoryReader.hasNext()) {
+			nextValue = readChange();
 		}
 		
 		return (nextValue != null);

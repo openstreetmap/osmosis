@@ -13,7 +13,10 @@ import com.bretth.osmosis.data.Segment;
 /**
  * Reads segment history records for segments that have been modified within a time
  * interval. All history items will be returned for the segment from segment creation
- * up to the end of the time interval.
+ * up to the end of the time interval. We need the complete history instead of
+ * just the history within the interval so we can determine if the segment was
+ * created during the interval or prior to the interval, a version attribute
+ * would eliminate the need for full history.
  * 
  * @author Brett Henderson
  */
@@ -22,12 +25,16 @@ public class SegmentHistoryReader extends EntityReader<EntityHistory<Segment>> {
 	// time interval. The outer query then queries all segment history items up to
 	// the end of the time interval.
 	private static final String SELECT_SQL =
-		"SELECT id, timestamp, node_a, node_b, tags, visible"
-		+ " FROM segments"
-		+ " WHERE id IN ("
-		+ "SELECT id FROM segments WHERE timestamp >= ? AND timestamp < ?"
-		+ ") AND timestamp < ?"
-		+ " ORDER BY id, timestamp";
+		"SELECT s.id, s.timestamp, s.node_a, s.node_b, s.tags, s.visible" +
+		" FROM segments s" +
+		" INNER JOIN (" +
+		"   SELECT id" +
+		"   FROM segments" +
+		"   WHERE timestamp >= ? AND timestamp < ?" +
+		"   GROUP BY id" +
+		" ) idList ON s.id = idList.id" +
+		" WHERE s.timestamp < ?" +
+		" ORDER BY s.id, s.timestamp";
 	
 	private EmbeddedTagProcessor tagParser;
 	private Date intervalBegin;

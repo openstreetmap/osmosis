@@ -18,16 +18,10 @@ import com.bretth.osmosis.data.Way;
  */
 public class WayHistoryReader extends EntityReader<EntityHistory<Way>> {
 	private static final String SELECT_SQL =
-		"SELECT w.id AS id, w.timestamp AS timestamp, w.version AS version, w.visible AS visible"
-		+ " FROM ways w"
-		+ " INNER JOIN"
-		+ " ("
-		+ "SELECT id, MAX(version) AS version"
-		+ " FROM ways"
-		+ " WHERE timestamp >= ? AND timestamp < ?"
-		+ " GROUP BY id"
-		+ ") w2"
-		+ " ON w.id = w2.id AND w.version = w2.version;";
+		"SELECT w.id AS id, w.timestamp AS timestamp, w.version AS version, w.visible AS visible" +
+		" FROM ways w" +
+		" WHERE w.timestamp >= ? AND w.timestamp < ?" +
+		" ORDER BY w.id, w.version";
 	
 	private Date intervalBegin;
 	private Date intervalEnd;

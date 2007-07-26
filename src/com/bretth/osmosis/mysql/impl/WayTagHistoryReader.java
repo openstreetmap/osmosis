@@ -10,23 +10,21 @@ import com.bretth.osmosis.OsmosisRuntimeException;
 
 
 /**
- * Reads the set of way segment changes from a database that have occurred within a
- * time interval.
+ * Reads the most recent set of way tags from a database for ways that have been
+ * modified within a time interval.
  * 
  * @author Brett Henderson
  */
 public class WayTagHistoryReader extends EntityReader<EntityHistory<WayTag>> {
 	private static final String SELECT_SQL =
-		"SELECT wt.id AS way_id, wt.k, wt.v, wt.version"
-		+ " FROM way_tags wt"
-		+ " INNER JOIN"
-		+ " ("
-		+ "SELECT id, MAX(version) AS version"
-		+ " FROM ways"
-		+ " WHERE timestamp >= ? AND timestamp < ?"
-		+ " GROUP BY id"
-		+ ") w"
-		+ " ON wt.id = w.id AND wt.version = w.version;";
+		"SELECT wt.id AS way_id, wt.k, wt.v, wt.version" +
+		" FROM way_tags wt" +
+		" INNER JOIN (" +
+		"   SELECT id, MAX(version) as version" +
+		"   FROM ways" +
+		"   WHERE timestamp >= ? AND timestamp < ?" +
+		"   GROUP BY id" +
+		" ) wayList ON wt.id = wayList.id AND wt.version = wayList.version";
 	
 	private Date intervalBegin;
 	private Date intervalEnd;

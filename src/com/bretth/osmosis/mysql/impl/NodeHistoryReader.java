@@ -13,7 +13,10 @@ import com.bretth.osmosis.data.Node;
 /**
  * Reads node history records for nodes that have been modified within a time
  * interval. All history items will be returned for the node from node creation
- * up to the end of the time interval.
+ * up to the end of the time interval. We need the complete history instead of
+ * just the history within the interval so we can determine if the node was
+ * created during the interval or prior to the interval, a version attribute
+ * would eliminate the need for full history.
  * 
  * @author Brett Henderson
  */
@@ -22,12 +25,17 @@ public class NodeHistoryReader extends EntityReader<EntityHistory<Node>> {
 	// time interval. The outer query then queries all node history items up to
 	// the end of the time interval.
 	private static final String SELECT_SQL =
-		"SELECT id, timestamp, latitude, longitude, tags, visible"
-		+ " FROM nodes"
-		+ " WHERE id IN ("
-		+ "SELECT id FROM nodes WHERE timestamp >= ? AND timestamp < ?"
-		+ ") AND timestamp < ?"
-		+ " ORDER BY id, timestamp";
+		"SELECT n.id, n.timestamp, n.latitude, n.longitude, n.tags, n.visible" +
+		" FROM nodes n" +
+		" INNER JOIN (" +
+		"   SELECT id" +
+		"   FROM nodes" +
+		"   WHERE timestamp >= ? AND timestamp < ?" +
+		"   GROUP BY id" +
+		" ) idList ON n.id = idList.id" +
+		" WHERE n.timestamp < ?" +
+		" ORDER BY n.id, n.timestamp";
+	
 	
 	private EmbeddedTagProcessor tagParser;
 	private Date intervalBegin;

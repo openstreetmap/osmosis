@@ -19,6 +19,7 @@ public class SegmentChangeReader {
 	
 	private SegmentHistoryReader segmentHistoryReader;
 	private ChangeContainer nextValue;
+	private Date intervalBegin;
 	
 	
 	/**
@@ -39,6 +40,8 @@ public class SegmentChangeReader {
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
 	public SegmentChangeReader(String host, String database, String user, String password, Date intervalBegin, Date intervalEnd) {
+		this.intervalBegin = intervalBegin;
+		
 		segmentHistoryReader = new SegmentHistoryReader(host, database, user, password, intervalBegin, intervalEnd);
 	}
 	
@@ -47,42 +50,37 @@ public class SegmentChangeReader {
 	 * Reads the history of the next entity and builds a change object.
 	 */
 	private ChangeContainer readChange() {
-		int recordCount;
+		boolean createdPreviously;
 		EntityHistory<Segment> mostRecentHistory;
 		SegmentContainer segmentContainer;
 		
-		// Read the entire segment history, we need to know how many records there
-		// are and the details of the most recent change.
-		mostRecentHistory = segmentHistoryReader.next();
-		recordCount = 1;
-		while (segmentHistoryReader.hasNext() &&
-				(segmentHistoryReader.peekNext().getEntity().getId() == mostRecentHistory.getEntity().getId())) {
+		// Read the entire segment history, if any segments exist prior to the
+		// interval beginning, the segment already existed and therefore
+		// cannot be a create.
+		createdPreviously = false;
+		do {
 			mostRecentHistory = segmentHistoryReader.next();
-			recordCount++;
-		}
+			if (mostRecentHistory.getEntity().getTimestamp().compareTo(intervalBegin) < 0) {
+				createdPreviously = true;
+			}
+		} while (segmentHistoryReader.hasNext() &&
+				(segmentHistoryReader.peekNext().getEntity().getId() == mostRecentHistory.getEntity().getId()));
 		
 		// The segment in the result must be wrapped in a container.
 		segmentContainer = new SegmentContainer(mostRecentHistory.getEntity());
 		
-		// If only one history element exists, it must be a create.
-		// Else, if the most recent change leaves it visible it is a modify.
-		// Else, it is a delete.
-		if (recordCount == 1) {
-			// By definition, a create must be visible but we'll double check to be sure.
-			if (!mostRecentHistory.isVisible()) {
-				throw new OsmosisRuntimeException(
-					"Segment with id="
-					+ mostRecentHistory.getEntity().getId()
-					+ " only has one history element but it is not visible.");
-			}
-			
-			return new ChangeContainer(segmentContainer, ChangeAction.Create);
-			
-		} else if (mostRecentHistory.isVisible()) {
+		// The entity has been modified if it is visible and was created previously.
+		// It is a create if it is visible and was NOT created previously.
+		// It is a delete if it is NOT visible and was created previously.
+		// No action if it is NOT visible and was NOT created previously.
+		if (mostRecentHistory.isVisible() && createdPreviously) {
 			return new ChangeContainer(segmentContainer, ChangeAction.Modify);
-			
-		} else {
+		} else if (mostRecentHistory.isVisible() && !createdPreviously) {
+			return new ChangeContainer(segmentContainer, ChangeAction.Create);
+		} else if (!mostRecentHistory.isVisible() && createdPreviously) {
 			return new ChangeContainer(segmentContainer, ChangeAction.Delete);
+		} else {
+			return null;
 		}
 	}
 	
@@ -93,10 +91,8 @@ public class SegmentChangeReader {
 	 * @return True if more data is available, false otherwise.
 	 */
 	public boolean hasNext() {
-		if (nextValue == null) {
-			if (segmentHistoryReader.hasNext()) {
-				nextValue = readChange();
-			}
+		while (nextValue == null && segmentHistoryReader.hasNext()) {
+			nextValue = readChange();
 		}
 		
 		return (nextValue != null);
