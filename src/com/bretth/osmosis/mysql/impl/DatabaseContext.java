@@ -105,18 +105,6 @@ public class DatabaseContext {
 	
 	
 	/**
-	 * Sets a new value for the connection timeout, this is required when the
-	 * default timeout isn't long enough for streaming large result sets.
-	 * 
-	 * @param seconds
-	 *            The new connection timeout in seconds.
-	 */
-	public void setConnectionTimeout(long seconds) {
-		executeStatement("set session wait_timeout = " + seconds);
-	}
-	
-	
-	/**
 	 * Executes a sql statement against the database.
 	 * 
 	 * @param sql

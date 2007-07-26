@@ -65,10 +65,6 @@ public abstract class EntityReader<T> {
 	 */
 	private void readNextValue() {
 		if (resultSet == null) {
-			// Set the connection timeout to 8 hours to prevent errors when
-			// streaming large result sets.
-			dbCtx.setConnectionTimeout(28800);
-			
 			resultSet = createResultSet(dbCtx);
 		}
 		
