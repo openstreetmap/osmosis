@@ -18,7 +18,7 @@ import com.bretth.osmosis.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public abstract class TaskManagerFactory {
-	private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	private static final String DATE_FORMAT = "yyyy-MM-dd_HH:mm:ss";
 	
 	/**
 	 * The global register of task manager factories, keyed by a unique

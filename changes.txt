@@ -1,3 +1,6 @@
+0.5
+Modified command line date format to avoid use of spaces.
+
 0.4
 Modified mysql dump task to produce consistent snapshots.
 Added the ability to skip "current" tables when importing to mysql.
