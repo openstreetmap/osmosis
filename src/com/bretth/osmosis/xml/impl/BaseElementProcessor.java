@@ -1,5 +1,6 @@
 package com.bretth.osmosis.xml.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -12,6 +13,7 @@ public abstract class BaseElementProcessor implements ElementProcessor {
 	private BaseElementProcessor parentProcessor;
 	private ElementProcessor dummyChildProcessor;
 	private DateParser dateParser;
+	private Date timestamp;
 	private boolean enableDateParsing;
 	
 	
@@ -28,7 +30,15 @@ public abstract class BaseElementProcessor implements ElementProcessor {
 		this.parentProcessor = parentProcessor;
 		this.enableDateParsing = enableDateParsing;
 		
-		dateParser = new DateParser();
+		if (enableDateParsing) {
+			dateParser = new DateParser();
+		} else {
+			Calendar calendar;
+			
+			calendar = Calendar.getInstance();
+			calendar.set(Calendar.MILLISECOND, 0);
+			timestamp = calendar.getTime();
+		}
 	}
 	
 	
@@ -78,7 +88,7 @@ public abstract class BaseElementProcessor implements ElementProcessor {
 				return null;
 			}
 		} else {
-			return new Date();
+			return timestamp;
 		}
 	}
 }
