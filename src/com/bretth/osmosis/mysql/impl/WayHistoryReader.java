@@ -84,7 +84,7 @@ public class WayHistoryReader extends EntityReader<EntityHistory<Way>> {
 		
 		try {
 			id = resultSet.getLong("id");
-			timestamp = resultSet.getTimestamp("timestamp");
+			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
 			version = resultSet.getInt("version");
 			visible = resultSet.getBoolean("visible");
 			

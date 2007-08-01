@@ -106,7 +106,7 @@ public class SegmentHistoryReader extends EntityReader<EntityHistory<Segment>> {
 		
 		try {
 			id = resultSet.getLong("id");
-			timestamp = resultSet.getTimestamp("timestamp");
+			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
 			from = resultSet.getLong("node_a");
 			to = resultSet.getLong("node_b");
 			tags = resultSet.getString("tags");

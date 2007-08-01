@@ -107,7 +107,7 @@ public class NodeHistoryReader extends EntityReader<EntityHistory<Node>> {
 		
 		try {
 			id = resultSet.getLong("id");
-			timestamp = resultSet.getTimestamp("timestamp");
+			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
 			latitude = resultSet.getDouble("latitude");
 			longitude = resultSet.getDouble("longitude");
 			tags = resultSet.getString("tags");

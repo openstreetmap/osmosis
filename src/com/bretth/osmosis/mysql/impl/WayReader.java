@@ -83,7 +83,7 @@ public class WayReader extends EntityReader<Way> {
 		
 		try {
 			id = resultSet.getLong("id");
-			timestamp = resultSet.getTimestamp("timestamp");
+			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read way fields.", e);
 		}
