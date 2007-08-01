@@ -1,6 +1,7 @@
 0.6
 Modified ChangeDeriver task to set the timestamp of deleted records to the current time.
 Fixed all uses of java.sql.Timestamp to be converted to java.util.Date explicitly instead of utilising inheritance.
+Fixed bug in change writer where timestamps weren't being written for segments.
 
 0.5
 Modified command line date format to avoid use of spaces.

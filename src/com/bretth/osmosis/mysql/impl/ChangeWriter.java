@@ -28,9 +28,9 @@ public class ChangeWriter {
 	private static final String DELETE_SQL_NODE_CURRENT =
 		"DELETE FROM current_nodes WHERE id = ?";
 	private static final String INSERT_SQL_SEGMENT =
-		"INSERT INTO segments (id, node_a, node_b, tags, visible) VALUES (?, ?, ?, ?, ?)";
+		"INSERT INTO segments (id, timestamp, node_a, node_b, tags, visible) VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String INSERT_SQL_SEGMENT_CURRENT =
-		"INSERT INTO current_segments (id, node_a, node_b, tags, visible) VALUES (?, ?, ?, ?, ?)";
+		"INSERT INTO current_segments (id, timestamp, node_a, node_b, tags, visible) VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String DELETE_SQL_SEGMENT_CURRENT =
 		"DELETE FROM current_segments WHERE id = ?";
 	private static final String INSERT_SQL_WAY =
@@ -221,10 +221,11 @@ public class ChangeWriter {
 		// Insert the new segment into the history table.
 		try {
 			insertSegmentStatement.setLong(1, segment.getId());
-			insertSegmentStatement.setLong(2, segment.getFrom());
-			insertSegmentStatement.setLong(3, segment.getTo());
-			insertSegmentStatement.setString(4, tagFormatter.format(segment.getTagList()));
-			insertSegmentStatement.setBoolean(5, visible);
+			insertSegmentStatement.setTimestamp(2, new Timestamp(segment.getTimestamp().getTime()));
+			insertSegmentStatement.setLong(3, segment.getFrom());
+			insertSegmentStatement.setLong(4, segment.getTo());
+			insertSegmentStatement.setString(5, tagFormatter.format(segment.getTagList()));
+			insertSegmentStatement.setBoolean(6, visible);
 			
 			insertSegmentStatement.execute();
 			
@@ -245,10 +246,11 @@ public class ChangeWriter {
 		// Insert the new node into the current table.
 		try {
 			insertSegmentCurrentStatement.setLong(1, segment.getId());
-			insertSegmentCurrentStatement.setLong(2, segment.getFrom());
-			insertSegmentCurrentStatement.setLong(3, segment.getTo());
-			insertSegmentCurrentStatement.setString(4, tagFormatter.format(segment.getTagList()));
-			insertSegmentCurrentStatement.setBoolean(5, visible);
+			insertSegmentCurrentStatement.setTimestamp(2, new Timestamp(segment.getTimestamp().getTime()));
+			insertSegmentCurrentStatement.setLong(3, segment.getFrom());
+			insertSegmentCurrentStatement.setLong(4, segment.getTo());
+			insertSegmentCurrentStatement.setString(5, tagFormatter.format(segment.getTagList()));
+			insertSegmentCurrentStatement.setBoolean(6, visible);
 			
 			insertSegmentCurrentStatement.execute();
 			
