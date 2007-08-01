@@ -2,6 +2,7 @@ package com.bretth.osmosis.change;
 
 import com.bretth.osmosis.OsmosisRuntimeException;
 import com.bretth.osmosis.change.impl.DataPostbox;
+import com.bretth.osmosis.change.impl.TimestampChangeSetter;
 import com.bretth.osmosis.container.ChangeContainer;
 import com.bretth.osmosis.container.EntityContainer;
 import com.bretth.osmosis.sort.EntityByTypeThenIdComparator;
@@ -97,9 +98,13 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 			EntityByTypeThenIdComparator comparator;
 			EntityContainer fromEntityContainer = null;
 			EntityContainer toEntityContainer = null;
+			TimestampChangeSetter timestampChangeSetter;
 			
 			// Create a comparator for comparing two entities by type and identifier.
 			comparator = new EntityByTypeThenIdComparator();
+			
+			// Create an object for setting the current timestamp on entities being deleted.
+			timestampChangeSetter = new TimestampChangeSetter(changeSink, ChangeAction.Delete);
 			
 			// We continue in the comparison loop while both sources still have data.
 			while ((fromEntityContainer != null || fromPostbox.hasNext()) && (toEntityContainer != null || toPostbox.hasNext())) {
@@ -117,9 +122,10 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 				comparisonResult = comparator.compare(fromEntityContainer, toEntityContainer);
 				
 				if (comparisonResult < 0) {
-					// The from entity doesn't exist on the to source therefore has
-					// been deleted.
-					changeSink.process(new ChangeContainer(fromEntityContainer, ChangeAction.Delete));
+					// The from entity doesn't exist on the to source therefore
+					// has been deleted. We don't know when the entity was
+					// deleted so set the delete time to the current time.
+					fromEntityContainer.process(timestampChangeSetter);
 					fromEntityContainer = null;
 				} else if (comparisonResult > 0) {
 					// The to entity doesn't exist on the from source therefore has
@@ -144,7 +150,11 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 				if (fromEntityContainer == null) {
 					fromEntityContainer = fromPostbox.getNext();
 				}
-				changeSink.process(new ChangeContainer(fromEntityContainer, ChangeAction.Delete));
+
+				// The from entity doesn't exist on the to source therefore
+				// has been deleted. We don't know when the entity was
+				// deleted so set the delete time to the current time.
+				fromEntityContainer.process(timestampChangeSetter);
 				fromEntityContainer = null;
 			}
 			// Any remaining "to" entities are creates.

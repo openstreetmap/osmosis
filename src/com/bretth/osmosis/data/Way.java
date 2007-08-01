@@ -1,6 +1,7 @@
 package com.bretth.osmosis.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -159,5 +160,16 @@ public class Way extends Entity implements Comparable<Way> {
 	 */
 	public void addSegmentReference(SegmentReference segmentReference) {
 		segmentReferenceList.add(segmentReference);
+	}
+	
+	
+	/**
+	 * Adds all segment references in the collection to the node.
+	 * 
+	 * @param segmentReferences
+	 *            The collection of segment references to be added.
+	 */
+	public void addSegmentReferences(Collection<SegmentReference> segmentReferences) {
+		segmentReferenceList.addAll(segmentReferences);
 	}
 }
