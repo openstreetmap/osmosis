@@ -22,21 +22,21 @@ import com.bretth.osmosis.task.ChangeAction;
  */
 public class ChangeWriter {
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO nodes (id, timestamp, latitude, longitude, tags, visible) VALUES (?, ?, ?, ?, ?, ?)";
+		"INSERT INTO nodes (id, timestamp, latitude, longitude, tags, visible, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String INSERT_SQL_NODE_CURRENT =
-		"INSERT INTO current_nodes (id, timestamp, latitude, longitude, tags, visible) VALUES (?, ?, ?, ?, ?, ?)";
+		"INSERT INTO current_nodes (id, timestamp, latitude, longitude, tags, visible, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String DELETE_SQL_NODE_CURRENT =
 		"DELETE FROM current_nodes WHERE id = ?";
 	private static final String INSERT_SQL_SEGMENT =
-		"INSERT INTO segments (id, timestamp, node_a, node_b, tags, visible) VALUES (?, ?, ?, ?, ?, ?)";
+		"INSERT INTO segments (id, timestamp, node_a, node_b, tags, visible, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String INSERT_SQL_SEGMENT_CURRENT =
-		"INSERT INTO current_segments (id, timestamp, node_a, node_b, tags, visible) VALUES (?, ?, ?, ?, ?, ?)";
+		"INSERT INTO current_segments (id, timestamp, node_a, node_b, tags, visible, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String DELETE_SQL_SEGMENT_CURRENT =
 		"DELETE FROM current_segments WHERE id = ?";
 	private static final String INSERT_SQL_WAY =
-		"INSERT INTO ways (id, version, timestamp, visible) VALUES (?, ?, ?, ?)";
+		"INSERT INTO ways (id, version, timestamp, visible, user_id) VALUES (?, ?, ?, ?, ?)";
 	private static final String INSERT_SQL_WAY_CURRENT =
-		"INSERT INTO current_ways (id, timestamp, visible) VALUES (?, ?, ?)";
+		"INSERT INTO current_ways (id, timestamp, visible, user_id) VALUES (?, ?, ?, ?)";
 	private static final String DELETE_SQL_WAY_CURRENT =
 		"DELETE FROM current_ways WHERE id = ?";
 	private static final String INSERT_SQL_WAY_TAG =
@@ -56,7 +56,9 @@ public class ChangeWriter {
 	
 	
 	private DatabaseContext dbCtx;
-
+	
+	private UserIdManager userIdManager;
+	
 	private PreparedStatement insertNodeStatement;
 	private PreparedStatement insertNodeCurrentStatement;
 	private PreparedStatement deleteNodeCurrentStatement;
@@ -90,6 +92,8 @@ public class ChangeWriter {
 	 */
 	public ChangeWriter(String host, String database, String user, String password) {
 		dbCtx = new DatabaseContext(host, database, user, password);
+		
+		userIdManager = new UserIdManager(dbCtx);
 		
 		tagFormatter = new EmbeddedTagProcessor();
 	}
@@ -163,6 +167,7 @@ public class ChangeWriter {
 			insertNodeStatement.setDouble(4, node.getLongitude());
 			insertNodeStatement.setString(5, tagFormatter.format(node.getTagList()));
 			insertNodeStatement.setBoolean(6, visible);
+			insertNodeStatement.setLong(7, userIdManager.getUserId());
 			
 			insertNodeStatement.execute();
 			
@@ -188,6 +193,7 @@ public class ChangeWriter {
 			insertNodeCurrentStatement.setDouble(4, node.getLongitude());
 			insertNodeCurrentStatement.setString(5, tagFormatter.format(node.getTagList()));
 			insertNodeCurrentStatement.setBoolean(6, visible);
+			insertNodeCurrentStatement.setLong(7, userIdManager.getUserId());
 			
 			insertNodeCurrentStatement.execute();
 			
@@ -226,6 +232,7 @@ public class ChangeWriter {
 			insertSegmentStatement.setLong(4, segment.getTo());
 			insertSegmentStatement.setString(5, tagFormatter.format(segment.getTagList()));
 			insertSegmentStatement.setBoolean(6, visible);
+			insertSegmentStatement.setLong(7, userIdManager.getUserId());
 			
 			insertSegmentStatement.execute();
 			
@@ -251,6 +258,7 @@ public class ChangeWriter {
 			insertSegmentCurrentStatement.setLong(4, segment.getTo());
 			insertSegmentCurrentStatement.setString(5, tagFormatter.format(segment.getTagList()));
 			insertSegmentCurrentStatement.setBoolean(6, visible);
+			insertSegmentCurrentStatement.setLong(7, userIdManager.getUserId());
 			
 			insertSegmentCurrentStatement.execute();
 			
@@ -301,6 +309,7 @@ public class ChangeWriter {
 			insertWayStatement.setInt(2, version);
 			insertWayStatement.setTimestamp(3, new Timestamp(way.getTimestamp().getTime()));
 			insertWayStatement.setBoolean(4, visible);
+			insertWayStatement.setLong(5, userIdManager.getUserId());
 			
 			insertWayStatement.execute();
 			
@@ -379,6 +388,7 @@ public class ChangeWriter {
 			insertWayCurrentStatement.setLong(1, way.getId());
 			insertWayCurrentStatement.setTimestamp(2, new Timestamp(way.getTimestamp().getTime()));
 			insertWayCurrentStatement.setBoolean(3, visible);
+			insertWayCurrentStatement.setLong(4, userIdManager.getUserId());
 			
 			insertWayCurrentStatement.execute();
 			

@@ -19,6 +19,7 @@ import com.bretth.osmosis.data.Tag;
 import com.bretth.osmosis.data.Way;
 import com.bretth.osmosis.mysql.impl.DatabaseContext;
 import com.bretth.osmosis.mysql.impl.EmbeddedTagProcessor;
+import com.bretth.osmosis.mysql.impl.UserIdManager;
 import com.bretth.osmosis.mysql.impl.WaySegment;
 import com.bretth.osmosis.mysql.impl.WayTag;
 import com.bretth.osmosis.task.Sink;
@@ -34,14 +35,14 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	// These SQL strings are the prefix to statements that will be built based
 	// on how many rows of data are to be inserted at a time.
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO nodes(id, timestamp, latitude, longitude, tags, visible)";
-	private static final int INSERT_PRM_COUNT_NODE = 6;
+		"INSERT INTO nodes(id, timestamp, latitude, longitude, tags, visible, user_id)";
+	private static final int INSERT_PRM_COUNT_NODE = 7;
 	private static final String INSERT_SQL_SEGMENT =
-		"INSERT INTO segments (id, timestamp, node_a, node_b, tags, visible)";
-	private static final int INSERT_PRM_COUNT_SEGMENT = 6;
+		"INSERT INTO segments (id, timestamp, node_a, node_b, tags, visible, user_id)";
+	private static final int INSERT_PRM_COUNT_SEGMENT = 7;
 	private static final String INSERT_SQL_WAY =
-		"INSERT INTO ways (id, timestamp, version, visible)";
-	private static final int INSERT_PRM_COUNT_WAY = 4;
+		"INSERT INTO ways (id, timestamp, version, visible, user_id)";
+	private static final int INSERT_PRM_COUNT_WAY = 5;
 	private static final String INSERT_SQL_WAY_TAG =
 		"INSERT INTO way_tags (id, k, v, version)";
 	private static final int INSERT_PRM_COUNT_WAY_TAG = 4;
@@ -89,7 +90,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private static final String INVOKE_LOCK_TABLES =
 		"LOCK TABLES"
 		+ " nodes WRITE, segments WRITE, ways WRITE, way_tags WRITE, way_segments WRITE,"
-		+ " current_nodes WRITE, current_segments WRITE, current_ways WRITE, current_way_tags WRITE, current_way_segments WRITE";
+		+ " current_nodes WRITE, current_segments WRITE, current_ways WRITE, current_way_tags WRITE, current_way_segments WRITE,"
+		+ " users WRITE";
 	private static final String INVOKE_UNLOCK_TABLES = "UNLOCK TABLES";
 	
 	// These constants define how many rows of each data type will be inserted
@@ -177,6 +179,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	
 	
 	private DatabaseContext dbCtx;
+	private UserIdManager userIdManager;
 	private boolean lockTables;
 	private boolean populateCurrentTables;
 	private List<Node> nodeBuffer;
@@ -225,6 +228,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 */
 	public MysqlWriter(String host, String database, String user, String password, boolean lockTables, boolean populateCurrentTables) {
 		dbCtx = new DatabaseContext(host, database, user, password);
+		
+		userIdManager = new UserIdManager(dbCtx);
 		
 		this.lockTables = lockTables;
 		this.populateCurrentTables = populateCurrentTables;
@@ -305,6 +310,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			statement.setDouble(prmIndex++, node.getLongitude());
 			statement.setString(prmIndex++, tagProcessor.format(node.getTagList()));
 			statement.setBoolean(prmIndex++, true);
+			statement.setLong(prmIndex++, userIdManager.getUserId());
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a node.", e);
@@ -334,6 +340,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			statement.setLong(prmIndex++, segment.getTo());
 			statement.setString(prmIndex++, tagProcessor.format(segment.getTagList()));
 			statement.setBoolean(prmIndex++, true);
+			statement.setLong(prmIndex++, userIdManager.getUserId());
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a segment.", e);
@@ -361,6 +368,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			statement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
 			statement.setInt(prmIndex++, 1);
 			statement.setBoolean(prmIndex++, true);
+			statement.setLong(prmIndex++, userIdManager.getUserId());
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a way.", e);
