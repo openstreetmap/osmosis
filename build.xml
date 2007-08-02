@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="Osmosis" default="all" basedir=".">
 	<description>
-		Builds the Osmosis data translation library.
+		Builds the Osmosis data replication library.
 	</description>
 	
 	<!-- set global properties for this build -->
 	<property name="project.name" value="osmosis"/>
-	<property name="project.version" value="0.5.1"/>
+	<property name="project.version" value="0.6"/>
 	
 	<target name="init" description="Perform initialisation required by all other build steps.">
 		<!-- Create the time stamp -->
