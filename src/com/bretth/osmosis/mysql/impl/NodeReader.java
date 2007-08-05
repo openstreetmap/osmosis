@@ -25,9 +25,9 @@ public class NodeReader extends EntityReader<Node> {
 		+ " FROM nodes"
 		+ " WHERE timestamp < ?"
 		+ " GROUP BY id"
+		+ " ORDER BY id"
 		+ ") n2 ON n.id = n2.id AND n.timestamp = n2.timestamp"
-		+ " WHERE visible = 1"
-		+ " ORDER BY id";
+		+ " WHERE visible = 1";
 	
 	private EmbeddedTagProcessor tagParser;
 	private Date snapshotInstant;

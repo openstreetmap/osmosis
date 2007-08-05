@@ -25,9 +25,9 @@ public class SegmentReader extends EntityReader<Segment> {
 		+ " FROM segments"
 		+ " WHERE timestamp < ?"
 		+ " GROUP BY id"
+		+ " ORDER BY id"
 		+ ") s2 ON s.id = s2.id AND s.timestamp = s2.timestamp"
-		+ " WHERE visible = 1"
-		+ " ORDER BY id";
+		+ " WHERE visible = 1";
 	
 	private EmbeddedTagProcessor tagParser;
 	private Date snapshotInstant;
