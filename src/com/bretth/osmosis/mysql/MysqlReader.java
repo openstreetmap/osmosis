@@ -8,6 +8,7 @@ import com.bretth.osmosis.container.WayContainer;
 import com.bretth.osmosis.data.Way;
 import com.bretth.osmosis.mysql.impl.NodeReader;
 import com.bretth.osmosis.mysql.impl.SegmentReader;
+import com.bretth.osmosis.mysql.impl.SlowStartEntityReader;
 import com.bretth.osmosis.mysql.impl.WayReader;
 import com.bretth.osmosis.mysql.impl.WaySegment;
 import com.bretth.osmosis.mysql.impl.WaySegmentReader;
@@ -23,6 +24,16 @@ import com.bretth.osmosis.task.Sink;
  * @author Brett Henderson
  */
 public class MysqlReader implements RunnableSource {
+	/**
+	 * The size of the buffer used to store elements when slowly reading
+	 * entities from a result set to prevent timeouts.
+	 */
+	private static final int SLOW_START_BUFFER_CAPACITY = 1000000;
+	/**
+	 * The interval in milliseconds between reading individual entities from a a
+	 * result set to prevent timeouts.
+	 */
+	private static final int SLOW_START_READ_INTERVAL = 50;
 	
 	private Sink sink;
 	private String host;
@@ -106,13 +117,19 @@ public class MysqlReader implements RunnableSource {
 	 * Reads all ways from the database and sends to the sink.
 	 */
 	private void processWays() {
-		WayReader wayReader;
-		WaySegmentReader waySegmentReader;
-		WayTagReader wayTagReader;
+		SlowStartEntityReader<Way> wayReader;
+		SlowStartEntityReader<WaySegment> waySegmentReader;
+		SlowStartEntityReader<WayTag> wayTagReader;
 		
-		wayReader = new WayReader(host, database, user, password, snapshotInstant);
-		waySegmentReader = new WaySegmentReader(host, database, user, password, snapshotInstant);
-		wayTagReader = new WayTagReader(host, database, user, password, snapshotInstant);
+		wayReader = new SlowStartEntityReader<Way>(new WayReader(host, database, user, password, snapshotInstant), SLOW_START_BUFFER_CAPACITY, SLOW_START_READ_INTERVAL);
+		waySegmentReader = new SlowStartEntityReader<WaySegment>(new WaySegmentReader(host, database, user, password, snapshotInstant), SLOW_START_BUFFER_CAPACITY, SLOW_START_READ_INTERVAL);
+		wayTagReader = new SlowStartEntityReader<WayTag>(new WayTagReader(host, database, user, password, snapshotInstant), SLOW_START_BUFFER_CAPACITY, SLOW_START_READ_INTERVAL);
+		
+		// Calling hasNext will cause the readers to execute their queries and
+		// initialise their internal state.
+		wayReader.hasNext();
+		waySegmentReader.hasNext();
+		wayTagReader.hasNext();
 		
 		try {
 			while (wayReader.hasNext()) {
