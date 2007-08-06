@@ -1,6 +1,10 @@
 package com.bretth.osmosis.mysql;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 import com.bretth.osmosis.container.NodeContainer;
 import com.bretth.osmosis.container.SegmentContainer;
@@ -122,9 +126,13 @@ public class MysqlReader implements RunnableSource {
 		try {
 			while (wayReader.hasNext()) {
 				Way way;
+				List<WaySegment> waySegments;
 				
+				// Read the next way.
 				way = wayReader.next();
+				waySegments = new ArrayList<WaySegment>();
 				
+				// Read all associated way segments.
 				while (
 						waySegmentReader.hasNext() &&
 						(waySegmentReader.peekNext().getWayId() <= way.getId())) {
@@ -134,11 +142,26 @@ public class MysqlReader implements RunnableSource {
 					waySegment = waySegmentReader.next();
 					
 					if (waySegment.getWayId() == way.getId()) {
-						way.addSegmentReference(waySegment);
+						waySegments.add(waySegment);
 					}
 				}
 				
+				// Sort the way segments by the sequence id.
+				Collections.sort(
+					waySegments,
+					new Comparator<WaySegment>() {
+						public int compare(WaySegment o1, WaySegment o2) {
+							return o1.getSequenceId() - o2.getSequenceId();
+						}
+					}
+				);
 				
+				// Add the way segments to the way.
+				for (WaySegment waySegment : waySegments) {
+					way.addSegmentReference(waySegment);
+				}
+				
+				// Read all associated way tags.
 				while (
 						wayTagReader.hasNext() &&
 						(wayTagReader.peekNext().getWayId() <= way.getId())) {
@@ -152,6 +175,7 @@ public class MysqlReader implements RunnableSource {
 					}
 				}
 				
+				// Send the complete way to the sink.
 				sink.process(new WayContainer(way));
 			}
 			

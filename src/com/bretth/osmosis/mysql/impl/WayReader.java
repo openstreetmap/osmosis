@@ -25,11 +25,12 @@ public class WayReader extends EntityReader<Way> {
 		+ " FROM ways"
 		+ " WHERE timestamp < ?"
 		+ " GROUP BY id"
+		+ " ORDER BY id"
 		+ ") w2 ON w.id = w2.id AND w.version = w2.version"
-		+ " WHERE visible = 1"
-		+ " ORDER BY id";
+		+ " WHERE visible = 1";
 	
 	private Date snapshotInstant;
+	private long previousId;
 	
 	
 	/**
@@ -51,6 +52,8 @@ public class WayReader extends EntityReader<Way> {
 		super(host, database, user, password);
 		
 		this.snapshotInstant = snapshotInstant;
+		
+		previousId = 0;
 	}
 	
 	
@@ -87,6 +90,12 @@ public class WayReader extends EntityReader<Way> {
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read way fields.", e);
 		}
+		
+		if (id <= previousId) {
+			throw new OsmosisRuntimeException(
+					"Id of " + id + " must be greater than previous id of " + previousId + ".");
+		}
+		previousId = id;
 		
 		return new Way(id, timestamp);
 	}

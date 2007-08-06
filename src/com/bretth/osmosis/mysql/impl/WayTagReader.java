@@ -24,10 +24,11 @@ public class WayTagReader extends EntityReader<WayTag> {
 		+ " FROM ways"
 		+ " WHERE timestamp < ?"
 		+ " GROUP BY id"
-		+ ") w ON wt.id = w.id AND wt.version = w.version"
-		+ " ORDER BY wt.id";
+		+ " ORDER BY id"
+		+ ") w ON wt.id = w.id AND wt.version = w.version";
 	
 	private Date snapshotInstant;
+	private long previousWayId;
 	
 	
 	/**
@@ -49,6 +50,8 @@ public class WayTagReader extends EntityReader<WayTag> {
 		super(host, database, user, password);
 		
 		this.snapshotInstant = snapshotInstant;
+		
+		previousWayId = 0;
 	}
 	
 	
@@ -88,6 +91,12 @@ public class WayTagReader extends EntityReader<WayTag> {
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read way tag fields.", e);
 		}
+		
+		if (wayId < previousWayId) {
+			throw new OsmosisRuntimeException(
+					"Way id of " + wayId + " must be greater or equal to previous way id of " + previousWayId + ".");
+		}
+		previousWayId = wayId;
 		
 		return new WayTag(wayId, key, value);
 	}

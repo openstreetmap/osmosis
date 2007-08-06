@@ -31,6 +31,7 @@ public class NodeReader extends EntityReader<Node> {
 	
 	private EmbeddedTagProcessor tagParser;
 	private Date snapshotInstant;
+	private long previousId;
 	
 	
 	/**
@@ -53,6 +54,8 @@ public class NodeReader extends EntityReader<Node> {
 		
 		this.snapshotInstant = snapshotInstant;
 		tagParser = new EmbeddedTagProcessor();
+		
+		previousId = 0;
 	}
 	
 	
@@ -97,6 +100,12 @@ public class NodeReader extends EntityReader<Node> {
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read node fields.", e);
 		}
+		
+		if (id <= previousId) {
+			throw new OsmosisRuntimeException(
+					"Id of " + id + " must be greater than previous id of " + previousId + ".");
+		}
+		previousId = id;
 		
 		node = new Node(id, timestamp, latitude, longitude);
 		node.addTags(tagParser.parseTags(tags));

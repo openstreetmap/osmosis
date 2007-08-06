@@ -10,8 +10,8 @@ import com.bretth.osmosis.OsmosisRuntimeException;
 
 
 /**
- * Reads all way segments from a database ordered by the way identifier and
- * their sequence.
+ * Reads all way segments from a database ordered by the way identifier but not
+ * by the sequence.
  * 
  * @author Brett Henderson
  */
@@ -25,10 +25,11 @@ public class WaySegmentReader extends EntityReader<WaySegment> {
 		+ " FROM ways"
 		+ " WHERE timestamp < ?"
 		+ " GROUP BY id"
-		+ ") w ON ws.id = w.id AND ws.version = w.version"
-		+ " ORDER BY ws.id, ws.sequence_id";
+		+ " ORDER BY id"
+		+ ") w ON ws.id = w.id AND ws.version = w.version";
 	
 	private Date snapshotInstant;
+	private long previousWayId;
 	
 	
 	/**
@@ -50,6 +51,8 @@ public class WaySegmentReader extends EntityReader<WaySegment> {
 		super(host, database, user, password);
 		
 		this.snapshotInstant = snapshotInstant;
+		
+		previousWayId = 0;
 	}
 	
 	
@@ -89,6 +92,12 @@ public class WaySegmentReader extends EntityReader<WaySegment> {
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read way segment fields.", e);
 		}
+		
+		if (wayId < previousWayId) {
+			throw new OsmosisRuntimeException(
+					"Way id of " + wayId + " must be greater or equal to previous way id of " + previousWayId + ".");
+		}
+		previousWayId = wayId;
 		
 		return new WaySegment(wayId, segmentId, sequenceId);
 	}

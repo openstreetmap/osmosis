@@ -31,6 +31,7 @@ public class SegmentReader extends EntityReader<Segment> {
 	
 	private EmbeddedTagProcessor tagParser;
 	private Date snapshotInstant;
+	private long previousId;
 	
 	
 	/**
@@ -53,6 +54,8 @@ public class SegmentReader extends EntityReader<Segment> {
 		
 		this.snapshotInstant = snapshotInstant;
 		tagParser = new EmbeddedTagProcessor();
+		
+		previousId = 0;
 	}
 	
 	
@@ -97,6 +100,12 @@ public class SegmentReader extends EntityReader<Segment> {
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read segment fields.", e);
 		}
+		
+		if (id <= previousId) {
+			throw new OsmosisRuntimeException(
+					"Id of " + id + " must be greater than previous id of " + previousId + ".");
+		}
+		previousId = id;
 		
 		segment = new Segment(id, timestamp, from, to);
 		segment.addTags(tagParser.parseTags(tags));
