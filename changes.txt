@@ -1,3 +1,6 @@
+0.7
+Made a number of changes to the mysql dump task to improve performance and reduce the likelihood of timeouts.
+
 0.6
 Modified ChangeDeriver task to set the timestamp of deleted records to the current time.
 Fixed all uses of java.sql.Timestamp to be converted to java.util.Date explicitly instead of utilising inheritance.
