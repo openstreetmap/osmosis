@@ -79,7 +79,7 @@ public class WayTagHistoryReader extends EntityReader<EntityHistory<WayTag>> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected EntityHistory<WayTag> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<WayTag>> createNextValue(ResultSet resultSet) {
 		long wayId;
 		String key;
 		String value;
@@ -95,6 +95,10 @@ public class WayTagHistoryReader extends EntityReader<EntityHistory<WayTag>> {
 			throw new OsmosisRuntimeException("Unable to read way segment fields.", e);
 		}
 		
-		return new EntityHistory<WayTag>(new WayTag(wayId, key, value), version, true);
+		return new ReadResult<EntityHistory<WayTag>>(
+			true,
+			new EntityHistory<WayTag>(
+				new WayTag(wayId, key, value), version, true)
+		);
 	}
 }

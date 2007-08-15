@@ -95,7 +95,7 @@ public class NodeHistoryReader extends EntityReader<EntityHistory<Node>> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected EntityHistory<Node> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<Node>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
 		double latitude;
@@ -122,6 +122,6 @@ public class NodeHistoryReader extends EntityReader<EntityHistory<Node>> {
 		
 		nodeHistory = new EntityHistory<Node>(node, 0, visible);
 		
-		return nodeHistory;
+		return new ReadResult<EntityHistory<Node>>(true, nodeHistory);
 	}
 }

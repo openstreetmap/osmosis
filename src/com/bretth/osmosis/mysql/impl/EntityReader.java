@@ -53,9 +53,9 @@ public abstract class EntityReader<T> {
 	 * 
 	 * @param activeResultSet
 	 *            The record set to retrieve the data from.
-	 * @return The entity object.
+	 * @return The result of the read.
 	 */
-	protected abstract T createNextValue(ResultSet activeResultSet);
+	protected abstract ReadResult<T> createNextValue(ResultSet activeResultSet);
 	
 	
 	/**
@@ -69,11 +69,20 @@ public abstract class EntityReader<T> {
 		}
 		
 		try {
-			if (resultSet.next()) {
-				nextValue = createNextValue(resultSet);
-			} else {
-				nextValue = null;
-			}
+			ReadResult<T> readResult;
+			
+			// Loop until a valid result is determined. Typically a loop is
+			// required when a record on the result set is skipped over by the
+			// reader implementation.
+			do {
+				if (resultSet.next()) {
+					readResult = createNextValue(resultSet);
+				} else {
+					readResult = new ReadResult<T>(true, null);
+				}
+			} while (!readResult.isUsableResult());
+			
+			nextValue = readResult.getEntity();
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to move to next record.", e);
@@ -157,5 +166,49 @@ public abstract class EntityReader<T> {
 		resultSet = null;
 		
 		dbCtx.release();
+	}
+	
+	
+	/**
+	 * Represents the result of an entity read from the result set at the current position.
+	 * 
+	 * @param <T>
+	 *            The type of entity to retrieved.
+	 */
+	protected static class ReadResult<T> {
+		private boolean usableResult;
+		private T entity;
+		
+		
+		/**
+		 * Creates a new instance.
+		 * 
+		 * @param usableResult Indicates if this result should be used.
+		 * @param entity
+		 */
+		public ReadResult(boolean usableResult, T entity) {
+			this.usableResult = usableResult;
+			this.entity = entity;
+		}
+		
+		
+		/**
+		 * Returns the usable result flag.
+		 * 
+		 * @return The usable result flag.
+		 */
+		public boolean isUsableResult() {
+			return usableResult;
+		}
+		
+		
+		/**
+		 * Returns the entity.
+		 * 
+		 * @return The entity.
+		 */
+		public T getEntity() {
+			return entity;
+		}
 	}
 }

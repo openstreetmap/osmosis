@@ -76,7 +76,7 @@ public class WayHistoryReader extends EntityReader<EntityHistory<Way>> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected EntityHistory<Way> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<Way>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
 		int version;
@@ -92,6 +92,10 @@ public class WayHistoryReader extends EntityReader<EntityHistory<Way>> {
 			throw new OsmosisRuntimeException("Unable to read node fields.", e);
 		}
 		
-		return new EntityHistory<Way>(new Way(id, timestamp), version, visible);
+		return new ReadResult<EntityHistory<Way>>(
+			true,
+			new EntityHistory<Way>(
+				new Way(id, timestamp), version, visible)
+		);
 	}
 }

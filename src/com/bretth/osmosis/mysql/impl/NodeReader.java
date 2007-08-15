@@ -32,6 +32,7 @@ public class NodeReader extends EntityReader<Node> {
 	private EmbeddedTagProcessor tagParser;
 	private Date snapshotInstant;
 	private long previousId;
+	private Date previousTimestamp;
 	
 	
 	/**
@@ -82,13 +83,14 @@ public class NodeReader extends EntityReader<Node> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Node createNextValue(ResultSet resultSet) {
+	protected ReadResult<Node> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
 		double latitude;
 		double longitude;
 		String tags;
 		Node node;
+		boolean usableResult;
 		
 		try {
 			id = resultSet.getLong("id");
@@ -101,15 +103,29 @@ public class NodeReader extends EntityReader<Node> {
 			throw new OsmosisRuntimeException("Unable to read node fields.", e);
 		}
 		
-		if (id <= previousId) {
-			throw new OsmosisRuntimeException(
-					"Id of " + id + " must be greater than previous id of " + previousId + ".");
-		}
-		previousId = id;
-		
 		node = new Node(id, timestamp, latitude, longitude);
 		node.addTags(tagParser.parseTags(tags));
 		
-		return node;
+		if (id < previousId) {
+			throw new OsmosisRuntimeException(
+					"Id of " + id + " must be greater or equal to previous id of " + previousId + ".");
+		} else if (id == previousId) {
+			if (!timestamp.equals(previousTimestamp)) {
+				throw new OsmosisRuntimeException(
+						"Id of " + id + " has multiple records.");
+			}
+			
+			// Two records exist with the same id and timestamp, we will ignore
+			// this second one by flagging an invalid result.
+			usableResult = false;
+			
+		} else {
+			previousId = id;
+			previousTimestamp = timestamp;
+			
+			usableResult = true;
+		}
+		
+		return new ReadResult<Node>(usableResult, node);
 	}
 }

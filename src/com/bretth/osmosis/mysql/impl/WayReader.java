@@ -80,7 +80,7 @@ public class WayReader extends EntityReader<Way> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Way createNextValue(ResultSet resultSet) {
+	protected ReadResult<Way> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
 		
@@ -97,6 +97,6 @@ public class WayReader extends EntityReader<Way> {
 		}
 		previousId = id;
 		
-		return new Way(id, timestamp);
+		return new ReadResult<Way>(true, new Way(id, timestamp));
 	}
 }

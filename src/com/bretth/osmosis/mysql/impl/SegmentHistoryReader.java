@@ -94,7 +94,7 @@ public class SegmentHistoryReader extends EntityReader<EntityHistory<Segment>> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected EntityHistory<Segment> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<Segment>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
 		long from;
@@ -121,6 +121,6 @@ public class SegmentHistoryReader extends EntityReader<EntityHistory<Segment>> {
 		
 		segmentHistory = new EntityHistory<Segment>(segment, 0, visible);
 		
-		return segmentHistory;
+		return new ReadResult<EntityHistory<Segment>>(true, segmentHistory);
 	}
 }

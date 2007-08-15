@@ -80,7 +80,7 @@ public class WaySegmentHistoryReader extends EntityReader<EntityHistory<WaySegme
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected EntityHistory<WaySegment> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<WaySegment>> createNextValue(ResultSet resultSet) {
 		long wayId;
 		long segmentId;
 		int sequenceId;
@@ -96,6 +96,10 @@ public class WaySegmentHistoryReader extends EntityReader<EntityHistory<WaySegme
 			throw new OsmosisRuntimeException("Unable to read way segment fields.", e);
 		}
 		
-		return new EntityHistory<WaySegment>(new WaySegment(wayId, segmentId, sequenceId), version, true);
+		return new ReadResult<EntityHistory<WaySegment>>(
+			true,
+			new EntityHistory<WaySegment>(
+					new WaySegment(wayId, segmentId, sequenceId), version, true)
+		);
 	}
 }

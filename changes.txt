@@ -1,3 +1,6 @@
+0.8
+Modified node and segment readers to avoid returning duplicate records where multiple records with identical timestamps exist.
+
 0.7
 Made a number of changes to the mysql dump task to improve performance and reduce the likelihood of timeouts.
 

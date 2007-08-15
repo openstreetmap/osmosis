@@ -32,6 +32,7 @@ public class SegmentReader extends EntityReader<Segment> {
 	private EmbeddedTagProcessor tagParser;
 	private Date snapshotInstant;
 	private long previousId;
+	private Date previousTimestamp;
 	
 	
 	/**
@@ -82,13 +83,14 @@ public class SegmentReader extends EntityReader<Segment> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Segment createNextValue(ResultSet resultSet) {
+	protected ReadResult<Segment> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
 		long from;
 		long to;
 		String tags;
 		Segment segment;
+		boolean usableResult;
 		
 		try {
 			id = resultSet.getLong("id");
@@ -101,15 +103,29 @@ public class SegmentReader extends EntityReader<Segment> {
 			throw new OsmosisRuntimeException("Unable to read segment fields.", e);
 		}
 		
-		if (id <= previousId) {
-			throw new OsmosisRuntimeException(
-					"Id of " + id + " must be greater than previous id of " + previousId + ".");
-		}
-		previousId = id;
-		
 		segment = new Segment(id, timestamp, from, to);
 		segment.addTags(tagParser.parseTags(tags));
 		
-		return segment;
+		if (id < previousId) {
+			throw new OsmosisRuntimeException(
+					"Id of " + id + " must be greater or equal to previous id of " + previousId + ".");
+		} else if (id == previousId) {
+			if (!timestamp.equals(previousTimestamp)) {
+				throw new OsmosisRuntimeException(
+						"Id of " + id + " has multiple records.");
+			}
+			
+			// Two records exist with the same id and timestamp, we will ignore
+			// this second one by flagging an invalid result.
+			usableResult = false;
+			
+		} else {
+			previousId = id;
+			previousTimestamp = timestamp;
+			
+			usableResult = true;
+		}
+		
+		return new ReadResult<Segment>(usableResult, segment);
 	}
 }

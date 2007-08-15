@@ -78,7 +78,7 @@ public class WayTagReader extends EntityReader<WayTag> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected WayTag createNextValue(ResultSet resultSet) {
+	protected ReadResult<WayTag> createNextValue(ResultSet resultSet) {
 		long wayId;
 		String key;
 		String value;
@@ -98,6 +98,6 @@ public class WayTagReader extends EntityReader<WayTag> {
 		}
 		previousWayId = wayId;
 		
-		return new WayTag(wayId, key, value);
+		return new ReadResult<WayTag>(true, new WayTag(wayId, key, value));
 	}
 }

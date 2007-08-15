@@ -79,7 +79,7 @@ public class WaySegmentReader extends EntityReader<WaySegment> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected WaySegment createNextValue(ResultSet resultSet) {
+	protected ReadResult<WaySegment> createNextValue(ResultSet resultSet) {
 		long wayId;
 		long segmentId;
 		int sequenceId;
@@ -99,6 +99,6 @@ public class WaySegmentReader extends EntityReader<WaySegment> {
 		}
 		previousWayId = wayId;
 		
-		return new WaySegment(wayId, segmentId, sequenceId);
+		return new ReadResult<WaySegment>(true, new WaySegment(wayId, segmentId, sequenceId));
 	}
 }
