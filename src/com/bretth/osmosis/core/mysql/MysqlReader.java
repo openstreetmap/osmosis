@@ -17,8 +17,8 @@ import com.bretth.osmosis.core.mysql.impl.WaySegment;
 import com.bretth.osmosis.core.mysql.impl.WaySegmentReader;
 import com.bretth.osmosis.core.mysql.impl.WayTag;
 import com.bretth.osmosis.core.mysql.impl.WayTagReader;
-import com.bretth.osmosis.core.sort.impl.PeekableIterator;
-import com.bretth.osmosis.core.sort.impl.PersistentIterator;
+import com.bretth.osmosis.core.store.PeekableIterator;
+import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.task.RunnableSource;
 import com.bretth.osmosis.core.task.Sink;
 

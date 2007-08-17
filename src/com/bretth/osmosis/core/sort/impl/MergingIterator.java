@@ -5,6 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.bretth.osmosis.core.store.ReleasableIterator;
+
 
 /**
  * This iterator examines a list of sorted input sources and merges them into a

@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.sort.impl;
+package com.bretth.osmosis.core.store;
 
 import java.io.EOFException;
 import java.io.IOException;

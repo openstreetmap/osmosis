@@ -5,6 +5,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.bretth.osmosis.core.store.ChunkedObjectStore;
+import com.bretth.osmosis.core.store.PersistentIterator;
+import com.bretth.osmosis.core.store.Releasable;
+import com.bretth.osmosis.core.store.ReleasableIterator;
+
 
 /**
  * Allows a large number of objects to be sorted by writing them all to disk

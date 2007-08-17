@@ -6,8 +6,8 @@ import com.bretth.osmosis.core.container.ChangeContainer;
 import com.bretth.osmosis.core.container.WayContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.data.Way;
-import com.bretth.osmosis.core.sort.impl.PeekableIterator;
-import com.bretth.osmosis.core.sort.impl.PersistentIterator;
+import com.bretth.osmosis.core.store.PeekableIterator;
+import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.task.ChangeAction;
 
 

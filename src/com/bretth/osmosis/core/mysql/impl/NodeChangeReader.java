@@ -6,7 +6,7 @@ import com.bretth.osmosis.core.container.ChangeContainer;
 import com.bretth.osmosis.core.container.NodeContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.data.Node;
-import com.bretth.osmosis.core.sort.impl.PeekableIterator;
+import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.task.ChangeAction;
 
 

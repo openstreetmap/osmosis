@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.sort.impl;
+package com.bretth.osmosis.core.store;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 

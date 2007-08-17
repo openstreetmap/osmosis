@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 import com.bretth.osmosis.core.container.ChangeContainer;
 import com.bretth.osmosis.core.sort.impl.FileBasedSort;
-import com.bretth.osmosis.core.sort.impl.ReleasableIterator;
+import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.task.ChangeSink;
 import com.bretth.osmosis.core.task.ChangeSinkChangeSource;
 

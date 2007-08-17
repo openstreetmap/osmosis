@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.sort.impl.ReleasableIterator;
+import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**
