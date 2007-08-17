@@ -2,19 +2,21 @@ package com.bretth.osmosis.core.mysql.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.sort.impl.ReleasableIterator;
 
 
 /**
- * Provides iterator like behaviour for reading entities from a database.
+ * Provides the base implementation of all database entity readers.
  * 
  * @author Brett Henderson
  * 
  * @param <T>
  *            The type of entity to retrieved.
  */
-public abstract class EntityReader<T> {
+public abstract class BaseEntityReader<T> implements ReleasableIterator<T> {
 	
 	private DatabaseContext dbCtx;
 	private ResultSet resultSet;
@@ -33,7 +35,7 @@ public abstract class EntityReader<T> {
 	 * @param password
 	 *            The password for authentication.
 	 */
-	public EntityReader(String host, String database, String user, String password) {
+	public BaseEntityReader(String host, String database, String user, String password) {
 		dbCtx = new DatabaseContext(host, database, user, password);
 	}
 	
@@ -91,9 +93,7 @@ public abstract class EntityReader<T> {
 	
 	
 	/**
-	 * Indicates if there is any more data available to be read.
-	 * 
-	 * @return True if more data is available, false otherwise.
+	 * {@inheritDoc}
 	 */
 	public boolean hasNext() {
 		if (resultSet == null) {
@@ -105,50 +105,16 @@ public abstract class EntityReader<T> {
 	
 	
 	/**
-	 * Returns the next available entity without advancing to the next record.
-	 * 
-	 * @return The next available entity.
-	 */
-	public T peekNext() {
-		if (resultSet == null) {
-			throw new OsmosisRuntimeException("hasNext must be called first.");
-		}
-		if (nextValue == null) {
-			throw new OsmosisRuntimeException("No value is available.");
-		}
-		
-		return nextValue;
-	}
-	
-	
-	/**
-	 * Resets the state of the reader to the starting state. This allows a query
-	 * to be re-issued without instantiating a new instance. Sub-classes may
-	 * utilise this functionality to re-use existing prepared statements.
-	 */
-	public void reset() {
-		if (resultSet != null) {
-			try {
-				resultSet.close();
-			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to close the existing result set.", e);
-			}
-		}
-		
-		resultSet = null;
-		nextValue = null;
-	}
-	
-	
-	/**
-	 * Returns the next available entity and advances to the next record.
-	 * 
-	 * @return The next available entity.
+	 * {@inheritDoc}
 	 */
 	public T next() {
 		T result;
 		
-		result = peekNext();
+		if (!hasNext()) {
+			throw new NoSuchElementException();
+		}
+		
+		result = nextValue;
 		
 		readNextValue();
 		
@@ -157,15 +123,21 @@ public abstract class EntityReader<T> {
 	
 	
 	/**
-	 * Releases all database resources. This method is guaranteed not to throw
-	 * transactions and should always be called in a finally block whenever this
-	 * class is used.
+	 * {@inheritDoc}
 	 */
 	public void release() {
 		nextValue = null;
 		resultSet = null;
 		
 		dbCtx.release();
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void remove() {
+		throw new UnsupportedOperationException();
 	}
 	
 	

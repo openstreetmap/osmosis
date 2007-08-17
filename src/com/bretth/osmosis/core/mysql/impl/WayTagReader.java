@@ -14,7 +14,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * 
  * @author Brett Henderson
  */
-public class WayTagReader extends EntityReader<WayTag> {
+public class WayTagReader extends BaseEntityReader<WayTag> {
 	private static final String SELECT_SQL =
 		"SELECT wt.id as way_id, wt.k, wt.v"
 		+ " FROM way_tags wt"

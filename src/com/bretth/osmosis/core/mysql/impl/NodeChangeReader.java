@@ -6,6 +6,7 @@ import com.bretth.osmosis.core.container.ChangeContainer;
 import com.bretth.osmosis.core.container.NodeContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.data.Node;
+import com.bretth.osmosis.core.sort.impl.PeekableIterator;
 import com.bretth.osmosis.core.task.ChangeAction;
 
 
@@ -17,7 +18,7 @@ import com.bretth.osmosis.core.task.ChangeAction;
  */
 public class NodeChangeReader {
 	
-	private NodeHistoryReader nodeHistoryReader;
+	private PeekableIterator<EntityHistory<Node>> nodeHistoryReader;
 	private ChangeContainer nextValue;
 	private Date intervalBegin;
 	
@@ -42,7 +43,9 @@ public class NodeChangeReader {
 	public NodeChangeReader(String host, String database, String user, String password, Date intervalBegin, Date intervalEnd) {
 		this.intervalBegin = intervalBegin;
 		
-		nodeHistoryReader = new NodeHistoryReader(host, database, user, password, intervalBegin, intervalEnd);
+		nodeHistoryReader = new PeekableIterator<EntityHistory<Node>>(
+			new NodeHistoryReader(host, database, user, password, intervalBegin, intervalEnd)
+		);
 	}
 	
 	

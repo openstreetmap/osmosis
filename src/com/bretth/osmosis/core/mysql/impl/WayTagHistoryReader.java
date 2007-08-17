@@ -15,7 +15,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * 
  * @author Brett Henderson
  */
-public class WayTagHistoryReader extends EntityReader<EntityHistory<WayTag>> {
+public class WayTagHistoryReader extends BaseEntityReader<EntityHistory<WayTag>> {
 	private static final String SELECT_SQL =
 		"SELECT wt.id AS way_id, wt.k, wt.v, wt.version" +
 		" FROM way_tags wt" +

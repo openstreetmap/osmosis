@@ -6,6 +6,7 @@ import com.bretth.osmosis.core.container.ChangeContainer;
 import com.bretth.osmosis.core.container.SegmentContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.data.Segment;
+import com.bretth.osmosis.core.sort.impl.PeekableIterator;
 import com.bretth.osmosis.core.task.ChangeAction;
 
 
@@ -17,7 +18,7 @@ import com.bretth.osmosis.core.task.ChangeAction;
  */
 public class SegmentChangeReader {
 	
-	private SegmentHistoryReader segmentHistoryReader;
+	private PeekableIterator<EntityHistory<Segment>> segmentHistoryReader;
 	private ChangeContainer nextValue;
 	private Date intervalBegin;
 	
@@ -42,7 +43,9 @@ public class SegmentChangeReader {
 	public SegmentChangeReader(String host, String database, String user, String password, Date intervalBegin, Date intervalEnd) {
 		this.intervalBegin = intervalBegin;
 		
-		segmentHistoryReader = new SegmentHistoryReader(host, database, user, password, intervalBegin, intervalEnd);
+		segmentHistoryReader = new PeekableIterator<EntityHistory<Segment>>(
+			new SegmentHistoryReader(host, database, user, password, intervalBegin, intervalEnd)
+		);
 	}
 	
 	

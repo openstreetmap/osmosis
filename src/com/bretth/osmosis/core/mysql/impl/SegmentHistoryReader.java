@@ -20,7 +20,7 @@ import com.bretth.osmosis.core.data.Segment;
  * 
  * @author Brett Henderson
  */
-public class SegmentHistoryReader extends EntityReader<EntityHistory<Segment>> {
+public class SegmentHistoryReader extends BaseEntityReader<EntityHistory<Segment>> {
 	// The sub-select identifies the segments that have been modified within the
 	// time interval. The outer query then queries all segment history items up to
 	// the end of the time interval.

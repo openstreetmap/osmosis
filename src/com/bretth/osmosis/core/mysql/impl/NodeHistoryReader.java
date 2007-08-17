@@ -20,7 +20,7 @@ import com.bretth.osmosis.core.data.Node;
  * 
  * @author Brett Henderson
  */
-public class NodeHistoryReader extends EntityReader<EntityHistory<Node>> {
+public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 	// The sub-select identifies the nodes that have been modified within the
 	// time interval. The outer query then queries all node history items up to
 	// the end of the time interval.

@@ -6,6 +6,8 @@ import com.bretth.osmosis.core.container.ChangeContainer;
 import com.bretth.osmosis.core.container.WayContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.data.Way;
+import com.bretth.osmosis.core.sort.impl.PeekableIterator;
+import com.bretth.osmosis.core.sort.impl.PersistentIterator;
 import com.bretth.osmosis.core.task.ChangeAction;
 
 
@@ -17,9 +19,9 @@ import com.bretth.osmosis.core.task.ChangeAction;
  */
 public class WayChangeReader {
 	
-	private WayHistoryReader wayHistoryReader;
-	private WaySegmentHistoryReader waySegmentHistoryReader;
-	private WayTagHistoryReader wayTagHistoryReader;
+	private PeekableIterator<EntityHistory<Way>> wayHistoryReader;
+	private PeekableIterator<EntityHistory<WaySegment>> waySegmentHistoryReader;
+	private PeekableIterator<EntityHistory<WayTag>> wayTagHistoryReader;
 	private ChangeContainer nextValue;
 	
 	
@@ -41,9 +43,30 @@ public class WayChangeReader {
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
 	public WayChangeReader(String host, String database, String user, String password, Date intervalBegin, Date intervalEnd) {
-		wayHistoryReader = new WayHistoryReader(host, database, user, password, intervalBegin, intervalEnd);
-		waySegmentHistoryReader = new WaySegmentHistoryReader(host, database, user, password, intervalBegin, intervalEnd);
-		wayTagHistoryReader = new WayTagHistoryReader(host, database, user, password, intervalBegin, intervalEnd);
+		wayHistoryReader =
+			new PeekableIterator<EntityHistory<Way>>(
+				new PersistentIterator<EntityHistory<Way>>(
+					new WayHistoryReader(host, database, user, password, intervalBegin, intervalEnd),
+					"way",
+					true
+				)
+			);
+		waySegmentHistoryReader =
+			new PeekableIterator<EntityHistory<WaySegment>>(
+				new PersistentIterator<EntityHistory<WaySegment>>(
+					new WaySegmentHistoryReader(host, database, user, password, intervalBegin, intervalEnd),
+					"wayseg",
+					true
+				)
+			);
+		wayTagHistoryReader =
+			new PeekableIterator<EntityHistory<WayTag>>(
+				new PersistentIterator<EntityHistory<WayTag>>(
+					new WayTagHistoryReader(host, database, user, password, intervalBegin, intervalEnd),
+					"waytag",
+					true
+				)
+			);
 	}
 	
 	

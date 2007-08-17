@@ -15,7 +15,7 @@ import com.bretth.osmosis.core.data.Way;
  * 
  * @author Brett Henderson
  */
-public class WayReader extends EntityReader<Way> {
+public class WayReader extends BaseEntityReader<Way> {
 	private static final String SELECT_SQL =
 		"SELECT w.id, w.timestamp"
 		+ " FROM ways w"

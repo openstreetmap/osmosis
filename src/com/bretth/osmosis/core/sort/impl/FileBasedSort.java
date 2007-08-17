@@ -124,51 +124,36 @@ public class FileBasedSort<T> implements Releasable {
 	 */
 	@SuppressWarnings("null")
 	private ReleasableIterator<T> iteratePersisted(int nestLevel, long beginChunkIndex, long chunkCount) {
-		ReleasableIterator<T> sourceIterator = null;
-		ObjectStore<T> objectStorage = null;
-		ReleasableIterator<T> storageIterator = null;
+		ReleasableIterator<T> persistentIterator;
 		
+		// Create a persistent iterator based on the requested underlying chunk
+		// iterator.
+		persistentIterator = new PersistentIterator<T>(
+			iterate(nestLevel, beginChunkIndex, chunkCount),
+			"emtb",
+			useCompression
+		);
+		
+		// Prime the persistent iterator so that all underlying iterator data is
+		// written to file.
 		try {
-			ReleasableIterator<T> resultIterator;
+			ReleasableIterator<T> result;
 			
-			// Open the underlying source iterator.
-			sourceIterator = iterate(nestLevel, beginChunkIndex, chunkCount);
+			result = persistentIterator;
 			
-			// Create a persistent object store.
-			objectStorage = new ObjectStore<T>("emtb", useCompression);
+			// This will cause all data to be read from the underlying iterator
+			// into the persistent store.
+			persistentIterator.hasNext();
 			
-			// Write the source data to disk.
-			while (sourceIterator.hasNext()) {
-				objectStorage.add(sourceIterator.next());
-			}
+			persistentIterator = null;
 			
-			// Release the source iterator.
-			sourceIterator.release();
-			sourceIterator = null;
-			
-			// Open a new iterator on the persisted data.
-			storageIterator = objectStorage.iterate();
-			
-			// Create a result iterator which will close the object storage when
-			// the iterator is released.
-			resultIterator = new StoreReleasingIterator<T>(storageIterator, objectStorage);
-			
-			// Clear the references to the object storage and storage iterator
-			// so they won't be released on method exit.
-			objectStorage = null; 
-			storageIterator = null;
-			
-			return resultIterator;
+			return result;
 			
 		} finally {
-			if (sourceIterator != null) {
-				sourceIterator.release();
-			}
-			if (objectStorage != null) {
-				objectStorage.release();
-			}
-			if (storageIterator != null) {
-				storageIterator.release();
+			// This will release the persistent iterator and its underlying
+			// source iterator if the persistence operations failed.
+			if (persistentIterator != null) {
+				persistentIterator.release();
 			}
 		}
 	}

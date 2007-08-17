@@ -15,7 +15,7 @@ import com.bretth.osmosis.core.data.Segment;
  * 
  * @author Brett Henderson
  */
-public class SegmentReader extends EntityReader<Segment> {
+public class SegmentReader extends BaseEntityReader<Segment> {
 	private static final String SELECT_SQL =
 		"SELECT s.id, s.timestamp, s.node_a, s.node_b, s.tags"
 		+ " FROM segments s"

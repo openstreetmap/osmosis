@@ -15,7 +15,7 @@ import com.bretth.osmosis.core.data.Node;
  * 
  * @author Brett Henderson
  */
-public class NodeReader extends EntityReader<Node> {
+public class NodeReader extends BaseEntityReader<Node> {
 	private static final String SELECT_SQL =
 		"SELECT n.id, n.timestamp, n.latitude, n.longitude, n.tags"
 		+ " FROM nodes n"

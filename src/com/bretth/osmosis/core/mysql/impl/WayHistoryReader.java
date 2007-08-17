@@ -16,7 +16,7 @@ import com.bretth.osmosis.core.data.Way;
  * 
  * @author Brett Henderson
  */
-public class WayHistoryReader extends EntityReader<EntityHistory<Way>> {
+public class WayHistoryReader extends BaseEntityReader<EntityHistory<Way>> {
 	private static final String SELECT_SQL =
 		"SELECT w.id AS id, w.timestamp AS timestamp, w.version AS version, w.visible AS visible" +
 		" FROM ways w" +

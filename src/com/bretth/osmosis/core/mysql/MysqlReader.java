@@ -17,6 +17,8 @@ import com.bretth.osmosis.core.mysql.impl.WaySegment;
 import com.bretth.osmosis.core.mysql.impl.WaySegmentReader;
 import com.bretth.osmosis.core.mysql.impl.WayTag;
 import com.bretth.osmosis.core.mysql.impl.WayTagReader;
+import com.bretth.osmosis.core.sort.impl.PeekableIterator;
+import com.bretth.osmosis.core.sort.impl.PersistentIterator;
 import com.bretth.osmosis.core.task.RunnableSource;
 import com.bretth.osmosis.core.task.Sink;
 
@@ -109,13 +111,34 @@ public class MysqlReader implements RunnableSource {
 	 * Reads all ways from the database and sends to the sink.
 	 */
 	private void processWays() {
-		WayReader wayReader;
-		WaySegmentReader waySegmentReader;
-		WayTagReader wayTagReader;
+		PeekableIterator<Way> wayReader;
+		PeekableIterator<WaySegment> waySegmentReader;
+		PeekableIterator<WayTag> wayTagReader;
 		
-		wayReader = new WayReader(host, database, user, password, snapshotInstant);
-		waySegmentReader = new WaySegmentReader(host, database, user, password, snapshotInstant);
-		wayTagReader = new WayTagReader(host, database, user, password, snapshotInstant);
+		wayReader =
+			new PeekableIterator<Way>(
+				new PersistentIterator<Way>(
+					new WayReader(host, database, user, password, snapshotInstant),
+					"way",
+					true
+				)
+			);
+		waySegmentReader =
+			new PeekableIterator<WaySegment>(
+				new PersistentIterator<WaySegment>(
+					new WaySegmentReader(host, database, user, password, snapshotInstant),
+					"wayseg",
+					true
+				)
+			);
+		wayTagReader =
+			new PeekableIterator<WayTag>(
+				new PersistentIterator<WayTag>(
+					new WayTagReader(host, database, user, password, snapshotInstant),
+					"waytag",
+					true
+				)
+			);
 		
 		// Calling hasNext will cause the readers to execute their queries and
 		// initialise their internal state.

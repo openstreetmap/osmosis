@@ -13,7 +13,9 @@ package com.bretth.osmosis.core.sort.impl;
 public interface Releasable {
 	/**
 	 * Releases resources held by the object. The implementation must not throw
-	 * exceptions. The method may be called multiple times.
+	 * exceptions. The method may be called multiple times. This should be
+	 * called within a finally block whenever this object is not required any
+	 * more.
 	 */
 	public void release();
 }
