@@ -48,6 +48,8 @@ public class PersistentIterator<T> implements ReleasableIterator<T>{
 			sourceIterator.release();
 			
 			storeIterator = store.iterate();
+			
+			initialized = true;
 		}
 	}
 	
