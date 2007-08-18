@@ -17,19 +17,21 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * Provides a store for writing objects to a file for later retrieval. The
  * number of objects is limited only by disk space.
  * <p>
- * This class supports chunking where the stream is broken into segments.  This is achieved by calling the createChunk method between add calls.
+ * This class supports chunking where the stream is broken into segments. This
+ * is achieved by calling the closeChunk method between add calls.
  * 
  * @param <DataType>
- *            The object type to be sorted.
+ *            The object type to be stored.
  * @author Brett Henderson
  */
-public class ObjectStore<DataType> implements Releasable {
+public class SegmentedObjectStore<DataType> implements Releasable {
 	private StorageStage stage;
 	private String storageFilePrefix;
 	private File file;
 	private FileOutputStream fileOutStream;
 	private ObjectOutputStream objOutStream;
 	private ByteArrayOutputStream arrayOutStream;
+	private boolean chunkActive; 
 	private boolean useCompression;
 	private long fileSize;
 	
@@ -42,14 +44,14 @@ public class ObjectStore<DataType> implements Releasable {
 	 * @param useCompression
 	 *            If true, the storage file will be compressed.
 	 */
-	public ObjectStore(String storageFilePrefix, boolean useCompression) {
+	public SegmentedObjectStore(String storageFilePrefix, boolean useCompression) {
 		this.storageFilePrefix = storageFilePrefix;
 		this.useCompression = useCompression;
 		
 		stage = StorageStage.NotStarted;
 		fileSize = 0;
 		
-		arrayOutStream = new ByteArrayOutputStream();
+		chunkActive = false;
 	}
 	
 	
@@ -79,14 +81,19 @@ public class ObjectStore<DataType> implements Releasable {
 			}
 		}
 		
-		// Create an object output stream if none exists.
-		if (objOutStream == null) {
+		// Initialise the current chunk if it isn't already.
+		if (!chunkActive) {
 			try {
+				arrayOutStream = new ByteArrayOutputStream();
+				
 				if (useCompression) {
 					objOutStream = new ObjectOutputStream(new GZIPOutputStream(arrayOutStream));
 				} else {
 					objOutStream = new ObjectOutputStream(arrayOutStream);
 				}
+				
+				chunkActive = true;
+				
 			} catch (IOException e) {
 				throw new OsmosisRuntimeException("Unable to create object stream.", e);
 			}
@@ -96,6 +103,7 @@ public class ObjectStore<DataType> implements Releasable {
 		// buffer size, write the buffer to file, and clear the buffer.
 		try {
 			objOutStream.writeObject(data);
+			objOutStream.reset();
 			fileSize += arrayOutStream.size();
 			
 			arrayOutStream.writeTo(fileOutStream);
@@ -121,8 +129,8 @@ public class ObjectStore<DataType> implements Releasable {
 			throw new OsmosisRuntimeException("Cannot create interval in stage " + stage + ".");
 		}
 		
-		// Nothing needs to be done if no objects have been written for the current chunk.
-		if (objOutStream != null) {
+		// Nothing needs to be done if the chunk is not yet active.
+		if (chunkActive) {
 			try {
 				objOutStream.close();
 				fileSize += arrayOutStream.size();
@@ -131,7 +139,10 @@ public class ObjectStore<DataType> implements Releasable {
 				arrayOutStream.reset();
 				
 				// Subsequent writes must begin a new object stream.
+				arrayOutStream = null;
 				objOutStream = null;
+				
+				chunkActive = false;
 				
 			} catch (IOException e) {
 				throw new OsmosisRuntimeException("Unable to create a new interval.", e);
@@ -161,29 +172,20 @@ public class ObjectStore<DataType> implements Releasable {
 			return false;
 		}
 		
-		// If we're in the add stage, close the output stream.
+		// If we're in the add stage, close the current chunk and overall file stream.
 		if (stage.compareTo(StorageStage.Add) == 0) {
-			stage = StorageStage.Reading;
+			closeChunk();
 			
 			try {
-				// An object stream may not exist if a chunk was ended.
-				if (objOutStream != null) {
-					objOutStream.close();
-					objOutStream = null;
-				}
-				fileSize += arrayOutStream.size();
-				
-				arrayOutStream.writeTo(fileOutStream);
-				arrayOutStream.reset();
-				arrayOutStream = null;
-				
 				fileOutStream.close();
 				
 			} catch (IOException e) {
 				throw new OsmosisRuntimeException("Unable to close output stream.", e);
+			} finally {
+				fileOutStream = null;
 			}
 			
-			fileOutStream = null;
+			stage = StorageStage.Reading;
 		}
 		
 		// Data is available.

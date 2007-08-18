@@ -54,7 +54,10 @@ public class ObjectStreamIterator<T> implements ReleasableIterator<T> {
 		} catch (ClassNotFoundException e) {
 			throw new OsmosisRuntimeException("Unable to read object from object stream.", e);
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to read from object stream.", e);
+			throw new OsmosisRuntimeException(
+				"Unable to read from object stream (If the error mentions \"Corrupt GZIP trailer\" upgrade your JDK to one that has fixed Bug 5092263).",
+				e
+			);
 		}
 	}
 

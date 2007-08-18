@@ -1,5 +1,7 @@
 package com.bretth.osmosis.core.store;
 
+import java.util.NoSuchElementException;
+
 
 
 /**
@@ -16,7 +18,7 @@ package com.bretth.osmosis.core.store;
 public class PersistentIterator<T> implements ReleasableIterator<T>{
 	
 	private ReleasableIterator<T> sourceIterator;
-	private ObjectStore<T> store;
+	private SimpleObjectStore<T> store;
 	private ReleasableIterator<T> storeIterator;
 	private boolean initialized;
 	
@@ -34,7 +36,7 @@ public class PersistentIterator<T> implements ReleasableIterator<T>{
 	public PersistentIterator(ReleasableIterator<T> sourceIterator, String storageFilePrefix, boolean useCompression) {
 		this.sourceIterator = sourceIterator;
 		
-		store = new ObjectStore<T>(storageFilePrefix, useCompression);
+		store = new SimpleObjectStore<T>(storageFilePrefix, useCompression);
 		
 		initialized = false;
 	}
@@ -46,6 +48,7 @@ public class PersistentIterator<T> implements ReleasableIterator<T>{
 				store.add(sourceIterator.next());
 			}
 			sourceIterator.release();
+			sourceIterator = null;
 			
 			storeIterator = store.iterate();
 			
@@ -68,6 +71,10 @@ public class PersistentIterator<T> implements ReleasableIterator<T>{
 	 * {@inheritDoc}
 	 */
 	public T next() {
+		if (!hasNext()) {
+			throw new NoSuchElementException();
+		}
+		
 		return storeIterator.next();
 	}
 	
@@ -78,11 +85,15 @@ public class PersistentIterator<T> implements ReleasableIterator<T>{
 	public void release() {
 		if (storeIterator != null) {
 			storeIterator.release();
+			storeIterator = null;
 		}
 		
 		store.release();
 		
-		sourceIterator.release();
+		if (sourceIterator != null) {
+			sourceIterator.release();
+			sourceIterator = null;
+		}
 	}
 	
 	

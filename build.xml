@@ -6,7 +6,7 @@
 	
 	<!-- set global properties for this build -->
 	<property name="project.name" value="osmosis"/>
-	<property name="project.version" value="0.7.1"/>
+	<property name="project.version" value="0.7.2"/>
 	
 	<target name="init" description="Perform initialisation required by all other build steps.">
 		<!-- Create the time stamp -->
@@ -17,7 +17,7 @@
 		<!-- Update the version number in the main class. -->
 		<replaceregexp
 			byline="true"
-			file="src/com/bretth/osmosis/Osmosis.java"
+			file="src/com/bretth/osmosis/core/Osmosis.java"
 			match="private static final String VERSION = &quot;(.*)&quot;"
 			replace="private static final String VERSION = &quot;${project.version}&quot;"
 		/>

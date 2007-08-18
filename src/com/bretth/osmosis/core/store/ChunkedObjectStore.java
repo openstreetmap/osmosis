@@ -1,21 +1,20 @@
 package com.bretth.osmosis.core.store;
 
 
-
 /**
- * Adds indexed chunking capabilities to a basic object store allowing sets of
+ * Adds indexed chunking capabilities to a basic object store allowing groups of
  * objects to be written and retrieved later by their chunk index. The number of
  * objects and the size of the index is limited only by disk space.
  * 
  * @param <DataType>
- *            The object type to be sorted.
+ *            The object type to be stored.
  * @author Brett Henderson
  */
 public class ChunkedObjectStore<DataType> implements Releasable {
 	/**
 	 * Stores all the objects written to this store.
 	 */
-	private ObjectStore<DataType> objectStore;
+	private SegmentedObjectStore<DataType> objectStore;
 	
 	/**
 	 * Maintains both the file positions of each chunk and the number of objects
@@ -40,7 +39,7 @@ public class ChunkedObjectStore<DataType> implements Releasable {
 	 *            If true, the storage file will be compressed.
 	 */
 	public ChunkedObjectStore(String storageFilePrefix, String indexFilePrefix, boolean useCompression) {
-		objectStore = new ObjectStore<DataType>(storageFilePrefix, useCompression);
+		objectStore = new SegmentedObjectStore<DataType>(storageFilePrefix, useCompression);
 		indexStore = new IndexStore(indexFilePrefix);
 		
 		chunkCount = 0;
