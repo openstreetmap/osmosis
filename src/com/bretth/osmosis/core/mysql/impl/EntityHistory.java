@@ -1,5 +1,7 @@
 package com.bretth.osmosis.core.mysql.impl;
 
+import java.io.Serializable;
+
 
 /**
  * A data class representing a node history record.
@@ -14,7 +16,8 @@ package com.bretth.osmosis.core.mysql.impl;
  * @param <T>
  *            The type of entity that this class stores history for.
  */
-public class EntityHistory<T> {
+public class EntityHistory<T> implements Serializable {
+	private static final long serialVersionUID = 1L;
 	
 	private T entity;
 	private int version;
