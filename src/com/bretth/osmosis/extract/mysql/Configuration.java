@@ -16,6 +16,9 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 public class Configuration {
 	private static final String CONFIG_FILE_PATH = "osmosis-extract-mysql.conf";
 	private static final String KEY_HOST = "host";
+	private static final String KEY_DATABASE = "database";
+	private static final String KEY_USER = "user";
+	private static final String KEY_PASSWORD = "password";
 	
 	/*
 	# The database host system.
@@ -81,5 +84,35 @@ public class Configuration {
 	 */
 	public String getHost() {
 		return properties.getProperty(KEY_HOST);
+	}
+	
+	
+	/**
+	 * Returns the database instance.
+	 * 
+	 * @return The database instance.
+	 */
+	public String getDatabase() {
+		return properties.getProperty(KEY_DATABASE);
+	}
+	
+	
+	/**
+	 * Returns the database user.
+	 * 
+	 * @return The database user.
+	 */
+	public String getUser() {
+		return properties.getProperty(KEY_USER);
+	}
+	
+	
+	/**
+	 * Returns the database password.
+	 * 
+	 * @return The database password.
+	 */
+	public String getPassword() {
+		return properties.getProperty(KEY_PASSWORD);
 	}
 }
