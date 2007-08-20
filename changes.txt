@@ -1,5 +1,11 @@
 0.8
 Modified node and segment readers to avoid returning duplicate records where multiple records with identical timestamps exist.
+Moved main osmosis code into a "core" sub-package allowing new tools to be added.
+Fixed timeouts in mysql dumping of ways by using temporary files for query results.
+Refactored all temporary file handling to use common persistent iterator functionality.
+Fixed some classes not marked as Serializable.
+Updated change application to use less strict validation to handle "re-creates" of entities.
+Updated xml writing tasks to always write in UTC format.
 
 0.7
 Made a number of changes to the mysql dump task to improve performance and reduce the likelihood of timeouts.

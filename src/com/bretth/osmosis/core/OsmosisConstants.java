@@ -9,5 +9,5 @@ public interface OsmosisConstants {
 	/**
 	 * Defines the version of the Osmosis application.
 	 */
-	static final String VERSION = "0.7.6";
+	static final String VERSION = "0.8.0";
 }
