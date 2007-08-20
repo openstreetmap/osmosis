@@ -153,21 +153,12 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 					base = null;
 				} else if (comparisonResult > 0) {
 					// This entity doesn't exist in the "base" source therefore
-					// we are expecting an add. However, it is possible that
-					// this is a "re-create" of a previously deleted item which
-					// will come through as a modify.
-					if (
-							change.getAction().equals(ChangeAction.Create) ||
-							change.getAction().equals(ChangeAction.Modify)) {
-						sink.process(change.getEntityContainer());
-						
-					} else {
-						throw new OsmosisRuntimeException(
-							"Cannot perform action " + change.getAction() + " on node with id="
-							+ change.getEntityContainer().getEntity().getId()
-							+ " because it doesn't exist in the base source."
-						);
-					}
+					// we are expecting an add.
+					// However, it is possible that due to the database allowing
+					// "re-creation" of existing elements, it may come through
+					// as a modify or delete. We will simply pass the change
+					// source item through to the destination.
+					sink.process(change.getEntityContainer());
 					
 					change = null;
 					
