@@ -1,5 +1,7 @@
 package com.bretth.osmosis.core.container;
 
+import java.io.Serializable;
+
 import com.bretth.osmosis.core.task.ChangeAction;
 
 
@@ -8,7 +10,10 @@ import com.bretth.osmosis.core.task.ChangeAction;
  * 
  * @author Brett Henderson
  */
-public class ChangeContainer {
+public class ChangeContainer implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
+	
 	private EntityContainer entityContainer;
 	private ChangeAction action;
 	
