@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -67,7 +68,7 @@ public class ElementWriter {
 		this.elementName = elementName;
 		this.indentLevel = indentLevel;
 		
-		calendar = new GregorianCalendar();
+		calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
 		
 		try {
 			datatypeFactory = DatatypeFactory.newInstance();
