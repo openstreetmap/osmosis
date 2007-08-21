@@ -115,6 +115,45 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 	public void setSink(Sink sink) {
 		this.sink = sink;
 	}
+	
+	
+	/**
+	 * Processes an entity that exists on the base source but not the change
+	 * source.
+	 * 
+	 * @param entityContainer
+	 *            The entity to be processed.
+	 */
+	private void processBaseOnlyEntity(EntityContainer entityContainer) {
+		// The base entity doesn't exist on the change source therefore we
+		// simply pass it through.
+		sink.process(entityContainer);
+	}
+	
+	
+	/**
+	 * Processes a change for an entity that exists on the change source but not
+	 * the base source.
+	 * 
+	 * @param changeContainer
+	 *            The change to be processed.
+	 */
+	private void processChangeOnlyEntity(ChangeContainer changeContainer) {
+		// This entity doesn't exist in the "base" source therefore
+		// we would normally expect a create.
+		// However, it is possible that this is a "re-create" of a
+		// previously deleted item which will come through as a
+		// modify.
+		// It is also possible that a delete will come through for a
+		// previously deleted item which can be ignored.
+		if (
+				changeContainer.getAction().equals(ChangeAction.Create) ||
+				changeContainer.getAction().equals(ChangeAction.Modify)) {
+			sink.process(changeContainer.getEntityContainer());
+		} else {
+			// We don't need to do anything for delete.
+		}
+	}
 
 
 	/**
@@ -148,25 +187,11 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 				comparisonResult = comparator.compare(base, change.getEntityContainer());
 				
 				if (comparisonResult < 0) {
-					// The base entity doesn't exist on the change source therefore we simply pass it through.
-					sink.process(base);
+					processBaseOnlyEntity(base);
 					base = null;
-				} else if (comparisonResult > 0) {
-					// This entity doesn't exist in the "base" source therefore
-					// we would normally expect a create.
-					// However, it is possible that this is a "re-create" of a
-					// previously deleted item which will come through as a
-					// modify.
-					// It is also possible that a delete will come through for a
-					// previously deleted item which can be ignored.
-					if (
-							change.getAction().equals(ChangeAction.Create) ||
-							change.getAction().equals(ChangeAction.Modify)) {
-						sink.process(change.getEntityContainer());
-					} else {
-						// We don't need to do anything for delete.
-					}
 					
+				} else if (comparisonResult > 0) {
+					processChangeOnlyEntity(change);
 					change = null;
 					
 				} else {
@@ -196,27 +221,16 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 				if (base == null) {
 					base = basePostbox.getNext();
 				}
-				sink.process(base);
+				processBaseOnlyEntity(base);
 				base = null;
 			}
+			
 			// Any remaining "change" entities must be creates.
 			while (change != null || changePostbox.hasNext()) {
 				if (change == null) {
 					change = changePostbox.getNext();
 				}
-				// This entity doesn't exist in the "base" source therefore we
-				// are expecting an add.
-				if (change.getAction().equals(ChangeAction.Create)) {
-					sink.process(change.getEntityContainer());
-					
-				} else {
-					throw new OsmosisRuntimeException(
-						"Cannot perform action " + change.getAction() + " on node with id="
-						+ change.getEntityContainer().getEntity().getId()
-						+ " because it doesn't exist in the base source."
-					);
-				}
-				
+				processChangeOnlyEntity(change);
 				change = null;
 			}
 			

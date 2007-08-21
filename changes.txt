@@ -1,3 +1,7 @@
+0.9
+Fixed the name of the main class attribute in the jar manifest.
+Fixed a potential bug in the change application code where a validation step may have erroneously thrown errors.
+
 0.8
 Modified node and segment readers to avoid returning duplicate records where multiple records with identical timestamps exist.
 Moved main osmosis code into a "core" sub-package allowing new tools to be added.
