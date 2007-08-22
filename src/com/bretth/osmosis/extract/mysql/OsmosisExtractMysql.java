@@ -25,6 +25,9 @@ public class OsmosisExtractMysql {
 		
 		configuration = new Configuration(baseDirectory);
 		
-		configuration.getHost();
+		System.out.println("host: " + configuration.getHost());
+		System.out.println("database: " + configuration.getDatabase());
+		System.out.println("user: " + configuration.getUser());
+		System.out.println("password: " + configuration.getPassword());
 	}
 }
