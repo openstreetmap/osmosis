@@ -2,18 +2,18 @@ package com.bretth.osmosis.core.pipeline;
 
 import java.util.Map;
 
-import com.bretth.osmosis.core.task.MultiSinkRunnableChangeSource;
+import com.bretth.osmosis.core.task.MultiSinkRunnableSource;
 import com.bretth.osmosis.core.task.Sink;
 import com.bretth.osmosis.core.task.Source;
 
 
 /**
- * A task manager implementation for MultiSinkRunnableChangeSource task implementations.
+ * A task manager implementation for MultiSinkRunnableSource task implementations.
  * 
  * @author Brett Henderson
  */
-public class MultiSinkRunnableChangeSourceManager extends ActiveTaskManager {
-	private MultiSinkRunnableChangeSource task;
+public class MultiSinkRunnableSourceManager extends ActiveTaskManager {
+	private MultiSinkRunnableSource task;
 	
 	
 	/**
@@ -29,7 +29,7 @@ public class MultiSinkRunnableChangeSourceManager extends ActiveTaskManager {
 	 *            pipes are a logical concept for identifying how the tasks are
 	 *            connected together.
 	 */
-	public MultiSinkRunnableChangeSourceManager(String taskId, MultiSinkRunnableChangeSource task, Map<String, String> pipeArgs) {
+	public MultiSinkRunnableSourceManager(String taskId, MultiSinkRunnableSource task, Map<String, String> pipeArgs) {
 		super(taskId, pipeArgs);
 		
 		this.task = task;
@@ -57,7 +57,7 @@ public class MultiSinkRunnableChangeSourceManager extends ActiveTaskManager {
 			source.setSink(sink);
 		}
 		
-		// Register the change source as an output task.
+		// Register the source as an output task.
 		setOutputTask(pipeTasks, task, 0);
 	}
 	

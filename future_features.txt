@@ -35,7 +35,7 @@ Application output is not configurable.  This needs to be made configurable
 allowing default output, verbose output, or quiet output.
 Requires support for "global" command line options that aren't related to any tasks.
 
-**********
+********** DONE
 Combine entity stream task for merging two data files.
 Combine change stream task for merging two change files.
 

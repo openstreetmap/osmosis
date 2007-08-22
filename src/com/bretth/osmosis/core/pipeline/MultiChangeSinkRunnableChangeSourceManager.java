@@ -2,18 +2,18 @@ package com.bretth.osmosis.core.pipeline;
 
 import java.util.Map;
 
-import com.bretth.osmosis.core.task.MultiSinkRunnableChangeSource;
-import com.bretth.osmosis.core.task.Sink;
-import com.bretth.osmosis.core.task.Source;
+import com.bretth.osmosis.core.task.ChangeSink;
+import com.bretth.osmosis.core.task.ChangeSource;
+import com.bretth.osmosis.core.task.MultiChangeSinkRunnableChangeSource;
 
 
 /**
- * A task manager implementation for MultiSinkRunnableChangeSource task implementations.
+ * A task manager implementation for MultiChangeSinkRunnableChangeSource task implementations.
  * 
  * @author Brett Henderson
  */
-public class MultiSinkRunnableChangeSourceManager extends ActiveTaskManager {
-	private MultiSinkRunnableChangeSource task;
+public class MultiChangeSinkRunnableChangeSourceManager extends ActiveTaskManager {
+	private MultiChangeSinkRunnableChangeSource task;
 	
 	
 	/**
@@ -29,7 +29,7 @@ public class MultiSinkRunnableChangeSourceManager extends ActiveTaskManager {
 	 *            pipes are a logical concept for identifying how the tasks are
 	 *            connected together.
 	 */
-	public MultiSinkRunnableChangeSourceManager(String taskId, MultiSinkRunnableChangeSource task, Map<String, String> pipeArgs) {
+	public MultiChangeSinkRunnableChangeSourceManager(String taskId, MultiChangeSinkRunnableChangeSource task, Map<String, String> pipeArgs) {
 		super(taskId, pipeArgs);
 		
 		this.task = task;
@@ -43,21 +43,21 @@ public class MultiSinkRunnableChangeSourceManager extends ActiveTaskManager {
 	public void connect(PipeTasks pipeTasks) {
 		// A multi sink receives multiple streams of data, so we must connect
 		// them up one by one.
-		for (int i = 0; i < task.getSinkCount(); i++) {
-			Sink sink;
-			Source source;
+		for (int i = 0; i < task.getChangeSinkCount(); i++) {
+			ChangeSink sink;
+			ChangeSource source;
 			
 			// Retrieve the next sink.
-			sink = task.getSink(i);
+			sink = task.getChangeSink(i);
 			
 			// Retrieve the appropriate source.
-			source = (Source) getInputTask(pipeTasks, i, Source.class);
+			source = (ChangeSource) getInputTask(pipeTasks, i, ChangeSource.class);
 			
 			// Connect the tasks.
-			source.setSink(sink);
+			source.setChangeSink(sink);
 		}
 		
-		// Register the change source as an output task.
+		// Register the source as an output task.
 		setOutputTask(pipeTasks, task, 0);
 	}
 	
