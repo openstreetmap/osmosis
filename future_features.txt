@@ -1,0 +1,41 @@
+**********
+Fix problems with current command line default pipe feature where sometimes
+you have to explicitly specify pipes.
+
+Martijn van Oosterhout suggested the following:
+
+Actually, there is an easier. If new inputs got attached to the *last*
+available output, it would work also without naming pipes. So the
+outputs form a stack. Like so:
+
+--read-xml    Stack: read-xml output.0
+--read-change-xml   Stack: read-xml output.0 read-change-xml output.0
+--sort-change-xml
+   Input gets attached to read-change-xml output.0
+   Stack: read-xml output.0  sort-change-xml output.0
+--apply-change  Inputs getattached in order.
+
+Note for the last you have two inputs, they also have to be applied in
+reverse order.
+
+**********
+Martijn van Oosterhout suggested that the command line is too long.
+
+I think the lengthof the commandline is also an obsticle. Perhaps you
+could have something like:
+
+osmosis 'read-xml "foo" (read-change-xml "bar" | sort-change-xml ) |
+apply-change'
+
+A bit confusing with the multiple input pipes, but it's clearer if you
+know shell...
+
+**********
+Application output is not configurable.  This needs to be made configurable
+allowing default output, verbose output, or quiet output.
+Requires support for "global" command line options that aren't related to any tasks.
+
+**********
+Combine entity stream task for merging two data files.
+Combine change stream task for merging two change files.
+
