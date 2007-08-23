@@ -3,11 +3,10 @@ package com.bretth.osmosis.core.store;
 import java.util.NoSuchElementException;
 
 
-
 /**
- * Wraps an underlying entity reader implementation so that all data is read
- * from the underlying reader and written to a temporary file before being
- * returned. This allows the underlying database connection to be closed sooner
+ * Wraps an underlying iterator implementation so that all data is read from the
+ * underlying reader and written to a temporary file before being returned. This
+ * allows underlying resources such as database connections to be closed sooner
  * than otherwise possible. This object will own the wrapped source iterator and
  * release it along with all other resources.
  * 
