@@ -1,7 +1,11 @@
 package com.bretth.osmosis.extract.mysql;
 
-import com.bretth.osmosis.core.store.ReleasableIterator;
-import com.bretth.osmosis.core.store.SimpleObjectStore;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import com.bretth.osmosis.core.xml.impl.DateFormatter;
+import com.bretth.osmosis.core.xml.impl.DateParser;
 
 
 /**
@@ -10,8 +14,7 @@ import com.bretth.osmosis.core.store.SimpleObjectStore;
  * @author Brett Henderson
  */
 public class Test {
-	
-	private static final int RECORD_COUNT = 500000;
+	private static final int ITERATIONS = 1000000;
 	
 	
 	/**
@@ -21,32 +24,38 @@ public class Test {
 	 *            Command line arguments.
 	 */
 	public static void main(String[] args) {
-		SimpleObjectStore<String> store;
-		ReleasableIterator<String> iterator;
+		Date inputDate = new Date(1190535943000l);
+		Date outputDate = null;
+		//String dateString = "2005-07-26T03:09:29.000Z";
+		//String dateString = "2007-01-01T00:00:00.000+11:00";
+		//String dateString = "2005-07-26 03:09:29";
+		String dateString = new DateFormatter().format(inputDate);
+		DateParser dateParser = new DateParser();
+		Date beginTimestamp;
+		Date endTimestamp;
+		long duration;
+		double callsPerSecond;
 		
-		store = new SimpleObjectStore<String>("bhtest", true);
+		System.out.println("Input date: " + inputDate);
+		System.out.println("Time: " + inputDate.getTime());
+		System.out.println("Date String: " + dateString);
 		
-		for (int i = 0; i < RECORD_COUNT; i++) {
-			store.add(new String("test" + i));
+		beginTimestamp = new Date();
+		for (int i = 0; i < ITERATIONS; i++) {
+			outputDate = dateParser.parse(dateString);
 		}
+		endTimestamp = new Date();
 		
-		iterator = store.iterate();
+		duration = endTimestamp.getTime() - beginTimestamp.getTime();
+		callsPerSecond = 1000 * ITERATIONS / duration;
 		
-		int resultCount = 0;
-		while (iterator.hasNext()) {
-			iterator.next();
-			resultCount++;
-		}
+		System.out.println(callsPerSecond + " calls/second");
+		System.out.println("Output date: " + outputDate);
+		System.out.println("Time: " + outputDate.getTime());
 		
-		if (resultCount != RECORD_COUNT) {
-			throw new RuntimeException(
-				"Received " + resultCount + " instead of " + RECORD_COUNT + " records."
-			);
-		}
-		iterator.release();
-		store.release();
-		
-		System.out.println("done");
+		GregorianCalendar calendar = new GregorianCalendar();
+		calendar.setTime(outputDate);
+		System.out.println("Millisecond: " + calendar.get(Calendar.MILLISECOND));
 	}
 
 }
