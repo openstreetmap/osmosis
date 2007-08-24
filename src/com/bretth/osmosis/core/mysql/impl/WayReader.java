@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.data.Way;
 import com.bretth.osmosis.core.store.PeekableIterator;
+import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
@@ -15,7 +16,7 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
  */
 public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 	
-	private WayTableReader wayReader;
+	private ReleasableIterator<EntityHistory<Way>> wayReader;
 	private PeekableIterator<EntityHistory<WayTag>> wayTagReader;
 	private PeekableIterator<EntityHistory<WaySegment>> waySegmentReader;
 	private EntityHistory<Way> nextValue;
@@ -35,12 +36,24 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 	 *            The password for authentication.
 	 */
 	public WayReader(String host, String database, String user, String password) {
-		wayReader = new WayTableReader(host, database, user, password);
+		wayReader = new PersistentIterator<EntityHistory<Way>>(
+			new WayTableReader(host, database, user, password),
+			"way",
+			true
+		);
 		wayTagReader = new PeekableIterator<EntityHistory<WayTag>>(
-			new WayTagTableReader(host, database, user, password)
+			new PersistentIterator<EntityHistory<WayTag>>(
+				new WayTagTableReader(host, database, user, password),
+				"waytag",
+				true
+			)
 		);
 		waySegmentReader = new PeekableIterator<EntityHistory<WaySegment>>(
-			new WaySegmentTableReader(host, database, user, password)
+			new PersistentIterator<EntityHistory<WaySegment>>(
+				new WaySegmentTableReader(host, database, user, password),
+				"wayseg",
+				true
+			)
 		);
 	}
 	
@@ -112,6 +125,9 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 			while (waySegmentReader.hasNext() && waySegmentReader.peekNext().getEntity().getWayId() == wayId && waySegmentReader.peekNext().getVersion() == wayVersion) {
 				way.addSegmentReference(waySegmentReader.next().getEntity());
 			}
+			
+			nextValue = wayHistory;
+			nextValueLoaded = true;
 		}
 		
 		return nextValueLoaded;
