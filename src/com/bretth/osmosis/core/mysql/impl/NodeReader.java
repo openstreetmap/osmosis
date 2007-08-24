@@ -1,9 +1,7 @@
 package com.bretth.osmosis.core.mysql.impl;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
@@ -11,28 +9,17 @@ import com.bretth.osmosis.core.data.Node;
 
 
 /**
- * Reads all nodes from a database ordered by their identifier.
+ * Reads complete node history from a database ordered by their identifier.
  * 
  * @author Brett Henderson
  */
-public class NodeReader extends BaseEntityReader<Node> {
+public class NodeReader extends BaseEntityReader<EntityHistory<Node>> {
 	private static final String SELECT_SQL =
-		"SELECT n.id, n.timestamp, n.latitude, n.longitude, n.tags"
-		+ " FROM nodes n"
-		+ " INNER JOIN"
-		+ " ("
-		+ "SELECT id, MAX(timestamp) AS timestamp"
+		"SELECT id, timestamp, latitude, longitude, tags, visible"
 		+ " FROM nodes"
-		+ " WHERE timestamp < ?"
-		+ " GROUP BY id"
-		+ " ORDER BY id"
-		+ ") n2 ON n.id = n2.id AND n.timestamp = n2.timestamp"
-		+ " WHERE visible = 1";
+		+ " ORDER BY id";
 	
 	private EmbeddedTagProcessor tagParser;
-	private Date snapshotInstant;
-	private long previousId;
-	private Date previousTimestamp;
 	
 	
 	/**
@@ -46,17 +33,11 @@ public class NodeReader extends BaseEntityReader<Node> {
 	 *            The user name for authentication.
 	 * @param password
 	 *            The password for authentication.
-	 * @param snapshotInstant
-	 *            The state of the node table at this point in time will be
-	 *            dumped.  This ensures a consistent snapshot.
 	 */
-	public NodeReader(String host, String database, String user, String password, Date snapshotInstant) {
+	public NodeReader(String host, String database, String user, String password) {
 		super(host, database, user, password);
 		
-		this.snapshotInstant = snapshotInstant;
 		tagParser = new EmbeddedTagProcessor();
-		
-		previousId = 0;
 	}
 	
 	
@@ -65,17 +46,7 @@ public class NodeReader extends BaseEntityReader<Node> {
 	 */
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-		try {
-			PreparedStatement statement;
-			
-			statement = queryDbCtx.prepareStatementForStreaming(SELECT_SQL);
-			statement.setTimestamp(1, new Timestamp(snapshotInstant.getTime()));
-			
-			return statement.executeQuery();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to create streaming resultset.", e);
-		}
+		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
 	}
 	
 	
@@ -83,14 +54,14 @@ public class NodeReader extends BaseEntityReader<Node> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<Node> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<Node>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
 		double latitude;
 		double longitude;
 		String tags;
+		boolean visible;
 		Node node;
-		boolean usableResult;
 		
 		try {
 			id = resultSet.getLong("id");
@@ -98,6 +69,7 @@ public class NodeReader extends BaseEntityReader<Node> {
 			latitude = resultSet.getDouble("latitude");
 			longitude = resultSet.getDouble("longitude");
 			tags = resultSet.getString("tags");
+			visible = resultSet.getBoolean("visible");
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read node fields.", e);
@@ -106,26 +78,9 @@ public class NodeReader extends BaseEntityReader<Node> {
 		node = new Node(id, timestamp, latitude, longitude);
 		node.addTags(tagParser.parseTags(tags));
 		
-		if (id < previousId) {
-			throw new OsmosisRuntimeException(
-					"Id of " + id + " must be greater or equal to previous id of " + previousId + ".");
-		} else if (id == previousId) {
-			if (!timestamp.equals(previousTimestamp)) {
-				throw new OsmosisRuntimeException(
-						"Id of " + id + " has multiple records.");
-			}
-			
-			// Two records exist with the same id and timestamp, we will ignore
-			// this second one by flagging an invalid result.
-			usableResult = false;
-			
-		} else {
-			previousId = id;
-			previousTimestamp = timestamp;
-			
-			usableResult = true;
-		}
-		
-		return new ReadResult<Node>(usableResult, node);
+		return new ReadResult<EntityHistory<Node>>(
+			true,
+			new EntityHistory<Node>(node, 0, visible)
+		);
 	}
 }

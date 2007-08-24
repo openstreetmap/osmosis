@@ -1,24 +1,21 @@
 package com.bretth.osmosis.core.mysql;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
 
 import com.bretth.osmosis.core.container.NodeContainer;
 import com.bretth.osmosis.core.container.SegmentContainer;
 import com.bretth.osmosis.core.container.WayContainer;
+import com.bretth.osmosis.core.data.Node;
+import com.bretth.osmosis.core.data.Segment;
 import com.bretth.osmosis.core.data.Way;
+import com.bretth.osmosis.core.mysql.impl.EntityHistory;
+import com.bretth.osmosis.core.mysql.impl.EntityHistoryComparator;
+import com.bretth.osmosis.core.mysql.impl.EntitySnapshotReader;
 import com.bretth.osmosis.core.mysql.impl.NodeReader;
 import com.bretth.osmosis.core.mysql.impl.SegmentReader;
 import com.bretth.osmosis.core.mysql.impl.WayReader;
-import com.bretth.osmosis.core.mysql.impl.WaySegment;
-import com.bretth.osmosis.core.mysql.impl.WaySegmentReader;
-import com.bretth.osmosis.core.mysql.impl.WayTag;
-import com.bretth.osmosis.core.mysql.impl.WayTagReader;
 import com.bretth.osmosis.core.store.PeekableIterator;
-import com.bretth.osmosis.core.store.PersistentIterator;
+import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.task.RunnableSource;
 import com.bretth.osmosis.core.task.Sink;
 
@@ -73,9 +70,15 @@ public class MysqlReader implements RunnableSource {
 	 * Reads all nodes from the database and sends to the sink.
 	 */
 	private void processNodes() {
-		NodeReader reader;
+		ReleasableIterator<Node> reader;
 		
-		reader = new NodeReader(host, database, user, password, snapshotInstant);
+		reader = new EntitySnapshotReader<Node>(
+			new PeekableIterator<EntityHistory<Node>>(
+				new NodeReader(host, database, user, password)
+			),
+			snapshotInstant,
+			new EntityHistoryComparator<Node>()
+		);
 		
 		try {
 			while (reader.hasNext()) {
@@ -92,9 +95,15 @@ public class MysqlReader implements RunnableSource {
 	 * Reads all segments from the database and sends to the sink.
 	 */
 	private void processSegments() {
-		SegmentReader reader;
+		ReleasableIterator<Segment> reader;
 		
-		reader = new SegmentReader(host, database, user, password, snapshotInstant);
+		reader = new EntitySnapshotReader<Segment>(
+			new PeekableIterator<EntityHistory<Segment>>(
+				new SegmentReader(host, database, user, password)
+			),
+			snapshotInstant,
+			new EntityHistoryComparator<Segment>()
+		);
 		
 		try {
 			while (reader.hasNext()) {
@@ -111,101 +120,23 @@ public class MysqlReader implements RunnableSource {
 	 * Reads all ways from the database and sends to the sink.
 	 */
 	private void processWays() {
-		PeekableIterator<Way> wayReader;
-		PeekableIterator<WaySegment> waySegmentReader;
-		PeekableIterator<WayTag> wayTagReader;
+		ReleasableIterator<Way> reader;
 		
-		wayReader =
-			new PeekableIterator<Way>(
-				new PersistentIterator<Way>(
-					new WayReader(host, database, user, password, snapshotInstant),
-					"way",
-					true
-				)
-			);
-		waySegmentReader =
-			new PeekableIterator<WaySegment>(
-				new PersistentIterator<WaySegment>(
-					new WaySegmentReader(host, database, user, password, snapshotInstant),
-					"wayseg",
-					true
-				)
-			);
-		wayTagReader =
-			new PeekableIterator<WayTag>(
-				new PersistentIterator<WayTag>(
-					new WayTagReader(host, database, user, password, snapshotInstant),
-					"waytag",
-					true
-				)
-			);
-		
-		// Calling hasNext will cause the readers to execute their queries and
-		// initialise their internal state.
-		wayReader.hasNext();
-		waySegmentReader.hasNext();
-		wayTagReader.hasNext();
+		reader = new EntitySnapshotReader<Way>(
+			new PeekableIterator<EntityHistory<Way>>(
+				new WayReader(host, database, user, password)
+			),
+			snapshotInstant,
+			new EntityHistoryComparator<Way>()
+		);
 		
 		try {
-			while (wayReader.hasNext()) {
-				Way way;
-				List<WaySegment> waySegments;
-				
-				// Read the next way.
-				way = wayReader.next();
-				waySegments = new ArrayList<WaySegment>();
-				
-				// Read all associated way segments.
-				while (
-						waySegmentReader.hasNext() &&
-						(waySegmentReader.peekNext().getWayId() <= way.getId())) {
-					
-					WaySegment waySegment;
-					
-					waySegment = waySegmentReader.next();
-					
-					if (waySegment.getWayId() == way.getId()) {
-						waySegments.add(waySegment);
-					}
-				}
-				
-				// Sort the way segments by the sequence id.
-				Collections.sort(
-					waySegments,
-					new Comparator<WaySegment>() {
-						public int compare(WaySegment o1, WaySegment o2) {
-							return o1.getSequenceId() - o2.getSequenceId();
-						}
-					}
-				);
-				
-				// Add the way segments to the way.
-				for (WaySegment waySegment : waySegments) {
-					way.addSegmentReference(waySegment);
-				}
-				
-				// Read all associated way tags.
-				while (
-						wayTagReader.hasNext() &&
-						(wayTagReader.peekNext().getWayId() <= way.getId())) {
-					
-					WayTag wayTag;
-					
-					wayTag = wayTagReader.next();
-					
-					if (wayTag.getWayId() == way.getId()) {
-						way.addTag(wayTag);
-					}
-				}
-				
-				// Send the complete way to the sink.
-				sink.process(new WayContainer(way));
+			while (reader.hasNext()) {
+				sink.process(new WayContainer(reader.next()));
 			}
 			
 		} finally {
-			wayReader.release();
-			waySegmentReader.release();
-			wayTagReader.release();
+			reader.release();
 		}
 	}
 	

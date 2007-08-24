@@ -5,21 +5,20 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.data.Segment;
+import com.bretth.osmosis.core.data.Way;
 
 
 /**
- * Reads all segments from a database ordered by their identifier.
+ * Reads all ways from a database ordered by their identifier. These ways won't
+ * be populated with segments and tags.
  * 
  * @author Brett Henderson
  */
-public class SegmentReader extends BaseEntityReader<EntityHistory<Segment>> {
+public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
 	private static final String SELECT_SQL =
-		"SELECT id, timestamp, node_a, node_b, tags, visible"
-		+ " FROM segments"
-		+ " ORDER BY id";
-	
-	private EmbeddedTagProcessor tagParser;
+		"SELECT id, version, timestamp, visible"
+		+ " FROM ways"
+		+ " ORDER BY id, version";
 	
 	
 	/**
@@ -34,10 +33,8 @@ public class SegmentReader extends BaseEntityReader<EntityHistory<Segment>> {
 	 * @param password
 	 *            The password for authentication.
 	 */
-	public SegmentReader(String host, String database, String user, String password) {
+	public WayTableReader(String host, String database, String user, String password) {
 		super(host, database, user, password);
-		
-		tagParser = new EmbeddedTagProcessor();
 	}
 	
 	
@@ -54,33 +51,25 @@ public class SegmentReader extends BaseEntityReader<EntityHistory<Segment>> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<EntityHistory<Segment>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<Way>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
-		long from;
-		long to;
-		String tags;
+		int version;
 		boolean visible;
-		Segment segment;
 		
 		try {
 			id = resultSet.getLong("id");
+			version = resultSet.getInt("version");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
-			from = resultSet.getLong("node_a");
-			to = resultSet.getLong("node_b");
-			tags = resultSet.getString("tags");
 			visible = resultSet.getBoolean("visible");
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to read segment fields.", e);
+			throw new OsmosisRuntimeException("Unable to read way fields.", e);
 		}
 		
-		segment = new Segment(id, timestamp, from, to);
-		segment.addTags(tagParser.parseTags(tags));
-		
-		return new ReadResult<EntityHistory<Segment>>(
+		return new ReadResult<EntityHistory<Way>>(
 			true,
-			new EntityHistory<Segment>(segment, 0, visible)
+			new EntityHistory<Way>(new Way(id, timestamp), version, visible)
 		);
 	}
 }
