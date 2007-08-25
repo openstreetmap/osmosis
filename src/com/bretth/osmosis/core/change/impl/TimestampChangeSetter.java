@@ -8,9 +8,9 @@ import com.bretth.osmosis.core.container.EntityProcessor;
 import com.bretth.osmosis.core.container.NodeContainer;
 import com.bretth.osmosis.core.container.SegmentContainer;
 import com.bretth.osmosis.core.container.WayContainer;
-import com.bretth.osmosis.core.data.Node;
-import com.bretth.osmosis.core.data.Segment;
-import com.bretth.osmosis.core.data.Way;
+import com.bretth.osmosis.core.domain.Node;
+import com.bretth.osmosis.core.domain.Segment;
+import com.bretth.osmosis.core.domain.Way;
 import com.bretth.osmosis.core.task.ChangeAction;
 import com.bretth.osmosis.core.task.ChangeSink;
 

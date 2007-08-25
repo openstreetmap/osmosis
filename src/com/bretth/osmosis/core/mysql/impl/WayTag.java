@@ -1,6 +1,6 @@
 package com.bretth.osmosis.core.mysql.impl;
 
-import com.bretth.osmosis.core.data.Tag;
+import com.bretth.osmosis.core.domain.Tag;
 
 
 /**

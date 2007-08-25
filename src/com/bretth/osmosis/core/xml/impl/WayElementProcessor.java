@@ -5,9 +5,9 @@ import java.util.Date;
 import org.xml.sax.Attributes;
 
 import com.bretth.osmosis.core.container.WayContainer;
-import com.bretth.osmosis.core.data.SegmentReference;
-import com.bretth.osmosis.core.data.Tag;
-import com.bretth.osmosis.core.data.Way;
+import com.bretth.osmosis.core.domain.SegmentReference;
+import com.bretth.osmosis.core.domain.Tag;
+import com.bretth.osmosis.core.domain.Way;
 import com.bretth.osmosis.core.task.Sink;
 
 

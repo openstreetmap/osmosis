@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import com.bretth.osmosis.core.data.Tag;
+import com.bretth.osmosis.core.domain.Tag;
 
 
 /**

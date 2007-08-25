@@ -1,6 +1,6 @@
 package com.bretth.osmosis.core.container;
 
-import com.bretth.osmosis.core.data.Way;
+import com.bretth.osmosis.core.domain.Way;
 
 
 /**

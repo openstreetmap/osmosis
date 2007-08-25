@@ -4,8 +4,8 @@ import java.util.Comparator;
 
 import com.bretth.osmosis.core.container.ChangeContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.data.Entity;
-import com.bretth.osmosis.core.data.EntityType;
+import com.bretth.osmosis.core.domain.Entity;
+import com.bretth.osmosis.core.domain.EntityType;
 import com.bretth.osmosis.core.task.ChangeAction;
 
 

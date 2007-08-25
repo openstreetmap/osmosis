@@ -1,6 +1,6 @@
 package com.bretth.osmosis.core.container;
 
-import com.bretth.osmosis.core.data.Segment;
+import com.bretth.osmosis.core.domain.Segment;
 
 
 /**

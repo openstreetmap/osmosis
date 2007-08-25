@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.data.Segment;
+import com.bretth.osmosis.core.domain.Segment;
 
 
 /**

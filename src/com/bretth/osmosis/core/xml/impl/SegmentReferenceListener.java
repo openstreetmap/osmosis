@@ -1,6 +1,6 @@
 package com.bretth.osmosis.core.xml.impl;
 
-import com.bretth.osmosis.core.data.SegmentReference;
+import com.bretth.osmosis.core.domain.SegmentReference;
 
 
 /**

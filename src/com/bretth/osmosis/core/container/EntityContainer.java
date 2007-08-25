@@ -2,7 +2,7 @@ package com.bretth.osmosis.core.container;
 
 import java.io.Serializable;
 
-import com.bretth.osmosis.core.data.Entity;
+import com.bretth.osmosis.core.domain.Entity;
 
 
 /**

@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.data;
+package com.bretth.osmosis.core.domain;
 
 import java.util.Date;
 

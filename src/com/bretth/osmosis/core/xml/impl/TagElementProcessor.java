@@ -2,7 +2,7 @@ package com.bretth.osmosis.core.xml.impl;
 
 import org.xml.sax.Attributes;
 
-import com.bretth.osmosis.core.data.Tag;
+import com.bretth.osmosis.core.domain.Tag;
 
 
 /**

@@ -1,6 +1,6 @@
 package com.bretth.osmosis.core.mysql.impl;
 
-import com.bretth.osmosis.core.data.SegmentReference;
+import com.bretth.osmosis.core.domain.SegmentReference;
 
 
 /**

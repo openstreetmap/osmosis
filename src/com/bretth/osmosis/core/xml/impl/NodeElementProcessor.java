@@ -5,8 +5,8 @@ import java.util.Date;
 import org.xml.sax.Attributes;
 
 import com.bretth.osmosis.core.container.NodeContainer;
-import com.bretth.osmosis.core.data.Node;
-import com.bretth.osmosis.core.data.Tag;
+import com.bretth.osmosis.core.domain.Node;
+import com.bretth.osmosis.core.domain.Tag;
 import com.bretth.osmosis.core.task.Sink;
 
 

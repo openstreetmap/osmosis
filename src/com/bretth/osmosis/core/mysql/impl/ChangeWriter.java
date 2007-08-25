@@ -7,11 +7,11 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.data.Node;
-import com.bretth.osmosis.core.data.Segment;
-import com.bretth.osmosis.core.data.SegmentReference;
-import com.bretth.osmosis.core.data.Tag;
-import com.bretth.osmosis.core.data.Way;
+import com.bretth.osmosis.core.domain.Node;
+import com.bretth.osmosis.core.domain.Segment;
+import com.bretth.osmosis.core.domain.SegmentReference;
+import com.bretth.osmosis.core.domain.Tag;
+import com.bretth.osmosis.core.domain.Way;
 import com.bretth.osmosis.core.task.ChangeAction;
 
 
