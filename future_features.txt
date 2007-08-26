@@ -39,3 +39,9 @@ Requires support for "global" command line options that aren't related to any ta
 Combine entity stream task for merging two data files.
 Combine change stream task for merging two change files.
 
+**********
+Add bzip2 support (more important because this is used by current planet files).
+Add gzip support.
+
+**********
+Add ability to create new entities as part of change as well as simply replicate creates (with existing ids) from one place to another.
