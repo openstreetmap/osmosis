@@ -1,5 +1,10 @@
-0.10
+0.11
 Modified mysql snapshot task to read entire contents of table and process data in code in attempt to improve dump times.
+Added gzip and bzip2 support to xml tasks.
+
+0.10
+Added JOSM-like date handling as a fallback if the standard xml date format isn't found.
+Added a custom date parser for the special case of GMT times which this tool always produces (approx 10x speedup over JOSM code and 100x speedup over standard JDK for GMT dates).
 
 0.9
 Fixed the name of the main class attribute in the jar manifest.

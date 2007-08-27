@@ -1,7 +1,11 @@
 package com.bretth.osmosis.core.xml;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -21,9 +25,13 @@ import com.bretth.osmosis.core.xml.impl.OsmHandler;
  * @author Brett Henderson
  */
 public class XmlReader implements RunnableSource {
+	
+	private static Logger log = Logger.getLogger(XmlReader.class.getName());
+	
 	private Sink sink;
 	private File file;
 	private boolean enableDateParsing;
+	private CompressionMethod compressionMethod;
 	
 	
 	/**
@@ -34,8 +42,10 @@ public class XmlReader implements RunnableSource {
 	 * @param enableDateParsing
 	 *            If true, dates will be parsed from xml data, else the current
 	 *            date will be used thus saving parsing time.
+	 * @param compressionMethod
+	 *            Specifies the compression method to employ.
 	 */
-	public XmlReader(File file, boolean enableDateParsing) {
+	public XmlReader(File file, boolean enableDateParsing, CompressionMethod compressionMethod) {
 		this.file = file;
 		this.enableDateParsing = enableDateParsing;
 	}
@@ -70,8 +80,16 @@ public class XmlReader implements RunnableSource {
 	 * Reads all data from the file and send it to the sink.
 	 */
 	public void run() {
+		InputStream inputStream = null;
+		
 		try {
 			SAXParser parser;
+			
+			inputStream = new FileInputStream(file);
+			
+			inputStream =
+				new CompressionActivator(compressionMethod).
+					createCompressionInputStream(inputStream);
 			
 			parser = createParser();
 			
@@ -85,6 +103,15 @@ public class XmlReader implements RunnableSource {
 			throw new OsmosisRuntimeException("Unable to read XML file.", e);
 		} finally {
 			sink.release();
+			
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					log.log(Level.SEVERE, "Unable to close input stream.", e);
+				}
+				inputStream = null;
+			}
 		}
 	}
 }

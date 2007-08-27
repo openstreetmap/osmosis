@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.bretth.osmosis.core.pipeline.SinkManager;
 import com.bretth.osmosis.core.pipeline.TaskManager;
-import com.bretth.osmosis.core.pipeline.TaskManagerFactory;
 
 
 /**
@@ -13,10 +12,10 @@ import com.bretth.osmosis.core.pipeline.TaskManagerFactory;
  * 
  * @author Brett Henderson
  */
-public class XmlWriterFactory extends TaskManagerFactory {
+public class XmlWriterFactory extends XmlTaskManagerFactory {
 	private static final String ARG_FILE_NAME = "file";
 	private static final String DEFAULT_FILE_NAME = "dump.osm";
-
+	
 	
 	/**
 	 * {@inheritDoc}
@@ -26,15 +25,17 @@ public class XmlWriterFactory extends TaskManagerFactory {
 		String fileName;
 		File file;
 		XmlWriter task;
+		CompressionMethod compressionMethod;
 		
 		// Get the task arguments.
 		fileName = getStringArgument(taskId, taskArgs, ARG_FILE_NAME, DEFAULT_FILE_NAME);
+		compressionMethod = getCompressionMethodArgument(taskId, taskArgs);
 		
 		// Create a file object from the file name provided.
 		file = new File(fileName);
 		
 		// Build the task object.
-		task = new XmlWriter(file);
+		task = new XmlWriter(file, compressionMethod);
 		
 		return new SinkManager(taskId, task, pipeArgs);
 	}

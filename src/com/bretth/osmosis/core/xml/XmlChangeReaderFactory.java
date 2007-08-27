@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.bretth.osmosis.core.pipeline.RunnableChangeSourceManager;
 import com.bretth.osmosis.core.pipeline.TaskManager;
-import com.bretth.osmosis.core.pipeline.TaskManagerFactory;
 
 
 /**
@@ -13,7 +12,7 @@ import com.bretth.osmosis.core.pipeline.TaskManagerFactory;
  * 
  * @author Brett Henderson
  */
-public class XmlChangeReaderFactory extends TaskManagerFactory {
+public class XmlChangeReaderFactory extends XmlTaskManagerFactory {
 	private static final String ARG_FILE_NAME = "file";
 	private static final String DEFAULT_FILE_NAME = "change.osc";
 	private static final String ARG_ENABLE_DATE_PARSING = "enableDateParsing";
@@ -28,17 +27,19 @@ public class XmlChangeReaderFactory extends TaskManagerFactory {
 		String fileName;
 		File file;
 		boolean enableDateParsing;
+		CompressionMethod compressionMethod;
 		XmlChangeReader task;
 		
 		// Get the task arguments.
 		fileName = getStringArgument(taskId, taskArgs, ARG_FILE_NAME, DEFAULT_FILE_NAME);
 		enableDateParsing = getBooleanArgument(taskId, taskArgs, ARG_ENABLE_DATE_PARSING, DEFAULT_ENABLE_DATE_PARSING);
+		compressionMethod = getCompressionMethodArgument(taskId, taskArgs);
 		
 		// Create a file object from the file name provided.
 		file = new File(fileName);
 		
 		// Build the task object.
-		task = new XmlChangeReader(file, enableDateParsing);
+		task = new XmlChangeReader(file, enableDateParsing, compressionMethod);
 		
 		return new RunnableChangeSourceManager(taskId, task, pipeArgs);
 	}

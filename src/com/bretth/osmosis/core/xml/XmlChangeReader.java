@@ -1,7 +1,11 @@
 package com.bretth.osmosis.core.xml;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -22,9 +26,13 @@ import com.bretth.osmosis.core.xml.impl.OsmChangeHandler;
  * @author Brett Henderson
  */
 public class XmlChangeReader implements RunnableChangeSource {
+	
+	private static Logger log = Logger.getLogger(XmlReader.class.getName());
+	
 	private ChangeSink changeSink;
 	private File file;
 	private boolean enableDateParsing;
+	private CompressionMethod compressionMethod;
 	
 	
 	/**
@@ -35,8 +43,10 @@ public class XmlChangeReader implements RunnableChangeSource {
 	 * @param enableDateParsing
 	 *            If true, dates will be parsed from xml data, else the current
 	 *            date will be used thus saving parsing time.
+	 * @param compressionMethod
+	 *            Specifies the compression method to employ.
 	 */
-	public XmlChangeReader(File file, boolean enableDateParsing) {
+	public XmlChangeReader(File file, boolean enableDateParsing, CompressionMethod compressionMethod) {
 		this.file = file;
 		this.enableDateParsing = enableDateParsing;
 	}
@@ -71,12 +81,20 @@ public class XmlChangeReader implements RunnableChangeSource {
 	 * Reads all data from the file and send it to the sink.
 	 */
 	public void run() {
+		InputStream inputStream = null;
+		
 		try {
 			SAXParser parser;
 			
+			inputStream = new FileInputStream(file);
+			
+			inputStream =
+				new CompressionActivator(compressionMethod).
+					createCompressionInputStream(inputStream);
+			
 			parser = createParser();
 			
-			parser.parse(file, new OsmChangeHandler(changeSink, enableDateParsing));
+			parser.parse(inputStream, new OsmChangeHandler(changeSink, enableDateParsing));
 			
 			changeSink.complete();
 			
@@ -86,6 +104,15 @@ public class XmlChangeReader implements RunnableChangeSource {
 			throw new OsmosisRuntimeException("Unable to read XML file.", e);
 		} finally {
 			changeSink.release();
+			
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					log.log(Level.SEVERE, "Unable to close input stream.", e);
+				}
+				inputStream = null;
+			}
 		}
 	}
 }
