@@ -49,6 +49,7 @@ public class XmlChangeReader implements RunnableChangeSource {
 	public XmlChangeReader(File file, boolean enableDateParsing, CompressionMethod compressionMethod) {
 		this.file = file;
 		this.enableDateParsing = enableDateParsing;
+		this.compressionMethod = compressionMethod;
 	}
 	
 	

@@ -12,7 +12,7 @@ import com.bretth.osmosis.core.pipeline.TaskManagerFactory;
  * @author Brett Henderson
  */
 public abstract class XmlTaskManagerFactory extends TaskManagerFactory {
-	private static final String ARG_COMPRESSION_METHOD = "useCompression";
+	private static final String ARG_COMPRESSION_METHOD = "compressionMethod";
 	private static final CompressionMethod DEFAULT_COMPRESSION_METHOD = CompressionMethod.None;
 	
 	

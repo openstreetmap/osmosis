@@ -48,6 +48,7 @@ public class XmlReader implements RunnableSource {
 	public XmlReader(File file, boolean enableDateParsing, CompressionMethod compressionMethod) {
 		this.file = file;
 		this.enableDateParsing = enableDateParsing;
+		this.compressionMethod = compressionMethod;
 	}
 	
 	
@@ -93,7 +94,7 @@ public class XmlReader implements RunnableSource {
 			
 			parser = createParser();
 			
-			parser.parse(file, new OsmHandler(sink, enableDateParsing));
+			parser.parse(inputStream, new OsmHandler(sink, enableDateParsing));
 			
 			sink.complete();
 			
