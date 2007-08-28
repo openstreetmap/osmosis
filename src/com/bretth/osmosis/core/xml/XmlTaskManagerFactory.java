@@ -24,10 +24,6 @@ public abstract class XmlTaskManagerFactory extends TaskManagerFactory {
 	 *            The identifier for the task retrieving the parameter.
 	 * @param taskArgs
 	 *            The task arguments.
-	 * @param argName
-	 *            The name of the argument.
-	 * @param defaultValue
-	 *            The default value of the argument if not value is available.
 	 * @return The value of the argument.
 	 */
 	protected CompressionMethod getCompressionMethodArgument(

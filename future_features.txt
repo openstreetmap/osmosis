@@ -39,7 +39,7 @@ Requires support for "global" command line options that aren't related to any ta
 Combine entity stream task for merging two data files.
 Combine change stream task for merging two change files.
 
-**********
+********** DONE
 Add bzip2 support (more important because this is used by current planet files).
 Add gzip support.
 

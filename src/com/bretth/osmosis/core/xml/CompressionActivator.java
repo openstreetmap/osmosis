@@ -55,6 +55,9 @@ public class CompressionActivator {
 			}
 			
 			if (CompressionMethod.BZip2.equals(compressionMethod)) {
+				// Add a file prefix to match the command line application.
+				destinationStream.write('B');
+				destinationStream.write('Z');
 				return new CBZip2OutputStream(destinationStream);
 			}
 			
@@ -87,6 +90,15 @@ public class CompressionActivator {
 			}
 			
 			if (CompressionMethod.BZip2.equals(compressionMethod)) {
+				
+				// Command line BZip2 adds "BZ" to the start of the file which
+				// we must strip out.
+				if (sourceStream.read() != 'B' || sourceStream.read() != 'Z') {
+					throw new OsmosisRuntimeException(
+						"The source stream must start with the characters BZ if it is to be read as a BZip2 stream."
+					);
+				}
+				
 				return new CBZip2InputStream(sourceStream);
 			}
 			
