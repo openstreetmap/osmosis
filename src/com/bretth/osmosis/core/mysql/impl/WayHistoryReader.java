@@ -20,7 +20,7 @@ public class WayHistoryReader extends BaseEntityReader<EntityHistory<Way>> {
 	private static final String SELECT_SQL =
 		"SELECT w.id AS id, w.timestamp AS timestamp, w.version AS version, w.visible AS visible" +
 		" FROM ways w" +
-		" WHERE w.timestamp >= ? AND w.timestamp < ?" +
+		" WHERE w.timestamp > ? AND w.timestamp <= ?" +
 		" ORDER BY w.id, w.version";
 	
 	private Date intervalBegin;

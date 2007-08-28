@@ -22,7 +22,7 @@ public class WayTagHistoryReader extends BaseEntityReader<EntityHistory<WayTag>>
 		" INNER JOIN (" +
 		"   SELECT id, MAX(version) as version" +
 		"   FROM ways" +
-		"   WHERE timestamp >= ? AND timestamp < ?" +
+		"   WHERE timestamp > ? AND timestamp <= ?" +
 		"   GROUP BY id" +
 		" ) wayList ON wt.id = wayList.id AND wt.version = wayList.version";
 	

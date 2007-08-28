@@ -22,7 +22,7 @@ public class WaySegmentHistoryReader extends BaseEntityReader<EntityHistory<WayS
 		" INNER JOIN (" +
 		"   SELECT id, MAX(version) as version" +
 		"   FROM ways" +
-		"   WHERE timestamp >= ? AND timestamp < ?" +
+		"   WHERE timestamp > ? AND timestamp <= ?" +
 		"   GROUP BY id" +
 		" ) wayList ON ws.id = wayList.id AND ws.version = wayList.version";
 	

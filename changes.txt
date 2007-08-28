@@ -1,6 +1,8 @@
 0.11
 Modified mysql snapshot task to read entire contents of table and process data in code in attempt to improve dump times.
 Added gzip and bzip2 support to xml tasks.
+Modified all database snapshot tasks to include entities with a timestamp equalling the snapshot time.
+Modified all database changeset tasks to not include the begin time and to include the end time.
 
 0.10
 Added JOSM-like date handling as a fallback if the standard xml date format isn't found.

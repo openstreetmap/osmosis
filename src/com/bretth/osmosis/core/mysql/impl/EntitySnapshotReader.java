@@ -70,8 +70,8 @@ public class EntitySnapshotReader<T extends Entity> implements ReleasableIterato
 				
 				entityHistory = entityIterator.next();
 				
-				// We're only interested in elements prior to the snapshot point.
-				if (entityHistory.getEntity().getTimestamp().compareTo(snapshotInstant) < 0) {
+				// We're only interested in elements prior or equal to the snapshot point.
+				if (entityHistory.getEntity().getTimestamp().compareTo(snapshotInstant) <= 0) {
 					entityHistoryList.add(entityHistory);
 				}
 			}

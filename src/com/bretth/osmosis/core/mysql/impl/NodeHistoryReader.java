@@ -30,7 +30,7 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 		" INNER JOIN (" +
 		"   SELECT id" +
 		"   FROM nodes" +
-		"   WHERE timestamp >= ? AND timestamp < ?" +
+		"   WHERE timestamp > ? AND timestamp <= ?" +
 		"   GROUP BY id" +
 		" ) idList ON n.id = idList.id" +
 		" WHERE n.timestamp < ?" +
