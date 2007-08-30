@@ -22,6 +22,7 @@ import com.bretth.osmosis.core.sort.EntityByTypeThenIdComparator;
 import com.bretth.osmosis.core.sort.EntitySorterFactory;
 import com.bretth.osmosis.core.xml.XmlChangeReaderFactory;
 import com.bretth.osmosis.core.xml.XmlChangeWriterFactory;
+import com.bretth.osmosis.core.xml.XmlDownloaderFactory;
 import com.bretth.osmosis.core.xml.XmlReaderFactory;
 import com.bretth.osmosis.core.xml.XmlWriterFactory;
 
@@ -67,5 +68,6 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("buffer-change", new ChangeBufferFactory());
 		TaskManagerFactory.register("merge", new EntityMergerFactory());
 		TaskManagerFactory.register("merge-change", new ChangeMergerFactory());
+		TaskManagerFactory.register("download-xml", new XmlDownloaderFactory());
 	}
 }

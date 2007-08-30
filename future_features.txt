@@ -45,3 +45,36 @@ Add gzip support.
 
 **********
 Add ability to create new entities as part of change as well as simply replicate creates (with existing ids) from one place to another.
+
+**********
+An API download task.  Marcus Wolschon has already written this, I just have to make a couple of minor changes before applying it into the codebase.
+
+**********
+An API upload task.  This will duplicate the functionality of Martijn's bulk_import.pl so has slipped in priority.  Once the kinks have been ironed out in that tool I'll re-use the ideas.
+
+**********
+A new task for dumping "current" tables.  This might be useful in the short term to speed up planet creation.
+
+**********
+Complete the changeset application code in --write-mysql-change and add "placeholder" functionality to allow new entities to be created.
+
+**********
+Add referential integrity checking to database writing code.
+
+**********
+Add a task for reading and writing changes from JOSM style change files.
+
+**********
+A new cron or daemon run osmosis-extract application for producing regular changesets (ie. daily snapshots or perhaps even less).
+
+**********
+Add progress reporting features to osmosis tasks so you can tell where it's up to.
+
+**********
+Requested by Tom Hughes.
+Add a polygon filtering task allowing more complex filtering than existing bounding box task.
+
+**********
+Requested by Tom Hughes.
+Add a reporting task showing all editing users (to be used in conjunction with polygon filter.
+This implies adding user support to osmosis and should include reading/writing user info to xml files.
