@@ -68,6 +68,6 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("buffer-change", new ChangeBufferFactory());
 		TaskManagerFactory.register("merge", new EntityMergerFactory());
 		TaskManagerFactory.register("merge-change", new ChangeMergerFactory());
-		TaskManagerFactory.register("download-xml", new XmlDownloaderFactory());
+		TaskManagerFactory.register("read-api", new XmlDownloaderFactory());
 	}
 }
