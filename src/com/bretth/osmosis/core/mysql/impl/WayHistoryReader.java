@@ -18,7 +18,7 @@ import com.bretth.osmosis.core.domain.Way;
  */
 public class WayHistoryReader extends BaseEntityReader<EntityHistory<Way>> {
 	private static final String SELECT_SQL =
-		"SELECT w.id AS id, w.timestamp AS timestamp, w.version AS version, w.visible AS visible" +
+		"SELECT w.id AS id, w.timestamp AS timestamp, u.data_public, u.display_name, w.version AS version, w.visible AS visible" +
 		" FROM ways w" +
 		" INNER JOIN users u ON w.user_id = u.id" +
 		" WHERE w.timestamp > ? AND w.timestamp <= ?" +

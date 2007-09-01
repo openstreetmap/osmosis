@@ -25,7 +25,7 @@ public class SegmentHistoryReader extends BaseEntityReader<EntityHistory<Segment
 	// time interval. The outer query then queries all segment history items up to
 	// the end of the time interval.
 	private static final String SELECT_SQL =
-		"SELECT s.id, s.timestamp, s.node_a, s.node_b, s.tags, s.visible" +
+		"SELECT s.id, s.timestamp, u.data_public, u.display_name, s.node_a, s.node_b, s.tags, s.visible" +
 		" FROM segments s" +
 		" INNER JOIN (" +
 		"   SELECT id" +
