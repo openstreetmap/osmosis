@@ -33,6 +33,7 @@ public class SegmentHistoryReader extends BaseEntityReader<EntityHistory<Segment
 		"   WHERE timestamp > ? AND timestamp <= ?" +
 		"   GROUP BY id" +
 		" ) idList ON s.id = idList.id" +
+		" INNER JOIN users u ON s.user_id = u.id" +
 		" WHERE s.timestamp < ?" +
 		" ORDER BY s.id, s.timestamp";
 	
@@ -97,6 +98,8 @@ public class SegmentHistoryReader extends BaseEntityReader<EntityHistory<Segment
 	protected ReadResult<EntityHistory<Segment>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
+		boolean dataPublic;
+		String userName;
 		long from;
 		long to;
 		String tags;
@@ -107,6 +110,8 @@ public class SegmentHistoryReader extends BaseEntityReader<EntityHistory<Segment
 		try {
 			id = resultSet.getLong("id");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
+			dataPublic = resultSet.getBoolean("data_public");
+			userName = resultSet.getString("display_name");
 			from = resultSet.getLong("node_a");
 			to = resultSet.getLong("node_b");
 			tags = resultSet.getString("tags");
@@ -116,7 +121,11 @@ public class SegmentHistoryReader extends BaseEntityReader<EntityHistory<Segment
 			throw new OsmosisRuntimeException("Unable to read segment fields.", e);
 		}
 		
-		segment = new Segment(id, timestamp, from, to);
+		if (!dataPublic) {
+			userName = "";
+		}
+		
+		segment = new Segment(id, timestamp, userName, from, to);
 		segment.addTags(tagParser.parseTags(tags));
 		
 		segmentHistory = new EntityHistory<Segment>(segment, 0, visible);

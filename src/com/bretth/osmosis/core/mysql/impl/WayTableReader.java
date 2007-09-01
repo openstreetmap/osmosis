@@ -16,9 +16,10 @@ import com.bretth.osmosis.core.domain.Way;
  */
 public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
 	private static final String SELECT_SQL =
-		"SELECT id, version, timestamp, visible"
-		+ " FROM ways"
-		+ " ORDER BY id, version";
+		"SELECT w.id, w.version, w.timestamp, w.visible"
+		+ " FROM ways w"
+		+ " INNER JOIN users u ON w.user_id = u.id"
+		+ " ORDER BY w.id, w.version";
 	
 	
 	/**
@@ -54,6 +55,8 @@ public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
 	protected ReadResult<EntityHistory<Way>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
+		boolean dataPublic;
+		String userName;
 		int version;
 		boolean visible;
 		
@@ -61,15 +64,21 @@ public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
 			id = resultSet.getLong("id");
 			version = resultSet.getInt("version");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
+			dataPublic = resultSet.getBoolean("data_public");
+			userName = resultSet.getString("display_name");
 			visible = resultSet.getBoolean("visible");
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read way fields.", e);
 		}
 		
+		if (!dataPublic) {
+			userName = "";
+		}
+		
 		return new ReadResult<EntityHistory<Way>>(
 			true,
-			new EntityHistory<Way>(new Way(id, timestamp), version, visible)
+			new EntityHistory<Way>(new Way(id, timestamp, userName), version, visible)
 		);
 	}
 }

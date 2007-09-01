@@ -59,6 +59,7 @@ public class TimestampChangeSetter implements EntityProcessor {
 					new Node(
 						inputEntity.getId(),
 						timestamp,
+						inputEntity.getUser(),
 						inputEntity.getLatitude(),
 						inputEntity.getLongitude()
 					)
@@ -81,6 +82,7 @@ public class TimestampChangeSetter implements EntityProcessor {
 					new Segment(
 						inputEntity.getId(),
 						timestamp,
+						inputEntity.getUser(),
 						inputEntity.getFrom(),
 						inputEntity.getTo()
 					)
@@ -98,7 +100,7 @@ public class TimestampChangeSetter implements EntityProcessor {
 		Way inputEntity = wayContainer.getEntity();
 		Way outputEntity;
 		
-		outputEntity = new Way(inputEntity.getId(), timestamp);
+		outputEntity = new Way(inputEntity.getId(), timestamp, inputEntity.getUser());
 		
 		outputEntity.addSegmentReferences(inputEntity.getSegmentReferenceList());
 		outputEntity.addTags(inputEntity.getTagList());

@@ -19,6 +19,7 @@ public class NodeElementProcessor extends SourceElementProcessor implements TagL
 	private static final String ELEMENT_NAME_TAG = "tag";
 	private static final String ATTRIBUTE_NAME_ID = "id";
 	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
+	private static final String ATTRIBUTE_NAME_USER = "user";
 	private static final String ATTRIBUTE_NAME_LATITUDE = "lat";
 	private static final String ATTRIBUTE_NAME_LONGITUDE = "lon";
 	
@@ -52,13 +53,18 @@ public class NodeElementProcessor extends SourceElementProcessor implements TagL
 		Date timestamp;
 		double latitude;
 		double longitude;
+		String user;
 		
 		id = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_ID));
 		timestamp = parseTimestamp(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
 		latitude = Double.parseDouble(attributes.getValue(ATTRIBUTE_NAME_LATITUDE));
 		longitude = Double.parseDouble(attributes.getValue(ATTRIBUTE_NAME_LONGITUDE));
+		user = attributes.getValue(ATTRIBUTE_NAME_USER);
+		if (user == null) {
+			user = "";
+		}
 		
-		node = new Node(id, timestamp, latitude, longitude);
+		node = new Node(id, timestamp, user, latitude, longitude);
 	}
 	
 	

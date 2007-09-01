@@ -23,13 +23,15 @@ public class Segment extends Entity implements Comparable<Segment> {
 	 *            The unique identifier.
 	 * @param timestamp
 	 *            The last updated timestamp.
+	 * @param user
+	 *            The name of the user that last modified this entity.
 	 * @param from
 	 *            The id of the node marking the beginning of the segment.
 	 * @param to
 	 *            The id of the node marking the end of the segment.
 	 */
-	public Segment(long id, Date timestamp, long from, long to) {
-		super(id, timestamp);
+	public Segment(long id, Date timestamp, String user, long from, long to) {
+		super(id, timestamp, user);
 		
 		this.from = from;
 		this.to = to;

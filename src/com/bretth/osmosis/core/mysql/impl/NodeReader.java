@@ -15,9 +15,10 @@ import com.bretth.osmosis.core.domain.Node;
  */
 public class NodeReader extends BaseEntityReader<EntityHistory<Node>> {
 	private static final String SELECT_SQL =
-		"SELECT id, timestamp, latitude, longitude, tags, visible"
-		+ " FROM nodes"
-		+ " ORDER BY id";
+		"SELECT n.id, n.timestamp, u.data_public, u.display_name, n.latitude, n.longitude, n.tags, n.visible"
+		+ " FROM nodes n"
+		+ " INNER JOIN users u ON n.user_id = u.id"
+		+ " ORDER BY n.id";
 	
 	private EmbeddedTagProcessor tagParser;
 	
@@ -57,6 +58,8 @@ public class NodeReader extends BaseEntityReader<EntityHistory<Node>> {
 	protected ReadResult<EntityHistory<Node>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
+		boolean dataPublic;
+		String userName;
 		double latitude;
 		double longitude;
 		String tags;
@@ -66,6 +69,8 @@ public class NodeReader extends BaseEntityReader<EntityHistory<Node>> {
 		try {
 			id = resultSet.getLong("id");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
+			dataPublic = resultSet.getBoolean("data_public");
+			userName = resultSet.getString("display_name");
 			latitude = resultSet.getDouble("latitude");
 			longitude = resultSet.getDouble("longitude");
 			tags = resultSet.getString("tags");
@@ -75,7 +80,11 @@ public class NodeReader extends BaseEntityReader<EntityHistory<Node>> {
 			throw new OsmosisRuntimeException("Unable to read node fields.", e);
 		}
 		
-		node = new Node(id, timestamp, latitude, longitude);
+		if (!dataPublic) {
+			userName = "";
+		}
+		
+		node = new Node(id, timestamp, userName, latitude, longitude);
 		node.addTags(tagParser.parseTags(tags));
 		
 		return new ReadResult<EntityHistory<Node>>(

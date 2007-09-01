@@ -1,3 +1,7 @@
+0.12
+Added a --read-api task for retrieving data from the central server.
+Added "user" support to the core data types, and all relevant tasks except database writing tasks.
+
 0.11
 Modified mysql snapshot task to read entire contents of table and process data in code in attempt to improve dump times.
 Added gzip and bzip2 support to xml tasks.

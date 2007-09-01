@@ -23,13 +23,15 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            The unique identifier.
 	 * @param timestamp
 	 *            The last updated timestamp.
+	 * @param user
+	 *            The name of the user that last modified this entity.
 	 * @param latitude
 	 *            The geographic latitude.
 	 * @param longitude
 	 *            The geographic longitude.
 	 */
-	public Node(long id, Date timestamp, double latitude, double longitude) {
-		super(id, timestamp);
+	public Node(long id, Date timestamp, String user, double latitude, double longitude) {
+		super(id, timestamp, user);
 		
 		this.latitude = latitude;
 		this.longitude = longitude;

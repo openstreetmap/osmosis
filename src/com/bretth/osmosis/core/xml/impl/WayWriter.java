@@ -47,6 +47,9 @@ public class WayWriter extends ElementWriter {
 		beginOpenElement();
 		addAttribute("id", Long.toString(way.getId()));
 		addAttribute("timestamp", formatDate(way.getTimestamp()));
+		if (way.getUser() != null && way.getUser().length() > 0) {
+			addAttribute("user", way.getUser());
+		}
 		
 		segmentReferences = way.getSegmentReferenceList();
 		tags = way.getTagList();

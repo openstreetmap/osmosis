@@ -19,6 +19,7 @@ public class SegmentElementProcessor extends SourceElementProcessor implements T
 	private static final String ELEMENT_NAME_TAG = "tag";
 	private static final String ATTRIBUTE_NAME_ID = "id";
 	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
+	private static final String ATTRIBUTE_NAME_USER = "user";
 	private static final String ATTRIBUTE_NAME_FROM = "from";
 	private static final String ATTRIBUTE_NAME_TO = "to";
 	
@@ -52,13 +53,18 @@ public class SegmentElementProcessor extends SourceElementProcessor implements T
 		Date timestamp;
 		long from;
 		long to;
+		String user;
 		
 		id = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_ID));
 		timestamp = parseTimestamp(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
 		from = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_FROM));
 		to = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_TO));
+		user = attributes.getValue(ATTRIBUTE_NAME_USER);
+		if (user == null) {
+			user = "";
+		}
 		
-		segment = new Segment(id, timestamp, from, to);
+		segment = new Segment(id, timestamp, user, from, to);
 	}
 	
 	

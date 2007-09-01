@@ -58,7 +58,7 @@ public class OsmChangeWriter extends ElementWriter {
 	 */
 	public void begin() {
 		beginOpenElement();
-		addAttribute("version", "0.3");
+		addAttribute("version", XmlConstants.OSM_VERSION);
 		addAttribute("generator", "Osmosis");
 		endOpenElement(false);
 	}

@@ -43,6 +43,9 @@ public class SegmentWriter extends ElementWriter {
 		beginOpenElement();
 		addAttribute("id", Long.toString(segment.getId()));
 		addAttribute("timestamp", formatDate(segment.getTimestamp()));
+		if (segment.getUser() != null && segment.getUser().length() > 0) {
+			addAttribute("user", segment.getUser());
+		}
 		addAttribute("from", Long.toString(segment.getFrom()));
 		addAttribute("to", Long.toString(segment.getTo()));
 		

@@ -18,6 +18,7 @@ public abstract class Entity implements Serializable {
 	private long id;
 	private Date timestamp;
 	private List<Tag> tagList;
+	private String user;
 	
 	
 	/**
@@ -27,10 +28,13 @@ public abstract class Entity implements Serializable {
 	 *            The unique identifier.
 	 * @param timestamp
 	 *            The last updated timestamp.
+	 * @param user
+	 *            The name of the user that last modified this entity.
 	 */
-	public Entity(long id, Date timestamp) {
+	public Entity(long id, Date timestamp, String user) {
 		this.id = id;
 		this.timestamp = timestamp;
+		this.user = user;
 		
 		tagList = new ArrayList<Tag>();
 	}
@@ -95,6 +99,14 @@ public abstract class Entity implements Serializable {
 	 */
 	public Date getTimestamp() {
 		return timestamp;
+	}
+	
+	
+	/**
+	 * @return The user. 
+	 */
+	public String getUser() {
+		return user;
 	}
 	
 	

@@ -26,9 +26,11 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            The unique identifier.
 	 * @param timestamp
 	 *            The last updated timestamp.
+	 * @param user
+	 *            The name of the user that last modified this entity.
 	 */
-	public Way(long id, Date timestamp) {
-		super(id, timestamp);
+	public Way(long id, Date timestamp, String user) {
+		super(id, timestamp, user);
 		
 		segmentReferenceList = new ArrayList<SegmentReference>();
 	}

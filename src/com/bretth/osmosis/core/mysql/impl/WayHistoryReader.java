@@ -20,6 +20,7 @@ public class WayHistoryReader extends BaseEntityReader<EntityHistory<Way>> {
 	private static final String SELECT_SQL =
 		"SELECT w.id AS id, w.timestamp AS timestamp, w.version AS version, w.visible AS visible" +
 		" FROM ways w" +
+		" INNER JOIN users u ON w.user_id = u.id" +
 		" WHERE w.timestamp > ? AND w.timestamp <= ?" +
 		" ORDER BY w.id, w.version";
 	
@@ -79,12 +80,16 @@ public class WayHistoryReader extends BaseEntityReader<EntityHistory<Way>> {
 	protected ReadResult<EntityHistory<Way>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
+		boolean dataPublic;
+		String userName;
 		int version;
 		boolean visible;
 		
 		try {
 			id = resultSet.getLong("id");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
+			dataPublic = resultSet.getBoolean("data_public");
+			userName = resultSet.getString("display_name");
 			version = resultSet.getInt("version");
 			visible = resultSet.getBoolean("visible");
 			
@@ -92,10 +97,14 @@ public class WayHistoryReader extends BaseEntityReader<EntityHistory<Way>> {
 			throw new OsmosisRuntimeException("Unable to read node fields.", e);
 		}
 		
+		if (!dataPublic) {
+			userName = "";
+		}
+		
 		return new ReadResult<EntityHistory<Way>>(
 			true,
 			new EntityHistory<Way>(
-				new Way(id, timestamp), version, visible)
+				new Way(id, timestamp, userName), version, visible)
 		);
 	}
 }

@@ -21,6 +21,7 @@ public class WayElementProcessor extends SourceElementProcessor implements TagLi
 	private static final String ELEMENT_NAME_SEGMENT = "seg";
 	private static final String ATTRIBUTE_NAME_ID = "id";
 	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
+	private static final String ATTRIBUTE_NAME_USER = "user";
 	
 	private TagElementProcessor tagElementProcessor;
 	private SegmentReferenceElementProcessor segmentReferenceElementProcessor;
@@ -52,11 +53,16 @@ public class WayElementProcessor extends SourceElementProcessor implements TagLi
 	public void begin(Attributes attributes) {
 		long id;
 		Date timestamp;
+		String user;
 		
 		id = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_ID));
 		timestamp = parseTimestamp(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
+		user = attributes.getValue(ATTRIBUTE_NAME_USER);
+		if (user == null) {
+			user = "";
+		}
 		
-		way = new Way(id, timestamp);
+		way = new Way(id, timestamp, user);
 	}
 	
 	

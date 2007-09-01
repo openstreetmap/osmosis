@@ -43,6 +43,9 @@ public class NodeWriter extends ElementWriter {
 		beginOpenElement();
 		addAttribute("id", Long.toString(node.getId()));
 		addAttribute("timestamp", formatDate(node.getTimestamp()));
+		if (node.getUser() != null && node.getUser().length() > 0) {
+			addAttribute("user", node.getUser());
+		}
 		addAttribute("lat", Double.toString(node.getLatitude()));
 		addAttribute("lon", Double.toString(node.getLongitude()));
 		

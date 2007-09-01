@@ -1,5 +1,7 @@
 package com.bretth.osmosis.core.xml.impl;
 
+import java.util.logging.Logger;
+
 import org.xml.sax.Attributes;
 
 import com.bretth.osmosis.core.task.Sink;
@@ -11,11 +13,13 @@ import com.bretth.osmosis.core.task.Sink;
  * @author Brett Henderson
  */
 public class OsmElementProcessor extends SourceElementProcessor {
+	
+	private static final Logger log = Logger.getLogger(OsmElementProcessor.class.getName());
+	
 	private static final String ELEMENT_NAME_NODE = "node";
 	private static final String ELEMENT_NAME_SEGMENT = "segment";
 	private static final String ELEMENT_NAME_WAY = "way";
 	private static final String ATTRIBUTE_NAME_VERSION = "version";
-	private static final String ATTRIBUTE_VALUE_VERSION = "0.3";
 	
 	
 	private NodeElementProcessor nodeElementProcessor;
@@ -51,9 +55,9 @@ public class OsmElementProcessor extends SourceElementProcessor {
 		
 		fileVersion = attributes.getValue(ATTRIBUTE_NAME_VERSION);
 		
-		if (!ATTRIBUTE_VALUE_VERSION.equals(fileVersion)) {
-			System.err.println(
-				"Warning, expected version " + ATTRIBUTE_VALUE_VERSION
+		if (!XmlConstants.OSM_VERSION.equals(fileVersion)) {
+			log.warning(
+				"Expected version " + XmlConstants.OSM_VERSION
 				+ " but received " + fileVersion + "."
 			);
 		}

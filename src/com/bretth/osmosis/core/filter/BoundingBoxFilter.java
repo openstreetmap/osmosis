@@ -138,7 +138,7 @@ public class BoundingBoxFilter implements SinkSource, EntityProcessor {
 		way = container.getEntity();
 		
 		// Create a new way object to contain only items within the bounding box.
-		filteredWay = new Way(way.getId(), way.getTimestamp());
+		filteredWay = new Way(way.getId(), way.getTimestamp(), way.getUser());
 		
 		// Only add segment references to segments that are within the bounding box.
 		for (SegmentReference segmentReference : way.getSegmentReferenceList()) {

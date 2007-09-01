@@ -15,9 +15,10 @@ import com.bretth.osmosis.core.domain.Segment;
  */
 public class SegmentReader extends BaseEntityReader<EntityHistory<Segment>> {
 	private static final String SELECT_SQL =
-		"SELECT id, timestamp, node_a, node_b, tags, visible"
-		+ " FROM segments"
-		+ " ORDER BY id";
+		"SELECT s.id, s.timestamp, u.data_public, u.display_name, s.node_a, s.node_b, s.tags, s.visible"
+		+ " FROM segments s"
+		+ " INNER JOIN users u ON s.user_id = u.id"
+		+ " ORDER BY s.id";
 	
 	private EmbeddedTagProcessor tagParser;
 	
@@ -57,6 +58,8 @@ public class SegmentReader extends BaseEntityReader<EntityHistory<Segment>> {
 	protected ReadResult<EntityHistory<Segment>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
+		boolean dataPublic;
+		String userName;
 		long from;
 		long to;
 		String tags;
@@ -66,6 +69,8 @@ public class SegmentReader extends BaseEntityReader<EntityHistory<Segment>> {
 		try {
 			id = resultSet.getLong("id");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
+			dataPublic = resultSet.getBoolean("data_public");
+			userName = resultSet.getString("display_name");
 			from = resultSet.getLong("node_a");
 			to = resultSet.getLong("node_b");
 			tags = resultSet.getString("tags");
@@ -75,7 +80,11 @@ public class SegmentReader extends BaseEntityReader<EntityHistory<Segment>> {
 			throw new OsmosisRuntimeException("Unable to read segment fields.", e);
 		}
 		
-		segment = new Segment(id, timestamp, from, to);
+		if (!dataPublic) {
+			userName = "";
+		}
+		
+		segment = new Segment(id, timestamp, userName, from, to);
 		segment.addTags(tagParser.parseTags(tags));
 		
 		return new ReadResult<EntityHistory<Segment>>(

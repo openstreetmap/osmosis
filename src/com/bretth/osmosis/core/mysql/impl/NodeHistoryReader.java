@@ -25,7 +25,7 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 	// time interval. The outer query then queries all node history items up to
 	// the end of the time interval.
 	private static final String SELECT_SQL =
-		"SELECT n.id, n.timestamp, n.latitude, n.longitude, n.tags, n.visible" +
+		"SELECT n.id, n.timestamp, u.data_public, u.display_name, n.latitude, n.longitude, n.tags, n.visible" +
 		" FROM nodes n" +
 		" INNER JOIN (" +
 		"   SELECT id" +
@@ -33,6 +33,7 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 		"   WHERE timestamp > ? AND timestamp <= ?" +
 		"   GROUP BY id" +
 		" ) idList ON n.id = idList.id" +
+		" INNER JOIN users u ON n.user_id = u.id" +
 		" WHERE n.timestamp < ?" +
 		" ORDER BY n.id, n.timestamp";
 	
@@ -98,6 +99,8 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 	protected ReadResult<EntityHistory<Node>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
+		boolean dataPublic;
+		String userName;
 		double latitude;
 		double longitude;
 		String tags;
@@ -108,6 +111,8 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 		try {
 			id = resultSet.getLong("id");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
+			dataPublic = resultSet.getBoolean("data_public");
+			userName = resultSet.getString("display_name");
 			latitude = resultSet.getDouble("latitude");
 			longitude = resultSet.getDouble("longitude");
 			tags = resultSet.getString("tags");
@@ -117,7 +122,11 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 			throw new OsmosisRuntimeException("Unable to read node fields.", e);
 		}
 		
-		node = new Node(id, timestamp, latitude, longitude);
+		if (!dataPublic) {
+			userName = "";
+		}
+		
+		node = new Node(id, timestamp, userName, latitude, longitude);
 		node.addTags(tagParser.parseTags(tags));
 		
 		nodeHistory = new EntityHistory<Node>(node, 0, visible);
