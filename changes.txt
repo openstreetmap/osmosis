@@ -2,6 +2,7 @@
 Added a --read-api task for retrieving data from the central server.
 Added "user" support to the core data types, and all relevant tasks except database writing tasks.
 Added a --bounding-polygon task for filtering data by an area.
+Added a --report task which will produce user statistics for a data set.
 
 0.11
 Modified mysql snapshot task to read entire contents of table and process data in code in attempt to improve dump times.
