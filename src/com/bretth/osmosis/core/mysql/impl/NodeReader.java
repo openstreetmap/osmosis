@@ -34,9 +34,12 @@ public class NodeReader extends BaseEntityReader<EntityHistory<Node>> {
 	 *            The user name for authentication.
 	 * @param password
 	 *            The password for authentication.
+	 * @param readAllUsers
+	 *            If this flag is true, all users will be read from the database
+	 *            regardless of their public edits flag.
 	 */
-	public NodeReader(String host, String database, String user, String password) {
-		super(host, database, user, password);
+	public NodeReader(String host, String database, String user, String password, boolean readAllUsers) {
+		super(host, database, user, password, readAllUsers);
 		
 		tagParser = new EmbeddedTagProcessor();
 	}
@@ -58,7 +61,6 @@ public class NodeReader extends BaseEntityReader<EntityHistory<Node>> {
 	protected ReadResult<EntityHistory<Node>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
-		boolean dataPublic;
 		String userName;
 		double latitude;
 		double longitude;
@@ -69,8 +71,10 @@ public class NodeReader extends BaseEntityReader<EntityHistory<Node>> {
 		try {
 			id = resultSet.getLong("id");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
-			dataPublic = resultSet.getBoolean("data_public");
-			userName = resultSet.getString("display_name");
+			userName = readUserField(
+				resultSet.getBoolean("data_public"),
+				resultSet.getString("display_name")
+			);
 			latitude = resultSet.getDouble("latitude");
 			longitude = resultSet.getDouble("longitude");
 			tags = resultSet.getString("tags");
@@ -78,10 +82,6 @@ public class NodeReader extends BaseEntityReader<EntityHistory<Node>> {
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read node fields.", e);
-		}
-		
-		if (!dataPublic) {
-			userName = "";
 		}
 		
 		node = new Node(id, timestamp, userName, latitude, longitude);

@@ -34,9 +34,12 @@ public class SegmentReader extends BaseEntityReader<EntityHistory<Segment>> {
 	 *            The user name for authentication.
 	 * @param password
 	 *            The password for authentication.
+	 * @param readAllUsers
+	 *            If this flag is true, all users will be read from the database
+	 *            regardless of their public edits flag.
 	 */
-	public SegmentReader(String host, String database, String user, String password) {
-		super(host, database, user, password);
+	public SegmentReader(String host, String database, String user, String password, boolean readAllUsers) {
+		super(host, database, user, password, readAllUsers);
 		
 		tagParser = new EmbeddedTagProcessor();
 	}
@@ -58,7 +61,6 @@ public class SegmentReader extends BaseEntityReader<EntityHistory<Segment>> {
 	protected ReadResult<EntityHistory<Segment>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
-		boolean dataPublic;
 		String userName;
 		long from;
 		long to;
@@ -69,8 +71,10 @@ public class SegmentReader extends BaseEntityReader<EntityHistory<Segment>> {
 		try {
 			id = resultSet.getLong("id");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
-			dataPublic = resultSet.getBoolean("data_public");
-			userName = resultSet.getString("display_name");
+			userName = readUserField(
+				resultSet.getBoolean("data_public"),
+				resultSet.getString("display_name")
+			);
 			from = resultSet.getLong("node_a");
 			to = resultSet.getLong("node_b");
 			tags = resultSet.getString("tags");
@@ -78,10 +82,6 @@ public class SegmentReader extends BaseEntityReader<EntityHistory<Segment>> {
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read segment fields.", e);
-		}
-		
-		if (!dataPublic) {
-			userName = "";
 		}
 		
 		segment = new Segment(id, timestamp, userName, from, to);

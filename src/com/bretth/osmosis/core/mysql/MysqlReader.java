@@ -32,6 +32,7 @@ public class MysqlReader implements RunnableSource {
 	private String user;
 	private String password;
 	private Date snapshotInstant;
+	private boolean readAllUsers;
 	
 	
 	/**
@@ -47,14 +48,18 @@ public class MysqlReader implements RunnableSource {
 	 *            The password for authentication.
 	 * @param snapshotInstant
 	 *            The state of the node table at this point in time will be
-	 *            dumped.  This ensures a consistent snapshot.
+	 *            dumped. This ensures a consistent snapshot.
+	 * @param readAllUsers
+	 *            If this flag is true, all users will be read from the database
+	 *            regardless of their public edits flag.
 	 */
-	public MysqlReader(String host, String database, String user, String password, Date snapshotInstant) {
+	public MysqlReader(String host, String database, String user, String password, Date snapshotInstant, boolean readAllUsers) {
 		this.host = host;
 		this.database = database;
 		this.user = user;
 		this.password = password;
 		this.snapshotInstant = snapshotInstant;
+		this.readAllUsers = readAllUsers;
 	}
 	
 	
@@ -74,7 +79,7 @@ public class MysqlReader implements RunnableSource {
 		
 		reader = new EntitySnapshotReader<Node>(
 			new PeekableIterator<EntityHistory<Node>>(
-				new NodeReader(host, database, user, password)
+				new NodeReader(host, database, user, password, readAllUsers)
 			),
 			snapshotInstant,
 			new EntityHistoryComparator<Node>()
@@ -99,7 +104,7 @@ public class MysqlReader implements RunnableSource {
 		
 		reader = new EntitySnapshotReader<Segment>(
 			new PeekableIterator<EntityHistory<Segment>>(
-				new SegmentReader(host, database, user, password)
+				new SegmentReader(host, database, user, password, readAllUsers)
 			),
 			snapshotInstant,
 			new EntityHistoryComparator<Segment>()
@@ -124,7 +129,7 @@ public class MysqlReader implements RunnableSource {
 		
 		reader = new EntitySnapshotReader<Way>(
 			new PeekableIterator<EntityHistory<Way>>(
-				new WayReader(host, database, user, password)
+				new WayReader(host, database, user, password, readAllUsers)
 			),
 			snapshotInstant,
 			new EntityHistoryComparator<Way>()

@@ -36,17 +36,20 @@ public class WayChangeReader {
 	 *            The user name for authentication.
 	 * @param password
 	 *            The password for authentication.
+	 * @param readAllUsers
+	 *            If this flag is true, all users will be read from the database
+	 *            regardless of their public edits flag.
 	 * @param intervalBegin
 	 *            Marks the beginning (inclusive) of the time interval to be
 	 *            checked.
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public WayChangeReader(String host, String database, String user, String password, Date intervalBegin, Date intervalEnd) {
+	public WayChangeReader(String host, String database, String user, String password, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
 		wayHistoryReader =
 			new PeekableIterator<EntityHistory<Way>>(
 				new PersistentIterator<EntityHistory<Way>>(
-					new WayHistoryReader(host, database, user, password, intervalBegin, intervalEnd),
+					new WayHistoryReader(host, database, user, password, readAllUsers, intervalBegin, intervalEnd),
 					"way",
 					true
 				)

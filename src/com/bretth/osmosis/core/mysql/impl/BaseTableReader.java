@@ -9,14 +9,14 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**
- * Provides the base implementation of all database entity readers.
+ * Provides the base implementation of all database table readers.
  * 
  * @author Brett Henderson
  * 
  * @param <T>
  *            The type of entity to retrieved.
  */
-public abstract class BaseEntityReader<T> implements ReleasableIterator<T> {
+public abstract class BaseTableReader<T> implements ReleasableIterator<T> {
 	
 	private DatabaseContext dbCtx;
 	private ResultSet resultSet;
@@ -35,7 +35,7 @@ public abstract class BaseEntityReader<T> implements ReleasableIterator<T> {
 	 * @param password
 	 *            The password for authentication.
 	 */
-	public BaseEntityReader(String host, String database, String user, String password) {
+	public BaseTableReader(String host, String database, String user, String password) {
 		dbCtx = new DatabaseContext(host, database, user, password);
 	}
 	

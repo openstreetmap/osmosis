@@ -22,6 +22,7 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	private String database;
 	private String user;
 	private String password;
+	private boolean readAllUsers;
 	private Date intervalBegin;
 	private Date intervalEnd;
 	
@@ -37,17 +38,21 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	 *            The user name for authentication.
 	 * @param password
 	 *            The password for authentication.
+	 * @param readAllUsers
+	 *            If this flag is true, all users will be read from the database
+	 *            regardless of their public edits flag.
 	 * @param intervalBegin
 	 *            Marks the beginning (inclusive) of the time interval to be
 	 *            checked.
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public MysqlChangeReader(String host, String database, String user, String password, Date intervalBegin, Date intervalEnd) {
+	public MysqlChangeReader(String host, String database, String user, String password, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
 		this.host = host;
 		this.database = database;
 		this.user = user;
 		this.password = password;
+		this.readAllUsers = readAllUsers;
 		this.intervalBegin = intervalBegin;
 		this.intervalEnd = intervalEnd;
 	}
@@ -65,7 +70,7 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	 * Reads all node changes and sends them to the change sink.
 	 */
 	private void processNodes() {
-		NodeChangeReader reader = new NodeChangeReader(host, database, user, password, intervalBegin, intervalEnd);
+		NodeChangeReader reader = new NodeChangeReader(host, database, user, password, readAllUsers, intervalBegin, intervalEnd);
 		
 		try {
 			while (reader.hasNext()) {
@@ -82,7 +87,7 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	 * Reads all segment changes and sends them to the change sink.
 	 */
 	private void processSegments() {
-		SegmentChangeReader reader = new SegmentChangeReader(host, database, user, password, intervalBegin, intervalEnd);
+		SegmentChangeReader reader = new SegmentChangeReader(host, database, user, password, readAllUsers, intervalBegin, intervalEnd);
 		
 		try {
 			while (reader.hasNext()) {
@@ -99,7 +104,7 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	 * Reads all ways from the database and sends to the sink.
 	 */
 	private void processWays() {
-		WayChangeReader reader = new WayChangeReader(host, database, user, password, intervalBegin, intervalEnd);
+		WayChangeReader reader = new WayChangeReader(host, database, user, password, readAllUsers, intervalBegin, intervalEnd);
 		
 		try {
 			while (reader.hasNext()) {

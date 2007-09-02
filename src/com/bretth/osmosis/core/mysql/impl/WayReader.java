@@ -34,10 +34,13 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 	 *            The user name for authentication.
 	 * @param password
 	 *            The password for authentication.
+	 * @param readAllUsers
+	 *            If this flag is true, all users will be read from the database
+	 *            regardless of their public edits flag.
 	 */
-	public WayReader(String host, String database, String user, String password) {
+	public WayReader(String host, String database, String user, String password, boolean readAllUsers) {
 		wayReader = new PersistentIterator<EntityHistory<Way>>(
-			new WayTableReader(host, database, user, password),
+			new WayTableReader(host, database, user, password, readAllUsers),
 			"way",
 			true
 		);

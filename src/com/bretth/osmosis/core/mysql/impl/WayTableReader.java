@@ -33,9 +33,12 @@ public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
 	 *            The user name for authentication.
 	 * @param password
 	 *            The password for authentication.
+	 * @param readAllUsers
+	 *            If this flag is true, all users will be read from the database
+	 *            regardless of their public edits flag.
 	 */
-	public WayTableReader(String host, String database, String user, String password) {
-		super(host, database, user, password);
+	public WayTableReader(String host, String database, String user, String password, boolean readAllUsers) {
+		super(host, database, user, password, readAllUsers);
 	}
 	
 	
@@ -55,7 +58,6 @@ public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
 	protected ReadResult<EntityHistory<Way>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
-		boolean dataPublic;
 		String userName;
 		int version;
 		boolean visible;
@@ -64,16 +66,14 @@ public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
 			id = resultSet.getLong("id");
 			version = resultSet.getInt("version");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
-			dataPublic = resultSet.getBoolean("data_public");
-			userName = resultSet.getString("display_name");
+			userName = readUserField(
+				resultSet.getBoolean("data_public"),
+				resultSet.getString("display_name")
+			);
 			visible = resultSet.getBoolean("visible");
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read way fields.", e);
-		}
-		
-		if (!dataPublic) {
-			userName = "";
 		}
 		
 		return new ReadResult<EntityHistory<Way>>(

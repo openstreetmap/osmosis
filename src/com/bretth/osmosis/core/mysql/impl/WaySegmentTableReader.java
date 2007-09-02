@@ -12,7 +12,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * 
  * @author Brett Henderson
  */
-public class WaySegmentTableReader extends BaseEntityReader<EntityHistory<WaySegment>> {
+public class WaySegmentTableReader extends BaseTableReader<EntityHistory<WaySegment>> {
 	private static final String SELECT_SQL =
 		"SELECT id as way_id, version, segment_id, sequence_id"
 		+ " FROM way_segments"

@@ -34,17 +34,20 @@ public class NodeChangeReader {
 	 *            The user name for authentication.
 	 * @param password
 	 *            The password for authentication.
+	 * @param readAllUsers
+	 *            If this flag is true, all users will be read from the database
+	 *            regardless of their public edits flag.
 	 * @param intervalBegin
 	 *            Marks the beginning (inclusive) of the time interval to be
 	 *            checked.
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public NodeChangeReader(String host, String database, String user, String password, Date intervalBegin, Date intervalEnd) {
+	public NodeChangeReader(String host, String database, String user, String password, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
 		this.intervalBegin = intervalBegin;
 		
 		nodeHistoryReader = new PeekableIterator<EntityHistory<Node>>(
-			new NodeHistoryReader(host, database, user, password, intervalBegin, intervalEnd)
+			new NodeHistoryReader(host, database, user, password, readAllUsers, intervalBegin, intervalEnd)
 		);
 	}
 	
