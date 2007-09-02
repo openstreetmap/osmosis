@@ -1,10 +1,7 @@
 package com.bretth.osmosis.extract.mysql;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Date;
-
-import com.bretth.osmosis.core.xml.impl.DateFormatter;
+import java.awt.geom.Area;
+import java.awt.geom.Path2D;
 
 
 /**
@@ -13,9 +10,6 @@ import com.bretth.osmosis.core.xml.impl.DateFormatter;
  * @author Brett Henderson
  */
 public class Test {
-	private static final int ITERATIONS = 10000000;
-	
-	
 	/**
 	 * Entry point to the application.
 	 * 
@@ -23,21 +17,33 @@ public class Test {
 	 *            Command line arguments.
 	 */
 	public static void main(String[] args) {
-		DecimalFormat decimalFormat;
-		double myValue1;
-		double myValue2;
+		Path2D.Double path1;
+		Area area1;
+		Path2D.Double path2;
+		Area area2;
 		
-		decimalFormat = new DecimalFormat("0.####################E000;-0.####################E000");
-		myValue1 = -1234567890.1234567890;
-		myValue2 = -myValue1;
+		path1 = new Path2D.Double();
+		path2 = new Path2D.Double();
 		
-		System.out.println(myValue1);
-		System.out.println(myValue2);
-		System.out.println(decimalFormat.format(myValue1));
-		System.out.println(decimalFormat.format(myValue2));
+		path1.moveTo(0, 0);
+		path1.lineTo(1, 1);
+		path1.lineTo(1, 0);
+		path1.lineTo(0, 0);
 		
-		System.out.println(Double.parseDouble("0.4890E+02"));
-		System.out.println(Double.parseDouble("0.4890E02"));
+		path2.moveTo(0.5, 0);
+		path2.lineTo(0.5, 1);
+		path2.lineTo(1, 1);
+		path2.lineTo(1, 0);
+		path2.lineTo(0.5, 0);
+		
+		area1 = new Area(path1);
+		area2 = new Area(path2);
+		
+		System.out.println(area1.contains(0, 1));
+		System.out.println(area1.contains(0.25, 0.125));
+		System.out.println(area1.contains(0.75, 0.375));
+		area1.subtract(area2);
+		System.out.println(area1.contains(0.25, 0.125));
+		System.out.println(area1.contains(0.75, 0.375));
 	}
-
 }

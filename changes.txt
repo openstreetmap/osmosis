@@ -1,3 +1,6 @@
+0.13
+Modified the --bounding-polygon task so it can read files containing blank lines.
+
 0.12
 Added a --read-api task for retrieving data from the central server.
 Added "user" support to the core data types, and all relevant tasks except database writing tasks.

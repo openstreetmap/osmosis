@@ -121,18 +121,20 @@ public class PolygonFileReader {
 				boolean positivePolygon;
 				Area sectionArea;
 				
-				// Read the section header.
-				sectionHeader = bufferedReader.readLine();
-				
-				// It is invalid for the file to end without an "END" record.
-				if (sectionHeader == null) {
-					throw new OsmosisRuntimeException("File terminated prematurely without a global END record.");
-				}
-				
-				// The file cannot contain blank lines.
-				if (sectionHeader.trim().length() == 0) {
-					throw new OsmosisRuntimeException("A blank line was encountered where a new section was expected.");
-				}
+				// Read until a non-empty line is obtained.
+				do {
+					// Read the section header.
+					sectionHeader = bufferedReader.readLine();
+					
+					// It is invalid for the file to end without a global "END" record.
+					if (sectionHeader == null) {
+						throw new OsmosisRuntimeException("File terminated prematurely without a section END record.");
+					}
+					
+					// Remove any whitespace.
+					sectionHeader = sectionHeader.trim();
+					
+				} while (sectionHeader.isEmpty());
 				
 				// Stop reading when the global END record is reached.
 				if ("END".equals(sectionHeader)) {
@@ -184,17 +186,19 @@ public class PolygonFileReader {
 			String sectionLine;
 			double coordinates[];
 			
-			sectionLine = bufferedReader.readLine();
-			
-			// It is invalid for the file to end without an "END" record.
-			if (sectionLine == null) {
-				throw new OsmosisRuntimeException("File terminated prematurely without a section END record.");
-			}
-			
-			// The file cannot contain blank lines.
-			if (sectionLine.trim().length() == 0) {
-				throw new OsmosisRuntimeException("A blank line was encountered where coordinate was expected.");
-			}
+			// Read until a non-empty line is obtained.
+			do {
+				sectionLine = bufferedReader.readLine();
+				
+				// It is invalid for the file to end without a section "END" record.
+				if (sectionLine == null) {
+					throw new OsmosisRuntimeException("File terminated prematurely without a section END record.");
+				}
+				
+				// Remove any whitespace.
+				sectionLine = sectionLine.trim();
+				
+			} while (sectionLine.isEmpty());
 			
 			// Stop reading when the section END record is reached.
 			if ("END".equals(sectionLine)) {
