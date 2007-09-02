@@ -1,5 +1,7 @@
 package com.bretth.osmosis.extract.mysql;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Date;
 
 import com.bretth.osmosis.core.xml.impl.DateFormatter;
@@ -21,34 +23,21 @@ public class Test {
 	 *            Command line arguments.
 	 */
 	public static void main(String[] args) {
-		// 2007-09-23T08:25:43.000Z
-		Date inputDate = new Date(1190535943001l);
-		DateFormatter dateFormatter;
-		String outString = null;
-		Date beginTimestamp;
-		Date endTimestamp;
-		long duration;
-		double callsPerSecond;
+		DecimalFormat decimalFormat;
+		double myValue1;
+		double myValue2;
 		
-		dateFormatter = new DateFormatter();
+		decimalFormat = new DecimalFormat("0.####################E000;-0.####################E000");
+		myValue1 = -1234567890.1234567890;
+		myValue2 = -myValue1;
 		
-		System.out.println("Input date: " + inputDate);
-		System.out.println("Time: " + inputDate.getTime());
+		System.out.println(myValue1);
+		System.out.println(myValue2);
+		System.out.println(decimalFormat.format(myValue1));
+		System.out.println(decimalFormat.format(myValue2));
 		
-		beginTimestamp = new Date();
-		
-		for (int i = 0; i < ITERATIONS; i++) {
-			outString = dateFormatter.format(inputDate);
-		}
-		
-		endTimestamp = new Date();
-		
-		duration = endTimestamp.getTime() - beginTimestamp.getTime();
-		callsPerSecond = 1000 * ITERATIONS / duration;
-		
-		System.out.println(callsPerSecond + " calls/second");
-		
-		System.out.println("Formatted Date: " + outString);
+		System.out.println(Double.parseDouble("0.4890E+02"));
+		System.out.println(Double.parseDouble("0.4890E02"));
 	}
 
 }

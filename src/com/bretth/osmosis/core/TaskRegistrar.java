@@ -5,6 +5,7 @@ import com.bretth.osmosis.core.change.ChangeDeriverFactory;
 import com.bretth.osmosis.core.buffer.ChangeBufferFactory;
 import com.bretth.osmosis.core.buffer.EntityBufferFactory;
 import com.bretth.osmosis.core.filter.BoundingBoxFilterFactory;
+import com.bretth.osmosis.core.filter.PolygonFilterFactory;
 import com.bretth.osmosis.core.merge.ChangeMergerFactory;
 import com.bretth.osmosis.core.merge.EntityMergerFactory;
 import com.bretth.osmosis.core.misc.NullChangeWriterFactory;
@@ -69,5 +70,6 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("merge", new EntityMergerFactory());
 		TaskManagerFactory.register("merge-change", new ChangeMergerFactory());
 		TaskManagerFactory.register("read-api", new XmlDownloaderFactory());
+		TaskManagerFactory.register("bounding-polygon", new PolygonFilterFactory());
 	}
 }
