@@ -2,12 +2,12 @@ package com.bretth.osmosis.core.mysql;
 
 import java.util.Date;
 
-import com.bretth.osmosis.core.container.NodeContainer;
-import com.bretth.osmosis.core.container.SegmentContainer;
-import com.bretth.osmosis.core.container.WayContainer;
-import com.bretth.osmosis.core.domain.Node;
-import com.bretth.osmosis.core.domain.Segment;
-import com.bretth.osmosis.core.domain.Way;
+import com.bretth.osmosis.core.container.v0_4.NodeContainer;
+import com.bretth.osmosis.core.container.v0_4.SegmentContainer;
+import com.bretth.osmosis.core.container.v0_4.WayContainer;
+import com.bretth.osmosis.core.domain.v0_4.Node;
+import com.bretth.osmosis.core.domain.v0_4.Segment;
+import com.bretth.osmosis.core.domain.v0_4.Way;
 import com.bretth.osmosis.core.mysql.impl.EntityHistory;
 import com.bretth.osmosis.core.mysql.impl.EntityHistoryComparator;
 import com.bretth.osmosis.core.mysql.impl.EntitySnapshotReader;
@@ -16,8 +16,8 @@ import com.bretth.osmosis.core.mysql.impl.SegmentReader;
 import com.bretth.osmosis.core.mysql.impl.WayReader;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
-import com.bretth.osmosis.core.task.RunnableSource;
-import com.bretth.osmosis.core.task.Sink;
+import com.bretth.osmosis.core.task.v0_4.RunnableSource;
+import com.bretth.osmosis.core.task.v0_4.Sink;
 
 
 /**

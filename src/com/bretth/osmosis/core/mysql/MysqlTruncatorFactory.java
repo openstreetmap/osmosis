@@ -2,9 +2,9 @@ package com.bretth.osmosis.core.mysql;
 
 import java.util.Map;
 
-import com.bretth.osmosis.core.pipeline.RunnableTaskManager;
-import com.bretth.osmosis.core.pipeline.TaskManager;
-import com.bretth.osmosis.core.pipeline.TaskManagerFactory;
+import com.bretth.osmosis.core.pipeline.common.RunnableTaskManager;
+import com.bretth.osmosis.core.pipeline.common.TaskManager;
+import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 
 
 /**

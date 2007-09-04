@@ -2,11 +2,11 @@ package com.bretth.osmosis.core.xml.impl;
 
 import java.io.BufferedWriter;
 
-import com.bretth.osmosis.core.container.EntityContainer;
-import com.bretth.osmosis.core.container.EntityProcessor;
-import com.bretth.osmosis.core.container.NodeContainer;
-import com.bretth.osmosis.core.container.SegmentContainer;
-import com.bretth.osmosis.core.container.WayContainer;
+import com.bretth.osmosis.core.container.v0_4.EntityContainer;
+import com.bretth.osmosis.core.container.v0_4.EntityProcessor;
+import com.bretth.osmosis.core.container.v0_4.NodeContainer;
+import com.bretth.osmosis.core.container.v0_4.SegmentContainer;
+import com.bretth.osmosis.core.container.v0_4.WayContainer;
 
 
 /**

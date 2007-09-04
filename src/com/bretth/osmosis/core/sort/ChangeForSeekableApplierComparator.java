@@ -2,11 +2,11 @@ package com.bretth.osmosis.core.sort;
 
 import java.util.Comparator;
 
-import com.bretth.osmosis.core.container.ChangeContainer;
+import com.bretth.osmosis.core.container.v0_4.ChangeContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.domain.Entity;
-import com.bretth.osmosis.core.domain.EntityType;
-import com.bretth.osmosis.core.task.ChangeAction;
+import com.bretth.osmosis.core.domain.v0_4.Entity;
+import com.bretth.osmosis.core.domain.v0_4.EntityType;
+import com.bretth.osmosis.core.task.common.ChangeAction;
 
 
 /**

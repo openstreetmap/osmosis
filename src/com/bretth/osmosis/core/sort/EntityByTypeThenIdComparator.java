@@ -2,7 +2,7 @@ package com.bretth.osmosis.core.sort;
 
 import java.util.Comparator;
 
-import com.bretth.osmosis.core.container.EntityContainer;
+import com.bretth.osmosis.core.container.v0_4.EntityContainer;
 
 
 /**

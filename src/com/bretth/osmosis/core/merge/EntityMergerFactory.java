@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.pipeline.MultiSinkRunnableSourceManager;
-import com.bretth.osmosis.core.pipeline.TaskManager;
-import com.bretth.osmosis.core.pipeline.TaskManagerFactory;
+import com.bretth.osmosis.core.pipeline.common.TaskManager;
+import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
+import com.bretth.osmosis.core.pipeline.v0_4.MultiSinkRunnableSourceManager;
 
 
 /**

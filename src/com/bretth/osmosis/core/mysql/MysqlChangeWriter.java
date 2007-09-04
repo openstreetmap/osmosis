@@ -3,12 +3,12 @@ package com.bretth.osmosis.core.mysql;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.bretth.osmosis.core.container.ChangeContainer;
+import com.bretth.osmosis.core.container.v0_4.ChangeContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.mysql.impl.ActionChangeWriter;
 import com.bretth.osmosis.core.mysql.impl.ChangeWriter;
-import com.bretth.osmosis.core.task.ChangeAction;
-import com.bretth.osmosis.core.task.ChangeSink;
+import com.bretth.osmosis.core.task.common.ChangeAction;
+import com.bretth.osmosis.core.task.v0_4.ChangeSink;
 
 
 /**

@@ -1,6 +1,6 @@
 package com.bretth.osmosis.core.filter;
 
-import com.bretth.osmosis.core.domain.Node;
+import com.bretth.osmosis.core.domain.v0_4.Node;
 
 
 /**

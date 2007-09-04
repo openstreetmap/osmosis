@@ -4,11 +4,11 @@ import java.util.Date;
 
 import org.xml.sax.Attributes;
 
-import com.bretth.osmosis.core.container.WayContainer;
-import com.bretth.osmosis.core.domain.SegmentReference;
-import com.bretth.osmosis.core.domain.Tag;
-import com.bretth.osmosis.core.domain.Way;
-import com.bretth.osmosis.core.task.Sink;
+import com.bretth.osmosis.core.container.v0_4.WayContainer;
+import com.bretth.osmosis.core.domain.v0_4.SegmentReference;
+import com.bretth.osmosis.core.domain.v0_4.Tag;
+import com.bretth.osmosis.core.domain.v0_4.Way;
+import com.bretth.osmosis.core.task.v0_4.Sink;
 
 
 /**

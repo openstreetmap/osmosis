@@ -1,7 +1,7 @@
 package com.bretth.osmosis.core.misc;
 
-import com.bretth.osmosis.core.container.EntityContainer;
-import com.bretth.osmosis.core.task.Sink;
+import com.bretth.osmosis.core.container.v0_4.EntityContainer;
+import com.bretth.osmosis.core.task.v0_4.Sink;
 
 
 /**

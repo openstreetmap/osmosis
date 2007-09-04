@@ -5,7 +5,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.task.ChangeSink;
+import com.bretth.osmosis.core.task.v0_4.ChangeSink;
 
 
 /**

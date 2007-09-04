@@ -3,8 +3,8 @@ package com.bretth.osmosis.core.xml;
 import java.io.File;
 import java.util.Map;
 
-import com.bretth.osmosis.core.pipeline.RunnableChangeSourceManager;
-import com.bretth.osmosis.core.pipeline.TaskManager;
+import com.bretth.osmosis.core.pipeline.common.TaskManager;
+import com.bretth.osmosis.core.pipeline.v0_4.RunnableChangeSourceManager;
 
 
 /**

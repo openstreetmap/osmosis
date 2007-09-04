@@ -3,7 +3,7 @@ package com.bretth.osmosis.core.filter;
 import java.awt.geom.Area;
 import java.io.File;
 
-import com.bretth.osmosis.core.domain.Node;
+import com.bretth.osmosis.core.domain.v0_4.Node;
 import com.bretth.osmosis.core.filter.impl.PolygonFileReader;
 
 

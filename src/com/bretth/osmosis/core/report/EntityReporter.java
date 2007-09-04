@@ -14,12 +14,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.container.EntityContainer;
-import com.bretth.osmosis.core.container.EntityProcessor;
-import com.bretth.osmosis.core.container.NodeContainer;
-import com.bretth.osmosis.core.container.SegmentContainer;
-import com.bretth.osmosis.core.container.WayContainer;
-import com.bretth.osmosis.core.task.Sink;
+import com.bretth.osmosis.core.container.v0_4.EntityContainer;
+import com.bretth.osmosis.core.container.v0_4.EntityProcessor;
+import com.bretth.osmosis.core.container.v0_4.NodeContainer;
+import com.bretth.osmosis.core.container.v0_4.SegmentContainer;
+import com.bretth.osmosis.core.container.v0_4.WayContainer;
+import com.bretth.osmosis.core.task.v0_4.Sink;
 
 
 /**

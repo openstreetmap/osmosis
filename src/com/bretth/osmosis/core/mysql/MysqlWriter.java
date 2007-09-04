@@ -6,23 +6,23 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bretth.osmosis.core.container.EntityContainer;
-import com.bretth.osmosis.core.container.EntityProcessor;
-import com.bretth.osmosis.core.container.NodeContainer;
-import com.bretth.osmosis.core.container.SegmentContainer;
-import com.bretth.osmosis.core.container.WayContainer;
+import com.bretth.osmosis.core.container.v0_4.EntityContainer;
+import com.bretth.osmosis.core.container.v0_4.EntityProcessor;
+import com.bretth.osmosis.core.container.v0_4.NodeContainer;
+import com.bretth.osmosis.core.container.v0_4.SegmentContainer;
+import com.bretth.osmosis.core.container.v0_4.WayContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.domain.Node;
-import com.bretth.osmosis.core.domain.Segment;
-import com.bretth.osmosis.core.domain.SegmentReference;
-import com.bretth.osmosis.core.domain.Tag;
-import com.bretth.osmosis.core.domain.Way;
+import com.bretth.osmosis.core.domain.v0_4.Node;
+import com.bretth.osmosis.core.domain.v0_4.Segment;
+import com.bretth.osmosis.core.domain.v0_4.SegmentReference;
+import com.bretth.osmosis.core.domain.v0_4.Tag;
+import com.bretth.osmosis.core.domain.v0_4.Way;
 import com.bretth.osmosis.core.mysql.impl.DatabaseContext;
 import com.bretth.osmosis.core.mysql.impl.EmbeddedTagProcessor;
 import com.bretth.osmosis.core.mysql.impl.UserIdManager;
 import com.bretth.osmosis.core.mysql.impl.WaySegment;
 import com.bretth.osmosis.core.mysql.impl.WayTag;
-import com.bretth.osmosis.core.task.Sink;
+import com.bretth.osmosis.core.task.v0_4.Sink;
 
 
 /**

@@ -9,7 +9,7 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.task.Sink;
+import com.bretth.osmosis.core.task.v0_4.Sink;
 
 
 /**

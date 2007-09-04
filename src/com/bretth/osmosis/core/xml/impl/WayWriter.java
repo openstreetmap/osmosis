@@ -3,9 +3,9 @@ package com.bretth.osmosis.core.xml.impl;
 import java.io.BufferedWriter;
 import java.util.List;
 
-import com.bretth.osmosis.core.domain.SegmentReference;
-import com.bretth.osmosis.core.domain.Tag;
-import com.bretth.osmosis.core.domain.Way;
+import com.bretth.osmosis.core.domain.v0_4.SegmentReference;
+import com.bretth.osmosis.core.domain.v0_4.Tag;
+import com.bretth.osmosis.core.domain.v0_4.Way;
 
 
 /**

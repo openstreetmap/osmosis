@@ -5,7 +5,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.bretth.osmosis.core.pipeline.Pipeline;
+import com.bretth.osmosis.core.pipeline.common.Pipeline;
 
 
 /**

@@ -2,11 +2,11 @@ package com.bretth.osmosis.core.xml.impl;
 
 import org.xml.sax.Attributes;
 
-import com.bretth.osmosis.core.container.ChangeContainer;
-import com.bretth.osmosis.core.container.EntityContainer;
-import com.bretth.osmosis.core.task.ChangeAction;
-import com.bretth.osmosis.core.task.ChangeSink;
-import com.bretth.osmosis.core.task.Sink;
+import com.bretth.osmosis.core.container.v0_4.ChangeContainer;
+import com.bretth.osmosis.core.container.v0_4.EntityContainer;
+import com.bretth.osmosis.core.task.common.ChangeAction;
+import com.bretth.osmosis.core.task.v0_4.ChangeSink;
+import com.bretth.osmosis.core.task.v0_4.Sink;
 
 
 /**

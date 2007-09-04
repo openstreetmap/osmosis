@@ -3,9 +3,9 @@ package com.bretth.osmosis.core.filter;
 import java.io.File;
 import java.util.Map;
 
-import com.bretth.osmosis.core.pipeline.SinkSourceManager;
-import com.bretth.osmosis.core.pipeline.TaskManager;
-import com.bretth.osmosis.core.pipeline.TaskManagerFactory;
+import com.bretth.osmosis.core.pipeline.common.TaskManager;
+import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
+import com.bretth.osmosis.core.pipeline.v0_4.SinkSourceManager;
 
 
 /**

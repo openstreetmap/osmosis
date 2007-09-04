@@ -4,7 +4,7 @@ import java.util.logging.Logger;
 
 import org.xml.sax.Attributes;
 
-import com.bretth.osmosis.core.task.Sink;
+import com.bretth.osmosis.core.task.v0_4.Sink;
 
 
 /**

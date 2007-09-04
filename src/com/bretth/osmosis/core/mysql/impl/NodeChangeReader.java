@@ -2,12 +2,12 @@ package com.bretth.osmosis.core.mysql.impl;
 
 import java.util.Date;
 
-import com.bretth.osmosis.core.container.ChangeContainer;
-import com.bretth.osmosis.core.container.NodeContainer;
+import com.bretth.osmosis.core.container.v0_4.ChangeContainer;
+import com.bretth.osmosis.core.container.v0_4.NodeContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.domain.Node;
+import com.bretth.osmosis.core.domain.v0_4.Node;
 import com.bretth.osmosis.core.store.PeekableIterator;
-import com.bretth.osmosis.core.task.ChangeAction;
+import com.bretth.osmosis.core.task.common.ChangeAction;
 
 
 /**

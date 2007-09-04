@@ -1,10 +1,10 @@
 package com.bretth.osmosis.core.mysql.impl;
 
-import com.bretth.osmosis.core.container.EntityProcessor;
-import com.bretth.osmosis.core.container.NodeContainer;
-import com.bretth.osmosis.core.container.SegmentContainer;
-import com.bretth.osmosis.core.container.WayContainer;
-import com.bretth.osmosis.core.task.ChangeAction;
+import com.bretth.osmosis.core.container.v0_4.EntityProcessor;
+import com.bretth.osmosis.core.container.v0_4.NodeContainer;
+import com.bretth.osmosis.core.container.v0_4.SegmentContainer;
+import com.bretth.osmosis.core.container.v0_4.WayContainer;
+import com.bretth.osmosis.core.task.common.ChangeAction;
 
 
 /**

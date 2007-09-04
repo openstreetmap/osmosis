@@ -3,7 +3,7 @@ package com.bretth.osmosis.core.xml;
 import java.util.Map;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.pipeline.TaskManagerFactory;
+import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 
 
 /**

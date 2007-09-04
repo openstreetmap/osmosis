@@ -1,7 +1,7 @@
 package com.bretth.osmosis.core.mysql;
 
 import com.bretth.osmosis.core.mysql.impl.DatabaseContext;
-import com.bretth.osmosis.core.task.RunnableTask;
+import com.bretth.osmosis.core.task.common.RunnableTask;
 
 
 /**

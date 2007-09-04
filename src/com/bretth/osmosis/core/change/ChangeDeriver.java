@@ -1,15 +1,15 @@
 package com.bretth.osmosis.core.change;
 
-import com.bretth.osmosis.core.change.impl.DataPostbox;
 import com.bretth.osmosis.core.change.impl.TimestampChangeSetter;
-import com.bretth.osmosis.core.container.ChangeContainer;
-import com.bretth.osmosis.core.container.EntityContainer;
+import com.bretth.osmosis.core.container.v0_4.ChangeContainer;
+import com.bretth.osmosis.core.container.v0_4.EntityContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.sort.EntityByTypeThenIdComparator;
-import com.bretth.osmosis.core.task.ChangeAction;
-import com.bretth.osmosis.core.task.ChangeSink;
-import com.bretth.osmosis.core.task.MultiSinkRunnableChangeSource;
-import com.bretth.osmosis.core.task.Sink;
+import com.bretth.osmosis.core.store.DataPostbox;
+import com.bretth.osmosis.core.task.common.ChangeAction;
+import com.bretth.osmosis.core.task.v0_4.ChangeSink;
+import com.bretth.osmosis.core.task.v0_4.MultiSinkRunnableChangeSource;
+import com.bretth.osmosis.core.task.v0_4.Sink;
 
 
 /**

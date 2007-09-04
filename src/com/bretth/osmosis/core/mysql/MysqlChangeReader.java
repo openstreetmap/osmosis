@@ -5,8 +5,8 @@ import java.util.Date;
 import com.bretth.osmosis.core.mysql.impl.NodeChangeReader;
 import com.bretth.osmosis.core.mysql.impl.SegmentChangeReader;
 import com.bretth.osmosis.core.mysql.impl.WayChangeReader;
-import com.bretth.osmosis.core.task.ChangeSink;
-import com.bretth.osmosis.core.task.RunnableChangeSource;
+import com.bretth.osmosis.core.task.v0_4.ChangeSink;
+import com.bretth.osmosis.core.task.v0_4.RunnableChangeSource;
 
 
 /**

@@ -1,6 +1,6 @@
 package com.bretth.osmosis.core.xml.impl;
 
-import com.bretth.osmosis.core.task.Sink;
+import com.bretth.osmosis.core.task.v0_4.Sink;
 
 
 /**

@@ -14,8 +14,8 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.task.ChangeSink;
-import com.bretth.osmosis.core.task.RunnableChangeSource;
+import com.bretth.osmosis.core.task.v0_4.ChangeSink;
+import com.bretth.osmosis.core.task.v0_4.RunnableChangeSource;
 import com.bretth.osmosis.core.xml.impl.OsmChangeHandler;
 
 

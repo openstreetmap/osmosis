@@ -3,8 +3,8 @@ package com.bretth.osmosis.core.xml;
 import java.io.BufferedWriter;
 import java.io.File;
 
-import com.bretth.osmosis.core.container.EntityContainer;
-import com.bretth.osmosis.core.task.Sink;
+import com.bretth.osmosis.core.container.v0_4.EntityContainer;
+import com.bretth.osmosis.core.task.v0_4.Sink;
 import com.bretth.osmosis.core.xml.impl.OsmWriter;
 
 

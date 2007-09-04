@@ -3,8 +3,8 @@ package com.bretth.osmosis.core.xml.impl;
 import java.io.BufferedWriter;
 import java.util.List;
 
-import com.bretth.osmosis.core.domain.Segment;
-import com.bretth.osmosis.core.domain.Tag;
+import com.bretth.osmosis.core.domain.v0_4.Segment;
+import com.bretth.osmosis.core.domain.v0_4.Tag;
 
 
 /**

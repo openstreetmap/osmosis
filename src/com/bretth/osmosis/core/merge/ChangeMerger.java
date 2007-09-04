@@ -1,11 +1,11 @@
 package com.bretth.osmosis.core.merge;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.change.impl.DataPostbox;
-import com.bretth.osmosis.core.container.ChangeContainer;
+import com.bretth.osmosis.core.container.v0_4.ChangeContainer;
 import com.bretth.osmosis.core.sort.EntityByTypeThenIdComparator;
-import com.bretth.osmosis.core.task.ChangeSink;
-import com.bretth.osmosis.core.task.MultiChangeSinkRunnableChangeSource;
+import com.bretth.osmosis.core.store.DataPostbox;
+import com.bretth.osmosis.core.task.v0_4.ChangeSink;
+import com.bretth.osmosis.core.task.v0_4.MultiChangeSinkRunnableChangeSource;
 
 
 /**

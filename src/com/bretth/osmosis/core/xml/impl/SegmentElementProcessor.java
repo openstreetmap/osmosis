@@ -4,10 +4,10 @@ import java.util.Date;
 
 import org.xml.sax.Attributes;
 
-import com.bretth.osmosis.core.container.SegmentContainer;
-import com.bretth.osmosis.core.domain.Segment;
-import com.bretth.osmosis.core.domain.Tag;
-import com.bretth.osmosis.core.task.Sink;
+import com.bretth.osmosis.core.container.v0_4.SegmentContainer;
+import com.bretth.osmosis.core.domain.v0_4.Segment;
+import com.bretth.osmosis.core.domain.v0_4.Tag;
+import com.bretth.osmosis.core.task.v0_4.Sink;
 
 
 /**

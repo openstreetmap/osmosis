@@ -2,11 +2,11 @@ package com.bretth.osmosis.core.sort;
 
 import java.util.Comparator;
 
-import com.bretth.osmosis.core.container.EntityContainer;
+import com.bretth.osmosis.core.container.v0_4.EntityContainer;
 import com.bretth.osmosis.core.sort.impl.FileBasedSort;
 import com.bretth.osmosis.core.store.ReleasableIterator;
-import com.bretth.osmosis.core.task.Sink;
-import com.bretth.osmosis.core.task.SinkSource;
+import com.bretth.osmosis.core.task.v0_4.Sink;
+import com.bretth.osmosis.core.task.v0_4.SinkSource;
 
 
 /**

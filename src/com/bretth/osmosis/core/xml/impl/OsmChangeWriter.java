@@ -2,9 +2,9 @@ package com.bretth.osmosis.core.xml.impl;
 
 import java.io.BufferedWriter;
 
-import com.bretth.osmosis.core.container.ChangeContainer;
+import com.bretth.osmosis.core.container.v0_4.ChangeContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.task.ChangeAction;
+import com.bretth.osmosis.core.task.common.ChangeAction;
 
 
 /**
