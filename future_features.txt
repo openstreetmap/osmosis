@@ -78,3 +78,7 @@ Add a polygon filtering task allowing more complex filtering than existing bound
 Requested by Tom Hughes.
 Add a reporting task showing all editing users (to be used in conjunction with polygon filter.
 This implies adding user support to osmosis and should include reading/writing user info to xml files.
+
+**********
+Unit Tests
+As the codebase grows, the lack of unit tests is becoming a bigger issue and making it difficult to make changes.
