@@ -19,7 +19,7 @@ public class CurrentWayTableReader extends BaseEntityReader<Way> {
 		"SELECT w.id, w.timestamp, u.data_public, u.display_name, w.visible"
 		+ " FROM current_ways w"
 		+ " INNER JOIN users u ON w.user_id = u.id"
-		+ " ORDER BY w.id, w.version";
+		+ " ORDER BY w.id";
 	
 	
 	/**
