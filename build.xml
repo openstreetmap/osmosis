@@ -6,7 +6,7 @@
 	
 	<!-- set global properties for this build -->
 	<property name="project.name" value="osmosis"/>
-	<property name="project.version" value="0.12.1"/>
+	<property name="project.version" value="0.12.2"/>
 	
 	<target name="init" description="Perform initialisation required by all other build steps.">
 		<!-- Create the time stamp -->
@@ -89,6 +89,10 @@
 		<zip destfile="dist/${project.name}-${project.version}.zip">
 			<zipfileset prefix="${project.name}-${project.version}" dir="dist/result"/>
 		</zip>
+		<tar destfile="dist/${project.name}-${project.version}.tar">
+			<tarfileset prefix="${project.name}-${project.version}" dir="dist/result"/>
+		</tar>
+		<gzip destfile="dist/${project.name}-${project.version}.tgz" src="dist/${project.name}-${project.version}.tar"/>
 	</target>
 	
 	<target name="build_test" depends="dist" description="Compile test source code into class files.">

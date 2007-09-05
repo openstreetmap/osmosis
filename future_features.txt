@@ -46,13 +46,13 @@ Add gzip support.
 **********
 Add ability to create new entities as part of change as well as simply replicate creates (with existing ids) from one place to another.
 
-**********
+********** DONE
 An API download task.  Marcus Wolschon has already written this, I just have to make a couple of minor changes before applying it into the codebase.
 
 **********
 An API upload task.  This will duplicate the functionality of Martijn's bulk_import.pl so has slipped in priority.  Once the kinks have been ironed out in that tool I'll re-use the ideas.
 
-**********
+********** DONE
 A new task for dumping "current" tables.  This might be useful in the short term to speed up planet creation.
 
 **********

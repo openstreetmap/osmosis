@@ -10,6 +10,7 @@ import com.bretth.osmosis.core.merge.ChangeMergerFactory;
 import com.bretth.osmosis.core.merge.EntityMergerFactory;
 import com.bretth.osmosis.core.misc.NullChangeWriterFactory;
 import com.bretth.osmosis.core.misc.NullWriterFactory;
+import com.bretth.osmosis.core.mysql.MySqlCurrentReaderFactory;
 import com.bretth.osmosis.core.mysql.MysqlChangeReaderFactory;
 import com.bretth.osmosis.core.mysql.MysqlChangeWriterFactory;
 import com.bretth.osmosis.core.mysql.MysqlReaderFactory;
@@ -55,6 +56,7 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("derive-change", new ChangeDeriverFactory());
 		TaskManagerFactory.register("read-mysql", new MysqlReaderFactory());
 		TaskManagerFactory.register("read-mysql-change", new MysqlChangeReaderFactory());
+		TaskManagerFactory.register("read-mysql-current", new MySqlCurrentReaderFactory());
 		TaskManagerFactory.register("read-xml", new XmlReaderFactory());
 		TaskManagerFactory.register("read-xml-change", new XmlChangeReaderFactory());
 		TaskManagerFactory.register("sort", entitySorterFactory);

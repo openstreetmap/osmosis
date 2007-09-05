@@ -228,6 +228,10 @@ public class EntityReporter implements Sink {
 		
 		/**
 		 * Creates a new instance.
+		 * 
+		 * @param userName
+		 *            The name of the user that this statistics record relates
+		 *            to.
 		 */
 		public UserStatistics(String userName) {
 			this.userName = userName;

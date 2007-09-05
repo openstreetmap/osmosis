@@ -13,17 +13,17 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**
- * Reads all ways from a database ordered by their identifier. It combines the
+ * Reads current ways from a database ordered by their identifier. It combines the
  * output of the way table readers to produce fully configured way objects.
  * 
  * @author Brett Henderson
  */
-public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
+public class CurrentWayReader implements ReleasableIterator<Way> {
 	
-	private ReleasableIterator<EntityHistory<Way>> wayReader;
-	private PeekableIterator<EntityHistory<WayTag>> wayTagReader;
-	private PeekableIterator<EntityHistory<WaySegment>> waySegmentReader;
-	private EntityHistory<Way> nextValue;
+	private ReleasableIterator<Way> wayReader;
+	private PeekableIterator<WayTag> wayTagReader;
+	private PeekableIterator<WaySegment> waySegmentReader;
+	private Way nextValue;
 	private boolean nextValueLoaded;
 	
 	
@@ -42,22 +42,22 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 	 *            If this flag is true, all users will be read from the database
 	 *            regardless of their public edits flag.
 	 */
-	public WayReader(String host, String database, String user, String password, boolean readAllUsers) {
-		wayReader = new PersistentIterator<EntityHistory<Way>>(
-			new WayTableReader(host, database, user, password, readAllUsers),
+	public CurrentWayReader(String host, String database, String user, String password, boolean readAllUsers) {
+		wayReader = new PersistentIterator<Way>(
+			new CurrentWayTableReader(host, database, user, password, readAllUsers),
 			"way",
 			true
 		);
-		wayTagReader = new PeekableIterator<EntityHistory<WayTag>>(
-			new PersistentIterator<EntityHistory<WayTag>>(
-				new WayTagTableReader(host, database, user, password),
+		wayTagReader = new PeekableIterator<WayTag>(
+			new PersistentIterator<WayTag>(
+				new CurrentWayTagTableReader(host, database, user, password),
 				"waytag",
 				true
 			)
 		);
-		waySegmentReader = new PeekableIterator<EntityHistory<WaySegment>>(
-			new PersistentIterator<EntityHistory<WaySegment>>(
-				new WaySegmentTableReader(host, database, user, password),
+		waySegmentReader = new PeekableIterator<WaySegment>(
+			new PersistentIterator<WaySegment>(
+				new CurrentWaySegmentTableReader(host, database, user, password),
 				"wayseg",
 				true
 			)
@@ -70,60 +70,40 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 	 */
 	public boolean hasNext() {
 		if (!nextValueLoaded && wayReader.hasNext()) {
-			EntityHistory<Way> wayHistory;
-			long wayId;
-			int wayVersion;
 			Way way;
+			long wayId;
 			List<WaySegment> waySegments;
 			
-			wayHistory = wayReader.next();
+			way = wayReader.next();
 			
-			way = wayHistory.getEntity();
 			wayId = way.getId();
-			wayVersion = wayHistory.getVersion();
 			
-			// Skip all way tags that are from lower id or lower version of the same id.
+			// Skip all way tags that are from lower id way.
 			while (wayTagReader.hasNext()) {
-				EntityHistory<WayTag> wayTagHistory;
 				WayTag wayTag;
 				
-				wayTagHistory = wayTagReader.peekNext();
-				wayTag = wayTagHistory.getEntity();
+				wayTag = wayTagReader.peekNext();
 				
 				if (wayTag.getWayId() < wayId) {
 					wayTagReader.next();
-				} else if (wayTag.getWayId() == wayId) {
-					if (wayTagHistory.getVersion() < wayVersion) {
-						wayTagReader.next();
-					} else {
-						break;
-					}
 				} else {
 					break;
 				}
 			}
 			
-			// Load all tags matching this version of the way.
-			while (wayTagReader.hasNext() && wayTagReader.peekNext().getEntity().getWayId() == wayId && wayTagReader.peekNext().getVersion() == wayVersion) {
-				way.addTag(wayTagReader.next().getEntity());
+			// Load all tags for this way.
+			while (wayTagReader.hasNext() && wayTagReader.peekNext().getWayId() == wayId) {
+				way.addTag(wayTagReader.next());
 			}
 			
 			// Skip all way segments that are from lower id or lower version of the same id.
 			while (waySegmentReader.hasNext()) {
-				EntityHistory<WaySegment> waySegmentHistory;
 				WaySegment waySegment;
 				
-				waySegmentHistory = waySegmentReader.peekNext();
-				waySegment = waySegmentHistory.getEntity();
+				waySegment = waySegmentReader.peekNext();
 				
 				if (waySegment.getWayId() < wayId) {
 					waySegmentReader.next();
-				} else if (waySegment.getWayId() == wayId) {
-					if (waySegmentHistory.getVersion() < wayVersion) {
-						waySegmentReader.next();
-					} else {
-						break;
-					}
 				} else {
 					break;
 				}
@@ -131,8 +111,8 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 			
 			// Load all segments matching this version of the way.
 			waySegments = new ArrayList<WaySegment>();
-			while (waySegmentReader.hasNext() && waySegmentReader.peekNext().getEntity().getWayId() == wayId && waySegmentReader.peekNext().getVersion() == wayVersion) {
-				waySegments.add(waySegmentReader.next().getEntity());
+			while (waySegmentReader.hasNext() && waySegmentReader.peekNext().getWayId() == wayId) {
+				waySegments.add(waySegmentReader.next());
 			}
 			// The underlying query sorts segment references by way id but not
 			// by their sequence number.
@@ -141,7 +121,7 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 				way.addSegmentReference(segmentReference);
 			}
 			
-			nextValue = wayHistory;
+			nextValue = way;
 			nextValueLoaded = true;
 		}
 		
@@ -152,8 +132,8 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public EntityHistory<Way> next() {
-		EntityHistory<Way> result;
+	public Way next() {
+		Way result;
 		
 		if (!hasNext()) {
 			throw new NoSuchElementException();
