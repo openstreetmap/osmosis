@@ -1,6 +1,7 @@
 0.13
 Modified the --bounding-polygon task so it can read files containing blank lines.
 Added the ability to dump mysql "current" tables.
+Modified xml output to only write latitude and longitude to 7 decimal places.
 
 0.12
 Added a --read-api task for retrieving data from the central server.

@@ -1,6 +1,8 @@
 package com.bretth.osmosis.core.xml.impl;
 
 import java.io.BufferedWriter;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 import com.bretth.osmosis.core.domain.v0_4.Node;
@@ -14,6 +16,7 @@ import com.bretth.osmosis.core.domain.v0_4.Tag;
  */
 public class NodeWriter extends ElementWriter {
 	private TagWriter tagWriter;
+	private NumberFormat numberFormat;
 	
 	
 	/**
@@ -28,6 +31,8 @@ public class NodeWriter extends ElementWriter {
 		super(elementName, indentLevel);
 		
 		tagWriter = new TagWriter("tag", indentLevel + 1);
+		
+		numberFormat = new DecimalFormat("0.#######;-0.#######");
 	}
 	
 	
@@ -46,8 +51,8 @@ public class NodeWriter extends ElementWriter {
 		if (node.getUser() != null && node.getUser().length() > 0) {
 			addAttribute("user", node.getUser());
 		}
-		addAttribute("lat", Double.toString(node.getLatitude()));
-		addAttribute("lon", Double.toString(node.getLongitude()));
+		addAttribute("lat", numberFormat.format(node.getLatitude()));
+		addAttribute("lon", numberFormat.format(node.getLongitude()));
 		
 		tags = node.getTagList();
 		
