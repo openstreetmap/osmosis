@@ -18,7 +18,7 @@ public class CurrentWayTableReader extends BaseEntityReader<Way> {
 	private static final String SELECT_SQL =
 		"SELECT w.id, w.timestamp, u.data_public, u.display_name, w.visible"
 		+ " FROM current_ways w"
-		+ " INNER JOIN users u ON w.user_id = u.id"
+		+ " LEFT OUTER JOIN users u ON w.user_id = u.id"
 		+ " ORDER BY w.id";
 	
 	

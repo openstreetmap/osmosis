@@ -33,7 +33,7 @@ public class SegmentHistoryReader extends BaseEntityReader<EntityHistory<Segment
 		"   WHERE timestamp > ? AND timestamp <= ?" +
 		"   GROUP BY id" +
 		" ) idList ON s.id = idList.id" +
-		" INNER JOIN users u ON s.user_id = u.id" +
+		" LEFT OUTER JOIN users u ON s.user_id = u.id" +
 		" WHERE s.timestamp < ?" +
 		" ORDER BY s.id, s.timestamp";
 	

@@ -17,7 +17,7 @@ public class NodeReader extends BaseEntityReader<EntityHistory<Node>> {
 	private static final String SELECT_SQL =
 		"SELECT n.id, n.timestamp, u.data_public, u.display_name, n.latitude, n.longitude, n.tags, n.visible"
 		+ " FROM nodes n"
-		+ " INNER JOIN users u ON n.user_id = u.id"
+		+ " LEFT OUTER JOIN users u ON n.user_id = u.id"
 		+ " ORDER BY n.id";
 	
 	private EmbeddedTagProcessor tagParser;

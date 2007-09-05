@@ -17,7 +17,7 @@ public class CurrentSegmentReader extends BaseEntityReader<Segment> {
 	private static final String SELECT_SQL =
 		"SELECT s.id, s.timestamp, u.data_public, u.display_name, s.node_a, s.node_b, s.tags, s.visible"
 		+ " FROM current_segments s"
-		+ " INNER JOIN users u ON s.user_id = u.id"
+		+ " LEFT OUTER JOIN users u ON s.user_id = u.id"
 		+ " ORDER BY s.id";
 	
 	private EmbeddedTagProcessor tagParser;

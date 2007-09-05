@@ -18,7 +18,7 @@ public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
 	private static final String SELECT_SQL =
 		"SELECT w.id, w.version, w.timestamp, u.data_public, u.display_name, w.visible"
 		+ " FROM ways w"
-		+ " INNER JOIN users u ON w.user_id = u.id"
+		+ " LEFT OUTER JOIN users u ON w.user_id = u.id"
 		+ " ORDER BY w.id, w.version";
 	
 	
