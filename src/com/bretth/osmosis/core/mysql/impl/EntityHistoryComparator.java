@@ -3,7 +3,7 @@ package com.bretth.osmosis.core.mysql.impl;
 import java.util.Comparator;
 import java.util.Date;
 
-import com.bretth.osmosis.core.domain.v0_4.Entity;
+import com.bretth.osmosis.core.domain.common.Entity;
 
 
 /**

@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.bretth.osmosis.core.domain.v0_4.Entity;
+import com.bretth.osmosis.core.domain.common.Entity;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 

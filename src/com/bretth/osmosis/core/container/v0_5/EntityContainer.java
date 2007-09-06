@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.container.v0_4;
+package com.bretth.osmosis.core.container.v0_5;
 
 import java.io.Serializable;
 

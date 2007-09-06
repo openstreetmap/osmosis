@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.domain.v0_4;
+package com.bretth.osmosis.core.domain.v0_5;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,7 +19,7 @@ public class Way extends Entity implements Comparable<Way> {
 	private static final long serialVersionUID = 1L;
 	
 	
-	private List<SegmentReference> segmentReferenceList;
+	private List<NodeReference> nodeReferenceList;
 	
 	
 	/**
@@ -35,7 +35,7 @@ public class Way extends Entity implements Comparable<Way> {
 	public Way(long id, Date timestamp, String user) {
 		super(id, timestamp, user);
 		
-		segmentReferenceList = new ArrayList<SegmentReference>();
+		nodeReferenceList = new ArrayList<NodeReference>();
 	}
 	
 	
@@ -62,20 +62,20 @@ public class Way extends Entity implements Comparable<Way> {
 	
 	
 	/**
-	 * Compares this segment list to the specified segment list. The comparison
-	 * is based on a direct comparison of the segment ids.
+	 * Compares this node list to the specified node list. The comparison is
+	 * based on a direct comparison of the node ids.
 	 * 
-	 * @param comparisonSegmentReferenceList
-	 *            The segment reference list to compare to.
+	 * @param comparisonNodeReferenceList
+	 *            The node reference list to compare to.
 	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
 	 *         "bigger".
 	 */
-	protected int compareSegmentReferences(List<SegmentReference> comparisonSegmentReferenceList) {
-		List<SegmentReference> list1;
-		List<SegmentReference> list2;
+	protected int compareNodeReferences(List<NodeReference> comparisonNodeReferenceList) {
+		List<NodeReference> list1;
+		List<NodeReference> list2;
 		
-		list1 = new ArrayList<SegmentReference>(segmentReferenceList);
-		list2 = new ArrayList<SegmentReference>(comparisonSegmentReferenceList);
+		list1 = new ArrayList<NodeReference>(nodeReferenceList);
+		list2 = new ArrayList<NodeReference>(comparisonNodeReferenceList);
 		
 		Collections.sort(list1);
 		Collections.sort(list2);
@@ -85,7 +85,7 @@ public class Way extends Entity implements Comparable<Way> {
 			return list1.size() - list2.size();
 		}
 		
-		// Check the individual segment references.
+		// Check the individual node references.
 		for (int i = 0; i < list1.size(); i++) {
 			int result = list1.get(i).compareTo(list2.get(i));
 			
@@ -109,7 +109,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 *         "bigger".
 	 */
 	public int compareTo(Way comparisonWay) {
-		int segmentReferenceListResult;
+		int nodeReferenceListResult;
 		
 		if (this.getId() < comparisonWay.getId()) {
 			return -1;
@@ -134,12 +134,12 @@ public class Way extends Entity implements Comparable<Way> {
 			}
 		}
 		
-		segmentReferenceListResult = compareSegmentReferences(
-			comparisonWay.getSegmentReferenceList()
+		nodeReferenceListResult = compareNodeReferences(
+			comparisonWay.getNodeReferenceList()
 		);
 		
-		if (segmentReferenceListResult != 0) {
-			return segmentReferenceListResult;
+		if (nodeReferenceListResult != 0) {
+			return nodeReferenceListResult;
 		}
 		
 		return compareTags(comparisonWay.getTagList());
@@ -147,34 +147,34 @@ public class Way extends Entity implements Comparable<Way> {
 	
 	
 	/**
-	 * Returns the attached list of segment references. The returned list is
+	 * Returns the attached list of node references. The returned list is
 	 * read-only.
 	 * 
-	 * @return The segmentReferenceList.
+	 * @return The nodeReferenceList.
 	 */
-	public List<SegmentReference> getSegmentReferenceList() {
-		return Collections.unmodifiableList(segmentReferenceList);
+	public List<NodeReference> getNodeReferenceList() {
+		return Collections.unmodifiableList(nodeReferenceList);
 	}
 	
 	
 	/**
-	 * Adds a new segment reference.
+	 * Adds a new node reference.
 	 * 
-	 * @param segmentReference
+	 * @param nodeReference
 	 *            The segment reference to add.
 	 */
-	public void addSegmentReference(SegmentReference segmentReference) {
-		segmentReferenceList.add(segmentReference);
+	public void addNodeReference(NodeReference nodeReference) {
+		nodeReferenceList.add(nodeReference);
 	}
 	
 	
 	/**
-	 * Adds all segment references in the collection to the node.
+	 * Adds all node references in the collection to the node.
 	 * 
-	 * @param segmentReferences
-	 *            The collection of segment references to be added.
+	 * @param nodeReferences
+	 *            The collection of node references to be added.
 	 */
-	public void addSegmentReferences(Collection<SegmentReference> segmentReferences) {
-		segmentReferenceList.addAll(segmentReferences);
+	public void addNodeReferences(Collection<NodeReference> nodeReferences) {
+		nodeReferenceList.addAll(nodeReferences);
 	}
 }

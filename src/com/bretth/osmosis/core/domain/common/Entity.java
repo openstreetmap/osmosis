@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.domain.v0_4;
+package com.bretth.osmosis.core.domain.common;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import com.bretth.osmosis.core.domain.v0_4.Tag;
 
 
 /**

@@ -19,7 +19,6 @@ public class ChangeSourceElementProcessor extends BaseElementProcessor {
 	private static final String ELEMENT_NAME_MODIFY = "modify";
 	private static final String ELEMENT_NAME_DELETE = "delete";
 	private static final String ATTRIBUTE_NAME_VERSION = "version";
-	private static final String ATTRIBUTE_VALUE_VERSION = "0.3";
 	
 	
 	private OsmElementProcessor createElementProcessor;
@@ -58,9 +57,9 @@ public class ChangeSourceElementProcessor extends BaseElementProcessor {
 		
 		fileVersion = attributes.getValue(ATTRIBUTE_NAME_VERSION);
 		
-		if (!ATTRIBUTE_VALUE_VERSION.equals(fileVersion)) {
+		if (!XmlConstants.OSM_VERSION.equals(fileVersion)) {
 			System.err.println(
-				"Warning, expected version " + ATTRIBUTE_VALUE_VERSION
+				"Warning, expected version " + XmlConstants.OSM_VERSION
 				+ " but received " + fileVersion + "."
 			);
 		}

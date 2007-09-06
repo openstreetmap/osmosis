@@ -2,6 +2,9 @@ package com.bretth.osmosis.core.domain.v0_4;
 
 import java.util.Date;
 
+import com.bretth.osmosis.core.domain.common.Entity;
+import com.bretth.osmosis.core.domain.common.EntityType;
+
 
 /**
  * A data class representing a single OSM segment.
