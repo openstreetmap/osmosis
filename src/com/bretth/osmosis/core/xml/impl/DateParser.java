@@ -138,7 +138,7 @@ public class DateParser {
 		
 		calendar.clear();
 		calendar.set(Calendar.YEAR, year);
-		calendar.set(Calendar.MONTH, month);
+		calendar.set(Calendar.MONTH, month - 1);
 		calendar.set(Calendar.DAY_OF_MONTH, day);
 		calendar.set(Calendar.HOUR_OF_DAY, hour);
 		calendar.set(Calendar.MINUTE, minute);
