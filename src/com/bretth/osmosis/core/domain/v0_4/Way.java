@@ -71,23 +71,14 @@ public class Way extends Entity implements Comparable<Way> {
 	 *         "bigger".
 	 */
 	protected int compareSegmentReferences(List<SegmentReference> comparisonSegmentReferenceList) {
-		List<SegmentReference> list1;
-		List<SegmentReference> list2;
-		
-		list1 = new ArrayList<SegmentReference>(segmentReferenceList);
-		list2 = new ArrayList<SegmentReference>(comparisonSegmentReferenceList);
-		
-		Collections.sort(list1);
-		Collections.sort(list2);
-		
 		// The list with the most entities is considered bigger.
-		if (list1.size() != list2.size()) {
-			return list1.size() - list2.size();
+		if (segmentReferenceList.size() != comparisonSegmentReferenceList.size()) {
+			return segmentReferenceList.size() - comparisonSegmentReferenceList.size();
 		}
 		
 		// Check the individual segment references.
-		for (int i = 0; i < list1.size(); i++) {
-			int result = list1.get(i).compareTo(list2.get(i));
+		for (int i = 0; i < segmentReferenceList.size(); i++) {
+			int result = segmentReferenceList.get(i).compareTo(comparisonSegmentReferenceList.get(i));
 			
 			if (result != 0) {
 				return result;

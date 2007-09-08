@@ -1,3 +1,6 @@
+0.14
+Fixed a bug in the way comparison code where changes in the ordering of segments wouldn't be picked up.
+
 0.13
 Modified the --bounding-polygon task so it can read files containing blank lines.
 Added the ability to dump mysql "current" tables.
