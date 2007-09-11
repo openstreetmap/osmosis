@@ -47,12 +47,12 @@ public class NodeWriter extends ElementWriter {
 		
 		beginOpenElement();
 		addAttribute("id", Long.toString(node.getId()));
+		addAttribute("lat", numberFormat.format(node.getLatitude()));
+		addAttribute("lon", numberFormat.format(node.getLongitude()));
 		addAttribute("timestamp", formatDate(node.getTimestamp()));
 		if (node.getUser() != null && node.getUser().length() > 0) {
 			addAttribute("user", node.getUser());
 		}
-		addAttribute("lat", numberFormat.format(node.getLatitude()));
-		addAttribute("lon", numberFormat.format(node.getLongitude()));
 		
 		tags = node.getTagList();
 		
