@@ -81,17 +81,11 @@ public class ChangeWriter {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param host
-	 *            The server hosting the database.
-	 * @param database
-	 *            The database instance.
-	 * @param user
-	 *            The user name for authentication.
-	 * @param password
-	 *            The password for authentication.
+	 * @param loginCredentials
+	 *            Contains all information required to connect to the database.
 	 */
-	public ChangeWriter(String host, String database, String user, String password) {
-		dbCtx = new DatabaseContext(host, database, user, password);
+	public ChangeWriter(DatabaseLoginCredentials loginCredentials) {
+		dbCtx = new DatabaseContext(loginCredentials);
 		
 		userIdManager = new UserIdManager(dbCtx);
 		

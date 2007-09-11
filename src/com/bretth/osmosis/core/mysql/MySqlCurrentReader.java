@@ -9,6 +9,7 @@ import com.bretth.osmosis.core.domain.v0_4.Way;
 import com.bretth.osmosis.core.mysql.impl.CurrentNodeReader;
 import com.bretth.osmosis.core.mysql.impl.CurrentSegmentReader;
 import com.bretth.osmosis.core.mysql.impl.CurrentWayReader;
+import com.bretth.osmosis.core.mysql.impl.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.task.v0_4.RunnableSource;
 import com.bretth.osmosis.core.task.v0_4.Sink;
@@ -22,33 +23,22 @@ import com.bretth.osmosis.core.task.v0_4.Sink;
  */
 public class MySqlCurrentReader implements RunnableSource {
 	private Sink sink;
-	private String host;
-	private String database;
-	private String user;
-	private String password;
+	private DatabaseLoginCredentials loginCredentials;
 	private boolean readAllUsers;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param host
-	 *            The server hosting the database.
-	 * @param database
-	 *            The database instance.
-	 * @param user
-	 *            The user name for authentication.
-	 * @param password
+	 * @param loginCredentials
+	 *            Contains all information required to connect to the database.
 	 *            The password for authentication.
 	 * @param readAllUsers
 	 *            If this flag is true, all users will be read from the database
 	 *            regardless of their public edits flag.
 	 */
-	public MySqlCurrentReader(String host, String database, String user, String password, boolean readAllUsers) {
-		this.host = host;
-		this.database = database;
-		this.user = user;
-		this.password = password;
+	public MySqlCurrentReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
+		this.loginCredentials = loginCredentials;
 		this.readAllUsers = readAllUsers;
 	}
 	
@@ -67,7 +57,7 @@ public class MySqlCurrentReader implements RunnableSource {
 	private void processNodes() {
 		ReleasableIterator<Node> reader;
 		
-		reader = new CurrentNodeReader(host, database, user, password, readAllUsers);
+		reader = new CurrentNodeReader(loginCredentials, readAllUsers);
 		
 		try {
 			while (reader.hasNext()) {
@@ -86,7 +76,7 @@ public class MySqlCurrentReader implements RunnableSource {
 	private void processSegments() {
 		ReleasableIterator<Segment> reader;
 		
-		reader = new CurrentSegmentReader(host, database, user, password, readAllUsers);
+		reader = new CurrentSegmentReader(loginCredentials, readAllUsers);
 		
 		try {
 			while (reader.hasNext()) {
@@ -105,7 +95,7 @@ public class MySqlCurrentReader implements RunnableSource {
 	private void processWays() {
 		ReleasableIterator<Way> reader;
 		
-		reader = new CurrentWayReader(host, database, user, password, readAllUsers);
+		reader = new CurrentWayReader(loginCredentials, readAllUsers);
 		
 		try {
 			while (reader.hasNext()) {

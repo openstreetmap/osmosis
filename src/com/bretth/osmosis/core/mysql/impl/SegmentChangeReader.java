@@ -26,14 +26,8 @@ public class SegmentChangeReader {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param host
-	 *            The server hosting the database.
-	 * @param database
-	 *            The database instance.
-	 * @param user
-	 *            The user name for authentication.
-	 * @param password
-	 *            The password for authentication.
+	 * @param loginCredentials
+	 *            Contains all information required to connect to the database.
 	 * @param readAllUsers
 	 *            If this flag is true, all users will be read from the database
 	 *            regardless of their public edits flag.
@@ -43,11 +37,11 @@ public class SegmentChangeReader {
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public SegmentChangeReader(String host, String database, String user, String password, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+	public SegmentChangeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
 		this.intervalBegin = intervalBegin;
 		
 		segmentHistoryReader = new PeekableIterator<EntityHistory<Segment>>(
-			new SegmentHistoryReader(host, database, user, password, readAllUsers, intervalBegin, intervalEnd)
+			new SegmentHistoryReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd)
 		);
 	}
 	

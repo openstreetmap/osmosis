@@ -18,6 +18,7 @@ import com.bretth.osmosis.core.domain.v0_4.SegmentReference;
 import com.bretth.osmosis.core.domain.v0_4.Tag;
 import com.bretth.osmosis.core.domain.v0_4.Way;
 import com.bretth.osmosis.core.mysql.impl.DatabaseContext;
+import com.bretth.osmosis.core.mysql.impl.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.mysql.impl.EmbeddedTagProcessor;
 import com.bretth.osmosis.core.mysql.impl.UserIdManager;
 import com.bretth.osmosis.core.mysql.impl.WaySegment;
@@ -212,22 +213,16 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param host
-	 *            The server hosting the database.
-	 * @param database
-	 *            The database instance.
-	 * @param user
-	 *            The user name for authentication.
-	 * @param password
-	 *            The password for authentication.
+	 * @param loginCredentials
+	 *            Contains all information required to connect to the database.
 	 * @param lockTables
 	 *            If true, all tables will be locked during loading.
 	 * @param populateCurrentTables
 	 *            If true, the current tables will be populated as well as
 	 *            history tables.
 	 */
-	public MysqlWriter(String host, String database, String user, String password, boolean lockTables, boolean populateCurrentTables) {
-		dbCtx = new DatabaseContext(host, database, user, password);
+	public MysqlWriter(DatabaseLoginCredentials loginCredentials, boolean lockTables, boolean populateCurrentTables) {
+		dbCtx = new DatabaseContext(loginCredentials);
 		
 		userIdManager = new UserIdManager(dbCtx);
 		

@@ -30,34 +30,28 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param host
-	 *            The server hosting the database.
-	 * @param database
-	 *            The database instance.
-	 * @param user
-	 *            The user name for authentication.
-	 * @param password
-	 *            The password for authentication.
+	 * @param loginCredentials
+	 *            Contains all information required to connect to the database.
 	 * @param readAllUsers
 	 *            If this flag is true, all users will be read from the database
 	 *            regardless of their public edits flag.
 	 */
-	public WayReader(String host, String database, String user, String password, boolean readAllUsers) {
+	public WayReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
 		wayReader = new PersistentIterator<EntityHistory<Way>>(
-			new WayTableReader(host, database, user, password, readAllUsers),
+			new WayTableReader(loginCredentials, readAllUsers),
 			"way",
 			true
 		);
 		wayTagReader = new PeekableIterator<EntityHistory<WayTag>>(
 			new PersistentIterator<EntityHistory<WayTag>>(
-				new WayTagTableReader(host, database, user, password),
+				new WayTagTableReader(loginCredentials),
 				"waytag",
 				true
 			)
 		);
 		waySegmentReader = new PeekableIterator<EntityHistory<WaySegment>>(
 			new PersistentIterator<EntityHistory<WaySegment>>(
-				new WaySegmentTableReader(host, database, user, password),
+				new WaySegmentTableReader(loginCredentials),
 				"wayseg",
 				true
 			)

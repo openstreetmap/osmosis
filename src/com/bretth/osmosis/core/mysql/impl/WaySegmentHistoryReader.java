@@ -34,22 +34,16 @@ public class WaySegmentHistoryReader extends BaseTableReader<EntityHistory<WaySe
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param host
-	 *            The server hosting the database.
-	 * @param database
-	 *            The database instance.
-	 * @param user
-	 *            The user name for authentication.
-	 * @param password
-	 *            The password for authentication.
+	 * @param loginCredentials
+	 *            Contains all information required to connect to the database.
 	 * @param intervalBegin
 	 *            Marks the beginning (inclusive) of the time interval to be
 	 *            checked.
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public WaySegmentHistoryReader(String host, String database, String user, String password, Date intervalBegin, Date intervalEnd) {
-		super(host, database, user, password);
+	public WaySegmentHistoryReader(DatabaseLoginCredentials loginCredentials, Date intervalBegin, Date intervalEnd) {
+		super(loginCredentials);
 		
 		this.intervalBegin = intervalBegin;
 		this.intervalEnd = intervalEnd;

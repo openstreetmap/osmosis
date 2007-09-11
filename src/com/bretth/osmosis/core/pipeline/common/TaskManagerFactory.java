@@ -100,6 +100,42 @@ public abstract class TaskManagerFactory {
 	
 	
 	/**
+	 * Checks if the specified argument has been supplied.
+	 * 
+	 * @param taskArgs The task arguments.
+	 * @param argName The name of the argument.
+	 * @return True if the argument has been supplied.
+	 */
+	protected boolean doesArgumentExist(Map<String, String> taskArgs, String argName) {
+		return taskArgs.containsKey(argName);
+	}
+	
+	
+	/**
+	 * Utility method for retrieving a String argument value from a Map of task
+	 * arguments.
+	 * 
+	 * @param taskId
+	 *            The identifier for the task retrieving the parameter.
+	 * @param taskArgs
+	 *            The task arguments.
+	 * @param argName
+	 *            The name of the argument.
+	 * @return The value of the argument.
+	 */
+	protected String getStringArgument(String taskId, Map<String, String> taskArgs,
+			String argName) {
+		if (taskArgs.containsKey(argName)) {
+			return taskArgs.get(argName);
+		} else {
+			throw new OsmosisRuntimeException(
+				"Argument " + argName + " for task " + taskId
+				+ " does not exist.");
+		}
+	}
+	
+	
+	/**
 	 * Utility method for retrieving a String argument value from a Map of task
 	 * arguments.
 	 * 

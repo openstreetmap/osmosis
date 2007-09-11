@@ -2,8 +2,8 @@ package com.bretth.osmosis.core.mysql;
 
 import java.util.Map;
 
+import com.bretth.osmosis.core.mysql.impl.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
-import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.v0_4.RunnableSourceManager;
 
 
@@ -12,16 +12,8 @@ import com.bretth.osmosis.core.pipeline.v0_4.RunnableSourceManager;
  * 
  * @author Brett Henderson
  */
-public class MySqlCurrentReaderFactory extends TaskManagerFactory {
-	private static final String ARG_HOST = "host";
-	private static final String ARG_DATABASE = "database";
-	private static final String ARG_USER = "user";
-	private static final String ARG_PASSWORD = "password";
+public class MySqlCurrentReaderFactory extends MysqlTaskManagerFactory {
 	private static final String ARG_READ_ALL_USERS = "readAllUsers";
-	private static final String DEFAULT_HOST = "localhost";
-	private static final String DEFAULT_DATABASE = "osm";
-	private static final String DEFAULT_USER = "osm";
-	private static final String DEFAULT_PASSWORD = "";
 	private static final boolean DEFAULT_READ_ALL_USERS = false;
 	
 	
@@ -30,22 +22,16 @@ public class MySqlCurrentReaderFactory extends TaskManagerFactory {
 	 */
 	@Override
 	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
-		String host;
-		String database;
-		String user;
-		String password;
+		DatabaseLoginCredentials loginCredentials;
 		boolean readAllUsers;
 		
 		// Get the task arguments.
-		host = getStringArgument(taskId, taskArgs, ARG_HOST, DEFAULT_HOST);
-		database = getStringArgument(taskId, taskArgs, ARG_DATABASE, DEFAULT_DATABASE);
-		user = getStringArgument(taskId, taskArgs, ARG_USER, DEFAULT_USER);
-		password = getStringArgument(taskId, taskArgs, ARG_PASSWORD, DEFAULT_PASSWORD);
+		loginCredentials = getDatabaseLoginCredentials(taskId, taskArgs);
 		readAllUsers = getBooleanArgument(taskId, taskArgs, ARG_READ_ALL_USERS, DEFAULT_READ_ALL_USERS);
 		
 		return new RunnableSourceManager(
 			taskId,
-			new MySqlCurrentReader(host, database, user, password, readAllUsers),
+			new MySqlCurrentReader(loginCredentials, readAllUsers),
 			pipeArgs
 		);
 	}

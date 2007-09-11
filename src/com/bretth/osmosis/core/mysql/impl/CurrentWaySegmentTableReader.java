@@ -22,17 +22,11 @@ public class CurrentWaySegmentTableReader extends BaseTableReader<WaySegment> {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param host
-	 *            The server hosting the database.
-	 * @param database
-	 *            The database instance.
-	 * @param user
-	 *            The user name for authentication.
-	 * @param password
-	 *            The password for authentication.
+	 * @param loginCredentials
+	 *            Contains all information required to connect to the database.
 	 */
-	public CurrentWaySegmentTableReader(String host, String database, String user, String password) {
-		super(host, database, user, password);
+	public CurrentWaySegmentTableReader(DatabaseLoginCredentials loginCredentials) {
+		super(loginCredentials);
 	}
 	
 	

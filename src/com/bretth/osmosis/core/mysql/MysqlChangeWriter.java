@@ -7,6 +7,7 @@ import com.bretth.osmosis.core.container.v0_4.ChangeContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.mysql.impl.ActionChangeWriter;
 import com.bretth.osmosis.core.mysql.impl.ChangeWriter;
+import com.bretth.osmosis.core.mysql.impl.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.task.common.ChangeAction;
 import com.bretth.osmosis.core.task.v0_4.ChangeSink;
 
@@ -28,17 +29,11 @@ public class MysqlChangeWriter implements ChangeSink {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param host
-	 *            The server hosting the database.
-	 * @param database
-	 *            The database instance.
-	 * @param user
-	 *            The user name for authentication.
-	 * @param password
-	 *            The password for authentication.
+	 * @param loginCredentials
+	 *            Contains all information required to connect to the database.
 	 */
-	public MysqlChangeWriter(String host, String database, String user, String password) {
-		changeWriter = new ChangeWriter(host, database, user, password);
+	public MysqlChangeWriter(DatabaseLoginCredentials loginCredentials) {
+		changeWriter = new ChangeWriter(loginCredentials);
 		actionWriterMap = new HashMap<ChangeAction, ActionChangeWriter>();
 		actionWriterMap.put(ChangeAction.Create, new ActionChangeWriter(changeWriter, ChangeAction.Create));
 		actionWriterMap.put(ChangeAction.Modify, new ActionChangeWriter(changeWriter, ChangeAction.Modify));

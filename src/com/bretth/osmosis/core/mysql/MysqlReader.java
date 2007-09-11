@@ -8,6 +8,7 @@ import com.bretth.osmosis.core.container.v0_4.WayContainer;
 import com.bretth.osmosis.core.domain.v0_4.Node;
 import com.bretth.osmosis.core.domain.v0_4.Segment;
 import com.bretth.osmosis.core.domain.v0_4.Way;
+import com.bretth.osmosis.core.mysql.impl.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.mysql.impl.EntityHistory;
 import com.bretth.osmosis.core.mysql.impl.EntityHistoryComparator;
 import com.bretth.osmosis.core.mysql.impl.EntitySnapshotReader;
@@ -27,10 +28,7 @@ import com.bretth.osmosis.core.task.v0_4.Sink;
  */
 public class MysqlReader implements RunnableSource {
 	private Sink sink;
-	private String host;
-	private String database;
-	private String user;
-	private String password;
+	private DatabaseLoginCredentials loginCredentials;
 	private Date snapshotInstant;
 	private boolean readAllUsers;
 	
@@ -38,14 +36,8 @@ public class MysqlReader implements RunnableSource {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param host
-	 *            The server hosting the database.
-	 * @param database
-	 *            The database instance.
-	 * @param user
-	 *            The user name for authentication.
-	 * @param password
-	 *            The password for authentication.
+	 * @param loginCredentials
+	 *            Contains all information required to connect to the database.
 	 * @param snapshotInstant
 	 *            The state of the node table at this point in time will be
 	 *            dumped. This ensures a consistent snapshot.
@@ -53,11 +45,8 @@ public class MysqlReader implements RunnableSource {
 	 *            If this flag is true, all users will be read from the database
 	 *            regardless of their public edits flag.
 	 */
-	public MysqlReader(String host, String database, String user, String password, Date snapshotInstant, boolean readAllUsers) {
-		this.host = host;
-		this.database = database;
-		this.user = user;
-		this.password = password;
+	public MysqlReader(DatabaseLoginCredentials loginCredentials, Date snapshotInstant, boolean readAllUsers) {
+		this.loginCredentials = loginCredentials;
 		this.snapshotInstant = snapshotInstant;
 		this.readAllUsers = readAllUsers;
 	}
@@ -79,7 +68,7 @@ public class MysqlReader implements RunnableSource {
 		
 		reader = new EntitySnapshotReader<Node>(
 			new PeekableIterator<EntityHistory<Node>>(
-				new NodeReader(host, database, user, password, readAllUsers)
+				new NodeReader(loginCredentials, readAllUsers)
 			),
 			snapshotInstant,
 			new EntityHistoryComparator<Node>()
@@ -104,7 +93,7 @@ public class MysqlReader implements RunnableSource {
 		
 		reader = new EntitySnapshotReader<Segment>(
 			new PeekableIterator<EntityHistory<Segment>>(
-				new SegmentReader(host, database, user, password, readAllUsers)
+				new SegmentReader(loginCredentials, readAllUsers)
 			),
 			snapshotInstant,
 			new EntityHistoryComparator<Segment>()
@@ -129,7 +118,7 @@ public class MysqlReader implements RunnableSource {
 		
 		reader = new EntitySnapshotReader<Way>(
 			new PeekableIterator<EntityHistory<Way>>(
-				new WayReader(host, database, user, password, readAllUsers)
+				new WayReader(loginCredentials, readAllUsers)
 			),
 			snapshotInstant,
 			new EntityHistoryComparator<Way>()

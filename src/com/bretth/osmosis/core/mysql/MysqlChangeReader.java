@@ -2,6 +2,7 @@ package com.bretth.osmosis.core.mysql;
 
 import java.util.Date;
 
+import com.bretth.osmosis.core.mysql.impl.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.mysql.impl.NodeChangeReader;
 import com.bretth.osmosis.core.mysql.impl.SegmentChangeReader;
 import com.bretth.osmosis.core.mysql.impl.WayChangeReader;
@@ -18,10 +19,7 @@ import com.bretth.osmosis.core.task.v0_4.RunnableChangeSource;
  */
 public class MysqlChangeReader implements RunnableChangeSource {
 	private ChangeSink changeSink;
-	private String host;
-	private String database;
-	private String user;
-	private String password;
+	private DatabaseLoginCredentials loginCredentials;
 	private boolean readAllUsers;
 	private Date intervalBegin;
 	private Date intervalEnd;
@@ -30,14 +28,8 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param host
-	 *            The server hosting the database.
-	 * @param database
-	 *            The database instance.
-	 * @param user
-	 *            The user name for authentication.
-	 * @param password
-	 *            The password for authentication.
+	 * @param loginCredentials
+	 *            Contains all information required to connect to the database.
 	 * @param readAllUsers
 	 *            If this flag is true, all users will be read from the database
 	 *            regardless of their public edits flag.
@@ -47,11 +39,8 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public MysqlChangeReader(String host, String database, String user, String password, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
-		this.host = host;
-		this.database = database;
-		this.user = user;
-		this.password = password;
+	public MysqlChangeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+		this.loginCredentials = loginCredentials;
 		this.readAllUsers = readAllUsers;
 		this.intervalBegin = intervalBegin;
 		this.intervalEnd = intervalEnd;
@@ -70,7 +59,7 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	 * Reads all node changes and sends them to the change sink.
 	 */
 	private void processNodes() {
-		NodeChangeReader reader = new NodeChangeReader(host, database, user, password, readAllUsers, intervalBegin, intervalEnd);
+		NodeChangeReader reader = new NodeChangeReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd);
 		
 		try {
 			while (reader.hasNext()) {
@@ -87,7 +76,7 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	 * Reads all segment changes and sends them to the change sink.
 	 */
 	private void processSegments() {
-		SegmentChangeReader reader = new SegmentChangeReader(host, database, user, password, readAllUsers, intervalBegin, intervalEnd);
+		SegmentChangeReader reader = new SegmentChangeReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd);
 		
 		try {
 			while (reader.hasNext()) {
@@ -104,7 +93,7 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	 * Reads all ways from the database and sends to the sink.
 	 */
 	private void processWays() {
-		WayChangeReader reader = new WayChangeReader(host, database, user, password, readAllUsers, intervalBegin, intervalEnd);
+		WayChangeReader reader = new WayChangeReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd);
 		
 		try {
 			while (reader.hasNext()) {

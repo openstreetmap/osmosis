@@ -19,10 +19,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 public class DatabaseContext {
 	private static boolean driverLoaded;
 	
-	private String host;
-	private String database;
-	private String user;
-	private String password;
+	private DatabaseLoginCredentials loginCredentials;
 	private Connection connection;
 	/**
 	 * This statement is used by streaming result sets. It is stored globally
@@ -35,20 +32,11 @@ public class DatabaseContext {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param host
-	 *            The server hosting the database.
-	 * @param database
-	 *            The database instance.
-	 * @param user
-	 *            The user name for authentication.
-	 * @param password
-	 *            The password for authentication.
+	 * @param loginCredentials
+	 *            Contains all information required to connect to the database.
 	 */
-	public DatabaseContext(String host, String database, String user, String password) {
-		this.host = host;
-		this.database = database;
-		this.user = user;
-		this.password = password;
+	public DatabaseContext(DatabaseLoginCredentials loginCredentials) {
+		this.loginCredentials = loginCredentials;
 	}
 	
 	
@@ -89,8 +77,10 @@ public class DatabaseContext {
 			
 			try {
 				connection = DriverManager.getConnection(
-					"jdbc:mysql://" + host + "/" + database + "?"
-			    	+ "user=" + user + "&password=" + password// + "&profileSql=true"
+					"jdbc:mysql://" + loginCredentials.getHost() + "/"
+					+ loginCredentials.getDatabase() + "?"
+			    	+ "user=" + loginCredentials.getUser()
+			    	+ "&password=" + loginCredentials.getPassword()// + "&profileSql=true"
 			    );
 				
 				connection.setAutoCommit(false);

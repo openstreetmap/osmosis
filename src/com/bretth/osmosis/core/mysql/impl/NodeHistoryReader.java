@@ -46,14 +46,8 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param host
-	 *            The server hosting the database.
-	 * @param database
-	 *            The database instance.
-	 * @param user
-	 *            The user name for authentication.
-	 * @param password
-	 *            The password for authentication.
+	 * @param loginCredentials
+	 *            Contains all information required to connect to the database.
 	 * @param readAllUsers
 	 *            If this flag is true, all users will be read from the database
 	 *            regardless of their public edits flag.
@@ -63,8 +57,8 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public NodeHistoryReader(String host, String database, String user, String password, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
-		super(host, database, user, password, readAllUsers);
+	public NodeHistoryReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+		super(loginCredentials, readAllUsers);
 		
 		this.intervalBegin = intervalBegin;
 		this.intervalEnd = intervalEnd;

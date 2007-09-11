@@ -32,14 +32,8 @@ public class WayChangeReader {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param host
-	 *            The server hosting the database.
-	 * @param database
-	 *            The database instance.
-	 * @param user
-	 *            The user name for authentication.
-	 * @param password
-	 *            The password for authentication.
+	 * @param loginCredentials
+	 *            Contains all information required to connect to the database.
 	 * @param readAllUsers
 	 *            If this flag is true, all users will be read from the database
 	 *            regardless of their public edits flag.
@@ -49,11 +43,11 @@ public class WayChangeReader {
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public WayChangeReader(String host, String database, String user, String password, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+	public WayChangeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
 		wayHistoryReader =
 			new PeekableIterator<EntityHistory<Way>>(
 				new PersistentIterator<EntityHistory<Way>>(
-					new WayHistoryReader(host, database, user, password, readAllUsers, intervalBegin, intervalEnd),
+					new WayHistoryReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd),
 					"way",
 					true
 				)
@@ -61,7 +55,7 @@ public class WayChangeReader {
 		waySegmentHistoryReader =
 			new PeekableIterator<EntityHistory<WaySegment>>(
 				new PersistentIterator<EntityHistory<WaySegment>>(
-					new WaySegmentHistoryReader(host, database, user, password, intervalBegin, intervalEnd),
+					new WaySegmentHistoryReader(loginCredentials, intervalBegin, intervalEnd),
 					"wayseg",
 					true
 				)
@@ -69,7 +63,7 @@ public class WayChangeReader {
 		wayTagHistoryReader =
 			new PeekableIterator<EntityHistory<WayTag>>(
 				new PersistentIterator<EntityHistory<WayTag>>(
-					new WayTagHistoryReader(host, database, user, password, intervalBegin, intervalEnd),
+					new WayTagHistoryReader(loginCredentials, intervalBegin, intervalEnd),
 					"waytag",
 					true
 				)
