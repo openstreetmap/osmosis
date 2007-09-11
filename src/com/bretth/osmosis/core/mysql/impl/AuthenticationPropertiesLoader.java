@@ -91,13 +91,13 @@ public class AuthenticationPropertiesLoader {
 			loginCredentials.setHost(properties.getProperty(KEY_HOST));
 		}
 		if (properties.containsKey(KEY_DATABASE)) {
-			loginCredentials.setHost(properties.getProperty(KEY_DATABASE));
+			loginCredentials.setDatabase(properties.getProperty(KEY_DATABASE));
 		}
 		if (properties.containsKey(KEY_USER)) {
-			loginCredentials.setHost(properties.getProperty(KEY_USER));
+			loginCredentials.setUser(properties.getProperty(KEY_USER));
 		}
 		if (properties.containsKey(KEY_PASSWORD)) {
-			loginCredentials.setHost(properties.getProperty(KEY_PASSWORD));
+			loginCredentials.setPassword(properties.getProperty(KEY_PASSWORD));
 		}
 	}
 }

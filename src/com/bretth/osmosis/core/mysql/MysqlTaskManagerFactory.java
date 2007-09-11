@@ -31,10 +31,10 @@ public abstract class MysqlTaskManagerFactory extends TaskManagerFactory {
 		
 		// Create a new credential object with default values.
 		loginCredentials = new DatabaseLoginCredentials(
-			MysqlConstants.TASK_ARG_HOST,
-			MysqlConstants.TASK_ARG_DATABASE,
-			MysqlConstants.TASK_ARG_USER,
-			MysqlConstants.TASK_ARG_PASSWORD
+			MysqlConstants.TASK_DEFAULT_HOST,
+			MysqlConstants.TASK_DEFAULT_DATABASE,
+			MysqlConstants.TASK_DEFAULT_USER,
+			MysqlConstants.TASK_DEFAULT_PASSWORD
 		);
 		
 		// If an authentication properties file has been supplied, load override
