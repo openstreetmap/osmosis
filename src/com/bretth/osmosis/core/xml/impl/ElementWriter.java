@@ -19,7 +19,7 @@ public class ElementWriter {
 	/**
 	 * The number of spaces to indent per indent level.
 	 */
-	private static final int INDENT_SPACES_PER_LEVEL = 4;
+	private static final int INDENT_SPACES_PER_LEVEL = 2;
 	
 	/**
 	 * Defines the characters that must be replaced by an encoded string when writing to XML.
