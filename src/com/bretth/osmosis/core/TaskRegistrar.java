@@ -75,5 +75,55 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("read-api", new XmlDownloaderFactory());
 		TaskManagerFactory.register("bounding-polygon", new PolygonFilterFactory());
 		TaskManagerFactory.register("report", new EntityReporterFactory());
+		
+		TaskManagerFactory.register("apply-change-0.4", new ChangeApplierFactory());
+		TaskManagerFactory.register("bounding-box-0.4", new BoundingBoxFilterFactory());
+		TaskManagerFactory.register("derive-change-0.4", new ChangeDeriverFactory());
+		TaskManagerFactory.register("read-mysql-0.4", new MysqlReaderFactory());
+		TaskManagerFactory.register("read-mysql-change-0.4", new MysqlChangeReaderFactory());
+		TaskManagerFactory.register("read-mysql-current-0.4", new MySqlCurrentReaderFactory());
+		TaskManagerFactory.register("read-xml-0.4", new XmlReaderFactory());
+		TaskManagerFactory.register("read-xml-change-0.4", new XmlChangeReaderFactory());
+		TaskManagerFactory.register("sort-0.4", entitySorterFactory);
+		TaskManagerFactory.register("sort-change-0.4", changeSorterFactory);
+		TaskManagerFactory.register("write-mysql-0.4", new MysqlWriterFactory());
+		TaskManagerFactory.register("write-mysql-change-0.4", new MysqlChangeWriterFactory());
+		TaskManagerFactory.register("truncate-mysql-0.4", new MysqlTruncatorFactory());
+		TaskManagerFactory.register("write-xml-0.4", new XmlWriterFactory());
+		TaskManagerFactory.register("write-xml-change-0.4", new XmlChangeWriterFactory());
+		TaskManagerFactory.register("write-null-0.4", new NullWriterFactory());
+		TaskManagerFactory.register("write-null-change-0.4", new NullChangeWriterFactory());
+		TaskManagerFactory.register("buffer-0.4", new EntityBufferFactory());
+		TaskManagerFactory.register("buffer-change-0.4", new ChangeBufferFactory());
+		TaskManagerFactory.register("merge-0.4", new EntityMergerFactory());
+		TaskManagerFactory.register("merge-change-0.4", new ChangeMergerFactory());
+		TaskManagerFactory.register("read-api-0.4", new XmlDownloaderFactory());
+		TaskManagerFactory.register("bounding-polygon-0.4", new PolygonFilterFactory());
+		TaskManagerFactory.register("report-0.4", new EntityReporterFactory());
+		
+		TaskManagerFactory.register("apply-change-0.5", new com.bretth.osmosis.core.change.v0_5.ChangeApplierFactory());
+		TaskManagerFactory.register("bounding-box-0.5", new com.bretth.osmosis.core.filter.v0_5.BoundingBoxFilterFactory());
+		TaskManagerFactory.register("derive-change-0.5", new com.bretth.osmosis.core.change.v0_5.ChangeDeriverFactory());
+		TaskManagerFactory.register("read-mysql-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlReaderFactory());
+		TaskManagerFactory.register("read-mysql-change-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlChangeReaderFactory());
+		TaskManagerFactory.register("read-mysql-current-0.5", new com.bretth.osmosis.core.mysql.v0_5.MySqlCurrentReaderFactory());
+		//TaskManagerFactory.register("read-xml-0.5", new XmlReaderFactory());
+		//TaskManagerFactory.register("read-xml-change-0.5", new XmlChangeReaderFactory());
+		//TaskManagerFactory.register("sort-0.5", entitySorterFactory);
+		TaskManagerFactory.register("sort-change-0.5", changeSorterFactory);
+		TaskManagerFactory.register("write-mysql-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlWriterFactory());
+		TaskManagerFactory.register("write-mysql-change-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlChangeWriterFactory());
+		TaskManagerFactory.register("truncate-mysql-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlTruncatorFactory());
+		//TaskManagerFactory.register("write-xml-0.5", new XmlWriterFactory());
+		//TaskManagerFactory.register("write-xml-change-0.5", new XmlChangeWriterFactory());
+		TaskManagerFactory.register("write-null-0.5", new com.bretth.osmosis.core.misc.v0_5.NullWriterFactory());
+		TaskManagerFactory.register("write-null-change-0.5", new com.bretth.osmosis.core.misc.v0_5.NullChangeWriterFactory());
+		TaskManagerFactory.register("buffer-0.5", new com.bretth.osmosis.core.buffer.v0_5.EntityBufferFactory());
+		TaskManagerFactory.register("buffer-change-0.5", new com.bretth.osmosis.core.buffer.v0_5.ChangeBufferFactory());
+		TaskManagerFactory.register("merge-0.5", new com.bretth.osmosis.core.merge.v0_5.EntityMergerFactory());
+		TaskManagerFactory.register("merge-change-0.5", new com.bretth.osmosis.core.merge.v0_5.ChangeMergerFactory());
+		//TaskManagerFactory.register("read-api-0.5", new XmlDownloaderFactory());
+		TaskManagerFactory.register("bounding-polygon-0.5", new com.bretth.osmosis.core.filter.v0_5.PolygonFilterFactory());
+		//TaskManagerFactory.register("report-0.5", new EntityReporterFactory());
 	}
 }
