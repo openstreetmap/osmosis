@@ -16,7 +16,7 @@ public class Way extends Entity implements Comparable<Way> {
 	private static final long serialVersionUID = 1L;
 	
 	
-	private List<NodeReference> nodeReferenceList;
+	private List<WayNode> nodeReferenceList;
 	
 	
 	/**
@@ -32,7 +32,7 @@ public class Way extends Entity implements Comparable<Way> {
 	public Way(long id, Date timestamp, String user) {
 		super(id, timestamp, user);
 		
-		nodeReferenceList = new ArrayList<NodeReference>();
+		nodeReferenceList = new ArrayList<WayNode>();
 	}
 	
 	
@@ -67,7 +67,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
 	 *         "bigger".
 	 */
-	protected int compareNodeReferences(List<NodeReference> comparisonNodeReferenceList) {
+	protected int compareNodeReferences(List<WayNode> comparisonNodeReferenceList) {
 		// The list with the most entities is considered bigger.
 		if (nodeReferenceList.size() != comparisonNodeReferenceList.size()) {
 			return nodeReferenceList.size() - comparisonNodeReferenceList.size();
@@ -140,7 +140,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 * 
 	 * @return The nodeReferenceList.
 	 */
-	public List<NodeReference> getNodeReferenceList() {
+	public List<WayNode> getNodeReferenceList() {
 		return Collections.unmodifiableList(nodeReferenceList);
 	}
 	
@@ -151,7 +151,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 * @param nodeReference
 	 *            The segment reference to add.
 	 */
-	public void addNodeReference(NodeReference nodeReference) {
+	public void addNodeReference(WayNode nodeReference) {
 		nodeReferenceList.add(nodeReference);
 	}
 	
@@ -162,7 +162,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 * @param nodeReferences
 	 *            The collection of node references to be added.
 	 */
-	public void addNodeReferences(Collection<NodeReference> nodeReferences) {
+	public void addNodeReferences(Collection<WayNode> nodeReferences) {
 		nodeReferenceList.addAll(nodeReferences);
 	}
 }

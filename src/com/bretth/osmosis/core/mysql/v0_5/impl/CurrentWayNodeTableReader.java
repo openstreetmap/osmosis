@@ -15,7 +15,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
  * 
  * @author Brett Henderson
  */
-public class CurrentWayNodeTableReader extends BaseTableReader<WayNode> {
+public class CurrentWayNodeTableReader extends BaseTableReader<DBWayNode> {
 	private static final String SELECT_SQL =
 		"SELECT id as way_id, node_id, sequence_id"
 		+ " FROM current_way_nodes"
@@ -46,7 +46,7 @@ public class CurrentWayNodeTableReader extends BaseTableReader<WayNode> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<WayNode> createNextValue(ResultSet resultSet) {
+	protected ReadResult<DBWayNode> createNextValue(ResultSet resultSet) {
 		long wayId;
 		long nodeId;
 		int sequenceId;
@@ -60,9 +60,9 @@ public class CurrentWayNodeTableReader extends BaseTableReader<WayNode> {
 			throw new OsmosisRuntimeException("Unable to read way node fields.", e);
 		}
 		
-		return new ReadResult<WayNode>(
+		return new ReadResult<DBWayNode>(
 			true,
-			new WayNode(wayId, nodeId, sequenceId)
+			new DBWayNode(wayId, nodeId, sequenceId)
 		);
 	}
 }

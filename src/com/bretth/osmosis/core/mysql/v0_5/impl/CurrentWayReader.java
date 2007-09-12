@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.bretth.osmosis.core.domain.v0_5.NodeReference;
+import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.store.PeekableIterator;
@@ -22,8 +22,8 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
 public class CurrentWayReader implements ReleasableIterator<Way> {
 	
 	private ReleasableIterator<Way> wayReader;
-	private PeekableIterator<WayTag> wayTagReader;
-	private PeekableIterator<WayNode> waySegmentReader;
+	private PeekableIterator<DBEntityTag> wayTagReader;
+	private PeekableIterator<DBWayNode> waySegmentReader;
 	private Way nextValue;
 	private boolean nextValueLoaded;
 	
@@ -43,15 +43,15 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 			"way",
 			true
 		);
-		wayTagReader = new PeekableIterator<WayTag>(
-			new PersistentIterator<WayTag>(
-				new CurrentWayTagTableReader(loginCredentials),
+		wayTagReader = new PeekableIterator<DBEntityTag>(
+			new PersistentIterator<DBEntityTag>(
+				new CurrentEntityTagTableReader(loginCredentials, "current_way_tags"),
 				"waytag",
 				true
 			)
 		);
-		waySegmentReader = new PeekableIterator<WayNode>(
-			new PersistentIterator<WayNode>(
+		waySegmentReader = new PeekableIterator<DBWayNode>(
+			new PersistentIterator<DBWayNode>(
 				new CurrentWayNodeTableReader(loginCredentials),
 				"wayseg",
 				true
@@ -67,7 +67,7 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 		if (!nextValueLoaded && wayReader.hasNext()) {
 			Way way;
 			long wayId;
-			List<WayNode> waySegments;
+			List<DBWayNode> waySegments;
 			
 			way = wayReader.next();
 			
@@ -75,11 +75,11 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 			
 			// Skip all way tags that are from lower id way.
 			while (wayTagReader.hasNext()) {
-				WayTag wayTag;
+				DBEntityTag wayTag;
 				
 				wayTag = wayTagReader.peekNext();
 				
-				if (wayTag.getWayId() < wayId) {
+				if (wayTag.getEntityId() < wayId) {
 					wayTagReader.next();
 				} else {
 					break;
@@ -87,13 +87,13 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 			}
 			
 			// Load all tags for this way.
-			while (wayTagReader.hasNext() && wayTagReader.peekNext().getWayId() == wayId) {
+			while (wayTagReader.hasNext() && wayTagReader.peekNext().getEntityId() == wayId) {
 				way.addTag(wayTagReader.next());
 			}
 			
 			// Skip all way segments that are from lower id or lower version of the same id.
 			while (waySegmentReader.hasNext()) {
-				WayNode waySegment;
+				DBWayNode waySegment;
 				
 				waySegment = waySegmentReader.peekNext();
 				
@@ -104,15 +104,15 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 				}
 			}
 			
-			// Load all segments matching this version of the way.
-			waySegments = new ArrayList<WayNode>();
+			// Load all segments matching this way.
+			waySegments = new ArrayList<DBWayNode>();
 			while (waySegmentReader.hasNext() && waySegmentReader.peekNext().getWayId() == wayId) {
 				waySegments.add(waySegmentReader.next());
 			}
 			// The underlying query sorts segment references by way id but not
 			// by their sequence number.
 			Collections.sort(waySegments, new WayNodeComparator());
-			for (NodeReference nodeReference : waySegments) {
+			for (WayNode nodeReference : waySegments) {
 				way.addNodeReference(nodeReference);
 			}
 			

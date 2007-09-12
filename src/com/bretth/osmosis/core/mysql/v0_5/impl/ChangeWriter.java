@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_5.Node;
-import com.bretth.osmosis.core.domain.v0_5.NodeReference;
+import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
@@ -202,7 +202,7 @@ public class ChangeWriter {
 	public void write(Way way, ChangeAction action) {
 		boolean visible;
 		int version;
-		List<NodeReference> nodeReferenceList;
+		List<WayNode> nodeReferenceList;
 		
 		nodeReferenceList = way.getNodeReferenceList();
 		
@@ -259,7 +259,7 @@ public class ChangeWriter {
 		
 		// Insert the segments of the new way into the history table.
 		for (int i = 0; i < nodeReferenceList.size(); i++) {
-			NodeReference nodeReference;
+			WayNode nodeReference;
 			
 			nodeReference = nodeReferenceList.get(i);
 			
@@ -337,7 +337,7 @@ public class ChangeWriter {
 		
 		// Insert the segments of the new way into the current table.
 		for (int i = 0; i < nodeReferenceList.size(); i++) {
-			NodeReference nodeReference;
+			WayNode nodeReference;
 			
 			nodeReference = nodeReferenceList.get(i);
 			

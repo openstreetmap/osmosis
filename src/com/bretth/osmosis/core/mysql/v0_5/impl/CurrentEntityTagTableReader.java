@@ -10,15 +10,17 @@ import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
 
 
 /**
- * Reads current way tags from a database ordered by the way identifier.
+ * Reads current tags for an entity from a tag table ordered by the entity
+ * identifier.  The table must match an expected schema.
  * 
  * @author Brett Henderson
  */
-public class CurrentWayTagTableReader extends BaseTableReader<WayTag> {
-	private static final String SELECT_SQL =
-		"SELECT id as way_id, k, v"
-		+ " FROM current_way_tags"
-		+ " ORDER BY way_id";
+public class CurrentEntityTagTableReader extends BaseTableReader<DBEntityTag> {
+	private static final String SELECT_SQL_1 = "SELECT id as way_id, k, v FROM ";
+	private static final String SELECT_SQL_2 = " ORDER BY way_id";
+	
+	
+	private String tableName;
 	
 	
 	/**
@@ -26,9 +28,13 @@ public class CurrentWayTagTableReader extends BaseTableReader<WayTag> {
 	 * 
 	 * @param loginCredentials
 	 *            Contains all information required to connect to the database.
+	 * @param tableName
+	 *            The name of the table to query tag information from.
 	 */
-	public CurrentWayTagTableReader(DatabaseLoginCredentials loginCredentials) {
+	public CurrentEntityTagTableReader(DatabaseLoginCredentials loginCredentials, String tableName) {
 		super(loginCredentials);
+		
+		this.tableName = tableName;
 	}
 	
 	
@@ -37,7 +43,7 @@ public class CurrentWayTagTableReader extends BaseTableReader<WayTag> {
 	 */
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
+		return queryDbCtx.executeStreamingQuery(SELECT_SQL_1 + tableName + SELECT_SQL_2);
 	}
 	
 	
@@ -45,7 +51,7 @@ public class CurrentWayTagTableReader extends BaseTableReader<WayTag> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<WayTag> createNextValue(ResultSet resultSet) {
+	protected ReadResult<DBEntityTag> createNextValue(ResultSet resultSet) {
 		long wayId;
 		String key;
 		String value;
@@ -59,9 +65,9 @@ public class CurrentWayTagTableReader extends BaseTableReader<WayTag> {
 			throw new OsmosisRuntimeException("Unable to read way tag fields.", e);
 		}
 		
-		return new ReadResult<WayTag>(
+		return new ReadResult<DBEntityTag>(
 			true,
-			new WayTag(wayId, key, value)
+			new DBEntityTag(wayId, key, value)
 		);
 	}
 }

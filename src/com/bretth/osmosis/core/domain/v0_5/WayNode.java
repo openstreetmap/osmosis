@@ -8,7 +8,7 @@ import java.io.Serializable;
  * 
  * @author Brett Henderson
  */
-public class NodeReference implements Comparable<NodeReference>, Serializable {
+public class WayNode implements Comparable<WayNode>, Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	
@@ -21,7 +21,7 @@ public class NodeReference implements Comparable<NodeReference>, Serializable {
 	 * @param nodeId
 	 *            The unique identifier of the segment being referred to.
 	 */
-	public NodeReference(long nodeId) {
+	public WayNode(long nodeId) {
 		this.nodeId = nodeId;
 	}
 	
@@ -35,7 +35,7 @@ public class NodeReference implements Comparable<NodeReference>, Serializable {
 	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
 	 *         "bigger".
 	 */
-	public int compareTo(NodeReference nodeReference) {
+	public int compareTo(WayNode nodeReference) {
 		long result;
 		
 		result = this.nodeId - nodeReference.nodeId;

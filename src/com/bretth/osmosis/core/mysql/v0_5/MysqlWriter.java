@@ -13,15 +13,15 @@ import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_5.Node;
-import com.bretth.osmosis.core.domain.v0_5.NodeReference;
+import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.mysql.common.UserIdManager;
 import com.bretth.osmosis.core.mysql.v0_5.impl.EmbeddedTagProcessor;
-import com.bretth.osmosis.core.mysql.v0_5.impl.WayNode;
-import com.bretth.osmosis.core.mysql.v0_5.impl.WayTag;
+import com.bretth.osmosis.core.mysql.v0_5.impl.DBWayNode;
+import com.bretth.osmosis.core.mysql.v0_5.impl.DBEntityTag;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 
 
@@ -169,8 +169,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private boolean populateCurrentTables;
 	private List<Node> nodeBuffer;
 	private List<Way> wayBuffer;
-	private List<WayTag> wayTagBuffer;
-	private List<WayNode> wayNodeBuffer;
+	private List<DBEntityTag> wayTagBuffer;
+	private List<DBWayNode> wayNodeBuffer;
 	private long maxNodeId;
 	private long maxWayId;
 	private EmbeddedTagProcessor tagProcessor;
@@ -210,8 +210,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		
 		nodeBuffer = new ArrayList<Node>();
 		wayBuffer = new ArrayList<Way>();
-		wayTagBuffer = new ArrayList<WayTag>();
-		wayNodeBuffer = new ArrayList<WayNode>();
+		wayTagBuffer = new ArrayList<DBEntityTag>();
+		wayNodeBuffer = new ArrayList<DBWayNode>();
 		
 		maxNodeId = 0;
 		maxWayId = 0;
@@ -325,13 +325,13 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * @param wayTag
 	 *            The way tag containing the data to be inserted.
 	 */
-	private void populateWayTagParameters(PreparedStatement statement, int initialIndex, WayTag wayTag) {
+	private void populateWayTagParameters(PreparedStatement statement, int initialIndex, DBEntityTag wayTag) {
 		int prmIndex;
 		
 		prmIndex = initialIndex;
 		
 		try {
-			statement.setLong(prmIndex++, wayTag.getWayId());
+			statement.setLong(prmIndex++, wayTag.getEntityId());
 			statement.setString(prmIndex++, wayTag.getKey());
 			statement.setString(prmIndex++, wayTag.getValue());
 			statement.setInt(prmIndex++, 1);
@@ -352,7 +352,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * @param wayNode
 	 *            The way node containing the data to be inserted.
 	 */
-	private void populateWayNodeParameters(PreparedStatement statement, int initialIndex, WayNode wayNode) {
+	private void populateWayNodeParameters(PreparedStatement statement, int initialIndex, DBWayNode wayNode) {
 		int prmIndex;
 		
 		prmIndex = initialIndex;
@@ -707,7 +707,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addWayTags(Way way) {
 		for (Tag tag: way.getTagList()) {
-			wayTagBuffer.add(new WayTag(way.getId(), tag.getKey(), tag.getValue()));
+			wayTagBuffer.add(new DBEntityTag(way.getId(), tag.getKey(), tag.getValue()));
 		}
 		
 		flushWayTags(false);
@@ -721,12 +721,12 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 *            The way to be processed.
 	 */
 	private void addWayNodes(Way way) {
-		List<NodeReference> nodeReferenceList;
+		List<WayNode> nodeReferenceList;
 		
 		nodeReferenceList = way.getNodeReferenceList();
 		
 		for (int i = 0; i < nodeReferenceList.size(); i++) {
-			wayNodeBuffer.add(new WayNode(
+			wayNodeBuffer.add(new DBWayNode(
 				way.getId(),
 				nodeReferenceList.get(i).getNodeId(),
 				i + 1

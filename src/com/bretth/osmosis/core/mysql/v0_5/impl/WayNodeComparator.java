@@ -9,12 +9,12 @@ import java.util.Comparator;
  * 
  * @author Brett Henderson
  */
-public class WayNodeComparator implements Comparator<WayNode> {
+public class WayNodeComparator implements Comparator<DBWayNode> {
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public int compare(WayNode o1, WayNode o2) {
+	public int compare(DBWayNode o1, DBWayNode o2) {
 		long way1Id;
 		long way2Id;
 		

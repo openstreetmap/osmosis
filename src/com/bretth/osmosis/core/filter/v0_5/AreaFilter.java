@@ -9,7 +9,7 @@ import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_5.Node;
-import com.bretth.osmosis.core.domain.v0_5.NodeReference;
+import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
@@ -94,7 +94,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		filteredWay = new Way(way.getId(), way.getTimestamp(), way.getUser());
 		
 		// Only add node references to nodes that are within the bounding box.
-		for (NodeReference nodeReference : way.getNodeReferenceList()) {
+		for (WayNode nodeReference : way.getNodeReferenceList()) {
 			long nodeId;
 			
 			nodeId = nodeReference.getNodeId();

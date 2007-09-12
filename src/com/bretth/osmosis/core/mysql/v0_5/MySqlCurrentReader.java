@@ -1,11 +1,14 @@
 package com.bretth.osmosis.core.mysql.v0_5;
 
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
+import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.domain.v0_5.Node;
+import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.mysql.v0_5.impl.CurrentNodeReader;
+import com.bretth.osmosis.core.mysql.v0_5.impl.CurrentRelationReader;
 import com.bretth.osmosis.core.mysql.v0_5.impl.CurrentWayReader;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.task.v0_5.RunnableSource;
@@ -86,12 +89,32 @@ public class MySqlCurrentReader implements RunnableSource {
 	
 	
 	/**
+	 * Reads all relations from the database and sends to the sink.
+	 */
+	private void processRelations() {
+		ReleasableIterator<Relation> reader;
+		
+		reader = new CurrentRelationReader(loginCredentials, readAllUsers);
+		
+		try {
+			while (reader.hasNext()) {
+				sink.process(new RelationContainer(reader.next()));
+			}
+			
+		} finally {
+			reader.release();
+		}
+	}
+	
+	
+	/**
 	 * Reads all data from the database and send it to the sink.
 	 */
 	public void run() {
 		try {
 			processNodes();
 			processWays();
+			processRelations();
 			
 			sink.complete();
 			

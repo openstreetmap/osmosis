@@ -19,7 +19,7 @@ import com.bretth.osmosis.core.mysql.common.EntityHistory;
  * 
  * @author Brett Henderson
  */
-public class WayNodeHistoryReader extends BaseTableReader<EntityHistory<WayNode>> {
+public class WayNodeHistoryReader extends BaseTableReader<EntityHistory<DBWayNode>> {
 	private static final String SELECT_SQL =
 		"SELECT ws.id AS way_id, ws.segment_id, ws.sequence_id, ws.version" +
 		" FROM way_segments ws" +
@@ -78,7 +78,7 @@ public class WayNodeHistoryReader extends BaseTableReader<EntityHistory<WayNode>
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<EntityHistory<WayNode>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<DBWayNode>> createNextValue(ResultSet resultSet) {
 		long wayId;
 		long segmentId;
 		int sequenceId;
@@ -94,10 +94,10 @@ public class WayNodeHistoryReader extends BaseTableReader<EntityHistory<WayNode>
 			throw new OsmosisRuntimeException("Unable to read way segment fields.", e);
 		}
 		
-		return new ReadResult<EntityHistory<WayNode>>(
+		return new ReadResult<EntityHistory<DBWayNode>>(
 			true,
-			new EntityHistory<WayNode>(
-					new WayNode(wayId, segmentId, sequenceId), version, true)
+			new EntityHistory<DBWayNode>(
+					new DBWayNode(wayId, segmentId, sequenceId), version, true)
 		);
 	}
 }

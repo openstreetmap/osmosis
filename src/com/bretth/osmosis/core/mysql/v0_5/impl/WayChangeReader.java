@@ -8,7 +8,7 @@ import java.util.List;
 import com.bretth.osmosis.core.container.v0_5.ChangeContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.domain.v0_5.NodeReference;
+import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.mysql.common.EntityHistory;
@@ -26,8 +26,8 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
 public class WayChangeReader {
 	
 	private PeekableIterator<EntityHistory<Way>> wayHistoryReader;
-	private PeekableIterator<EntityHistory<WayNode>> wayNodeHistoryReader;
-	private PeekableIterator<EntityHistory<WayTag>> wayTagHistoryReader;
+	private PeekableIterator<EntityHistory<DBWayNode>> wayNodeHistoryReader;
+	private PeekableIterator<EntityHistory<DBEntityTag>> wayTagHistoryReader;
 	private ChangeContainer nextValue;
 	
 	
@@ -55,16 +55,16 @@ public class WayChangeReader {
 				)
 			);
 		wayNodeHistoryReader =
-			new PeekableIterator<EntityHistory<WayNode>>(
-				new PersistentIterator<EntityHistory<WayNode>>(
+			new PeekableIterator<EntityHistory<DBWayNode>>(
+				new PersistentIterator<EntityHistory<DBWayNode>>(
 					new WayNodeHistoryReader(loginCredentials, intervalBegin, intervalEnd),
 					"wayseg",
 					true
 				)
 			);
 		wayTagHistoryReader =
-			new PeekableIterator<EntityHistory<WayTag>>(
-				new PersistentIterator<EntityHistory<WayTag>>(
+			new PeekableIterator<EntityHistory<DBEntityTag>>(
+				new PersistentIterator<EntityHistory<DBEntityTag>>(
 					new WayTagHistoryReader(loginCredentials, intervalBegin, intervalEnd),
 					"waytag",
 					true
@@ -83,13 +83,13 @@ public class WayChangeReader {
 	private EntityHistory<Way> readNextWayHistory() {
 		EntityHistory<Way> wayHistory;
 		Way way;
-		List<WayNode> wayNodes;
+		List<DBWayNode> wayNodes;
 		
 		wayHistory = wayHistoryReader.next();
 		way = wayHistory.getEntity();
 
 		// Add all applicable segment references to the way.
-		wayNodes = new ArrayList<WayNode>();
+		wayNodes = new ArrayList<DBWayNode>();
 		while (wayNodeHistoryReader.hasNext() &&
 				wayNodeHistoryReader.peekNext().getEntity().getWayId() == way.getId() &&
 				wayNodeHistoryReader.peekNext().getVersion() == wayHistory.getVersion()) {
@@ -98,13 +98,13 @@ public class WayChangeReader {
 		// The underlying query sorts segment references by way id but not
 		// by their sequence number.
 		Collections.sort(wayNodes, new WayNodeComparator());
-		for (NodeReference nodeReference : wayNodes) {
+		for (WayNode nodeReference : wayNodes) {
 			way.addNodeReference(nodeReference);
 		}
 		
 		// Add all applicable tags to the way.
 		while (wayTagHistoryReader.hasNext() &&
-				wayTagHistoryReader.peekNext().getEntity().getWayId() == way.getId() &&
+				wayTagHistoryReader.peekNext().getEntity().getEntityId() == way.getId() &&
 				wayTagHistoryReader.peekNext().getVersion() == wayHistory.getVersion()) {
 			way.addTag(wayTagHistoryReader.next().getEntity());
 		}
