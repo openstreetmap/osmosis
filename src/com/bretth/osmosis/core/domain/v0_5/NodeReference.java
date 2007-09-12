@@ -51,9 +51,9 @@ public class NodeReference implements Comparable<NodeReference>, Serializable {
 	
 	
 	/**
-	 * @return The segmentId.
+	 * @return The nodeId.
 	 */
-	public long getSegmentId() {
+	public long getNodeId() {
 		return nodeId;
 	}
 }

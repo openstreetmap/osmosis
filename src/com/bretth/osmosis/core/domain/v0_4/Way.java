@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import com.bretth.osmosis.core.domain.common.Entity;
-import com.bretth.osmosis.core.domain.common.EntityType;
 
 
 /**

@@ -1,9 +1,10 @@
 package com.bretth.osmosis.core.domain.v0_5;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
-
-import com.bretth.osmosis.core.domain.common.Entity;
-import com.bretth.osmosis.core.domain.common.EntityType;
+import java.util.List;
 
 
 /**
@@ -13,6 +14,9 @@ import com.bretth.osmosis.core.domain.common.EntityType;
  */
 public class Relation extends Entity implements Comparable<Relation> {
 	private static final long serialVersionUID = 1L;
+	
+	
+	private List<RelationMember> memberList;
 	
 	
 	/**
@@ -27,6 +31,8 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 */
 	public Relation(long id, Date timestamp, String user) {
 		super(id, timestamp, user);
+		
+		memberList = new ArrayList<RelationMember>();
 	}
 	
 	
@@ -35,8 +41,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 */
 	@Override
 	public EntityType getType() {
-		// FIXME: Must correct the type returned here.
-		return EntityType.Way;
+		return EntityType.Relation;
 	}
 	
 	
@@ -51,6 +56,36 @@ public class Relation extends Entity implements Comparable<Relation> {
 			return false;
 		}
 	}
+	
+	
+	/**
+	 * Compares this member list to the specified member list. The bigger list
+	 * is considered bigger, if that is equal then each relation member is
+	 * compared.
+	 * 
+	 * @param comparisonMemberList
+	 *            The member list to compare to.
+	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
+	 *         "bigger".
+	 */
+	protected int compareMemberList(List<RelationMember> comparisonMemberList) {
+		// The list with the most entities is considered bigger.
+		if (memberList.size() != comparisonMemberList.size()) {
+			return memberList.size() - comparisonMemberList.size();
+		}
+		
+		// Check the individual node references.
+		for (int i = 0; i < memberList.size(); i++) {
+			int result = memberList.get(i).compareTo(comparisonMemberList.get(i));
+			
+			if (result != 0) {
+				return result;
+			}
+		}
+		
+		// There are no differences.
+		return 0;
+	}
 
 
 	/**
@@ -63,6 +98,8 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *         "bigger".
 	 */
 	public int compareTo(Relation comparisonRelation) {
+		int memberListResult;
+		
 		if (this.getId() < comparisonRelation.getId()) {
 			return -1;
 		}
@@ -86,6 +123,47 @@ public class Relation extends Entity implements Comparable<Relation> {
 			}
 		}
 		
+		memberListResult = compareMemberList(
+			comparisonRelation.memberList
+		);
+		
+		if (memberListResult != 0) {
+			return memberListResult;
+		}
+		
 		return compareTags(comparisonRelation.getTagList());
+	}
+	
+	
+	/**
+	 * Returns the attached list of relation members. The returned list is
+	 * read-only.
+	 * 
+	 * @return The member list.
+	 */
+	public List<RelationMember> getMemberList() {
+		return Collections.unmodifiableList(memberList);
+	}
+	
+	
+	/**
+	 * Adds a new member.
+	 * 
+	 * @param member
+	 *            The member to add.
+	 */
+	public void addMember(RelationMember member) {
+		memberList.add(member);
+	}
+	
+	
+	/**
+	 * Adds all members in the collection to the relation.
+	 * 
+	 * @param members
+	 *            The collection of members to be added.
+	 */
+	public void addNodeReferences(Collection<RelationMember> members) {
+		memberList.addAll(members);
 	}
 }

@@ -82,3 +82,8 @@ This implies adding user support to osmosis and should include reading/writing u
 **********
 Unit Tests
 As the codebase grows, the lack of unit tests is becoming a bigger issue and making it difficult to make changes.
+
+**********
+Feature request from Frederik Ramm
+Add a --verify-integrity task to report on ways/segments that refer to non-existent segments/nodes.  This would allow inconsistent planets
+to be handled more effectively.

@@ -6,9 +6,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import com.bretth.osmosis.core.domain.common.Entity;
-import com.bretth.osmosis.core.domain.common.EntityType;
-
 
 /**
  * A data class representing a single OSM way.
@@ -71,23 +68,14 @@ public class Way extends Entity implements Comparable<Way> {
 	 *         "bigger".
 	 */
 	protected int compareNodeReferences(List<NodeReference> comparisonNodeReferenceList) {
-		List<NodeReference> list1;
-		List<NodeReference> list2;
-		
-		list1 = new ArrayList<NodeReference>(nodeReferenceList);
-		list2 = new ArrayList<NodeReference>(comparisonNodeReferenceList);
-		
-		Collections.sort(list1);
-		Collections.sort(list2);
-		
 		// The list with the most entities is considered bigger.
-		if (list1.size() != list2.size()) {
-			return list1.size() - list2.size();
+		if (nodeReferenceList.size() != comparisonNodeReferenceList.size()) {
+			return nodeReferenceList.size() - comparisonNodeReferenceList.size();
 		}
 		
 		// Check the individual node references.
-		for (int i = 0; i < list1.size(); i++) {
-			int result = list1.get(i).compareTo(list2.get(i));
+		for (int i = 0; i < nodeReferenceList.size(); i++) {
+			int result = nodeReferenceList.get(i).compareTo(comparisonNodeReferenceList.get(i));
 			
 			if (result != 0) {
 				return result;
