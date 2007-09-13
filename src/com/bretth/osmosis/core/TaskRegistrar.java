@@ -17,7 +17,7 @@ import com.bretth.osmosis.core.mysql.v0_4.MysqlReaderFactory;
 import com.bretth.osmosis.core.mysql.v0_4.MysqlTruncatorFactory;
 import com.bretth.osmosis.core.mysql.v0_4.MysqlWriterFactory;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
-import com.bretth.osmosis.core.report.EntityReporterFactory;
+import com.bretth.osmosis.core.report.v0_4.EntityReporterFactory;
 import com.bretth.osmosis.core.sort.v0_4.ChangeForSeekableApplierComparator;
 import com.bretth.osmosis.core.sort.v0_4.ChangeForStreamableApplierComparator;
 import com.bretth.osmosis.core.sort.v0_4.ChangeSorterFactory;
@@ -131,6 +131,6 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("merge-change-0.5", new com.bretth.osmosis.core.merge.v0_5.ChangeMergerFactory());
 		TaskManagerFactory.register("read-api-0.5", new com.bretth.osmosis.core.xml.v0_5.XmlDownloaderFactory());
 		TaskManagerFactory.register("bounding-polygon-0.5", new com.bretth.osmosis.core.filter.v0_5.PolygonFilterFactory());
-		//TaskManagerFactory.register("report-0.5", new EntityReporterFactory());
+		TaskManagerFactory.register("report-0.5", new com.bretth.osmosis.core.report.v0_5.EntityReporterFactory());
 	}
 }

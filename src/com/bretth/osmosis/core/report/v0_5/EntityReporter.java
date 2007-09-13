@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.report;
+package com.bretth.osmosis.core.report.v0_5;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,12 +14,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.container.v0_4.EntityContainer;
-import com.bretth.osmosis.core.container.v0_4.EntityProcessor;
-import com.bretth.osmosis.core.container.v0_4.NodeContainer;
-import com.bretth.osmosis.core.container.v0_4.SegmentContainer;
-import com.bretth.osmosis.core.container.v0_4.WayContainer;
-import com.bretth.osmosis.core.task.v0_4.Sink;
+import com.bretth.osmosis.core.container.v0_5.EntityContainer;
+import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
+import com.bretth.osmosis.core.container.v0_5.NodeContainer;
+import com.bretth.osmosis.core.container.v0_5.RelationContainer;
+import com.bretth.osmosis.core.container.v0_5.WayContainer;
+import com.bretth.osmosis.core.task.v0_5.Sink;
 
 
 /**
@@ -32,8 +32,8 @@ public class EntityReporter implements Sink {
 	
 	private final static int COLUMN_WIDTH_USER_NAME = 50;
 	private final static int COLUMN_WIDTH_NODE_COUNT = 7;
-	private final static int COLUMN_WIDTH_SEGMENT_COUNT = 7;
 	private final static int COLUMN_WIDTH_WAY_COUNT = 7;
+	private final static int COLUMN_WIDTH_RELATION_COUNT = 7;
 	
 	private Logger log = Logger.getLogger(EntityReporter.class.getName());
 	
@@ -86,12 +86,12 @@ public class EntityReporter implements Sink {
 					processorUser.incrementNodeCount();
 				}
 				
-				public void process(SegmentContainer segment) {
-					processorUser.incrementSegmentCount();
-				}
-				
 				public void process(WayContainer way) {
 					processorUser.incrementWayCount();
+				}
+				
+				public void process(RelationContainer relation) {
+					processorUser.incrementRelationCount();
 				}
 			}
 		);
@@ -119,7 +119,6 @@ public class EntityReporter implements Sink {
 		}
 		
 		writer.write(data);
-		// TODO: There must be a more efficient way of doing this ...
 		for (int i = 0; i < padLength; i++) {
 			writer.write(' ');
 		}
@@ -137,8 +136,8 @@ public class EntityReporter implements Sink {
 	private void writeUserLine(BufferedWriter writer, UserStatistics userStatistics) throws IOException {
 		writeColumnValue(writer, userStatistics.getUserName(), COLUMN_WIDTH_USER_NAME);
 		writeColumnValue(writer, Integer.toString(userStatistics.getNodeCount()), COLUMN_WIDTH_NODE_COUNT);
-		writeColumnValue(writer, Integer.toString(userStatistics.getSegmentCount()), COLUMN_WIDTH_SEGMENT_COUNT);
 		writeColumnValue(writer, Integer.toString(userStatistics.getWayCount()), COLUMN_WIDTH_WAY_COUNT);
+		writeColumnValue(writer, Integer.toString(userStatistics.getRelationCount()), COLUMN_WIDTH_RELATION_COUNT);
 		writer.newLine();
 	}
 	
@@ -167,8 +166,8 @@ public class EntityReporter implements Sink {
 		writer.newLine();
 		writeColumnValue(writer, "USER NAME", COLUMN_WIDTH_USER_NAME);
 		writeColumnValue(writer, "NODES", COLUMN_WIDTH_NODE_COUNT);
-		writeColumnValue(writer, "SEGS", COLUMN_WIDTH_SEGMENT_COUNT);
 		writeColumnValue(writer, "WAYS", COLUMN_WIDTH_WAY_COUNT);
+		writeColumnValue(writer, "RELNS", COLUMN_WIDTH_RELATION_COUNT);
 		writer.newLine();
 		writeUserLine(writer, anonymousUser);
 		for (UserStatistics userStatistics : userList) {
@@ -222,8 +221,8 @@ public class EntityReporter implements Sink {
 		
 		private String userName;
 		private int nodeCount;
-		private int segmentCount;
 		private int wayCount;
+		private int relationCount;
 		
 		
 		/**
@@ -247,18 +246,18 @@ public class EntityReporter implements Sink {
 		
 		
 		/**
-		 * Increments the segment count by one.
-		 */
-		public void incrementSegmentCount() {
-			segmentCount++;
-		}
-		
-		
-		/**
 		 * Increments the way count by one.
 		 */
 		public void incrementWayCount() {
 			wayCount++;
+		}
+		
+		
+		/**
+		 * Increments the relation count by one.
+		 */
+		public void incrementRelationCount() {
+			relationCount++;
 		}
 		
 		
@@ -283,22 +282,22 @@ public class EntityReporter implements Sink {
 		
 		
 		/**
-		 * Returns the segment count.
-		 * 
-		 * @return The segment count.
-		 */
-		public int getSegmentCount() {
-			return segmentCount;
-		}
-		
-		
-		/**
 		 * Returns the way count.
 		 * 
 		 * @return The way count.
 		 */
 		public int getWayCount() {
 			return wayCount;
+		}
+		
+		
+		/**
+		 * Returns the relation count.
+		 * 
+		 * @return The relation count.
+		 */
+		public int getRelationCount() {
+			return relationCount;
 		}
 	}
 }

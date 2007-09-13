@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.report;
+package com.bretth.osmosis.core.report.v0_4;
 
 import java.io.File;
 import java.util.Map;
