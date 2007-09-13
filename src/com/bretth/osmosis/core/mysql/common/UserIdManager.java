@@ -14,15 +14,15 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 public class UserIdManager {
 	private static final String INSERT_SQL_USER =
 		"INSERT INTO users (" +
-		"email, token, active, pass_crypt," +
-		" creation_time, timeout, display_name, data_public," +
-		" description, home_lat, home_lon, within_lat," +
-		" within_lon, home_zoom" +
+		"email, active, pass_crypt," +
+		" creation_time, display_name, data_public," +
+		" description, home_lat, home_lon, home_zoom," +
+		" nearby, pass_salt" +
 		") VALUES (" +
-		"'osmosis@bretth.com', '', 1, '00000000000000000000000000000000'," +
-		" NOW(), NOW(), 'Osmosis System User', 1," +
-		" 'System user for the Osmosis toolset.', 0, 0, 0," +
-		" 0, 3)";
+		"'osmosis@bretth.com', 1, '00000000000000000000000000000000'," +
+		" NOW(), 'Osmosis System User', 1," +
+		" 'System user for the Osmosis toolset.', 0, 0, 3," +
+		" 50, '00000000')";
 	
 	private static final String SELECT_SQL_USER =
 		"SELECT id FROM users WHERE email='osmosis@bretth.com'";
