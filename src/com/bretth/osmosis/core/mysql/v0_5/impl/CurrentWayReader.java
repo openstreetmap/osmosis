@@ -113,7 +113,7 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 			// by their sequence number.
 			Collections.sort(waySegments, new WayNodeComparator());
 			for (WayNode nodeReference : waySegments) {
-				way.addNodeReference(nodeReference);
+				way.addWayNode(nodeReference);
 			}
 			
 			nextValue = way;

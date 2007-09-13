@@ -16,7 +16,7 @@ public class Way extends Entity implements Comparable<Way> {
 	private static final long serialVersionUID = 1L;
 	
 	
-	private List<WayNode> nodeReferenceList;
+	private List<WayNode> wayNodeList;
 	
 	
 	/**
@@ -32,7 +32,7 @@ public class Way extends Entity implements Comparable<Way> {
 	public Way(long id, Date timestamp, String user) {
 		super(id, timestamp, user);
 		
-		nodeReferenceList = new ArrayList<WayNode>();
+		wayNodeList = new ArrayList<WayNode>();
 	}
 	
 	
@@ -62,20 +62,20 @@ public class Way extends Entity implements Comparable<Way> {
 	 * Compares this node list to the specified node list. The comparison is
 	 * based on a direct comparison of the node ids.
 	 * 
-	 * @param comparisonNodeReferenceList
-	 *            The node reference list to compare to.
+	 * @param comparisonWayNodeList
+	 *            The node list to compare to.
 	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
 	 *         "bigger".
 	 */
-	protected int compareNodeReferences(List<WayNode> comparisonNodeReferenceList) {
+	protected int compareWayNodes(List<WayNode> comparisonWayNodeList) {
 		// The list with the most entities is considered bigger.
-		if (nodeReferenceList.size() != comparisonNodeReferenceList.size()) {
-			return nodeReferenceList.size() - comparisonNodeReferenceList.size();
+		if (wayNodeList.size() != comparisonWayNodeList.size()) {
+			return wayNodeList.size() - comparisonWayNodeList.size();
 		}
 		
-		// Check the individual node references.
-		for (int i = 0; i < nodeReferenceList.size(); i++) {
-			int result = nodeReferenceList.get(i).compareTo(comparisonNodeReferenceList.get(i));
+		// Check the individual way nodes.
+		for (int i = 0; i < wayNodeList.size(); i++) {
+			int result = wayNodeList.get(i).compareTo(comparisonWayNodeList.get(i));
 			
 			if (result != 0) {
 				return result;
@@ -89,7 +89,7 @@ public class Way extends Entity implements Comparable<Way> {
 
 	/**
 	 * Compares this way to the specified way. The way comparison is based on a
-	 * comparison of id, timestamp, segmentReferenceList and tags in that order.
+	 * comparison of id, timestamp, wayNodeList and tags in that order.
 	 * 
 	 * @param comparisonWay
 	 *            The way to compare to.
@@ -97,7 +97,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 *         "bigger".
 	 */
 	public int compareTo(Way comparisonWay) {
-		int nodeReferenceListResult;
+		int wayNodeListResult;
 		
 		if (this.getId() < comparisonWay.getId()) {
 			return -1;
@@ -122,12 +122,12 @@ public class Way extends Entity implements Comparable<Way> {
 			}
 		}
 		
-		nodeReferenceListResult = compareNodeReferences(
-			comparisonWay.getNodeReferenceList()
+		wayNodeListResult = compareWayNodes(
+			comparisonWay.getWayNodeList()
 		);
 		
-		if (nodeReferenceListResult != 0) {
-			return nodeReferenceListResult;
+		if (wayNodeListResult != 0) {
+			return wayNodeListResult;
 		}
 		
 		return compareTags(comparisonWay.getTagList());
@@ -135,34 +135,33 @@ public class Way extends Entity implements Comparable<Way> {
 	
 	
 	/**
-	 * Returns the attached list of node references. The returned list is
-	 * read-only.
+	 * Returns the attached list of way nodes. The returned list is read-only.
 	 * 
-	 * @return The nodeReferenceList.
+	 * @return The wayNodeList.
 	 */
-	public List<WayNode> getNodeReferenceList() {
-		return Collections.unmodifiableList(nodeReferenceList);
+	public List<WayNode> getWayNodeList() {
+		return Collections.unmodifiableList(wayNodeList);
 	}
 	
 	
 	/**
-	 * Adds a new node reference.
+	 * Adds a new way node.
 	 * 
-	 * @param nodeReference
-	 *            The segment reference to add.
+	 * @param wayNode
+	 *            The way node to add.
 	 */
-	public void addNodeReference(WayNode nodeReference) {
-		nodeReferenceList.add(nodeReference);
+	public void addWayNode(WayNode wayNode) {
+		wayNodeList.add(wayNode);
 	}
 	
 	
 	/**
 	 * Adds all node references in the collection to the node.
 	 * 
-	 * @param nodeReferences
+	 * @param wayNodes
 	 *            The collection of node references to be added.
 	 */
-	public void addNodeReferences(Collection<WayNode> nodeReferences) {
-		nodeReferenceList.addAll(nodeReferences);
+	public void addWayNodes(Collection<WayNode> wayNodes) {
+		wayNodeList.addAll(wayNodes);
 	}
 }

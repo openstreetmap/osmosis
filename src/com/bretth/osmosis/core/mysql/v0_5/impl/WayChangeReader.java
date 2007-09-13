@@ -99,7 +99,7 @@ public class WayChangeReader {
 		// by their sequence number.
 		Collections.sort(wayNodes, new WayNodeComparator());
 		for (WayNode nodeReference : wayNodes) {
-			way.addNodeReference(nodeReference);
+			way.addWayNode(nodeReference);
 		}
 		
 		// Add all applicable tags to the way.

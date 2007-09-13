@@ -723,7 +723,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private void addWayNodes(Way way) {
 		List<WayNode> nodeReferenceList;
 		
-		nodeReferenceList = way.getNodeReferenceList();
+		nodeReferenceList = way.getWayNodeList();
 		
 		for (int i = 0; i < nodeReferenceList.size(); i++) {
 			wayNodeBuffer.add(new DBWayNode(

@@ -134,7 +134,7 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 			// by their sequence number.
 			Collections.sort(wayNodes, new WayNodeComparator());
 			for (WayNode nodeReference : wayNodes) {
-				way.addNodeReference(nodeReference);
+				way.addWayNode(nodeReference);
 			}
 			
 			nextValue = wayHistory;

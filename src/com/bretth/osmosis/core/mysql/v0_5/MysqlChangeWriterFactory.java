@@ -3,6 +3,7 @@ package com.bretth.osmosis.core.mysql.v0_5;
 import java.util.Map;
 
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.mysql.common.MysqlTaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.v0_5.ChangeSinkManager;
 

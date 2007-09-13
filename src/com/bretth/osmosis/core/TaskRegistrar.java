@@ -23,11 +23,11 @@ import com.bretth.osmosis.core.sort.v0_4.ChangeForStreamableApplierComparator;
 import com.bretth.osmosis.core.sort.v0_4.ChangeSorterFactory;
 import com.bretth.osmosis.core.sort.v0_4.EntityByTypeThenIdComparator;
 import com.bretth.osmosis.core.sort.v0_4.EntitySorterFactory;
-import com.bretth.osmosis.core.xml.XmlChangeReaderFactory;
-import com.bretth.osmosis.core.xml.XmlChangeWriterFactory;
-import com.bretth.osmosis.core.xml.XmlDownloaderFactory;
-import com.bretth.osmosis.core.xml.XmlReaderFactory;
-import com.bretth.osmosis.core.xml.XmlWriterFactory;
+import com.bretth.osmosis.core.xml.v0_4.XmlChangeReaderFactory;
+import com.bretth.osmosis.core.xml.v0_4.XmlChangeWriterFactory;
+import com.bretth.osmosis.core.xml.v0_4.XmlDownloaderFactory;
+import com.bretth.osmosis.core.xml.v0_4.XmlReaderFactory;
+import com.bretth.osmosis.core.xml.v0_4.XmlWriterFactory;
 
 
 /**

@@ -94,7 +94,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		filteredWay = new Way(way.getId(), way.getTimestamp(), way.getUser());
 		
 		// Only add node references to nodes that are within the bounding box.
-		for (WayNode nodeReference : way.getNodeReferenceList()) {
+		for (WayNode nodeReference : way.getWayNodeList()) {
 			long nodeId;
 			
 			nodeId = nodeReference.getNodeId();
@@ -106,12 +106,12 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			
 			
 			if (availableSegments.get((int) nodeId)) {
-				filteredWay.addNodeReference(nodeReference);
+				filteredWay.addWayNode(nodeReference);
 			}
 		}
 		
 		// Only add ways that contain segments.
-		if (filteredWay.getNodeReferenceList().size() > 0) {
+		if (filteredWay.getWayNodeList().size() > 0) {
 			// Add all tags to the filtered node.
 			for (Tag tag : way.getTagList()) {
 				filteredWay.addTag(tag);

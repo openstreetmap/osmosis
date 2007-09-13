@@ -19,7 +19,7 @@ public class WayNode implements Comparable<WayNode>, Serializable {
 	 * Creates a new instance.
 	 * 
 	 * @param nodeId
-	 *            The unique identifier of the segment being referred to.
+	 *            The unique identifier of the node being referred to.
 	 */
 	public WayNode(long nodeId) {
 		this.nodeId = nodeId;
@@ -27,18 +27,18 @@ public class WayNode implements Comparable<WayNode>, Serializable {
 	
 	
 	/**
-	 * Compares this node reference to the specified node reference. The node
-	 * reference comparison is based on a comparison of nodeId.
+	 * Compares this way node to the specified way node. The way node comparison
+	 * is based on a comparison of nodeId.
 	 * 
-	 * @param nodeReference
-	 *            The node reference to compare to.
+	 * @param wayNode
+	 *            The way node to compare to.
 	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
 	 *         "bigger".
 	 */
-	public int compareTo(WayNode nodeReference) {
+	public int compareTo(WayNode wayNode) {
 		long result;
 		
-		result = this.nodeId - nodeReference.nodeId;
+		result = this.nodeId - wayNode.nodeId;
 		
 		if (result > 0) {
 			return 1;

@@ -204,7 +204,7 @@ public class ChangeWriter {
 		int version;
 		List<WayNode> nodeReferenceList;
 		
-		nodeReferenceList = way.getNodeReferenceList();
+		nodeReferenceList = way.getWayNodeList();
 		
 		// If this is a deletion, the entity is not visible.
 		visible = !action.equals(ChangeAction.Delete);
