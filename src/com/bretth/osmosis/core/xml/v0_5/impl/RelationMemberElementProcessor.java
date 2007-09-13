@@ -28,7 +28,7 @@ public class RelationMemberElementProcessor extends BaseElementProcessor {
 	 * @param parentProcessor
 	 *            The parent element processor.
 	 * @param relationMemberListener
-	 *            The segment reference listener for receiving created tags.
+	 *            The relation member listener for receiving created tags.
 	 */
 	public RelationMemberElementProcessor(BaseElementProcessor parentProcessor, RelationMemberListener relationMemberListener) {
 		super(parentProcessor, true);

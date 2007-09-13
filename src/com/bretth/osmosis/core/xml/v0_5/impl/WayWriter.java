@@ -31,7 +31,7 @@ public class WayWriter extends ElementWriter {
 		super(elementName, indentLevel);
 		
 		tagWriter = new TagWriter("tag", indentLevel + 1);
-		wayNodeWriter = new WayNodeWriter("seg", indentLevel + 1);
+		wayNodeWriter = new WayNodeWriter("nd", indentLevel + 1);
 	}
 	
 	

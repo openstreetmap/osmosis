@@ -7,7 +7,7 @@ import com.bretth.osmosis.core.xml.common.BaseElementProcessor;
 
 
 /**
- * Provides an element processor implementation for a segment reference.
+ * Provides an element processor implementation for a way node.
  * 
  * @author Brett Henderson
  */
@@ -23,13 +23,13 @@ public class WayNodeElementProcessor extends BaseElementProcessor {
 	 * 
 	 * @param parentProcessor
 	 *            The parent element processor.
-	 * @param segmentReferenceListener
-	 *            The segment reference listener for receiving created tags.
+	 * @param wayNodeListener
+	 *            The way node listener for receiving created tags.
 	 */
-	public WayNodeElementProcessor(BaseElementProcessor parentProcessor, WayNodeListener segmentReferenceListener) {
+	public WayNodeElementProcessor(BaseElementProcessor parentProcessor, WayNodeListener wayNodeListener) {
 		super(parentProcessor, true);
 		
-		this.wayNodeListener = segmentReferenceListener;
+		this.wayNodeListener = wayNodeListener;
 	}
 	
 	
