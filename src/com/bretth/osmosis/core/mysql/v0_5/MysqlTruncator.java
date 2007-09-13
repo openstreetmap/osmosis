@@ -14,16 +14,22 @@ import com.bretth.osmosis.core.task.common.RunnableTask;
 public class MysqlTruncator implements RunnableTask {
 	
 	// These SQL statements will be invoked to truncate each table.
-	private static final String INVOKE_TRUNCATE_NODE = "TRUNCATE nodes";
-	private static final String INVOKE_TRUNCATE_SEGMENT = "TRUNCATE segments";
-	private static final String INVOKE_TRUNCATE_WAY = "TRUNCATE ways";
-	private static final String INVOKE_TRUNCATE_WAY_TAG = "TRUNCATE way_tags";
-	private static final String INVOKE_TRUNCATE_WAY_SEGMENT = "TRUNCATE way_segments";
-	private static final String INVOKE_TRUNCATE_NODE_CURRENT = "TRUNCATE current_nodes";
-	private static final String INVOKE_TRUNCATE_SEGMENT_CURRENT = "TRUNCATE current_segments";
-	private static final String INVOKE_TRUNCATE_WAY_CURRENT = "TRUNCATE current_ways";
-	private static final String INVOKE_TRUNCATE_WAY_TAG_CURRENT = "TRUNCATE current_way_tags";
-	private static final String INVOKE_TRUNCATE_WAY_SEGMENT_CURRENT = "TRUNCATE current_way_segments";
+	private static final String[] SQL_STATEMENTS = {
+		"TRUNCATE current_relation_members",
+		"TRUNCATE current_relation_tags",
+		"TRUNCATE current_relations",
+		"TRUNCATE current_way_nodes",
+		"TRUNCATE current_way_tags",
+		"TRUNCATE current_ways",
+		"TRUNCATE current_nodes",
+		"TRUNCATE relation_members",
+		"TRUNCATE relation_tags",
+		"TRUNCATE relations",
+		"TRUNCATE way_nodes",
+		"TRUNCATE way_tags",
+		"TRUNCATE ways",
+		"TRUNCATE nodes"
+	};
 	
 	
 	private DatabaseContext dbCtx;
@@ -45,16 +51,9 @@ public class MysqlTruncator implements RunnableTask {
 	 */
 	public void run() {
 		try {
-			dbCtx.executeStatement(INVOKE_TRUNCATE_WAY_TAG_CURRENT);
-			dbCtx.executeStatement(INVOKE_TRUNCATE_WAY_SEGMENT_CURRENT);
-			dbCtx.executeStatement(INVOKE_TRUNCATE_WAY_CURRENT);
-			dbCtx.executeStatement(INVOKE_TRUNCATE_SEGMENT_CURRENT);
-			dbCtx.executeStatement(INVOKE_TRUNCATE_NODE_CURRENT);
-			dbCtx.executeStatement(INVOKE_TRUNCATE_WAY_TAG);
-			dbCtx.executeStatement(INVOKE_TRUNCATE_WAY_SEGMENT);
-			dbCtx.executeStatement(INVOKE_TRUNCATE_WAY);
-			dbCtx.executeStatement(INVOKE_TRUNCATE_SEGMENT);
-			dbCtx.executeStatement(INVOKE_TRUNCATE_NODE);
+			for (int i = 0; i < SQL_STATEMENTS.length; i++) {
+				dbCtx.executeStatement(SQL_STATEMENTS[i]);
+			}
 			
 		} finally {
 			dbCtx.release();
