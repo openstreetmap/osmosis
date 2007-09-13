@@ -3,7 +3,7 @@ package com.bretth.osmosis.core.sort.v0_4;
 import java.util.Comparator;
 
 import com.bretth.osmosis.core.container.v0_4.EntityContainer;
-import com.bretth.osmosis.core.sort.impl.FileBasedSort;
+import com.bretth.osmosis.core.sort.common.FileBasedSort;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.task.v0_4.Sink;
 import com.bretth.osmosis.core.task.v0_4.SinkSource;

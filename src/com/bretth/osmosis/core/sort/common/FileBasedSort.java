@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.sort.impl;
+package com.bretth.osmosis.core.sort.common;
 
 import java.util.ArrayList;
 import java.util.Collections;
