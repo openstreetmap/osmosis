@@ -6,7 +6,7 @@ import com.bretth.osmosis.core.domain.v0_5.RelationMember;
 
 /**
  * A data class for representing a relation member database record. This extends
- * a relation member with fields relating it to the owning way.
+ * a relation member with fields relating it to the owning relation.
  * 
  * @author Brett Henderson
  */
@@ -37,7 +37,7 @@ public class DBRelationMember extends RelationMember {
 	
 	
 	/**
-	 * @return The way id.
+	 * @return The relation id.
 	 */
 	public long getRelationId() {
 		return relationId;
