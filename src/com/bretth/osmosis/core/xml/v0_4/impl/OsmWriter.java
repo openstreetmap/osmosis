@@ -76,7 +76,7 @@ public class OsmWriter extends ElementWriter {
 		
 		// Tell the sub element writer that a new writer is available. This will
 		// cause the underlying entity writing classes to be updated.
-		subElementWriter.updateWriter();
+		subElementWriter.updateWriter(writer);
 	}
 
 
@@ -88,7 +88,7 @@ public class OsmWriter extends ElementWriter {
 	 * 
 	 * @author Brett Henderson
 	 */
-	private class SubElementWriter implements EntityProcessor {
+	private static class SubElementWriter implements EntityProcessor {
 		private NodeWriter nodeWriter;
 		private SegmentWriter segmentWriter;
 		private WayWriter wayWriter;
@@ -113,7 +113,7 @@ public class OsmWriter extends ElementWriter {
 		 * @param writer
 		 *            The writer to be used for all output xml.
 		 */
-		public void updateWriter() {
+		public void updateWriter(BufferedWriter writer) {
 			nodeWriter.setWriter(writer);
 			segmentWriter.setWriter(writer);
 			wayWriter.setWriter(writer);
