@@ -40,15 +40,22 @@ public class TaskRegistrar {
 	 * Initialises factories for all tasks.
 	 */
 	public static void initialize() {
-		EntitySorterFactory entitySorterFactory;
-		ChangeSorterFactory changeSorterFactory;
+		EntitySorterFactory entitySorterFactory04;
+		ChangeSorterFactory changeSorterFactory04;
+		com.bretth.osmosis.core.sort.v0_5.EntitySorterFactory entitySorterFactory05;
+		com.bretth.osmosis.core.sort.v0_5.ChangeSorterFactory changeSorterFactory05;
 		
 		// Configure factories that require additional information.
-		entitySorterFactory = new EntitySorterFactory();
-		entitySorterFactory.registerComparator("TypeThenId", new EntityByTypeThenIdComparator(), true);
-		changeSorterFactory = new ChangeSorterFactory();
-		changeSorterFactory.registerComparator("streamable", new ChangeForStreamableApplierComparator(), true);
-		changeSorterFactory.registerComparator("seekable", new ChangeForSeekableApplierComparator(), false);
+		entitySorterFactory04 = new EntitySorterFactory();
+		entitySorterFactory04.registerComparator("TypeThenId", new EntityByTypeThenIdComparator(), true);
+		changeSorterFactory04 = new ChangeSorterFactory();
+		changeSorterFactory04.registerComparator("streamable", new ChangeForStreamableApplierComparator(), true);
+		changeSorterFactory04.registerComparator("seekable", new ChangeForSeekableApplierComparator(), false);
+		entitySorterFactory05 = new com.bretth.osmosis.core.sort.v0_5.EntitySorterFactory();
+		entitySorterFactory05.registerComparator("TypeThenId", new com.bretth.osmosis.core.sort.v0_5.EntityByTypeThenIdComparator(), true);
+		changeSorterFactory05 = new com.bretth.osmosis.core.sort.v0_5.ChangeSorterFactory();
+		changeSorterFactory05.registerComparator("streamable", new com.bretth.osmosis.core.sort.v0_5.ChangeForStreamableApplierComparator(), true);
+		changeSorterFactory05.registerComparator("seekable", new com.bretth.osmosis.core.sort.v0_5.ChangeForSeekableApplierComparator(), false);
 		
 		// Register factories.
 		TaskManagerFactory.register("apply-change", new ChangeApplierFactory());
@@ -59,8 +66,8 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("read-mysql-current", new MySqlCurrentReaderFactory());
 		TaskManagerFactory.register("read-xml", new XmlReaderFactory());
 		TaskManagerFactory.register("read-xml-change", new XmlChangeReaderFactory());
-		TaskManagerFactory.register("sort", entitySorterFactory);
-		TaskManagerFactory.register("sort-change", changeSorterFactory);
+		TaskManagerFactory.register("sort", entitySorterFactory04);
+		TaskManagerFactory.register("sort-change", changeSorterFactory04);
 		TaskManagerFactory.register("write-mysql", new MysqlWriterFactory());
 		TaskManagerFactory.register("write-mysql-change", new MysqlChangeWriterFactory());
 		TaskManagerFactory.register("truncate-mysql", new MysqlTruncatorFactory());
@@ -84,8 +91,8 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("read-mysql-current-0.4", new MySqlCurrentReaderFactory());
 		TaskManagerFactory.register("read-xml-0.4", new XmlReaderFactory());
 		TaskManagerFactory.register("read-xml-change-0.4", new XmlChangeReaderFactory());
-		TaskManagerFactory.register("sort-0.4", entitySorterFactory);
-		TaskManagerFactory.register("sort-change-0.4", changeSorterFactory);
+		TaskManagerFactory.register("sort-0.4", entitySorterFactory04);
+		TaskManagerFactory.register("sort-change-0.4", changeSorterFactory04);
 		TaskManagerFactory.register("write-mysql-0.4", new MysqlWriterFactory());
 		TaskManagerFactory.register("write-mysql-change-0.4", new MysqlChangeWriterFactory());
 		TaskManagerFactory.register("truncate-mysql-0.4", new MysqlTruncatorFactory());
@@ -109,8 +116,8 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("read-mysql-current-0.5", new com.bretth.osmosis.core.mysql.v0_5.MySqlCurrentReaderFactory());
 		TaskManagerFactory.register("read-xml-0.5", new com.bretth.osmosis.core.xml.v0_5.XmlReaderFactory());
 		TaskManagerFactory.register("read-xml-change-0.5", new com.bretth.osmosis.core.xml.v0_5.XmlChangeReaderFactory());
-		//TaskManagerFactory.register("sort-0.5", entitySorterFactory);
-		//TaskManagerFactory.register("sort-change-0.5", changeSorterFactory);
+		TaskManagerFactory.register("sort-0.5", entitySorterFactory05);
+		TaskManagerFactory.register("sort-change-0.5", changeSorterFactory05);
 		TaskManagerFactory.register("write-mysql-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlWriterFactory());
 		TaskManagerFactory.register("write-mysql-change-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlChangeWriterFactory());
 		TaskManagerFactory.register("truncate-mysql-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlTruncatorFactory());
