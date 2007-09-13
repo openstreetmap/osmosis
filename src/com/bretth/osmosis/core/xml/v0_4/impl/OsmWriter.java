@@ -78,11 +78,8 @@ public class OsmWriter extends ElementWriter {
 		// cause the underlying entity writing classes to be updated.
 		subElementWriter.updateWriter(writer);
 	}
-
-
-
-
-
+	
+	
 	/**
 	 * Directs data to the appropriate underlying element writer.
 	 * 
