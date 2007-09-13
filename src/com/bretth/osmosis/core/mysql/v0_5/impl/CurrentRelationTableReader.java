@@ -19,7 +19,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
  */
 public class CurrentRelationTableReader extends BaseEntityReader<Relation> {
 	private static final String SELECT_SQL =
-		"SELECT w.id, w.timestamp, u.data_public, u.display_name, w.visible"
+		"SELECT r.id, r.timestamp, u.data_public, u.display_name, r.visible"
 		+ " FROM current_relations r"
 		+ " LEFT OUTER JOIN users u ON r.user_id = u.id"
 		+ " ORDER BY r.id";
