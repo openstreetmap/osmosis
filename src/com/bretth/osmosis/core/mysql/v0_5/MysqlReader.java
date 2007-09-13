@@ -3,14 +3,17 @@ package com.bretth.osmosis.core.mysql.v0_5;
 import java.util.Date;
 
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
+import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.domain.v0_5.Node;
+import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.mysql.common.EntityHistory;
 import com.bretth.osmosis.core.mysql.v0_5.impl.EntityHistoryComparator;
 import com.bretth.osmosis.core.mysql.v0_5.impl.EntitySnapshotReader;
 import com.bretth.osmosis.core.mysql.v0_5.impl.NodeReader;
+import com.bretth.osmosis.core.mysql.v0_5.impl.RelationReader;
 import com.bretth.osmosis.core.mysql.v0_5.impl.WayReader;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
@@ -111,19 +114,19 @@ public class MysqlReader implements RunnableSource {
 	 * Reads all relations from the database and sends to the sink.
 	 */
 	private void processRelations() {
-		ReleasableIterator<Way> reader;
+		ReleasableIterator<Relation> reader;
 		
-		reader = new EntitySnapshotReader<Way>(
-			new PeekableIterator<EntityHistory<Way>>(
-				new WayReader(loginCredentials, readAllUsers)
+		reader = new EntitySnapshotReader<Relation>(
+			new PeekableIterator<EntityHistory<Relation>>(
+				new RelationReader(loginCredentials, readAllUsers)
 			),
 			snapshotInstant,
-			new EntityHistoryComparator<Way>()
+			new EntityHistoryComparator<Relation>()
 		);
 		
 		try {
 			while (reader.hasNext()) {
-				sink.process(new WayContainer(reader.next()));
+				sink.process(new RelationContainer(reader.next()));
 			}
 			
 		} finally {

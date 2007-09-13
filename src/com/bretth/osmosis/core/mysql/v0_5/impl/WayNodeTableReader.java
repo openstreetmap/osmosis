@@ -11,15 +11,15 @@ import com.bretth.osmosis.core.mysql.common.EntityHistory;
 
 
 /**
- * Reads all way segments from a database ordered by the way identifier but not
+ * Reads all way nodes from a database ordered by the way identifier but not
  * by the sequence.
  * 
  * @author Brett Henderson
  */
-public class WaySegmentTableReader extends BaseTableReader<EntityHistory<DBWayNode>> {
+public class WayNodeTableReader extends BaseTableReader<EntityHistory<DBWayNode>> {
 	private static final String SELECT_SQL =
-		"SELECT id as way_id, version, segment_id, sequence_id"
-		+ " FROM way_segments"
+		"SELECT id as way_id, version, node_id, sequence_id"
+		+ " FROM way_nodes"
 		+ " ORDER BY id, version";
 	
 	
@@ -29,7 +29,7 @@ public class WaySegmentTableReader extends BaseTableReader<EntityHistory<DBWayNo
 	 * @param loginCredentials
 	 *            Contains all information required to connect to the database.
 	 */
-	public WaySegmentTableReader(DatabaseLoginCredentials loginCredentials) {
+	public WayNodeTableReader(DatabaseLoginCredentials loginCredentials) {
 		super(loginCredentials);
 	}
 	
@@ -49,23 +49,23 @@ public class WaySegmentTableReader extends BaseTableReader<EntityHistory<DBWayNo
 	@Override
 	protected ReadResult<EntityHistory<DBWayNode>> createNextValue(ResultSet resultSet) {
 		long wayId;
-		long segmentId;
+		long nodeId;
 		int sequenceId;
 		int version;
 		
 		try {
 			wayId = resultSet.getLong("way_id");
-			segmentId = resultSet.getLong("segment_id");
+			nodeId = resultSet.getLong("node_id");
 			sequenceId = resultSet.getInt("sequence_id");
 			version = resultSet.getInt("version");
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to read way segment fields.", e);
+			throw new OsmosisRuntimeException("Unable to read way node fields.", e);
 		}
 		
 		return new ReadResult<EntityHistory<DBWayNode>>(
 			true,
-			new EntityHistory<DBWayNode>(new DBWayNode(wayId, segmentId, sequenceId), version, true)
+			new EntityHistory<DBWayNode>(new DBWayNode(wayId, nodeId, sequenceId), version, true)
 		);
 	}
 }

@@ -11,13 +11,14 @@ import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
 
 /**
  * Reads current tags for an entity from a tag table ordered by the entity
- * identifier.  The table must match an expected schema.
+ * identifier.   This relies on the fact that all tag tables have an identical
+ * layout.
  * 
  * @author Brett Henderson
  */
 public class CurrentEntityTagTableReader extends BaseTableReader<DBEntityTag> {
-	private static final String SELECT_SQL_1 = "SELECT id as way_id, k, v FROM ";
-	private static final String SELECT_SQL_2 = " ORDER BY way_id";
+	private static final String SELECT_SQL_1 = "SELECT id as entity_id, k, v FROM ";
+	private static final String SELECT_SQL_2 = " ORDER BY id";
 	
 	
 	private String tableName;
@@ -52,22 +53,22 @@ public class CurrentEntityTagTableReader extends BaseTableReader<DBEntityTag> {
 	 */
 	@Override
 	protected ReadResult<DBEntityTag> createNextValue(ResultSet resultSet) {
-		long wayId;
+		long entityId;
 		String key;
 		String value;
 		
 		try {
-			wayId = resultSet.getLong("way_id");
+			entityId = resultSet.getLong("entity_id");
 			key = resultSet.getString("k");
 			value = resultSet.getString("v");
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to read way tag fields.", e);
+			throw new OsmosisRuntimeException("Unable to read entity tag fields from table " + tableName + ".", e);
 		}
 		
 		return new ReadResult<DBEntityTag>(
 			true,
-			new DBEntityTag(wayId, key, value)
+			new DBEntityTag(entityId, key, value)
 		);
 	}
 }

@@ -46,14 +46,14 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 		);
 		wayTagReader = new PeekableIterator<EntityHistory<DBEntityTag>>(
 			new PersistentIterator<EntityHistory<DBEntityTag>>(
-				new WayTagTableReader(loginCredentials),
+				new EntityTagTableReader(loginCredentials, "way_tags"),
 				"waytag",
 				true
 			)
 		);
 		waySegmentReader = new PeekableIterator<EntityHistory<DBWayNode>>(
 			new PersistentIterator<EntityHistory<DBWayNode>>(
-				new WaySegmentTableReader(loginCredentials),
+				new WayNodeTableReader(loginCredentials),
 				"wayseg",
 				true
 			)

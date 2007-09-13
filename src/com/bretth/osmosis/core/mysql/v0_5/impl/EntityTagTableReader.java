@@ -11,15 +11,18 @@ import com.bretth.osmosis.core.mysql.common.EntityHistory;
 
 
 /**
- * Reads all way tags from a database ordered by the way identifier.
+ * Reads all tags for an entity from a tag table ordered by the entity
+ * identifier. This relies on the fact that all tag tables have an identical
+ * layout.
  * 
  * @author Brett Henderson
  */
-public class WayTagTableReader extends BaseTableReader<EntityHistory<DBEntityTag>> {
-	private static final String SELECT_SQL =
-		"SELECT id as way_id, version, k, v"
-		+ " FROM way_tags"
-		+ " ORDER BY way_id, version";
+public class EntityTagTableReader extends BaseTableReader<EntityHistory<DBEntityTag>> {
+	private static final String SELECT_SQL_1 = "SELECT id as entity_id, version, k, v FROM ";
+	private static final String SELECT_SQL_2 = " ORDER BY id, version";
+	
+	
+	private String tableName;
 	
 	
 	/**
@@ -27,9 +30,13 @@ public class WayTagTableReader extends BaseTableReader<EntityHistory<DBEntityTag
 	 * 
 	 * @param loginCredentials
 	 *            Contains all information required to connect to the database.
+	 * @param tableName
+	 *            The name of the table to query tag information from.
 	 */
-	public WayTagTableReader(DatabaseLoginCredentials loginCredentials) {
+	public EntityTagTableReader(DatabaseLoginCredentials loginCredentials, String tableName) {
 		super(loginCredentials);
+		
+		this.tableName = tableName;
 	}
 	
 	
@@ -38,7 +45,7 @@ public class WayTagTableReader extends BaseTableReader<EntityHistory<DBEntityTag
 	 */
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
+		return queryDbCtx.executeStreamingQuery(SELECT_SQL_1 + tableName + SELECT_SQL_2);
 	}
 	
 	
@@ -47,24 +54,24 @@ public class WayTagTableReader extends BaseTableReader<EntityHistory<DBEntityTag
 	 */
 	@Override
 	protected ReadResult<EntityHistory<DBEntityTag>> createNextValue(ResultSet resultSet) {
-		long wayId;
+		long entityId;
 		String key;
 		String value;
 		int version;
 		
 		try {
-			wayId = resultSet.getLong("way_id");
+			entityId = resultSet.getLong("entity_id");
 			key = resultSet.getString("k");
 			value = resultSet.getString("v");
 			version = resultSet.getInt("version");
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to read way tag fields.", e);
+			throw new OsmosisRuntimeException("Unable to read entity tag fields from table " + tableName + ".", e);
 		}
 		
 		return new ReadResult<EntityHistory<DBEntityTag>>(
 			true,
-			new EntityHistory<DBEntityTag>(new DBEntityTag(wayId, key, value), version, true)
+			new EntityHistory<DBEntityTag>(new DBEntityTag(entityId, key, value), version, true)
 		);
 	}
 }

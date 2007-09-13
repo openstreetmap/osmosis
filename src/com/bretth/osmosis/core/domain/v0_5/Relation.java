@@ -163,7 +163,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 * @param members
 	 *            The collection of members to be added.
 	 */
-	public void addNodeReferences(Collection<RelationMember> members) {
+	public void addMembers(Collection<RelationMember> members) {
 		memberList.addAll(members);
 	}
 }
