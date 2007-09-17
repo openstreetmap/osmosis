@@ -20,7 +20,7 @@ import com.bretth.osmosis.core.xml.common.ElementProcessor;
  */
 public class RelationElementProcessor extends SourceElementProcessor implements TagListener, RelationMemberListener {
 	private static final String ELEMENT_NAME_TAG = "tag";
-	private static final String ELEMENT_NAME_MEMBER = "mbr";
+	private static final String ELEMENT_NAME_MEMBER = "member";
 	private static final String ATTRIBUTE_NAME_ID = "id";
 	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
 	private static final String ATTRIBUTE_NAME_USER = "user";

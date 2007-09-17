@@ -32,7 +32,7 @@ public class WayNodeWriter extends ElementWriter {
 	 */
 	public void processWayNode(WayNode wayNode) {
 		beginOpenElement();
-		addAttribute("id", Long.toString(wayNode.getNodeId()));
+		addAttribute("ref", Long.toString(wayNode.getNodeId()));
 		endOpenElement(true);
 	}
 }

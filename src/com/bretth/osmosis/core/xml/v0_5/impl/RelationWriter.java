@@ -31,7 +31,7 @@ public class RelationWriter extends ElementWriter {
 		super(elementName, indentLevel);
 		
 		tagWriter = new TagWriter("tag", indentLevel + 1);
-		relationMemberWriter = new RelationMemberWriter("mbr", indentLevel + 1);
+		relationMemberWriter = new RelationMemberWriter("member", indentLevel + 1);
 	}
 	
 	

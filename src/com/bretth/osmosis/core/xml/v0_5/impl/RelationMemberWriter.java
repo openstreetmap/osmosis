@@ -37,8 +37,8 @@ public class RelationMemberWriter extends ElementWriter {
 	 */
 	public void processRelationMember(RelationMember relationMember) {
 		beginOpenElement();
-		addAttribute("id", Long.toString(relationMember.getMemberId()));
 		addAttribute("type", memberTypeRenderer.render(relationMember.getMemberType()));
+		addAttribute("ref", Long.toString(relationMember.getMemberId()));
 		addAttribute("role", relationMember.getMemberRole());
 		endOpenElement(true);
 	}
