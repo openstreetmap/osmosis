@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.domain.v0_5.EntityType;
 import com.bretth.osmosis.core.mysql.common.BaseTableReader;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
@@ -14,21 +15,23 @@ import com.bretth.osmosis.core.mysql.common.EntityHistory;
 
 
 /**
- * Reads the most recent set of way nodes from a database for ways that have
- * been modified within a time interval.
+ * Reads the most recent set of relation members from a database for relations
+ * that have been modified within a time interval.
  * 
  * @author Brett Henderson
  */
-public class WayNodeHistoryReader extends BaseTableReader<EntityHistory<DBWayNode>> {
+public class RelationMemberHistoryReader extends BaseTableReader<EntityHistory<DBRelationMember>> {
 	private static final String SELECT_SQL =
-		"SELECT wn.id AS way_id, wn.node_id, wn.sequence_id, wn.version" +
-		" FROM way_nodes wn" +
+		"SELECT rm.id AS relation_id, rm.member_type, rm.member_id, rm.member_role, rm.version" +
+		" FROM relation_members rm" +
 		" INNER JOIN (" +
 		"   SELECT id, MAX(version) as version" +
-		"   FROM ways" +
+		"   FROM relations" +
 		"   WHERE timestamp > ? AND timestamp <= ?" +
 		"   GROUP BY id" +
-		" ) wayList ON wn.id = wayList.id AND wn.version = wayList.version";
+		" ) relationList ON rm.id = relationList.id AND rm.version = relationList.version";
+	
+	private MemberTypeParser memberTypeParser;
 	
 	
 	private Date intervalBegin;
@@ -46,8 +49,10 @@ public class WayNodeHistoryReader extends BaseTableReader<EntityHistory<DBWayNod
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public WayNodeHistoryReader(DatabaseLoginCredentials loginCredentials, Date intervalBegin, Date intervalEnd) {
+	public RelationMemberHistoryReader(DatabaseLoginCredentials loginCredentials, Date intervalBegin, Date intervalEnd) {
 		super(loginCredentials);
+		
+		memberTypeParser = new MemberTypeParser();
 		
 		this.intervalBegin = intervalBegin;
 		this.intervalEnd = intervalEnd;
@@ -78,26 +83,30 @@ public class WayNodeHistoryReader extends BaseTableReader<EntityHistory<DBWayNod
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<EntityHistory<DBWayNode>> createNextValue(ResultSet resultSet) {
-		long wayId;
-		long nodeId;
-		int sequenceId;
+	protected ReadResult<EntityHistory<DBRelationMember>> createNextValue(ResultSet resultSet) {
+		long relationId;
+		EntityType memberType;
+		long memberId;
+		String memberRole;
 		int version;
 		
 		try {
-			wayId = resultSet.getLong("way_id");
-			nodeId = resultSet.getLong("node_id");
-			sequenceId = resultSet.getInt("sequence_id");
+			relationId = resultSet.getLong("relation_id");
+			memberType = memberTypeParser.parse(resultSet.getString("member_type"));
+			memberId = resultSet.getLong("member_id");
+			memberRole = resultSet.getString("member_role");
 			version = resultSet.getInt("version");
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to read way node fields.", e);
+			throw new OsmosisRuntimeException("Unable to read relation member fields.", e);
 		}
 		
-		return new ReadResult<EntityHistory<DBWayNode>>(
+		return new ReadResult<EntityHistory<DBRelationMember>>(
 			true,
-			new EntityHistory<DBWayNode>(
-					new DBWayNode(wayId, nodeId, sequenceId), version, true)
+			new EntityHistory<DBRelationMember>(
+				new DBRelationMember(relationId, memberId, memberType, memberRole),
+				version, true
+			)
 		);
 	}
 }

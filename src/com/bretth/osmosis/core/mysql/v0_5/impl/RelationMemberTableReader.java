@@ -67,7 +67,7 @@ public class RelationMemberTableReader extends BaseTableReader<EntityHistory<DBR
 			version = resultSet.getInt("version");
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to read way segment fields.", e);
+			throw new OsmosisRuntimeException("Unable to read relation member fields.", e);
 		}
 		
 		return new ReadResult<EntityHistory<DBRelationMember>>(

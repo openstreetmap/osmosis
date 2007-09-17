@@ -37,20 +37,20 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 	public RelationReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
 		relationReader = new PersistentIterator<EntityHistory<Relation>>(
 			new RelationTableReader(loginCredentials, readAllUsers),
-			"way",
+			"rel",
 			true
 		);
 		relationTagReader = new PeekableIterator<EntityHistory<DBEntityTag>>(
 			new PersistentIterator<EntityHistory<DBEntityTag>>(
 				new EntityTagTableReader(loginCredentials, "relation_tags"),
-				"waytag",
+				"reltag",
 				true
 			)
 		);
 		relationMemberReader = new PeekableIterator<EntityHistory<DBRelationMember>>(
 			new PersistentIterator<EntityHistory<DBRelationMember>>(
 				new RelationMemberTableReader(loginCredentials),
-				"wayseg",
+				"relmbr",
 				true
 			)
 		);

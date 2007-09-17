@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_5.Node;
+import com.bretth.osmosis.core.domain.v0_5.RelationMember;
 import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
@@ -42,14 +43,34 @@ public class ChangeWriter {
 		"INSERT INTO current_way_tags (id, k, v) VALUES (?, ?, ?)";
 	private static final String DELETE_SQL_WAY_TAG_CURRENT =
 		"DELETE FROM current_way_tags WHERE id = ?";
-	private static final String INSERT_SQL_WAY_SEGMENT =
-		"INSERT INTO way_segments (id, version, segment_id, sequence_id) VALUES (?, ?, ?, ?)";
-	private static final String INSERT_SQL_WAY_SEGMENT_CURRENT =
-		"INSERT INTO current_way_segments (id, segment_id, sequence_id) VALUES (?, ?, ?)";
-	private static final String DELETE_SQL_WAY_SEGMENT_CURRENT =
-		"DELETE FROM current_way_segments WHERE id = ?";
+	private static final String INSERT_SQL_WAY_NODE =
+		"INSERT INTO way_nodes (id, version, node_id, sequence_id) VALUES (?, ?, ?, ?)";
+	private static final String INSERT_SQL_WAY_NODE_CURRENT =
+		"INSERT INTO current_way_nodes (id, node_id, sequence_id) VALUES (?, ?, ?)";
+	private static final String DELETE_SQL_WAY_NODE_CURRENT =
+		"DELETE FROM current_way_nodes WHERE id = ?";
 	private static final String SELECT_SQL_WAY_CURRENT_VERSION =
 		"SELECT MAX(version) AS version FROM ways WHERE id = ?";
+	private static final String INSERT_SQL_RELATION =
+		"INSERT INTO relations (id, version, timestamp, visible, user_id) VALUES (?, ?, ?, ?, ?)";
+	private static final String INSERT_SQL_RELATION_CURRENT =
+		"INSERT INTO current_relations (id, timestamp, visible, user_id) VALUES (?, ?, ?, ?)";
+	private static final String DELETE_SQL_RELATION_CURRENT =
+		"DELETE FROM current_relations WHERE id = ?";
+	private static final String INSERT_SQL_RELATION_TAG =
+		"INSERT INTO relation_tags (id, version, k, v) VALUES (?, ?, ?, ?)";
+	private static final String INSERT_SQL_RELATION_TAG_CURRENT =
+		"INSERT INTO current_relation_tags (id, k, v) VALUES (?, ?, ?)";
+	private static final String DELETE_SQL_RELATION_TAG_CURRENT =
+		"DELETE FROM current_relation_tags WHERE id = ?";
+	private static final String INSERT_SQL_RELATION_MEMBER =
+		"INSERT INTO relation_members (id, version, member_type, member_id, member_role) VALUES (?, ?, ?, ?, ?)";
+	private static final String INSERT_SQL_RELATION_MEMBER_CURRENT =
+		"INSERT INTO current_relation_members (id, member_type, member_id, member_role) VALUES (?, ?, ?, ?)";
+	private static final String DELETE_SQL_RELATION_MEMBER_CURRENT =
+		"DELETE FROM current_relation_members WHERE id = ?";
+	private static final String SELECT_SQL_RELATION_CURRENT_VERSION =
+		"SELECT MAX(version) AS version FROM relations WHERE id = ?";
 	
 	
 	private DatabaseContext dbCtx;
@@ -65,11 +86,22 @@ public class ChangeWriter {
 	private PreparedStatement insertWayTagStatement;
 	private PreparedStatement insertWayTagCurrentStatement;
 	private PreparedStatement deleteWayTagCurrentStatement;
-	private PreparedStatement insertWaySegmentStatement;
-	private PreparedStatement insertWaySegmentCurrentStatement;
-	private PreparedStatement deleteWaySegmentCurrentStatement;
+	private PreparedStatement insertWayNodeStatement;
+	private PreparedStatement insertWayNodeCurrentStatement;
+	private PreparedStatement deleteWayNodeCurrentStatement;
 	private PreparedStatement queryWayCurrentVersion;
+	private PreparedStatement insertRelationStatement;
+	private PreparedStatement insertRelationCurrentStatement;
+	private PreparedStatement deleteRelationCurrentStatement;
+	private PreparedStatement insertRelationTagStatement;
+	private PreparedStatement insertRelationTagCurrentStatement;
+	private PreparedStatement deleteRelationTagCurrentStatement;
+	private PreparedStatement insertRelationMemberStatement;
+	private PreparedStatement insertRelationMemberCurrentStatement;
+	private PreparedStatement deleteRelationMemberCurrentStatement;
+	private PreparedStatement queryRelationCurrentVersion;
 	private EmbeddedTagProcessor tagFormatter;
+	private MemberTypeRenderer memberTypeRenderer;
 	
 	
 	/**
@@ -84,6 +116,7 @@ public class ChangeWriter {
 		userIdManager = new UserIdManager(dbCtx);
 		
 		tagFormatter = new EmbeddedTagProcessor();
+		memberTypeRenderer = new MemberTypeRenderer();
 	}
 	
 	
@@ -120,6 +153,45 @@ public class ChangeWriter {
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("The version of way with id=" + wayId + " could not be loaded.", e);
+		}
+		
+		return result;
+	}
+	
+	
+	/**
+	 * Loads the current version of a relation from the database.
+	 * 
+	 * @param relationId
+	 *            The relation to load.
+	 * @return The existing version of the relation.
+	 */
+	private int getRelationVersion(long relationId) {
+		ResultSet resultSet;
+		int result;
+		
+		if (queryRelationCurrentVersion == null) {
+			queryRelationCurrentVersion = dbCtx.prepareStatement(SELECT_SQL_RELATION_CURRENT_VERSION);
+		}
+		
+		try {
+			// Query the current version of the specified relation.
+			queryRelationCurrentVersion.setLong(1, relationId);
+			resultSet = queryRelationCurrentVersion.executeQuery();
+			
+			// Get the result from the first row in the recordset if it exists.
+			// If it doesn't exist, this is a create so we treat the existing
+			// version as 0.
+			if (resultSet.next()) {
+				result = resultSet.getInt("version");
+			} else {
+				result = 0;
+			}
+			
+			resultSet.close();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("The version of relation with id=" + relationId + " could not be loaded.", e);
 		}
 		
 		return result;
@@ -221,9 +293,9 @@ public class ChangeWriter {
 			insertWayTagStatement = dbCtx.prepareStatement(INSERT_SQL_WAY_TAG);
 			insertWayTagCurrentStatement = dbCtx.prepareStatement(INSERT_SQL_WAY_TAG_CURRENT);
 			deleteWayTagCurrentStatement = dbCtx.prepareStatement(DELETE_SQL_WAY_TAG_CURRENT);
-			insertWaySegmentStatement = dbCtx.prepareStatement(INSERT_SQL_WAY_SEGMENT);
-			insertWaySegmentCurrentStatement = dbCtx.prepareStatement(INSERT_SQL_WAY_SEGMENT_CURRENT);
-			deleteWaySegmentCurrentStatement = dbCtx.prepareStatement(DELETE_SQL_WAY_SEGMENT_CURRENT);
+			insertWayNodeStatement = dbCtx.prepareStatement(INSERT_SQL_WAY_NODE);
+			insertWayNodeCurrentStatement = dbCtx.prepareStatement(INSERT_SQL_WAY_NODE_CURRENT);
+			deleteWayNodeCurrentStatement = dbCtx.prepareStatement(DELETE_SQL_WAY_NODE_CURRENT);
 		}
 		
 		// Insert the new way into the history table.
@@ -257,24 +329,24 @@ public class ChangeWriter {
 			}
 		}
 		
-		// Insert the segments of the new way into the history table.
+		// Insert the nodes of the new way into the history table.
 		for (int i = 0; i < nodeReferenceList.size(); i++) {
 			WayNode nodeReference;
 			
 			nodeReference = nodeReferenceList.get(i);
 			
 			try {
-				insertWaySegmentStatement.setLong(1, way.getId());
-				insertWaySegmentStatement.setInt(2, version);
-				insertWaySegmentStatement.setLong(3, nodeReference.getNodeId());
-				insertWaySegmentStatement.setLong(4, i + 1);
+				insertWayNodeStatement.setLong(1, way.getId());
+				insertWayNodeStatement.setInt(2, version);
+				insertWayNodeStatement.setLong(3, nodeReference.getNodeId());
+				insertWayNodeStatement.setLong(4, i + 1);
 				
-				insertWaySegmentStatement.execute();
+				insertWayNodeStatement.execute();
 				
 			} catch (SQLException e) {
 				throw new OsmosisRuntimeException(
-					"Unable to insert history way segment with way id=" + way.getId()
-					+ " and segment id=" + nodeReference.getNodeId() + ".", e);
+					"Unable to insert history way node with way id=" + way.getId()
+					+ " and node id=" + nodeReference.getNodeId() + ".", e);
 			}
 		}
 		
@@ -287,14 +359,14 @@ public class ChangeWriter {
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to delete current way tags with id=" + way.getId() + ".", e);
 		}
-		// Delete the existing way segments from the current table.
+		// Delete the existing way nodes from the current table.
 		try {
-			deleteWaySegmentCurrentStatement.setLong(1, way.getId());
+			deleteWayNodeCurrentStatement.setLong(1, way.getId());
 			
-			deleteWaySegmentCurrentStatement.execute();
+			deleteWayNodeCurrentStatement.execute();
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to delete current way segments with id=" + way.getId() + ".", e);
+			throw new OsmosisRuntimeException("Unable to delete current way nodes with id=" + way.getId() + ".", e);
 		}
 		// Delete the existing way from the current table.
 		try {
@@ -335,23 +407,23 @@ public class ChangeWriter {
 			}
 		}
 		
-		// Insert the segments of the new way into the current table.
+		// Insert the nodes of the new way into the current table.
 		for (int i = 0; i < nodeReferenceList.size(); i++) {
 			WayNode nodeReference;
 			
 			nodeReference = nodeReferenceList.get(i);
 			
 			try {
-				insertWaySegmentCurrentStatement.setLong(1, way.getId());
-				insertWaySegmentCurrentStatement.setLong(2, nodeReference.getNodeId());
-				insertWaySegmentCurrentStatement.setLong(3, i);
+				insertWayNodeCurrentStatement.setLong(1, way.getId());
+				insertWayNodeCurrentStatement.setLong(2, nodeReference.getNodeId());
+				insertWayNodeCurrentStatement.setLong(3, i);
 				
-				insertWaySegmentCurrentStatement.execute();
+				insertWayNodeCurrentStatement.execute();
 				
 			} catch (SQLException e) {
 				throw new OsmosisRuntimeException(
-						"Unable to insert current way segment with way id=" + way.getId()
-						+ " and segment id=" + nodeReference.getNodeId() + ".", e);
+						"Unable to insert current way node with way id=" + way.getId()
+						+ " and node id=" + nodeReference.getNodeId() + ".", e);
 			}
 		}
 	}
@@ -366,7 +438,164 @@ public class ChangeWriter {
 	 *            The change to be applied.
 	 */
 	public void write(Relation relation, ChangeAction action) {
-		// TODO: Complete this method.
+		boolean visible;
+		int version;
+		List<RelationMember> relationMemberList;
+		
+		relationMemberList = relation.getMemberList();
+		
+		// If this is a deletion, the entity is not visible.
+		visible = !action.equals(ChangeAction.Delete);
+		
+		// Retrieve the existing relation version. If it doesn't exist, we will
+		// receive 0.
+		version = getRelationVersion(relation.getId()) + 1;
+		
+		// Create the prepared statements for relation creation if necessary.
+		if (insertRelationStatement == null) {
+			insertRelationStatement = dbCtx.prepareStatement(INSERT_SQL_RELATION);
+			insertRelationCurrentStatement = dbCtx.prepareStatement(INSERT_SQL_RELATION_CURRENT);
+			deleteRelationCurrentStatement = dbCtx.prepareStatement(DELETE_SQL_RELATION_CURRENT);
+			insertRelationTagStatement = dbCtx.prepareStatement(INSERT_SQL_RELATION_TAG);
+			insertRelationTagCurrentStatement = dbCtx.prepareStatement(INSERT_SQL_RELATION_TAG_CURRENT);
+			deleteRelationTagCurrentStatement = dbCtx.prepareStatement(DELETE_SQL_RELATION_TAG_CURRENT);
+			insertRelationMemberStatement = dbCtx.prepareStatement(INSERT_SQL_RELATION_MEMBER);
+			insertRelationMemberCurrentStatement = dbCtx.prepareStatement(INSERT_SQL_RELATION_MEMBER_CURRENT);
+			deleteRelationMemberCurrentStatement = dbCtx.prepareStatement(DELETE_SQL_RELATION_MEMBER_CURRENT);
+		}
+		
+		// Insert the new relation into the history table.
+		try {
+			insertRelationStatement.setLong(1, relation.getId());
+			insertRelationStatement.setInt(2, version);
+			insertRelationStatement.setTimestamp(3, new Timestamp(relation.getTimestamp().getTime()));
+			insertRelationStatement.setBoolean(4, visible);
+			insertRelationStatement.setLong(5, userIdManager.getUserId());
+			
+			insertRelationStatement.execute();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to insert history relation with id=" + relation.getId() + ".", e);
+		}
+		
+		// Insert the tags of the new relation into the history table.
+		for (Tag tag : relation.getTagList()) {
+			try {
+				insertRelationTagStatement.setLong(1, relation.getId());
+				insertRelationTagStatement.setInt(2, version);
+				insertRelationTagStatement.setString(3, tag.getKey());
+				insertRelationTagStatement.setString(4, tag.getValue());
+				
+				insertRelationTagStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException(
+					"Unable to insert history relation tag with id=" + relation.getId()
+					+ " and key=(" + tag.getKey() + ").", e);
+			}
+		}
+		
+		// Insert the members of the new relation into the history table.
+		for (int i = 0; i < relationMemberList.size(); i++) {
+			RelationMember relationMember;
+			
+			relationMember = relationMemberList.get(i);
+			
+			try {
+				insertRelationMemberStatement.setLong(1, relation.getId());
+				insertRelationMemberStatement.setInt(2, version);
+				insertRelationMemberStatement.setString(3, memberTypeRenderer.render(relationMember.getMemberType()));
+				insertRelationMemberStatement.setLong(4, relationMember.getMemberId());
+				insertRelationMemberStatement.setString(5, relationMember.getMemberRole());
+				
+				insertRelationMemberStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException(
+					"Unable to insert history relation member with relation id=" + relation.getId()
+					+ ", member type=" + relationMember.getMemberId()
+					+ " and member id=" + relationMember.getMemberId() + ".", e);
+			}
+		}
+		
+		// Delete the existing relation tags from the current table.
+		try {
+			deleteRelationTagCurrentStatement.setLong(1, relation.getId());
+			
+			deleteRelationTagCurrentStatement.execute();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to delete current relation tags with id=" + relation.getId() + ".", e);
+		}
+		// Delete the existing relation members from the current table.
+		try {
+			deleteRelationMemberCurrentStatement.setLong(1, relation.getId());
+			
+			deleteRelationMemberCurrentStatement.execute();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to delete current relation members with id=" + relation.getId() + ".", e);
+		}
+		// Delete the existing relation from the current table.
+		try {
+			deleteRelationCurrentStatement.setLong(1, relation.getId());
+			
+			deleteRelationCurrentStatement.execute();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to delete current relation with id=" + relation.getId() + ".", e);
+		}
+		
+		// Insert the new relation into the current table.
+		try {
+			insertRelationCurrentStatement.setLong(1, relation.getId());
+			insertRelationCurrentStatement.setTimestamp(2, new Timestamp(relation.getTimestamp().getTime()));
+			insertRelationCurrentStatement.setBoolean(3, visible);
+			insertRelationCurrentStatement.setLong(4, userIdManager.getUserId());
+			
+			insertRelationCurrentStatement.execute();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to insert current relation with id=" + relation.getId() + ".", e);
+		}
+		
+		// Insert the tags of the new relation into the current table.
+		for (Tag tag : relation.getTagList()) {
+			try {
+				insertRelationTagCurrentStatement.setLong(1, relation.getId());
+				insertRelationTagCurrentStatement.setString(2, tag.getKey());
+				insertRelationTagCurrentStatement.setString(3, tag.getValue());
+				
+				insertRelationTagCurrentStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException(
+					"Unable to insert current relation tag with id=" + relation.getId()
+					+ " and key=(" + tag.getKey() + ").", e);
+			}
+		}
+		
+		// Insert the members of the new relation into the current table.
+		for (int i = 0; i < relationMemberList.size(); i++) {
+			RelationMember relationMember;
+			
+			relationMember = relationMemberList.get(i);
+			
+			try {
+				insertRelationMemberCurrentStatement.setLong(1, relation.getId());
+				insertRelationMemberCurrentStatement.setString(2, memberTypeRenderer.render(relationMember.getMemberType()));
+				insertRelationMemberCurrentStatement.setLong(3, relationMember.getMemberId());
+				insertRelationMemberCurrentStatement.setString(4, relationMember.getMemberRole());
+				
+				insertRelationMemberCurrentStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException(
+						"Unable to insert current relation member with relation id=" + relation.getId()
+						+ ", member type=" + relationMember.getMemberId()
+						+ " and member id=" + relationMember.getMemberId() + ".", e);
+			}
+		}
 	}
 	
 	

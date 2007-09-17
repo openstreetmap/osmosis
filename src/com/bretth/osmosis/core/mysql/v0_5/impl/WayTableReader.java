@@ -14,7 +14,7 @@ import com.bretth.osmosis.core.mysql.common.EntityHistory;
 
 /**
  * Reads all ways from a database ordered by their identifier. These ways won't
- * be populated with segments and tags.
+ * be populated with nodes and tags.
  * 
  * @author Brett Henderson
  */

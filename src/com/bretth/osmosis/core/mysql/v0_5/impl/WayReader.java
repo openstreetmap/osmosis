@@ -24,7 +24,7 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 	
 	private ReleasableIterator<EntityHistory<Way>> wayReader;
 	private PeekableIterator<EntityHistory<DBEntityTag>> wayTagReader;
-	private PeekableIterator<EntityHistory<DBWayNode>> waySegmentReader;
+	private PeekableIterator<EntityHistory<DBWayNode>> wayNodeReader;
 	private EntityHistory<Way> nextValue;
 	private boolean nextValueLoaded;
 	
@@ -51,10 +51,10 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 				true
 			)
 		);
-		waySegmentReader = new PeekableIterator<EntityHistory<DBWayNode>>(
+		wayNodeReader = new PeekableIterator<EntityHistory<DBWayNode>>(
 			new PersistentIterator<EntityHistory<DBWayNode>>(
 				new WayNodeTableReader(loginCredentials),
-				"wayseg",
+				"waynod",
 				true
 			)
 		);
@@ -104,19 +104,19 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 				way.addTag(wayTagReader.next().getEntity());
 			}
 			
-			// Skip all way segments that are from lower id or lower version of the same id.
-			while (waySegmentReader.hasNext()) {
-				EntityHistory<DBWayNode> waySegmentHistory;
-				DBWayNode waySegment;
+			// Skip all way nodes that are from lower id or lower version of the same id.
+			while (wayNodeReader.hasNext()) {
+				EntityHistory<DBWayNode> wayNodeHistory;
+				DBWayNode wayNode;
 				
-				waySegmentHistory = waySegmentReader.peekNext();
-				waySegment = waySegmentHistory.getEntity();
+				wayNodeHistory = wayNodeReader.peekNext();
+				wayNode = wayNodeHistory.getEntity();
 				
-				if (waySegment.getWayId() < wayId) {
-					waySegmentReader.next();
-				} else if (waySegment.getWayId() == wayId) {
-					if (waySegmentHistory.getVersion() < wayVersion) {
-						waySegmentReader.next();
+				if (wayNode.getWayId() < wayId) {
+					wayNodeReader.next();
+				} else if (wayNode.getWayId() == wayId) {
+					if (wayNodeHistory.getVersion() < wayVersion) {
+						wayNodeReader.next();
 					} else {
 						break;
 					}
@@ -125,12 +125,12 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 				}
 			}
 			
-			// Load all segments matching this version of the way.
+			// Load all nodes matching this version of the way.
 			wayNodes = new ArrayList<DBWayNode>();
-			while (waySegmentReader.hasNext() && waySegmentReader.peekNext().getEntity().getWayId() == wayId && waySegmentReader.peekNext().getVersion() == wayVersion) {
-				wayNodes.add(waySegmentReader.next().getEntity());
+			while (wayNodeReader.hasNext() && wayNodeReader.peekNext().getEntity().getWayId() == wayId && wayNodeReader.peekNext().getVersion() == wayVersion) {
+				wayNodes.add(wayNodeReader.next().getEntity());
 			}
-			// The underlying query sorts segment references by way id but not
+			// The underlying query sorts node references by way id but not
 			// by their sequence number.
 			Collections.sort(wayNodes, new WayNodeComparator());
 			for (WayNode nodeReference : wayNodes) {
@@ -176,6 +176,6 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 	public void release() {
 		wayReader.release();
 		wayTagReader.release();
-		waySegmentReader.release();
+		wayNodeReader.release();
 	}
 }

@@ -96,7 +96,7 @@ public class WayHistoryReader extends BaseEntityReader<EntityHistory<Way>> {
 			visible = resultSet.getBoolean("visible");
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to read node fields.", e);
+			throw new OsmosisRuntimeException("Unable to read way fields.", e);
 		}
 		
 		return new ReadResult<EntityHistory<Way>>(

@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 
 /**
- * Compares way segments to allow them to be sorted by way id then sequence
+ * Compares way nodes to allow them to be sorted by way id then sequence
  * number.
  * 
  * @author Brett Henderson

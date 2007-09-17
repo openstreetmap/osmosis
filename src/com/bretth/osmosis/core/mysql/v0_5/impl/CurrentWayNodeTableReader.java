@@ -10,7 +10,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
 
 
 /**
- * Reads current way segments from a database ordered by the way identifier but not
+ * Reads current way nodes from a database ordered by the way identifier but not
  * by the sequence.
  * 
  * @author Brett Henderson

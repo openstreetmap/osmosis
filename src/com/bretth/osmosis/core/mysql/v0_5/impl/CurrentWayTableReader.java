@@ -13,7 +13,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
 
 /**
  * Reads current ways from a database ordered by their identifier. These ways
- * won't be populated with segments and tags.
+ * won't be populated with nodes and tags.
  * 
  * @author Brett Henderson
  */

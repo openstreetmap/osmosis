@@ -58,14 +58,14 @@ public class WayChangeReader {
 			new PeekableIterator<EntityHistory<DBWayNode>>(
 				new PersistentIterator<EntityHistory<DBWayNode>>(
 					new WayNodeHistoryReader(loginCredentials, intervalBegin, intervalEnd),
-					"wayseg",
+					"waynod",
 					true
 				)
 			);
 		wayTagHistoryReader =
 			new PeekableIterator<EntityHistory<DBEntityTag>>(
 				new PersistentIterator<EntityHistory<DBEntityTag>>(
-					new WayTagHistoryReader(loginCredentials, intervalBegin, intervalEnd),
+					new EntityTagHistoryReader(loginCredentials, "ways", "way_tags", intervalBegin, intervalEnd),
 					"waytag",
 					true
 				)
@@ -77,8 +77,8 @@ public class WayChangeReader {
 	 * Consolides the output of all history readers so that ways are fully
 	 * populated.
 	 * 
-	 * @return A way history record where the way is fully populated with
-	 *         segments and tags.
+	 * @return A way history record where the way is fully populated with nodes
+	 *         and tags.
 	 */
 	private EntityHistory<Way> readNextWayHistory() {
 		EntityHistory<Way> wayHistory;
@@ -88,14 +88,14 @@ public class WayChangeReader {
 		wayHistory = wayHistoryReader.next();
 		way = wayHistory.getEntity();
 
-		// Add all applicable segment references to the way.
+		// Add all applicable node references to the way.
 		wayNodes = new ArrayList<DBWayNode>();
 		while (wayNodeHistoryReader.hasNext() &&
 				wayNodeHistoryReader.peekNext().getEntity().getWayId() == way.getId() &&
 				wayNodeHistoryReader.peekNext().getVersion() == wayHistory.getVersion()) {
 			wayNodes.add(wayNodeHistoryReader.next().getEntity());
 		}
-		// The underlying query sorts segment references by way id but not
+		// The underlying query sorts node references by way id but not
 		// by their sequence number.
 		Collections.sort(wayNodes, new WayNodeComparator());
 		for (WayNode nodeReference : wayNodes) {
