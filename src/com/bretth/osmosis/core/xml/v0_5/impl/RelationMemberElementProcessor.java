@@ -13,7 +13,7 @@ import com.bretth.osmosis.core.xml.common.BaseElementProcessor;
  * @author Brett Henderson
  */
 public class RelationMemberElementProcessor extends BaseElementProcessor {
-	private static final String ATTRIBUTE_NAME_ID = "id";
+	private static final String ATTRIBUTE_NAME_ID = "ref";
 	private static final String ATTRIBUTE_NAME_TYPE = "type";
 	private static final String ATTRIBUTE_NAME_ROLE = "role";
 	
