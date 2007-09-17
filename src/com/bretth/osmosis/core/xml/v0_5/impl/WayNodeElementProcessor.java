@@ -12,7 +12,7 @@ import com.bretth.osmosis.core.xml.common.BaseElementProcessor;
  * @author Brett Henderson
  */
 public class WayNodeElementProcessor extends BaseElementProcessor {
-	private static final String ATTRIBUTE_NAME_ID = "id";
+	private static final String ATTRIBUTE_NAME_ID = "ref";
 	
 	private WayNodeListener wayNodeListener;
 	private WayNode wayNode;
