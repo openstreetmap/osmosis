@@ -24,7 +24,7 @@ public class XmlDownloaderFactory extends TaskManagerFactory {
 	private static final double DEFAULT_RIGHT = 180;
 	private static final double DEFAULT_TOP = 90;
 	private static final double DEFAULT_BOTTOM = -90;
-	private static final String DEFAULT_URL = "http://www.openstreetmap.org/api/0.4";
+	private static final String DEFAULT_URL = "http://www.openstreetmap.org/api/0.5";
 	
 	
     /**
