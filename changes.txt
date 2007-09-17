@@ -1,3 +1,7 @@
+0.15
+Added full 0.5 support.
+Updated 0.4 code to the 005 schema.
+
 0.14
 Fixed a bug in the area filtering tasks where the original way was being passed to the destination instead of the modified way with only the available segments populated.
 Fixed a bug in the way comparison code where changes in the ordering of segments wouldn't be picked up.
