@@ -108,7 +108,7 @@ public abstract class BaseXmlWriter {
 				outStream =
 					new CompressionActivator(compressionMethod).createCompressionOutputStream(outStream);
 				
-				writer = new BufferedWriter(new OutputStreamWriter(outStream));
+				writer = new BufferedWriter(new OutputStreamWriter(outStream, "UTF-8"));
 				
 				outStream = null;
 				

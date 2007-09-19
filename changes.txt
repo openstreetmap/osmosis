@@ -1,3 +1,6 @@
+0.16
+Fixed a major bug in UTF-8 handling when writing xml files.  All files were being written in the default character set.
+
 0.15
 Added full 0.5 support.
 Updated 0.4 code to the 005 schema.
