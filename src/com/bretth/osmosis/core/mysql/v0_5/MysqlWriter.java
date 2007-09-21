@@ -20,7 +20,10 @@ import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.mysql.common.DatabasePreferences;
+import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.common.UserIdManager;
+import com.bretth.osmosis.core.mysql.v0_5.MySqlVersionConstants;
 import com.bretth.osmosis.core.mysql.v0_5.impl.DBRelationMember;
 import com.bretth.osmosis.core.mysql.v0_5.impl.EmbeddedTagProcessor;
 import com.bretth.osmosis.core.mysql.v0_5.impl.DBWayNode;
@@ -212,8 +215,10 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	}
 	
 	
+	private DatabasePreferences preferences;
 	private DatabaseContext dbCtx;
 	private UserIdManager userIdManager;
+	private SchemaVersionValidator schemaVersionValidator;
 	private boolean lockTables;
 	private boolean populateCurrentTables;
 	private List<Node> nodeBuffer;
@@ -257,16 +262,22 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * 
 	 * @param loginCredentials
 	 *            Contains all information required to connect to the database.
+	 * @param preferences
+	 *            Contains preferences configuring database behaviour.
 	 * @param lockTables
 	 *            If true, all tables will be locked during loading.
 	 * @param populateCurrentTables
 	 *            If true, the current tables will be populated as well as
 	 *            history tables.
 	 */
-	public MysqlWriter(DatabaseLoginCredentials loginCredentials, boolean lockTables, boolean populateCurrentTables) {
+	public MysqlWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean lockTables, boolean populateCurrentTables) {
+		this.preferences = preferences;
+		
 		dbCtx = new DatabaseContext(loginCredentials);
 		
 		userIdManager = new UserIdManager(dbCtx);
+		
+		schemaVersionValidator = new SchemaVersionValidator(loginCredentials);
 		
 		this.lockTables = lockTables;
 		this.populateCurrentTables = populateCurrentTables;
@@ -296,6 +307,10 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 */
 	private void initialize() {
 		if (!initialized) {
+			if (preferences.getValidateSchemaVersion()) {
+				schemaVersionValidator.validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
+			}
+			
 			bulkNodeStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_NODE);
 			singleNodeStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_NODE);
 			bulkWayStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_WAY);

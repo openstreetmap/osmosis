@@ -6,6 +6,8 @@ import java.util.Map;
 import com.bretth.osmosis.core.container.v0_4.ChangeContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.mysql.common.DatabasePreferences;
+import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.v0_4.impl.ActionChangeWriter;
 import com.bretth.osmosis.core.mysql.v0_4.impl.ChangeWriter;
 import com.bretth.osmosis.core.task.common.ChangeAction;
@@ -23,7 +25,8 @@ public class MysqlChangeWriter implements ChangeSink {
 	
 	private ChangeWriter changeWriter;
 	private Map<ChangeAction, ActionChangeWriter> actionWriterMap;
-	
+	private DatabasePreferences preferences;
+	private SchemaVersionValidator schemaVersionValidator;
 	
 	
 	/**
@@ -31,13 +34,19 @@ public class MysqlChangeWriter implements ChangeSink {
 	 * 
 	 * @param loginCredentials
 	 *            Contains all information required to connect to the database.
+	 * @param preferences
+	 *            Contains preferences configuring database behaviour.
 	 */
-	public MysqlChangeWriter(DatabaseLoginCredentials loginCredentials) {
+	public MysqlChangeWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
+		this.preferences = preferences;
+		
 		changeWriter = new ChangeWriter(loginCredentials);
 		actionWriterMap = new HashMap<ChangeAction, ActionChangeWriter>();
 		actionWriterMap.put(ChangeAction.Create, new ActionChangeWriter(changeWriter, ChangeAction.Create));
 		actionWriterMap.put(ChangeAction.Modify, new ActionChangeWriter(changeWriter, ChangeAction.Modify));
 		actionWriterMap.put(ChangeAction.Delete, new ActionChangeWriter(changeWriter, ChangeAction.Delete));
+		
+		schemaVersionValidator = new SchemaVersionValidator(loginCredentials);
 	}
 	
 	
@@ -46,6 +55,11 @@ public class MysqlChangeWriter implements ChangeSink {
 	 */
 	public void process(ChangeContainer change) {
 		ChangeAction action;
+		
+		// Verify that the schema version is supported.
+		if (preferences.getValidateSchemaVersion()) {
+			schemaVersionValidator.validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
+		}
 		
 		action = change.getAction();
 		

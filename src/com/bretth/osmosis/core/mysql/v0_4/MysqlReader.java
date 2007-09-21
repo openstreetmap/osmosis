@@ -9,7 +9,9 @@ import com.bretth.osmosis.core.domain.v0_4.Node;
 import com.bretth.osmosis.core.domain.v0_4.Segment;
 import com.bretth.osmosis.core.domain.v0_4.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.mysql.common.DatabasePreferences;
 import com.bretth.osmosis.core.mysql.common.EntityHistory;
+import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.v0_4.impl.EntityHistoryComparator;
 import com.bretth.osmosis.core.mysql.v0_4.impl.EntitySnapshotReader;
 import com.bretth.osmosis.core.mysql.v0_4.impl.NodeReader;
@@ -29,6 +31,7 @@ import com.bretth.osmosis.core.task.v0_4.Sink;
 public class MysqlReader implements RunnableSource {
 	private Sink sink;
 	private DatabaseLoginCredentials loginCredentials;
+	private DatabasePreferences preferences;
 	private Date snapshotInstant;
 	private boolean readAllUsers;
 	
@@ -38,6 +41,8 @@ public class MysqlReader implements RunnableSource {
 	 * 
 	 * @param loginCredentials
 	 *            Contains all information required to connect to the database.
+	 * @param preferences
+	 *            Contains preferences configuring database behaviour.
 	 * @param snapshotInstant
 	 *            The state of the node table at this point in time will be
 	 *            dumped. This ensures a consistent snapshot.
@@ -45,8 +50,9 @@ public class MysqlReader implements RunnableSource {
 	 *            If this flag is true, all users will be read from the database
 	 *            regardless of their public edits flag.
 	 */
-	public MysqlReader(DatabaseLoginCredentials loginCredentials, Date snapshotInstant, boolean readAllUsers) {
+	public MysqlReader(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, Date snapshotInstant, boolean readAllUsers) {
 		this.loginCredentials = loginCredentials;
+		this.preferences = preferences;
 		this.snapshotInstant = snapshotInstant;
 		this.readAllUsers = readAllUsers;
 	}
@@ -140,6 +146,9 @@ public class MysqlReader implements RunnableSource {
 	 */
 	public void run() {
 		try {
+			if (preferences.getValidateSchemaVersion()) {
+				new SchemaVersionValidator(loginCredentials).validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
+			}
 			processNodes();
 			processSegments();
 			processWays();

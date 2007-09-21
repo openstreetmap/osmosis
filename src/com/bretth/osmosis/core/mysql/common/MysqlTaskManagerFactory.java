@@ -85,4 +85,35 @@ public abstract class MysqlTaskManagerFactory extends TaskManagerFactory {
 		
 		return loginCredentials;
 	}
+	
+	
+	/**
+	 * Utility method for retrieving the login credentials for a database connection.
+	 * 
+	 * @param taskId
+	 *            The identifier for the task retrieving the parameter.
+	 * @param taskArgs
+	 *            The task arguments.
+	 * @return The value of the argument.
+	 */
+	protected DatabasePreferences getDatabasePreferences(
+			String taskId, Map<String, String> taskArgs) {
+		DatabasePreferences preferences;
+		
+		// Create a new preferences object with default values.
+		preferences = new DatabasePreferences(MysqlConstants.TASK_DEFAULT_VALIDATE_SCHEMA_VERSION);
+		
+		// Update the preferences with any explicit arguments provided on the
+		// command line.
+		preferences.setValidateSchemaVersion(
+			getBooleanArgument(
+				taskId,
+				taskArgs,
+				MysqlConstants.TASK_ARG_VALIDATE_SCHEMA_VERSION,
+				preferences.getValidateSchemaVersion()
+			)
+		);
+		
+		return preferences;
+	}
 }

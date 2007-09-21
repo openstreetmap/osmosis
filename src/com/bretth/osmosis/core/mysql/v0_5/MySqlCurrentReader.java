@@ -7,6 +7,8 @@ import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.mysql.common.DatabasePreferences;
+import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.v0_5.impl.CurrentNodeReader;
 import com.bretth.osmosis.core.mysql.v0_5.impl.CurrentRelationReader;
 import com.bretth.osmosis.core.mysql.v0_5.impl.CurrentWayReader;
@@ -24,6 +26,7 @@ import com.bretth.osmosis.core.task.v0_5.Sink;
 public class MySqlCurrentReader implements RunnableSource {
 	private Sink sink;
 	private DatabaseLoginCredentials loginCredentials;
+	private DatabasePreferences preferences;
 	private boolean readAllUsers;
 	
 	
@@ -32,12 +35,15 @@ public class MySqlCurrentReader implements RunnableSource {
 	 * 
 	 * @param loginCredentials
 	 *            Contains all information required to connect to the database.
+	 * @param preferences
+	 *            Contains preferences configuring database behaviour.
 	 * @param readAllUsers
 	 *            If this flag is true, all users will be read from the database
 	 *            regardless of their public edits flag.
 	 */
-	public MySqlCurrentReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
+	public MySqlCurrentReader(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean readAllUsers) {
 		this.loginCredentials = loginCredentials;
+		this.preferences = preferences;
 		this.readAllUsers = readAllUsers;
 	}
 	
@@ -112,6 +118,9 @@ public class MySqlCurrentReader implements RunnableSource {
 	 */
 	public void run() {
 		try {
+			if (preferences.getValidateSchemaVersion()) {
+				new SchemaVersionValidator(loginCredentials).validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
+			}
 			processNodes();
 			processWays();
 			processRelations();

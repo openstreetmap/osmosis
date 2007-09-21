@@ -2,6 +2,8 @@ package com.bretth.osmosis.core.mysql.v0_4;
 
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.mysql.common.DatabasePreferences;
+import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.task.common.RunnableTask;
 
 
@@ -27,6 +29,8 @@ public class MysqlTruncator implements RunnableTask {
 	
 	
 	private DatabaseContext dbCtx;
+	private DatabasePreferences preferences;
+	private SchemaVersionValidator schemaVersionValidator;
 	
 	
 	/**
@@ -34,9 +38,15 @@ public class MysqlTruncator implements RunnableTask {
 	 * 
 	 * @param loginCredentials
 	 *            Contains all information required to connect to the database.
+	 * @param preferences
+	 *            Contains preferences configuring database behaviour.
 	 */
-	public MysqlTruncator(DatabaseLoginCredentials loginCredentials) {
+	public MysqlTruncator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
+		this.preferences = preferences;
+		
 		dbCtx = new DatabaseContext(loginCredentials);
+		
+		schemaVersionValidator = new SchemaVersionValidator(loginCredentials);
 	}
 	
 	
@@ -45,6 +55,10 @@ public class MysqlTruncator implements RunnableTask {
 	 */
 	public void run() {
 		try {
+			if (preferences.getValidateSchemaVersion()) {
+				schemaVersionValidator.validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
+			}
+			
 			dbCtx.executeStatement(INVOKE_TRUNCATE_WAY_TAG_CURRENT);
 			dbCtx.executeStatement(INVOKE_TRUNCATE_WAY_SEGMENT_CURRENT);
 			dbCtx.executeStatement(INVOKE_TRUNCATE_WAY_CURRENT);

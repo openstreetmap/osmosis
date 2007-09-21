@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Map;
 
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.mysql.common.DatabasePreferences;
 import com.bretth.osmosis.core.mysql.common.MysqlTaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.v0_4.RunnableSourceManager;
@@ -26,17 +27,19 @@ public class MysqlReaderFactory extends MysqlTaskManagerFactory {
 	@Override
 	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
 		DatabaseLoginCredentials loginCredentials;
+		DatabasePreferences preferences;
 		boolean readAllUsers;
 		Date snapshotInstant;
 		
 		// Get the task arguments.
 		loginCredentials = getDatabaseLoginCredentials(taskId, taskArgs);
+		preferences = getDatabasePreferences(taskId, taskArgs);
 		readAllUsers = getBooleanArgument(taskId, taskArgs, ARG_READ_ALL_USERS, DEFAULT_READ_ALL_USERS);
 		snapshotInstant = getDateArgument(taskId, taskArgs, ARG_SNAPSHOT_INSTANT, new Date());
 		
 		return new RunnableSourceManager(
 			taskId,
-			new MysqlReader(loginCredentials, snapshotInstant, readAllUsers),
+			new MysqlReader(loginCredentials, preferences, snapshotInstant, readAllUsers),
 			pipeArgs
 		);
 	}

@@ -34,6 +34,11 @@ public interface MysqlConstants {
 	static final String TASK_ARG_PASSWORD = "password";
 	
 	/**
+	 * The task argument for specifying whether schema version validation should be performed.
+	 */
+	static final String TASK_ARG_VALIDATE_SCHEMA_VERSION = "validateSchemaVersion";
+	
+	/**
 	 * The default host for a database connection.
 	 */
 	static final String TASK_DEFAULT_HOST = "localhost";
@@ -52,4 +57,9 @@ public interface MysqlConstants {
 	 * The default password for a database connection.
 	 */
 	static final String TASK_DEFAULT_PASSWORD = "";
+	
+	/**
+	 * The default value for whether schema version validation should be performed.
+	 */
+	static final boolean TASK_DEFAULT_VALIDATE_SCHEMA_VERSION = true;
 }
