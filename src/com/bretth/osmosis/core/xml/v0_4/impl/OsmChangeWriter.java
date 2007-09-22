@@ -3,6 +3,7 @@ package com.bretth.osmosis.core.xml.v0_4.impl;
 import java.io.BufferedWriter;
 
 import com.bretth.osmosis.core.container.v0_4.ChangeContainer;
+import com.bretth.osmosis.core.OsmosisConstants;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.task.common.ChangeAction;
 import com.bretth.osmosis.core.xml.common.ElementWriter;
@@ -60,7 +61,7 @@ public class OsmChangeWriter extends ElementWriter {
 	public void begin() {
 		beginOpenElement();
 		addAttribute("version", XmlConstants.OSM_VERSION);
-		addAttribute("generator", "Osmosis");
+		addAttribute("generator", "Osmosis " + OsmosisConstants.VERSION);
 		endOpenElement(false);
 	}
 	

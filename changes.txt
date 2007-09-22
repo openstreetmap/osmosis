@@ -1,6 +1,7 @@
 0.17
 Added schema version checking to all MySQL tasks.
 Updated xml reading tasks to provide line number information when parse errors occur.
+Modified xml writing tasks to include the osmosis version number in the generator attribute.
 
 0.16
 Fixed a major bug in UTF-8 handling when writing xml files.  All files were being written in the default character set.
