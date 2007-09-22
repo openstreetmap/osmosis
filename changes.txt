@@ -1,3 +1,6 @@
+0.17
+Added schema version checking to all MySQL tasks.
+
 0.16
 Fixed a major bug in UTF-8 handling when writing xml files.  All files were being written in the default character set.
 
