@@ -15,6 +15,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.task.v0_4.RunnableSource;
@@ -174,10 +175,18 @@ public class XmlDownloader implements RunnableSource {
             
             sink.complete();
             
-        } catch (SAXException e) {
+        } catch (SAXParseException e) {
+			throw new OsmosisRuntimeException(
+				"Unable to parse xml"
+				+ ".  publicId=(" + e.getPublicId()
+				+ "), systemId=(" + e.getSystemId()
+				+ "), lineNumber=" + e.getLineNumber()
+				+ ", columnNumber=" + e.getColumnNumber() + ".",
+				e);
+		} catch (SAXException e) {
             throw new OsmosisRuntimeException("Unable to parse XML.", e);
         } catch (IOException e) {
-            throw new OsmosisRuntimeException("Unable to read XML file.", e);
+            throw new OsmosisRuntimeException("Unable to read XML.", e);
         } finally {
             sink.release();
             
