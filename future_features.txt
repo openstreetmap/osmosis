@@ -87,3 +87,11 @@ As the codebase grows, the lack of unit tests is becoming a bigger issue and mak
 Feature request from Frederik Ramm
 Add a --verify-integrity task to report on ways/segments that refer to non-existent segments/nodes.  This would allow inconsistent planets
 to be handled more effectively.
+
+**********
+Feature request from Marcus Wolschon
+You should really do away with the Tag-class. It serves
+no purpose. A Hashtable<String, String> does the same
+job much more flexible, efficient and with less code.
+
+BH: I will use a HashMap to implement this.
