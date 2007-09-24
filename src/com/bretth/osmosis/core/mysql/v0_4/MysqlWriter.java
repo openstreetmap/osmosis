@@ -323,7 +323,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			statement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
 			statement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLatitude()));
 			statement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLongitude()));
-			statement.setInt(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
+			statement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
 			statement.setString(prmIndex++, tagProcessor.format(node.getTagList()));
 			statement.setBoolean(prmIndex++, true);
 			statement.setLong(prmIndex++, userIdManager.getUserId());

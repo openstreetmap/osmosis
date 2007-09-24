@@ -18,10 +18,10 @@ public class TileCalculator {
 	 *            The coordinate longitude.
 	 * @return The tile index value.
 	 */
-	public int calculateTile(double latitude, double longitude) {
+	public long calculateTile(double latitude, double longitude) {
 		int x;
 		int y;
-		int tile;
+		long tile;
 		
 		x = (int) Math.round((longitude + 180) * 65536 / 360);
 		y = (int) Math.round((latitude + 90) * 65536 / 180);

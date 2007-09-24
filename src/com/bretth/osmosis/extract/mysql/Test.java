@@ -47,7 +47,7 @@ public class Test {
 	}
 	
 	private static void testTile(double latitude, double longitude) {
-		int tile;
+		long tile;
 		
 		tile = calculator.calculateTile(latitude, longitude);
 		

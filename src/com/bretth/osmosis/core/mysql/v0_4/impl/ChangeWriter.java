@@ -170,7 +170,7 @@ public class ChangeWriter {
 			insertNodeStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
 			insertNodeStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLatitude()));
 			insertNodeStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLongitude()));
-			insertNodeStatement.setInt(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
+			insertNodeStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
 			insertNodeStatement.setString(prmIndex++, tagFormatter.format(node.getTagList()));
 			insertNodeStatement.setBoolean(prmIndex++, visible);
 			insertNodeStatement.setLong(prmIndex++, userIdManager.getUserId());
@@ -198,7 +198,7 @@ public class ChangeWriter {
 			insertNodeCurrentStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
 			insertNodeStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLatitude()));
 			insertNodeStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLongitude()));
-			insertNodeStatement.setInt(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
+			insertNodeStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
 			insertNodeCurrentStatement.setString(prmIndex++, tagFormatter.format(node.getTagList()));
 			insertNodeCurrentStatement.setBoolean(prmIndex++, visible);
 			insertNodeCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
