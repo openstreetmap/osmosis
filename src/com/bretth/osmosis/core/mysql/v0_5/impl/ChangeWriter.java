@@ -15,6 +15,8 @@ import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.mysql.common.FixedPrecisionCoordinateConvertor;
+import com.bretth.osmosis.core.mysql.common.TileCalculator;
 import com.bretth.osmosis.core.mysql.common.UserIdManager;
 import com.bretth.osmosis.core.task.common.ChangeAction;
 
@@ -102,6 +104,8 @@ public class ChangeWriter {
 	private PreparedStatement queryRelationCurrentVersion;
 	private EmbeddedTagProcessor tagFormatter;
 	private MemberTypeRenderer memberTypeRenderer;
+	private FixedPrecisionCoordinateConvertor fixedPrecisionConvertor;
+	private TileCalculator tileCalculator;
 	
 	
 	/**
@@ -116,6 +120,8 @@ public class ChangeWriter {
 		userIdManager = new UserIdManager(dbCtx);
 		
 		tagFormatter = new EmbeddedTagProcessor();
+		fixedPrecisionConvertor = new FixedPrecisionCoordinateConvertor();
+		tileCalculator = new TileCalculator();
 		memberTypeRenderer = new MemberTypeRenderer();
 	}
 	
@@ -208,6 +214,7 @@ public class ChangeWriter {
 	 */
 	public void write(Node node, ChangeAction action) {
 		boolean visible;
+		int prmIndex;
 		
 		// If this is a deletion, the entity is not visible.
 		visible = !action.equals(ChangeAction.Delete);
@@ -221,13 +228,15 @@ public class ChangeWriter {
 		
 		// Insert the new node into the history table.
 		try {
-			insertNodeStatement.setLong(1, node.getId());
-			insertNodeStatement.setTimestamp(2, new Timestamp(node.getTimestamp().getTime()));
-			insertNodeStatement.setDouble(3, node.getLatitude());
-			insertNodeStatement.setDouble(4, node.getLongitude());
-			insertNodeStatement.setString(5, tagFormatter.format(node.getTagList()));
-			insertNodeStatement.setBoolean(6, visible);
-			insertNodeStatement.setLong(7, userIdManager.getUserId());
+			prmIndex = 1;
+			insertNodeStatement.setLong(prmIndex++, node.getId());
+			insertNodeStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
+			insertNodeStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLatitude()));
+			insertNodeStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLongitude()));
+			insertNodeStatement.setInt(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
+			insertNodeStatement.setString(prmIndex++, tagFormatter.format(node.getTagList()));
+			insertNodeStatement.setBoolean(prmIndex++, visible);
+			insertNodeStatement.setLong(prmIndex++, userIdManager.getUserId());
 			
 			insertNodeStatement.execute();
 			
@@ -247,13 +256,15 @@ public class ChangeWriter {
 		
 		// Insert the new node into the current table.
 		try {
-			insertNodeCurrentStatement.setLong(1, node.getId());
-			insertNodeCurrentStatement.setTimestamp(2, new Timestamp(node.getTimestamp().getTime()));
-			insertNodeCurrentStatement.setDouble(3, node.getLatitude());
-			insertNodeCurrentStatement.setDouble(4, node.getLongitude());
-			insertNodeCurrentStatement.setString(5, tagFormatter.format(node.getTagList()));
-			insertNodeCurrentStatement.setBoolean(6, visible);
-			insertNodeCurrentStatement.setLong(7, userIdManager.getUserId());
+			prmIndex = 1;
+			insertNodeCurrentStatement.setLong(prmIndex++, node.getId());
+			insertNodeCurrentStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
+			insertNodeCurrentStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLatitude()));
+			insertNodeCurrentStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLongitude()));
+			insertNodeCurrentStatement.setInt(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
+			insertNodeCurrentStatement.setString(prmIndex++, tagFormatter.format(node.getTagList()));
+			insertNodeCurrentStatement.setBoolean(prmIndex++, visible);
+			insertNodeCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
 			
 			insertNodeCurrentStatement.execute();
 			
@@ -273,6 +284,7 @@ public class ChangeWriter {
 	 */
 	public void write(Way way, ChangeAction action) {
 		boolean visible;
+		int prmIndex;
 		int version;
 		List<WayNode> nodeReferenceList;
 		
@@ -300,11 +312,12 @@ public class ChangeWriter {
 		
 		// Insert the new way into the history table.
 		try {
-			insertWayStatement.setLong(1, way.getId());
-			insertWayStatement.setInt(2, version);
-			insertWayStatement.setTimestamp(3, new Timestamp(way.getTimestamp().getTime()));
-			insertWayStatement.setBoolean(4, visible);
-			insertWayStatement.setLong(5, userIdManager.getUserId());
+			prmIndex = 1;
+			insertWayStatement.setLong(prmIndex++, way.getId());
+			insertWayStatement.setInt(prmIndex++, version);
+			insertWayStatement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
+			insertWayStatement.setBoolean(prmIndex++, visible);
+			insertWayStatement.setLong(prmIndex++, userIdManager.getUserId());
 			
 			insertWayStatement.execute();
 			
@@ -315,10 +328,11 @@ public class ChangeWriter {
 		// Insert the tags of the new way into the history table.
 		for (Tag tag : way.getTagList()) {
 			try {
-				insertWayTagStatement.setLong(1, way.getId());
-				insertWayTagStatement.setInt(2, version);
-				insertWayTagStatement.setString(3, tag.getKey());
-				insertWayTagStatement.setString(4, tag.getValue());
+				prmIndex = 1;
+				insertWayTagStatement.setLong(prmIndex++, way.getId());
+				insertWayTagStatement.setInt(prmIndex++, version);
+				insertWayTagStatement.setString(prmIndex++, tag.getKey());
+				insertWayTagStatement.setString(prmIndex++, tag.getValue());
 				
 				insertWayTagStatement.execute();
 				
@@ -336,10 +350,11 @@ public class ChangeWriter {
 			nodeReference = nodeReferenceList.get(i);
 			
 			try {
-				insertWayNodeStatement.setLong(1, way.getId());
-				insertWayNodeStatement.setInt(2, version);
-				insertWayNodeStatement.setLong(3, nodeReference.getNodeId());
-				insertWayNodeStatement.setLong(4, i + 1);
+				prmIndex = 1;
+				insertWayNodeStatement.setLong(prmIndex++, way.getId());
+				insertWayNodeStatement.setInt(prmIndex++, version);
+				insertWayNodeStatement.setLong(prmIndex++, nodeReference.getNodeId());
+				insertWayNodeStatement.setLong(prmIndex++, i + 1);
 				
 				insertWayNodeStatement.execute();
 				
@@ -380,10 +395,11 @@ public class ChangeWriter {
 		
 		// Insert the new way into the current table.
 		try {
-			insertWayCurrentStatement.setLong(1, way.getId());
-			insertWayCurrentStatement.setTimestamp(2, new Timestamp(way.getTimestamp().getTime()));
-			insertWayCurrentStatement.setBoolean(3, visible);
-			insertWayCurrentStatement.setLong(4, userIdManager.getUserId());
+			prmIndex = 1;
+			insertWayCurrentStatement.setLong(prmIndex++, way.getId());
+			insertWayCurrentStatement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
+			insertWayCurrentStatement.setBoolean(prmIndex++, visible);
+			insertWayCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
 			
 			insertWayCurrentStatement.execute();
 			
@@ -394,9 +410,10 @@ public class ChangeWriter {
 		// Insert the tags of the new way into the current table.
 		for (Tag tag : way.getTagList()) {
 			try {
-				insertWayTagCurrentStatement.setLong(1, way.getId());
-				insertWayTagCurrentStatement.setString(2, tag.getKey());
-				insertWayTagCurrentStatement.setString(3, tag.getValue());
+				prmIndex = 1;
+				insertWayTagCurrentStatement.setLong(prmIndex++, way.getId());
+				insertWayTagCurrentStatement.setString(prmIndex++, tag.getKey());
+				insertWayTagCurrentStatement.setString(prmIndex++, tag.getValue());
 				
 				insertWayTagCurrentStatement.execute();
 				
@@ -414,9 +431,10 @@ public class ChangeWriter {
 			nodeReference = nodeReferenceList.get(i);
 			
 			try {
-				insertWayNodeCurrentStatement.setLong(1, way.getId());
-				insertWayNodeCurrentStatement.setLong(2, nodeReference.getNodeId());
-				insertWayNodeCurrentStatement.setLong(3, i);
+				prmIndex = 1;
+				insertWayNodeCurrentStatement.setLong(prmIndex++, way.getId());
+				insertWayNodeCurrentStatement.setLong(prmIndex++, nodeReference.getNodeId());
+				insertWayNodeCurrentStatement.setLong(prmIndex++, i);
 				
 				insertWayNodeCurrentStatement.execute();
 				
@@ -439,6 +457,7 @@ public class ChangeWriter {
 	 */
 	public void write(Relation relation, ChangeAction action) {
 		boolean visible;
+		int prmIndex;
 		int version;
 		List<RelationMember> relationMemberList;
 		
@@ -466,11 +485,12 @@ public class ChangeWriter {
 		
 		// Insert the new relation into the history table.
 		try {
-			insertRelationStatement.setLong(1, relation.getId());
-			insertRelationStatement.setInt(2, version);
-			insertRelationStatement.setTimestamp(3, new Timestamp(relation.getTimestamp().getTime()));
-			insertRelationStatement.setBoolean(4, visible);
-			insertRelationStatement.setLong(5, userIdManager.getUserId());
+			prmIndex = 1;
+			insertRelationStatement.setLong(prmIndex++, relation.getId());
+			insertRelationStatement.setInt(prmIndex++, version);
+			insertRelationStatement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
+			insertRelationStatement.setBoolean(prmIndex++, visible);
+			insertRelationStatement.setLong(prmIndex++, userIdManager.getUserId());
 			
 			insertRelationStatement.execute();
 			
@@ -481,10 +501,11 @@ public class ChangeWriter {
 		// Insert the tags of the new relation into the history table.
 		for (Tag tag : relation.getTagList()) {
 			try {
-				insertRelationTagStatement.setLong(1, relation.getId());
-				insertRelationTagStatement.setInt(2, version);
-				insertRelationTagStatement.setString(3, tag.getKey());
-				insertRelationTagStatement.setString(4, tag.getValue());
+				prmIndex = 1;
+				insertRelationTagStatement.setLong(prmIndex++, relation.getId());
+				insertRelationTagStatement.setInt(prmIndex++, version);
+				insertRelationTagStatement.setString(prmIndex++, tag.getKey());
+				insertRelationTagStatement.setString(prmIndex++, tag.getValue());
 				
 				insertRelationTagStatement.execute();
 				
@@ -502,11 +523,12 @@ public class ChangeWriter {
 			relationMember = relationMemberList.get(i);
 			
 			try {
-				insertRelationMemberStatement.setLong(1, relation.getId());
-				insertRelationMemberStatement.setInt(2, version);
-				insertRelationMemberStatement.setString(3, memberTypeRenderer.render(relationMember.getMemberType()));
-				insertRelationMemberStatement.setLong(4, relationMember.getMemberId());
-				insertRelationMemberStatement.setString(5, relationMember.getMemberRole());
+				prmIndex = 1;
+				insertRelationMemberStatement.setLong(prmIndex++, relation.getId());
+				insertRelationMemberStatement.setInt(prmIndex++, version);
+				insertRelationMemberStatement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
+				insertRelationMemberStatement.setLong(prmIndex++, relationMember.getMemberId());
+				insertRelationMemberStatement.setString(prmIndex++, relationMember.getMemberRole());
 				
 				insertRelationMemberStatement.execute();
 				
@@ -548,10 +570,11 @@ public class ChangeWriter {
 		
 		// Insert the new relation into the current table.
 		try {
-			insertRelationCurrentStatement.setLong(1, relation.getId());
-			insertRelationCurrentStatement.setTimestamp(2, new Timestamp(relation.getTimestamp().getTime()));
-			insertRelationCurrentStatement.setBoolean(3, visible);
-			insertRelationCurrentStatement.setLong(4, userIdManager.getUserId());
+			prmIndex = 1;
+			insertRelationCurrentStatement.setLong(prmIndex++, relation.getId());
+			insertRelationCurrentStatement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
+			insertRelationCurrentStatement.setBoolean(prmIndex++, visible);
+			insertRelationCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
 			
 			insertRelationCurrentStatement.execute();
 			
@@ -562,9 +585,10 @@ public class ChangeWriter {
 		// Insert the tags of the new relation into the current table.
 		for (Tag tag : relation.getTagList()) {
 			try {
-				insertRelationTagCurrentStatement.setLong(1, relation.getId());
-				insertRelationTagCurrentStatement.setString(2, tag.getKey());
-				insertRelationTagCurrentStatement.setString(3, tag.getValue());
+				prmIndex = 1;
+				insertRelationTagCurrentStatement.setLong(prmIndex++, relation.getId());
+				insertRelationTagCurrentStatement.setString(prmIndex++, tag.getKey());
+				insertRelationTagCurrentStatement.setString(prmIndex++, tag.getValue());
 				
 				insertRelationTagCurrentStatement.execute();
 				
@@ -582,10 +606,11 @@ public class ChangeWriter {
 			relationMember = relationMemberList.get(i);
 			
 			try {
-				insertRelationMemberCurrentStatement.setLong(1, relation.getId());
-				insertRelationMemberCurrentStatement.setString(2, memberTypeRenderer.render(relationMember.getMemberType()));
-				insertRelationMemberCurrentStatement.setLong(3, relationMember.getMemberId());
-				insertRelationMemberCurrentStatement.setString(4, relationMember.getMemberRole());
+				prmIndex = 1;
+				insertRelationMemberCurrentStatement.setLong(prmIndex++, relation.getId());
+				insertRelationMemberCurrentStatement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
+				insertRelationMemberCurrentStatement.setLong(prmIndex++, relationMember.getMemberId());
+				insertRelationMemberCurrentStatement.setString(prmIndex++, relationMember.getMemberRole());
 				
 				insertRelationMemberCurrentStatement.execute();
 				

@@ -9,6 +9,7 @@ import com.bretth.osmosis.core.domain.v0_4.Node;
 import com.bretth.osmosis.core.mysql.common.BaseEntityReader;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.mysql.common.FixedPrecisionCoordinateConvertor;
 
 
 /**
@@ -24,6 +25,7 @@ public class CurrentNodeReader extends BaseEntityReader<Node> {
 		+ " ORDER BY n.id";
 	
 	private EmbeddedTagProcessor tagParser;
+	private FixedPrecisionCoordinateConvertor fixedPrecisionConvertor;
 	
 	
 	/**
@@ -39,6 +41,7 @@ public class CurrentNodeReader extends BaseEntityReader<Node> {
 		super(loginCredentials, readAllUsers);
 		
 		tagParser = new EmbeddedTagProcessor();
+		fixedPrecisionConvertor = new FixedPrecisionCoordinateConvertor();
 	}
 	
 	
@@ -72,8 +75,8 @@ public class CurrentNodeReader extends BaseEntityReader<Node> {
 				resultSet.getBoolean("data_public"),
 				resultSet.getString("display_name")
 			);
-			latitude = resultSet.getDouble("latitude");
-			longitude = resultSet.getDouble("longitude");
+			latitude = fixedPrecisionConvertor.convertToDouble(resultSet.getInt("latitude"));
+			longitude = fixedPrecisionConvertor.convertToDouble(resultSet.getInt("longitude"));
 			tags = resultSet.getString("tags");
 			visible = resultSet.getBoolean("visible");
 			

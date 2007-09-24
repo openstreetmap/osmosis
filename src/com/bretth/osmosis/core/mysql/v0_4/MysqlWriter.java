@@ -20,7 +20,9 @@ import com.bretth.osmosis.core.domain.v0_4.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.mysql.common.DatabasePreferences;
+import com.bretth.osmosis.core.mysql.common.FixedPrecisionCoordinateConvertor;
 import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
+import com.bretth.osmosis.core.mysql.common.TileCalculator;
 import com.bretth.osmosis.core.mysql.common.UserIdManager;
 import com.bretth.osmosis.core.mysql.v0_4.impl.EmbeddedTagProcessor;
 import com.bretth.osmosis.core.mysql.v0_4.impl.WaySegment;
@@ -38,8 +40,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	// These SQL strings are the prefix to statements that will be built based
 	// on how many rows of data are to be inserted at a time.
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO nodes(id, timestamp, latitude, longitude, tags, visible, user_id)";
-	private static final int INSERT_PRM_COUNT_NODE = 7;
+		"INSERT INTO nodes(id, timestamp, latitude, longitude, tile, tags, visible, user_id)";
+	private static final int INSERT_PRM_COUNT_NODE = 8;
 	private static final String INSERT_SQL_SEGMENT =
 		"INSERT INTO segments (id, timestamp, node_a, node_b, tags, visible, user_id)";
 	private static final int INSERT_PRM_COUNT_SEGMENT = 7;
@@ -184,7 +186,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private DatabasePreferences preferences;
 	private DatabaseContext dbCtx;
 	private UserIdManager userIdManager;
-	private SchemaVersionValidator schemaVersionValidator;
+	private TileCalculator tileCalculator;
 	private boolean lockTables;
 	private boolean populateCurrentTables;
 	private List<Node> nodeBuffer;
@@ -196,6 +198,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private long maxSegmentId;
 	private long maxWayId;
 	private EmbeddedTagProcessor tagProcessor;
+	private SchemaVersionValidator schemaVersionValidator;
+	private FixedPrecisionCoordinateConvertor fixedPrecisionConvertor;
 	private boolean initialized;
 	private PreparedStatement singleNodeStatement;
 	private PreparedStatement bulkNodeStatement;
@@ -250,6 +254,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		maxWayId = 0;
 		
 		tagProcessor = new EmbeddedTagProcessor();
+		fixedPrecisionConvertor = new FixedPrecisionCoordinateConvertor();
+		tileCalculator = new TileCalculator();
 		
 		initialized = false;
 	}
@@ -315,8 +321,9 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		try {
 			statement.setLong(prmIndex++, node.getId());
 			statement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
-			statement.setDouble(prmIndex++, node.getLatitude());
-			statement.setDouble(prmIndex++, node.getLongitude());
+			statement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLatitude()));
+			statement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLongitude()));
+			statement.setInt(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
 			statement.setString(prmIndex++, tagProcessor.format(node.getTagList()));
 			statement.setBoolean(prmIndex++, true);
 			statement.setLong(prmIndex++, userIdManager.getUserId());

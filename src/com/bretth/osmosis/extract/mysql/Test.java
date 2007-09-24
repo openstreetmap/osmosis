@@ -1,7 +1,7 @@
 package com.bretth.osmosis.extract.mysql;
 
-import java.awt.geom.Area;
-import java.awt.geom.Path2D;
+import com.bretth.osmosis.core.mysql.common.FixedPrecisionCoordinateConvertor;
+import com.bretth.osmosis.core.mysql.common.TileCalculator;
 
 
 /**
@@ -10,6 +10,10 @@ import java.awt.geom.Path2D;
  * @author Brett Henderson
  */
 public class Test {
+	
+	private static FixedPrecisionCoordinateConvertor convertor = new FixedPrecisionCoordinateConvertor();
+	private static TileCalculator calculator = new TileCalculator();
+	
 	/**
 	 * Entry point to the application.
 	 * 
@@ -17,33 +21,36 @@ public class Test {
 	 *            Command line arguments.
 	 */
 	public static void main(String[] args) {
-		Path2D.Double path1;
-		Area area1;
-		Path2D.Double path2;
-		Area area2;
+		testDoubleFixed(0);
+		testDoubleFixed(1);
+		testDoubleFixed(-180);
+		testDoubleFixed(180);
+		testDoubleFixed(1.1111111111);
 		
-		path1 = new Path2D.Double();
-		path2 = new Path2D.Double();
+		testTile(-90, -180);
+		testTile(0, 0);
+		testTile(90, 180);
+		testTile(89.997, 179.99);
+		testTile(-89.997, -179.99);
+		testTile(-45, -90);
+		testTile(-1, -2);
+	}
+	
+	private static void testDoubleFixed(double inputDoubleCoordinate) {
+		int fixedCoordinate;
+		double doubleCoordinate;
 		
-		path1.moveTo(0, 0);
-		path1.lineTo(1, 1);
-		path1.lineTo(1, 0);
-		path1.lineTo(0, 0);
+		fixedCoordinate = convertor.convertToFixed(inputDoubleCoordinate);
+		doubleCoordinate = convertor.convertToDouble(fixedCoordinate);
 		
-		path2.moveTo(0.5, 0);
-		path2.lineTo(0.5, 1);
-		path2.lineTo(1, 1);
-		path2.lineTo(1, 0);
-		path2.lineTo(0.5, 0);
+		System.out.println("double: " + inputDoubleCoordinate + " fixed: " + fixedCoordinate + " double: " + doubleCoordinate);
+	}
+	
+	private static void testTile(double latitude, double longitude) {
+		int tile;
 		
-		area1 = new Area(path1);
-		area2 = new Area(path2);
+		tile = calculator.calculateTile(latitude, longitude);
 		
-		System.out.println(area1.contains(0, 1));
-		System.out.println(area1.contains(0.25, 0.125));
-		System.out.println(area1.contains(0.75, 0.375));
-		area1.subtract(area2);
-		System.out.println(area1.contains(0.25, 0.125));
-		System.out.println(area1.contains(0.75, 0.375));
+		System.out.println("latitude: " + latitude + " longitude: " + longitude + " tile: " + tile);
 	}
 }

@@ -21,7 +21,9 @@ import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.mysql.common.DatabasePreferences;
+import com.bretth.osmosis.core.mysql.common.FixedPrecisionCoordinateConvertor;
 import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
+import com.bretth.osmosis.core.mysql.common.TileCalculator;
 import com.bretth.osmosis.core.mysql.common.UserIdManager;
 import com.bretth.osmosis.core.mysql.v0_5.MySqlVersionConstants;
 import com.bretth.osmosis.core.mysql.v0_5.impl.DBRelationMember;
@@ -232,6 +234,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private long maxWayId;
 	private long maxRelationId;
 	private EmbeddedTagProcessor tagProcessor;
+	private FixedPrecisionCoordinateConvertor fixedPrecisionConvertor;
+	private TileCalculator tileCalculator;
 	private MemberTypeRenderer memberTypeRenderer;
 	private boolean initialized;
 	private PreparedStatement singleNodeStatement;
@@ -295,6 +299,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		maxRelationId = 0;
 		
 		tagProcessor = new EmbeddedTagProcessor();
+		fixedPrecisionConvertor = new FixedPrecisionCoordinateConvertor();
+		tileCalculator = new TileCalculator();
 		memberTypeRenderer = new MemberTypeRenderer();
 		
 		initialized = false;
@@ -367,8 +373,9 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		try {
 			statement.setLong(prmIndex++, node.getId());
 			statement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
-			statement.setDouble(prmIndex++, node.getLatitude());
-			statement.setDouble(prmIndex++, node.getLongitude());
+			statement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLatitude()));
+			statement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLongitude()));
+			statement.setInt(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));;
 			statement.setString(prmIndex++, tagProcessor.format(node.getTagList()));
 			statement.setBoolean(prmIndex++, true);
 			statement.setLong(prmIndex++, userIdManager.getUserId());

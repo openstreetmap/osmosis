@@ -14,6 +14,8 @@ import com.bretth.osmosis.core.domain.v0_4.Tag;
 import com.bretth.osmosis.core.domain.v0_4.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.mysql.common.FixedPrecisionCoordinateConvertor;
+import com.bretth.osmosis.core.mysql.common.TileCalculator;
 import com.bretth.osmosis.core.mysql.common.UserIdManager;
 import com.bretth.osmosis.core.task.common.ChangeAction;
 
@@ -25,9 +27,9 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
  */
 public class ChangeWriter {
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO nodes (id, timestamp, latitude, longitude, tags, visible, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		"INSERT INTO nodes (id, timestamp, latitude, longitude, tile, tags, visible, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String INSERT_SQL_NODE_CURRENT =
-		"INSERT INTO current_nodes (id, timestamp, latitude, longitude, tags, visible, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		"INSERT INTO current_nodes (id, timestamp, latitude, longitude, tile, tags, visible, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String DELETE_SQL_NODE_CURRENT =
 		"DELETE FROM current_nodes WHERE id = ?";
 	private static final String INSERT_SQL_SEGMENT =
@@ -79,6 +81,8 @@ public class ChangeWriter {
 	private PreparedStatement deleteWaySegmentCurrentStatement;
 	private PreparedStatement queryWayCurrentVersion;
 	private EmbeddedTagProcessor tagFormatter;
+	private FixedPrecisionCoordinateConvertor fixedPrecisionConvertor;
+	private TileCalculator tileCalculator;
 	
 	
 	/**
@@ -93,6 +97,8 @@ public class ChangeWriter {
 		userIdManager = new UserIdManager(dbCtx);
 		
 		tagFormatter = new EmbeddedTagProcessor();
+		fixedPrecisionConvertor = new FixedPrecisionCoordinateConvertor();
+		tileCalculator = new TileCalculator();
 	}
 	
 	
@@ -145,6 +151,7 @@ public class ChangeWriter {
 	 */
 	public void write(Node node, ChangeAction action) {
 		boolean visible;
+		int prmIndex;
 		
 		// If this is a deletion, the entity is not visible.
 		visible = !action.equals(ChangeAction.Delete);
@@ -158,13 +165,15 @@ public class ChangeWriter {
 		
 		// Insert the new node into the history table.
 		try {
-			insertNodeStatement.setLong(1, node.getId());
-			insertNodeStatement.setTimestamp(2, new Timestamp(node.getTimestamp().getTime()));
-			insertNodeStatement.setDouble(3, node.getLatitude());
-			insertNodeStatement.setDouble(4, node.getLongitude());
-			insertNodeStatement.setString(5, tagFormatter.format(node.getTagList()));
-			insertNodeStatement.setBoolean(6, visible);
-			insertNodeStatement.setLong(7, userIdManager.getUserId());
+			prmIndex = 1;
+			insertNodeStatement.setLong(prmIndex++, node.getId());
+			insertNodeStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
+			insertNodeStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLatitude()));
+			insertNodeStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLongitude()));
+			insertNodeStatement.setInt(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
+			insertNodeStatement.setString(prmIndex++, tagFormatter.format(node.getTagList()));
+			insertNodeStatement.setBoolean(prmIndex++, visible);
+			insertNodeStatement.setLong(prmIndex++, userIdManager.getUserId());
 			
 			insertNodeStatement.execute();
 			
@@ -184,13 +193,15 @@ public class ChangeWriter {
 		
 		// Insert the new node into the current table.
 		try {
-			insertNodeCurrentStatement.setLong(1, node.getId());
-			insertNodeCurrentStatement.setTimestamp(2, new Timestamp(node.getTimestamp().getTime()));
-			insertNodeCurrentStatement.setDouble(3, node.getLatitude());
-			insertNodeCurrentStatement.setDouble(4, node.getLongitude());
-			insertNodeCurrentStatement.setString(5, tagFormatter.format(node.getTagList()));
-			insertNodeCurrentStatement.setBoolean(6, visible);
-			insertNodeCurrentStatement.setLong(7, userIdManager.getUserId());
+			prmIndex = 1;
+			insertNodeCurrentStatement.setLong(prmIndex++, node.getId());
+			insertNodeCurrentStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
+			insertNodeStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLatitude()));
+			insertNodeStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLongitude()));
+			insertNodeStatement.setInt(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
+			insertNodeCurrentStatement.setString(prmIndex++, tagFormatter.format(node.getTagList()));
+			insertNodeCurrentStatement.setBoolean(prmIndex++, visible);
+			insertNodeCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
 			
 			insertNodeCurrentStatement.execute();
 			
@@ -210,6 +221,7 @@ public class ChangeWriter {
 	 */
 	public void write(Segment segment, ChangeAction action) {
 		boolean visible;
+		int prmIndex;
 		
 		// If this is a deletion, the entity is not visible.
 		visible = !action.equals(ChangeAction.Delete);
@@ -223,13 +235,14 @@ public class ChangeWriter {
 		
 		// Insert the new segment into the history table.
 		try {
-			insertSegmentStatement.setLong(1, segment.getId());
-			insertSegmentStatement.setTimestamp(2, new Timestamp(segment.getTimestamp().getTime()));
-			insertSegmentStatement.setLong(3, segment.getFrom());
-			insertSegmentStatement.setLong(4, segment.getTo());
-			insertSegmentStatement.setString(5, tagFormatter.format(segment.getTagList()));
-			insertSegmentStatement.setBoolean(6, visible);
-			insertSegmentStatement.setLong(7, userIdManager.getUserId());
+			prmIndex = 1;
+			insertSegmentStatement.setLong(prmIndex++, segment.getId());
+			insertSegmentStatement.setTimestamp(prmIndex++, new Timestamp(segment.getTimestamp().getTime()));
+			insertSegmentStatement.setLong(prmIndex++, segment.getFrom());
+			insertSegmentStatement.setLong(prmIndex++, segment.getTo());
+			insertSegmentStatement.setString(prmIndex++, tagFormatter.format(segment.getTagList()));
+			insertSegmentStatement.setBoolean(prmIndex++, visible);
+			insertSegmentStatement.setLong(prmIndex++, userIdManager.getUserId());
 			
 			insertSegmentStatement.execute();
 			
@@ -249,13 +262,14 @@ public class ChangeWriter {
 		
 		// Insert the new node into the current table.
 		try {
-			insertSegmentCurrentStatement.setLong(1, segment.getId());
-			insertSegmentCurrentStatement.setTimestamp(2, new Timestamp(segment.getTimestamp().getTime()));
-			insertSegmentCurrentStatement.setLong(3, segment.getFrom());
-			insertSegmentCurrentStatement.setLong(4, segment.getTo());
-			insertSegmentCurrentStatement.setString(5, tagFormatter.format(segment.getTagList()));
-			insertSegmentCurrentStatement.setBoolean(6, visible);
-			insertSegmentCurrentStatement.setLong(7, userIdManager.getUserId());
+			prmIndex = 1;
+			insertSegmentCurrentStatement.setLong(prmIndex++, segment.getId());
+			insertSegmentCurrentStatement.setTimestamp(prmIndex++, new Timestamp(segment.getTimestamp().getTime()));
+			insertSegmentCurrentStatement.setLong(prmIndex++, segment.getFrom());
+			insertSegmentCurrentStatement.setLong(prmIndex++, segment.getTo());
+			insertSegmentCurrentStatement.setString(prmIndex++, tagFormatter.format(segment.getTagList()));
+			insertSegmentCurrentStatement.setBoolean(prmIndex++, visible);
+			insertSegmentCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
 			
 			insertSegmentCurrentStatement.execute();
 			
@@ -275,6 +289,7 @@ public class ChangeWriter {
 	 */
 	public void write(Way way, ChangeAction action) {
 		boolean visible;
+		int prmIndex;
 		int version;
 		List<SegmentReference> segmentReferenceList;
 		
@@ -302,11 +317,12 @@ public class ChangeWriter {
 		
 		// Insert the new way into the history table.
 		try {
-			insertWayStatement.setLong(1, way.getId());
-			insertWayStatement.setInt(2, version);
-			insertWayStatement.setTimestamp(3, new Timestamp(way.getTimestamp().getTime()));
-			insertWayStatement.setBoolean(4, visible);
-			insertWayStatement.setLong(5, userIdManager.getUserId());
+			prmIndex = 1;
+			insertWayStatement.setLong(prmIndex++, way.getId());
+			insertWayStatement.setInt(prmIndex++, version);
+			insertWayStatement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
+			insertWayStatement.setBoolean(prmIndex++, visible);
+			insertWayStatement.setLong(prmIndex++, userIdManager.getUserId());
 			
 			insertWayStatement.execute();
 			
@@ -317,10 +333,11 @@ public class ChangeWriter {
 		// Insert the tags of the new way into the history table.
 		for (Tag tag : way.getTagList()) {
 			try {
-				insertWayTagStatement.setLong(1, way.getId());
-				insertWayTagStatement.setInt(2, version);
-				insertWayTagStatement.setString(3, tag.getKey());
-				insertWayTagStatement.setString(4, tag.getValue());
+				prmIndex = 1;
+				insertWayTagStatement.setLong(prmIndex++, way.getId());
+				insertWayTagStatement.setInt(prmIndex++, version);
+				insertWayTagStatement.setString(prmIndex++, tag.getKey());
+				insertWayTagStatement.setString(prmIndex++, tag.getValue());
 				
 				insertWayTagStatement.execute();
 				
@@ -338,10 +355,11 @@ public class ChangeWriter {
 			segmentReference = segmentReferenceList.get(i);
 			
 			try {
-				insertWaySegmentStatement.setLong(1, way.getId());
-				insertWaySegmentStatement.setInt(2, version);
-				insertWaySegmentStatement.setLong(3, segmentReference.getSegmentId());
-				insertWaySegmentStatement.setLong(4, i + 1);
+				prmIndex = 1;
+				insertWaySegmentStatement.setLong(prmIndex++, way.getId());
+				insertWaySegmentStatement.setInt(prmIndex++, version);
+				insertWaySegmentStatement.setLong(prmIndex++, segmentReference.getSegmentId());
+				insertWaySegmentStatement.setLong(prmIndex++, i + 1);
 				
 				insertWaySegmentStatement.execute();
 				
@@ -382,10 +400,11 @@ public class ChangeWriter {
 		
 		// Insert the new way into the current table.
 		try {
-			insertWayCurrentStatement.setLong(1, way.getId());
-			insertWayCurrentStatement.setTimestamp(2, new Timestamp(way.getTimestamp().getTime()));
-			insertWayCurrentStatement.setBoolean(3, visible);
-			insertWayCurrentStatement.setLong(4, userIdManager.getUserId());
+			prmIndex = 1;
+			insertWayCurrentStatement.setLong(prmIndex++, way.getId());
+			insertWayCurrentStatement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
+			insertWayCurrentStatement.setBoolean(prmIndex++, visible);
+			insertWayCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
 			
 			insertWayCurrentStatement.execute();
 			
@@ -396,9 +415,10 @@ public class ChangeWriter {
 		// Insert the tags of the new way into the current table.
 		for (Tag tag : way.getTagList()) {
 			try {
-				insertWayTagCurrentStatement.setLong(1, way.getId());
-				insertWayTagCurrentStatement.setString(2, tag.getKey());
-				insertWayTagCurrentStatement.setString(3, tag.getValue());
+				prmIndex = 1;
+				insertWayTagCurrentStatement.setLong(prmIndex++, way.getId());
+				insertWayTagCurrentStatement.setString(prmIndex++, tag.getKey());
+				insertWayTagCurrentStatement.setString(prmIndex++, tag.getValue());
 				
 				insertWayTagCurrentStatement.execute();
 				
@@ -416,9 +436,10 @@ public class ChangeWriter {
 			segmentReference = segmentReferenceList.get(i);
 			
 			try {
-				insertWaySegmentCurrentStatement.setLong(1, way.getId());
-				insertWaySegmentCurrentStatement.setLong(2, segmentReference.getSegmentId());
-				insertWaySegmentCurrentStatement.setLong(3, i);
+				prmIndex = 1;
+				insertWaySegmentCurrentStatement.setLong(prmIndex++, way.getId());
+				insertWaySegmentCurrentStatement.setLong(prmIndex++, segmentReference.getSegmentId());
+				insertWaySegmentCurrentStatement.setLong(prmIndex++, i);
 				
 				insertWaySegmentCurrentStatement.execute();
 				
