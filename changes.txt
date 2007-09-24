@@ -1,3 +1,6 @@
+0.18
+Improved error messages when errors are returned from the api.
+
 0.17
 Added schema version checking to all MySQL tasks.
 Updated xml reading tasks to provide line number information when parse errors occur.

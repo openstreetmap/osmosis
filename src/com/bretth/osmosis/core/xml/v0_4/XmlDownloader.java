@@ -219,7 +219,18 @@ public class XmlDownloader implements RunnableSource {
         responseCode = activeConnection.getResponseCode();
         
         if (responseCode != 200) {
-        	throw new OsmosisRuntimeException("Received API HTTP response code " + responseCode + ".");
+        	String message;
+        	String apiErrorMessage;
+        	
+        	apiErrorMessage = activeConnection.getHeaderField("Error");
+        	
+        	if (apiErrorMessage != null) {
+        		message = "Received API HTTP response code " + responseCode + " with message \"" + apiErrorMessage + "\".";
+        	} else {
+        		message = "Received API HTTP response code " + responseCode + ".";
+        	}
+        	
+        	throw new OsmosisRuntimeException(message);
         }
         
         activeConnection.setConnectTimeout(TIMEOUT);
