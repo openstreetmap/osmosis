@@ -73,7 +73,7 @@ public class CommandLineParser {
 		i = offset;
 		
 		// Extract the task type from the current argument.
-		taskType = programArgs[i].substring(PipelineConstants.TASK_ARGUMENT_PREFIX.length());
+		taskType = programArgs[i++].substring(PipelineConstants.TASK_ARGUMENT_PREFIX.length());
 		
 		// Build up a list of task and pipe arguments.
 		taskArgs = new HashMap<String, String>();
