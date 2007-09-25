@@ -5,6 +5,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.bretth.osmosis.core.cli.CommandLineParser;
 import com.bretth.osmosis.core.pipeline.common.Pipeline;
 
 
@@ -25,9 +26,16 @@ public class Osmosis {
 	 */
 	public static void main(String[] args) {
 		try {
+			CommandLineParser commandLineParser;
 			Pipeline pipeline;
 			
-			initializeLogging();
+			configureLoggingConsole();
+			configureLoggingLevelAll();
+			
+			commandLineParser = new CommandLineParser();
+			
+			// Parse the command line arguments into a consumable form.
+			commandLineParser.parse(args);
 			
 			log.info("Osmosis Version " + OsmosisConstants.VERSION);
 			TaskRegistrar.initialize();
@@ -35,7 +43,7 @@ public class Osmosis {
 			pipeline = new Pipeline();
 			
 			log.fine("Preparing pipeline.");
-			pipeline.prepare(args);
+			pipeline.prepare(commandLineParser.getTaskInfoList());
 			
 			log.fine("Executing pipeline.");
 			pipeline.execute();
@@ -51,7 +59,10 @@ public class Osmosis {
 	}
 	
 	
-	private static final void initializeLogging() {
+	/**
+	 * Configures logging to write all output to the console.
+	 */
+	private static final void configureLoggingConsole() {
 		Logger rootLogger;
 		Handler consoleHandler;
 		
@@ -66,6 +77,16 @@ public class Osmosis {
 		consoleHandler = new ConsoleHandler();
 		consoleHandler.setLevel(Level.ALL);
 		rootLogger.addHandler(consoleHandler);
+	}
+	
+	
+	/**
+	 * Configures the logging level.
+	 */
+	private static final void configureLoggingLevelAll() {
+		Logger rootLogger;
+		
+		rootLogger = Logger.getLogger("");
 		
 		// Set the required logging level.
 		rootLogger.setLevel(Level.ALL);

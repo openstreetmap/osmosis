@@ -1,13 +1,12 @@
 package com.bretth.osmosis.core.pipeline.common;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.cli.TaskInfo;
 
 
 /**
@@ -36,109 +35,23 @@ public class Pipeline {
 	 * correct task with all task parameters set. The tasks will not be
 	 * connected together.
 	 * 
-	 * @param taskType
-	 *            The name of the task to be created.
-	 * @param programArgs
-	 *            The command line arguments passed to this application.
-	 * @param offset
-	 *            The current offset through the command line arguments.
-	 * @return The new offset through the command line arguments.
+	 * @param taskInfoList
+	 *            The list of task information objects.
 	 */
-	private int buildNode(String taskType, String [] programArgs, int offset) {
-		int i;
-		Map<String, String> taskArgs;
-		Map<String, String> pipeArgs;
-		String taskId;
-		
-		i = offset;
-		
-		// Build up a list of task and pipe arguments.
-		taskArgs = new HashMap<String, String>();
-		pipeArgs = new HashMap<String, String>();
-		while (i < programArgs.length) {
-			String arg;
-			int equalsIndex;
-			String argName;
-			String argValue;
+	private void buildTasks(List<TaskInfo> taskInfoList) {
+		for (TaskInfo taskInfo : taskInfoList) {
+			// Create the new task manager and add to the pipeline.
+			taskManagers.add(
+				TaskManagerFactory.createTaskManager(
+					taskInfo.getType(),
+					taskInfo.getId(),
+					taskInfo.getConfigArgs(),
+					taskInfo.getPipeArgs()
+				)
+			);
 			
-			arg = programArgs[i];
-			
-			if (arg.indexOf(PipelineConstants.TASK_ARGUMENT_PREFIX) == 0) {
-				break;
-			}
-			
-			equalsIndex = arg.indexOf("=");
-			
-			// Check if the equals exists.
-			if (equalsIndex < 0) {
-				throw new OsmosisRuntimeException("Expected argument " + (i + 1) + " to be a name value pair (ie. name=value).");
-			}
-			
-			// Check if the name component of the argument exists.
-			if (equalsIndex == 0) {
-				throw new OsmosisRuntimeException("Argument " + (i + 1) + " doesn't contain a name before the '=' (ie. name=value).");
-			}
-			
-			// Check if the value component of the argument exists.
-			if (equalsIndex >= (arg.length() - 1)) {
-				throw new OsmosisRuntimeException("Argument " + (i + 1) + " doesn't contain a value after the '=' (ie. name=value).");
-			}
-			
-			// Split the argument into name and value.
-			argName = arg.substring(0, equalsIndex);
-			argValue = arg.substring(equalsIndex + 1);
-			
-			// Add pipeline arguments to pipeArgs, all other arguments to taskArgs.
-			// A pipeline arg is inPipe, inPipe.x, outPipe or outPipe.x.
-			if (PipelineConstants.IN_PIPE_ARGUMENT_PREFIX.equals(argName) || argName.indexOf(PipelineConstants.IN_PIPE_ARGUMENT_PREFIX + ".") == 0 || PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX.equals(argName) || argName.indexOf(PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX + ".") == 0) {
-				pipeArgs.put(argName, argValue);
-			} else {
-				taskArgs.put(argName, argValue);
-			}
-			
-			i++;
-		}
-		
-		// Build a unique task id.
-		taskId = (taskManagers.size() + 1) + "-" + taskType;
-		
-		// Create the new task manager and add to the pipeline.
-		taskManagers.add(
-			TaskManagerFactory.createTaskManager(taskType, taskId, taskArgs, pipeArgs)
-		);
-		
-		if (log.isLoggable(Level.INFO)) {
-			log.info("Created task \"" + taskId + "\"");
-		}
-		
-		return i;
-	}
-	
-	
-	/**
-	 * Creates all nodes in the pipeline. The nodes will be created with the
-	 * correct task with all task parameters set. The tasks will not be
-	 * connected together.
-	 * 
-	 * @param programArgs
-	 *            The command line arguments passed to this application.
-	 */
-	private void buildTasks(String [] programArgs) {
-		// Process the command line arguments to build all nodes in the pipeline.
-		for (int i = 0; i < programArgs.length; ) {
-			String arg;
-			
-			arg = programArgs[i];
-			
-			if (arg.indexOf(PipelineConstants.TASK_ARGUMENT_PREFIX) == 0) {
-				String taskType;
-				
-				taskType = arg.substring(PipelineConstants.TASK_ARGUMENT_PREFIX.length());
-				
-				i = buildNode(taskType, programArgs, ++i);
-				
-			} else {
-				throw new OsmosisRuntimeException("Expected argument " + (i + 1) + " to be a task name.");
+			if (log.isLoggable(Level.INFO)) {
+				log.info("Created task \"" + taskInfo.getId() + "\"");
 			}
 		}
 	}
@@ -185,13 +98,13 @@ public class Pipeline {
 	/**
 	 * Instantiates and configures all tasks within the pipeline.
 	 * 
-	 * @param programArgs
-	 *            The command line arguments for configuring the pipeline.
+	 * @param taskInfoList
+	 *            The list of task information objects.
 	 */
-	public void prepare(String [] programArgs) {
+	public void prepare(List<TaskInfo> taskInfoList) {
 		// Process the command line arguments to build all tasks in the pipeline.
 		log.fine("Building tasks.");
-		buildTasks(programArgs);
+		buildTasks(taskInfoList);
 		
 		// Connect the nodes in the pipeline.
 		log.fine("Connecting tasks.");
