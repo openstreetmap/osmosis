@@ -18,7 +18,7 @@ import com.bretth.osmosis.core.task.v0_4.SinkSource;
 
 
 /**
- * A base class for all tasks filter entities within an area.
+ * A base class for all tasks filtering entities within an area.
  * 
  * @author Brett Henderson
  */
