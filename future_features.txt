@@ -95,3 +95,12 @@ no purpose. A Hashtable<String, String> does the same
 job much more flexible, efficient and with less code.
 
 BH: I will use a HashMap to implement this.
+
+**********
+Modify --write-mysql to delete and re-create indexes on InnoDB tables.
+This should result in large import speedups because most time is spent on current table population.
+Not sure how to do this, may be able to examine tables and dynamically re-create the indexes.
+Or maybe just hard code the index creation based on the schema version.
+
+**********
+Update the bounding box and polygon tasks to handle negative identifiers.
