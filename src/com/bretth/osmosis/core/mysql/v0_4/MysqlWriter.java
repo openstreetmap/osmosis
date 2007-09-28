@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.container.v0_4.EntityContainer;
 import com.bretth.osmosis.core.container.v0_4.EntityProcessor;
@@ -37,6 +39,10 @@ import com.bretth.osmosis.core.task.v0_4.Sink;
  * @author Brett Henderson
  */
 public class MysqlWriter implements Sink, EntityProcessor {
+	
+	private static final Logger log = Logger.getLogger(MysqlWriter.class.getName());
+	
+	
 	// These SQL strings are the prefix to statements that will be built based
 	// on how many rows of data are to be inserted at a time.
 	private static final String INSERT_SQL_NODE =
@@ -54,25 +60,43 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private static final String INSERT_SQL_WAY_SEGMENT =
 		"INSERT INTO way_segments (id, segment_id, sequence_id, version)";
 	private static final int INSERT_PRM_COUNT_WAY_SEGMENT = 4;
-	
+
 	// These SQL statements will be invoked prior to loading data to disable
-	// indexes.
-	private static final String[] INVOKE_DISABLE_KEYS = {
+	// history table indexes.
+	private static final String[] INVOKE_DISABLE_HISTORY_KEYS = {
 		"ALTER TABLE nodes DISABLE KEYS",
 		"ALTER TABLE segments DISABLE KEYS",
 		"ALTER TABLE ways DISABLE KEYS",
 		"ALTER TABLE way_tags DISABLE KEYS",
 		"ALTER TABLE way_segments DISABLE KEYS"
 	};
+
+	// These SQL statements will be invoked prior to loading data to disable
+	// current table indexes.
+	private static final String[] INVOKE_DISABLE_CURRENT_KEYS = {
+		"ALTER TABLE current_nodes DROP INDEX current_nodes_timestamp_idx, DROP INDEX current_nodes_tile_idx",
+		"ALTER TABLE current_segments DROP INDEX current_segments_a_idx, DROP INDEX current_segments_b_idx",
+		"ALTER TABLE current_way_segments DROP INDEX current_way_segments_seg_idx",
+		"ALTER TABLE current_way_tags DROP INDEX current_way_tags_id_idx, DROP INDEX current_way_tags_v_idx"
+	};
 	
 	// These SQL statements will be invoked after loading data to re-enable
-	// indexes.
-	private static final String[] INVOKE_ENABLE_KEYS = {
+	// history table indexes.
+	private static final String[] INVOKE_ENABLE_HISTORY_KEYS = {
 		"ALTER TABLE nodes ENABLE KEYS",
 		"ALTER TABLE segments ENABLE KEYS",
 		"ALTER TABLE ways ENABLE KEYS",
 		"ALTER TABLE way_tags ENABLE KEYS",
 		"ALTER TABLE way_segments ENABLE KEYS"
+	};
+	
+	// These SQL statements will be invoked after loading data to re-enable
+	// current table indexes.
+	private static final String[] INVOKE_ENABLE_CURRENT_KEYS = {
+		"ALTER TABLE current_nodes ADD INDEX current_nodes_timestamp_idx (timestamp), ADD INDEX current_nodes_tile_idx (tile)",
+		"ALTER TABLE current_segments ADD INDEX current_segments_a_idx (node_a), ADD INDEX current_segments_b_idx (node_b)",
+		"ALTER TABLE current_way_segments ADD INDEX current_way_segments_seg_idx (segment_id)",
+		"ALTER TABLE current_way_tags ADD INDEX current_way_tags_id_idx (id), ADD FULLTEXT INDEX current_way_tags_v_idx (v)"
 	};
 	
 	// These SQL statements will be invoked after loading history tables to
@@ -288,9 +312,9 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			loadCurrentWayTagsStatement = dbCtx.prepareStatement(LOAD_CURRENT_WAY_TAGS);
 			loadCurrentWaySegmentsStatement = dbCtx.prepareStatement(LOAD_CURRENT_WAY_SEGMENTS);
 			
-			// Disable indexes to improve load performance.
-			for (int i = 0; i < INVOKE_DISABLE_KEYS.length; i++) {
-				dbCtx.executeStatement(INVOKE_DISABLE_KEYS[i]);
+			// Disable history table indexes to improve load performance.
+			for (int i = 0; i < INVOKE_DISABLE_HISTORY_KEYS.length; i++) {
+				dbCtx.executeStatement(INVOKE_DISABLE_HISTORY_KEYS[i]);
 			}
 			
 			// Lock tables if required to improve load performance.
@@ -683,9 +707,24 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		flushWayTags(true);
 		flushWaySegments(true);
 		
-		// Re-enable indexes now that the load has completed.
-		for (int i = 0; i < INVOKE_DISABLE_KEYS.length; i++) {
-			dbCtx.executeStatement(INVOKE_ENABLE_KEYS[i]);
+		// Unlock tables (if they were locked) now that we have completed.
+		if (lockTables) {
+			dbCtx.executeStatement(INVOKE_UNLOCK_TABLES);
+		}
+		
+		// Re-enable history table indexes now that the load has completed.
+		for (int i = 0; i < INVOKE_DISABLE_HISTORY_KEYS.length; i++) {
+			dbCtx.executeStatement(INVOKE_ENABLE_HISTORY_KEYS[i]);
+		}
+		
+		// Disable current table indexes before loading current tables.
+		for (int i = 0; i < INVOKE_DISABLE_CURRENT_KEYS.length; i++) {
+			try {
+				dbCtx.executeStatement(INVOKE_DISABLE_CURRENT_KEYS[i]);
+				
+			} catch (OsmosisRuntimeException e) {
+				log.log(Level.WARNING, "Unable to drop a current table index with command (" + INVOKE_DISABLE_CURRENT_KEYS[i] + ").");
+			}
 		}
 		
 		if (populateCurrentTables) {
@@ -754,9 +793,9 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			}
 		}
 		
-		// Unlock tables (if they were locked) now that we have completed.
-		if (lockTables) {
-			dbCtx.executeStatement(INVOKE_UNLOCK_TABLES);
+		// Re-enable current table indexes now that the load has completed.
+		for (int i = 0; i < INVOKE_DISABLE_CURRENT_KEYS.length; i++) {
+			dbCtx.executeStatement(INVOKE_ENABLE_CURRENT_KEYS[i]);
 		}
 		
 		dbCtx.commit();
