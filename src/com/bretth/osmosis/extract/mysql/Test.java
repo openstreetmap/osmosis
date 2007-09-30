@@ -1,5 +1,7 @@
 package com.bretth.osmosis.extract.mysql;
 
+import com.bretth.osmosis.core.xml.common.DateParser;
+
 
 /**
  * Simple test program that is randomly updated to test current features.
@@ -8,6 +10,8 @@ package com.bretth.osmosis.extract.mysql;
  */
 public class Test {
 	
+	private static DateParser parser = new DateParser();
+	
 	/**
 	 * Entry point to the application.
 	 * 
@@ -15,6 +19,12 @@ public class Test {
 	 *            Command line arguments.
 	 */
 	public static void main(String[] args) {
-		// Do nothing.
+		test("2007-09-23T08:25:43.000Z");
+		test("2007-09-23T08:25:43Z");
+	}
+	
+	
+	private static void test(String date) {
+		System.out.println("date: " + date + " parsed: " + parser.parse(date));
 	}
 }
