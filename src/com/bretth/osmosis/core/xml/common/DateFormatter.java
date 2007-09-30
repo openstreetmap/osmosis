@@ -1,14 +1,9 @@
 package com.bretth.osmosis.core.xml.common;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
-import com.bretth.osmosis.core.OsmosisRuntimeException;
 
 
 /**
@@ -19,7 +14,6 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 public class DateFormatter {
 	
 	private GregorianCalendar calendar;
-	private DatatypeFactory datatypeFactory;
 	
 	
 	/**
@@ -27,13 +21,6 @@ public class DateFormatter {
 	 */
 	public DateFormatter() {
 		calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-		
-		try {
-			datatypeFactory = DatatypeFactory.newInstance();
-			
-		} catch (DatatypeConfigurationException e) {
-			throw new OsmosisRuntimeException("Unable to instantiate a new XML datatype factory.", e);
-		}
 	}
 	
 	
@@ -45,12 +32,53 @@ public class DateFormatter {
 	 * @return The string representing the date.
 	 */
 	public String format(Date date) {
-		XMLGregorianCalendar xmlCalendar;
+		StringBuilder result;
+		int year;
+		int month;
+		int day;
+		int hour;
+		int minute;
+		int second;
 		
 		calendar.setTime(date);
 		
-		xmlCalendar = datatypeFactory.newXMLGregorianCalendar(calendar);
+		result = new StringBuilder(20);
 		
-		return xmlCalendar.toXMLFormat();
+		year = calendar.get(Calendar.YEAR);
+		month = calendar.get(Calendar.MONTH) + 1;
+		day = calendar.get(Calendar.DATE);
+		hour = calendar.get(Calendar.HOUR_OF_DAY);
+		minute = calendar.get(Calendar.MINUTE);
+		second = calendar.get(Calendar.SECOND);
+		
+		result.append(year);
+		result.append('-');
+		if (month < 10) {
+			result.append('0');
+		}
+		result.append(month);
+		result.append('-');
+		if (day < 10) {
+			result.append('0');
+		}
+		result.append(day);
+		result.append('T');
+		if (hour < 10) {
+			result.append('0');
+		}
+		result.append(hour);
+		result.append(':');
+		if (minute < 10) {
+			result.append('0');
+		}
+		result.append(minute);
+		result.append(':');
+		if (second < 10) {
+			result.append('0');
+		}
+		result.append(second);
+		result.append('Z');
+		
+		return result.toString();
 	}
 }
