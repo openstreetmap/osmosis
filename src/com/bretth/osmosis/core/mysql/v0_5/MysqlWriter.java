@@ -44,8 +44,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	// These SQL strings are the prefix to statements that will be built based
 	// on how many rows of data are to be inserted at a time.
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO nodes(id, timestamp, latitude, longitude, tags, visible, user_id)";
-	private static final int INSERT_PRM_COUNT_NODE = 7;
+		"INSERT INTO nodes(id, timestamp, latitude, longitude, tile, tags, visible, user_id)";
+	private static final int INSERT_PRM_COUNT_NODE = 8;
 	private static final String INSERT_SQL_WAY =
 		"INSERT INTO ways (id, timestamp, version, visible, user_id)";
 	private static final int INSERT_PRM_COUNT_WAY = 5;
