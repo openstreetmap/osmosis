@@ -30,12 +30,14 @@ public class Osmosis {
 			Pipeline pipeline;
 			
 			configureLoggingConsole();
-			configureLoggingLevelAll();
 			
 			commandLineParser = new CommandLineParser();
 			
 			// Parse the command line arguments into a consumable form.
 			commandLineParser.parse(args);
+			
+			// Configure the new logging level.
+			configureLoggingLevel(commandLineParser.getLogLevel());
 			
 			log.info("Osmosis Version " + OsmosisConstants.VERSION);
 			TaskRegistrar.initialize();
@@ -75,20 +77,22 @@ public class Osmosis {
 		
 		// Add a new console handler.
 		consoleHandler = new ConsoleHandler();
-		consoleHandler.setLevel(Level.ALL);
 		rootLogger.addHandler(consoleHandler);
 	}
 	
 	
 	/**
 	 * Configures the logging level.
+	 * 
+	 * @param level
+	 *            The new logging level to apply.
 	 */
-	private static final void configureLoggingLevelAll() {
+	private static final void configureLoggingLevel(Level level) {
 		Logger rootLogger;
 		
 		rootLogger = Logger.getLogger("");
 		
 		// Set the required logging level.
-		rootLogger.setLevel(Level.ALL);
+		rootLogger.setLevel(level);
 	}
 }

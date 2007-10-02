@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.pipeline.common.PipelineConstants;
@@ -17,7 +18,35 @@ import com.bretth.osmosis.core.pipeline.common.PipelineConstants;
  */
 public class CommandLineParser {
 	
+	private final String GLOBAL_ARGUMENT_PREFIX = "-";
+	private final String TASK_ARGUMENT_PREFIX = "--";
+	private final String OPTION_QUIET = "q";
+	private final String OPTION_VERBOSE = "v";
+	
+	
+	/**
+	 * Defines the log levels supported from the command line.
+	 */
+	private static final Level [] logLevels = {
+		Level.OFF,
+		Level.SEVERE,
+		Level.WARNING,
+		Level.INFO,
+		Level.FINE,
+		Level.FINER,
+		Level.FINEST
+	};
+	
+	
+	/**
+	 * The index into the logLevels array for the default log level.
+	 */
+	private static final int defaultLogLevelIndex = 3;
+	
+	
 	private List<TaskInfo> taskInfoList;
+	private int quietValue;
+	private int verboseValue;
 	
 	
 	/**
@@ -25,6 +54,9 @@ public class CommandLineParser {
 	 */
 	public CommandLineParser() {
 		taskInfoList = new ArrayList<TaskInfo>();
+		
+		quietValue = 0;
+		verboseValue = 0;
 	}
 	
 	
@@ -41,17 +73,84 @@ public class CommandLineParser {
 			
 			arg = programArgs[i];
 			
-			if (arg.indexOf(PipelineConstants.TASK_ARGUMENT_PREFIX) == 0) {
+			if (arg.indexOf(TASK_ARGUMENT_PREFIX) == 0) {
 				i = parseTask(programArgs, i);
-				
+			} else if (arg.indexOf(GLOBAL_ARGUMENT_PREFIX) == 0) {
+				i = parseGlobalOption(programArgs, i);
 			} else {
-				throw new OsmosisRuntimeException("Expected argument " + (i + 1) + " to be a task name.");
+				throw new OsmosisRuntimeException("Expected argument " + (i + 1) + " to be an option or task name.");
 			}
 		}
 	}
 	
 	
-
+	/**
+	 * Checks if the current command line argument is for the specified option.
+	 * 
+	 * @param optionName
+	 *            The name of the option to check for.
+	 * @param rawArgument
+	 *            The command line argument without the option prefix.
+	 * @return True if the argument is for the specified option.
+	 */
+	private boolean isArgumentForOption(String optionName, String rawArgument) {
+		return rawArgument.substring(0, optionName.length()).equals(optionName);
+	}
+	
+	
+	/**
+	 * Parses a command line argument into an integer. If none is specified,
+	 * zero will be returned.
+	 * 
+	 * @param optionName
+	 *            The name of the command line option.
+	 * @param rawArgument
+	 *            The command line argument, this must include optionName as a
+	 *            prefix which will be stripped off.
+	 * @return The integer value.
+	 */
+	private int parseOptionInteger(String optionName, String rawArgument, int offset) {
+		String optionValue;
+		
+		optionValue = rawArgument.substring(optionName.length());
+		if (optionValue.length() <= 0) {
+			return 0;
+		}
+		
+		try {
+			return Integer.parseInt(optionValue);
+			
+		} catch (NumberFormatException e) {
+			throw new OsmosisRuntimeException("Expected argument " + (offset + 1) + " to contain an integer value.");
+		}
+	}
+	
+	
+	/**
+	 * Parses the details of a single option.
+	 * 
+	 * @param programArgs
+	 *            The command line arguments passed to this application.
+	 * @param offset
+	 *            The current offset through the command line arguments.
+	 * @return The new offset through the command line arguments.
+	 */
+	private int parseGlobalOption(String [] programArgs, int offset) {
+		int i;
+		String argument;
+		
+		i = offset;
+		argument = programArgs[i++].substring(1);
+		
+		if (isArgumentForOption(OPTION_QUIET, argument)) {
+			quietValue = parseOptionInteger(OPTION_QUIET, argument, i - 1) + 1;
+		}
+		if (isArgumentForOption(OPTION_VERBOSE, argument)) {
+			verboseValue = parseOptionInteger(OPTION_VERBOSE, argument, i - 1) + 1;
+		}
+		
+		return i;
+	}
 	
 	
 	/**
@@ -73,7 +172,7 @@ public class CommandLineParser {
 		i = offset;
 		
 		// Extract the task type from the current argument.
-		taskType = programArgs[i++].substring(PipelineConstants.TASK_ARGUMENT_PREFIX.length());
+		taskType = programArgs[i++].substring(TASK_ARGUMENT_PREFIX.length());
 		
 		// Build up a list of task and pipe arguments.
 		taskArgs = new HashMap<String, String>();
@@ -86,7 +185,7 @@ public class CommandLineParser {
 			
 			arg = programArgs[i];
 			
-			if (arg.indexOf(PipelineConstants.TASK_ARGUMENT_PREFIX) == 0) {
+			if (arg.indexOf(TASK_ARGUMENT_PREFIX) == 0) {
 				break;
 			}
 			
@@ -141,5 +240,26 @@ public class CommandLineParser {
 	 */
 	public List<TaskInfo> getTaskInfoList() {
 		return taskInfoList;
+	}
+	
+	
+	/**
+	 * The level of logging required.
+	 * 
+	 * @return The log level to be used.
+	 */
+	public Level getLogLevel() {
+		int logLevelIndex;
+		
+		logLevelIndex = defaultLogLevelIndex + verboseValue - quietValue;
+		
+		if (logLevelIndex < 0) {
+			logLevelIndex = 0;
+		}
+		if (logLevelIndex >= logLevels.length) {
+			logLevelIndex = logLevels.length - 1;
+		}
+		
+		return logLevels[logLevelIndex];
 	}
 }

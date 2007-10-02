@@ -9,11 +9,6 @@ package com.bretth.osmosis.core.pipeline.common;
 public interface PipelineConstants {
 
 	/**
-	 * Defines the prefix used for command line task arguments.
-	 */
-	final String TASK_ARGUMENT_PREFIX = "--";
-
-	/**
 	 * Defines the prefix used for command line input pipe arguments.
 	 */
 	final String IN_PIPE_ARGUMENT_PREFIX = "inPipe";

@@ -1,5 +1,8 @@
 0.18
 Improved error messages when errors are returned from the api.
+Added support for new shorter date format excluding millisecond information.
+Updated mysql writing code to support the new 0.5 schema version and fixed bugs in node insertion sql.
+Added support for quiet and verbose command line options.
 
 0.17
 Added schema version checking to all MySQL tasks.
