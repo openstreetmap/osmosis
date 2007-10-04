@@ -2,9 +2,9 @@ package com.bretth.osmosis.core.mysql.v0_4;
 
 import java.util.Map;
 
-import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
-import com.bretth.osmosis.core.mysql.common.DatabasePreferences;
-import com.bretth.osmosis.core.mysql.common.MysqlTaskManagerFactory;
+import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.database.DatabasePreferences;
+import com.bretth.osmosis.core.database.DatabaseTaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.v0_4.SinkManager;
 
@@ -14,7 +14,7 @@ import com.bretth.osmosis.core.pipeline.v0_4.SinkManager;
  * 
  * @author Brett Henderson
  */
-public class MysqlWriterFactory extends MysqlTaskManagerFactory {
+public class MysqlWriterFactory extends DatabaseTaskManagerFactory {
 	private static final String ARG_LOCK_TABLES = "lockTables";
 	private static final String ARG_POPULATE_CURRENT_TABLES = "populateCurrentTables";
 	private static final boolean DEFAULT_LOCK_TABLES = true;

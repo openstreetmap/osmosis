@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.mysql.common;
+package com.bretth.osmosis.core.database;
 
 
 /**
@@ -6,7 +6,7 @@ package com.bretth.osmosis.core.mysql.common;
  * 
  * @author Brett Henderson
  */
-public interface MysqlConstants {
+public interface DatabaseConstants {
 	
 	/**
 	 * The task argument for specifying an database authorisation properties file.

@@ -1,5 +1,7 @@
 package com.bretth.osmosis.core.mysql.common;
 
+import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+
 
 /**
  * Provides the base implementation of all database entity readers. This extends

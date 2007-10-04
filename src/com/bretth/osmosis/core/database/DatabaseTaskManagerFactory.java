@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.mysql.common;
+package com.bretth.osmosis.core.database;
 
 import java.io.File;
 import java.util.Map;
@@ -11,7 +11,7 @@ import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
  * 
  * @author Brett Henderson
  */
-public abstract class MysqlTaskManagerFactory extends TaskManagerFactory {
+public abstract class DatabaseTaskManagerFactory extends TaskManagerFactory {
 	
 	/**
 	 * Utility method for retrieving the login credentials for a database connection.
@@ -28,20 +28,20 @@ public abstract class MysqlTaskManagerFactory extends TaskManagerFactory {
 		
 		// Create a new credential object with default values.
 		loginCredentials = new DatabaseLoginCredentials(
-			MysqlConstants.TASK_DEFAULT_HOST,
-			MysqlConstants.TASK_DEFAULT_DATABASE,
-			MysqlConstants.TASK_DEFAULT_USER,
-			MysqlConstants.TASK_DEFAULT_PASSWORD
+			DatabaseConstants.TASK_DEFAULT_HOST,
+			DatabaseConstants.TASK_DEFAULT_DATABASE,
+			DatabaseConstants.TASK_DEFAULT_USER,
+			DatabaseConstants.TASK_DEFAULT_PASSWORD
 		);
 		
 		// If an authentication properties file has been supplied, load override
 		// values from there.
-		if (doesArgumentExist(taskArgs, MysqlConstants.TASK_ARG_AUTH_FILE)) {
+		if (doesArgumentExist(taskArgs, DatabaseConstants.TASK_ARG_AUTH_FILE)) {
 			AuthenticationPropertiesLoader authLoader;
 			
 			authLoader = new AuthenticationPropertiesLoader(
 				new File(
-					getStringArgument(taskId, taskArgs, MysqlConstants.TASK_ARG_AUTH_FILE)
+					getStringArgument(taskId, taskArgs, DatabaseConstants.TASK_ARG_AUTH_FILE)
 				)
 			);
 			
@@ -54,7 +54,7 @@ public abstract class MysqlTaskManagerFactory extends TaskManagerFactory {
 			getStringArgument(
 				taskId,
 				taskArgs,
-				MysqlConstants.TASK_ARG_HOST,
+				DatabaseConstants.TASK_ARG_HOST,
 				loginCredentials.getHost()
 			)
 		);
@@ -62,7 +62,7 @@ public abstract class MysqlTaskManagerFactory extends TaskManagerFactory {
 			getStringArgument(
 				taskId,
 				taskArgs,
-				MysqlConstants.TASK_ARG_DATABASE,
+				DatabaseConstants.TASK_ARG_DATABASE,
 				loginCredentials.getDatabase()
 			)
 		);
@@ -70,7 +70,7 @@ public abstract class MysqlTaskManagerFactory extends TaskManagerFactory {
 			getStringArgument(
 				taskId,
 				taskArgs,
-				MysqlConstants.TASK_ARG_USER,
+				DatabaseConstants.TASK_ARG_USER,
 				loginCredentials.getUser()
 			)
 		);
@@ -78,7 +78,7 @@ public abstract class MysqlTaskManagerFactory extends TaskManagerFactory {
 			getStringArgument(
 				taskId,
 				taskArgs,
-				MysqlConstants.TASK_ARG_PASSWORD,
+				DatabaseConstants.TASK_ARG_PASSWORD,
 				loginCredentials.getPassword()
 			)
 		);
@@ -101,7 +101,7 @@ public abstract class MysqlTaskManagerFactory extends TaskManagerFactory {
 		DatabasePreferences preferences;
 		
 		// Create a new preferences object with default values.
-		preferences = new DatabasePreferences(MysqlConstants.TASK_DEFAULT_VALIDATE_SCHEMA_VERSION);
+		preferences = new DatabasePreferences(DatabaseConstants.TASK_DEFAULT_VALIDATE_SCHEMA_VERSION);
 		
 		// Update the preferences with any explicit arguments provided on the
 		// command line.
@@ -109,7 +109,7 @@ public abstract class MysqlTaskManagerFactory extends TaskManagerFactory {
 			getBooleanArgument(
 				taskId,
 				taskArgs,
-				MysqlConstants.TASK_ARG_VALIDATE_SCHEMA_VERSION,
+				DatabaseConstants.TASK_ARG_VALIDATE_SCHEMA_VERSION,
 				preferences.getValidateSchemaVersion()
 			)
 		);

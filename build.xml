@@ -8,6 +8,11 @@
 	<property name="project.name" value="osmosis"/>
 	<property name="project.version" value="0.17.1"/>
 	
+	<!-- Define a classpath containing all lib jars. -->
+	<path id="libclasspath">
+		<fileset dir="lib" includes="**/*.jar"/>
+	</path>
+	
 	<target name="init" description="Perform initialisation required by all other build steps.">
 		<!-- Create the time stamp -->
 		<tstamp/>
@@ -24,14 +29,14 @@
 		<!-- Create the build directory structure. -->
 		<mkdir dir="build"/>
 		<!-- Compile the java code from src into build -->
-		<javac srcdir="src" destdir="build" debug="on" debuglevel="lines,vars,source"/>
+		<javac srcdir="src" destdir="build" debug="on" debuglevel="lines,vars,source" classpathref="libclasspath"/>
 		<!-- Put a version number file in the build directory. -->
 		<touch file="build/version-${project.version}"/>
 	</target>
 	
 	<!-- Produces javadoc output from the source code. -->
 	<target name="javadoc" depends="init" description="Products javadoc documentation from the source code.">
-		<javadoc packagenames="*" sourcepath="src" destdir="doc/api"/>
+		<javadoc packagenames="*" sourcepath="src" destdir="doc/api" classpathref="libclasspath"/>
 	</target>
 	
 	<target name="dist_binary" depends="build" description="Generates the binaries for the distribution.">

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 
 

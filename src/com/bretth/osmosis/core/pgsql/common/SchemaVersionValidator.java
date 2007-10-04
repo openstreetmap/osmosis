@@ -1,9 +1,11 @@
-package com.bretth.osmosis.core.mysql.common;
+package com.bretth.osmosis.core.pgsql.common;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 
 
 /**
@@ -55,10 +57,12 @@ public class SchemaVersionValidator {
 	 */
 	private void validateDBVersion(int expectedVersion) {
 		try {
+			Statement statement;
 			ResultSet resultSet;
 			int dbVersion;
 			
-			resultSet = dbCtx.executeStreamingQuery(SELECT_SQL);
+			statement = dbCtx.createStatement();
+			resultSet = statement.executeQuery(SELECT_SQL);
 			
 			if (!resultSet.next()) {
 				throw new OsmosisRuntimeException("No rows were found in the schema info table.");
@@ -74,6 +78,7 @@ public class SchemaVersionValidator {
 			}
 			
 			resultSet.close();
+			statement.close();
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read the schema version from the schema info table.", e);

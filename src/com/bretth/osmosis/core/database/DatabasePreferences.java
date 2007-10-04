@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.mysql.common;
+package com.bretth.osmosis.core.database;
 
 
 /**

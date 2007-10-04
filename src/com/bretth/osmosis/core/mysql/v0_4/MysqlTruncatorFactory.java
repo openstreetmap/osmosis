@@ -2,7 +2,7 @@ package com.bretth.osmosis.core.mysql.v0_4;
 
 import java.util.Map;
 
-import com.bretth.osmosis.core.mysql.common.MysqlTaskManagerFactory;
+import com.bretth.osmosis.core.database.DatabaseTaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.common.RunnableTaskManager;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 
@@ -12,7 +12,7 @@ import com.bretth.osmosis.core.pipeline.common.TaskManager;
  * 
  * @author Brett Henderson
  */
-public class MysqlTruncatorFactory extends MysqlTaskManagerFactory {
+public class MysqlTruncatorFactory extends DatabaseTaskManagerFactory {
 	
 	/**
 	 * {@inheritDoc}

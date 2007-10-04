@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.bretth.osmosis.core.container.v0_5.ChangeContainer;
+import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
-import com.bretth.osmosis.core.mysql.common.DatabasePreferences;
-import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.v0_5.MySqlVersionConstants;
 import com.bretth.osmosis.core.mysql.v0_5.impl.ActionChangeWriter;
 import com.bretth.osmosis.core.mysql.v0_5.impl.ChangeWriter;
+import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.task.common.ChangeAction;
 import com.bretth.osmosis.core.task.v0_5.ChangeSink;
 

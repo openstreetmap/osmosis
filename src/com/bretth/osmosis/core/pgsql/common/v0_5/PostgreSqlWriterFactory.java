@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.mysql.v0_5;
+package com.bretth.osmosis.core.pgsql.common.v0_5;
 
 import java.util.Map;
 
@@ -14,7 +14,7 @@ import com.bretth.osmosis.core.pipeline.v0_5.SinkManager;
  * 
  * @author Brett Henderson
  */
-public class MysqlWriterFactory extends DatabaseTaskManagerFactory {
+public class PostgreSqlWriterFactory extends DatabaseTaskManagerFactory {
 	private static final String ARG_LOCK_TABLES = "lockTables";
 	private static final String ARG_POPULATE_CURRENT_TABLES = "populateCurrentTables";
 	private static final boolean DEFAULT_LOCK_TABLES = true;
@@ -39,7 +39,7 @@ public class MysqlWriterFactory extends DatabaseTaskManagerFactory {
 		
 		return new SinkManager(
 			taskId,
-			new MysqlWriter(loginCredentials, preferences, lockTables, populateCurrentTables),
+			new PostgreSqlWriter(loginCredentials, preferences, lockTables, populateCurrentTables),
 			pipeArgs
 		);
 	}

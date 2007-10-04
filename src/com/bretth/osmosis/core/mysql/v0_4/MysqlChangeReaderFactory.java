@@ -3,9 +3,9 @@ package com.bretth.osmosis.core.mysql.v0_4;
 import java.util.Date;
 import java.util.Map;
 
-import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
-import com.bretth.osmosis.core.mysql.common.DatabasePreferences;
-import com.bretth.osmosis.core.mysql.common.MysqlTaskManagerFactory;
+import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.database.DatabasePreferences;
+import com.bretth.osmosis.core.database.DatabaseTaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.v0_4.RunnableChangeSourceManager;
 
@@ -15,7 +15,7 @@ import com.bretth.osmosis.core.pipeline.v0_4.RunnableChangeSourceManager;
  * 
  * @author Brett Henderson
  */
-public class MysqlChangeReaderFactory extends MysqlTaskManagerFactory {
+public class MysqlChangeReaderFactory extends DatabaseTaskManagerFactory {
 	private static final String ARG_READ_ALL_USERS = "readAllUsers";
 	private static final String ARG_INTERVAL_BEGIN = "intervalBegin";
 	private static final String ARG_INTERVAL_END = "intervalEnd";

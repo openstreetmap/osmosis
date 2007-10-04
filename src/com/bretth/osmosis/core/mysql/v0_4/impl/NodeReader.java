@@ -5,10 +5,10 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_4.Node;
 import com.bretth.osmosis.core.mysql.common.BaseEntityReader;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
-import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.mysql.common.EntityHistory;
 import com.bretth.osmosis.core.mysql.common.FixedPrecisionCoordinateConvertor;
 

@@ -2,13 +2,13 @@ package com.bretth.osmosis.core.mysql.v0_5;
 
 import java.util.Date;
 
-import com.bretth.osmosis.core.mysql.common.DatabaseLoginCredentials;
-import com.bretth.osmosis.core.mysql.common.DatabasePreferences;
-import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
+import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.mysql.v0_5.MySqlVersionConstants;
 import com.bretth.osmosis.core.mysql.v0_5.impl.NodeChangeReader;
 import com.bretth.osmosis.core.mysql.v0_5.impl.RelationChangeReader;
 import com.bretth.osmosis.core.mysql.v0_5.impl.WayChangeReader;
+import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.task.v0_5.ChangeSink;
 import com.bretth.osmosis.core.task.v0_5.RunnableChangeSource;
 
