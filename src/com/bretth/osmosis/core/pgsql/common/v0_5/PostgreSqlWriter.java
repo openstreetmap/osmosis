@@ -38,7 +38,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"INSERT INTO node(id, version, timestamp, user_id, visible, current, location)";
 	private static final int INSERT_PRM_COUNT_NODE = 7;
 	private static final String INSERT_SQL_NODE_TAG =
-		"INSERT INTO node_tag(node_id, key, value)";
+		"INSERT INTO node_tag(node_id, node_version, key, value)";
 	private static final int INSERT_PRM_COUNT_NODE_TAG = 4;
 	
 	// These constants define how many rows of each data type will be inserted
@@ -51,6 +51,11 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private static final String INSERT_SQL_SINGLE_NODE_TAG;
 	private static final String INSERT_SQL_BULK_NODE;
 	private static final String INSERT_SQL_BULK_NODE_TAG;
+	
+	/**
+	 * Defines the number of entities to write between each commit.
+	 */
+	private static final int COMMIT_ENTITY_COUNT = 100000;
 	
 	
 	/**
@@ -116,6 +121,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private PreparedStatement bulkNodeStatement;
 	private PreparedStatement singleNodeTagStatement;
 	private PreparedStatement bulkNodeTagStatement;
+	private int uncommittedEntityCount;
 	
 	
 	/**
@@ -144,6 +150,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		nodeTagBuffer = new ArrayList<DBEntityTag>();
 		
 		maxNodeId = 0;
+		uncommittedEntityCount = 0;
 		
 		initialized = false;
 	}
@@ -170,6 +177,20 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	
 	
 	/**
+	 * Commits outstanding changes to the database if a threshold of uncommitted
+	 * data has been reached. This regular interval commit is intended to
+	 * provide maximum performance.
+	 */
+	private void performIntervalCommit() {
+		if (uncommittedEntityCount >= COMMIT_ENTITY_COUNT) {
+			dbCtx.commit();
+			
+			uncommittedEntityCount = 0;
+		}
+	}
+	
+	
+	/**
 	 * Sets node values as bind variable parameters to a node insert query.
 	 * 
 	 * @param statement
@@ -185,9 +206,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		prmIndex = initialIndex;
 		
 		try {
-			//"INSERT INTO node(id, version, timestamp, user_id, visible, current, location)";
 			statement.setLong(prmIndex++, node.getId());
-			statement.setInt(prmIndex++, 0);
+			statement.setInt(prmIndex++, 1);
 			statement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
 			statement.setLong(prmIndex++, userIdManager.getUserId());
 			statement.setBoolean(prmIndex++, true);
@@ -217,9 +237,9 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		
 		try {
 			statement.setLong(prmIndex++, entityTag.getEntityId());
+			statement.setInt(prmIndex++, 1);
 			statement.setString(prmIndex++, entityTag.getKey());
 			statement.setString(prmIndex++, entityTag.getValue());
-			statement.setInt(prmIndex++, 1);
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for an entity tag.", e);
@@ -253,6 +273,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				
 				populateNodeParameters(bulkNodeStatement, prmIndex, node);
 				prmIndex += INSERT_PRM_COUNT_NODE;
+
+				uncommittedEntityCount++;
 			}
 			
 			try {
@@ -274,6 +296,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				
 				populateNodeParameters(singleNodeStatement, 1, node);
 				
+				uncommittedEntityCount++;
+				
 				try {
 					singleNodeStatement.executeUpdate();
 				} catch (SQLException e) {
@@ -283,6 +307,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				addNodeTags(node);
 			}
 		}
+		
+		performIntervalCommit();
 	}
 	
 	
