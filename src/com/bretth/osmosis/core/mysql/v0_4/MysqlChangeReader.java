@@ -4,10 +4,10 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
+import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.v0_4.impl.NodeChangeReader;
 import com.bretth.osmosis.core.mysql.v0_4.impl.SegmentChangeReader;
 import com.bretth.osmosis.core.mysql.v0_4.impl.WayChangeReader;
-import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.task.v0_4.ChangeSink;
 import com.bretth.osmosis.core.task.v0_4.RunnableChangeSource;
 

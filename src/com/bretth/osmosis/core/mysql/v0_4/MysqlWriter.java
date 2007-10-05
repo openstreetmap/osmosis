@@ -6,12 +6,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.container.v0_4.EntityContainer;
 import com.bretth.osmosis.core.container.v0_4.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_4.NodeContainer;
 import com.bretth.osmosis.core.container.v0_4.SegmentContainer;
 import com.bretth.osmosis.core.container.v0_4.WayContainer;
-import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.domain.v0_4.Node;
@@ -21,12 +21,12 @@ import com.bretth.osmosis.core.domain.v0_4.Tag;
 import com.bretth.osmosis.core.domain.v0_4.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.FixedPrecisionCoordinateConvertor;
+import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
 import com.bretth.osmosis.core.mysql.common.UserIdManager;
 import com.bretth.osmosis.core.mysql.v0_4.impl.EmbeddedTagProcessor;
 import com.bretth.osmosis.core.mysql.v0_4.impl.WaySegment;
 import com.bretth.osmosis.core.mysql.v0_4.impl.WayTag;
-import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.task.v0_4.Sink;
 
 

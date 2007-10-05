@@ -3,8 +3,7 @@ package com.bretth.osmosis.core.mysql.v0_5;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
-import com.bretth.osmosis.core.mysql.v0_5.MySqlVersionConstants;
-import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
+import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.task.common.RunnableTask;
 
 
