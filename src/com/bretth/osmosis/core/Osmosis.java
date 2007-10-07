@@ -44,16 +44,16 @@ public class Osmosis {
 			
 			pipeline = new Pipeline();
 			
-			log.fine("Preparing pipeline.");
+			log.info("Preparing pipeline.");
 			pipeline.prepare(commandLineParser.getTaskInfoList());
 			
-			log.fine("Executing pipeline.");
+			log.info("Launching pipeline execution.");
 			pipeline.execute();
 			
-			log.fine("Pipeline executing, waiting for completion.");
+			log.info("Pipeline executing, waiting for completion.");
 			pipeline.waitForCompletion();
 			
-			log.fine("Pipeline complete.");
+			log.info("Pipeline complete.");
 			
 		} catch (Throwable t) {
 			log.log(Level.SEVERE, "Main thread aborted.", t);

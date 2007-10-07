@@ -51,7 +51,7 @@ public class Pipeline {
 			);
 			
 			if (log.isLoggable(Level.INFO)) {
-				log.info("Created task \"" + taskInfo.getId() + "\"");
+				log.fine("Created task \"" + taskInfo.getId() + "\"");
 			}
 		}
 	}
@@ -73,7 +73,7 @@ public class Pipeline {
 			taskManager.connect(pipeTasks);
 			
 			if (log.isLoggable(Level.INFO)) {
-				log.info("Connected task \"" + taskManager.getTaskId() + "\"");
+				log.fine("Connected task \"" + taskManager.getTaskId() + "\"");
 			}
 		}
 		
