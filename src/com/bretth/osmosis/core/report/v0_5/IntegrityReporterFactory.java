@@ -15,7 +15,7 @@ import com.bretth.osmosis.core.pipeline.v0_5.SinkManager;
  */
 public class IntegrityReporterFactory extends TaskManagerFactory {
 	private static final String ARG_FILE_NAME = "file";
-	private static final String DEFAULT_FILE_NAME = "report.txt";
+	private static final String DEFAULT_FILE_NAME = "integrity-report.txt";
 	
 	
 	/**
