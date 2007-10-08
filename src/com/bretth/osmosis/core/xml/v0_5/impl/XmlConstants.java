@@ -12,4 +12,10 @@ public interface XmlConstants {
 	 * will also be applied to osmChange files.
 	 */
 	public static final String OSM_VERSION = "0.5";
+	
+	
+	/**
+	 * The default URL for the production API.
+	 */
+	public static final String DEFAULT_URL = "http://www.openstreetmap.org/api/0.5";
 }

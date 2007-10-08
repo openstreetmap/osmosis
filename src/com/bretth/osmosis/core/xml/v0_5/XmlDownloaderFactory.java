@@ -5,6 +5,7 @@ import java.util.Map;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.v0_5.RunnableSourceManager;
+import com.bretth.osmosis.core.xml.v0_5.impl.XmlConstants;
 
 
 /**
@@ -24,7 +25,6 @@ public class XmlDownloaderFactory extends TaskManagerFactory {
 	private static final double DEFAULT_RIGHT = 180;
 	private static final double DEFAULT_TOP = 90;
 	private static final double DEFAULT_BOTTOM = -90;
-	private static final String DEFAULT_URL = "http://www.openstreetmap.org/api/0.5";
 	
 	
     /**
@@ -45,7 +45,7 @@ public class XmlDownloaderFactory extends TaskManagerFactory {
 		right = getDoubleArgument(taskId, taskArgs, ARG_RIGHT, DEFAULT_RIGHT);
 		top = getDoubleArgument(taskId, taskArgs, ARG_TOP, DEFAULT_TOP);
 		bottom = getDoubleArgument(taskId, taskArgs, ARG_BOTTOM, DEFAULT_BOTTOM);
-		url = getStringArgument(taskId, taskArgs, ARG_URL, DEFAULT_URL);
+		url = getStringArgument(taskId, taskArgs, ARG_URL, XmlConstants.DEFAULT_URL);
         
 		// Create and return the task and associated manager.
 		return new RunnableSourceManager(

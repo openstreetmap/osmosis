@@ -21,129 +21,142 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.task.v0_5.RunnableSource;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 import com.bretth.osmosis.core.xml.v0_5.impl.OsmHandler;
+import com.bretth.osmosis.core.xml.v0_5.impl.XmlConstants;
 
 
 /**
- * An OSM data source reading from an osm-xml file from the
- * OpenStreetMap-server.
- * 
- * @author <a href="mailto:Marcus@Wolschon.biz">Marcus Wolschon</a>
- */
+ *  * An OSM data source reading from an osm-xml file from the
+ *   * OpenStreetMap-server.
+ *    *
+ *     * @author <a href="mailto:Marcus@Wolschon.biz">Marcus Wolschon</a>
+ *      */
 public class XmlDownloader implements RunnableSource {
-	
-	private static Logger log = Logger.getLogger(XmlDownloader.class.getName());
-	
-	
+
     /**
-     * The timeout we use for the  HttpURLConnection.
-     */
+ *      * The http-response-code for OK.
+ *           */
+    private static final int RESPONSECODE_OK = 200;
+
+
+    /**
+ *      * My logger for debug- and error-output.
+ *           */
+    private static Logger log = Logger.getLogger(XmlDownloader.class.getName());
+
+
+    /**
+ *      * The timeout we use for the  HttpURLConnection.
+ *           */
     private static final int TIMEOUT = 15000;
-    
-    
+
+
     /**
-     * Where to deliver the loaded data.
-     */
-    private Sink sink;
-    
+ *      * Where to deliver the loaded data.
+ *           */
+    private Sink mySink;
+
     /**
-     * Left longitude of the bounding box.
-     */
-    private double left;
-    
+ *      * Left longitude of the bounding box.
+ *           */
+    private double myLeft;
+
     /**
-     * Right longitude of the bounding box.
-     */
-    private double right;
-    
+ *      * Right longitude of the bounding box.
+ *           */
+    private double myRight;
+
     /**
-     * Top latitude of the bounding box.
-     */
-    private double top;
-    
+ *      * Top latitude of the bounding box.
+ *           */
+    private double myTop;
+
     /**
-     * Bottom latitude of the bounding box.
-     */
-    private double bottom;
-    
+ *      * Bottom latitude of the bounding box.
+ *           */
+    private double myBottom;
+
     /**
-     * The base url of the server (eg. http://www.openstreetmap.org/api/0.4).
-     */
-    private String baseUrl;
-    
-    
+ *      * The base url of the server.
+ *           * Defaults to. "http://www.openstreetmap.org/api/0.5".
+ *                */
+    private String myBaseUrl = XmlConstants.DEFAULT_URL;
+
     /**
-     * The http connection used to retrieve data.
-     */
-    private HttpURLConnection activeConnection;
-    
-    
+ *      * The http connection used to retrieve data.
+ *           */
+    private HttpURLConnection myActiveConnection;
+
     /**
-     * The stream providing response data.
-     */
+ *      * The stream providing response data.
+ *           */
     private InputStream responseStream;
-    
-    
+
     /**
-	 * Creates a new instance with the specified geographical coordinates.
-	 * 
-	 * @param left
-	 *            The longitude marking the left edge of the bounding box.
-	 * @param right
-	 *            The longitude marking the right edge of the bounding box.
-	 * @param top
-	 *            The latitude marking the top edge of the bounding box.
-	 * @param bottom
-	 *            The latitude marking the bottom edge of the bounding box.
-	 * @param baseUrl
-	 *            The base url of the server (eg.
-	 *            http://www.openstreetmap.org/api/0.4).
-	 */
-    public XmlDownloader(double left,
-                         double right,
-                         double top,
-                         double bottom,
-                         String baseUrl) {
-        this.left = left;
-        this.right = right;
-        this.top = top;
-        this.bottom = bottom;
-        this.baseUrl = baseUrl;
+ *      * Creates a new instance with the specified geographical coordinates.
+ *           *
+ *                * @param left
+ *                     *            The longitude marking the left edge of the bounding box.
+ *                          * @param right
+ *                               *            The longitude marking the right edge of the bounding box.
+ *                                    * @param top
+ *                                         *            The latitude marking the top edge of the bounding box.
+ *                                              * @param bottom
+ *                                                   *            The latitude marking the bottom edge of the bounding box.
+ *                                                        * @param baseUrl
+ *                                                             *            (optional) The base url of the server (eg.
+ *                                                                  *            http://www.openstreetmap.org/api/0.5).
+ *                                                                       */
+    public XmlDownloader(final double left,
+                         final double right,
+                         final double top,
+                         final double bottom,
+                         final String baseUrl) {
+        this.myLeft = Math.min(top, bottom);
+        this.myRight = Math.max(top, bottom);
+        this.myTop = Math.max(left, right);
+        this.myBottom = Math.min(left, right);
+        if (baseUrl != null)
+            this.myBaseUrl = baseUrl;
     }
 
 
     /**
-     * {@inheritDoc}
-     */
+ *      * {@inheritDoc}
+ *           */
     public void setSink(final Sink aSink) {
-        this.sink = aSink;
+        this.mySink = aSink;
     }
-    
-    
+
     /**
-     * Cleans up any resources remaining after completion.
-     */
+ *      * Cleans up any resources remaining after completion.
+ *           */
     private void cleanup() {
-    	if (activeConnection != null) {
-    		activeConnection.disconnect();
-    		activeConnection = null;
-    	}
-    	
-    	if (responseStream != null) {
-			try {
-				responseStream.close();
-			} catch (IOException e) {
-				log.log(Level.SEVERE, "Unable to close response stream.", e);
-			}
-			responseStream = null;
-		}
+        if (myActiveConnection != null) {
+            try {
+                myActiveConnection.disconnect();
+            } catch (Exception e) {
+                log.log(Level.SEVERE, "Unable to disconnect.", e);
+            }
+            myActiveConnection = null;
+        }
+
+        if (responseStream != null) {
+            try {
+
+                responseStream.close();
+            } catch (IOException e) {
+                log.log(Level.SEVERE, "Unable to close response stream.", e);
+            }
+            responseStream = null;
+        }
     }
 
 
     /**
-     * Creates a new SAX parser.
-     *
-     * @return The newly created SAX parser.
-     */
+ *      * Creates a new SAX parser.
+ *           *
+ *                * @return The newly created SAX parser.
+ *                     */
     private SAXParser createParser() {
         try {
             return SAXParserFactory.newInstance().newSAXParser();
@@ -157,93 +170,94 @@ public class XmlDownloader implements RunnableSource {
 
 
     /**
-     * Reads all data from the file and send it to the sink.
-     */
+ *      * Reads all data from the server and send it to the {@link Sink}.
+ *           */
     public void run() {
         try {
-        	InputStream inputStream;
-            SAXParser parser;
-            
-            parser = createParser();
-            
-            inputStream = getInputStream(baseUrl + "/map?bbox=" + left + "," + bottom + "," + right + "," + top);
-            
-            parser.parse(inputStream, new OsmHandler(sink, true));
-            
-            inputStream.close();
-            inputStream = null;
-            
-            sink.complete();
-            
+            SAXParser    parser = createParser();
+            InputStream  inputStream = getInputStream(myBaseUrl + "/map?bbox=" + myLeft + "," + myBottom + "," + myRight + "," + myTop);
+
+            try {
+                parser.parse(inputStream, new OsmHandler(mySink, true));
+            } finally {
+                inputStream.close();
+                inputStream = null;
+            }
+
+            mySink.complete();
+
         } catch (SAXParseException e) {
-			throw new OsmosisRuntimeException(
-				"Unable to parse xml"
-				+ ".  publicId=(" + e.getPublicId()
-				+ "), systemId=(" + e.getSystemId()
-				+ "), lineNumber=" + e.getLineNumber()
-				+ ", columnNumber=" + e.getColumnNumber() + ".",
-				e);
-		} catch (SAXException e) {
+            throw new OsmosisRuntimeException(
+                    "Unable to parse xml"
+                    + ".  publicId=(" + e.getPublicId()
+                    + "), systemId=(" + e.getSystemId()
+                    + "), lineNumber=" + e.getLineNumber()
+                    + ", columnNumber=" + e.getColumnNumber() + ".",
+                    e);
+        } catch (SAXException e) {
             throw new OsmosisRuntimeException("Unable to parse XML.", e);
         } catch (IOException e) {
             throw new OsmosisRuntimeException("Unable to read XML.", e);
         } finally {
-            sink.release();
-            
+            mySink.release();
+
             cleanup();
         }
     }
-    
-    
+
     /**
-	 * Open a connection to the given url and return a reader on the input
-	 * stream from that connection.
-	 * 
-	 * @param pUrlStr
-	 *            The exact url to connect to.
-	 * @return An reader reading the input stream (servers answer) or
-	 *         <code>null</code>.
-	 * @throws IOException
-	 *             on io-errors
-	 */
-	private InputStream getInputStream(String urlStr) throws IOException {
+ *      * Open a connection to the given url and return a reader on the input
+ *           * stream from that connection.
+ *                *
+ *                     * @param pUrlStr
+ *                          *            The exact url to connect to.
+ *                               * @return An reader reading the input stream (servers answer) or
+ *                                    *         <code>null</code>.
+ *                                         * @throws IOException
+ *                                              *             on io-errors
+ *                                                   */
+    private InputStream getInputStream(final String pUrlStr) throws IOException {
         URL url;
         int responseCode;
         String encoding;
-        
-        url = new URL(urlStr);
-        activeConnection = (HttpURLConnection) url.openConnection();
-        
-        activeConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
-        
-        responseCode = activeConnection.getResponseCode();
-        
-        if (responseCode != 200) {
-        	String message;
-        	String apiErrorMessage;
-        	
-        	apiErrorMessage = activeConnection.getHeaderField("Error");
-        	
-        	if (apiErrorMessage != null) {
-        		message = "Received API HTTP response code " + responseCode + " with message \"" + apiErrorMessage + "\".";
-        	} else {
-        		message = "Received API HTTP response code " + responseCode + ".";
-        	}
-        	
-        	throw new OsmosisRuntimeException(message);
+
+        url = new URL(pUrlStr);
+        myActiveConnection = (HttpURLConnection) url.openConnection();
+
+        myActiveConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
+
+        responseCode = myActiveConnection.getResponseCode();
+
+        if (responseCode != RESPONSECODE_OK) {
+            String message;
+            String apiErrorMessage;
+
+            apiErrorMessage = myActiveConnection.getHeaderField("Error");
+
+            if (apiErrorMessage != null) {
+                message = "Received API HTTP response code " + responseCode
+                + " with message \"" + apiErrorMessage
+                + "\" for URL \"" + pUrlStr + "\".";
+            } else {
+                message = "Received API HTTP response code " + responseCode
+                + " for URL \"" + pUrlStr + "\".";
+            }
+
+            throw new OsmosisRuntimeException(message);
         }
-        
-        activeConnection.setConnectTimeout(TIMEOUT);
-        
-        encoding = activeConnection.getContentEncoding();
-        
-        responseStream = activeConnection.getInputStream();
+
+        myActiveConnection.setConnectTimeout(TIMEOUT);
+
+        encoding = myActiveConnection.getContentEncoding();
+
+        responseStream = myActiveConnection.getInputStream();
         if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
-        	responseStream = new GZIPInputStream(responseStream);
+            responseStream = new GZIPInputStream(responseStream);
         } else if (encoding != null && encoding.equalsIgnoreCase("deflate")) {
-        	responseStream = new InflaterInputStream(responseStream, new Inflater(true));
+            responseStream = new InflaterInputStream(responseStream, new Inflater(true));
         }
-        
+
         return responseStream;
     }
 }
+
