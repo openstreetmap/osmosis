@@ -9,7 +9,7 @@ import com.bretth.osmosis.core.pipeline.v0_5.SinkManager;
 
 
 /**
- * The task manager factory for an xml writer.
+ * The task manager factory for an entity reporter.
  * 
  * @author Brett Henderson
  */

@@ -1,18 +1,16 @@
 package com.bretth.osmosis.core.filter.v0_4;
 
-import java.util.BitSet;
-
 import com.bretth.osmosis.core.container.v0_4.EntityContainer;
 import com.bretth.osmosis.core.container.v0_4.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_4.NodeContainer;
 import com.bretth.osmosis.core.container.v0_4.SegmentContainer;
 import com.bretth.osmosis.core.container.v0_4.WayContainer;
-import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_4.Node;
 import com.bretth.osmosis.core.domain.v0_4.Segment;
 import com.bretth.osmosis.core.domain.v0_4.SegmentReference;
 import com.bretth.osmosis.core.domain.v0_4.Tag;
 import com.bretth.osmosis.core.domain.v0_4.Way;
+import com.bretth.osmosis.core.filter.common.BigBitSet;
 import com.bretth.osmosis.core.task.v0_4.Sink;
 import com.bretth.osmosis.core.task.v0_4.SinkSource;
 
@@ -24,16 +22,16 @@ import com.bretth.osmosis.core.task.v0_4.SinkSource;
  */
 public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	private Sink sink;
-	private BitSet availableNodes;
-	private BitSet availableSegments;
+	private BigBitSet availableNodes;
+	private BigBitSet availableSegments;
 	
 	
 	/**
 	 * Creates a new instance.
 	 */
 	public AreaFilter() {
-		availableNodes = new BitSet();
-		availableSegments = new BitSet();
+		availableNodes = new BigBitSet();
+		availableSegments = new BigBitSet();
 	}
 	
 	
@@ -71,12 +69,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		if (isNodeWithinArea(node)) {
 			sink.process(container);
 			
-			// Ensure that the node identifier can be represented as an integer.
-			if (nodeId > Integer.MAX_VALUE) {
-				throw new OsmosisRuntimeException("The bounding box filter can only handle node identifiers up to " + Integer.MAX_VALUE + ".");
-			}
-			
-			availableNodes.set((int) nodeId);
+			availableNodes.set(nodeId);
 		}
 	}
 	
@@ -95,21 +88,10 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		nodeIdFrom = segment.getFrom();
 		nodeIdTo = segment.getTo();
 		
-		// Ensure that all identifiers can be represented as integers.
-		if (segmentId > Integer.MAX_VALUE) {
-			throw new OsmosisRuntimeException("The bounding box filter can only handle segment identifiers up to " + Integer.MAX_VALUE + ".");
-		}
-		if (nodeIdFrom > Integer.MAX_VALUE) {
-			throw new OsmosisRuntimeException("The bounding box filter can only handle node identifiers up to " + Integer.MAX_VALUE + ".");
-		}
-		if (nodeIdTo > Integer.MAX_VALUE) {
-			throw new OsmosisRuntimeException("The bounding box filter can only handle node identifiers up to " + Integer.MAX_VALUE + ".");
-		}
-		
 		// Only add the segment if both of its nodes are within the bounding box.
-		if (availableNodes.get((int) nodeIdFrom) && availableNodes.get((int) nodeIdTo)) {
+		if (availableNodes.get(nodeIdFrom) && availableNodes.get(nodeIdTo)) {
 			sink.process(container);
-			availableSegments.set((int) segmentId);
+			availableSegments.set(segmentId);
 		}
 	}
 	
@@ -132,13 +114,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			
 			segmentId = segmentReference.getSegmentId();
 			
-			// Ensure that the segment identifier can be represented as an integer.
-			if (segmentId > Integer.MAX_VALUE) {
-				throw new OsmosisRuntimeException("The bounding box filter can only handle segment identifiers up to " + Integer.MAX_VALUE + ".");
-			}
-			
-			
-			if (availableSegments.get((int) segmentId)) {
+			if (availableSegments.get(segmentId)) {
 				filteredWay.addSegmentReference(segmentReference);
 			}
 		}

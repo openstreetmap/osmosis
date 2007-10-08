@@ -1,18 +1,16 @@
 package com.bretth.osmosis.core.filter.v0_5;
 
-import java.util.BitSet;
-
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
 import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
-import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
+import com.bretth.osmosis.core.filter.common.BigBitSet;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 import com.bretth.osmosis.core.task.v0_5.SinkSource;
 
@@ -24,16 +22,16 @@ import com.bretth.osmosis.core.task.v0_5.SinkSource;
  */
 public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	private Sink sink;
-	private BitSet availableNodes;
-	private BitSet availableSegments;
+	private BigBitSet availableNodes;
+	private BigBitSet availableSegments;
 	
 	
 	/**
 	 * Creates a new instance.
 	 */
 	public AreaFilter() {
-		availableNodes = new BitSet();
-		availableSegments = new BitSet();
+		availableNodes = new BigBitSet();
+		availableSegments = new BigBitSet();
 	}
 	
 	
@@ -71,12 +69,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		if (isNodeWithinArea(node)) {
 			sink.process(container);
 			
-			// Ensure that the node identifier can be represented as an integer.
-			if (nodeId > Integer.MAX_VALUE) {
-				throw new OsmosisRuntimeException("The bounding box filter can only handle node identifiers up to " + Integer.MAX_VALUE + ".");
-			}
-			
-			availableNodes.set((int) nodeId);
+			availableNodes.set(nodeId);
 		}
 	}
 	
@@ -99,13 +92,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			
 			nodeId = nodeReference.getNodeId();
 			
-			// Ensure that the segment identifier can be represented as an integer.
-			if (nodeId > Integer.MAX_VALUE) {
-				throw new OsmosisRuntimeException("The bounding box filter can only handle segment identifiers up to " + Integer.MAX_VALUE + ".");
-			}
-			
-			
-			if (availableSegments.get((int) nodeId)) {
+			if (availableSegments.get(nodeId)) {
 				filteredWay.addWayNode(nodeReference);
 			}
 		}
