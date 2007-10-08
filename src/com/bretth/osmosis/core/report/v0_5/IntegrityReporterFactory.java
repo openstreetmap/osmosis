@@ -25,7 +25,7 @@ public class IntegrityReporterFactory extends TaskManagerFactory {
 	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
 		String fileName;
 		File file;
-		EntityReporter task;
+		IntegrityReporter task;
 		
 		// Get the task arguments.
 		fileName = getStringArgument(taskId, taskArgs, ARG_FILE_NAME, DEFAULT_FILE_NAME);
@@ -34,7 +34,7 @@ public class IntegrityReporterFactory extends TaskManagerFactory {
 		file = new File(fileName);
 		
 		// Build the task object.
-		task = new EntityReporter(file);
+		task = new IntegrityReporter(file);
 		
 		return new SinkManager(taskId, task, pipeArgs);
 	}
