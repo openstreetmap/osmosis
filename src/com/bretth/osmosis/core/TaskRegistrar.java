@@ -18,6 +18,7 @@ import com.bretth.osmosis.core.mysql.v0_4.MysqlTruncatorFactory;
 import com.bretth.osmosis.core.mysql.v0_4.MysqlWriterFactory;
 import com.bretth.osmosis.core.pgsql.common.v0_5.PostgreSqlWriterFactory;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
+import com.bretth.osmosis.core.progress.v0_5.ProgressLoggerFactory;
 import com.bretth.osmosis.core.report.v0_4.EntityReporterFactory;
 import com.bretth.osmosis.core.sort.v0_4.ChangeForSeekableApplierComparator;
 import com.bretth.osmosis.core.sort.v0_4.ChangeForStreamableApplierComparator;
@@ -85,6 +86,7 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("report-entity", new com.bretth.osmosis.core.report.v0_5.EntityReporterFactory());
 		TaskManagerFactory.register("report-integrity", new com.bretth.osmosis.core.report.v0_5.IntegrityReporterFactory());
 		TaskManagerFactory.register("write-pgsql", new PostgreSqlWriterFactory());
+		TaskManagerFactory.register("log-progress", new ProgressLoggerFactory());
 		
 		TaskManagerFactory.register("apply-change-0.4", new ChangeApplierFactory());
 		TaskManagerFactory.register("bounding-box-0.4", new BoundingBoxFilterFactory());
@@ -137,5 +139,6 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("report-entity-0.5", new com.bretth.osmosis.core.report.v0_5.EntityReporterFactory());
 		TaskManagerFactory.register("report-integrity-0.5", new com.bretth.osmosis.core.report.v0_5.IntegrityReporterFactory());
 		TaskManagerFactory.register("write-pgsql-0.5", new PostgreSqlWriterFactory());
+		TaskManagerFactory.register("log-progress-0.5", new ProgressLoggerFactory());
 	}
 }
