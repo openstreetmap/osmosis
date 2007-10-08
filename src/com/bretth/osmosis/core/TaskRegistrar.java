@@ -82,7 +82,8 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("merge-change", new com.bretth.osmosis.core.merge.v0_5.ChangeMergerFactory());
 		TaskManagerFactory.register("read-api", new com.bretth.osmosis.core.xml.v0_5.XmlDownloaderFactory());
 		TaskManagerFactory.register("bounding-polygon", new com.bretth.osmosis.core.filter.v0_5.PolygonFilterFactory());
-		TaskManagerFactory.register("report", new com.bretth.osmosis.core.report.v0_5.EntityReporterFactory());
+		TaskManagerFactory.register("report-entity", new com.bretth.osmosis.core.report.v0_5.EntityReporterFactory());
+		TaskManagerFactory.register("report-integrity", new com.bretth.osmosis.core.report.v0_5.IntegrityReporterFactory());
 		TaskManagerFactory.register("write-pgsql", new PostgreSqlWriterFactory());
 		
 		TaskManagerFactory.register("apply-change-0.4", new ChangeApplierFactory());
@@ -133,7 +134,8 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("merge-change-0.5", new com.bretth.osmosis.core.merge.v0_5.ChangeMergerFactory());
 		TaskManagerFactory.register("read-api-0.5", new com.bretth.osmosis.core.xml.v0_5.XmlDownloaderFactory());
 		TaskManagerFactory.register("bounding-polygon-0.5", new com.bretth.osmosis.core.filter.v0_5.PolygonFilterFactory());
-		TaskManagerFactory.register("report-0.5", new com.bretth.osmosis.core.report.v0_5.EntityReporterFactory());
+		TaskManagerFactory.register("report-entity-0.5", new com.bretth.osmosis.core.report.v0_5.EntityReporterFactory());
+		TaskManagerFactory.register("report-integrity-0.5", new com.bretth.osmosis.core.report.v0_5.IntegrityReporterFactory());
 		TaskManagerFactory.register("write-pgsql-0.5", new PostgreSqlWriterFactory());
 	}
 }
