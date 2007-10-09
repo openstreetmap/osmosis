@@ -1,7 +1,8 @@
 0.19
 Added a new --integrity-reporter task to detect referential integrity issues between entity types.
 Updated the default file names for report tasks.
-Added a new --log-progress task to provide progress information to standard out during processing.
+Added a new --log-progress task to provide progress information to the jdk log during processing.
+Added a new --log-change-progress task to provide change progress information to the jdk log during processing.
 
 0.18
 Improved error messages when errors are returned from the api.

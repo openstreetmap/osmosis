@@ -14,9 +14,9 @@ import com.bretth.osmosis.core.task.v0_5.SinkSource;
  * 
  * @author Brett Henderson
  */
-public class ProgressLogger implements SinkSource {
+public class EntityProgressLogger implements SinkSource {
 	
-	private static final Logger log = Logger.getLogger(ProgressLogger.class.getName());
+	private static final Logger log = Logger.getLogger(EntityProgressLogger.class.getName());
 	
 	private Sink sink;
 	private int interval;
@@ -30,7 +30,7 @@ public class ProgressLogger implements SinkSource {
 	 * @param interval
 	 *            The interval between logging progress reports in milliseconds.
 	 */
-	public ProgressLogger(int interval) {
+	public EntityProgressLogger(int interval) {
 		this.interval = interval;
 		
 		initialized = false;

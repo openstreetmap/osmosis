@@ -30,7 +30,7 @@ apply-change'
 A bit confusing with the multiple input pipes, but it's clearer if you
 know shell...
 
-**********
+********** DONE
 Application output is not configurable.  This needs to be made configurable
 allowing default output, verbose output, or quiet output.
 Requires support for "global" command line options that aren't related to any tasks.
