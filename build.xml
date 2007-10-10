@@ -18,7 +18,7 @@
 		<tstamp/>
 	</target>	
 	
-	<target name="build" depends="init" description="Compile source code into class files.">
+	<target name="build_src" depends="init" description="Compile source code into class files.">
 		<!-- Update the version number in the main class. -->
 		<replaceregexp
 			byline="true"
@@ -28,26 +28,31 @@
 		/>
 		<!-- Create the build directory structure. -->
 		<mkdir dir="build"/>
-		<!-- Compile the java code from src into build -->
-		<javac srcdir="src" destdir="build" debug="on" debuglevel="lines,vars,source" classpathref="libclasspath"/>
-		<!-- Put a version number file in the build directory. -->
-		<touch file="build/version-${project.version}"/>
+		<mkdir dir="build/src"/>
+		<!-- Compile the java code from src into build/src -->
+		<javac srcdir="src" destdir="build/src" debug="on" debuglevel="lines,vars,source" classpathref="libclasspath"/>
+		<!-- Put a version number file in the build/src directory. -->
+		<touch file="build/src/version-${project.version}"/>
 	</target>
 	
-	<!-- Produces javadoc output from the source code. -->
-	<target name="javadoc" depends="init" description="Products javadoc documentation from the source code.">
-		<javadoc packagenames="*" sourcepath="src" destdir="doc/api" classpathref="libclasspath"/>
+	<target name="build_test" depends="dist" description="Compile test source code into class files.">
+		<!-- Create the build directory structure. -->
+		<mkdir dir="build/test"/>
+		<!-- Compile the java test code with the main project classes as a dependency. -->
+		<javac srcdir="test" destdir="build/test" classpath="build/src/${project.name}.jar" debug="on" debuglevel="lines,vars,source">
+			<classpath>
+				<path path="libclasspath"/>
+				<pathelement path="build/src"/>
+			</classpath>
+		</javac>
 	</target>
 	
-	<target name="dist_binary" depends="build" description="Generates the binaries for the distribution.">
-		<!-- Create the distribution build directory -->
-		<mkdir dir="dist/result"/>
-		
-		<!-- Create a directory to hold the generated manifest files. -->
-		<mkdir dir="dist/manifest"/>
+	<target name="build_binary" depends="build_src" description="Generates the binaries for the distribution.">
+		<!-- Create the binary directory -->
+		<mkdir dir="build/binary"/>
 		
 		<!-- Create a manifest for the jar file. -->
-		<manifest file="dist/manifest/jar.txt">
+		<manifest file="build/binary/jar.txt">
 			<attribute name="Main-Class" value="com.bretth.osmosis.core.Osmosis"/>
 			<attribute name="Built-By" value="${user.name}"/>
 			<attribute name="Implementation-Title" value="Osmosis Library"/>
@@ -57,54 +62,61 @@
 		
 		<!-- Create the jar archive. -->
 		<jar
-			destfile="dist/result/${project.name}.jar"
-			basedir="build"
-			manifest="dist/manifest/jar.txt"/>
+			destfile="build/binary/${project.name}.jar"
+			basedir="build/src"
+			manifest="build/binary/jar.txt"/>
 	</target>
 	
-	<target name="dist" depends="dist_binary,javadoc" description="Generate the distribution.">
+	<!-- Produces javadoc output from the source code. -->
+	<target name="javadoc" depends="init" description="Products javadoc documentation from the source code.">
+		<javadoc packagenames="*" sourcepath="src" destdir="doc/api" classpathref="libclasspath"/>
+	</target>
+	
+	<target name="dist" depends="build_binary,javadoc" description="Generate the distribution.">
 		<!-- Copy the documentation into the distribution. -->
-		<copy todir="dist/result/doc">
+		<copy todir="build/dist/doc">
 			<fileset dir="doc"/>
 		</copy>
 		
 		<!-- Copy the source into the distribution. -->
-		<copy todir="dist/result/src">
+		<copy todir="build/dist/src">
 			<fileset dir="src"/>
 		</copy>
 		
 		<!-- Copy the libraries into the distribution. -->
-		<copy todir="dist/result/lib">
+		<copy todir="build/dist/lib">
 			<fileset dir="lib"/>
 		</copy>
 		
+		<!-- Copy the binaries into the distribution. -->
+		<copy todir="build/dist">
+			<fileset dir="build/binary">
+				<include name="**/*.jar"/>
+			</fileset>
+		</copy>
+		
 		<!-- Copy scripts into the distribution. -->
-		<copy todir="dist/result/bin">
+		<copy todir="build/dist/bin">
 			<fileset dir="bin"/>
 		</copy>
 		
 		<!-- Copy readme file. -->
-		<copy todir="dist/result" file="readme.txt"/>
+		<copy todir="build/dist" file="readme.txt"/>
 		<!-- Copy changes file. -->
-		<copy todir="dist/result" file="changes.txt"/>
-		<!-- Copy distribution file. -->
-		<copy todir="dist/result" file="build.xml"/>
+		<copy todir="build/dist" file="changes.txt"/>
+		<!-- Copy build script. -->
+		<copy todir="build/dist" file="build.xml"/>
 		
 		<!-- Create the distribution zip file. -->
+		<mkdir dir="dist"/>
 		<zip destfile="dist/${project.name}-${project.version}.zip">
-			<zipfileset prefix="${project.name}-${project.version}" dir="dist/result"/>
+			<zipfileset prefix="${project.name}-${project.version}" dir="build/dist"/>
 		</zip>
+		<!-- Create the distribution tgz file. -->
 		<tar destfile="dist/${project.name}-${project.version}.tar">
-			<tarfileset prefix="${project.name}-${project.version}" dir="dist/result"/>
+			<tarfileset prefix="${project.name}-${project.version}" dir="build/dist"/>
 		</tar>
 		<gzip destfile="dist/${project.name}-${project.version}.tgz" src="dist/${project.name}-${project.version}.tar"/>
-	</target>
-	
-	<target name="build_test" depends="dist" description="Compile test source code into class files.">
-		<!-- Create the build directory structure. -->
-		<mkdir dir="build_test"/>
-		<!-- Compile the java test code with the main project classes as a dependency. -->
-		<javac srcdir="test" destdir="build_test" classpath="dist/result/${project.name}.jar" debug="on" debuglevel="lines,vars,source"/>
 	</target>
 	
 	<!-- Runs all of the unit tests in the application.  Uses the AllTests suite to achieve this. -->
@@ -112,7 +124,7 @@
 		<junit printsummary="on" haltonerror="on" haltonfailure="on" filtertrace="on">
 			<formatter type="plain" usefile="true"/>
 			<classpath>
-				<pathelement path="build_test"/>
+				<pathelement path="build/test"/>
 				<fileset dir="dist/result">
 					<include name="**/*.jar"/>
 				</fileset>
@@ -131,7 +143,5 @@
 		<delete dir="dist"/>
 		<!-- Delete the ${doc}/api directory tree. -->
 		<delete dir="doc/api"/>
-		<!-- Delete the test directory tree. -->
-		<delete dir="build_test"/>
 	</target>
 </project>
