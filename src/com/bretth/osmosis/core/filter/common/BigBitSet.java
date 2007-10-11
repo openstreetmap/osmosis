@@ -39,7 +39,7 @@ public class BigBitSet {
 		long absoluteBit;
 		int activeBit;
 		
-		if (bit > 0) {
+		if (bit >= 0) {
 			activeSet = positiveSet;
 			absoluteBit = bit;
 		} else {
@@ -81,7 +81,7 @@ public class BigBitSet {
 		long absoluteBit;
 		int activeBit;
 		
-		if (bit > 0) {
+		if (bit >= 0) {
 			activeSet = positiveSet;
 			absoluteBit = bit;
 		} else {

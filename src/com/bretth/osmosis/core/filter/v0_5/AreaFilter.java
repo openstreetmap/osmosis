@@ -1,11 +1,14 @@
 package com.bretth.osmosis.core.filter.v0_5;
 
+import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
 import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
+import com.bretth.osmosis.core.domain.v0_5.EntityType;
 import com.bretth.osmosis.core.domain.v0_5.Node;
+import com.bretth.osmosis.core.domain.v0_5.RelationMember;
 import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
@@ -23,7 +26,8 @@ import com.bretth.osmosis.core.task.v0_5.SinkSource;
 public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	private Sink sink;
 	private BigBitSet availableNodes;
-	private BigBitSet availableSegments;
+	private BigBitSet availableWays;
+	private BigBitSet availableRelations;
 	
 	
 	/**
@@ -31,7 +35,8 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	 */
 	public AreaFilter() {
 		availableNodes = new BigBitSet();
-		availableSegments = new BigBitSet();
+		availableWays = new BigBitSet();
+		availableRelations = new BigBitSet();
 	}
 	
 	
@@ -67,9 +72,9 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		
 		// Only add the node if it lies within the box boundaries.
 		if (isNodeWithinArea(node)) {
-			sink.process(container);
-			
 			availableNodes.set(nodeId);
+			
+			sink.process(container);
 		}
 	}
 	
@@ -86,23 +91,25 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		// Create a new way object to contain only items within the bounding box.
 		filteredWay = new Way(way.getId(), way.getTimestamp(), way.getUser());
 		
-		// Only add node references to nodes that are within the bounding box.
+		// Only add node references for nodes that are within the bounding box.
 		for (WayNode nodeReference : way.getWayNodeList()) {
 			long nodeId;
 			
 			nodeId = nodeReference.getNodeId();
 			
-			if (availableSegments.get(nodeId)) {
+			if (availableNodes.get(nodeId)) {
 				filteredWay.addWayNode(nodeReference);
 			}
 		}
 		
-		// Only add ways that contain segments.
+		// Only add ways that contain nodes.
 		if (filteredWay.getWayNodeList().size() > 0) {
 			// Add all tags to the filtered node.
 			for (Tag tag : way.getTagList()) {
 				filteredWay.addTag(tag);
 			}
+			
+			availableWays.set(way.getId());
 			
 			sink.process(new WayContainer(filteredWay));
 		}
@@ -121,9 +128,42 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		// Create a new relation object to contain only items within the bounding box.
 		filteredRelation = new Relation(relation.getId(), relation.getTimestamp(), relation.getUser());
 		
-		// TODO: Add relation entity lists to relation.
+		// Only add members for entities that are within the bounding box.
+		for (RelationMember member : relation.getMemberList()) {
+			long memberId;
+			EntityType memberType;
+			
+			memberId = member.getMemberId();
+			memberType = member.getMemberType();
+			
+			if (EntityType.Node.equals(memberType)) {
+				if (availableNodes.get(memberId)) {
+					filteredRelation.addMember(member);
+				}
+			} else if (EntityType.Way.equals(memberType)) {
+				if (availableWays.get(memberId)) {
+					filteredRelation.addMember(member);
+				}
+			} else if (EntityType.Relation.equals(memberType)) {
+				if (availableRelations.get(memberId)) {
+					filteredRelation.addMember(member);
+				}
+			} else {
+				throw new OsmosisRuntimeException("Unsupported member type + " + memberType + " for relation " + relation.getId() + ".");
+			}
+		}
 		
-		sink.process(new RelationContainer(filteredRelation));
+		// Only add relations that contain entities.
+		if (filteredRelation.getMemberList().size() > 0) {
+			// Add all tags to the filtered relation.
+			for (Tag tag : relation.getTagList()) {
+				filteredRelation.addTag(tag);
+			}
+			
+			availableRelations.set(relation.getId());
+			
+			sink.process(new RelationContainer(filteredRelation));
+		}
 	}
 	
 	
