@@ -179,7 +179,7 @@ public class IntegrityReporter implements Sink, EntityProcessor {
 					write("Relation," + relation.getId() + ",Node," + relationMember.getMemberId());
 				}
 			} else if (EntityType.Way.equals(memberType)) {
-				if (!nodeBitSet.get(relationMember.getMemberId())) {
+				if (!wayBitSet.get(relationMember.getMemberId())) {
 					initialize();
 					
 					write("Relation," + relation.getId() + ",Way," + relationMember.getMemberId());
