@@ -98,3 +98,7 @@ BH: I will use a HashMap to implement this.
 
 ********** DONE
 Update the bounding box and polygon tasks to handle negative identifiers.
+
+**********
+Modify bounding box and xml downloader tasks to use minLat, maxLat, minLon, maxLon arguments instead of left, right, top and bottom.
+
