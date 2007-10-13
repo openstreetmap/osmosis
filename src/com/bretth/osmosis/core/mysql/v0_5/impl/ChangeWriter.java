@@ -28,9 +28,9 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
  */
 public class ChangeWriter {
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO nodes (id, timestamp, latitude, longitude, tags, visible, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		"INSERT INTO nodes (id, timestamp, latitude, longitude, tile, tags, visible, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String INSERT_SQL_NODE_CURRENT =
-		"INSERT INTO current_nodes (id, timestamp, latitude, longitude, tags, visible, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		"INSERT INTO current_nodes (id, timestamp, latitude, longitude, tile, tags, visible, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String DELETE_SQL_NODE_CURRENT =
 		"DELETE FROM current_nodes WHERE id = ?";
 	private static final String INSERT_SQL_WAY =
