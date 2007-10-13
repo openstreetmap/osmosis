@@ -5,6 +5,7 @@ Added a new --log-progress task to provide progress information to the jdk log d
 Added a new --log-change-progress task to provide change progress information to the jdk log during processing.
 Fixed a number of bugs in the area extraction tasks.
 Updated area extraction tasks to support negative identifiers used on files that are ready for upload.
+Fixed bug in the ChangeWriter where the node insert SQL commands were missing tile parameters.
 
 0.18
 Improved error messages when errors are returned from the api.
