@@ -1,3 +1,5 @@
+0.20
+
 0.19
 Added a new --integrity-reporter task to detect referential integrity issues between entity types.
 Updated the default file names for report tasks.
