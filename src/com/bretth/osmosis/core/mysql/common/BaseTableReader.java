@@ -44,7 +44,7 @@ public abstract class BaseTableReader<T> implements ReleasableIterator<T> {
 	 */
 	protected abstract ResultSet createResultSet(DatabaseContext queryDbCtx);
 	
-	
+
 	/**
 	 * Builds an entity object from the current recordset row.
 	 * 
@@ -53,6 +53,19 @@ public abstract class BaseTableReader<T> implements ReleasableIterator<T> {
 	 * @return The result of the read.
 	 */
 	protected abstract ReadResult<T> createNextValue(ResultSet activeResultSet);
+	
+	
+	/**
+	 * If the implementation requires multiple rows to build an entity object,
+	 * this method allows the implementation to return an entity based on the
+	 * fact that no more rows are available. This default implementation returns
+	 * a blank result.
+	 * 
+	 * @return The last result record.
+	 */
+	protected ReadResult<T> createLastValue() {
+		return new ReadResult<T>(true, null);
+	}
 	
 	
 	/**
@@ -75,7 +88,8 @@ public abstract class BaseTableReader<T> implements ReleasableIterator<T> {
 				if (resultSet.next()) {
 					readResult = createNextValue(resultSet);
 				} else {
-					readResult = new ReadResult<T>(true, null);
+					
+					readResult = createLastValue();
 				}
 			} while (!readResult.isUsableResult());
 			
