@@ -11,7 +11,7 @@ import com.bretth.osmosis.core.task.v0_5.ChangeSinkChangeSource;
 
 
 /**
- * Logs progress information using jdk logging at fine level at regular intervals.
+ * Logs progress information using jdk logging at info level at regular intervals.
  * 
  * @author Brett Henderson
  */
