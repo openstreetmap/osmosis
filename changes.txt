@@ -1,4 +1,5 @@
 0.20
+Fixed the integrity reporter task so that it writes new lines after each record.
 
 0.19
 Added a new --integrity-reporter task to detect referential integrity issues between entity types.
