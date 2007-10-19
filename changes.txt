@@ -1,5 +1,6 @@
 0.20
 Fixed the integrity reporter task so that it writes new lines after each record.
+Relaxed validation checks in the --apply-change task so that it can apply changes to planets already containing data without aborting.
 
 0.19
 Added a new --integrity-reporter task to detect referential integrity issues between entity types.
