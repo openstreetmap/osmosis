@@ -141,9 +141,9 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 	private void processChangeOnlyEntity(ChangeContainer changeContainer) {
 		// This entity doesn't exist in the "base" source therefore
 		// we would normally expect a create.
-		// However, it is possible that this is a "re-create" of a
-		// previously deleted item which will come through as a
-		// modify.
+		// But to cover cases where the change is being re-applied or it is a
+		// previously deleted item which will show as a modify we need to be
+		// lenient with error checking.
 		// It is also possible that a delete will come through for a
 		// previously deleted item which can be ignored.
 		if (
@@ -151,6 +151,28 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 				changeContainer.getAction().equals(ChangeAction.Modify)) {
 			sink.process(changeContainer.getEntityContainer());
 		} else {
+			// We don't need to do anything for delete.
+		}
+	}
+	
+	
+	/**
+	 * Processes a change for an entity that exists on both the base source and
+	 * the change source.
+	 * 
+	 * @param changeContainer
+	 *            The change to be processed.
+	 */
+	private void processBothSourceEntity(EntityContainer entityContainer, ChangeContainer changeContainer) {
+		// The same entity exists in both sources therefore we are
+		// expecting a modify or delete. However a create is possible if the
+		// data is being re-applied so we need to be lenient.
+		if (
+				changeContainer.getAction().equals(ChangeAction.Create) ||
+				changeContainer.getAction().equals(ChangeAction.Modify)) {
+			sink.process(changeContainer.getEntityContainer());
+			
+		} else if (changeContainer.getAction().equals(ChangeAction.Delete)) {
 			// We don't need to do anything for delete.
 		}
 	}
@@ -195,22 +217,7 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 					change = null;
 					
 				} else {
-					// The same entity exists in both sources therefore we are
-					// expecting a modify or delete.
-					if (change.getAction().equals(ChangeAction.Modify)) {
-						sink.process(change.getEntityContainer());
-						
-					} else if (change.getAction().equals(ChangeAction.Delete)) {
-						// We don't need to do anything for delete.
-						
-					} else {
-						throw new OsmosisRuntimeException(
-							"Cannot perform action " + change.getAction() + " on node with id="
-							+ change.getEntityContainer().getEntity().getId()
-							+ " because it exists in the base source."
-						);
-					}
-					
+					processBothSourceEntity(base, change);
 					base = null;
 					change = null;
 				}
