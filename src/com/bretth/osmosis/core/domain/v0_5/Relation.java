@@ -6,13 +6,18 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.bretth.osmosis.core.store.StoreClassRegister;
+import com.bretth.osmosis.core.store.StoreReader;
+import com.bretth.osmosis.core.store.StoreWriter;
+import com.bretth.osmosis.core.store.Storeable;
+
 
 /**
  * A data class representing a single OSM way.
  * 
  * @author Brett Henderson
  */
-public class Relation extends Entity implements Comparable<Relation> {
+public class Relation extends Entity implements Comparable<Relation>, Storeable {
 	private static final long serialVersionUID = 1L;
 	
 	
@@ -33,6 +38,43 @@ public class Relation extends Entity implements Comparable<Relation> {
 		super(id, timestamp, user);
 		
 		memberList = new ArrayList<RelationMember>();
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param sr
+	 *            The store to read state from.
+	 * @param scr
+	 *            Maintains the mapping between classes and their identifiers
+	 *            within the store.
+	 */
+	public Relation(StoreReader sr, StoreClassRegister scr) {
+		super(sr, scr);
+		
+		int nodeCount;
+		
+		nodeCount = sr.readInteger();
+		
+		memberList = new ArrayList<RelationMember>();
+		for (int i = 0; i < nodeCount; i++) {
+			addMember(new RelationMember(sr, scr));
+		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void store(StoreWriter sw, StoreClassRegister scr) {
+		super.store(sw, scr);
+		
+		sw.writeInteger(memberList.size());
+		for (RelationMember relationMember : memberList) {
+			relationMember.store(sw, scr);
+		}
 	}
 	
 	

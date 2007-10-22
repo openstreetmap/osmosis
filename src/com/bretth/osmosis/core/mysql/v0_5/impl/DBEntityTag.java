@@ -1,6 +1,10 @@
 package com.bretth.osmosis.core.mysql.v0_5.impl;
 
 import com.bretth.osmosis.core.domain.v0_5.Tag;
+import com.bretth.osmosis.core.store.StoreClassRegister;
+import com.bretth.osmosis.core.store.StoreReader;
+import com.bretth.osmosis.core.store.StoreWriter;
+import com.bretth.osmosis.core.store.Storeable;
 
 
 /**
@@ -9,11 +13,10 @@ import com.bretth.osmosis.core.domain.v0_5.Tag;
  * 
  * @author Brett Henderson
  */
-public class DBEntityTag extends Tag {
-	private static final long serialVersionUID = 1L;
-	
+public class DBEntityTag implements Storeable {
 	
 	private long entityId;
+	private Tag tag;
 	
 	
 	/**
@@ -21,15 +24,38 @@ public class DBEntityTag extends Tag {
 	 * 
 	 * @param entityId
 	 *            The owning entity id.
-	 * @param key
-	 *            The tag key.
-	 * @param value
-	 *            The tag value.
+	 * @param tag
+	 *            The tag to be wrapped.
 	 */
-	public DBEntityTag(long entityId, String key, String value) {
-		super(key, value);
-		
+	public DBEntityTag(long entityId, Tag tag) {
 		this.entityId = entityId;
+		this.tag = tag;
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param sr
+	 *            The store to read state from.
+	 * @param scr
+	 *            Maintains the mapping between classes and their identifiers
+	 *            within the store.
+	 */
+	public DBEntityTag(StoreReader sr, StoreClassRegister scr) {
+		this(
+			sr.readLong(),
+			new Tag(sr, scr)
+		);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void store(StoreWriter sw, StoreClassRegister scr) {
+		sw.writeLong(entityId);
+		tag.store(sw, scr);
 	}
 	
 	
@@ -38,5 +64,13 @@ public class DBEntityTag extends Tag {
 	 */
 	public long getEntityId() {
 		return entityId;
+	}
+	
+	
+	/**
+	 * @return The tag.
+	 */
+	public Tag getTag() {
+		return tag;
 	}
 }

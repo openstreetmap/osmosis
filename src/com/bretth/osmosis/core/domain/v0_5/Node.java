@@ -2,6 +2,10 @@ package com.bretth.osmosis.core.domain.v0_5;
 
 import java.util.Date;
 
+import com.bretth.osmosis.core.store.StoreClassRegister;
+import com.bretth.osmosis.core.store.StoreReader;
+import com.bretth.osmosis.core.store.StoreWriter;
+
 
 /**
  * A data class representing a single OSM node.
@@ -9,8 +13,6 @@ import java.util.Date;
  * @author Brett Henderson
  */
 public class Node extends Entity implements Comparable<Node> {
-	private static final long serialVersionUID = 1L;
-	
 	
 	private double latitude;
 	private double longitude;
@@ -35,6 +37,35 @@ public class Node extends Entity implements Comparable<Node> {
 		
 		this.latitude = latitude;
 		this.longitude = longitude;
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param sr
+	 *            The store to read state from.
+	 * @param scr
+	 *            Maintains the mapping between classes and their identifiers
+	 *            within the store.
+	 */
+	public Node(StoreReader sr, StoreClassRegister scr) {
+		super(sr, scr);
+		
+		this.latitude = sr.readDouble();
+		this.longitude = sr.readDouble();
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void store(StoreWriter sw, StoreClassRegister scr) {
+		super.store(sw, scr);
+		
+		sw.writeDouble(latitude);
+		sw.writeDouble(longitude);
 	}
 	
 	

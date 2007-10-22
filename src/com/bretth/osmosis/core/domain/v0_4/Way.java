@@ -6,6 +6,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.bretth.osmosis.core.store.StoreClassRegister;
+import com.bretth.osmosis.core.store.StoreReader;
+import com.bretth.osmosis.core.store.StoreWriter;
+import com.bretth.osmosis.core.store.Storeable;
 
 
 /**
@@ -13,9 +17,7 @@ import java.util.List;
  * 
  * @author Brett Henderson
  */
-public class Way extends Entity implements Comparable<Way> {
-	private static final long serialVersionUID = 1L;
-	
+public class Way extends Entity implements Comparable<Way>, Storeable {
 	
 	private List<SegmentReference> segmentReferenceList;
 	
@@ -34,6 +36,43 @@ public class Way extends Entity implements Comparable<Way> {
 		super(id, timestamp, user);
 		
 		segmentReferenceList = new ArrayList<SegmentReference>();
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param sr
+	 *            The store to read state from.
+	 * @param scr
+	 *            Maintains the mapping between classes and their identifiers
+	 *            within the store.
+	 */
+	public Way(StoreReader sr, StoreClassRegister scr) {
+		super(sr, scr);
+		
+		int segmentCount;
+		
+		segmentCount = sr.readInteger();
+		
+		segmentReferenceList = new ArrayList<SegmentReference>();
+		for (int i = 0; i < segmentCount; i++) {
+			addSegmentReference(new SegmentReference(sr, scr));
+		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void store(StoreWriter sw, StoreClassRegister scr) {
+		super.store(sw, scr);
+		
+		sw.writeInteger(segmentReferenceList.size());
+		for (SegmentReference segmentReference : segmentReferenceList) {
+			segmentReference.store(sw, scr);
+		}
 	}
 	
 	

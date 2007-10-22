@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.mysql.common.BaseTableReader;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 
@@ -62,7 +63,7 @@ public class CurrentWayNodeTableReader extends BaseTableReader<DBWayNode> {
 		
 		return new ReadResult<DBWayNode>(
 			true,
-			new DBWayNode(wayId, nodeId, sequenceId)
+			new DBWayNode(wayId, new WayNode(nodeId), sequenceId)
 		);
 	}
 }

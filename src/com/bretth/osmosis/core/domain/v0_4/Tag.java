@@ -1,6 +1,9 @@
 package com.bretth.osmosis.core.domain.v0_4;
 
-import java.io.Serializable;
+import com.bretth.osmosis.core.store.StoreClassRegister;
+import com.bretth.osmosis.core.store.StoreReader;
+import com.bretth.osmosis.core.store.StoreWriter;
+import com.bretth.osmosis.core.store.Storeable;
 
 
 /**
@@ -8,8 +11,7 @@ import java.io.Serializable;
  * 
  * @author Brett Henderson
  */
-public class Tag implements Comparable<Tag>, Serializable {
-	private static final long serialVersionUID = 1L;
+public class Tag implements Comparable<Tag>, Storeable {
 	
 	private String key;
 	private String value;
@@ -26,6 +28,29 @@ public class Tag implements Comparable<Tag>, Serializable {
 	public Tag(String key, String value) {
 		this.key = key;
 		this.value = value;
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param sr
+	 *            The store to read state from.
+	 * @param scr
+	 *            Maintains the mapping between classes and their identifiers
+	 *            within the store.
+	 */
+	public Tag(StoreReader sr, StoreClassRegister scr) {
+		this(sr.readString(), sr.readString());
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void store(StoreWriter sw, StoreClassRegister scr) {
+		sw.writeString(key);
+		sw.writeString(value);
 	}
 	
 	

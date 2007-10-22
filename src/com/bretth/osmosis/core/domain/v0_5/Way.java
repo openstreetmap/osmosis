@@ -6,15 +6,18 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.bretth.osmosis.core.store.StoreClassRegister;
+import com.bretth.osmosis.core.store.StoreReader;
+import com.bretth.osmosis.core.store.StoreWriter;
+import com.bretth.osmosis.core.store.Storeable;
+
 
 /**
  * A data class representing a single OSM way.
  * 
  * @author Brett Henderson
  */
-public class Way extends Entity implements Comparable<Way> {
-	private static final long serialVersionUID = 1L;
-	
+public class Way extends Entity implements Comparable<Way>, Storeable {
 	
 	private List<WayNode> wayNodeList;
 	
@@ -33,6 +36,43 @@ public class Way extends Entity implements Comparable<Way> {
 		super(id, timestamp, user);
 		
 		wayNodeList = new ArrayList<WayNode>();
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param sr
+	 *            The store to read state from.
+	 * @param scr
+	 *            Maintains the mapping between classes and their identifiers
+	 *            within the store.
+	 */
+	public Way(StoreReader sr, StoreClassRegister scr) {
+		super(sr, scr);
+		
+		int nodeCount;
+		
+		nodeCount = sr.readInteger();
+		
+		wayNodeList = new ArrayList<WayNode>();
+		for (int i = 0; i < nodeCount; i++) {
+			addWayNode(new WayNode(sr, scr));
+		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void store(StoreWriter sw, StoreClassRegister scr) {
+		super.store(sw, scr);
+		
+		sw.writeInteger(wayNodeList.size());
+		for (WayNode wayNode : wayNodeList) {
+			wayNode.store(sw, scr);
+		}
 	}
 	
 	

@@ -1,6 +1,10 @@
 package com.bretth.osmosis.core.mysql.v0_5.impl;
 
 import com.bretth.osmosis.core.domain.v0_5.WayNode;
+import com.bretth.osmosis.core.store.StoreClassRegister;
+import com.bretth.osmosis.core.store.StoreReader;
+import com.bretth.osmosis.core.store.StoreWriter;
+import com.bretth.osmosis.core.store.Storeable;
 
 
 /**
@@ -9,11 +13,10 @@ import com.bretth.osmosis.core.domain.v0_5.WayNode;
  * 
  * @author Brett Henderson
  */
-public class DBWayNode extends WayNode {
-	private static final long serialVersionUID = 1L;
-	
+public class DBWayNode implements Storeable {
 	
 	private long wayId;
+	private WayNode wayNode;
 	private int sequenceId;
 	
 	
@@ -22,16 +25,43 @@ public class DBWayNode extends WayNode {
 	 * 
 	 * @param wayId
 	 *            The owning way id.
-	 * @param nodeId
-	 *            The node being referenced.
+	 * @param wayNode
+	 *            The way node being referenced.
 	 * @param sequenceId
 	 *            The order of this node within the way.
 	 */
-	public DBWayNode(long wayId, long nodeId, int sequenceId) {
-		super(nodeId);
-		
+	public DBWayNode(long wayId, WayNode wayNode, int sequenceId) {
 		this.wayId = wayId;
+		this.wayNode = wayNode;
 		this.sequenceId = sequenceId;
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param sr
+	 *            The store to read state from.
+	 * @param scr
+	 *            Maintains the mapping between classes and their identifiers
+	 *            within the store.
+	 */
+	public DBWayNode(StoreReader sr, StoreClassRegister scr) {
+		this(
+			sr.readLong(),
+			new WayNode(sr, scr),
+			sr.readInteger()
+		);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void store(StoreWriter sw, StoreClassRegister scr) {
+		sw.writeLong(wayId);
+		wayNode.store(sw, scr);
+		sw.writeInteger(sequenceId);
 	}
 	
 	
@@ -40,6 +70,14 @@ public class DBWayNode extends WayNode {
 	 */
 	public long getWayId() {
 		return wayId;
+	}
+	
+	
+	/**
+	 * @return The way node.
+	 */
+	public WayNode getWayNode() {
+		return wayNode;
 	}
 	
 	

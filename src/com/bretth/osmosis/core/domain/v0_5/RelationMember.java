@@ -1,6 +1,9 @@
 package com.bretth.osmosis.core.domain.v0_5;
 
-import java.io.Serializable;
+import com.bretth.osmosis.core.store.StoreClassRegister;
+import com.bretth.osmosis.core.store.StoreReader;
+import com.bretth.osmosis.core.store.StoreWriter;
+import com.bretth.osmosis.core.store.Storeable;
 
 
 /**
@@ -8,8 +11,7 @@ import java.io.Serializable;
  * 
  * @author Brett Henderson
  */
-public class RelationMember implements Comparable<RelationMember>, Serializable {
-	private static final long serialVersionUID = 1L;
+public class RelationMember implements Comparable<RelationMember>, Storeable {
 	
 	private long memberId;
 	private EntityType memberType;
@@ -30,6 +32,34 @@ public class RelationMember implements Comparable<RelationMember>, Serializable 
 		this.memberId = memberId;
 		this.memberType = memberType;
 		this.memberRole = memberRole;
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param sr
+	 *            The store to read state from.
+	 * @param scr
+	 *            Maintains the mapping between classes and their identifiers
+	 *            within the store.
+	 */
+	public RelationMember(StoreReader sr, StoreClassRegister scr) {
+		this(
+			sr.readLong(),
+			EntityType.valueOf(sr.readString()),
+			sr.readString()
+		);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void store(StoreWriter sw, StoreClassRegister scr) {
+		sw.writeLong(memberId);
+		sw.writeString(memberType.toString());
+		sw.writeString(memberRole);
 	}
 	
 	

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
-import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
@@ -88,7 +87,7 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 			
 			// Load all tags for this way.
 			while (wayTagReader.hasNext() && wayTagReader.peekNext().getEntityId() == wayId) {
-				way.addTag(wayTagReader.next());
+				way.addTag(wayTagReader.next().getTag());
 			}
 			
 			// Skip all way nodes that are from lower id or lower version of the same id.
@@ -112,8 +111,8 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 			// The underlying query sorts node references by way id but not
 			// by their sequence number.
 			Collections.sort(wayNodes, new WayNodeComparator());
-			for (WayNode nodeReference : wayNodes) {
-				way.addWayNode(nodeReference);
+			for (DBWayNode dbWayNode : wayNodes) {
+				way.addWayNode(dbWayNode.getWayNode());
 			}
 			
 			nextValue = way;

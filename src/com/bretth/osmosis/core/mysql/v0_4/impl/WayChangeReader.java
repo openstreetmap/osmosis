@@ -9,7 +9,6 @@ import com.bretth.osmosis.core.container.v0_4.ChangeContainer;
 import com.bretth.osmosis.core.container.v0_4.WayContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
-import com.bretth.osmosis.core.domain.v0_4.SegmentReference;
 import com.bretth.osmosis.core.domain.v0_4.Way;
 import com.bretth.osmosis.core.mysql.common.EntityHistory;
 import com.bretth.osmosis.core.store.PeekableIterator;
@@ -98,8 +97,8 @@ public class WayChangeReader {
 		// The underlying query sorts segment references by way id but not
 		// by their sequence number.
 		Collections.sort(waySegments, new WaySegmentComparator());
-		for (SegmentReference segmentReference : waySegments) {
-			way.addSegmentReference(segmentReference);
+		for (WaySegment waySegment : waySegments) {
+			way.addSegmentReference(waySegment.getSegmentReference());
 		}
 		
 		// Add all applicable tags to the way.

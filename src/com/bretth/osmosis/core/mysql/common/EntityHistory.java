@@ -1,6 +1,11 @@
 package com.bretth.osmosis.core.mysql.common;
 
-import java.io.Serializable;
+import com.bretth.osmosis.core.store.ObjectReader;
+import com.bretth.osmosis.core.store.ObjectWriter;
+import com.bretth.osmosis.core.store.StoreClassRegister;
+import com.bretth.osmosis.core.store.StoreReader;
+import com.bretth.osmosis.core.store.StoreWriter;
+import com.bretth.osmosis.core.store.Storeable;
 
 
 /**
@@ -10,8 +15,7 @@ import java.io.Serializable;
  * @param <T>
  *            The type of entity that this class stores history for.
  */
-public class EntityHistory<T> implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class EntityHistory<T extends Storeable> implements Storeable {
 	
 	private T entity;
 	private int version;
@@ -32,6 +36,34 @@ public class EntityHistory<T> implements Serializable {
 		this.entity = entity;
 		this.version = version;
 		this.visible = visible;
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param sr
+	 *            The store to read state from.
+	 * @param scr
+	 *            Maintains the mapping between classes and their identifiers
+	 *            within the store.
+	 */
+	@SuppressWarnings("unchecked")
+	public EntityHistory(StoreReader sr, StoreClassRegister scr) {
+		entity = (T) new ObjectReader(sr, scr).readObject();
+		
+		version = sr.readInteger();
+		visible = sr.readBoolean();
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void store(StoreWriter sw, StoreClassRegister scr) {
+		new ObjectWriter(sw, scr).writeObject(entity);
+		sw.writeInteger(version);
+		sw.writeBoolean(visible);
 	}
 	
 	

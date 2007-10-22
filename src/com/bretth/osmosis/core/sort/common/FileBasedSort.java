@@ -9,6 +9,7 @@ import com.bretth.osmosis.core.store.ChunkedObjectStore;
 import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.store.Releasable;
 import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.store.Storeable;
 
 
 /**
@@ -19,7 +20,7 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
  *            The object type to be sorted.
  * @author Brett Henderson
  */
-public class FileBasedSort<T> implements Releasable {
+public class FileBasedSort<T extends Storeable> implements Releasable {
 	/**
 	 * The maximum number of entities to perform memory-based sorting on,
 	 * amounts larger than this will be split into chunks of this size, the

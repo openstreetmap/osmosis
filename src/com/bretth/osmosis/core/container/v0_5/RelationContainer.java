@@ -1,6 +1,9 @@
 package com.bretth.osmosis.core.container.v0_5;
 
 import com.bretth.osmosis.core.domain.v0_5.Relation;
+import com.bretth.osmosis.core.store.StoreClassRegister;
+import com.bretth.osmosis.core.store.StoreReader;
+import com.bretth.osmosis.core.store.StoreWriter;
 
 
 /**
@@ -23,6 +26,28 @@ public class RelationContainer extends EntityContainer {
 	 */
 	public RelationContainer(Relation relation) {
 		this.relation = relation;
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param sr
+	 *            The store to read state from.
+	 * @param scr
+	 *            Maintains the mapping between classes and their identifiers
+	 *            within the store.
+	 */
+	public RelationContainer(StoreReader sr, StoreClassRegister scr) {
+		relation = new Relation(sr, scr);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void store(StoreWriter sw, StoreClassRegister scr) {
+		relation.store(sw, scr);
 	}
 	
 	

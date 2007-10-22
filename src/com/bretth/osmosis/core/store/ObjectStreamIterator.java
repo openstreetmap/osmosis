@@ -1,11 +1,7 @@
 package com.bretth.osmosis.core.store;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.DataInputStream;
 import java.util.NoSuchElementException;
-
-import com.bretth.osmosis.core.OsmosisRuntimeException;
 
 
 /**
@@ -16,9 +12,10 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  *            The type of data to be returned by the iterator.
  * @author Brett Henderson
  */
-public class ObjectStreamIterator<T> implements ReleasableIterator<T> {
+public class ObjectStreamIterator<T extends Storeable> implements ReleasableIterator<T> {
 	
-	private ObjectInputStream inStream;
+	private DataInputStream inStream;
+	private ObjectReader objectReader;
 	private T nextElement;
 	
 	
@@ -27,41 +24,37 @@ public class ObjectStreamIterator<T> implements ReleasableIterator<T> {
 	 * 
 	 * @param inStream
 	 *            The stream to read objects from.
+	 * @param storeClassRegister
+	 *            The register defining the classes in the stream and their
+	 *            identifiers.
 	 */
-	public ObjectStreamIterator(ObjectInputStream inStream) {
+	public ObjectStreamIterator(DataInputStream inStream, StoreClassRegister storeClassRegister) {
 		this.inStream = inStream;
+		
+		objectReader = new ObjectReader(new StoreReader(inStream), storeClassRegister);
 	}
-
-
+	
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean hasNext() {
-		try {
-			if (nextElement != null) {
-				return true;
-			}
-			
-			try {
-				nextElement = (T) inStream.readObject();
-			} catch (EOFException e) {
-				return false;
-			}
-			
+		if (nextElement != null) {
 			return true;
-			
-		} catch (ClassNotFoundException e) {
-			throw new OsmosisRuntimeException("Unable to read object from object stream.", e);
-		} catch (IOException e) {
-			throw new OsmosisRuntimeException(
-				"Unable to read from object stream (If the error mentions \"Corrupt GZIP trailer\" upgrade your JDK to one that has fixed Bug 5092263).",
-				e
-			);
 		}
+		
+		try {
+			nextElement = (T) objectReader.readObject();
+			
+		} catch (NoMoreObjectsInStoreException e) {
+			return false;
+		}
+		
+		return true;
 	}
-
-
+	
+	
 	/**
 	 * {@inheritDoc}
 	 */

@@ -8,6 +8,7 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.mysql.common.BaseTableReader;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.EntityHistory;
@@ -97,7 +98,7 @@ public class WayNodeHistoryReader extends BaseTableReader<EntityHistory<DBWayNod
 		return new ReadResult<EntityHistory<DBWayNode>>(
 			true,
 			new EntityHistory<DBWayNode>(
-					new DBWayNode(wayId, nodeId, sequenceId), version, true)
+					new DBWayNode(wayId, new WayNode(nodeId), sequenceId), version, true)
 		);
 	}
 }

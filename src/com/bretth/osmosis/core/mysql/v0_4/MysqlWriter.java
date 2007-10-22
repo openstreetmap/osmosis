@@ -436,7 +436,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		
 		try {
 			statement.setLong(prmIndex++, waySegment.getWayId());
-			statement.setLong(prmIndex++, waySegment.getSegmentId());
+			statement.setLong(prmIndex++, waySegment.getSegmentReference().getSegmentId());
 			statement.setInt(prmIndex++, waySegment.getSequenceId());
 			statement.setInt(prmIndex++, 1);
 			
@@ -874,7 +874,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		for (int i = 0; i < segmentReferenceList.size(); i++) {
 			waySegmentBuffer.add(new WaySegment(
 				way.getId(),
-				segmentReferenceList.get(i).getSegmentId(),
+				segmentReferenceList.get(i),
 				i + 1
 			));
 		}

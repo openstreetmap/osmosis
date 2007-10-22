@@ -6,15 +6,15 @@ package com.bretth.osmosis.core.store;
  * objects to be written and retrieved later by their chunk index. The number of
  * objects and the size of the index is limited only by disk space.
  * 
- * @param <DataType>
- *            The object type to be stored.
+ * @param <T>
+ *            The class type to be stored.
  * @author Brett Henderson
  */
-public class ChunkedObjectStore<DataType> implements Releasable {
+public class ChunkedObjectStore<T extends Storeable> implements Releasable {
 	/**
 	 * Stores all the objects written to this store.
 	 */
-	private SegmentedObjectStore<DataType> objectStore;
+	private SegmentedObjectStore<T> objectStore;
 	
 	/**
 	 * Maintains both the file positions of each chunk and the number of objects
@@ -39,7 +39,7 @@ public class ChunkedObjectStore<DataType> implements Releasable {
 	 *            If true, the storage file will be compressed.
 	 */
 	public ChunkedObjectStore(String storageFilePrefix, String indexFilePrefix, boolean useCompression) {
-		objectStore = new SegmentedObjectStore<DataType>(storageFilePrefix, useCompression);
+		objectStore = new SegmentedObjectStore<T>(storageFilePrefix, useCompression);
 		indexStore = new IndexStore(indexFilePrefix);
 		
 		chunkCount = 0;
@@ -55,7 +55,7 @@ public class ChunkedObjectStore<DataType> implements Releasable {
 	 * @param data
 	 *            The object to be added.
 	 */
-	public void add(DataType data) {
+	public void add(T data) {
 		objectStore.add(data);
 		chunkObjectCount++;
 		
@@ -116,7 +116,7 @@ public class ChunkedObjectStore<DataType> implements Releasable {
 	 *            The chunk to read objects from.
 	 * @return An iterator providing access to contents of the store.
 	 */
-	public ReleasableIterator<DataType> iterate(long chunk) {
+	public ReleasableIterator<T> iterate(long chunk) {
 		// If a chunk is in progress, we need to complete it before continuing.
 		if (chunkInProgress) {
 			closeChunk();

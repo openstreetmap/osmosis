@@ -1,18 +1,17 @@
 package com.bretth.osmosis.core.store;
 
-import java.io.ObjectInputStream;
-
+import java.io.DataInputStream;
 
 
 /**
  * This class reads objects from an ObjectInputStream until the end of stream is
  * reached or a maximum number of objects is reached.
  * 
- * @param <DataType>
+ * @param <T>
  *            The type of data to be returned by the iterator.
  * @author Brett Henderson
  */
-public class SubObjectStreamIterator<DataType> extends ObjectStreamIterator<DataType> {
+public class SubObjectStreamIterator<T extends Storeable> extends ObjectStreamIterator<T> {
 	private long maxObjectCount;
 	private long objectCount;
 	
@@ -24,9 +23,12 @@ public class SubObjectStreamIterator<DataType> extends ObjectStreamIterator<Data
 	 *            The stream to read objects from.
 	 * @param maxObjectCount
 	 *            The maximum number of objects to read.
+	 * @param storeClassRegister
+	 *            The register defining the classes in the stream and their
+	 *            identifiers.
 	 */
-	public SubObjectStreamIterator(ObjectInputStream inStream, long maxObjectCount) {
-		super(inStream);
+	public SubObjectStreamIterator(DataInputStream inStream, StoreClassRegister storeClassRegister, long maxObjectCount) {
+		super(inStream, storeClassRegister);
 		
 		this.maxObjectCount = maxObjectCount;
 		
@@ -51,8 +53,8 @@ public class SubObjectStreamIterator<DataType> extends ObjectStreamIterator<Data
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DataType next() {
-		DataType result;
+	public T next() {
+		T result;
 		
 		result = super.next();
 		objectCount++;

@@ -1,12 +1,15 @@
 package com.bretth.osmosis.core.domain.v0_4;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.bretth.osmosis.core.store.StoreClassRegister;
+import com.bretth.osmosis.core.store.StoreReader;
+import com.bretth.osmosis.core.store.StoreWriter;
+import com.bretth.osmosis.core.store.Storeable;
 
 
 /**
@@ -15,7 +18,7 @@ import java.util.List;
  * 
  * @author Brett Henderson
  */
-public abstract class Entity implements Serializable {
+public abstract class Entity implements Storeable {
 	private long id;
 	private Date timestamp;
 	private List<Tag> tagList;
@@ -38,6 +41,47 @@ public abstract class Entity implements Serializable {
 		this.user = user;
 		
 		tagList = new ArrayList<Tag>();
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param sr
+	 *            The store to read state from.
+	 * @param scr
+	 *            Maintains the mapping between classes and their identifiers
+	 *            within the store.
+	 */
+	public Entity(StoreReader sr, StoreClassRegister scr) {
+		this(
+			sr.readLong(),
+			new Date(sr.readLong()),
+			sr.readString()
+		);
+		
+		int tagCount;
+		
+		tagCount = sr.readInteger();
+		
+		for (int i = 0; i < tagCount; i++) {
+			addTag(new Tag(sr, scr));
+		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void store(StoreWriter sw, StoreClassRegister scr) {
+		sw.writeLong(id);
+		sw.writeLong(timestamp.getTime());
+		sw.writeString(user);
+		
+		sw.writeInteger(tagList.size());
+		for (Tag tag : tagList) {
+			tag.store(sw, scr);
+		}
 	}
 	
 	

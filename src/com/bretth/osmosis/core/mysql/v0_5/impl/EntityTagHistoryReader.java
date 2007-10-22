@@ -8,6 +8,7 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.mysql.common.BaseTableReader;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.EntityHistory;
@@ -109,7 +110,7 @@ public class EntityTagHistoryReader extends BaseTableReader<EntityHistory<DBEnti
 		return new ReadResult<EntityHistory<DBEntityTag>>(
 			true,
 			new EntityHistory<DBEntityTag>(
-				new DBEntityTag(entityId, key, value), version, true)
+				new DBEntityTag(entityId, new Tag(key, value)), version, true)
 		);
 	}
 }

@@ -1,8 +1,7 @@
 package com.bretth.osmosis.core.container.v0_5;
 
-import java.io.Serializable;
-
 import com.bretth.osmosis.core.domain.v0_5.Entity;
+import com.bretth.osmosis.core.store.Storeable;
 
 
 /**
@@ -11,7 +10,7 @@ import com.bretth.osmosis.core.domain.v0_5.Entity;
  * 
  * @author Brett Henderson
  */
-public abstract class EntityContainer implements Serializable {
+public abstract class EntityContainer implements Storeable {
 	/**
 	 * Calls the appropriate process method with the contained entity.
 	 * 

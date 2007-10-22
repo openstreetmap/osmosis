@@ -1,4 +1,5 @@
 0.21
+Introduced a custom serialisation mechanism to improve compressed temporary file performance by approximately 5 times.
 
 0.20
 Fixed the integrity reporter task so that it writes new lines after each record.

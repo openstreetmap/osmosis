@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_5.EntityType;
+import com.bretth.osmosis.core.domain.v0_5.RelationMember;
 import com.bretth.osmosis.core.mysql.common.BaseTableReader;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.EntityHistory;
@@ -72,7 +73,18 @@ public class RelationMemberTableReader extends BaseTableReader<EntityHistory<DBR
 		
 		return new ReadResult<EntityHistory<DBRelationMember>>(
 			true,
-			new EntityHistory<DBRelationMember>(new DBRelationMember(relationId, memberId, memberType, memberRole), version, true)
+			new EntityHistory<DBRelationMember>(
+				new DBRelationMember(
+					relationId,
+					new RelationMember(
+						memberId,
+						memberType,
+						memberRole
+					)
+				),
+				version,
+				true
+			)
 		);
 	}
 }

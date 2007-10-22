@@ -1,0 +1,17 @@
+StoreReader
+-int readInteger()
+
+StoreWriter
+-writeInteger(int)
+
+StoreClassRegister
+-byte getIdForClass(Class)
+
+Storeable
+-store(StoreWriter, StoreClassRegister)
+
+ObjectReader
+-Storeable readObject()
+
+ObjectWriter
+-writeObject(Storeable)

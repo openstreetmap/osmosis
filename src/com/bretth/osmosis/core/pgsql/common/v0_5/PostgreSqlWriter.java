@@ -227,19 +227,22 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 *            The prepared statement to add the values to.
 	 * @param initialIndex
 	 *            The offset index of the first variable to set.
-	 * @param entityTag
+	 * @param dbEntityTag
 	 *            The entity tag containing the data to be inserted.
 	 */
-	private void populateEntityTagParameters(PreparedStatement statement, int initialIndex, DBEntityTag entityTag) {
+	private void populateEntityTagParameters(PreparedStatement statement, int initialIndex, DBEntityTag dbEntityTag) {
 		int prmIndex;
+		Tag tag;
 		
 		prmIndex = initialIndex;
 		
+		tag = dbEntityTag.getTag();
+		
 		try {
-			statement.setLong(prmIndex++, entityTag.getEntityId());
+			statement.setLong(prmIndex++, dbEntityTag.getEntityId());
 			statement.setInt(prmIndex++, 1);
-			statement.setString(prmIndex++, entityTag.getKey());
-			statement.setString(prmIndex++, entityTag.getValue());
+			statement.setString(prmIndex++, tag.getKey());
+			statement.setString(prmIndex++, tag.getValue());
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for an entity tag.", e);
@@ -427,7 +430,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addNodeTags(Node node) {
 		for (Tag tag : node.getTagList()) {
-			nodeTagBuffer.add(new DBEntityTag(node.getId(), tag.getKey(), tag.getValue()));
+			nodeTagBuffer.add(new DBEntityTag(node.getId(), tag));
 		}
 		
 		flushNodeTags(false);

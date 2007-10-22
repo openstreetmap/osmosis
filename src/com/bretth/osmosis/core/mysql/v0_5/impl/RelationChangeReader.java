@@ -87,14 +87,14 @@ public class RelationChangeReader {
 		while (relationMemberHistoryReader.hasNext() &&
 				relationMemberHistoryReader.peekNext().getEntity().getRelationId() == relation.getId() &&
 				relationMemberHistoryReader.peekNext().getVersion() == relationHistory.getVersion()) {
-			relation.addMember(relationMemberHistoryReader.next().getEntity());
+			relation.addMember(relationMemberHistoryReader.next().getEntity().getRelationMember());
 		}
 		
 		// Add all applicable tags to the relation.
 		while (relationTagHistoryReader.hasNext() &&
 				relationTagHistoryReader.peekNext().getEntity().getEntityId() == relation.getId() &&
 				relationTagHistoryReader.peekNext().getVersion() == relationHistory.getVersion()) {
-			relation.addTag(relationTagHistoryReader.next().getEntity());
+			relation.addTag(relationTagHistoryReader.next().getEntity().getTag());
 		}
 		
 		return relationHistory;

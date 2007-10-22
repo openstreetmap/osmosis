@@ -1,7 +1,11 @@
 package com.bretth.osmosis.core.container.v0_4;
 
-import java.io.Serializable;
-
+import com.bretth.osmosis.core.store.ObjectReader;
+import com.bretth.osmosis.core.store.ObjectWriter;
+import com.bretth.osmosis.core.store.StoreClassRegister;
+import com.bretth.osmosis.core.store.StoreReader;
+import com.bretth.osmosis.core.store.StoreWriter;
+import com.bretth.osmosis.core.store.Storeable;
 import com.bretth.osmosis.core.task.common.ChangeAction;
 
 
@@ -10,9 +14,7 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
  * 
  * @author Brett Henderson
  */
-public class ChangeContainer implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
+public class ChangeContainer implements Storeable {
 	
 	private EntityContainer entityContainer;
 	private ChangeAction action;
@@ -29,6 +31,30 @@ public class ChangeContainer implements Serializable {
 	public ChangeContainer(EntityContainer entityContainer, ChangeAction action) {
 		this.entityContainer = entityContainer;
 		this.action = action;
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param sr
+	 *            The store to read state from.
+	 * @param scr
+	 *            Maintains the mapping between classes and their identifiers
+	 *            within the store.
+	 */
+	public ChangeContainer(StoreReader sr, StoreClassRegister scr) {
+		entityContainer = (EntityContainer) new ObjectReader(sr, scr).readObject();
+		action = ChangeAction.valueOf(sr.readString());
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void store(StoreWriter sw, StoreClassRegister scr) {
+		new ObjectWriter(sw, scr).writeObject(entityContainer);
+		sw.writeString(action.toString());
 	}
 	
 	

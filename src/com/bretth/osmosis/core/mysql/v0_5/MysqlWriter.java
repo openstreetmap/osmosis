@@ -420,18 +420,21 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 *            The prepared statement to add the values to.
 	 * @param initialIndex
 	 *            The offset index of the first variable to set.
-	 * @param entityTag
+	 * @param dbEntityTag
 	 *            The entity tag containing the data to be inserted.
 	 */
-	private void populateEntityTagParameters(PreparedStatement statement, int initialIndex, DBEntityTag entityTag) {
+	private void populateEntityTagParameters(PreparedStatement statement, int initialIndex, DBEntityTag dbEntityTag) {
 		int prmIndex;
+		Tag tag;
 		
 		prmIndex = initialIndex;
 		
+		tag = dbEntityTag.getTag();
+		
 		try {
-			statement.setLong(prmIndex++, entityTag.getEntityId());
-			statement.setString(prmIndex++, entityTag.getKey());
-			statement.setString(prmIndex++, entityTag.getValue());
+			statement.setLong(prmIndex++, dbEntityTag.getEntityId());
+			statement.setString(prmIndex++, tag.getKey());
+			statement.setString(prmIndex++, tag.getValue());
 			statement.setInt(prmIndex++, 1);
 			
 		} catch (SQLException e) {
@@ -447,18 +450,18 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 *            The prepared statement to add the values to.
 	 * @param initialIndex
 	 *            The offset index of the first variable to set.
-	 * @param wayNode
+	 * @param dbWayNode
 	 *            The way node containing the data to be inserted.
 	 */
-	private void populateWayNodeParameters(PreparedStatement statement, int initialIndex, DBWayNode wayNode) {
+	private void populateWayNodeParameters(PreparedStatement statement, int initialIndex, DBWayNode dbWayNode) {
 		int prmIndex;
 		
 		prmIndex = initialIndex;
 		
 		try {
-			statement.setLong(prmIndex++, wayNode.getWayId());
-			statement.setLong(prmIndex++, wayNode.getNodeId());
-			statement.setInt(prmIndex++, wayNode.getSequenceId());
+			statement.setLong(prmIndex++, dbWayNode.getWayId());
+			statement.setLong(prmIndex++, dbWayNode.getWayNode().getNodeId());
+			statement.setInt(prmIndex++, dbWayNode.getSequenceId());
 			statement.setInt(prmIndex++, 1);
 			
 		} catch (SQLException e) {
@@ -503,16 +506,19 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 *            The prepared statement to add the values to.
 	 * @param initialIndex
 	 *            The offset index of the first variable to set.
-	 * @param relationMember
+	 * @param dbRelationMember
 	 *            The relation member containing the data to be inserted.
 	 */
-	private void populateRelationMemberParameters(PreparedStatement statement, int initialIndex, DBRelationMember relationMember) {
+	private void populateRelationMemberParameters(PreparedStatement statement, int initialIndex, DBRelationMember dbRelationMember) {
 		int prmIndex;
+		RelationMember relationMember;
 		
 		prmIndex = initialIndex;
 		
+		relationMember = dbRelationMember.getRelationMember();
+		
 		try {
-			statement.setLong(prmIndex++, relationMember.getRelationId());
+			statement.setLong(prmIndex++, dbRelationMember.getRelationId());
 			statement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
 			statement.setLong(prmIndex++, relationMember.getMemberId());
 			statement.setString(prmIndex++, relationMember.getMemberRole());
@@ -1036,7 +1042,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addWayTags(Way way) {
 		for (Tag tag: way.getTagList()) {
-			wayTagBuffer.add(new DBEntityTag(way.getId(), tag.getKey(), tag.getValue()));
+			wayTagBuffer.add(new DBEntityTag(way.getId(), tag));
 		}
 		
 		flushWayTags(false);
@@ -1057,7 +1063,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		for (int i = 0; i < nodeReferenceList.size(); i++) {
 			wayNodeBuffer.add(new DBWayNode(
 				way.getId(),
-				nodeReferenceList.get(i).getNodeId(),
+				nodeReferenceList.get(i),
 				i + 1
 			));
 		}
@@ -1096,7 +1102,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addRelationTags(Relation relation) {
 		for (Tag tag: relation.getTagList()) {
-			relationTagBuffer.add(new DBEntityTag(relation.getId(), tag.getKey(), tag.getValue()));
+			relationTagBuffer.add(new DBEntityTag(relation.getId(), tag));
 		}
 		
 		flushRelationTags(false);
@@ -1121,9 +1127,11 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			
 			relationMemberBuffer.add(new DBRelationMember(
 				relation.getId(),
-				member.getMemberId(),
-				member.getMemberType(),
-				member.getMemberRole()
+				new RelationMember(
+					member.getMemberId(),
+					member.getMemberType(),
+					member.getMemberRole()
+				)
 			));
 		}
 		

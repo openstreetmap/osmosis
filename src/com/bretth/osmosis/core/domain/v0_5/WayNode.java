@@ -1,6 +1,9 @@
 package com.bretth.osmosis.core.domain.v0_5;
 
-import java.io.Serializable;
+import com.bretth.osmosis.core.store.StoreClassRegister;
+import com.bretth.osmosis.core.store.StoreReader;
+import com.bretth.osmosis.core.store.StoreWriter;
+import com.bretth.osmosis.core.store.Storeable;
 
 
 /**
@@ -8,9 +11,7 @@ import java.io.Serializable;
  * 
  * @author Brett Henderson
  */
-public class WayNode implements Comparable<WayNode>, Serializable {
-	private static final long serialVersionUID = 1L;
-	
+public class WayNode implements Comparable<WayNode>, Storeable {
 	
 	private long nodeId;
 	
@@ -23,6 +24,28 @@ public class WayNode implements Comparable<WayNode>, Serializable {
 	 */
 	public WayNode(long nodeId) {
 		this.nodeId = nodeId;
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param sr
+	 *            The store to read state from.
+	 * @param scr
+	 *            Maintains the mapping between classes and their identifiers
+	 *            within the store.
+	 */
+	public WayNode(StoreReader sr, StoreClassRegister scr) {
+		this(sr.readLong());
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void store(StoreWriter sw, StoreClassRegister scr) {
+		sw.writeLong(nodeId);
 	}
 	
 	

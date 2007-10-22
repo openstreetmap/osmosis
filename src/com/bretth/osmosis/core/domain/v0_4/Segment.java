@@ -2,6 +2,9 @@ package com.bretth.osmosis.core.domain.v0_4;
 
 import java.util.Date;
 
+import com.bretth.osmosis.core.store.StoreClassRegister;
+import com.bretth.osmosis.core.store.StoreReader;
+import com.bretth.osmosis.core.store.StoreWriter;
 
 
 /**
@@ -36,6 +39,35 @@ public class Segment extends Entity implements Comparable<Segment> {
 		
 		this.from = from;
 		this.to = to;
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param sr
+	 *            The store to read state from.
+	 * @param scr
+	 *            Maintains the mapping between classes and their identifiers
+	 *            within the store.
+	 */
+	public Segment(StoreReader sr, StoreClassRegister scr) {
+		super(sr, scr);
+		
+		this.from = sr.readLong();
+		this.to = sr.readLong();
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void store(StoreWriter sw, StoreClassRegister scr) {
+		super.store(sw, scr);
+		
+		sw.writeLong(from);
+		sw.writeLong(to);
 	}
 	
 	

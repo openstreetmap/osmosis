@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.domain.v0_4.SegmentReference;
 import com.bretth.osmosis.core.mysql.common.BaseTableReader;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.EntityHistory;
@@ -65,7 +66,7 @@ public class WaySegmentTableReader extends BaseTableReader<EntityHistory<WaySegm
 		
 		return new ReadResult<EntityHistory<WaySegment>>(
 			true,
-			new EntityHistory<WaySegment>(new WaySegment(wayId, segmentId, sequenceId), version, true)
+			new EntityHistory<WaySegment>(new WaySegment(wayId, new SegmentReference(segmentId), sequenceId), version, true)
 		);
 	}
 }

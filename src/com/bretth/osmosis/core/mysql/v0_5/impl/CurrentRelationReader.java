@@ -84,7 +84,7 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 			
 			// Load all tags for this relation.
 			while (relationTagReader.hasNext() && relationTagReader.peekNext().getEntityId() == relationId) {
-				relation.addTag(relationTagReader.next());
+				relation.addTag(relationTagReader.next().getTag());
 			}
 			
 			// Skip all relation members that are from lower id or lower version of the same id.
@@ -102,7 +102,7 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 			
 			// Load all members matching this relation.
 			while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getRelationId() == relationId) {
-				relation.addMember(relationMemberReader.next());
+				relation.addMember(relationMemberReader.next().getRelationMember());
 			}
 			
 			nextValue = relation;

@@ -9,6 +9,7 @@ import java.util.Date;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_5.EntityType;
+import com.bretth.osmosis.core.domain.v0_5.RelationMember;
 import com.bretth.osmosis.core.mysql.common.BaseTableReader;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.EntityHistory;
@@ -104,7 +105,14 @@ public class RelationMemberHistoryReader extends BaseTableReader<EntityHistory<D
 		return new ReadResult<EntityHistory<DBRelationMember>>(
 			true,
 			new EntityHistory<DBRelationMember>(
-				new DBRelationMember(relationId, memberId, memberType, memberRole),
+				new DBRelationMember(
+					relationId,
+					new RelationMember(
+						memberId,
+						memberType,
+						memberRole
+					)
+				),
 				version, true
 			)
 		);

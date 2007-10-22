@@ -1,12 +1,12 @@
 package com.bretth.osmosis.core.store;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -20,17 +20,19 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * This class supports chunking where the stream is broken into segments. This
  * is achieved by calling the closeChunk method between add calls.
  * 
- * @param <DataType>
+ * @param <T>
  *            The object type to be stored.
  * @author Brett Henderson
  */
-public class SegmentedObjectStore<DataType> implements Releasable {
+public class SegmentedObjectStore<T extends Storeable> implements Releasable {
 	private StorageStage stage;
 	private String storageFilePrefix;
 	private File file;
 	private FileOutputStream fileOutStream;
-	private ObjectOutputStream objOutStream;
+	private DataOutputStream dataOutStream;
 	private ByteArrayOutputStream arrayOutStream;
+	private StoreClassRegister storeClassRegister;
+	private ObjectWriter objectWriter;
 	private boolean chunkActive; 
 	private boolean useCompression;
 	private long fileSize;
@@ -48,6 +50,8 @@ public class SegmentedObjectStore<DataType> implements Releasable {
 		this.storageFilePrefix = storageFilePrefix;
 		this.useCompression = useCompression;
 		
+		storeClassRegister = new StoreClassRegister();
+		
 		stage = StorageStage.NotStarted;
 		fileSize = 0;
 		
@@ -61,7 +65,7 @@ public class SegmentedObjectStore<DataType> implements Releasable {
 	 * @param data
 	 *            The object to be added.
 	 */
-	public void add(DataType data) {
+	public void add(T data) {
 		// We can't add if we've passed the add stage.
 		if (stage.compareTo(StorageStage.Add) > 0) {
 			throw new OsmosisRuntimeException("Cannot add to storage in stage " + stage + ".");
@@ -87,10 +91,12 @@ public class SegmentedObjectStore<DataType> implements Releasable {
 				arrayOutStream = new ByteArrayOutputStream();
 				
 				if (useCompression) {
-					objOutStream = new ObjectOutputStream(new GZIPOutputStream(arrayOutStream));
+					dataOutStream = new DataOutputStream(new GZIPOutputStream(arrayOutStream));
 				} else {
-					objOutStream = new ObjectOutputStream(arrayOutStream);
+					dataOutStream = new DataOutputStream(arrayOutStream);
 				}
+				
+				objectWriter = new ObjectWriter(new StoreWriter(dataOutStream), storeClassRegister);
 				
 				chunkActive = true;
 				
@@ -99,13 +105,14 @@ public class SegmentedObjectStore<DataType> implements Releasable {
 			}
 		}
 		
-		// Write the object to a buffer, update the file position based on the
-		// buffer size, write the buffer to file, and clear the buffer.
+		// Write the object to the store.
+		objectWriter.writeObject(data);
+		
+		// Update the file position based on the buffer size.
+		fileSize += arrayOutStream.size();
+		
+		// Write the buffer to file, and clear the buffer.
 		try {
-			objOutStream.writeObject(data);
-			objOutStream.reset();
-			fileSize += arrayOutStream.size();
-			
 			arrayOutStream.writeTo(fileOutStream);
 			arrayOutStream.reset();
 			
@@ -132,7 +139,7 @@ public class SegmentedObjectStore<DataType> implements Releasable {
 		// Nothing needs to be done if the chunk is not yet active.
 		if (chunkActive) {
 			try {
-				objOutStream.close();
+				dataOutStream.close();
 				fileSize += arrayOutStream.size();
 				
 				arrayOutStream.writeTo(fileOutStream);
@@ -140,7 +147,7 @@ public class SegmentedObjectStore<DataType> implements Releasable {
 				
 				// Subsequent writes must begin a new object stream.
 				arrayOutStream = null;
-				objOutStream = null;
+				dataOutStream = null;
 				
 				chunkActive = false;
 				
@@ -199,7 +206,7 @@ public class SegmentedObjectStore<DataType> implements Releasable {
 	 * @return An iterator for reading objects from the data store. This
 	 *         iterator must be released after use.
 	 */
-	public ReleasableIterator<DataType> iterate() {
+	public ReleasableIterator<T> iterate() {
 		return iterate(0, -1);
 	}
 	
@@ -215,14 +222,14 @@ public class SegmentedObjectStore<DataType> implements Releasable {
 	 * @return An iterator for reading objects from the data store. This
 	 *         iterator must be released after use.
 	 */
-	public ReleasableIterator<DataType> iterate(long streamOffset, long maxObjectCount) {
+	public ReleasableIterator<T> iterate(long streamOffset, long maxObjectCount) {
 		FileInputStream fileStream = null;
 		
 		try {
-			ObjectInputStream objStream;
+			DataInputStream dataInStream;
 			
 			if (!initializeIteratingStage()) {
-				return new EmptyIterator<DataType>();
+				return new EmptyIterator<T>();
 			}
 			
 			// If we've reached this far, we have a file containing data to be read.  Open a file stream on the file.
@@ -244,9 +251,9 @@ public class SegmentedObjectStore<DataType> implements Releasable {
 			// Create the object input stream.
 			try {
 				if (useCompression) {
-					objStream = new ObjectInputStream(new GZIPInputStream(fileStream));
+					dataInStream = new DataInputStream(new GZIPInputStream(fileStream));
 				} else {
-					objStream = new ObjectInputStream(fileStream);
+					dataInStream = new DataInputStream(fileStream);
 				}
 				
 			} catch (IOException e) {
@@ -258,9 +265,9 @@ public class SegmentedObjectStore<DataType> implements Releasable {
 			fileStream = null;
 			
 			if (maxObjectCount >= 0) {
-				return new SubObjectStreamIterator<DataType>(objStream, maxObjectCount);
+				return new SubObjectStreamIterator<T>(dataInStream, storeClassRegister, maxObjectCount);
 			} else {
-				return new ObjectStreamIterator<DataType>(objStream);
+				return new ObjectStreamIterator<T>(dataInStream, storeClassRegister);
 			}
 			
 		} finally {

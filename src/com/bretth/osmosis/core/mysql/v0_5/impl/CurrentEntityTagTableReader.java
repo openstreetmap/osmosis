@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.mysql.common.BaseTableReader;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 
@@ -68,7 +69,7 @@ public class CurrentEntityTagTableReader extends BaseTableReader<DBEntityTag> {
 		
 		return new ReadResult<DBEntityTag>(
 			true,
-			new DBEntityTag(entityId, key, value)
+			new DBEntityTag(entityId, new Tag(key, value))
 		);
 	}
 }

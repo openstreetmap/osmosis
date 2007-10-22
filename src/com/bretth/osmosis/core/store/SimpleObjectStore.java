@@ -1,11 +1,11 @@
 package com.bretth.osmosis.core.store;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -20,12 +20,14 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  *            The object type to be stored.
  * @author Brett Henderson
  */
-public class SimpleObjectStore<T> implements Releasable {
+public class SimpleObjectStore<T extends Storeable> implements Releasable {
 	private StorageStage stage;
 	private String storageFilePrefix;
 	private File file;
 	private FileOutputStream fileOutStream;
-	private ObjectOutputStream objOutStream;
+	private DataOutputStream dataOutStream;
+	private StoreClassRegister storeClassRegister;
+	private ObjectWriter objectWriter;
 	private boolean useCompression;
 	
 	
@@ -40,6 +42,8 @@ public class SimpleObjectStore<T> implements Releasable {
 	public SimpleObjectStore(String storageFilePrefix, boolean useCompression) {
 		this.storageFilePrefix = storageFilePrefix;
 		this.useCompression = useCompression;
+		
+		storeClassRegister = new StoreClassRegister();
 		
 		stage = StorageStage.NotStarted;
 	}
@@ -65,10 +69,12 @@ public class SimpleObjectStore<T> implements Releasable {
 				fileOutStream = new FileOutputStream(file);
 				
 				if (useCompression) {
-					objOutStream = new ObjectOutputStream(new GZIPOutputStream(fileOutStream));
+					dataOutStream = new DataOutputStream(new GZIPOutputStream(fileOutStream));
 				} else {
-					objOutStream = new ObjectOutputStream(fileOutStream);
+					dataOutStream = new DataOutputStream(fileOutStream);
 				}
+				
+				objectWriter = new ObjectWriter(new StoreWriter(dataOutStream), storeClassRegister);
 				
 				stage = StorageStage.Add;
 				
@@ -77,15 +83,8 @@ public class SimpleObjectStore<T> implements Releasable {
 			}
 		}
 		
-		// Write the object to a buffer, update the file position based on the
-		// buffer size, write the buffer to file, and clear the buffer.
-		try {
-			objOutStream.writeObject(data);
-			objOutStream.reset();
-			
-		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to write object to file.", e);
-		}
+		// Write the object to the store.
+		objectWriter.writeObject(data);
 	}
 	
 	
@@ -111,13 +110,13 @@ public class SimpleObjectStore<T> implements Releasable {
 		// If we're in the add stage, close the output streams.
 		if (stage.compareTo(StorageStage.Add) == 0) {
 			try {
-				objOutStream.close();
+				dataOutStream.close();
 				fileOutStream.close();
 				
 			} catch (IOException e) {
 				throw new OsmosisRuntimeException("Unable to close output stream.", e);
 			} finally {
-				objOutStream = null;
+				dataOutStream = null;
 				fileOutStream = null;
 			}
 			
@@ -139,7 +138,7 @@ public class SimpleObjectStore<T> implements Releasable {
 		FileInputStream fileStream = null;
 		
 		try {
-			ObjectInputStream objStream;
+			DataInputStream dataInStream;
 			
 			if (!initializeIteratingStage()) {
 				return new EmptyIterator<T>();
@@ -155,9 +154,9 @@ public class SimpleObjectStore<T> implements Releasable {
 			// Create the object input stream.
 			try {
 				if (useCompression) {
-					objStream = new ObjectInputStream(new GZIPInputStream(fileStream));
+					dataInStream = new DataInputStream(new GZIPInputStream(fileStream));
 				} else {
-					objStream = new ObjectInputStream(fileStream);
+					dataInStream = new DataInputStream(fileStream);
 				}
 				
 			} catch (IOException e) {
@@ -168,7 +167,7 @@ public class SimpleObjectStore<T> implements Releasable {
 			// the reference now so it isn't closed on method exit.
 			fileStream = null;
 			
-			return new ObjectStreamIterator<T>(objStream);
+			return new ObjectStreamIterator<T>(dataInStream, storeClassRegister);
 			
 		} finally {
 			if (fileStream != null) {
