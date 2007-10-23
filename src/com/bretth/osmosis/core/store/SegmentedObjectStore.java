@@ -175,7 +175,6 @@ public class SegmentedObjectStore<T extends Storeable> implements Releasable {
 		
 		// If no data was written, an empty iterator should be returned.
 		if (stage.compareTo(StorageStage.NotStarted) <= 0) {
-			stage = StorageStage.Reading;
 			return false;
 		}
 		

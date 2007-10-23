@@ -1,6 +1,6 @@
 package com.bretth.osmosis.core.store;
 
-import java.io.DataOutputStream;
+import java.io.DataOutput;
 import java.io.IOException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
@@ -12,19 +12,19 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class StoreWriter {
-	private DataOutputStream outputStream;
+	private DataOutput output;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param outputStream
+	 * @param output
 	 *            The stream to write the data to.
 	 * @param storeClassRegister
 	 *            The register maintaining the stored class type to id mapping.
 	 */
-	public StoreWriter(DataOutputStream outputStream) {
-		this.outputStream = outputStream;
+	public StoreWriter(DataOutput output) {
+		this.output = output;
 	}
 	
 	
@@ -36,7 +36,7 @@ public class StoreWriter {
 	 */
 	public void writeBoolean(boolean value) {
 		try {
-			outputStream.writeBoolean(value);
+			output.writeBoolean(value);
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to write boolean " + value + " to the store.", e);
 		}
@@ -51,7 +51,7 @@ public class StoreWriter {
 	 */
 	public void writeByte(byte value) {
 		try {
-			outputStream.writeByte(value);
+			output.writeByte(value);
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to write byte " + value + " to the store.", e);
 		}
@@ -66,7 +66,7 @@ public class StoreWriter {
 	 */
 	public void writeInteger(int value) {
 		try {
-			outputStream.writeInt(value);
+			output.writeInt(value);
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to write integer " + value + " to the store.", e);
 		}
@@ -81,7 +81,7 @@ public class StoreWriter {
 	 */
 	public void writeLong(long value) {
 		try {
-			outputStream.writeLong(value);
+			output.writeLong(value);
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to write long " + value + " to the store.", e);
 		}
@@ -96,7 +96,7 @@ public class StoreWriter {
 	 */
 	public void writeDouble(double value) {
 		try {
-			outputStream.writeDouble(value);
+			output.writeDouble(value);
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to write double " + value + " to the store.", e);
 		}
@@ -111,7 +111,7 @@ public class StoreWriter {
 	 */
 	public void writeString(String value) {
 		try {
-			outputStream.writeUTF(value);
+			output.writeUTF(value);
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to write String (" + value + ") to the store.", e);
 		}

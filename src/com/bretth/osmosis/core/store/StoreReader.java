@@ -1,6 +1,6 @@
 package com.bretth.osmosis.core.store;
 
-import java.io.DataInputStream;
+import java.io.DataInput;
 import java.io.EOFException;
 import java.io.IOException;
 
@@ -13,17 +13,17 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class StoreReader {
-	private DataInputStream inputStream;
+	private DataInput input;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param inputStream
-	 *            The stream to read data from.
+	 * @param input
+	 *            The data input to read data from.
 	 */
-	public StoreReader(DataInputStream inputStream) {
-		this.inputStream = inputStream;
+	public StoreReader(DataInput input) {
+		this.input = input;
 	}
 	
 	
@@ -34,7 +34,7 @@ public class StoreReader {
 	 */
 	public boolean readBoolean() {
 		try {
-			return inputStream.readBoolean();
+			return input.readBoolean();
 		} catch (EOFException e) {
 			throw new EndOfStoreException("End of stream was reached while attempting to read a boolean from the store.", e);
 		} catch (IOException e) {
@@ -50,7 +50,7 @@ public class StoreReader {
 	 */
 	public byte readByte() {
 		try {
-			return inputStream.readByte();
+			return input.readByte();
 		} catch (EOFException e) {
 			throw new EndOfStoreException("End of stream was reached while attempting to read a byte from the store.", e);
 		} catch (IOException e) {
@@ -66,7 +66,7 @@ public class StoreReader {
 	 */
 	public int readInteger() {
 		try {
-			return inputStream.readInt();
+			return input.readInt();
 		} catch (EOFException e) {
 			throw new EndOfStoreException("End of stream was reached while attempting to read an integer from the store.", e);
 		} catch (IOException e) {
@@ -82,7 +82,7 @@ public class StoreReader {
 	 */
 	public long readLong() {
 		try {
-			return inputStream.readLong();
+			return input.readLong();
 		} catch (EOFException e) {
 			throw new EndOfStoreException("End of stream was reached while attempting to read a long from the store.", e);
 		} catch (IOException e) {
@@ -98,7 +98,7 @@ public class StoreReader {
 	 */
 	public double readDouble() {
 		try {
-			return inputStream.readDouble();
+			return input.readDouble();
 		} catch (EOFException e) {
 			throw new EndOfStoreException("End of stream was reached while attempting to read a double from the store.", e);
 		} catch (IOException e) {
@@ -114,7 +114,7 @@ public class StoreReader {
 	 */
 	public String readString() {
 		try {
-			return inputStream.readUTF();
+			return input.readUTF();
 		} catch (EOFException e) {
 			throw new EndOfStoreException("End of stream was reached while attempting to read a String from the store.", e);
 		} catch (IOException e) {
