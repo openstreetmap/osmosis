@@ -88,7 +88,11 @@ public class EntityProgressLogger implements SinkSource {
 	 * {@inheritDoc}
 	 */
 	public void complete() {
+		log.info("Processing completion steps.");
+		
 		sink.complete();
+		
+		log.info("Processing complete.");
 	}
 	
 	
