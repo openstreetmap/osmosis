@@ -1,0 +1,3 @@
+Brett Henderson - Majority of existing code.
+Marcus Wolschon - XmlDownloader (--read-api) task.
+Karl Newman - Area filtering task (--bounding-box, --bounding-polygon) improvements.

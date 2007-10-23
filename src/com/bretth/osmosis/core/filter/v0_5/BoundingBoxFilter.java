@@ -28,8 +28,14 @@ public class BoundingBoxFilter extends AreaFilter {
 	 *            The latitude marking the top edge of the bounding box.
 	 * @param bottom
 	 *            The latitude marking the bottom edge of the bounding box.
+	 * @param completeWays
+	 *            Include all nodes for ways which have at least one node inside the filtered area.
+	 * @param completeRelations
+	 *            Include all relations referenced by other relations which have members inside
+	 *            the filtered area.
 	 */
-	public BoundingBoxFilter(double left, double right, double top, double bottom) {
+	public BoundingBoxFilter(double left, double right, double top, double bottom, boolean completeWays, boolean completeRelations) {
+	    	super(completeWays, completeRelations);
 		this.left = left;
 		this.right = right;
 		this.top = top;

@@ -14,6 +14,8 @@ import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.filter.common.BigBitSet;
+import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.store.SimpleObjectStore;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 import com.bretth.osmosis.core.task.v0_5.SinkSource;
 
@@ -22,21 +24,45 @@ import com.bretth.osmosis.core.task.v0_5.SinkSource;
  * A base class for all tasks filter entities within an area.
  * 
  * @author Brett Henderson
+ * @author Karl Newman
  */
 public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	private Sink sink;
 	private BigBitSet availableNodes;
+	private BigBitSet requiredNodes; // Nodes needed to make complete Ways
+	private SimpleObjectStore<NodeContainer> allNodes;
+	private boolean completeWays;
 	private BigBitSet availableWays;
+	private SimpleObjectStore<WayContainer> allWays;
 	private BigBitSet availableRelations;
+	private boolean completeRelations;
+	private SimpleObjectStore<RelationContainer> allRelations;
 	
 	
 	/**
 	 * Creates a new instance.
+	 * 
+	 * @param completeWays
+	 *            Include all nodes for ways which have at least one node inside the filtered area.
+	 * @param completeRelations
+	 *            Include all relations referenced by other relations which have members inside the
+	 *            filtered area.
 	 */
-	public AreaFilter() {
+	public AreaFilter(boolean completeWays, boolean completeRelations) {
+		this.completeWays = completeWays;
+		this.completeRelations = completeRelations;
+		
 		availableNodes = new BigBitSet();
+		if (completeWays) {
+			requiredNodes = new BigBitSet();
+			allNodes = new SimpleObjectStore<NodeContainer>("afnd", true);
+			allWays = new SimpleObjectStore<WayContainer>("afwy", true);
+		}
 		availableWays = new BigBitSet();
 		availableRelations = new BigBitSet();
+		if (this.completeRelations || this.completeWays) {
+			allRelations = new SimpleObjectStore<RelationContainer>("afrl", true);
+		}
 	}
 	
 	
@@ -70,11 +96,16 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		node = container.getEntity();
 		nodeId = node.getId();
 		
+		// If complete ways are desired, stuff the node into a file
+		if (completeWays) {
+			allNodes.add(container);
+		}
 		// Only add the node if it lies within the box boundaries.
 		if (isNodeWithinArea(node)) {
 			availableNodes.set(nodeId);
-			
-			sink.process(container);
+			if (!completeWays) { // just pass it on immediately
+				sink.process(container);
+			}
 		}
 	}
 	
@@ -84,14 +115,45 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	 */
 	public void process(WayContainer container) {
 		Way way;
-		Way filteredWay;
 		
 		way = container.getEntity();
+
+		// First look through all the nodes to see if any are within the filtered area
+		for (WayNode nodeReference : way.getWayNodeList()) {
+			if (availableNodes.get(nodeReference.getNodeId())) {
+				availableWays.set(way.getId());
+				break;
+			}
+		}
 		
-		// Create a new way object to contain only items within the bounding box.
+		// If the way has at least one node in the filtered area
+		if (availableWays.get(way.getId())) {
+			// If complete ways are desired, mark all its nodes as required, then stuff the way into
+			// a file until all the ways are read
+			if (completeWays) {
+				for (WayNode nodeReference : way.getWayNodeList()) {
+					requiredNodes.set(nodeReference.getNodeId());
+				}
+				allWays.add(container);
+			} else { // just filter it on the available nodes and pass it on
+				emitFilteredWay(way);
+			}
+		} 
+	}
+	
+	/**
+	 * Construct a new way composed of only those nodes which are available and send it on to the
+	 * sink.
+	 * @param way
+	 *            Complete way entity from which to filter out nodes which are not available.
+	 */
+	private void emitFilteredWay(Way way) {
+		Way filteredWay;
+		
+		// Create a new way object to contain only available nodes.
 		filteredWay = new Way(way.getId(), way.getTimestamp(), way.getUser());
 		
-		// Only add node references for nodes that are within the bounding box.
+		// Only add node references for nodes that are available.
 		for (WayNode nodeReference : way.getWayNodeList()) {
 			long nodeId;
 			
@@ -104,12 +166,10 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		
 		// Only add ways that contain nodes.
 		if (filteredWay.getWayNodeList().size() > 0) {
-			// Add all tags to the filtered node.
+			// Add all tags to the filtered way.
 			for (Tag tag : way.getTagList()) {
 				filteredWay.addTag(tag);
 			}
-			
-			availableWays.set(way.getId());
 			
 			sink.process(new WayContainer(filteredWay));
 		}
@@ -121,14 +181,58 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	 */
 	public void process(RelationContainer container) {
 		Relation relation;
-		Relation filteredRelation;
 		
 		relation = container.getEntity();
+
+		// If complete relations are wanted, then mark each one as available and stuff them
+		// into a file for later retrieval. This has a potential referential integrity problem
+		// in that if it is marked as available and referenced by another relation, but later
+		// when it is read back, none of its members are available, the filtered relation will
+		// be empty so it won't get passed on to the sink.
+		if (completeRelations) {
+			availableRelations.set(relation.getId());
+		} else { // examine the relation to see if it should be passed on
+			// First look through all the members to see if any are within the filtered area
+			for (RelationMember member : relation.getMemberList()) {
+				long memberId;
+				EntityType memberType;
+				
+				memberId = member.getMemberId();
+				memberType = member.getMemberType();
+				
+				if ((EntityType.Node.equals(memberType) && availableNodes.get(memberId))
+					|| (EntityType.Way.equals(memberType) && availableWays.get(memberId)) 
+					|| (EntityType.Relation.equals(memberType) && availableRelations.get(memberId))) {
+						availableRelations.set(relation.getId());
+						break;
+				}
+			}
+		}
 		
-		// Create a new relation object to contain only items within the bounding box.
+		// if the relation is of interest
+		if (availableRelations.get(relation.getId())) {
+			// if the ways and nodes are being saved, or if complete relations are required 
+			if (completeWays || completeRelations) {
+				allRelations.add(container);
+			} else { // just filter it on available members and pass it on to the sink
+				emitFilteredRelation(relation);
+			}
+		}
+	}
+
+
+	/**
+	 * Construct a new relation composed of only those entities which are available and send it on 
+	 * to the sink.
+     * @param relation
+     *            Complete relation from which to filter out members which are not available.
+     */
+    private void emitFilteredRelation(Relation relation) {
+	    Relation filteredRelation;
+	    // Create a new relation object to contain only items within the bounding box.
 		filteredRelation = new Relation(relation.getId(), relation.getTimestamp(), relation.getUser());
 		
-		// Only add members for entities that are within the bounding box.
+		// Only add members for entities that are available.
 		for (RelationMember member : relation.getMemberList()) {
 			long memberId;
 			EntityType memberType;
@@ -160,8 +264,6 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 				filteredRelation.addTag(tag);
 			}
 			
-			availableRelations.set(relation.getId());
-			
 			sink.process(new RelationContainer(filteredRelation));
 		}
 	}
@@ -171,6 +273,41 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void complete() {
+		ReleasableIterator<NodeContainer> nodeIterator;
+		ReleasableIterator<WayContainer> wayIterator;
+		ReleasableIterator<RelationContainer> relationIterator;
+		NodeContainer nodeContainer;
+		long nodeId;
+		if (completeWays) {
+			// first send on all the nodes
+			nodeIterator = allNodes.iterate();
+			while (nodeIterator.hasNext()) {
+				nodeContainer = nodeIterator.next();
+				nodeId = nodeContainer.getEntity().getId();
+				// Send on all the stored nodes which are available (in the filtered area) or
+				// required (to make a way complete) 
+				if (availableNodes.get(nodeId) || requiredNodes.get(nodeId)) {
+					availableNodes.set(nodeId); // make sure to mark it as available for ways
+					sink.process(nodeContainer);
+				}
+			}
+			// 
+			nodeIterator.release();
+			nodeIterator = null;
+			// next send on all the ways
+			wayIterator = allWays.iterate();
+			while (wayIterator.hasNext()) {
+				emitFilteredWay(wayIterator.next().getEntity());
+			}
+			wayIterator.release();
+			wayIterator = null;
+		}
+		if (completeWays || completeRelations) {
+			relationIterator = allRelations.iterate();
+			while (relationIterator.hasNext()) {
+				emitFilteredRelation(relationIterator.next().getEntity());
+			}
+		}
 		sink.complete();
 	}
 	
@@ -179,6 +316,15 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void release() {
+		if (allNodes != null) {
+			allNodes.release();
+		}
+		if (allWays != null) {
+			allWays.release();			
+		}
+		if (allRelations != null) {
+			allRelations.release();
+		}
 		sink.release();
 	}
 	

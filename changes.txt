@@ -1,6 +1,7 @@
 0.21
 Introduced a custom serialisation mechanism to improve compressed temporary file performance by approximately 5 times.
 Added a new RandomAccessObjectStore class which can be used as the basis for smarter tasks requiring access to data multiple times.
+Added completeWays and completeRelations arguments to the area filtering tasks to provide more control over the filtering process.
 
 0.20
 Fixed the integrity reporter task so that it writes new lines after each record.

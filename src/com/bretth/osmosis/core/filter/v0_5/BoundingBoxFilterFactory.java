@@ -21,6 +21,10 @@ public class BoundingBoxFilterFactory extends TaskManagerFactory {
 	private static final double DEFAULT_RIGHT = 180;
 	private static final double DEFAULT_TOP = 90;
 	private static final double DEFAULT_BOTTOM = -90;
+	private static final String ARG_COMPLETE_WAYS = "completeWays";
+	private static final String ARG_COMPLETE_RELATIONS = "completeRelations";
+	private static final boolean DEFAULT_COMPLETE_WAYS = false;
+	private static final boolean DEFAULT_COMPLETE_RELATIONS = false;
 
 	
 	/**
@@ -32,16 +36,20 @@ public class BoundingBoxFilterFactory extends TaskManagerFactory {
 		double right;
 		double top;
 		double bottom;
+		boolean completeWays;
+		boolean completeRelations;
 		
 		// Get the task arguments.
 		left = getDoubleArgument(taskId, taskArgs, ARG_LEFT, DEFAULT_LEFT);
 		right = getDoubleArgument(taskId, taskArgs, ARG_RIGHT, DEFAULT_RIGHT);
 		top = getDoubleArgument(taskId, taskArgs, ARG_TOP, DEFAULT_TOP);
 		bottom = getDoubleArgument(taskId, taskArgs, ARG_BOTTOM, DEFAULT_BOTTOM);
+		completeWays = getBooleanArgument(taskId, taskArgs, ARG_COMPLETE_WAYS, DEFAULT_COMPLETE_WAYS);
+		completeRelations = getBooleanArgument(taskId, taskArgs, ARG_COMPLETE_RELATIONS, DEFAULT_COMPLETE_RELATIONS);
 		
 		return new SinkSourceManager(
 			taskId,
-			new BoundingBoxFilter(left, right, top, bottom),
+			new BoundingBoxFilter(left, right, top, bottom, completeWays, completeRelations),
 			pipeArgs
 		);
 	}

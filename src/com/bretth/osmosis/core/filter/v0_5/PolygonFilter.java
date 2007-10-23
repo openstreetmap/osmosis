@@ -24,8 +24,14 @@ public class PolygonFilter extends AreaFilter {
 	 * 
 	 * @param polygonFile
 	 *            The file containing the polygon coordinates.
+	 * @param completeWays
+	 *            Include all nodes for ways which have at least one node inside the filtered area.
+	 * @param completeRelations
+	 *            Include all relations referenced by other relations which have members inside
+	 *            the filtered area.
 	 */
-	public PolygonFilter(File polygonFile) {
+	public PolygonFilter(File polygonFile, boolean completeWays, boolean completeRelations) {
+	    	super(completeWays, completeRelations);
 		this.polygonFile = polygonFile;
 		
 		area = null;
