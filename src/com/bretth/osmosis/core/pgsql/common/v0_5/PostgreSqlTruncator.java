@@ -62,6 +62,8 @@ public class PostgreSqlTruncator implements RunnableTask {
 				dbCtx.executeStatement(SQL_STATEMENTS[i]);
 			}
 			
+			dbCtx.commit();
+			
 		} finally {
 			dbCtx.release();
 		}
