@@ -27,6 +27,8 @@ import com.bretth.osmosis.core.sort.v0_4.ChangeForStreamableApplierComparator;
 import com.bretth.osmosis.core.sort.v0_4.ChangeSorterFactory;
 import com.bretth.osmosis.core.sort.v0_4.EntityByTypeThenIdComparator;
 import com.bretth.osmosis.core.sort.v0_4.EntitySorterFactory;
+import com.bretth.osmosis.core.tee.v0_5.ChangeTeeFactory;
+import com.bretth.osmosis.core.tee.v0_5.EntityTeeFactory;
 import com.bretth.osmosis.core.xml.v0_4.XmlChangeReaderFactory;
 import com.bretth.osmosis.core.xml.v0_4.XmlChangeWriterFactory;
 import com.bretth.osmosis.core.xml.v0_4.XmlDownloaderFactory;
@@ -91,6 +93,8 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("truncate-pgsql", new PostgreSqlTruncatorFactory());
 		TaskManagerFactory.register("log-progress", new EntityProgressLoggerFactory());
 		TaskManagerFactory.register("log-change-progress", new ChangeProgressLoggerFactory());
+		TaskManagerFactory.register("tee", new EntityTeeFactory());
+		TaskManagerFactory.register("tee-change", new ChangeTeeFactory());
 		
 		TaskManagerFactory.register("apply-change-0.4", new ChangeApplierFactory());
 		TaskManagerFactory.register("bounding-box-0.4", new BoundingBoxFilterFactory());
@@ -146,5 +150,7 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("truncate-pgsql-0.5", new PostgreSqlTruncatorFactory());
 		TaskManagerFactory.register("log-progress-0.5", new EntityProgressLoggerFactory());
 		TaskManagerFactory.register("log-change-progress-0.5", new ChangeProgressLoggerFactory());
+		TaskManagerFactory.register("tee-0.5", new EntityTeeFactory());
+		TaskManagerFactory.register("tee-change-0.5", new ChangeTeeFactory());
 	}
 }

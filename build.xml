@@ -6,7 +6,7 @@
 	
 	<!-- set global properties for this build -->
 	<property name="project.name" value="osmosis"/>
-	<property name="project.version" value="0.20.3"/>
+	<property name="project.version" value="0.20.4"/>
 	
 	<!-- Define a classpath containing all lib jars. -->
 	<path id="libclasspath">
