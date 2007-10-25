@@ -102,3 +102,5 @@ Update the bounding box and polygon tasks to handle negative identifiers.
 **********
 Modify bounding box and xml downloader tasks to use minLat, maxLat, minLon, maxLon arguments instead of left, right, top and bottom.
 
+**********
+Add support for writing to MonetDB in attempt to improve on import speed provided by planetosm-to-db.pl.
