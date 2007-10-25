@@ -20,8 +20,6 @@ public class StoreWriter {
 	 * 
 	 * @param output
 	 *            The stream to write the data to.
-	 * @param storeClassRegister
-	 *            The register maintaining the stored class type to id mapping.
 	 */
 	public StoreWriter(DataOutput output) {
 		this.output = output;

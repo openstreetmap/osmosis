@@ -30,8 +30,6 @@ public class RandomAccessObjectStore<T extends Storeable> implements Releasable 
 	 * 
 	 * @param storageFilePrefix
 	 *            The prefix of the storage file.
-	 * @param useCompression
-	 *            If true, the storage file will be compressed.
 	 */
 	public RandomAccessObjectStore(String storageFilePrefix) {
 		this.storageFilePrefix = storageFilePrefix;
