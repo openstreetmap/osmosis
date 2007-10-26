@@ -55,13 +55,17 @@ public abstract class Entity implements Storeable {
 	 *            within the store.
 	 */
 	public Entity(StoreReader sr, StoreClassRegister scr) {
-		this(
-			sr.readLong(),
-			new Date(sr.readLong()),
-			sr.readString()
-		);
-		
 		int tagCount;
+		
+		id = sr.readLong();
+		if (sr.readBoolean()) {
+			timestamp = new Date(sr.readLong());
+		}
+		if (sr.readBoolean()) {
+			user = sr.readString();
+		}
+		
+		tagList = new ArrayList<Tag>();
 		
 		tagCount = sr.readInteger();
 		
@@ -76,8 +80,18 @@ public abstract class Entity implements Storeable {
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		sw.writeLong(id);
-		sw.writeLong(timestamp.getTime());
-		sw.writeString(user);
+		if (timestamp != null) {
+			sw.writeBoolean(true);
+			sw.writeLong(timestamp.getTime());
+		} else {
+			sw.writeBoolean(false);
+		}
+		if (user != null) {
+			sw.writeBoolean(true);
+			sw.writeString(user);
+		} else {
+			sw.writeBoolean(false);
+		}
 		
 		sw.writeInteger(tagList.size());
 		for (Tag tag : tagList) {
