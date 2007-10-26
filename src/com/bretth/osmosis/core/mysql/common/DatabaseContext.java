@@ -82,7 +82,7 @@ public class DatabaseContext {
 					+ loginCredentials.getDatabase()
 			    	+ "?user=" + loginCredentials.getUser()
 			    	+ "&password=" + loginCredentials.getPassword()
-			    	+ "&useUnicode=true&characterEncoding=UTF-8"// + "&profileSql=true"
+			    	//+ "&useUnicode=true&characterEncoding=UTF-8"// + "&profileSql=true"
 			    );
 				
 				connection.setAutoCommit(false);
