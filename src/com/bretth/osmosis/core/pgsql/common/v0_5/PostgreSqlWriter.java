@@ -205,6 +205,11 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		
 		prmIndex = initialIndex;
 		
+		// We can't write an entity with a null timestamp.
+		if (node.getTimestamp() == null) {
+			throw new OsmosisRuntimeException("Node " + node.getId() + " does not have a timestamp set.");
+		}
+		
 		try {
 			statement.setLong(prmIndex++, node.getId());
 			statement.setInt(prmIndex++, 1);
