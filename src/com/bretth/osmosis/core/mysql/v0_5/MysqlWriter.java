@@ -369,6 +369,11 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		
 		prmIndex = initialIndex;
 		
+		// We can't write an entity with a null timestamp.
+		if (node.getTimestamp() == null) {
+			throw new OsmosisRuntimeException("Node " + node.getId() + " does not have a timestamp set.");
+		}
+		
 		try {
 			statement.setLong(prmIndex++, node.getId());
 			statement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
@@ -399,6 +404,11 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		int prmIndex;
 		
 		prmIndex = initialIndex;
+		
+		// We can't write an entity with a null timestamp.
+		if (way.getTimestamp() == null) {
+			throw new OsmosisRuntimeException("Way " + way.getId() + " does not have a timestamp set.");
+		}
 		
 		try {
 			statement.setLong(prmIndex++, way.getId());
@@ -484,6 +494,11 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		int prmIndex;
 		
 		prmIndex = initialIndex;
+		
+		// We can't write an entity with a null timestamp.
+		if (relation.getTimestamp() == null) {
+			throw new OsmosisRuntimeException("Relation " + relation.getId() + " does not have a timestamp set.");
+		}
 		
 		try {
 			statement.setLong(prmIndex++, relation.getId());

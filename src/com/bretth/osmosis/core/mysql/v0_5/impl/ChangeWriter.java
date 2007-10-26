@@ -215,6 +215,11 @@ public class ChangeWriter {
 	public void write(Node node, ChangeAction action) {
 		boolean visible;
 		int prmIndex;
+
+		// We can't write an entity with a null timestamp.
+		if (node.getTimestamp() == null) {
+			throw new OsmosisRuntimeException("Node " + node.getId() + " does not have a timestamp set.");
+		}
 		
 		// If this is a deletion, the entity is not visible.
 		visible = !action.equals(ChangeAction.Delete);
@@ -287,6 +292,11 @@ public class ChangeWriter {
 		int prmIndex;
 		int version;
 		List<WayNode> nodeReferenceList;
+
+		// We can't write an entity with a null timestamp.
+		if (way.getTimestamp() == null) {
+			throw new OsmosisRuntimeException("Way " + way.getId() + " does not have a timestamp set.");
+		}
 		
 		nodeReferenceList = way.getWayNodeList();
 		
@@ -460,6 +470,11 @@ public class ChangeWriter {
 		int prmIndex;
 		int version;
 		List<RelationMember> relationMemberList;
+
+		// We can't write an entity with a null timestamp.
+		if (relation.getTimestamp() == null) {
+			throw new OsmosisRuntimeException("Relation " + relation.getId() + " does not have a timestamp set.");
+		}
 		
 		relationMemberList = relation.getMemberList();
 		

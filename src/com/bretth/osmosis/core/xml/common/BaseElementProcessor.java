@@ -79,7 +79,7 @@ public abstract class BaseElementProcessor implements ElementProcessor {
 	 * 
 	 * @param data
 	 *            The date string to be parsed.
-	 * @return The parsed date.
+	 * @return The parsed date (if dateparsing is enabled).
 	 */
 	protected Date parseTimestamp(String data) {
 		if (enableDateParsing) {

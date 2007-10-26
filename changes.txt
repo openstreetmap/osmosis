@@ -1,3 +1,6 @@
+0.22
+Updated mysql writing tasks to check if a timestamp is set and raise a meaningful error indicating where the error occurred.
+
 0.21
 Introduced a custom serialisation mechanism to improve compressed temporary file performance by approximately 5 times.
 Added a new RandomAccessObjectStore class which can be used as the basis for smarter tasks requiring access to data multiple times.
