@@ -2,6 +2,7 @@
 Updated mysql writing tasks to check if a timestamp is set and raise a meaningful error indicating where the error occurred.
 Modified mysql tasks to use the default character encoding for database connections to avoid suspected double encoding with the production database.
 Fixed the Entity serialisation to cater for null user ids and timestamps.
+Removed all 0.4 tasks.
 
 0.21
 Introduced a custom serialisation mechanism to improve compressed temporary file performance by approximately 5 times.
