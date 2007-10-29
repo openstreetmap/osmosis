@@ -20,7 +20,8 @@ import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.RelationMember;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.domain.v0_5.WayNode;
-import com.bretth.osmosis.core.filter.common.BigBitSet;
+import com.bretth.osmosis.core.filter.common.BitSetIdTracker;
+import com.bretth.osmosis.core.filter.common.IdTracker;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 
 
@@ -37,8 +38,8 @@ public class IntegrityReporter implements Sink, EntityProcessor {
 	private File file;
 	private boolean initialized;
 	private BufferedWriter writer;
-	private BigBitSet nodeBitSet;
-	private BigBitSet wayBitSet;
+	private IdTracker nodeBitSet;
+	private IdTracker wayBitSet;
 	
 	
 	/**
@@ -51,8 +52,8 @@ public class IntegrityReporter implements Sink, EntityProcessor {
 		this.file = file;
 		
 		initialized = false;
-		nodeBitSet = new BigBitSet();
-		wayBitSet = new BigBitSet();
+		nodeBitSet = new BitSetIdTracker();
+		wayBitSet = new BitSetIdTracker();
 	}
 	
 	

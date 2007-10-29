@@ -13,7 +13,8 @@ import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
-import com.bretth.osmosis.core.filter.common.BigBitSet;
+import com.bretth.osmosis.core.filter.common.BitSetIdTracker;
+import com.bretth.osmosis.core.filter.common.IdTracker;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.store.SimpleObjectStore;
 import com.bretth.osmosis.core.task.v0_5.Sink;
@@ -28,13 +29,13 @@ import com.bretth.osmosis.core.task.v0_5.SinkSource;
  */
 public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	private Sink sink;
-	private BigBitSet availableNodes;
-	private BigBitSet requiredNodes; // Nodes needed to make complete Ways
+	private IdTracker availableNodes;
+	private IdTracker requiredNodes; // Nodes needed to make complete Ways
 	private SimpleObjectStore<NodeContainer> allNodes;
 	private boolean completeWays;
-	private BigBitSet availableWays;
+	private IdTracker availableWays;
 	private SimpleObjectStore<WayContainer> allWays;
-	private BigBitSet availableRelations;
+	private IdTracker availableRelations;
 	private boolean completeRelations;
 	private SimpleObjectStore<RelationContainer> allRelations;
 	
@@ -52,14 +53,14 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		this.completeWays = completeWays;
 		this.completeRelations = completeRelations;
 		
-		availableNodes = new BigBitSet();
+		availableNodes = new BitSetIdTracker();
 		if (completeWays) {
-			requiredNodes = new BigBitSet();
+			requiredNodes = new BitSetIdTracker();
 			allNodes = new SimpleObjectStore<NodeContainer>("afnd", true);
 			allWays = new SimpleObjectStore<WayContainer>("afwy", true);
 		}
-		availableWays = new BigBitSet();
-		availableRelations = new BigBitSet();
+		availableWays = new BitSetIdTracker();
+		availableRelations = new BitSetIdTracker();
 		if (this.completeRelations || this.completeWays) {
 			allRelations = new SimpleObjectStore<RelationContainer>("afrl", true);
 		}
