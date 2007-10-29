@@ -1,6 +1,7 @@
 package com.bretth.osmosis.core.filter.v0_5;
 
 import com.bretth.osmosis.core.domain.v0_5.Node;
+import com.bretth.osmosis.core.filter.common.IdTrackerType;
 
 
 /**
@@ -20,6 +21,8 @@ public class BoundingBoxFilter extends AreaFilter {
 	 * Creates a new instance with the specified geographical coordinates. When
 	 * filtering, nodes right on the edge of the box will be included.
 	 * 
+	 * @param idTrackerType
+	 *            Defines the id tracker implementation to use.
 	 * @param left
 	 *            The longitude marking the left edge of the bounding box.
 	 * @param right
@@ -34,8 +37,8 @@ public class BoundingBoxFilter extends AreaFilter {
 	 *            Include all relations referenced by other relations which have members inside
 	 *            the filtered area.
 	 */
-	public BoundingBoxFilter(double left, double right, double top, double bottom, boolean completeWays, boolean completeRelations) {
-	    	super(completeWays, completeRelations);
+	public BoundingBoxFilter(IdTrackerType idTrackerType, double left, double right, double top, double bottom, boolean completeWays, boolean completeRelations) {
+	    	super(idTrackerType, completeWays, completeRelations);
 		this.left = left;
 		this.right = right;
 		this.top = top;

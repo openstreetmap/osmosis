@@ -13,8 +13,9 @@ import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
-import com.bretth.osmosis.core.filter.common.BitSetIdTracker;
 import com.bretth.osmosis.core.filter.common.IdTracker;
+import com.bretth.osmosis.core.filter.common.IdTrackerFactory;
+import com.bretth.osmosis.core.filter.common.IdTrackerType;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.store.SimpleObjectStore;
 import com.bretth.osmosis.core.task.v0_5.Sink;
@@ -43,24 +44,27 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param idTrackerType
+	 *            Defines the id tracker implementation to use.
 	 * @param completeWays
-	 *            Include all nodes for ways which have at least one node inside the filtered area.
+	 *            Include all nodes for ways which have at least one node inside
+	 *            the filtered area.
 	 * @param completeRelations
-	 *            Include all relations referenced by other relations which have members inside the
-	 *            filtered area.
+	 *            Include all relations referenced by other relations which have
+	 *            members inside the filtered area.
 	 */
-	public AreaFilter(boolean completeWays, boolean completeRelations) {
+	public AreaFilter(IdTrackerType idTrackerType, boolean completeWays, boolean completeRelations) {
 		this.completeWays = completeWays;
 		this.completeRelations = completeRelations;
 		
-		availableNodes = new BitSetIdTracker();
+		availableNodes = IdTrackerFactory.createInstance(idTrackerType);
 		if (completeWays) {
-			requiredNodes = new BitSetIdTracker();
+			requiredNodes = IdTrackerFactory.createInstance(idTrackerType);
 			allNodes = new SimpleObjectStore<NodeContainer>("afnd", true);
 			allWays = new SimpleObjectStore<WayContainer>("afwy", true);
 		}
-		availableWays = new BitSetIdTracker();
-		availableRelations = new BitSetIdTracker();
+		availableWays = IdTrackerFactory.createInstance(idTrackerType);
+		availableRelations = IdTrackerFactory.createInstance(idTrackerType);
 		if (this.completeRelations || this.completeWays) {
 			allRelations = new SimpleObjectStore<RelationContainer>("afrl", true);
 		}

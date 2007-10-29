@@ -4,6 +4,7 @@ import java.awt.geom.Area;
 import java.io.File;
 
 import com.bretth.osmosis.core.domain.v0_5.Node;
+import com.bretth.osmosis.core.filter.common.IdTrackerType;
 import com.bretth.osmosis.core.filter.common.PolygonFileReader;
 
 
@@ -22,6 +23,8 @@ public class PolygonFilter extends AreaFilter {
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param idTrackerType
+	 *            Defines the id tracker implementation to use.
 	 * @param polygonFile
 	 *            The file containing the polygon coordinates.
 	 * @param completeWays
@@ -30,8 +33,8 @@ public class PolygonFilter extends AreaFilter {
 	 *            Include all relations referenced by other relations which have members inside
 	 *            the filtered area.
 	 */
-	public PolygonFilter(File polygonFile, boolean completeWays, boolean completeRelations) {
-	    	super(completeWays, completeRelations);
+	public PolygonFilter(IdTrackerType idTrackerType, File polygonFile, boolean completeWays, boolean completeRelations) {
+	    	super(idTrackerType, completeWays, completeRelations);
 		this.polygonFile = polygonFile;
 		
 		area = null;

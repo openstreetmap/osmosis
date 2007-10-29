@@ -2,8 +2,8 @@ package com.bretth.osmosis.core.filter.v0_5;
 
 import java.util.Map;
 
+import com.bretth.osmosis.core.filter.common.IdTrackerType;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
-import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.v0_5.SinkSourceManager;
 
 
@@ -12,7 +12,7 @@ import com.bretth.osmosis.core.pipeline.v0_5.SinkSourceManager;
  * 
  * @author Brett Henderson
  */
-public class BoundingBoxFilterFactory extends TaskManagerFactory {
+public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 	private static final String ARG_LEFT = "left";
 	private static final String ARG_RIGHT = "right";
 	private static final String ARG_TOP = "top";
@@ -32,6 +32,7 @@ public class BoundingBoxFilterFactory extends TaskManagerFactory {
 	 */
 	@Override
 	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+		IdTrackerType idTrackerType;
 		double left;
 		double right;
 		double top;
@@ -40,6 +41,7 @@ public class BoundingBoxFilterFactory extends TaskManagerFactory {
 		boolean completeRelations;
 		
 		// Get the task arguments.
+		idTrackerType = getIdTrackerType(taskId, taskArgs);
 		left = getDoubleArgument(taskId, taskArgs, ARG_LEFT, DEFAULT_LEFT);
 		right = getDoubleArgument(taskId, taskArgs, ARG_RIGHT, DEFAULT_RIGHT);
 		top = getDoubleArgument(taskId, taskArgs, ARG_TOP, DEFAULT_TOP);
@@ -49,7 +51,7 @@ public class BoundingBoxFilterFactory extends TaskManagerFactory {
 		
 		return new SinkSourceManager(
 			taskId,
-			new BoundingBoxFilter(left, right, top, bottom, completeWays, completeRelations),
+			new BoundingBoxFilter(idTrackerType, left, right, top, bottom, completeWays, completeRelations),
 			pipeArgs
 		);
 	}

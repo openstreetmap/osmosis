@@ -7,7 +7,8 @@ import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 
 
 /**
- * Extends the basic task manager factory functionality with MySQL task specific common methods.
+ * Extends the basic task manager factory functionality with MySQL task specific
+ * common methods.
  * 
  * @author Brett Henderson
  */

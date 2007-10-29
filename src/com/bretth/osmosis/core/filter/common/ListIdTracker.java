@@ -15,7 +15,20 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class ListIdTracker implements IdTracker {
-	private List<Integer> idList;
+	/**
+	 * The internal list is initialised to this size.
+	 */
+	private static final int INITIAL_LIST_SIZE = 1024;
+	/**
+	 * The internal list size is multiplied by this factor when more space is
+	 * required.
+	 */
+	private static final double LIST_SIZE_EXTENSION_FACTOR = 1.5;
+	
+	
+	private int[] idList;
+	private int idOffset;
+	private int maxIdAdded;
 	private boolean sorted;
 	
 	
@@ -23,8 +36,10 @@ public class ListIdTracker implements IdTracker {
 	 * Creates a new instance.
 	 */
 	public ListIdTracker() {
-		idList = new ArrayList<Integer>();
-		sorted = false;
+		idList = new int[INITIAL_LIST_SIZE];
+		idOffset = 0;
+		maxIdAdded = Integer.MIN_VALUE;
+		sorted = true;
 	}
 	
 	
@@ -49,6 +64,23 @@ public class ListIdTracker implements IdTracker {
 	
 	
 	/**
+	 * Increases the size of the id list to make space for new ids.
+	 */
+	private void extendIdList() {
+		int[] newIdList;
+		int newListLength;
+		
+		newListLength = (int) (idList.length * LIST_SIZE_EXTENSION_FACTOR);
+		
+		newIdList = new int[newListLength];
+		
+		System.arraycopy(idList, 0, newIdList, 0, idList.length);
+		
+		idList = newIdList;
+	}
+	
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public void set(long id) {
@@ -56,9 +88,19 @@ public class ListIdTracker implements IdTracker {
 		
 		integerId = longToInt(id);
 		
-		idList.add(Integer.valueOf(integerId));
+		// Increase the id list size if it is full.
+		if (idOffset >= idList.length) {
+			extendIdList();
+		}
 		
-		sorted = false;
+		idList[idOffset++] = integerId;
+		
+		// If ids are added out of order, the list will have to be sorted before
+		// it can be searched using a binary search algorithm.
+		if (integerId < maxIdAdded) {
+			sorted = false;
+			maxIdAdded = integerId;
+		}
 	}
 	
 	
@@ -73,8 +115,22 @@ public class ListIdTracker implements IdTracker {
 		
 		integerId = longToInt(id);
 		
+		// If the list is not sorted, it must be sorted prior to a search being
+		// performed.
 		if (!sorted) {
-			Collections.sort(idList);
+			List<Integer> tmpList;
+			
+			tmpList = new ArrayList<Integer>(idOffset);
+			
+			for (int i = 0; i < idOffset; i++) {
+				tmpList.add(Integer.valueOf(idList[i]));
+			}
+			
+			Collections.sort(tmpList);
+			
+			for (int i = 0; i < idOffset; i++) {
+				idList[i] = tmpList.get(i).intValue();
+			}
 			
 			sorted = true;
 		}
@@ -82,7 +138,7 @@ public class ListIdTracker implements IdTracker {
 		// Perform a binary search splitting the list in half each time until
 		// the requested id is confirmed as existing or not.
 		intervalBegin = 0;
-		intervalEnd = idList.size();
+		intervalEnd = idOffset;
 		idFound = false;
 		for (boolean searchComplete = false; !searchComplete; ) {
 			int intervalSize;
@@ -101,7 +157,7 @@ public class ListIdTracker implements IdTracker {
 				
 				// Check whether the midpoint id is above or below the id
 				// required.
-				currentId = idList.get(intervalMid).intValue();
+				currentId = idList[intervalMid];
 				if (currentId == integerId) {
 					idFound = true;
 					searchComplete = true;
@@ -117,7 +173,7 @@ public class ListIdTracker implements IdTracker {
 					int currentId;
 					
 					// Check if the current offset contains the id required.
-					currentId = idList.get(currentOffset).intValue();
+					currentId = idList[currentOffset];
 					
 					if (currentId == integerId) {
 						idFound = true;

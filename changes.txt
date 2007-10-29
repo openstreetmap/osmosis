@@ -3,6 +3,7 @@ Updated mysql writing tasks to check if a timestamp is set and raise a meaningfu
 Modified mysql tasks to use the default character encoding for database connections to avoid suspected double encoding with the production database.
 Fixed the Entity serialisation to cater for null user ids and timestamps.
 Removed all 0.4 tasks.
+Added a new IdList id tracker implementation to be used internally by area filtering tasks to reduce memory usage on small'ish areas.  Old BitSet implementation is still selectable if large bounding boxes are required.
 
 0.21
 Introduced a custom serialisation mechanism to improve compressed temporary file performance by approximately 5 times.
