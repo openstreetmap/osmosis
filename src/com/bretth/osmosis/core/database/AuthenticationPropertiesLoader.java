@@ -60,7 +60,7 @@ public class AuthenticationPropertiesLoader {
 			loadedProperties.load(fileInputStream);
 			
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to load properties from config file " + configFile);
+			throw new OsmosisRuntimeException("Unable to load properties from config file " + configFile + ".", e);
 		} finally {
 			if (fileInputStream != null) {
 				try {
