@@ -35,7 +35,7 @@ public class XmlChangeReaderFactory extends XmlTaskManagerFactory {
 		// Get the task arguments.
 		fileName = getStringArgument(taskId, taskArgs, ARG_FILE_NAME, DEFAULT_FILE_NAME);
 		enableDateParsing = getBooleanArgument(taskId, taskArgs, ARG_ENABLE_DATE_PARSING, DEFAULT_ENABLE_DATE_PARSING);
-		compressionMethod = getCompressionMethodArgument(taskId, taskArgs);
+		compressionMethod = getCompressionMethodArgument(taskId, taskArgs, fileName);
 		
 		// Create a file object from the file name provided.
 		file = new File(fileName);
