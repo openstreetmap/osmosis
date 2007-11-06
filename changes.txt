@@ -4,6 +4,7 @@ Modified mysql tasks to use the default character encoding for database connecti
 Fixed the Entity serialisation to cater for null user ids and timestamps.
 Removed all 0.4 tasks.
 Added a new IdList id tracker implementation to be used internally by area filtering tasks to reduce memory usage on small'ish areas.  Old BitSet implementation is still selectable if large bounding boxes are required.
+Added automatic compression method detection for all xml file tasks to avoid need to use compressionMethod argument.
 
 0.21
 Introduced a custom serialisation mechanism to improve compressed temporary file performance by approximately 5 times.
