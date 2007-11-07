@@ -23,7 +23,7 @@ public class PostgreSqlTruncator implements RunnableTask {
 		//"TRUNCATE way_node",
 		//"TRUNCATE way_tag",
 		//"TRUNCATE way",
-		"TRUNCATE node, node_tag"
+		"TRUNCATE node, node_current, node_tag"
 	};
 	
 	

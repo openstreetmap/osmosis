@@ -35,8 +35,11 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	// These SQL strings are the prefix to statements that will be built based
 	// on how many rows of data are to be inserted at a time.
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO node(id, version, timestamp, user_id, visible, current, location)";
-	private static final int INSERT_PRM_COUNT_NODE = 7;
+		"INSERT INTO node(id, version, timestamp, user_id, visible, location)";
+	private static final int INSERT_PRM_COUNT_NODE = 6;
+	private static final String INSERT_SQL_NODE_CURRENT =
+		"INSERT INTO node_current(id, version, visible)";
+	private static final int INSERT_PRM_COUNT_NODE_CURRENT = 3;
 	private static final String INSERT_SQL_NODE_TAG =
 		"INSERT INTO node_tag(node_id, node_version, key, value)";
 	private static final int INSERT_PRM_COUNT_NODE_TAG = 4;
@@ -48,8 +51,10 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	
 	// These constants will be configured by a static code block.
 	private static final String INSERT_SQL_SINGLE_NODE;
+	private static final String INSERT_SQL_SINGLE_NODE_CURRENT;
 	private static final String INSERT_SQL_SINGLE_NODE_TAG;
 	private static final String INSERT_SQL_BULK_NODE;
+	private static final String INSERT_SQL_BULK_NODE_CURRENT;
 	private static final String INSERT_SQL_BULK_NODE_TAG;
 	
 	/**
@@ -100,10 +105,14 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	static {
 		INSERT_SQL_SINGLE_NODE =
 			buildSqlInsertStatement(INSERT_SQL_NODE, INSERT_PRM_COUNT_NODE, 1);
+		INSERT_SQL_SINGLE_NODE_CURRENT =
+			buildSqlInsertStatement(INSERT_SQL_NODE_CURRENT, INSERT_PRM_COUNT_NODE_CURRENT, 1);
 		INSERT_SQL_SINGLE_NODE_TAG =
 			buildSqlInsertStatement(INSERT_SQL_NODE_TAG, INSERT_PRM_COUNT_NODE_TAG, 1);
 		INSERT_SQL_BULK_NODE =
 			buildSqlInsertStatement(INSERT_SQL_NODE, INSERT_PRM_COUNT_NODE, INSERT_BULK_ROW_COUNT_NODE);
+		INSERT_SQL_BULK_NODE_CURRENT =
+			buildSqlInsertStatement(INSERT_SQL_NODE_CURRENT, INSERT_PRM_COUNT_NODE_CURRENT, INSERT_BULK_ROW_COUNT_NODE);
 		INSERT_SQL_BULK_NODE_TAG =
 			buildSqlInsertStatement(INSERT_SQL_NODE_TAG, INSERT_PRM_COUNT_NODE_TAG, INSERT_BULK_ROW_COUNT_NODE_TAG);
 	}
@@ -119,6 +128,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private boolean initialized;
 	private PreparedStatement singleNodeStatement;
 	private PreparedStatement bulkNodeStatement;
+	private PreparedStatement singleNodeCurrentStatement;
+	private PreparedStatement bulkNodeCurrentStatement;
 	private PreparedStatement singleNodeTagStatement;
 	private PreparedStatement bulkNodeTagStatement;
 	private int uncommittedEntityCount;
@@ -165,9 +176,11 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			if (preferences.getValidateSchemaVersion()) {
 				schemaVersionValidator.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
 			}
-			
+
 			bulkNodeStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_NODE);
 			singleNodeStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_NODE);
+			bulkNodeCurrentStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_NODE_CURRENT);
+			singleNodeCurrentStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_NODE_CURRENT);
 			bulkNodeTagStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_NODE_TAG);
 			singleNodeTagStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_NODE_TAG);
 			
@@ -183,6 +196,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	private void performIntervalCommit() {
 		if (uncommittedEntityCount >= COMMIT_ENTITY_COUNT) {
+			System.err.println("Commit");
 			dbCtx.commit();
 			
 			uncommittedEntityCount = 0;
@@ -216,8 +230,38 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			statement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
 			statement.setLong(prmIndex++, userIdManager.getUserId());
 			statement.setBoolean(prmIndex++, true);
-			statement.setBoolean(prmIndex++, true);
 			statement.setObject(prmIndex++, new PGpoint(node.getLongitude(), node.getLatitude()));
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a node.", e);
+		}
+	}
+	
+	
+	/**
+	 * Sets node values as bind variable parameters to a current node insert query.
+	 * 
+	 * @param statement
+	 *            The prepared statement to add the values to.
+	 * @param initialIndex
+	 *            The offset index of the first variable to set.
+	 * @param node
+	 *            The node containing the data to be inserted.
+	 */
+	private void populateNodeCurrentParameters(PreparedStatement statement, int initialIndex, Node node) {
+		int prmIndex;
+		
+		prmIndex = initialIndex;
+		
+		// We can't write an entity with a null timestamp.
+		if (node.getTimestamp() == null) {
+			throw new OsmosisRuntimeException("Node " + node.getId() + " does not have a timestamp set.");
+		}
+		
+		try {
+			statement.setLong(prmIndex++, node.getId());
+			statement.setInt(prmIndex++, 1);
+			statement.setBoolean(prmIndex++, true);
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a node.", e);
@@ -268,25 +312,31 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private void flushNodes(boolean complete) {
 		while (nodeBuffer.size() >= INSERT_BULK_ROW_COUNT_NODE) {
 			List<Node> processedNodes;
-			int prmIndex;
+			int prmHistoryIndex;
+			int prmCurrentIndex;
 			
 			processedNodes = new ArrayList<Node>(INSERT_BULK_ROW_COUNT_NODE);
 			
-			prmIndex = 1;
+			prmHistoryIndex = 1;
+			prmCurrentIndex = 1;
 			for (int i = 0; i < INSERT_BULK_ROW_COUNT_NODE; i++) {
 				Node node;
 				
 				node = nodeBuffer.remove(0);
 				processedNodes.add(node);
 				
-				populateNodeParameters(bulkNodeStatement, prmIndex, node);
-				prmIndex += INSERT_PRM_COUNT_NODE;
-
+				populateNodeParameters(bulkNodeStatement, prmHistoryIndex, node);
+				prmHistoryIndex += INSERT_PRM_COUNT_NODE;
+				
+				populateNodeCurrentParameters(bulkNodeCurrentStatement, prmCurrentIndex, node);
+				prmCurrentIndex += INSERT_PRM_COUNT_NODE_CURRENT;
+				
 				uncommittedEntityCount++;
 			}
 			
 			try {
 				bulkNodeStatement.executeUpdate();
+				bulkNodeCurrentStatement.executeUpdate();
 			} catch (SQLException e) {
 				throw new OsmosisRuntimeException("Unable to bulk insert nodes into the database.", e);
 			}
@@ -303,11 +353,13 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				node = nodeBuffer.remove(0);
 				
 				populateNodeParameters(singleNodeStatement, 1, node);
+				populateNodeCurrentParameters(singleNodeCurrentStatement, 1, node);
 				
 				uncommittedEntityCount++;
 				
 				try {
 					singleNodeStatement.executeUpdate();
+					singleNodeCurrentStatement.executeUpdate();
 				} catch (SQLException e) {
 					throw new OsmosisRuntimeException("Unable to insert a node into the database.", e);
 				}
