@@ -77,9 +77,6 @@ public abstract class XmlTaskManagerFactory extends TaskManagerFactory {
 	 *            The identifier for the task retrieving the parameter.
 	 * @param taskArgs
 	 *            The task arguments.
-	 * @param fileName
-	 *            The file name used to determine the default compression
-	 *            method.
 	 * @return The value of the argument.
 	 */
 	protected boolean getProdEncodingHackArgument(
