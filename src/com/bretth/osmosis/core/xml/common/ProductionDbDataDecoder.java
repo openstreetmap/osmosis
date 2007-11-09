@@ -142,7 +142,7 @@ public class ProductionDbDataDecoder extends CharsetDecoder {
 					out.put((char) 0x0178);
 					break;
 				default:
-					throw new OsmosisRuntimeException("Byte 0x" + Integer.toHexString(nextValue).substring(6) + " is not recognised.");
+					throw new OsmosisRuntimeException("Byte 0x" + Integer.toHexString(nextValue) + " is not recognised.");
 				}
 			}
 		}

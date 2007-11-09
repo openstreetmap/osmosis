@@ -139,7 +139,7 @@ public class ProductionDbDataEncoder extends CharsetEncoder {
 					out.put((byte) 0x9F);
 					break;
 				default:
-					throw new OsmosisRuntimeException("Char 0x" + Integer.toHexString(nextValue).substring(4) + " is not recognised.");
+					throw new OsmosisRuntimeException("Char 0x" + Integer.toHexString(nextValue) + " is not recognised.");
 				}
 			}
 		}
