@@ -60,6 +60,9 @@ public class ProductionDbDataEncoder extends CharsetEncoder {
 				case 0x20AC:
 					out.put((byte) 0x80);
 					break;
+				case 0x0081:
+					out.put((byte) 0x81);
+					break;
 				case 0x201A:
 					out.put((byte) 0x82);
 					break;

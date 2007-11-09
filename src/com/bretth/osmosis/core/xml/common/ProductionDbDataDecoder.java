@@ -63,6 +63,9 @@ public class ProductionDbDataDecoder extends CharsetDecoder {
 				case 0x80:
 					out.put((char) 0x20AC);
 					break;
+				case 0x81: // This is supposed to be an unmappable character.
+					out.put((char) 0x0081);
+					break;
 				case 0x82:
 					out.put((char) 0x201A);
 					break;
