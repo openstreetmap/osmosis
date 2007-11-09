@@ -28,16 +28,18 @@ public class XmlWriterFactory extends XmlTaskManagerFactory {
 		File file;
 		XmlWriter task;
 		CompressionMethod compressionMethod;
+		boolean enableProdEncodingHack;
 		
 		// Get the task arguments.
 		fileName = getStringArgument(taskId, taskArgs, ARG_FILE_NAME, DEFAULT_FILE_NAME);
 		compressionMethod = getCompressionMethodArgument(taskId, taskArgs, fileName);
+		enableProdEncodingHack = getProdEncodingHackArgument(taskId, taskArgs);
 		
 		// Create a file object from the file name provided.
 		file = new File(fileName);
 		
 		// Build the task object.
-		task = new XmlWriter(file, compressionMethod);
+		task = new XmlWriter(file, compressionMethod, enableProdEncodingHack);
 		
 		return new SinkManager(taskId, task, pipeArgs);
 	}

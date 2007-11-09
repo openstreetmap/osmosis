@@ -1,3 +1,6 @@
+0.23
+Adding support for a custom decoder when writing xml files to workaround the current production utf8 double encoding issue.
+
 0.22
 Updated mysql writing tasks to check if a timestamp is set and raise a meaningful error indicating where the error occurred.
 Modified mysql tasks to use the default character encoding for database connections to avoid suspected double encoding with the production database.

@@ -13,7 +13,9 @@ import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
  */
 public abstract class XmlTaskManagerFactory extends TaskManagerFactory {
 	private static final String ARG_COMPRESSION_METHOD = "compressionMethod";
+	private static final String ARG_ENCODING_HACK = "encodingHack";
 	private static final CompressionMethod DEFAULT_COMPRESSION_METHOD = CompressionMethod.None;
+	private static final boolean DEFAULT_ENCODING_HACK = false;
 	private static final String FILE_SUFFIX_GZIP = ".gz";
 	private static final String FILE_SUFFIX_BZIP2 = ".bz2";
 	
@@ -63,5 +65,25 @@ public abstract class XmlTaskManagerFactory extends TaskManagerFactory {
 		}
 		
 		return result;
+	}
+	
+	
+	/**
+	 * Utility method for retrieving the argument specifying whether to enable
+	 * the production file encoding hack to work around a bug in the current
+	 * production configuration.
+	 * 
+	 * @param taskId
+	 *            The identifier for the task retrieving the parameter.
+	 * @param taskArgs
+	 *            The task arguments.
+	 * @param fileName
+	 *            The file name used to determine the default compression
+	 *            method.
+	 * @return The value of the argument.
+	 */
+	protected boolean getProdEncodingHackArgument(
+			String taskId, Map<String, String> taskArgs) {
+		return getBooleanArgument(taskId, taskArgs, ARG_ENCODING_HACK, DEFAULT_ENCODING_HACK);
 	}
 }

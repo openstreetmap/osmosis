@@ -27,9 +27,13 @@ public class XmlWriter extends BaseXmlWriter implements Sink {
 	 *            The file to write.
 	 * @param compressionMethod
 	 *            Specifies the compression method to employ.
+	 * @param enableProdEncodingHack
+	 *            If true, a special encoding is enabled which works around an
+	 *            encoding issue with the current production configuration where
+	 *            data is double encoded as utf-8.
 	 */
-	public XmlWriter(File file, CompressionMethod compressionMethod) {
-		super(file, compressionMethod);
+	public XmlWriter(File file, CompressionMethod compressionMethod, boolean enableProdEncodingHack) {
+		super(file, compressionMethod, enableProdEncodingHack);
 		
 		osmWriter = new OsmWriter("osm", 0);
 	}
