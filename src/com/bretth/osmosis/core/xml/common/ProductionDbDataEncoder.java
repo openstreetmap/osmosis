@@ -96,6 +96,9 @@ public class ProductionDbDataEncoder extends CharsetEncoder {
 				case 0x0152:
 					out.put((byte) 0x8C);
 					break;
+				case 0x008D: // This is supposed to be an unmappable character.
+					out.put((byte) 0x8D);
+					break;
 				case 0x017D:
 					out.put((byte) 0x8E);
 					break;
