@@ -69,79 +69,82 @@ public class ProductionDbDataDecoder extends CharsetDecoder {
 				case 0x82:
 					out.put((char) 0x201A);
 					break;
-				case 0x83 :
+				case 0x83:
 					out.put((char) 0x0192);
 					break;
-				case 0x84 :
+				case 0x84:
 					out.put((char) 0x201E);
 					break;
-				case 0x85 :
+				case 0x85:
 					out.put((char) 0x2026);
 					break;
-				case 0x86 :
+				case 0x86:
 					out.put((char) 0x2020);
 					break;
-				case 0x87 :
+				case 0x87:
 					out.put((char) 0x2021);
 					break;
-				case 0x88 :
+				case 0x88:
 					out.put((char) 0x02C6);
 					break;
-				case 0x89 :
+				case 0x89:
 					out.put((char) 0x2030);
 					break;
-				case 0x8A :
+				case 0x8A:
 					out.put((char) 0x0160);
 					break;
-				case 0x8B :
+				case 0x8B:
 					out.put((char) 0x2039);
 					break;
-				case 0x8C :
+				case 0x8C:
 					out.put((char) 0x0152);
 					break;
-				case 0x8E :
+				case 0x8E:
 					out.put((char) 0x017D);
 					break;
-				case 0x91 :
+				case 0x8F: // This is supposed to be an unmappable character.
+					out.put((char) 0x008F);
+					break;
+				case 0x91:
 					out.put((char) 0x2018);
 					break;
-				case 0x92 :
+				case 0x92:
 					out.put((char) 0x2019);
 					break;
-				case 0x93 :
+				case 0x93:
 					out.put((char) 0x201C);
 					break;
-				case 0x94 :
+				case 0x94:
 					out.put((char) 0x201D);
 					break;
-				case 0x95 :
+				case 0x95:
 					out.put((char) 0x2022);
 					break;
-				case 0x96 :
+				case 0x96:
 					out.put((char) 0x2013);
 					break;
-				case 0x97 :
+				case 0x97:
 					out.put((char) 0x2014);
 					break;
-				case 0x98 :
+				case 0x98:
 					out.put((char) 0x02DC);
 					break;
-				case 0x99 :
+				case 0x99:
 					out.put((char) 0x2122);
 					break;
-				case 0x9A :
+				case 0x9A:
 					out.put((char) 0x0161);
 					break;
-				case 0x9B :
+				case 0x9B:
 					out.put((char) 0x203A);
 					break;
-				case 0x9C :
+				case 0x9C:
 					out.put((char) 0x0153);
 					break;
-				case 0x9E :
+				case 0x9E:
 					out.put((char) 0x017E);
 					break;
-				case 0x9F :
+				case 0x9F:
 					out.put((char) 0x0178);
 					break;
 				default:
