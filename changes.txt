@@ -1,5 +1,6 @@
 0.23
-Adding support for a custom decoder when writing xml files to workaround the current production utf8 double encoding issue.
+Added support for a custom decoder when writing xml files to workaround the current production utf8 double encoding issue.
+Added short task names to shorten command line (eg. --write-xml becomes --wx).
 
 0.22
 Updated mysql writing tasks to check if a timestamp is set and raise a meaningful error indicating where the error occurred.
