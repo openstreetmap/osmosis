@@ -39,7 +39,7 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 		"   GROUP BY id" +
 		" ) idList ON n.id = idList.id" +
 		" LEFT OUTER JOIN users u ON n.user_id = u.id" +
-		" WHERE n.timestamp < ?" +
+		" WHERE n.timestamp <= ?" +
 		" ORDER BY n.id, n.timestamp";
 	
 	
