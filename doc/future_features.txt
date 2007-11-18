@@ -104,3 +104,6 @@ Modify bounding box and xml downloader tasks to use minLat, maxLat, minLon, maxL
 
 **********
 Add support for writing to MonetDB in attempt to improve on import speed provided by planetosm-to-db.pl.
+
+**********
+Add workaround to allow contatenated GZIP files as per the workaround in http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4691425
