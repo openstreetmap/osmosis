@@ -1,7 +1,6 @@
 package com.bretth.osmosis.core.pgsql.common.v0_5;
 
-import java.util.Map;
-
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.database.DatabaseTaskManagerFactory;
@@ -25,22 +24,22 @@ public class PostgreSqlWriterFactory extends DatabaseTaskManagerFactory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		DatabaseLoginCredentials loginCredentials;
 		DatabasePreferences preferences;
 		boolean lockTables;
 		boolean populateCurrentTables;
 		
 		// Get the task arguments.
-		loginCredentials = getDatabaseLoginCredentials(taskId, taskArgs);
-		preferences = getDatabasePreferences(taskId, taskArgs);
-		lockTables = getBooleanArgument(taskId, taskArgs, ARG_LOCK_TABLES, DEFAULT_LOCK_TABLES);
-		populateCurrentTables = getBooleanArgument(taskId, taskArgs, ARG_POPULATE_CURRENT_TABLES, DEFAULT_POPULATE_CURRENT_TABLES);
+		loginCredentials = getDatabaseLoginCredentials(taskConfig);
+		preferences = getDatabasePreferences(taskConfig);
+		lockTables = getBooleanArgument(taskConfig, ARG_LOCK_TABLES, DEFAULT_LOCK_TABLES);
+		populateCurrentTables = getBooleanArgument(taskConfig, ARG_POPULATE_CURRENT_TABLES, DEFAULT_POPULATE_CURRENT_TABLES);
 		
 		return new SinkManager(
-			taskId,
+			taskConfig.getId(),
 			new PostgreSqlWriter(loginCredentials, preferences, lockTables, populateCurrentTables),
-			pipeArgs
+			taskConfig.getPipeArgs()
 		);
 	}
 }

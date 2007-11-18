@@ -1,8 +1,7 @@
 package com.bretth.osmosis.core.filter.v0_5;
 
-import java.util.Map;
-
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.filter.common.IdTrackerType;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 
@@ -21,24 +20,23 @@ public abstract class AreaFilterTaskManagerFactory extends TaskManagerFactory {
 	/**
 	 * Utility method for retrieving the login credentials for a database connection.
 	 * 
-	 * @param taskId
-	 *            The identifier for the task retrieving the parameter.
-	 * @param taskArgs
-	 *            The task arguments.
-	 * @return The value of the argument.
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
+	 * @return The entity identifier tracker type.
 	 */
 	protected IdTrackerType getIdTrackerType(
-			String taskId, Map<String, String> taskArgs) {
-		if (taskArgs.containsKey(ARG_ID_TRACKER_TYPE)) {
+			TaskConfiguration taskConfig) {
+		if (doesArgumentExist(taskConfig, ARG_ID_TRACKER_TYPE)) {
 			String idTrackerType;
 			
-			idTrackerType = taskArgs.get(ARG_ID_TRACKER_TYPE);
+			idTrackerType = getStringArgument(taskConfig, ARG_ID_TRACKER_TYPE);
 			
 			try {
 				return IdTrackerType.valueOf(idTrackerType);
 			} catch (IllegalArgumentException e) {
 				throw new OsmosisRuntimeException(
-					"Argument " + ARG_ID_TRACKER_TYPE + " for task " + taskId
+					"Argument " + ARG_ID_TRACKER_TYPE + " for task " + taskConfig.getId()
 					+ " must contain a valid id tracker type.", e);
 			}
 			

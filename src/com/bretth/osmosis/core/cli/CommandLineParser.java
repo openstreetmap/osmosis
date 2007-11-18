@@ -44,7 +44,7 @@ public class CommandLineParser {
 	private static final int defaultLogLevelIndex = 3;
 	
 	
-	private List<TaskInfo> taskInfoList;
+	private List<TaskConfiguration> taskConfigList;
 	private int quietValue;
 	private int verboseValue;
 	
@@ -53,7 +53,7 @@ public class CommandLineParser {
 	 * Creates a new instance.
 	 */
 	public CommandLineParser() {
-		taskInfoList = new ArrayList<TaskInfo>();
+		taskConfigList = new ArrayList<TaskConfiguration>();
 		
 		quietValue = 0;
 		verboseValue = 0;
@@ -168,6 +168,8 @@ public class CommandLineParser {
 		Map<String, String> taskArgs;
 		Map<String, String> pipeArgs;
 		String taskId;
+		int defaultArgIndex;
+		String defaultArg;
 		
 		i = offset;
 		
@@ -177,6 +179,8 @@ public class CommandLineParser {
 		// Build up a list of task and pipe arguments.
 		taskArgs = new HashMap<String, String>();
 		pipeArgs = new HashMap<String, String>();
+		defaultArg = null;
+		defaultArgIndex = -1;
 		while (i < programArgs.length) {
 			String arg;
 			int equalsIndex;
@@ -191,42 +195,48 @@ public class CommandLineParser {
 			
 			equalsIndex = arg.indexOf("=");
 			
-			// Check if the equals exists.
-			if (equalsIndex < 0) {
-				throw new OsmosisRuntimeException("Expected argument " + (i + 1) + " to be a name value pair (ie. name=value).");
-			}
-			
-			// Check if the name component of the argument exists.
-			if (equalsIndex == 0) {
-				throw new OsmosisRuntimeException("Argument " + (i + 1) + " doesn't contain a name before the '=' (ie. name=value).");
-			}
-			
-			// Check if the value component of the argument exists.
-			if (equalsIndex >= (arg.length() - 1)) {
-				throw new OsmosisRuntimeException("Argument " + (i + 1) + " doesn't contain a value after the '=' (ie. name=value).");
-			}
-			
-			// Split the argument into name and value.
-			argName = arg.substring(0, equalsIndex);
-			argValue = arg.substring(equalsIndex + 1);
-			
-			// Add pipeline arguments to pipeArgs, all other arguments to taskArgs.
-			// A pipeline arg is inPipe, inPipe.x, outPipe or outPipe.x.
-			if (PipelineConstants.IN_PIPE_ARGUMENT_PREFIX.equals(argName) || argName.indexOf(PipelineConstants.IN_PIPE_ARGUMENT_PREFIX + ".") == 0 || PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX.equals(argName) || argName.indexOf(PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX + ".") == 0) {
-				pipeArgs.put(argName, argValue);
+			// If an equals sign exists this is a named argument, otherwise it is a default argument.
+			if (equalsIndex >= 0) {
+				// Check if the name component of the argument exists.
+				if (equalsIndex == 0) {
+					throw new OsmosisRuntimeException("Argument " + (i + 1) + " doesn't contain a name before the '=' (ie. name=value).");
+				}
+				
+				// Check if the value component of the argument exists.
+				if (equalsIndex >= (arg.length() - 1)) {
+					throw new OsmosisRuntimeException("Argument " + (i + 1) + " doesn't contain a value after the '=' (ie. name=value).");
+				}
+				
+				// Split the argument into name and value.
+				argName = arg.substring(0, equalsIndex);
+				argValue = arg.substring(equalsIndex + 1);
+				
+				// Add pipeline arguments to pipeArgs, all other arguments to taskArgs.
+				// A pipeline arg is inPipe, inPipe.x, outPipe or outPipe.x.
+				if (PipelineConstants.IN_PIPE_ARGUMENT_PREFIX.equals(argName) || argName.indexOf(PipelineConstants.IN_PIPE_ARGUMENT_PREFIX + ".") == 0 || PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX.equals(argName) || argName.indexOf(PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX + ".") == 0) {
+					pipeArgs.put(argName, argValue);
+				} else {
+					taskArgs.put(argName, argValue);
+				}
+				
 			} else {
-				taskArgs.put(argName, argValue);
+				if (defaultArgIndex >= 0) {
+					throw new OsmosisRuntimeException("Only one default (un-named) argument can exist per task.  Arguments " + (i + 1) + " and " + (defaultArgIndex + 1) + " have no name.");
+				}
+				
+				defaultArg = arg;
+				defaultArgIndex = i;
 			}
 			
 			i++;
 		}
 		
 		// Build a unique task id.
-		taskId = (taskInfoList.size() + 1) + "-" + taskType;
+		taskId = (taskConfigList.size() + 1) + "-" + taskType;
 		
 		// Create a new task information object and add it to the list.
-		taskInfoList.add(
-			new TaskInfo(taskId, taskType, pipeArgs, taskArgs)
+		taskConfigList.add(
+			new TaskConfiguration(taskId, taskType, pipeArgs, taskArgs, defaultArg)
 		);
 		
 		return i;
@@ -238,8 +248,8 @@ public class CommandLineParser {
 	 * 
 	 * @return The taskInfoList.
 	 */
-	public List<TaskInfo> getTaskInfoList() {
-		return taskInfoList;
+	public List<TaskConfiguration> getTaskInfoList() {
+		return taskConfigList;
 	}
 	
 	

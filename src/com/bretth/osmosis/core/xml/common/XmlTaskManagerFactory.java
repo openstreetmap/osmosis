@@ -1,8 +1,7 @@
 package com.bretth.osmosis.core.xml.common;
 
-import java.util.Map;
-
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 
 
@@ -24,23 +23,22 @@ public abstract class XmlTaskManagerFactory extends TaskManagerFactory {
 	 * Utility method for retrieving a CompressionMethod argument value from a
 	 * Map of task arguments.
 	 * 
-	 * @param taskId
-	 *            The identifier for the task retrieving the parameter.
-	 * @param taskArgs
-	 *            The task arguments.
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
 	 * @param fileName
 	 *            The file name used to determine the default compression
 	 *            method.
 	 * @return The value of the argument.
 	 */
 	protected CompressionMethod getCompressionMethodArgument(
-			String taskId, Map<String, String> taskArgs, String fileName) {
+			TaskConfiguration taskConfig, String fileName) {
 		CompressionMethod result;
 		
-		if (taskArgs.containsKey(ARG_COMPRESSION_METHOD)) {
+		if (doesArgumentExist(taskConfig, ARG_COMPRESSION_METHOD)) {
 			String rawValue;
 			
-			rawValue = taskArgs.get(ARG_COMPRESSION_METHOD).toLowerCase();
+			rawValue = getStringArgument(taskConfig, ARG_COMPRESSION_METHOD).toLowerCase();
 			
 			if ("none".equals(rawValue)) {
 				result = CompressionMethod.None;
@@ -50,7 +48,7 @@ public abstract class XmlTaskManagerFactory extends TaskManagerFactory {
 				result = CompressionMethod.BZip2;
 			} else {
 				throw new OsmosisRuntimeException(
-					"Argument " + ARG_COMPRESSION_METHOD + " for task " + taskId
+					"Argument " + ARG_COMPRESSION_METHOD + " for task " + taskConfig.getId()
 					+ " must be one of none, gzip, or bzip2.");
 			}
 			
@@ -73,14 +71,13 @@ public abstract class XmlTaskManagerFactory extends TaskManagerFactory {
 	 * the production file encoding hack to work around a bug in the current
 	 * production configuration.
 	 * 
-	 * @param taskId
-	 *            The identifier for the task retrieving the parameter.
-	 * @param taskArgs
-	 *            The task arguments.
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
 	 * @return The value of the argument.
 	 */
 	protected boolean getProdEncodingHackArgument(
-			String taskId, Map<String, String> taskArgs) {
-		return getBooleanArgument(taskId, taskArgs, ARG_ENCODING_HACK, DEFAULT_ENCODING_HACK);
+			TaskConfiguration taskConfig) {
+		return getBooleanArgument(taskConfig, ARG_ENCODING_HACK, DEFAULT_ENCODING_HACK);
 	}
 }

@@ -1,7 +1,6 @@
 package com.bretth.osmosis.core.mysql.v0_5;
 
-import java.util.Map;
-
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.database.DatabaseTaskManagerFactory;
@@ -23,20 +22,20 @@ public class MySqlCurrentReaderFactory extends DatabaseTaskManagerFactory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		DatabaseLoginCredentials loginCredentials;
 		DatabasePreferences preferences;
 		boolean readAllUsers;
 		
 		// Get the task arguments.
-		loginCredentials = getDatabaseLoginCredentials(taskId, taskArgs);
-		preferences = getDatabasePreferences(taskId, taskArgs);
-		readAllUsers = getBooleanArgument(taskId, taskArgs, ARG_READ_ALL_USERS, DEFAULT_READ_ALL_USERS);
+		loginCredentials = getDatabaseLoginCredentials(taskConfig);
+		preferences = getDatabasePreferences(taskConfig);
+		readAllUsers = getBooleanArgument(taskConfig, ARG_READ_ALL_USERS, DEFAULT_READ_ALL_USERS);
 		
 		return new RunnableSourceManager(
-			taskId,
+			taskConfig.getId(),
 			new MySqlCurrentReader(loginCredentials, preferences, readAllUsers),
-			pipeArgs
+			taskConfig.getPipeArgs()
 		);
 	}
 }

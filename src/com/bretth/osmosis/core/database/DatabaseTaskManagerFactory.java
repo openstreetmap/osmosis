@@ -1,8 +1,8 @@
 package com.bretth.osmosis.core.database;
 
 import java.io.File;
-import java.util.Map;
 
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 
 
@@ -17,14 +17,13 @@ public abstract class DatabaseTaskManagerFactory extends TaskManagerFactory {
 	/**
 	 * Utility method for retrieving the login credentials for a database connection.
 	 * 
-	 * @param taskId
-	 *            The identifier for the task retrieving the parameter.
-	 * @param taskArgs
-	 *            The task arguments.
-	 * @return The value of the argument.
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
+	 * @return The credentials for the database connection.
 	 */
 	protected DatabaseLoginCredentials getDatabaseLoginCredentials(
-			String taskId, Map<String, String> taskArgs) {
+			TaskConfiguration taskConfig) {
 		DatabaseLoginCredentials loginCredentials;
 		
 		// Create a new credential object with default values.
@@ -37,12 +36,12 @@ public abstract class DatabaseTaskManagerFactory extends TaskManagerFactory {
 		
 		// If an authentication properties file has been supplied, load override
 		// values from there.
-		if (doesArgumentExist(taskArgs, DatabaseConstants.TASK_ARG_AUTH_FILE)) {
+		if (doesArgumentExist(taskConfig, DatabaseConstants.TASK_ARG_AUTH_FILE)) {
 			AuthenticationPropertiesLoader authLoader;
 			
 			authLoader = new AuthenticationPropertiesLoader(
 				new File(
-					getStringArgument(taskId, taskArgs, DatabaseConstants.TASK_ARG_AUTH_FILE)
+					getStringArgument(taskConfig, DatabaseConstants.TASK_ARG_AUTH_FILE)
 				)
 			);
 			
@@ -53,32 +52,28 @@ public abstract class DatabaseTaskManagerFactory extends TaskManagerFactory {
 		// command line.
 		loginCredentials.setHost(
 			getStringArgument(
-				taskId,
-				taskArgs,
+				taskConfig,
 				DatabaseConstants.TASK_ARG_HOST,
 				loginCredentials.getHost()
 			)
 		);
 		loginCredentials.setDatabase(
 			getStringArgument(
-				taskId,
-				taskArgs,
+				taskConfig,
 				DatabaseConstants.TASK_ARG_DATABASE,
 				loginCredentials.getDatabase()
 			)
 		);
 		loginCredentials.setUser(
 			getStringArgument(
-				taskId,
-				taskArgs,
+				taskConfig,
 				DatabaseConstants.TASK_ARG_USER,
 				loginCredentials.getUser()
 			)
 		);
 		loginCredentials.setPassword(
 			getStringArgument(
-				taskId,
-				taskArgs,
+				taskConfig,
 				DatabaseConstants.TASK_ARG_PASSWORD,
 				loginCredentials.getPassword()
 			)
@@ -91,14 +86,13 @@ public abstract class DatabaseTaskManagerFactory extends TaskManagerFactory {
 	/**
 	 * Utility method for retrieving the login credentials for a database connection.
 	 * 
-	 * @param taskId
-	 *            The identifier for the task retrieving the parameter.
-	 * @param taskArgs
-	 *            The task arguments.
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
 	 * @return The value of the argument.
 	 */
 	protected DatabasePreferences getDatabasePreferences(
-			String taskId, Map<String, String> taskArgs) {
+			TaskConfiguration taskConfig) {
 		DatabasePreferences preferences;
 		
 		// Create a new preferences object with default values.
@@ -108,8 +102,7 @@ public abstract class DatabaseTaskManagerFactory extends TaskManagerFactory {
 		// command line.
 		preferences.setValidateSchemaVersion(
 			getBooleanArgument(
-				taskId,
-				taskArgs,
+				taskConfig,
 				DatabaseConstants.TASK_ARG_VALIDATE_SCHEMA_VERSION,
 				preferences.getValidateSchemaVersion()
 			)

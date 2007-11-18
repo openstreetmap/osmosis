@@ -1,8 +1,8 @@
 package com.bretth.osmosis.core.report.v0_5;
 
 import java.io.File;
-import java.util.Map;
 
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.v0_5.SinkManager;
@@ -22,13 +22,13 @@ public class EntityReporterFactory extends TaskManagerFactory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		String fileName;
 		File file;
 		EntityReporter task;
 		
 		// Get the task arguments.
-		fileName = getStringArgument(taskId, taskArgs, ARG_FILE_NAME, DEFAULT_FILE_NAME);
+		fileName = getStringArgument(taskConfig, ARG_FILE_NAME, DEFAULT_FILE_NAME);
 		
 		// Create a file object from the file name provided.
 		file = new File(fileName);
@@ -36,6 +36,6 @@ public class EntityReporterFactory extends TaskManagerFactory {
 		// Build the task object.
 		task = new EntityReporter(file);
 		
-		return new SinkManager(taskId, task, pipeArgs);
+		return new SinkManager(taskConfig.getId(), task, taskConfig.getPipeArgs());
 	}
 }

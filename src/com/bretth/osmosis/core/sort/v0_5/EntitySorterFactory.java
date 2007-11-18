@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
@@ -76,19 +77,18 @@ public class EntitySorterFactory extends TaskManagerFactory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected TaskManager createTaskManagerImpl(String taskId,
-			Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		Comparator<EntityContainer> comparator;
 		
 		// Get the comparator.
 		comparator = getComparator(
-			getStringArgument(taskId, taskArgs, ARG_COMPARATOR_TYPE, defaultComparatorType)
+			getStringArgument(taskConfig, ARG_COMPARATOR_TYPE, defaultComparatorType)
 		);
 		
 		return new SinkSourceManager(
-			taskId,
+			taskConfig.getId(),
 			new EntitySorter(comparator),
-			pipeArgs
+			taskConfig.getPipeArgs()
 		);
 	}
 }

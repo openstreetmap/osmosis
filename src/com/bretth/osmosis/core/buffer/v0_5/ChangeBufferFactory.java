@@ -1,7 +1,6 @@
 package com.bretth.osmosis.core.buffer.v0_5;
 
-import java.util.Map;
-
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.v0_5.ChangeSinkRunnableChangeSourceManager;
@@ -21,16 +20,16 @@ public class ChangeBufferFactory extends TaskManagerFactory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		int bufferCapacity;
 		
 		// Get the task arguments.
-		bufferCapacity = getIntegerArgument(taskId, taskArgs, ARG_BUFFER_CAPACITY, DEFAULT_BUFFER_CAPACITY);
+		bufferCapacity = getIntegerArgument(taskConfig, ARG_BUFFER_CAPACITY, DEFAULT_BUFFER_CAPACITY);
 		
 		return new ChangeSinkRunnableChangeSourceManager(
-			taskId,
+			taskConfig.getId(),
 			new ChangeBuffer(bufferCapacity),
-			pipeArgs
+			taskConfig.getPipeArgs()
 		);
 	}
 }

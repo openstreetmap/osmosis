@@ -1,8 +1,8 @@
 package com.bretth.osmosis.core.xml.v0_5;
 
 import java.io.File;
-import java.util.Map;
 
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.v0_5.RunnableSourceManager;
 import com.bretth.osmosis.core.xml.common.CompressionMethod;
@@ -25,7 +25,7 @@ public class XmlReaderFactory extends XmlTaskManagerFactory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		String fileName;
 		File file;
 		boolean enableDateParsing;
@@ -33,9 +33,9 @@ public class XmlReaderFactory extends XmlTaskManagerFactory {
 		XmlReader task;
 		
 		// Get the task arguments.
-		fileName = getStringArgument(taskId, taskArgs, ARG_FILE_NAME, DEFAULT_FILE_NAME);
-		enableDateParsing = getBooleanArgument(taskId, taskArgs, ARG_ENABLE_DATE_PARSING, DEFAULT_ENABLE_DATE_PARSING);
-		compressionMethod = getCompressionMethodArgument(taskId, taskArgs, fileName);
+		fileName = getStringArgument(taskConfig, ARG_FILE_NAME, DEFAULT_FILE_NAME);
+		enableDateParsing = getBooleanArgument(taskConfig, ARG_ENABLE_DATE_PARSING, DEFAULT_ENABLE_DATE_PARSING);
+		compressionMethod = getCompressionMethodArgument(taskConfig, fileName);
 		
 		// Create a file object from the file name provided.
 		file = new File(fileName);
@@ -43,6 +43,6 @@ public class XmlReaderFactory extends XmlTaskManagerFactory {
 		// Build the task object.
 		task = new XmlReader(file, enableDateParsing, compressionMethod);
 		
-		return new RunnableSourceManager(taskId, task, pipeArgs);
+		return new RunnableSourceManager(taskConfig.getId(), task, taskConfig.getPipeArgs());
 	}
 }

@@ -1,8 +1,8 @@
 package com.bretth.osmosis.core.xml.v0_5;
 
 import java.io.File;
-import java.util.Map;
 
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.v0_5.SinkManager;
 import com.bretth.osmosis.core.xml.common.CompressionMethod;
@@ -23,7 +23,7 @@ public class XmlWriterFactory extends XmlTaskManagerFactory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		String fileName;
 		File file;
 		XmlWriter task;
@@ -31,9 +31,9 @@ public class XmlWriterFactory extends XmlTaskManagerFactory {
 		boolean enableProdEncodingHack;
 		
 		// Get the task arguments.
-		fileName = getStringArgument(taskId, taskArgs, ARG_FILE_NAME, DEFAULT_FILE_NAME);
-		compressionMethod = getCompressionMethodArgument(taskId, taskArgs, fileName);
-		enableProdEncodingHack = getProdEncodingHackArgument(taskId, taskArgs);
+		fileName = getStringArgument(taskConfig, ARG_FILE_NAME, DEFAULT_FILE_NAME);
+		compressionMethod = getCompressionMethodArgument(taskConfig, fileName);
+		enableProdEncodingHack = getProdEncodingHackArgument(taskConfig);
 		
 		// Create a file object from the file name provided.
 		file = new File(fileName);
@@ -41,6 +41,6 @@ public class XmlWriterFactory extends XmlTaskManagerFactory {
 		// Build the task object.
 		task = new XmlWriter(file, compressionMethod, enableProdEncodingHack);
 		
-		return new SinkManager(taskId, task, pipeArgs);
+		return new SinkManager(taskConfig.getId(), task, taskConfig.getPipeArgs());
 	}
 }

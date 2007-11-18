@@ -1,8 +1,7 @@
 package com.bretth.osmosis.core.filter.v0_5;
 
 import java.io.File;
-import java.util.Map;
-
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.filter.common.IdTrackerType;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.v0_5.SinkSourceManager;
@@ -26,7 +25,7 @@ public class PolygonFilterFactory extends AreaFilterTaskManagerFactory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		IdTrackerType idTrackerType;
 		String fileName;
 		File file;
@@ -34,18 +33,18 @@ public class PolygonFilterFactory extends AreaFilterTaskManagerFactory {
 		boolean completeRelations;
 		
 		// Get the task arguments.
-		idTrackerType = getIdTrackerType(taskId, taskArgs);
-		fileName = getStringArgument(taskId, taskArgs, ARG_FILE, DEFAULT_FILE);
-		completeWays = getBooleanArgument(taskId, taskArgs, ARG_COMPLETE_WAYS, DEFAULT_COMPLETE_WAYS);
-		completeRelations = getBooleanArgument(taskId, taskArgs, ARG_COMPLETE_RELATIONS, DEFAULT_COMPLETE_RELATIONS);
+		idTrackerType = getIdTrackerType(taskConfig);
+		fileName = getStringArgument(taskConfig, ARG_FILE, DEFAULT_FILE);
+		completeWays = getBooleanArgument(taskConfig, ARG_COMPLETE_WAYS, DEFAULT_COMPLETE_WAYS);
+		completeRelations = getBooleanArgument(taskConfig, ARG_COMPLETE_RELATIONS, DEFAULT_COMPLETE_RELATIONS);
 		
 		// Create a file object from the file name provided.
 		file = new File(fileName);
 		
 		return new SinkSourceManager(
-			taskId,
+			taskConfig.getId(),
 			new PolygonFilter(idTrackerType, file, completeWays, completeRelations),
-			pipeArgs
+			taskConfig.getPipeArgs()
 		);
 	}
 }

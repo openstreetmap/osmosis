@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.cli.TaskConfiguration;
+
 
 /**
  * All task implementations require a corresponding task manager factory. This
@@ -19,6 +21,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  */
 public abstract class TaskManagerFactory {
 	private static final String DATE_FORMAT = "yyyy-MM-dd_HH:mm:ss";
+	
 	
 	/**
 	 * The global register of task manager factories, keyed by a unique
@@ -67,70 +70,57 @@ public abstract class TaskManagerFactory {
 	/**
 	 * Create a new task manager containing a task instance.
 	 * 
-	 * @param taskType
-	 *            The identifier for the task type.
-	 * @param taskId
-	 *            The unique identifier for this task instance.
-	 * @param taskArgs
-	 *            The arguments used for initialising the task instance.
-	 * @param pipeArgs
-	 *            The arguments used for connecting the task inputs and outputs.
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
 	 * @return The newly created task manager.
 	 */
-	public static TaskManager createTaskManager(String taskType, String taskId,
-			Map<String, String> taskArgs, Map<String, String> pipeArgs) {
-		return getInstance(taskType).createTaskManagerImpl(taskId, taskArgs,
-				pipeArgs);
+	public static TaskManager createTaskManager(TaskConfiguration taskConfig) {
+		return getInstance(taskConfig.getType()).createTaskManagerImpl(taskConfig);
 	}
 	
-
+	
 	/**
 	 * Create a new task manager containing a task instance.
 	 * 
-	 * @param taskId
-	 *            The unique identifier for this task instance.
-	 * @param taskArgs
-	 *            The arguments used for initialising the task instance.
-	 * @param pipeArgs
-	 *            The arguments used for connecting the task inputs and outputs.
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
 	 * @return The newly created task manager.
 	 */
-	protected abstract TaskManager createTaskManagerImpl(String taskId,
-			Map<String, String> taskArgs, Map<String, String> pipeArgs);
+	protected abstract TaskManager createTaskManagerImpl(TaskConfiguration taskConfig);
 	
 	
 	/**
 	 * Checks if the specified argument has been supplied.
 	 * 
-	 * @param taskArgs The task arguments.
-	 * @param argName The name of the argument.
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
+	 * @param argName
+	 *            The name of the argument.
 	 * @return True if the argument has been supplied.
 	 */
-	protected boolean doesArgumentExist(Map<String, String> taskArgs, String argName) {
-		return taskArgs.containsKey(argName);
+	protected boolean doesArgumentExist(TaskConfiguration taskConfig, String argName) {
+		return taskConfig.getConfigArgs().containsKey(argName);
 	}
 	
 	
 	/**
-	 * Utility method for retrieving a String argument value from a Map of task
-	 * arguments.
+	 * Utility method for retrieving the default argument for the task as a String.
 	 * 
-	 * @param taskId
-	 *            The identifier for the task retrieving the parameter.
-	 * @param taskArgs
-	 *            The task arguments.
-	 * @param argName
-	 *            The name of the argument.
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
+	 * @param defaultValue
+	 *            The default value of the argument if not value is available.
 	 * @return The value of the argument.
 	 */
-	protected String getStringArgument(String taskId, Map<String, String> taskArgs,
-			String argName) {
-		if (taskArgs.containsKey(argName)) {
-			return taskArgs.get(argName);
+	protected String getDefaultStringArgument(TaskConfiguration taskConfig, String defaultValue) {
+		if (taskConfig.getDefaultArg() != null) {
+			return taskConfig.getDefaultArg();
 		} else {
-			throw new OsmosisRuntimeException(
-				"Argument " + argName + " for task " + taskId
-				+ " does not exist.");
+			return defaultValue;
 		}
 	}
 	
@@ -139,20 +129,48 @@ public abstract class TaskManagerFactory {
 	 * Utility method for retrieving a String argument value from a Map of task
 	 * arguments.
 	 * 
-	 * @param taskId
-	 *            The identifier for the task retrieving the parameter.
-	 * @param taskArgs
-	 *            The task arguments.
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
+	 * @param argName
+	 *            The name of the argument.
+	 * @return The value of the argument.
+	 */
+	protected String getStringArgument(TaskConfiguration taskConfig, String argName) {
+		Map<String, String> configArgs;
+		
+		configArgs = taskConfig.getConfigArgs();
+		
+		if (configArgs.containsKey(argName)) {
+			return configArgs.get(argName);
+		} else {
+			throw new OsmosisRuntimeException(
+				"Argument " + argName
+					+ " for task " + taskConfig.getId() + " does not exist.");
+		}
+	}
+	
+	
+	/**
+	 * Utility method for retrieving a String argument value from a Map of task
+	 * arguments.
+	 * 
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
 	 * @param argName
 	 *            The name of the argument.
 	 * @param defaultValue
 	 *            The default value of the argument if not value is available.
 	 * @return The value of the argument.
 	 */
-	protected String getStringArgument(String taskId, Map<String, String> taskArgs,
-			String argName, String defaultValue) {
-		if (taskArgs.containsKey(argName)) {
-			return taskArgs.get(argName);
+	protected String getStringArgument(TaskConfiguration taskConfig, String argName, String defaultValue) {
+		Map<String, String> configArgs;
+		
+		configArgs = taskConfig.getConfigArgs();
+		
+		if (configArgs.containsKey(argName)) {
+			return configArgs.get(argName);
 		} else {
 			return defaultValue;
 		}
@@ -163,33 +181,31 @@ public abstract class TaskManagerFactory {
 	 * Utility method for retrieving an integer argument value from a Map of
 	 * task arguments.
 	 * 
-	 * @param taskId
-	 *            The identifier for the task retrieving the parameter.
-	 * @param taskArgs
-	 *            The task arguments.
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
 	 * @param argName
 	 *            The name of the argument.
 	 * @param defaultValue
 	 *            The default value of the argument if not value is available.
 	 * @return The value of the argument.
 	 */
-	protected int getIntegerArgument(String taskId, Map<String, String> taskArgs,
-			String argName, int defaultValue) {
-		int result;
+	protected int getIntegerArgument(TaskConfiguration taskConfig, String argName, int defaultValue) {
+		Map<String, String> configArgs;
 		
-		if (taskArgs.containsKey(argName)) {
+		configArgs = taskConfig.getConfigArgs();
+		
+		if (configArgs.containsKey(argName)) {
 			try {
-				result = Integer.parseInt(taskArgs.get(argName));
+				return Integer.parseInt(configArgs.get(argName));
 			} catch (NumberFormatException e) {
 				throw new OsmosisRuntimeException(
-					"Argument " + argName + " for task " + taskId
+					"Argument " + argName + " for task " + taskConfig.getId()
 					+ " must be an integer number.", e);
 			}
 		} else {
-			result = defaultValue;
+			return defaultValue;
 		}
-		
-		return result;
 	}
 	
 	
@@ -197,33 +213,32 @@ public abstract class TaskManagerFactory {
 	 * Utility method for retrieving a double argument value from a Map of task
 	 * arguments.
 	 * 
-	 * @param taskId
-	 *            The identifier for the task retrieving the parameter.
-	 * @param taskArgs
-	 *            The task arguments.
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
 	 * @param argName
 	 *            The name of the argument.
 	 * @param defaultValue
 	 *            The default value of the argument if not value is available.
 	 * @return The value of the argument.
 	 */
-	protected double getDoubleArgument(String taskId, Map<String, String> taskArgs,
+	protected double getDoubleArgument(TaskConfiguration taskConfig, 
 			String argName, double defaultValue) {
-		double result;
+		Map<String, String> configArgs;
 		
-		if (taskArgs.containsKey(argName)) {
+		configArgs = taskConfig.getConfigArgs();
+		
+		if (configArgs.containsKey(argName)) {
 			try {
-				result = Double.parseDouble(taskArgs.get(argName));
+				return Double.parseDouble(configArgs.get(argName));
 			} catch (NumberFormatException e) {
 				throw new OsmosisRuntimeException(
-					"Argument " + argName + " for task " + taskId
+					"Argument " + argName + " for task " + taskConfig.getId()
 					+ " must be a decimal number.", e);
 			}
 		} else {
-			result = defaultValue;
+			return defaultValue;
 		}
-		
-		return result;
 	}
 	
 	
@@ -231,38 +246,37 @@ public abstract class TaskManagerFactory {
 	 * Utility method for retrieving a date argument value from a Map of task
 	 * arguments.
 	 * 
-	 * @param taskId
-	 *            The identifier for the task retrieving the parameter.
-	 * @param taskArgs
-	 *            The task arguments.
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
 	 * @param argName
 	 *            The name of the argument.
 	 * @param defaultValue
 	 *            The default value of the argument if not value is available.
 	 * @return The value of the argument.
 	 */
-	protected Date getDateArgument(String taskId, Map<String, String> taskArgs,
+	protected Date getDateArgument(TaskConfiguration taskConfig, 
 			String argName, Date defaultValue) {
-		Date result;
+		Map<String, String> configArgs;
 		
-		if (taskArgs.containsKey(argName)) {
+		configArgs = taskConfig.getConfigArgs();
+		
+		if (configArgs.containsKey(argName)) {
 			try {
 				SimpleDateFormat dateFormat;
 				
 				dateFormat = new SimpleDateFormat(DATE_FORMAT);
 				
-				result = dateFormat.parse(taskArgs.get(argName));
+				return dateFormat.parse(configArgs.get(argName));
 				
 			} catch (ParseException e) {
 				throw new OsmosisRuntimeException(
-					"Argument " + argName + " for task " + taskId
+					"Argument " + argName + " for task " + taskConfig.getId()
 					+ " must be a date in format " + DATE_FORMAT + ".", e);
 			}
 		} else {
-			result = defaultValue;
+			return defaultValue;
 		}
-		
-		return result;
 	}
 	
 	
@@ -270,41 +284,40 @@ public abstract class TaskManagerFactory {
 	 * Utility method for retrieving a boolean argument value from a Map of task
 	 * arguments.
 	 * 
-	 * @param taskId
-	 *            The identifier for the task retrieving the parameter.
-	 * @param taskArgs
-	 *            The task arguments.
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
 	 * @param argName
 	 *            The name of the argument.
 	 * @param defaultValue
 	 *            The default value of the argument if not value is available.
 	 * @return The value of the argument.
 	 */
-	protected boolean getBooleanArgument(String taskId, Map<String, String> taskArgs,
+	protected boolean getBooleanArgument(TaskConfiguration taskConfig, 
 			String argName, boolean defaultValue) {
-		boolean result;
+		Map<String, String> configArgs;
 		
-		if (taskArgs.containsKey(argName)) {
+		configArgs = taskConfig.getConfigArgs();
+		
+		if (configArgs.containsKey(argName)) {
 			String rawValue;
 			
-			rawValue = taskArgs.get(argName).toLowerCase();
+			rawValue = configArgs.get(argName).toLowerCase();
 			
 			if ("true".equals(rawValue) || "yes".equals(rawValue)) {
-				result = true;
+				return true;
 				
 			} else if ("false".equals(rawValue) || "no".equals(rawValue)) {
-				result = false;
+				return false;
 				
 			} else {
 				throw new OsmosisRuntimeException(
-					"Argument " + argName + " for task " + taskId
+					"Argument " + argName + " for task " + taskConfig.getId()
 					+ " must be one of yes, no, true or false.");
 			}
 			
 		} else {
-			result = defaultValue;
+			return defaultValue;
 		}
-		
-		return result;
 	}
 }

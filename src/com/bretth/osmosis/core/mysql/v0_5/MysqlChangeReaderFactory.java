@@ -1,8 +1,8 @@
 package com.bretth.osmosis.core.mysql.v0_5;
 
 import java.util.Date;
-import java.util.Map;
 
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.database.DatabaseTaskManagerFactory;
@@ -26,7 +26,7 @@ public class MysqlChangeReaderFactory extends DatabaseTaskManagerFactory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		DatabaseLoginCredentials loginCredentials;
 		DatabasePreferences preferences;
 		boolean readAllUsers;
@@ -34,16 +34,16 @@ public class MysqlChangeReaderFactory extends DatabaseTaskManagerFactory {
 		Date intervalEnd;
 		
 		// Get the task arguments.
-		loginCredentials = getDatabaseLoginCredentials(taskId, taskArgs);
-		preferences = getDatabasePreferences(taskId, taskArgs);
-		readAllUsers = getBooleanArgument(taskId, taskArgs, ARG_READ_ALL_USERS, DEFAULT_READ_ALL_USERS);
-		intervalBegin = getDateArgument(taskId, taskArgs, ARG_INTERVAL_BEGIN, new Date(0));
-		intervalEnd = getDateArgument(taskId, taskArgs, ARG_INTERVAL_END, new Date());
+		loginCredentials = getDatabaseLoginCredentials(taskConfig);
+		preferences = getDatabasePreferences(taskConfig);
+		readAllUsers = getBooleanArgument(taskConfig, ARG_READ_ALL_USERS, DEFAULT_READ_ALL_USERS);
+		intervalBegin = getDateArgument(taskConfig, ARG_INTERVAL_BEGIN, new Date(0));
+		intervalEnd = getDateArgument(taskConfig, ARG_INTERVAL_END, new Date());
 		
 		return new RunnableChangeSourceManager(
-			taskId,
+			taskConfig.getId(),
 			new MysqlChangeReader(loginCredentials, preferences, readAllUsers, intervalBegin, intervalEnd),
-			pipeArgs
+			taskConfig.getPipeArgs()
 		);
 	}
 }

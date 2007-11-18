@@ -1,7 +1,6 @@
 package com.bretth.osmosis.core.filter.v0_5;
 
-import java.util.Map;
-
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.filter.common.IdTrackerType;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.v0_5.SinkSourceManager;
@@ -31,7 +30,7 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		IdTrackerType idTrackerType;
 		double left;
 		double right;
@@ -41,18 +40,18 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 		boolean completeRelations;
 		
 		// Get the task arguments.
-		idTrackerType = getIdTrackerType(taskId, taskArgs);
-		left = getDoubleArgument(taskId, taskArgs, ARG_LEFT, DEFAULT_LEFT);
-		right = getDoubleArgument(taskId, taskArgs, ARG_RIGHT, DEFAULT_RIGHT);
-		top = getDoubleArgument(taskId, taskArgs, ARG_TOP, DEFAULT_TOP);
-		bottom = getDoubleArgument(taskId, taskArgs, ARG_BOTTOM, DEFAULT_BOTTOM);
-		completeWays = getBooleanArgument(taskId, taskArgs, ARG_COMPLETE_WAYS, DEFAULT_COMPLETE_WAYS);
-		completeRelations = getBooleanArgument(taskId, taskArgs, ARG_COMPLETE_RELATIONS, DEFAULT_COMPLETE_RELATIONS);
+		idTrackerType = getIdTrackerType(taskConfig);
+		left = getDoubleArgument(taskConfig, ARG_LEFT, DEFAULT_LEFT);
+		right = getDoubleArgument(taskConfig, ARG_RIGHT, DEFAULT_RIGHT);
+		top = getDoubleArgument(taskConfig, ARG_TOP, DEFAULT_TOP);
+		bottom = getDoubleArgument(taskConfig, ARG_BOTTOM, DEFAULT_BOTTOM);
+		completeWays = getBooleanArgument(taskConfig, ARG_COMPLETE_WAYS, DEFAULT_COMPLETE_WAYS);
+		completeRelations = getBooleanArgument(taskConfig, ARG_COMPLETE_RELATIONS, DEFAULT_COMPLETE_RELATIONS);
 		
 		return new SinkSourceManager(
-			taskId,
+			taskConfig.getId(),
 			new BoundingBoxFilter(idTrackerType, left, right, top, bottom, completeWays, completeRelations),
-			pipeArgs
+			taskConfig.getPipeArgs()
 		);
 	}
 }

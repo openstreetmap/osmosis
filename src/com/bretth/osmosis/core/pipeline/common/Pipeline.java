@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.cli.TaskInfo;
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 
 
 /**
@@ -38,20 +38,15 @@ public class Pipeline {
 	 * @param taskInfoList
 	 *            The list of task information objects.
 	 */
-	private void buildTasks(List<TaskInfo> taskInfoList) {
-		for (TaskInfo taskInfo : taskInfoList) {
+	private void buildTasks(List<TaskConfiguration> taskInfoList) {
+		for (TaskConfiguration taskConfig : taskInfoList) {
 			// Create the new task manager and add to the pipeline.
 			taskManagers.add(
-				TaskManagerFactory.createTaskManager(
-					taskInfo.getType(),
-					taskInfo.getId(),
-					taskInfo.getConfigArgs(),
-					taskInfo.getPipeArgs()
-				)
+				TaskManagerFactory.createTaskManager(taskConfig)
 			);
 			
 			if (log.isLoggable(Level.INFO)) {
-				log.fine("Created task \"" + taskInfo.getId() + "\"");
+				log.fine("Created task \"" + taskConfig.getId() + "\"");
 			}
 		}
 	}
@@ -101,7 +96,7 @@ public class Pipeline {
 	 * @param taskInfoList
 	 *            The list of task information objects.
 	 */
-	public void prepare(List<TaskInfo> taskInfoList) {
+	public void prepare(List<TaskConfiguration> taskInfoList) {
 		// Process the command line arguments to build all tasks in the pipeline.
 		log.fine("Building tasks.");
 		buildTasks(taskInfoList);

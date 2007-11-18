@@ -9,11 +9,12 @@ import java.util.Map;
  * 
  * @author Brett Henderson
  */
-public class TaskInfo {
+public class TaskConfiguration {
 	private String id;
 	private String type;
 	private Map<String, String> pipeArgs;
 	private Map<String, String> configArgs;
+	private String defaultArg;
 	
 	
 	/**
@@ -23,12 +24,14 @@ public class TaskInfo {
 	 * @param type The type of the task.
 	 * @param pipeArgs The pipe arguments for the task.
 	 * @param configArgs The configuration arguments for the task.
+	 * @param defaultArg The default argument for the task.
 	 */
-	public TaskInfo(String id, String type, Map<String, String> pipeArgs, Map<String, String> configArgs) {
+	public TaskConfiguration(String id, String type, Map<String, String> pipeArgs, Map<String, String> configArgs, String defaultArg) {
 		this.id = id;
 		this.type = type;
 		this.pipeArgs = pipeArgs;
 		this.configArgs = configArgs;
+		this.defaultArg = defaultArg;
 	}
 	
 	
@@ -69,5 +72,15 @@ public class TaskInfo {
 	 */
 	public Map<String, String> getConfigArgs() {
 		return Collections.unmodifiableMap(configArgs);
+	}
+	
+	
+	/**
+	 * Contains the single default argument (if supplied) to the task.
+	 * 
+	 * @return The defaultArg or null if not available.
+	 */
+	public String getDefaultArg() {
+		return defaultArg;
 	}
 }

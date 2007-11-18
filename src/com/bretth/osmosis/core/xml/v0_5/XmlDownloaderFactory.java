@@ -1,7 +1,6 @@
 package com.bretth.osmosis.core.xml.v0_5;
 
-import java.util.Map;
-
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.v0_5.RunnableSourceManager;
@@ -31,9 +30,7 @@ public class XmlDownloaderFactory extends TaskManagerFactory {
      * {@inheritDoc}
      */
     @Override
-    protected TaskManager createTaskManagerImpl(final String taskId,
-                                                final Map<String, String> taskArgs,
-                                                final Map<String, String> pipeArgs) {
+    protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		double left;
 		double right;
 		double top;
@@ -41,17 +38,17 @@ public class XmlDownloaderFactory extends TaskManagerFactory {
 		String url;
 		
 		// Get the task arguments.
-		left = getDoubleArgument(taskId, taskArgs, ARG_LEFT, DEFAULT_LEFT);
-		right = getDoubleArgument(taskId, taskArgs, ARG_RIGHT, DEFAULT_RIGHT);
-		top = getDoubleArgument(taskId, taskArgs, ARG_TOP, DEFAULT_TOP);
-		bottom = getDoubleArgument(taskId, taskArgs, ARG_BOTTOM, DEFAULT_BOTTOM);
-		url = getStringArgument(taskId, taskArgs, ARG_URL, XmlConstants.DEFAULT_URL);
+		left = getDoubleArgument(taskConfig, ARG_LEFT, DEFAULT_LEFT);
+		right = getDoubleArgument(taskConfig, ARG_RIGHT, DEFAULT_RIGHT);
+		top = getDoubleArgument(taskConfig, ARG_TOP, DEFAULT_TOP);
+		bottom = getDoubleArgument(taskConfig, ARG_BOTTOM, DEFAULT_BOTTOM);
+		url = getStringArgument(taskConfig, ARG_URL, XmlConstants.DEFAULT_URL);
         
 		// Create and return the task and associated manager.
 		return new RunnableSourceManager(
-			taskId,
+			taskConfig.getId(),
 			new XmlDownloader(left, right, top, bottom, url),
-			pipeArgs
+			taskConfig.getPipeArgs()
 		);
     }
 }

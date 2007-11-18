@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.merge.common.ConflictResolutionMethod;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
@@ -31,21 +32,21 @@ public class ChangeMergerFactory extends TaskManagerFactory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		String conflictResolutionMethod;
 		
-		conflictResolutionMethod = getStringArgument(taskId, taskArgs, ARG_CONFLICT_RESOLUTION_METHOD, DEFAULT_CONFLICT_RESOLUTION_METHOD);
+		conflictResolutionMethod = getStringArgument(taskConfig, ARG_CONFLICT_RESOLUTION_METHOD, DEFAULT_CONFLICT_RESOLUTION_METHOD);
 		
 		if (!conflictResolutionMethodMap.containsKey(conflictResolutionMethod)) {
 			throw new OsmosisRuntimeException(
-					"Argument " + ARG_CONFLICT_RESOLUTION_METHOD + " for task " + taskId +
+					"Argument " + ARG_CONFLICT_RESOLUTION_METHOD + " for task " + taskConfig.getId() +
 					" has value \"" + conflictResolutionMethod + "\" which is unrecognised.");
 		}
 		
 		return new MultiChangeSinkRunnableChangeSourceManager(
-			taskId,
+			taskConfig.getId(),
 			new ChangeMerger(conflictResolutionMethodMap.get(conflictResolutionMethod), 10),
-			pipeArgs
+			taskConfig.getPipeArgs()
 		);
 	}
 }

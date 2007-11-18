@@ -1,7 +1,6 @@
 package com.bretth.osmosis.core.mysql.v0_5;
 
-import java.util.Map;
-
+import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.database.DatabaseTaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.common.RunnableTaskManager;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
@@ -18,14 +17,14 @@ public class MysqlTruncatorFactory extends DatabaseTaskManagerFactory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected TaskManager createTaskManagerImpl(String taskId, Map<String, String> taskArgs, Map<String, String> pipeArgs) {
+	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		return new RunnableTaskManager(
-			taskId,
+			taskConfig.getId(),
 			new MysqlTruncator(
-				getDatabaseLoginCredentials(taskId, taskArgs),
-				getDatabasePreferences(taskId, taskArgs)
+				getDatabaseLoginCredentials(taskConfig),
+				getDatabasePreferences(taskConfig)
 			),
-			pipeArgs
+			taskConfig.getPipeArgs()
 		);
 	}
 }
