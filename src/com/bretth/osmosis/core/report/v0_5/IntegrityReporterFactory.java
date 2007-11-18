@@ -28,7 +28,11 @@ public class IntegrityReporterFactory extends TaskManagerFactory {
 		IntegrityReporter task;
 		
 		// Get the task arguments.
-		fileName = getStringArgument(taskConfig, ARG_FILE_NAME, DEFAULT_FILE_NAME);
+		fileName = getStringArgument(
+			taskConfig,
+			ARG_FILE_NAME,
+			getDefaultStringArgument(taskConfig, DEFAULT_FILE_NAME)
+		);
 		
 		// Create a file object from the file name provided.
 		file = new File(fileName);

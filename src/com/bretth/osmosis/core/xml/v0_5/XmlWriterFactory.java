@@ -31,7 +31,11 @@ public class XmlWriterFactory extends XmlTaskManagerFactory {
 		boolean enableProdEncodingHack;
 		
 		// Get the task arguments.
-		fileName = getStringArgument(taskConfig, ARG_FILE_NAME, DEFAULT_FILE_NAME);
+		fileName = getStringArgument(
+			taskConfig,
+			ARG_FILE_NAME,
+			getDefaultStringArgument(taskConfig, DEFAULT_FILE_NAME)
+		);
 		compressionMethod = getCompressionMethodArgument(taskConfig, fileName);
 		enableProdEncodingHack = getProdEncodingHackArgument(taskConfig);
 		

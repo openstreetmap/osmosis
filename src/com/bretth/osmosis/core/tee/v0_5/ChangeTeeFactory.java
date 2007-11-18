@@ -24,7 +24,11 @@ public class ChangeTeeFactory extends TaskManagerFactory {
 		int outputCount;
 		
 		// Get the task arguments.
-		outputCount = getIntegerArgument(taskConfig, ARG_OUTPUT_COUNT, DEFAULT_OUTPUT_COUNT);
+		outputCount = getIntegerArgument(
+			taskConfig,
+			ARG_OUTPUT_COUNT,
+			getDefaultIntegerArgument(taskConfig, DEFAULT_OUTPUT_COUNT)
+		);
 		
 		return new ChangeSinkMultiChangeSourceManager(
 			taskConfig.getId(),

@@ -24,7 +24,11 @@ public class EntityBufferFactory extends TaskManagerFactory {
 		int bufferCapacity;
 		
 		// Get the task arguments.
-		bufferCapacity = getIntegerArgument(taskConfig, ARG_BUFFER_CAPACITY, DEFAULT_BUFFER_CAPACITY);
+		bufferCapacity = getIntegerArgument(
+			taskConfig,
+			ARG_BUFFER_CAPACITY,
+			getDefaultIntegerArgument(taskConfig, DEFAULT_BUFFER_CAPACITY)
+		);
 		
 		return new SinkRunnableSourceManager(
 			taskConfig.getId(),

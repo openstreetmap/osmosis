@@ -82,7 +82,11 @@ public class EntitySorterFactory extends TaskManagerFactory {
 		
 		// Get the comparator.
 		comparator = getComparator(
-			getStringArgument(taskConfig, ARG_COMPARATOR_TYPE, defaultComparatorType)
+			getStringArgument(
+				taskConfig,
+				ARG_COMPARATOR_TYPE,
+				getDefaultStringArgument(taskConfig, defaultComparatorType)
+			)
 		);
 		
 		return new SinkSourceManager(

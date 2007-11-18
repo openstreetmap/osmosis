@@ -178,6 +178,35 @@ public abstract class TaskManagerFactory {
 	
 	
 	/**
+	 * Utility method for retrieving the default argument for the task as an integer.
+	 * 
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
+	 * @param defaultValue
+	 *            The default value of the argument if not value is available.
+	 * @return The value of the argument.
+	 */
+	protected int getDefaultIntegerArgument(TaskConfiguration taskConfig, int defaultValue) {
+		String defaultArg;
+		
+		defaultArg = taskConfig.getDefaultArg();
+		
+		if (defaultArg != null) {
+			try {
+				return Integer.parseInt(defaultArg);
+			} catch (NumberFormatException e) {
+				throw new OsmosisRuntimeException(
+					"Default argument for task " + taskConfig.getId()
+					+ " must be an integer number.", e);
+			}
+		} else {
+			return defaultValue;
+		}
+	}
+	
+	
+	/**
 	 * Utility method for retrieving an integer argument value from a Map of
 	 * task arguments.
 	 * 
