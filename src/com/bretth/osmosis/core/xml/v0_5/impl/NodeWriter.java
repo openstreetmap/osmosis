@@ -2,8 +2,10 @@ package com.bretth.osmosis.core.xml.v0_5.impl;
 
 import java.io.BufferedWriter;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
@@ -33,7 +35,12 @@ public class NodeWriter extends ElementWriter {
 		
 		tagWriter = new TagWriter("tag", indentLevel + 1);
 		
-		numberFormat = new DecimalFormat("0.#######;-0.#######");
+		// Only write the first 7 decimal places.
+		// Write in US locale so that a '.' is used as the decimal separator.
+		numberFormat = new DecimalFormat(
+			"0.#######;-0.#######",
+			new DecimalFormatSymbols(Locale.US)
+		);
 	}
 	
 	

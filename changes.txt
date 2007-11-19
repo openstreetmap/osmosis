@@ -1,4 +1,5 @@
 0.24
+Fixed a bug in the XML node writing code where it would write a ',' character instead of '.' as the decimal separator in some locales.
 
 0.23
 Added support for a custom decoder when writing xml files to workaround the current production utf8 double encoding issue.
