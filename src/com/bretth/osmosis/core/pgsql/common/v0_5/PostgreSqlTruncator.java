@@ -17,13 +17,7 @@ public class PostgreSqlTruncator implements RunnableTask {
 	
 	// These SQL statements will be invoked to truncate each table.
 	private static final String[] SQL_STATEMENTS = {
-		//"TRUNCATE relation_member",
-		//"TRUNCATE relation_tag",
-		//"TRUNCATE relation",
-		//"TRUNCATE way_node",
-		//"TRUNCATE way_tag",
-		//"TRUNCATE way",
-		"TRUNCATE node, node_current, node_tag"
+		"TRUNCATE api_user, node, node_current, node_tag"
 	};
 	
 	

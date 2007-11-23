@@ -16,6 +16,7 @@ import com.bretth.osmosis.core.mysql.v0_5.MysqlChangeWriterFactory;
 import com.bretth.osmosis.core.mysql.v0_5.MysqlReaderFactory;
 import com.bretth.osmosis.core.mysql.v0_5.MysqlTruncatorFactory;
 import com.bretth.osmosis.core.mysql.v0_5.MysqlWriterFactory;
+import com.bretth.osmosis.core.pgsql.common.v0_5.PostgreSqlDumpWriterFactory;
 import com.bretth.osmosis.core.pgsql.common.v0_5.PostgreSqlTruncatorFactory;
 import com.bretth.osmosis.core.pgsql.common.v0_5.PostgreSqlWriterFactory;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
@@ -120,6 +121,8 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("t", new EntityTeeFactory());
 		TaskManagerFactory.register("tee-change", new ChangeTeeFactory());
 		TaskManagerFactory.register("tc", new ChangeTeeFactory());
+		TaskManagerFactory.register("write-pgsql-dump", new PostgreSqlDumpWriterFactory());
+		TaskManagerFactory.register("wpd", new PostgreSqlDumpWriterFactory());
 		
 		TaskManagerFactory.register("apply-change-0.5", new ChangeApplierFactory());
 		TaskManagerFactory.register("bounding-box-0.5", new BoundingBoxFilterFactory());
@@ -152,5 +155,6 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("log-change-progress-0.5", new ChangeProgressLoggerFactory());
 		TaskManagerFactory.register("tee-0.5", new EntityTeeFactory());
 		TaskManagerFactory.register("tee-change-0.5", new ChangeTeeFactory());
+		TaskManagerFactory.register("write-pgsql-dump-0.5", new PostgreSqlDumpWriterFactory());
 	}
 }
