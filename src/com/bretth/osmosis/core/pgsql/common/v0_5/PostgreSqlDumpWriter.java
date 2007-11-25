@@ -1,6 +1,7 @@
 package com.bretth.osmosis.core.pgsql.common.v0_5;
 
 import java.io.File;
+import java.util.Map.Entry;
 
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
@@ -9,6 +10,7 @@ import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.pgsql.common.v0_5.impl.AllocatingUserIdManager;
 import com.bretth.osmosis.core.pgsql.common.v0_5.impl.NodeCopyFileWriter;
+import com.bretth.osmosis.core.pgsql.common.v0_5.impl.UserFileWriter;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 
 
@@ -22,10 +24,12 @@ public class PostgreSqlDumpWriter implements Sink, EntityProcessor {
 	
 	private static final String NODE_SUFFIX = "TblNode.txt";
 	private static final String NODE_TAG_SUFFIX = "TblNodeTag.txt";
+	private static final String USER_SUFFIX = "TblUser.txt";
 	
 	
 	private AllocatingUserIdManager userIdManager;
 	private NodeCopyFileWriter nodeWriter;
+	private UserFileWriter userWriter;
 	
 	
 	/**
@@ -42,22 +46,7 @@ public class PostgreSqlDumpWriter implements Sink, EntityProcessor {
 			new File(filePrefix.getPath() + NODE_SUFFIX),
 			new File(filePrefix.getPath() + NODE_TAG_SUFFIX)
 		);
-	}
-	
-	
-	/**
-	 * Writes any buffered data to the database and commits. 
-	 */
-	public void complete() {
-		nodeWriter.complete();
-	}
-	
-	
-	/**
-	 * Releases all database resources.
-	 */
-	public void release() {
-		nodeWriter.release();
+		userWriter = new UserFileWriter(new File(filePrefix.getPath() + USER_SUFFIX));
 	}
 	
 	
@@ -90,5 +79,28 @@ public class PostgreSqlDumpWriter implements Sink, EntityProcessor {
 	 */
 	public void process(RelationContainer relationContainer) {
 		// Do nothing.
+	}
+	
+	
+	/**
+	 * Writes any buffered data to the database and commits. 
+	 */
+	public void complete() {
+		nodeWriter.complete();
+		
+		// Write out the user information.
+		for (Entry<String, Long> userEntry : userIdManager.getUserIdMap().entrySet()) {
+			userWriter.writeRecord(userEntry.getValue().longValue(), userEntry.getKey());
+		}
+		userWriter.complete();
+	}
+	
+	
+	/**
+	 * Releases all database resources.
+	 */
+	public void release() {
+		nodeWriter.release();
+		userWriter.release();
 	}
 }

@@ -13,6 +13,9 @@ import com.bretth.osmosis.core.pgsql.common.CopyFileWriter;
  */
 public class UserFileWriter {
 	
+	private static final String ANONYMOUS_USER_NAME = "OpenStreetMap";
+	
+	
 	private CopyFileWriter userWriter;
 	
 	
@@ -39,7 +42,11 @@ public class UserFileWriter {
 		// Id
 		userWriter.writeField(id);
 		// User name
-		userWriter.writeField(userName);
+		if (userName == null || userName.length() <= 0) {
+			userWriter.writeField(ANONYMOUS_USER_NAME);
+		} else {
+			userWriter.writeField(userName);
+		}
 		// Email address
 		userWriter.writeField("osmosis@bretth.com");
 		
