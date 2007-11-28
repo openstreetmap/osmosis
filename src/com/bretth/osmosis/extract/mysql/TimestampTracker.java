@@ -11,6 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.xml.common.DateFormatter;
+import com.bretth.osmosis.core.xml.common.DateParser;
 
 
 /**
@@ -25,7 +27,9 @@ public class TimestampTracker {
 	
 	
 	private File timestampFile;
-	private File tmpFile;
+	private File newTimestampFile;
+	private DateParser dateParser;
+	private DateFormatter dateFormatter;
 	
 	
 	/**
@@ -33,13 +37,40 @@ public class TimestampTracker {
 	 * 
 	 * @param timestampFile
 	 *            The location of the file containing the persisted timestamp.
-	 * @param tmpFile
+	 * @param newTimestampFile
 	 *            The location of the temp file to use when updating the
 	 *            persisted timestamp to make the update atomic.
 	 */
-	public TimestampTracker(File timestampFile, File tmpFile) {
+	public TimestampTracker(File timestampFile, File newTimestampFile) {
 		this.timestampFile = timestampFile;
-		this.tmpFile = tmpFile;
+		this.newTimestampFile = newTimestampFile;
+		
+		dateParser = new DateParser();
+		dateFormatter = new DateFormatter();
+	}
+	
+	
+	/**
+	 * Renames the new timestamp file to the current file deleting the current
+	 * file if it exists.
+	 */
+	private void renameNewFileToCurrent() {
+		// Make sure we have a new timestamp file.
+		if (!newTimestampFile.exists()) {
+			throw new OsmosisRuntimeException("Can't rename non-existent file " + newTimestampFile + ".");
+		}
+		
+		// Delete the existing timestamp file if it exists.
+		if (timestampFile.exists()) {
+			if (!timestampFile.delete()) {
+				throw new OsmosisRuntimeException("Unable to delete file " + timestampFile + ".");
+			}
+		}
+		
+		// Rename the new file to the existing file.
+		if (!newTimestampFile.renameTo(timestampFile)) {
+			throw new OsmosisRuntimeException("Unable to rename file " + newTimestampFile + " to " + timestampFile + ".");
+		}
 	}
 	
 	
@@ -58,7 +89,7 @@ public class TimestampTracker {
 			fileReader = new FileReader(timestampFile);
 			reader = new BufferedReader(fileReader);
 			
-			result = new Date(Long.parseLong(reader.readLine()));
+			result = dateParser.parse(reader.readLine());
 			
 			fileReader.close();
 			fileReader = null;
@@ -91,25 +122,23 @@ public class TimestampTracker {
 		try {
 			BufferedWriter writer;
 			
-			fileWriter = new FileWriter(tmpFile);
+			fileWriter = new FileWriter(newTimestampFile);
 			writer = new BufferedWriter(fileWriter);
 			
-			writer.write(Long.toString(time.getTime()));
+			writer.write(dateFormatter.format(time));
 			
-			fileWriter.close();
+			writer.close();
 			
-			if (!tmpFile.renameTo(timestampFile)) {
-				throw new OsmosisRuntimeException("Unable to rename file " + tmpFile + " to " + timestampFile + ".");
-			}
+			renameNewFileToCurrent();
 			
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to write the time to temporary file " + tmpFile + ".", e);
+			throw new OsmosisRuntimeException("Unable to write the time to temporary file " + newTimestampFile + ".", e);
 		} finally {
 			if (fileWriter != null) {
 				try {
-				fileWriter.close();
+					fileWriter.close();
 				} catch (Exception e) {
-					log.log(Level.WARNING, "Unable to close temporary time file " + tmpFile + ".", e);
+					log.log(Level.WARNING, "Unable to close temporary time file " + newTimestampFile + ".", e);
 				}
 			}
 		}

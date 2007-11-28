@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
@@ -21,6 +22,7 @@ import com.bretth.osmosis.core.cli.TaskConfiguration;
  */
 public abstract class TaskManagerFactory {
 	private static final String DATE_FORMAT = "yyyy-MM-dd_HH:mm:ss";
+	private static final Locale DATE_LOCALE = Locale.US;
 	
 	
 	/**
@@ -294,7 +296,7 @@ public abstract class TaskManagerFactory {
 			try {
 				SimpleDateFormat dateFormat;
 				
-				dateFormat = new SimpleDateFormat(DATE_FORMAT);
+				dateFormat = new SimpleDateFormat(DATE_FORMAT, DATE_LOCALE);
 				
 				return dateFormat.parse(configArgs.get(argName));
 				

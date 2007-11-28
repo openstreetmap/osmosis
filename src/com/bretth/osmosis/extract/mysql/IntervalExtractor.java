@@ -1,9 +1,9 @@
 package com.bretth.osmosis.extract.mysql;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
@@ -62,8 +62,8 @@ public class IntervalExtractor {
 		File tmpFile;
 		File file;
 		
-		beginDateFormat = new SimpleDateFormat(config.getChangeFileBeginFormat());
-		endDateFormat = new SimpleDateFormat(config.getChangeFileEndFormat());
+		beginDateFormat = new SimpleDateFormat(config.getChangeFileBeginFormat(), Locale.US);
+		endDateFormat = new SimpleDateFormat(config.getChangeFileEndFormat(), Locale.US);
 		utcTimezone = TimeZone.getTimeZone("UTC");
 		beginDateFormat.setTimeZone(utcTimezone);
 		endDateFormat.setTimeZone(utcTimezone);
@@ -106,14 +106,10 @@ public class IntervalExtractor {
 		// Run the changeset extraction.
 		reader.run();
 		
-		// If no change file was created, create an empty one.
-		if (!tmpFile.exists()) {
-			try {
-				if (!tmpFile.createNewFile()) {
-					throw new OsmosisRuntimeException("Unable to create empty temporary file " + tmpFile + ".");
-				}
-			} catch (IOException e) {
-				throw new OsmosisRuntimeException("Error occurred creating empty temporary file " + tmpFile + ".", e);
+		// Delete the destination file if it already exists.
+		if (file.exists()) {
+			if (!file.delete()) {
+				throw new OsmosisRuntimeException("Unable to delete existing file " + file + ".");
 			}
 		}
 		

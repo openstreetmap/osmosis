@@ -1,0 +1,42 @@
+#!/bin/sh
+
+if [ -f /etc/osmosis ] ; then
+  . /etc/osmosis
+fi
+
+if [ -f "$HOME/.osmosis" ] ; then
+  . "$HOME/.osmosis"
+fi
+
+if [ -z "$JAVACMD" ] ; then
+  # No JAVACMD provided in osmosis config files, therefore default to java
+  JAVACMD=java
+fi
+
+## resolve links - $0 may be a link to application
+PRG="$0"
+
+# need this for relative symlinks
+while [ -h "$PRG" ] ; do
+  ls=`ls -ld "$PRG"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG="`dirname "$PRG"`/$link"
+  fi
+done
+
+# make it fully qualified
+saveddir=`pwd`
+MYAPP_HOME=`dirname "$PRG"`/..
+MYAPP_HOME=`cd "$MYAPP_HOME" && pwd`
+cd "$saveddir"
+
+#echo "myapp is installed in $MYAPP_HOME"
+
+MAINCLASS=com.bretth.osmosis.extract.mysql.OsmosisExtractMysql
+EXEC="$JAVACMD -cp $MYAPP_HOME/osmosis.jar:$MYAPP_HOME/lib/mysql-connector-java-5.0.7-bin.jar:$MYAPP_HOME/lib/postgresql-8.2-506.jdbc4.jar $MAINCLASS $@"
+
+#echo $EXEC
+exec $EXEC

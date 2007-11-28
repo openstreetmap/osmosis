@@ -5,7 +5,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisConstants;
@@ -24,8 +28,8 @@ public class OsmosisExtractMysql {
 	
 	private static final File LOCK_FILE = new File("osmosis-extract-mysql.lock");
 	private static final File CONFIG_FILE = new File("osmosis-extract-mysql.conf");
-	private static final File TSTAMP_FILE = new File("var/timestamp.txt");
-	private static final File TSTAMP_TMP_FILE = new File("var/timestamptmp.txt");
+	private static final File TSTAMP_FILE = new File("timestamp.txt");
+	private static final File TSTAMP_NEW_FILE = new File("timestampnew.txt");
 	private static final File DATA_DIR = new File("data");
 	
 	private static final String CONFIG_RESOURCE = "osmosis-extract-mysql.conf";
@@ -34,6 +38,9 @@ public class OsmosisExtractMysql {
 	private static final String COMMAND_INITIALIZE = "initialize";
 	private static final String COMMAND_SUMMARIZE = "summarize";
 	private static final String COMMAND_EXTRACT = "extract";
+	private static final String COMMAND_LINE_DATE_FORMAT = "yyyy-MM-dd_HH:mm:ss";
+	private static final Locale COMMAND_LINE_DATE_LOCALE = Locale.US;
+	private static final TimeZone COMMAND_LINE_DATE_TIMEZONE = TimeZone.getTimeZone("UTC");
 	
 	
 	private String[] programArgs;
@@ -110,8 +117,43 @@ public class OsmosisExtractMysql {
 	}
 	
 	
+	/**
+	 * Creates a timestamp tracker object.
+	 * 
+	 * @return The timestamp tracker.
+	 */
 	private TimestampTracker getTimestampTracker() {
-		return new TimestampTracker(TSTAMP_FILE, TSTAMP_TMP_FILE);
+		return new TimestampTracker(TSTAMP_FILE, TSTAMP_NEW_FILE);
+	}
+	
+	
+	/**
+	 * Gets a date argument from the program arguments.
+	 * 
+	 * @param args
+	 *            The program arguments.
+	 * @param argIndex
+	 *            The current argument index.
+	 * @return The parsed date.
+	 */
+	private Date getDateArgument(String args[], int argIndex) {
+		// Verify that the argument is available.
+		if (args.length <= argIndex) {
+			throw new OsmosisRuntimeException("A date argument is required at argument " + (argIndex + 1) + ".");
+		}
+		
+		try {
+			SimpleDateFormat dateFormat;
+			
+			dateFormat = new SimpleDateFormat(COMMAND_LINE_DATE_FORMAT, COMMAND_LINE_DATE_LOCALE);
+			dateFormat.setTimeZone(COMMAND_LINE_DATE_TIMEZONE);
+			
+			return dateFormat.parse(args[argIndex]);
+			
+		} catch (ParseException e) {
+			throw new OsmosisRuntimeException(
+				"Argument " + (argIndex + 1) + " must be a date in format " + COMMAND_LINE_DATE_FORMAT + ".", e);
+		}
 	}
 	
 	
@@ -189,23 +231,26 @@ public class OsmosisExtractMysql {
 	 * 
 	 * @param args
 	 *            The input arguments.
-	 * @param argIndex
+	 * @param initialArgIndex
 	 *            The current offset into the arguments.
 	 */
-	private void initializeCommand(String args[], int argIndex) {
+	private void initializeCommand(String args[], int initialArgIndex) {
+		int currentArgIndex;
+		Date initialExtractDate;
+		
+		// Get the command line arguments.
+		currentArgIndex = initialArgIndex;
+		initialExtractDate = getDateArgument(args, currentArgIndex++);
+		
 		if (CONFIG_FILE.exists()) {
 			throw new OsmosisRuntimeException("Config file " + CONFIG_FILE + " already exists.");
-		} else {
-			copyResourceToFile(CONFIG_RESOURCE, CONFIG_FILE);
 		}
+		copyResourceToFile(CONFIG_RESOURCE, CONFIG_FILE);
 		
-		if (DATA_DIR.exists()) {
-			throw new OsmosisRuntimeException("Directory " + DATA_DIR + " already exists.");
-		} else {
-			if (!DATA_DIR.mkdir()) {
-				throw new OsmosisRuntimeException("Unable to create directory " + DATA_DIR);
-			}
+		if (TSTAMP_FILE.exists()) {
+			throw new OsmosisRuntimeException("Extract timestamp file " + TSTAMP_FILE + " already exists.");
 		}
+		getTimestampTracker().setTime(initialExtractDate);
 	}
 	
 	
@@ -270,7 +315,7 @@ public class OsmosisExtractMysql {
 			intervalEnd = new Date(nextExtractTime);
 			
 			// Extract a changeset for the current interval.
-			extractor = new IntervalExtractor(configuration, new File("./"), intervalBegin, intervalEnd);
+			extractor = new IntervalExtractor(configuration, DATA_DIR, intervalBegin, intervalEnd);
 			extractor.run();
 			
 			// Update and persist the latest extract timestamp.
