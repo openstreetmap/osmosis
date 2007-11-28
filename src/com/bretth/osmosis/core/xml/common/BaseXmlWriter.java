@@ -155,6 +155,10 @@ public abstract class BaseXmlWriter {
 	 * Flushes all changes to file.
 	 */
 	public void complete() {
+		// We need to call this here so that we create empty files if no records
+		// are available.
+		initialize();
+		
 		try {
 			if (writer != null) {
 				endElementWriter();
