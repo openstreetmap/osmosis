@@ -14,24 +14,16 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class Configuration {
-	private static final String CONFIG_FILE_PATH = "osmosis-extract-mysql.conf";
 	private static final String KEY_HOST = "host";
 	private static final String KEY_DATABASE = "database";
 	private static final String KEY_USER = "user";
 	private static final String KEY_PASSWORD = "password";
+	private static final String KEY_INTERVAL_LENGTH = "intervalLength";
+	private static final String KEY_LAG_LENGTH = "lagLength";
+	private static final String KEY_CHANGE_FILE_BEGIN_FORMAT = "changeFileBeginFormat";
+	private static final String KEY_CHANGE_FILE_END_FORMAT = "changeFileEndFormat";
+	private static final String KEY_ENABLE_PROD_ENCODING_HACK = "enableProdEncodingHack";
 	
-	/*
-	# The database host system.
-	host=localhost
-	# The database instance.
-	database=osm
-	# The database user.
-	user=osm
-	# The database password
-	password=mypwd
-	# The length of an extraction interval in milliseconds (86400000 = 1 day).
-	intervalLength=86400000
-	*/
 	
 	private Properties properties;
 	
@@ -39,14 +31,10 @@ public class Configuration {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param baseDirectory
-	 *            The root of the extraction file tree.
+	 * @param configFile
+	 *            The configuration file to read from.
 	 */
-	public Configuration(File baseDirectory) {
-		File configFile;
-		
-		configFile = new File(baseDirectory, CONFIG_FILE_PATH);
-		
+	public Configuration(File configFile) {
 		properties = loadProperties(configFile);
 	}
 	
@@ -114,5 +102,56 @@ public class Configuration {
 	 */
 	public String getPassword() {
 		return properties.getProperty(KEY_PASSWORD);
+	}
+	
+	
+	/**
+	 * Returns the duration of each changeset interval.
+	 * 
+	 * @return The interval length in milliseconds.
+	 */
+	public int getIntervalLength() {
+		return Integer.parseInt(properties.getProperty(KEY_INTERVAL_LENGTH));
+	}
+	
+	
+	/**
+	 * Returns the amount of time the extraction process lags the current time
+	 * to allow the database to stabilise to ensure consistent queries.
+	 * 
+	 * @return The lag length in milliseconds.
+	 */
+	public int getLagLength() {
+		return Integer.parseInt(properties.getProperty(KEY_LAG_LENGTH));
+	}
+	
+	
+	/**
+	 * Returns the begin time portion of the changeset filename.
+	 * 
+	 * @return The format.
+	 */
+	public String getChangeFileBeginFormat() {
+		return properties.getProperty(KEY_CHANGE_FILE_BEGIN_FORMAT);
+	}
+	
+	
+	/**
+	 * Returns the end time portion of the changeset filename.
+	 * 
+	 * @return The format.
+	 */
+	public String getChangeFileEndFormat() {
+		return properties.getProperty(KEY_CHANGE_FILE_END_FORMAT);
+	}
+	
+	
+	/**
+	 * Returns the production encoding hack flag.
+	 * 
+	 * @return The production encoding hack flag.
+	 */
+	public boolean getEnableProductionEncodingHack() {
+		return Boolean.valueOf(properties.getProperty(KEY_ENABLE_PROD_ENCODING_HACK));
 	}
 }

@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.store.Releasable;
@@ -17,6 +18,8 @@ import com.bretth.osmosis.core.store.Releasable;
  * @author Brett Henderson
  */
 public class FileBasedLock implements Releasable {
+	
+	private static final Logger log = Logger.getLogger(FileBasedLock.class.getName());
 	
 	private File lockFile;
 	private FileOutputStream outputStream;
@@ -66,9 +69,14 @@ public class FileBasedLock implements Releasable {
 		}
 		
 		try {
-			fileLock = fileChannel.lock();
+			fileLock = fileChannel.tryLock();
+			
+			if (fileLock == null) {
+				throw new OsmosisRuntimeException("A exclusive lock already exists on file " + lockFile + ".");
+			}
+			
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to obtain exclusive lock on file " + lockFile + ".");
+			throw new OsmosisRuntimeException("An error occurred while trying to obtain an exclusive lock on file " + lockFile + ".");
 		}
 	}
 	
@@ -91,6 +99,17 @@ public class FileBasedLock implements Releasable {
 	 * {@inheritDoc}
 	 */
 	public void release() {
-		// TODO: Complete this method.
+		if (outputStream != null) {
+			try {
+				outputStream.close();
+			} catch (Exception e) {
+				log.warning("Unable to close lock stream on file " + lockFile + ".");
+			} finally {
+				outputStream = null;
+				fileChannel= null;
+				fileLock = null;
+				initialized = false;
+			}
+		}
 	}
 }
