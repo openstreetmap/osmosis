@@ -164,7 +164,7 @@ public class OsmosisExtractMysql {
 		System.out.println("Osmosis Extract MySQL Version " + OsmosisConstants.VERSION);
 		System.out.println("Usage: osmosis-mysql-extract <command> <options>");
 		System.out.println("Commands:");
-		System.out.println("\t" + COMMAND_INITIALIZE + " <yyyyMMdd_HH:mm:ss>");
+		System.out.println("\t" + COMMAND_INITIALIZE + " <" + COMMAND_LINE_DATE_FORMAT + ">");
 		System.out.println("\t" + COMMAND_INFO);
 		System.out.println("\t" + COMMAND_EXTRACT);
 	}
