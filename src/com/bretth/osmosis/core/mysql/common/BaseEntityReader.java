@@ -45,7 +45,7 @@ public abstract class BaseEntityReader<T> extends BaseTableReader<T> {
 	 * @return The appropriate user name to add to the entity.
 	 */
 	protected String readUserField(boolean dataPublic, String userName) {
-		if (userName == null || userName.isEmpty()) {
+		if (userName == null || userName.length() == 0) {
 			return "";
 		} else if (readAllUsers || dataPublic) {
 			return userName;

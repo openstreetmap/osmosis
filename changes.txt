@@ -1,5 +1,6 @@
 0.25
 Added a new osmosis-extract-mysql application for extracting regular changesets from mysql.
+Removed use of String.isEmpty to minimise Java5 incompatibility.
 
 0.24
 Fixed a bug in the XML node writing code where it would write a ',' character instead of '.' as the decimal separator in some locales.
