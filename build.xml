@@ -31,6 +31,12 @@
 		<mkdir dir="build/src"/>
 		<!-- Compile the java code from src into build/src -->
 		<javac srcdir="src" destdir="build/src" debug="on" debuglevel="lines,vars,source" classpathref="libclasspath"/>
+		<!-- Copy all resource files from src into build/src -->
+		<copy todir="build/src">
+			<fileset dir="src">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
 		<!-- Put a version number file in the build/src directory. -->
 		<touch file="build/src/version-${project.version}"/>
 	</target>
