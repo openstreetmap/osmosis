@@ -107,3 +107,6 @@ Add support for writing to MonetDB in attempt to improve on import speed provide
 
 **********
 Add workaround to allow contatenated GZIP files as per the workaround in http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4691425
+
+**********
+Fix tag ';' character escaping.
