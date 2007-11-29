@@ -36,7 +36,7 @@ public class OsmosisExtractMysql {
 	
 	private static final String COMMAND_HELP = "help";
 	private static final String COMMAND_INITIALIZE = "initialize";
-	private static final String COMMAND_SUMMARIZE = "summarize";
+	private static final String COMMAND_INFO = "info";
 	private static final String COMMAND_EXTRACT = "extract";
 	private static final String COMMAND_LINE_DATE_FORMAT = "yyyy-MM-dd_HH:mm:ss";
 	private static final Locale COMMAND_LINE_DATE_LOCALE = Locale.US;
@@ -96,8 +96,8 @@ public class OsmosisExtractMysql {
 				helpCommand();
 			} else if (COMMAND_INITIALIZE.equals(command)) {
 				initializeCommand(programArgs, argIndex);
-			} else if (COMMAND_SUMMARIZE.equals(command)) {
-				summarizeCommand();
+			} else if (COMMAND_INFO.equals(command)) {
+				infoCommand();
 			} else if (COMMAND_EXTRACT.equals(command)) {
 				extractCommand();
 			} else {
@@ -165,7 +165,7 @@ public class OsmosisExtractMysql {
 		System.out.println("Usage: osmosis-mysql-extract <command> <options>");
 		System.out.println("Commands:");
 		System.out.println("\t" + COMMAND_INITIALIZE + " <yyyyMMdd_HH:mm:ss>");
-		System.out.println("\t" + COMMAND_SUMMARIZE);
+		System.out.println("\t" + COMMAND_INFO);
 		System.out.println("\t" + COMMAND_EXTRACT);
 	}
 	
@@ -247,6 +247,12 @@ public class OsmosisExtractMysql {
 		}
 		copyResourceToFile(CONFIG_RESOURCE, CONFIG_FILE);
 		
+		if (!DATA_DIR.exists()) {
+			if (!DATA_DIR.mkdir()) {
+				throw new OsmosisRuntimeException("Unable to create directory " + DATA_DIR);
+			}
+		}
+		
 		if (TSTAMP_FILE.exists()) {
 			throw new OsmosisRuntimeException("Extract timestamp file " + TSTAMP_FILE + " already exists.");
 		}
@@ -255,9 +261,9 @@ public class OsmosisExtractMysql {
 	
 	
 	/**
-	 * Summarises the state of the current working directory.
+	 * Provides information about the state of the current working directory.
 	 */
-	private void summarizeCommand() {
+	private void infoCommand() {
 		Configuration configuration;
 		TimestampTracker timestampTracker;
 		

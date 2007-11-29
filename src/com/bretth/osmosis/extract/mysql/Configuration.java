@@ -111,7 +111,7 @@ public class Configuration {
 	 * @return The interval length in milliseconds.
 	 */
 	public int getIntervalLength() {
-		return Integer.parseInt(properties.getProperty(KEY_INTERVAL_LENGTH));
+		return Integer.parseInt(properties.getProperty(KEY_INTERVAL_LENGTH)) * 1000;
 	}
 	
 	
@@ -122,7 +122,7 @@ public class Configuration {
 	 * @return The lag length in milliseconds.
 	 */
 	public int getLagLength() {
-		return Integer.parseInt(properties.getProperty(KEY_LAG_LENGTH));
+		return Integer.parseInt(properties.getProperty(KEY_LAG_LENGTH)) * 1000;
 	}
 	
 	
