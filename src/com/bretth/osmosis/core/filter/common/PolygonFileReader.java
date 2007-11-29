@@ -134,7 +134,7 @@ public class PolygonFileReader {
 					// Remove any whitespace.
 					sectionHeader = sectionHeader.trim();
 					
-				} while (sectionHeader.isEmpty());
+				} while (sectionHeader.length() == 0);
 				
 				// Stop reading when the global END record is reached.
 				if ("END".equals(sectionHeader)) {
@@ -198,7 +198,7 @@ public class PolygonFileReader {
 				// Remove any whitespace.
 				sectionLine = sectionLine.trim();
 				
-			} while (sectionLine.isEmpty());
+			} while (sectionLine.length() == 0);
 			
 			// Stop reading when the section END record is reached.
 			if ("END".equals(sectionLine)) {
