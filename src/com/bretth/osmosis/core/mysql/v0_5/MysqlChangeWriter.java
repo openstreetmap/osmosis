@@ -36,11 +36,14 @@ public class MysqlChangeWriter implements ChangeSink {
 	 *            Contains all information required to connect to the database.
 	 * @param preferences
 	 *            Contains preferences configuring database behaviour.
+	 * @param populateCurrentTables
+	 *            If true, the current tables will be populated as well as
+	 *            history tables.
 	 */
-	public MysqlChangeWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
+	public MysqlChangeWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean populateCurrentTables) {
 		this.preferences = preferences;
 		
-		changeWriter = new ChangeWriter(loginCredentials);
+		changeWriter = new ChangeWriter(loginCredentials, populateCurrentTables);
 		actionWriterMap = new HashMap<ChangeAction, ActionChangeWriter>();
 		actionWriterMap.put(ChangeAction.Create, new ActionChangeWriter(changeWriter, ChangeAction.Create));
 		actionWriterMap.put(ChangeAction.Modify, new ActionChangeWriter(changeWriter, ChangeAction.Modify));

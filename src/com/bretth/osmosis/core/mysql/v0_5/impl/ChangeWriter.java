@@ -79,6 +79,7 @@ public class ChangeWriter {
 	
 	private UserIdManager userIdManager;
 	
+	private boolean populateCurrentTables;
 	private PreparedStatement insertNodeStatement;
 	private PreparedStatement insertNodeCurrentStatement;
 	private PreparedStatement deleteNodeCurrentStatement;
@@ -113,11 +114,16 @@ public class ChangeWriter {
 	 * 
 	 * @param loginCredentials
 	 *            Contains all information required to connect to the database.
+	 * @param populateCurrentTables
+	 *            If true, the current tables will be populated as well as
+	 *            history tables.
 	 */
-	public ChangeWriter(DatabaseLoginCredentials loginCredentials) {
+	public ChangeWriter(DatabaseLoginCredentials loginCredentials, boolean populateCurrentTables) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		
 		userIdManager = new UserIdManager(dbCtx);
+		
+		this.populateCurrentTables = populateCurrentTables;
 		
 		tagFormatter = new EmbeddedTagProcessor();
 		fixedPrecisionConvertor = new FixedPrecisionCoordinateConvertor();
@@ -249,32 +255,34 @@ public class ChangeWriter {
 			throw new OsmosisRuntimeException("Unable to insert history node with id=" + node.getId() + ".", e);
 		}
 		
-		// Delete the existing node from the current table.
-		try {
-			deleteNodeCurrentStatement.setLong(1, node.getId());
+		if (populateCurrentTables) {
+			// Delete the existing node from the current table.
+			try {
+				deleteNodeCurrentStatement.setLong(1, node.getId());
+				
+				deleteNodeCurrentStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to delete current node with id=" + node.getId() + ".", e);
+			}
 			
-			deleteNodeCurrentStatement.execute();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to delete current node with id=" + node.getId() + ".", e);
-		}
-		
-		// Insert the new node into the current table.
-		try {
-			prmIndex = 1;
-			insertNodeCurrentStatement.setLong(prmIndex++, node.getId());
-			insertNodeCurrentStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
-			insertNodeCurrentStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLatitude()));
-			insertNodeCurrentStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLongitude()));
-			insertNodeCurrentStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
-			insertNodeCurrentStatement.setString(prmIndex++, tagFormatter.format(node.getTagList()));
-			insertNodeCurrentStatement.setBoolean(prmIndex++, visible);
-			insertNodeCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
-			
-			insertNodeCurrentStatement.execute();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to insert current node with id=" + node.getId() + ".", e);
+			// Insert the new node into the current table.
+			try {
+				prmIndex = 1;
+				insertNodeCurrentStatement.setLong(prmIndex++, node.getId());
+				insertNodeCurrentStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
+				insertNodeCurrentStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLatitude()));
+				insertNodeCurrentStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLongitude()));
+				insertNodeCurrentStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
+				insertNodeCurrentStatement.setString(prmIndex++, tagFormatter.format(node.getTagList()));
+				insertNodeCurrentStatement.setBoolean(prmIndex++, visible);
+				insertNodeCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
+				
+				insertNodeCurrentStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to insert current node with id=" + node.getId() + ".", e);
+			}
 		}
 	}
 	
@@ -375,83 +383,85 @@ public class ChangeWriter {
 			}
 		}
 		
-		// Delete the existing way tags from the current table.
-		try {
-			deleteWayTagCurrentStatement.setLong(1, way.getId());
-			
-			deleteWayTagCurrentStatement.execute();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to delete current way tags with id=" + way.getId() + ".", e);
-		}
-		// Delete the existing way nodes from the current table.
-		try {
-			deleteWayNodeCurrentStatement.setLong(1, way.getId());
-			
-			deleteWayNodeCurrentStatement.execute();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to delete current way nodes with id=" + way.getId() + ".", e);
-		}
-		// Delete the existing way from the current table.
-		try {
-			deleteWayCurrentStatement.setLong(1, way.getId());
-			
-			deleteWayCurrentStatement.execute();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to delete current way with id=" + way.getId() + ".", e);
-		}
-		
-		// Insert the new way into the current table.
-		try {
-			prmIndex = 1;
-			insertWayCurrentStatement.setLong(prmIndex++, way.getId());
-			insertWayCurrentStatement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
-			insertWayCurrentStatement.setBoolean(prmIndex++, visible);
-			insertWayCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
-			
-			insertWayCurrentStatement.execute();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to insert current way with id=" + way.getId() + ".", e);
-		}
-		
-		// Insert the tags of the new way into the current table.
-		for (Tag tag : way.getTagList()) {
+		if (populateCurrentTables) {
+			// Delete the existing way tags from the current table.
 			try {
-				prmIndex = 1;
-				insertWayTagCurrentStatement.setLong(prmIndex++, way.getId());
-				insertWayTagCurrentStatement.setString(prmIndex++, tag.getKey());
-				insertWayTagCurrentStatement.setString(prmIndex++, tag.getValue());
+				deleteWayTagCurrentStatement.setLong(1, way.getId());
 				
-				insertWayTagCurrentStatement.execute();
+				deleteWayTagCurrentStatement.execute();
 				
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException(
-					"Unable to insert current way tag with id=" + way.getId()
-					+ " and key=(" + tag.getKey() + ").", e);
+				throw new OsmosisRuntimeException("Unable to delete current way tags with id=" + way.getId() + ".", e);
 			}
-		}
-		
-		// Insert the nodes of the new way into the current table.
-		for (int i = 0; i < nodeReferenceList.size(); i++) {
-			WayNode nodeReference;
-			
-			nodeReference = nodeReferenceList.get(i);
-			
+			// Delete the existing way nodes from the current table.
 			try {
-				prmIndex = 1;
-				insertWayNodeCurrentStatement.setLong(prmIndex++, way.getId());
-				insertWayNodeCurrentStatement.setLong(prmIndex++, nodeReference.getNodeId());
-				insertWayNodeCurrentStatement.setLong(prmIndex++, i);
+				deleteWayNodeCurrentStatement.setLong(1, way.getId());
 				
-				insertWayNodeCurrentStatement.execute();
+				deleteWayNodeCurrentStatement.execute();
 				
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException(
-						"Unable to insert current way node with way id=" + way.getId()
-						+ " and node id=" + nodeReference.getNodeId() + ".", e);
+				throw new OsmosisRuntimeException("Unable to delete current way nodes with id=" + way.getId() + ".", e);
+			}
+			// Delete the existing way from the current table.
+			try {
+				deleteWayCurrentStatement.setLong(1, way.getId());
+				
+				deleteWayCurrentStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to delete current way with id=" + way.getId() + ".", e);
+			}
+			
+			// Insert the new way into the current table.
+			try {
+				prmIndex = 1;
+				insertWayCurrentStatement.setLong(prmIndex++, way.getId());
+				insertWayCurrentStatement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
+				insertWayCurrentStatement.setBoolean(prmIndex++, visible);
+				insertWayCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
+				
+				insertWayCurrentStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to insert current way with id=" + way.getId() + ".", e);
+			}
+			
+			// Insert the tags of the new way into the current table.
+			for (Tag tag : way.getTagList()) {
+				try {
+					prmIndex = 1;
+					insertWayTagCurrentStatement.setLong(prmIndex++, way.getId());
+					insertWayTagCurrentStatement.setString(prmIndex++, tag.getKey());
+					insertWayTagCurrentStatement.setString(prmIndex++, tag.getValue());
+					
+					insertWayTagCurrentStatement.execute();
+					
+				} catch (SQLException e) {
+					throw new OsmosisRuntimeException(
+						"Unable to insert current way tag with id=" + way.getId()
+						+ " and key=(" + tag.getKey() + ").", e);
+				}
+			}
+			
+			// Insert the nodes of the new way into the current table.
+			for (int i = 0; i < nodeReferenceList.size(); i++) {
+				WayNode nodeReference;
+				
+				nodeReference = nodeReferenceList.get(i);
+				
+				try {
+					prmIndex = 1;
+					insertWayNodeCurrentStatement.setLong(prmIndex++, way.getId());
+					insertWayNodeCurrentStatement.setLong(prmIndex++, nodeReference.getNodeId());
+					insertWayNodeCurrentStatement.setLong(prmIndex++, i);
+					
+					insertWayNodeCurrentStatement.execute();
+					
+				} catch (SQLException e) {
+					throw new OsmosisRuntimeException(
+							"Unable to insert current way node with way id=" + way.getId()
+							+ " and node id=" + nodeReference.getNodeId() + ".", e);
+				}
 			}
 		}
 	}
@@ -555,85 +565,87 @@ public class ChangeWriter {
 			}
 		}
 		
-		// Delete the existing relation tags from the current table.
-		try {
-			deleteRelationTagCurrentStatement.setLong(1, relation.getId());
-			
-			deleteRelationTagCurrentStatement.execute();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to delete current relation tags with id=" + relation.getId() + ".", e);
-		}
-		// Delete the existing relation members from the current table.
-		try {
-			deleteRelationMemberCurrentStatement.setLong(1, relation.getId());
-			
-			deleteRelationMemberCurrentStatement.execute();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to delete current relation members with id=" + relation.getId() + ".", e);
-		}
-		// Delete the existing relation from the current table.
-		try {
-			deleteRelationCurrentStatement.setLong(1, relation.getId());
-			
-			deleteRelationCurrentStatement.execute();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to delete current relation with id=" + relation.getId() + ".", e);
-		}
-		
-		// Insert the new relation into the current table.
-		try {
-			prmIndex = 1;
-			insertRelationCurrentStatement.setLong(prmIndex++, relation.getId());
-			insertRelationCurrentStatement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
-			insertRelationCurrentStatement.setBoolean(prmIndex++, visible);
-			insertRelationCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
-			
-			insertRelationCurrentStatement.execute();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to insert current relation with id=" + relation.getId() + ".", e);
-		}
-		
-		// Insert the tags of the new relation into the current table.
-		for (Tag tag : relation.getTagList()) {
+		if (populateCurrentTables) {
+			// Delete the existing relation tags from the current table.
 			try {
-				prmIndex = 1;
-				insertRelationTagCurrentStatement.setLong(prmIndex++, relation.getId());
-				insertRelationTagCurrentStatement.setString(prmIndex++, tag.getKey());
-				insertRelationTagCurrentStatement.setString(prmIndex++, tag.getValue());
+				deleteRelationTagCurrentStatement.setLong(1, relation.getId());
 				
-				insertRelationTagCurrentStatement.execute();
+				deleteRelationTagCurrentStatement.execute();
 				
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException(
-					"Unable to insert current relation tag with id=" + relation.getId()
-					+ " and key=(" + tag.getKey() + ").", e);
+				throw new OsmosisRuntimeException("Unable to delete current relation tags with id=" + relation.getId() + ".", e);
 			}
-		}
-		
-		// Insert the members of the new relation into the current table.
-		for (int i = 0; i < relationMemberList.size(); i++) {
-			RelationMember relationMember;
-			
-			relationMember = relationMemberList.get(i);
-			
+			// Delete the existing relation members from the current table.
 			try {
-				prmIndex = 1;
-				insertRelationMemberCurrentStatement.setLong(prmIndex++, relation.getId());
-				insertRelationMemberCurrentStatement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
-				insertRelationMemberCurrentStatement.setLong(prmIndex++, relationMember.getMemberId());
-				insertRelationMemberCurrentStatement.setString(prmIndex++, relationMember.getMemberRole());
+				deleteRelationMemberCurrentStatement.setLong(1, relation.getId());
 				
-				insertRelationMemberCurrentStatement.execute();
+				deleteRelationMemberCurrentStatement.execute();
 				
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException(
-						"Unable to insert current relation member with relation id=" + relation.getId()
-						+ ", member type=" + relationMember.getMemberId()
-						+ " and member id=" + relationMember.getMemberId() + ".", e);
+				throw new OsmosisRuntimeException("Unable to delete current relation members with id=" + relation.getId() + ".", e);
+			}
+			// Delete the existing relation from the current table.
+			try {
+				deleteRelationCurrentStatement.setLong(1, relation.getId());
+				
+				deleteRelationCurrentStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to delete current relation with id=" + relation.getId() + ".", e);
+			}
+			
+			// Insert the new relation into the current table.
+			try {
+				prmIndex = 1;
+				insertRelationCurrentStatement.setLong(prmIndex++, relation.getId());
+				insertRelationCurrentStatement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
+				insertRelationCurrentStatement.setBoolean(prmIndex++, visible);
+				insertRelationCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
+				
+				insertRelationCurrentStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to insert current relation with id=" + relation.getId() + ".", e);
+			}
+			
+			// Insert the tags of the new relation into the current table.
+			for (Tag tag : relation.getTagList()) {
+				try {
+					prmIndex = 1;
+					insertRelationTagCurrentStatement.setLong(prmIndex++, relation.getId());
+					insertRelationTagCurrentStatement.setString(prmIndex++, tag.getKey());
+					insertRelationTagCurrentStatement.setString(prmIndex++, tag.getValue());
+					
+					insertRelationTagCurrentStatement.execute();
+					
+				} catch (SQLException e) {
+					throw new OsmosisRuntimeException(
+						"Unable to insert current relation tag with id=" + relation.getId()
+						+ " and key=(" + tag.getKey() + ").", e);
+				}
+			}
+			
+			// Insert the members of the new relation into the current table.
+			for (int i = 0; i < relationMemberList.size(); i++) {
+				RelationMember relationMember;
+				
+				relationMember = relationMemberList.get(i);
+				
+				try {
+					prmIndex = 1;
+					insertRelationMemberCurrentStatement.setLong(prmIndex++, relation.getId());
+					insertRelationMemberCurrentStatement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
+					insertRelationMemberCurrentStatement.setLong(prmIndex++, relationMember.getMemberId());
+					insertRelationMemberCurrentStatement.setString(prmIndex++, relationMember.getMemberRole());
+					
+					insertRelationMemberCurrentStatement.execute();
+					
+				} catch (SQLException e) {
+					throw new OsmosisRuntimeException(
+							"Unable to insert current relation member with relation id=" + relation.getId()
+							+ ", member type=" + relationMember.getMemberId()
+							+ " and member id=" + relationMember.getMemberId() + ".", e);
+				}
 			}
 		}
 	}
