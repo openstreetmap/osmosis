@@ -3,6 +3,7 @@ package com.bretth.osmosis.core.merge.v0_5;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.merge.common.ConflictResolutionMethod;
+import com.bretth.osmosis.core.merge.v0_5.impl.SortedEntityPipeValidator;
 import com.bretth.osmosis.core.sort.v0_5.EntityByTypeThenIdComparator;
 import com.bretth.osmosis.core.store.DataPostbox;
 import com.bretth.osmosis.core.task.v0_5.MultiSinkRunnableSource;
@@ -46,7 +47,10 @@ public class EntityMerger implements MultiSinkRunnableSource {
 	 */
 	public Sink getSink(int instance) {
 		final DataPostbox<EntityContainer> destinationPostbox;
+		Sink postboxSink;
+		SortedEntityPipeValidator sortedPipeValidator;
 		
+		// Determine which postbox should be written to.
 		switch (instance) {
 		case 0:
 			destinationPostbox = postbox0;
@@ -59,7 +63,8 @@ public class EntityMerger implements MultiSinkRunnableSource {
 					+ " is not valid.");
 		}
 		
-		return new Sink() {
+		// Create a changesink pointing to the postbox.
+		postboxSink = new Sink() {
 			private DataPostbox<EntityContainer> postbox = destinationPostbox;
 			
 			public void process(EntityContainer entityContainer) {
@@ -72,6 +77,13 @@ public class EntityMerger implements MultiSinkRunnableSource {
 				postbox.release();
 			}
 		};
+		
+		// Create a validation class to verify that all incoming data is sorted
+		// and connect its output to the postbox sink.
+		sortedPipeValidator = new SortedEntityPipeValidator();
+		sortedPipeValidator.setSink(postboxSink);
+		
+		return sortedPipeValidator;
 	}
 
 

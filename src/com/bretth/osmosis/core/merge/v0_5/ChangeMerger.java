@@ -3,6 +3,7 @@ package com.bretth.osmosis.core.merge.v0_5;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.container.v0_5.ChangeContainer;
 import com.bretth.osmosis.core.merge.common.ConflictResolutionMethod;
+import com.bretth.osmosis.core.merge.v0_5.impl.SortedChangePipeValidator;
 import com.bretth.osmosis.core.sort.v0_5.EntityByTypeThenIdComparator;
 import com.bretth.osmosis.core.store.DataPostbox;
 import com.bretth.osmosis.core.task.v0_5.ChangeSink;
@@ -46,7 +47,10 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 	 */
 	public ChangeSink getChangeSink(int instance) {
 		final DataPostbox<ChangeContainer> destinationPostbox;
+		ChangeSink postboxChangeSink;
+		SortedChangePipeValidator sortedPipeValidator;
 		
+		// Determine which postbox should be written to.
 		switch (instance) {
 		case 0:
 			destinationPostbox = postbox0;
@@ -59,7 +63,8 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 					+ " is not valid.");
 		}
 		
-		return new ChangeSink() {
+		// Create a changesink pointing to the postbox.
+		postboxChangeSink = new ChangeSink() {
 			private DataPostbox<ChangeContainer> postbox = destinationPostbox;
 
 			public void process(ChangeContainer change) {
@@ -72,6 +77,13 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 				postbox.release();
 			}
 		};
+		
+		// Create a validation class to verify that all incoming data is sorted
+		// and connect its output to the postbox changesink.
+		sortedPipeValidator = new SortedChangePipeValidator();
+		sortedPipeValidator.setChangeSink(postboxChangeSink);
+		
+		return sortedPipeValidator;
 	}
 
 
