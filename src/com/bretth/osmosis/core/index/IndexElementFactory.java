@@ -1,6 +1,5 @@
 package com.bretth.osmosis.core.index;
 
-import com.bretth.osmosis.core.store.NoMoreObjectsInStoreException;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
 
@@ -13,7 +12,7 @@ import com.bretth.osmosis.core.store.StoreWriter;
  * @author Brett Henderson
  */
 public interface IndexElementFactory<T> {
-
+	
 	/**
 	 * Writes the element to the data store.
 	 * 

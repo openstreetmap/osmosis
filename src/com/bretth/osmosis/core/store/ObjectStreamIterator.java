@@ -47,7 +47,7 @@ public class ObjectStreamIterator<T extends Storeable> implements ReleasableIter
 		try {
 			nextElement = (T) objectReader.readObject();
 			
-		} catch (NoMoreObjectsInStoreException e) {
+		} catch (EndOfStoreException e) {
 			return false;
 		}
 		

@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.sort.common.FileBasedSort;
-import com.bretth.osmosis.core.store.NoMoreObjectsInStoreException;
+import com.bretth.osmosis.core.store.EndOfStoreException;
 import com.bretth.osmosis.core.store.Releasable;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.store.StorageStage;
@@ -215,7 +215,7 @@ public class IndexWriter<T extends IndexElement> implements Releasable {
 					try {
 						element = elementFactory.loadElement(storeReader);
 						
-					} catch (NoMoreObjectsInStoreException e) {
+					} catch (EndOfStoreException e) {
 						break;
 					}
 					

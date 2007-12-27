@@ -1,62 +1,32 @@
 package com.bretth.osmosis.core.store;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
-import com.bretth.osmosis.core.OsmosisRuntimeException;
-
 
 /**
- * Provides functionality to deserialise a Storeable implementation from a store.
+ * Provides functionality to deserialise a Storeable implementation from a
+ * store. This implementation supports the loading of any Storeable object.
  * 
  * @author Brett Henderson
  */
-public class GenericObjectReader implements ObjectReader {
-	private StoreReader storeReader;
-	private StoreClassRegister storeClassRegister;
-	
+public class GenericObjectReader extends BaseObjectReader {
 	
 	/**
 	 * Creates a new instance.
 	 * 
 	 * @param storeReader
-	 *            The store writer to write all serialised data to.
+	 *            The store writer to read all serialised data from.
 	 * @param storeClassRegister
 	 *            The register for class to identifier mappings.
 	 */
 	public GenericObjectReader(StoreReader storeReader, StoreClassRegister storeClassRegister) {
-		this.storeReader = storeReader;
-		this.storeClassRegister = storeClassRegister;
+		super(storeReader, storeClassRegister);
 	}
 	
 	
 	/**
-	 * Reads an object from storage using identifiers embedded in the stream to
-	 * determine the correct class type to instantiate.
-	 * 
-	 * @return The re-instantiated object.
+	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
-	public Storeable readObject() {
-		Constructor<?> constructor;
-		
-		try {
-			// Obtain the class constructor based on the class identifier.
-			constructor = storeClassRegister.getConstructorForClass(storeReader);
-		} catch (EndOfStoreException e) {
-			throw new NoMoreObjectsInStoreException("No more objects are available in the store.", e.getCause());
-		}
-		
-		try {
-			return (Storeable) constructor.newInstance(new Object[] {storeReader, storeClassRegister});
-			
-		} catch (IllegalAccessException e) {
-			throw new OsmosisRuntimeException("The class " + constructor.getDeclaringClass().getName() + " could not be instantiated.", e);
-		} catch (InvocationTargetException e) {
-			throw new OsmosisRuntimeException("The class " + constructor.getDeclaringClass().getName() + " could not be instantiated.", e);
-		} catch (InstantiationException e) {
-			throw new OsmosisRuntimeException("The class " + constructor.getDeclaringClass().getName() + " could not be instantiated.", e);
-		}
+	@Override
+	protected Class<?> readClassFromIdentifier(StoreReader sr, StoreClassRegister scr) {
+		return scr.getClassFromIdentifier(sr);
 	}
-
 }

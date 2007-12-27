@@ -3,13 +3,11 @@ package com.bretth.osmosis.core.store;
 
 /**
  * Provides functionality to serialise a Storeable implementation to a store.
+ * This implementation supports the storing of any Storeable object.
  * 
  * @author Brett Henderson
  */
-public class GenericObjectWriter implements ObjectWriter {
-	private StoreWriter storeWriter;
-	private StoreClassRegister storeClassRegister;
-	
+public class GenericObjectWriter extends BaseObjectWriter {
 	
 	/**
 	 * Creates a new instance.
@@ -20,19 +18,15 @@ public class GenericObjectWriter implements ObjectWriter {
 	 *            The register for class to identifier mappings.
 	 */
 	public GenericObjectWriter(StoreWriter storeWriter, StoreClassRegister storeClassRegister) {
-		this.storeWriter = storeWriter;
-		this.storeClassRegister = storeClassRegister;
+		super(storeWriter, storeClassRegister);
 	}
 	
 	
 	/**
-	 * Writes an object to storage in a way that allows its type to be
-	 * automatically determined when read back in.
-	 * 
-	 * @param value
-	 *            The object to be written.
+	 * {@inheritDoc}
 	 */
-	public void writeObject(Storeable value) {
-		storeClassRegister.storeIdentifierForClass(storeWriter, value.getClass());
+	@Override
+	protected void writeClassIdentifier(StoreWriter sw, StoreClassRegister scr, Class<?> clazz) {
+		scr.storeIdentifierForClass(sw, clazz);
 	}
 }
