@@ -6,7 +6,7 @@ package com.bretth.osmosis.core.store;
  * 
  * @author Brett Henderson
  */
-public class ObjectWriter {
+public class GenericObjectWriter implements ObjectWriter {
 	private StoreWriter storeWriter;
 	private StoreClassRegister storeClassRegister;
 	
@@ -19,7 +19,7 @@ public class ObjectWriter {
 	 * @param storeClassRegister
 	 *            The register for class to identifier mappings.
 	 */
-	public ObjectWriter(StoreWriter storeWriter, StoreClassRegister storeClassRegister) {
+	public GenericObjectWriter(StoreWriter storeWriter, StoreClassRegister storeClassRegister) {
 		this.storeWriter = storeWriter;
 		this.storeClassRegister = storeClassRegister;
 	}
@@ -33,10 +33,6 @@ public class ObjectWriter {
 	 *            The object to be written.
 	 */
 	public void writeObject(Storeable value) {
-		storeWriter.writeByte(
-			storeClassRegister.getIdentifierForClass(value.getClass())
-		);
-		
-		value.store(storeWriter, storeClassRegister);
+		storeClassRegister.storeIdentifierForClass(storeWriter, value.getClass());
 	}
 }

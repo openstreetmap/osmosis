@@ -4,7 +4,9 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 
 
 /**
- * Provides a store for objects that can be located by a long identifier.
+ * Provides a store for objects that can be located by a long identifier. This
+ * implementation requires that input object identifiers are sorted and always
+ * increase.
  * 
  * @param <T>
  *            The object type to be stored.

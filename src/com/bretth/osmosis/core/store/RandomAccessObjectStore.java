@@ -21,8 +21,8 @@ public class RandomAccessObjectStore<T extends Storeable> implements Releasable 
 	private File file;
 	private RandomAccessFile randomFile;
 	private StoreClassRegister storeClassRegister;
-	private ObjectWriter objectWriter;
-	private ObjectReader objectReader;
+	private GenericObjectWriter objectWriter;
+	private GenericObjectReader objectReader;
 	
 	
 	/**
@@ -62,8 +62,8 @@ public class RandomAccessObjectStore<T extends Storeable> implements Releasable 
 				
 				randomFile = new RandomAccessFile(file, "rw");
 				
-				objectWriter = new ObjectWriter(new StoreWriter(randomFile), storeClassRegister);
-				objectReader = new ObjectReader(new StoreReader(randomFile), storeClassRegister);
+				objectWriter = new GenericObjectWriter(new StoreWriter(randomFile), storeClassRegister);
+				objectReader = new GenericObjectReader(new StoreReader(randomFile), storeClassRegister);
 				
 				stage = StorageStage.Add;
 				

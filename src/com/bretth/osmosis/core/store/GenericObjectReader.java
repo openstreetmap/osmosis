@@ -11,7 +11,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * 
  * @author Brett Henderson
  */
-public class ObjectReader {
+public class GenericObjectReader implements ObjectReader {
 	private StoreReader storeReader;
 	private StoreClassRegister storeClassRegister;
 	
@@ -24,7 +24,7 @@ public class ObjectReader {
 	 * @param storeClassRegister
 	 *            The register for class to identifier mappings.
 	 */
-	public ObjectReader(StoreReader storeReader, StoreClassRegister storeClassRegister) {
+	public GenericObjectReader(StoreReader storeReader, StoreClassRegister storeClassRegister) {
 		this.storeReader = storeReader;
 		this.storeClassRegister = storeClassRegister;
 	}
@@ -38,19 +38,14 @@ public class ObjectReader {
 	 */
 	@SuppressWarnings("unchecked")
 	public Storeable readObject() {
-		byte classId;
 		Constructor<?> constructor;
 		
-		// Read the identifier of the next class in the stream.
 		try {
-			classId = storeReader.readByte();
-			
+			// Obtain the class constructor based on the class identifier.
+			constructor = storeClassRegister.getConstructorForClass(storeReader);
 		} catch (EndOfStoreException e) {
 			throw new NoMoreObjectsInStoreException("No more objects are available in the store.", e.getCause());
 		}
-		
-		// Obtain the class constructor based on the class identifier.
-		constructor = storeClassRegister.getConstructorForClassId(classId);
 		
 		try {
 			return (Storeable) constructor.newInstance(new Object[] {storeReader, storeClassRegister});

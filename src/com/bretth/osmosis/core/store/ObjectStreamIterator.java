@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
 public class ObjectStreamIterator<T extends Storeable> implements ReleasableIterator<T> {
 	
 	private DataInputStream inStream;
-	private ObjectReader objectReader;
+	private GenericObjectReader objectReader;
 	private T nextElement;
 	
 	
@@ -31,7 +31,7 @@ public class ObjectStreamIterator<T extends Storeable> implements ReleasableIter
 	public ObjectStreamIterator(DataInputStream inStream, StoreClassRegister storeClassRegister) {
 		this.inStream = inStream;
 		
-		objectReader = new ObjectReader(new StoreReader(inStream), storeClassRegister);
+		objectReader = new GenericObjectReader(new StoreReader(inStream), storeClassRegister);
 	}
 	
 	

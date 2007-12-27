@@ -32,7 +32,7 @@ public class SegmentedObjectStore<T extends Storeable> implements Releasable {
 	private DataOutputStream dataOutStream;
 	private ByteArrayOutputStream arrayOutStream;
 	private StoreClassRegister storeClassRegister;
-	private ObjectWriter objectWriter;
+	private GenericObjectWriter objectWriter;
 	private boolean chunkActive; 
 	private boolean useCompression;
 	private long fileSize;
@@ -96,7 +96,7 @@ public class SegmentedObjectStore<T extends Storeable> implements Releasable {
 					dataOutStream = new DataOutputStream(arrayOutStream);
 				}
 				
-				objectWriter = new ObjectWriter(new StoreWriter(dataOutStream), storeClassRegister);
+				objectWriter = new GenericObjectWriter(new StoreWriter(dataOutStream), storeClassRegister);
 				
 				chunkActive = true;
 				

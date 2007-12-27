@@ -27,7 +27,7 @@ public class SimpleObjectStore<T extends Storeable> implements Releasable {
 	private FileOutputStream fileOutStream;
 	private DataOutputStream dataOutStream;
 	private StoreClassRegister storeClassRegister;
-	private ObjectWriter objectWriter;
+	private GenericObjectWriter objectWriter;
 	private boolean useCompression;
 	
 	
@@ -74,7 +74,7 @@ public class SimpleObjectStore<T extends Storeable> implements Releasable {
 					dataOutStream = new DataOutputStream(fileOutStream);
 				}
 				
-				objectWriter = new ObjectWriter(new StoreWriter(dataOutStream), storeClassRegister);
+				objectWriter = new GenericObjectWriter(new StoreWriter(dataOutStream), storeClassRegister);
 				
 				stage = StorageStage.Add;
 				

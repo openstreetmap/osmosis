@@ -30,18 +30,39 @@ public class StoreClassRegister {
 	
 	
 	/**
-	 * Returns the unique identifier for the specified class. If none exists, a
-	 * new identifier is allocated and the class is registered internally.
+	 * Returns the constructor on the specified class that is used for loading
+	 * state from a data store.
 	 * 
 	 * @param clazz
-	 *            The class for which an identifier is required.
-	 * @return The unique identifier representing this class.
+	 *            The class with the storeable constructor.
+	 * @return The storeable class constructor.
 	 */
-	public byte getIdentifierForClass(Class<?> clazz) {
+	public Constructor<?> getStoreableConstructor(Class<?> clazz) {
+		try {
+			return clazz.getConstructor(new Class [] {StoreReader.class, StoreClassRegister.class});
+			
+		} catch (NoSuchMethodException e) {
+			throw new OsmosisRuntimeException("Class " + clazz.getName() + " does not have a constructor accepting a " + StoreReader.class.getName() + " argument, this is required for all Storeable classes.", e);
+		}
+	}
+	
+	
+	/**
+	 * Stores the unique identifier for the specified class to the store. If no
+	 * identifier already exists exists, a new identifier is allocated and the
+	 * class is registered internally.
+	 * 
+	 * @param storeWriter
+	 *            The store to write class identification data to.
+	 * @param clazz
+	 *            The class for which an identifier is required.
+	 */
+	public void storeIdentifierForClass(StoreWriter storeWriter, Class<?> clazz) {
+		byte id;
+		
 		if (classToByteMap.containsKey(clazz)) {
-			return classToByteMap.get(clazz).byteValue();
+			id = classToByteMap.get(clazz).byteValue();
 		} else {
-			byte id;
 			Byte objId;
 			Constructor<?> constructor;
 			
@@ -64,23 +85,26 @@ public class StoreClassRegister {
 			
 			classToByteMap.put(clazz, objId);
 			byteToConstructorMap.put(objId, constructor);
-			
-			return id;
 		}
+		
+		storeWriter.writeByte(id);
 	}
 	
 	
 	/**
-	 * Returns the class associated with the unique identifier. An exception
-	 * will be thrown if the identifier is not recognised.
+	 * Returns the constructor of the class associated with the unique
+	 * identifier in the store. An exception will be thrown if the identifier is
+	 * not recognised.
 	 * 
-	 * @param classId
-	 *            The unique identifier for which the associated class is
-	 *            required.
-	 * @return The class associated with the identifier.
+	 * @param storeReader
+	 *            The store to read class identification information from.
+	 * @return The constructor of the class associated with the identifier.
 	 */
-	public Constructor<?> getConstructorForClassId(byte classId) {
+	public Constructor<?> getConstructorForClass(StoreReader storeReader) {
+		byte classId;
 		Byte idObj;
+		
+		classId = storeReader.readByte();
 		
 		idObj = Byte.valueOf(classId);
 		
