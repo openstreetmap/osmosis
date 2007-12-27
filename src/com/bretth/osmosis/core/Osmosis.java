@@ -77,6 +77,7 @@ public class Osmosis {
 		
 		// Add a new console handler.
 		consoleHandler = new ConsoleHandler();
+		consoleHandler.setLevel(Level.ALL);
 		rootLogger.addHandler(consoleHandler);
 	}
 	

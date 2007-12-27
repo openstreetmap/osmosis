@@ -45,7 +45,7 @@ public class Pipeline {
 				TaskManagerFactory.createTaskManager(taskConfig)
 			);
 			
-			if (log.isLoggable(Level.INFO)) {
+			if (log.isLoggable(Level.FINE)) {
 				log.fine("Created task \"" + taskConfig.getId() + "\"");
 			}
 		}
@@ -67,25 +67,29 @@ public class Pipeline {
 		for (TaskManager taskManager : taskManagers) {
 			taskManager.connect(pipeTasks);
 			
-			if (log.isLoggable(Level.INFO)) {
+			if (log.isLoggable(Level.FINE)) {
 				log.fine("Connected task \"" + taskManager.getTaskId() + "\"");
 			}
 		}
 		
 		// Validate that no pipes are left without sinks.
 		if (pipeTasks.size() > 0) {
-			StringBuilder pipes;
+			StringBuilder namedPipes;
 			
 			// Build a list of pipes to include in the error.
-			pipes = new StringBuilder();
+			namedPipes = new StringBuilder();
 			for (String pipeName : pipeTasks.getPipeNames()) {
-				if (pipes.length() > 0) {
-					pipes.append(", ");
+				if (namedPipes.length() > 0) {
+					namedPipes.append(", ");
 				}
-				pipes.append(pipeName);
+				namedPipes.append(pipeName);
 			}
 			
-			throw new OsmosisRuntimeException("The following data pipes have not been terminated with appropriate output sinks (" + pipes.toString() + ").");
+			throw new OsmosisRuntimeException(
+				"The following named pipes (" + namedPipes + ") and " +
+				pipeTasks.defaultTaskSize() +
+				" default pipes have not been terminated with appropriate output sinks."
+			);
 		}
 	}
 	

@@ -1,5 +1,7 @@
 package com.bretth.osmosis.core.pipeline.common;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -19,16 +21,16 @@ import com.bretth.osmosis.core.task.common.Task;
 public class PipeTasks {
 	private static final Logger log = Logger.getLogger(PipeTasks.class.getName());
 	
-	private Map<String, Task> pipeTasks;
-	private int defaultNameCreationIndex;
-	private int defaultNameConsumptionIndex;
+	private Map<String, Task> namedTasks;
+	private Deque<Task> defaultTasks;
 	
 	
 	/**
 	 * Creates a new instance.
 	 */
 	public PipeTasks() {
-		pipeTasks = new HashMap<String, Task>();
+		namedTasks = new HashMap<String, Task>();
+		defaultTasks = new ArrayDeque<Task>();
 	}
 	
 	
@@ -44,13 +46,13 @@ public class PipeTasks {
 	 */
 	public void putTask(String taskId, String pipeName, Task task) {
 		// Verify that the output pipe is not already taken.
-		if (pipeTasks.containsKey(pipeName)) {
+		if (namedTasks.containsKey(pipeName)) {
 			throw new OsmosisRuntimeException("Task " + taskId
 					+ " cannot write to pipe " + pipeName
 					+ " because the pipe is already being written to.");
 		}
 		
-		pipeTasks.put(pipeName, task);
+		namedTasks.put(pipeName, task);
 		
 		if (log.isLoggable(Level.FINE)) {
 			log.fine("Task \"" + taskId + "\" produced pipe \"" + pipeName + "\"");
@@ -59,26 +61,36 @@ public class PipeTasks {
 	
 	
 	/**
-	 * Adds the specified task using a generated pipe name.
+	 * Adds the specified task to the default pipe list.
 	 * 
 	 * @param taskId
-	 *            The unique identifier of the task perfroming this request.
+	 *            The unique identifier of the task performing this request.
 	 * @param task
 	 *            The task to be added.
-	 * @return The name that the task was registered under.
 	 */
-	public String putTask(String taskId, Task task) {
-		String pipeName;
+	public void putTask(String taskId, Task task) {
 		
-		// Generate a unique pipe name.
-		do {
-			pipeName = PipelineConstants.DEFAULT_PIPE_PREFIX + "." + defaultNameCreationIndex;
-			defaultNameCreationIndex++;
-		} while (pipeTasks.containsKey(pipeName));
+		// Push the new task onto the top of the default pipe stack.
+		defaultTasks.push(task);
 		
-		putTask(taskId, pipeName, task);
-		
-		return pipeName;
+		if (log.isLoggable(Level.FINE)) {
+			log.fine("Task \"" + taskId + "\" produced unnamed pipe stored at level " + defaultTasks.size() + " in the default pipe stack.");
+		}
+	}
+	
+	
+	/**
+	 * Checks if the specified task matches the required task type.
+	 * 
+	 * @param requiredTaskType
+	 *            The type of task required.
+	 * @param task
+	 *            The task to be checked.
+	 * @return True if the task type is a match.
+	 */
+	private boolean verifyPipeType(Class<? extends Task> requiredTaskType, Task task) {
+		// Ensure the task is of the correct type.
+		return requiredTaskType.isInstance(task);
 	}
 	
 	
@@ -96,14 +108,14 @@ public class PipeTasks {
 	public Task retrieveTask(String taskId, String pipeName, Class<? extends Task> requiredTaskType) {
 		Task task;
 		
-		if (!pipeTasks.containsKey(pipeName)) {
+		if (!namedTasks.containsKey(pipeName)) {
 			throw new OsmosisRuntimeException("No pipe named " + pipeName + " is available as input for task " + taskId + ".");
 		}
 		
-		task = pipeTasks.remove(pipeName);
+		task = namedTasks.remove(pipeName);
 		
 		// Ensure the task is of the correct type.
-		if (!requiredTaskType.isInstance(task)) {
+		if (!verifyPipeType(requiredTaskType, task)) {
 			throw new OsmosisRuntimeException("Task " + taskId + " does not support data provided by input pipe " + pipeName + ".");
 		}
 		
@@ -125,20 +137,27 @@ public class PipeTasks {
 	 * @return The matching task.
 	 */
 	public Task retrieveTask(String taskId, Class<? extends Task> requiredTaskType) {
-		String pipeName;
+		Task task;
+		int defaultTaskCount;
 		
-		// Find the next available default pipe.
-		do {
-			if (defaultNameConsumptionIndex >= defaultNameCreationIndex) {
-				throw new OsmosisRuntimeException("No default pipes are available as input for task " + taskId + ".");
-			}
-			
-			pipeName = PipelineConstants.DEFAULT_PIPE_PREFIX + "." + defaultNameConsumptionIndex;
-			
-			defaultNameConsumptionIndex++;
-		} while (!pipeTasks.containsKey(pipeName));
+		defaultTaskCount = defaultTasks.size();
 		
-		return retrieveTask(taskId, pipeName, requiredTaskType);
+		if (defaultTaskCount == 0) {
+			throw new OsmosisRuntimeException("No default pipes are available as input for task " + taskId + ".");
+		}
+		
+		task = defaultTasks.pop();
+		
+		// Ensure the task is of the correct type.
+		if (!verifyPipeType(requiredTaskType, task)) {
+			throw new OsmosisRuntimeException("Task " + taskId + " does not support data provided by default pipe stored at level " + defaultTasks.size() + " in the default pipe stack.");
+		}
+		
+		if (log.isLoggable(Level.FINE)) {
+			log.fine("Task \"" + taskId + "\" consumed unnamed pipe stored at level " + defaultTaskCount + " in the default pipe stack.");
+		}
+		
+		return task;
 	}
 	
 	
@@ -148,7 +167,18 @@ public class PipeTasks {
 	 * @return The number of pipes.
 	 */
 	public int size() {
-		return pipeTasks.size();
+		return namedTasks.size() + defaultTasks.size();
+	}
+	
+	
+	/**
+	 * Returns how many default pipes are stored in this container. This is a
+	 * subset of the count returned by size().
+	 * 
+	 * @return The number of default pipes.
+	 */
+	public int defaultTaskSize() {
+		return defaultTasks.size();
 	}
 	
 	
@@ -158,6 +188,6 @@ public class PipeTasks {
 	 * @return The set of pipe names.
 	 */
 	public Set<String> getPipeNames() {
-		return pipeTasks.keySet();
+		return namedTasks.keySet();
 	}
 }

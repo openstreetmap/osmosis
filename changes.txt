@@ -1,6 +1,7 @@
 0.25
 Added a new osmosis-extract-mysql application for extracting regular changesets from mysql.
 Removed use of String.isEmpty to minimise Java5 incompatibility.
+Modified the default pipe connectivity functionality to use stack-based connectivity instead of queue-based connectivity.
 Added a populateCurrentTables option to the --write-mysql-change task to match the --write-mysql task.
 Added validation code to the merge tasks to verify that input data is sorted.
 
