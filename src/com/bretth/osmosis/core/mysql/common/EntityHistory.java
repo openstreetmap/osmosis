@@ -1,7 +1,7 @@
 package com.bretth.osmosis.core.mysql.common;
 
-import com.bretth.osmosis.core.store.ObjectReader;
-import com.bretth.osmosis.core.store.ObjectWriter;
+import com.bretth.osmosis.core.store.GenericObjectReader;
+import com.bretth.osmosis.core.store.GenericObjectWriter;
 import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
@@ -50,7 +50,7 @@ public class EntityHistory<T extends Storeable> implements Storeable {
 	 */
 	@SuppressWarnings("unchecked")
 	public EntityHistory(StoreReader sr, StoreClassRegister scr) {
-		entity = (T) new ObjectReader(sr, scr).readObject();
+		entity = (T) new GenericObjectReader(sr, scr).readObject();
 		
 		version = sr.readInteger();
 		visible = sr.readBoolean();
@@ -61,7 +61,7 @@ public class EntityHistory<T extends Storeable> implements Storeable {
 	 * {@inheritDoc}
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
-		new ObjectWriter(sw, scr).writeObject(entity);
+		new GenericObjectWriter(sw, scr).writeObject(entity);
 		sw.writeInteger(version);
 		sw.writeBoolean(visible);
 	}

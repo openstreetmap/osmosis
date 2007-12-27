@@ -1,7 +1,7 @@
 package com.bretth.osmosis.core.container.v0_5;
 
-import com.bretth.osmosis.core.store.ObjectReader;
-import com.bretth.osmosis.core.store.ObjectWriter;
+import com.bretth.osmosis.core.store.GenericObjectReader;
+import com.bretth.osmosis.core.store.GenericObjectWriter;
 import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
@@ -44,7 +44,7 @@ public class ChangeContainer implements Storeable {
 	 *            within the store.
 	 */
 	public ChangeContainer(StoreReader sr, StoreClassRegister scr) {
-		entityContainer = (EntityContainer) new ObjectReader(sr, scr).readObject();
+		entityContainer = (EntityContainer) new GenericObjectReader(sr, scr).readObject();
 		action = ChangeAction.valueOf(sr.readString());
 	}
 	
@@ -53,7 +53,7 @@ public class ChangeContainer implements Storeable {
 	 * {@inheritDoc}
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
-		new ObjectWriter(sw, scr).writeObject(entityContainer);
+		new GenericObjectWriter(sw, scr).writeObject(entityContainer);
 		sw.writeString(action.toString());
 	}
 	

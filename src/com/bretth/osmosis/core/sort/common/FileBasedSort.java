@@ -50,7 +50,7 @@ public class FileBasedSort<T extends Storeable> implements Releasable {
 	
 	
 	private Comparator<T> comparator;
-	private ChunkedObjectStore<T> indexedEntityStore;
+	private ChunkedObjectStore<T> chunkedEntityStore;
 	private List<T> addBuffer;
 	private boolean useCompression;
 	
@@ -67,7 +67,7 @@ public class FileBasedSort<T extends Storeable> implements Releasable {
 		this.comparator = comparator;
 		this.useCompression = useCompression;
 		
-		indexedEntityStore = new ChunkedObjectStore<T>("emta", "idx", useCompression);
+		chunkedEntityStore = new ChunkedObjectStore<T>("emta", "idx", useCompression);
 		addBuffer = new ArrayList<T>(MAX_MEMORY_SORT_COUNT);
 	}
 	
@@ -83,14 +83,14 @@ public class FileBasedSort<T extends Storeable> implements Releasable {
 			
 			// Write all entities in the buffer to entity storage.
 			for (T entity : addBuffer) {
-				indexedEntityStore.add(entity);
+				chunkedEntityStore.add(entity);
 			}
 			
 			addBuffer.clear();
 			
 			// Close the chunk in the underlying data store so that it can be
 			// read separately.
-			indexedEntityStore.closeChunk();
+			chunkedEntityStore.closeChunk();
 		}
 	}
 	
@@ -192,7 +192,7 @@ public class FileBasedSort<T extends Storeable> implements Releasable {
 			if (chunkCount <= MAX_MERGE_SOURCE_COUNT) {
 				for (int i = 0; i < chunkCount; i++) {
 					sources.add(
-						indexedEntityStore.iterate(beginChunkIndex + i)
+						chunkedEntityStore.iterate(beginChunkIndex + i)
 					);
 				}
 				
@@ -261,7 +261,7 @@ public class FileBasedSort<T extends Storeable> implements Releasable {
 	public ReleasableIterator<T> iterate() {
 		flushAddBuffer();
 		
-		return iterate(0, 0, indexedEntityStore.getChunkCount());
+		return iterate(0, 0, chunkedEntityStore.getChunkCount());
 	}
 	
 	
@@ -269,6 +269,6 @@ public class FileBasedSort<T extends Storeable> implements Releasable {
 	 * {@inheritDoc}
 	 */
 	public void release() {
-		indexedEntityStore.release();
+		chunkedEntityStore.release();
 	}
 }

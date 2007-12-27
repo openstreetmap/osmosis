@@ -4,6 +4,7 @@ Removed use of String.isEmpty to minimise Java5 incompatibility.
 Modified the default pipe connectivity functionality to use stack-based connectivity instead of queue-based connectivity.
 Added a populateCurrentTables option to the --write-mysql-change task to match the --write-mysql task.
 Added validation code to the merge tasks to verify that input data is sorted.
+Enhanced serialisation code to eliminate class identification information in the stream where single data types are being stored.
 
 0.24
 Fixed a bug in the XML node writing code where it would write a ',' character instead of '.' as the decimal separator in some locales.
