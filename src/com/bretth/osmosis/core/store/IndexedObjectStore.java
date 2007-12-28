@@ -16,6 +16,7 @@ public class IndexedObjectStore<T extends Storeable> implements Releasable {
 	private IndexStore activeIdIndex;
 	private IndexStore storeOffsetIndex;
 	private RandomAccessObjectStore<T> objectStore;
+	private RandomAccessObjectStoreReader<T> objectStoreReader;
 	private int objectCount;
 	private long previousId;
 	
@@ -143,7 +144,11 @@ public class IndexedObjectStore<T extends Storeable> implements Releasable {
 		objectStoreOffset = storeOffsetIndex.read(activeIdOffset);
 		
 		// The object can now be read from the store.
-		return objectStore.get(objectStoreOffset);
+		if (objectStoreReader == null) {
+			objectStoreReader = objectStore.createReader();
+		}
+		
+		return objectStoreReader.get(objectStoreOffset);
 	}
 	
 	
@@ -153,6 +158,11 @@ public class IndexedObjectStore<T extends Storeable> implements Releasable {
 	public void release() {
 		activeIdIndex.release();
 		storeOffsetIndex.release();
+		
+		if (objectStoreReader != null) {
+			objectStoreReader.release();
+			objectStoreReader = null;
+		}
 		objectStore.release();
 	}
 }

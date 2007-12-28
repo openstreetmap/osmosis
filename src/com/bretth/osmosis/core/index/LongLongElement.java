@@ -47,20 +47,6 @@ public class LongLongElement implements IndexElement {
 	 *            within the store.
 	 */
 	public LongLongElement(StoreReader sr, StoreClassRegister scr) {
-		this(sr);
-	}
-	
-	
-	/**
-	 * Creates a new instance.
-	 * 
-	 * @param sr
-	 *            The store to read state from.
-	 * @param scr
-	 *            Maintains the mapping between classes and their identifiers
-	 *            within the store.
-	 */
-	public LongLongElement(StoreReader sr) {
 		this(sr.readLong(), sr.readLong());
 	}
 	
@@ -69,17 +55,6 @@ public class LongLongElement implements IndexElement {
 	 * {@inheritDoc}
 	 */
 	public void store(StoreWriter writer, StoreClassRegister storeClassRegister) {
-		store(writer);
-	}
-	
-	
-	/**
-	 * Stores all state to the specified store writer.
-	 * 
-	 * @param writer
-	 *            The writer that persists data to an underlying store.
-	 */
-	public void store(StoreWriter writer) {
 		writer.writeLong(id);
 		writer.writeLong(value);
 	}

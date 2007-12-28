@@ -8,9 +8,7 @@ import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.index.IndexWriter;
 import com.bretth.osmosis.core.index.IntLongElement;
-import com.bretth.osmosis.core.index.IntLongElementFactory;
 import com.bretth.osmosis.core.index.LongLongElement;
-import com.bretth.osmosis.core.index.LongLongElementFactory;
 import com.bretth.osmosis.core.store.RandomAccessObjectStore;
 import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 import com.bretth.osmosis.core.task.v0_5.Sink;
@@ -41,12 +39,10 @@ public class DatasetStore implements Sink, EntityProcessor {
 		nodeObjectStore = new RandomAccessObjectStore<Node>(new SingleClassObjectSerializationFactory(Node.class), "nos");
 		nodeObjectOffsetIndexWriter = new IndexWriter<LongLongElement>(
 			fileManager.getNodeObjectOffsetIndexFile(),
-			new LongLongElementFactory(),
 			LongLongElement.class
 		);
 		nodeTileIndexWriter = new IndexWriter<IntLongElement>(
 			fileManager.getNodeTileIndexFile(),
-			new IntLongElementFactory(),
 			IntLongElement.class
 		);
 	}

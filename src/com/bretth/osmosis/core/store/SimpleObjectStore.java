@@ -170,7 +170,7 @@ public class SimpleObjectStore<T extends Storeable> implements Releasable {
 			// the reference now so it isn't closed on method exit.
 			fileStream = null;
 			
-			return new ObjectStreamIterator<T>(serializationFactory, dataInStream, storeClassRegister);
+			return new ObjectStreamIterator<T>(dataInStream, serializationFactory.createObjectReader(new StoreReader(dataInStream), storeClassRegister));
 			
 		} finally {
 			if (fileStream != null) {

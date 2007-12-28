@@ -230,6 +230,7 @@ public class SegmentedObjectStore<T extends Storeable> implements Releasable {
 		
 		try {
 			DataInputStream dataInStream;
+			ObjectReader objectReader;
 			
 			if (!initializeIteratingStage()) {
 				return new EmptyIterator<T>();
@@ -267,10 +268,12 @@ public class SegmentedObjectStore<T extends Storeable> implements Releasable {
 			// the reference now so it isn't closed on method exit.
 			fileStream = null;
 			
+			objectReader = serializationFactory.createObjectReader(new StoreReader(dataInStream), storeClassRegister);
+			
 			if (maxObjectCount >= 0) {
-				return new SubObjectStreamIterator<T>(serializationFactory, dataInStream, storeClassRegister, maxObjectCount);
+				return new SubObjectStreamIterator<T>(dataInStream, objectReader, maxObjectCount);
 			} else {
-				return new ObjectStreamIterator<T>(serializationFactory, dataInStream, storeClassRegister);
+				return new ObjectStreamIterator<T>(dataInStream, objectReader);
 			}
 			
 		} finally {

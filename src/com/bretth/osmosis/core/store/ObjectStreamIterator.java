@@ -1,7 +1,6 @@
 package com.bretth.osmosis.core.store;
 
 import java.io.DataInputStream;
-import java.util.NoSuchElementException;
 
 
 /**
@@ -12,74 +11,21 @@ import java.util.NoSuchElementException;
  *            The type of data to be returned by the iterator.
  * @author Brett Henderson
  */
-public class ObjectStreamIterator<T extends Storeable> implements ReleasableIterator<T> {
+public class ObjectStreamIterator<T> extends ObjectDataInputIterator<T> implements ReleasableIterator<T> {
 	
 	private DataInputStream inStream;
-	private ObjectReader objectReader;
-	private T nextElement;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param serializationFactory
-	 *            The factory defining the object serialisation implementation.
 	 * @param inStream
 	 *            The stream to read objects from.
-	 * @param storeClassRegister
-	 *            The register defining the classes in the stream and their
-	 *            identifiers.
+	 * @param objectReader
+	 *            The reader containing the objects to be deserialized.
 	 */
-	public ObjectStreamIterator(ObjectSerializationFactory serializationFactory, DataInputStream inStream, StoreClassRegister storeClassRegister) {
-		this.inStream = inStream;
-		
-		objectReader = serializationFactory.createObjectReader(new StoreReader(inStream), storeClassRegister);
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@SuppressWarnings("unchecked")
-	public boolean hasNext() {
-		if (nextElement != null) {
-			return true;
-		}
-		
-		try {
-			nextElement = (T) objectReader.readObject();
-			
-		} catch (EndOfStoreException e) {
-			return false;
-		}
-		
-		return true;
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public T next() {
-		if (hasNext()) {
-			T result;
-			
-			result = nextElement;
-			nextElement = null;
-			
-			return result;
-			
-		} else {
-			throw new NoSuchElementException();
-		}
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void remove() {
-		throw new UnsupportedOperationException();
+	public ObjectStreamIterator(DataInputStream inStream, ObjectReader objectReader) {
+		super(objectReader);
 	}
 
 	

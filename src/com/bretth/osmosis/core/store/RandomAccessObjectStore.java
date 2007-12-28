@@ -1,6 +1,7 @@
 package com.bretth.osmosis.core.store;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
@@ -18,12 +19,12 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 public class RandomAccessObjectStore<T extends Storeable> implements Releasable {
 	private ObjectSerializationFactory serializationFactory;
 	private StorageStage stage;
-	private String storageFilePrefix;
-	private File file;
+	private String tempFilePrefix;
+	private File tempFile;
+	private File storageFile;
 	private RandomAccessFile randomFile;
 	private StoreClassRegister storeClassRegister;
 	private ObjectWriter objectWriter;
-	private ObjectReader objectReader;
 	
 	
 	/**
@@ -31,16 +32,64 @@ public class RandomAccessObjectStore<T extends Storeable> implements Releasable 
 	 * 
 	 * @param serializationFactory
 	 *            The factory defining the object serialisation implementation.
-	 * @param storageFilePrefix
-	 *            The prefix of the storage file.
+	 * @param tempFilePrefix
+	 *            The prefix of the temporary file.
 	 */
-	public RandomAccessObjectStore(ObjectSerializationFactory serializationFactory, String storageFilePrefix) {
+	public RandomAccessObjectStore(ObjectSerializationFactory serializationFactory, String tempFilePrefix) {
 		this.serializationFactory = serializationFactory;
-		this.storageFilePrefix = storageFilePrefix;
+		this.tempFilePrefix = tempFilePrefix;
 		
 		storeClassRegister = new StoreClassRegister();
 		
 		stage = StorageStage.NotStarted;
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param serializationFactory
+	 *            The factory defining the object serialisation implementation.
+	 * @param storageFile
+	 *            The storage file to use.
+	 */
+	public RandomAccessObjectStore(ObjectSerializationFactory serializationFactory, File storageFile) {
+		this.serializationFactory = serializationFactory;
+		this.storageFile = storageFile;
+		
+		storeClassRegister = new StoreClassRegister();
+		
+		stage = StorageStage.NotStarted;
+	}
+	
+	
+	/**
+	 * Initialises the output file and configures the class for adding data.
+	 */
+	private void initializeAddStage() {
+		// We can't add if we've passed the add stage.
+		if (stage.compareTo(StorageStage.Add) > 0) {
+			throw new OsmosisRuntimeException("Cannot add to storage in stage " + stage + ".");
+		}
+		
+		// If we're not up to the add stage, initialise for adding.
+		if (stage.compareTo(StorageStage.Add) < 0) {
+			try {
+				if (storageFile == null) {
+					tempFile = File.createTempFile(tempFilePrefix, null);
+					storageFile = tempFile;
+				} 
+				
+				randomFile = new RandomAccessFile(storageFile, "rw");
+				
+				objectWriter = serializationFactory.createObjectWriter(new StoreWriter(randomFile), storeClassRegister);
+				
+				stage = StorageStage.Add;
+				
+			} catch (IOException e) {
+				throw new OsmosisRuntimeException("Unable to create object stream writing to file " + storageFile + ".", e);
+			}
+		}
 	}
 	
 	
@@ -54,27 +103,7 @@ public class RandomAccessObjectStore<T extends Storeable> implements Releasable 
 	public long add(T data) {
 		long objectFileOffset;
 		
-		// We can't add if we've passed the add stage.
-		if (stage.compareTo(StorageStage.Add) > 0) {
-			throw new OsmosisRuntimeException("Cannot add to storage in stage " + stage + ".");
-		}
-		
-		// If we're not up to the add stage, initialise for adding.
-		if (stage.compareTo(StorageStage.Add) < 0) {
-			try {
-				file = File.createTempFile(storageFilePrefix, null);
-				
-				randomFile = new RandomAccessFile(file, "rw");
-				
-				objectWriter = serializationFactory.createObjectWriter(new StoreWriter(randomFile), storeClassRegister);
-				objectReader = serializationFactory.createObjectReader(new StoreReader(randomFile), storeClassRegister);
-				
-				stage = StorageStage.Add;
-				
-			} catch (IOException e) {
-				throw new OsmosisRuntimeException("Unable to create object stream writing to temporary file " + file + ".", e);
-			}
-		}
+		initializeAddStage();
 		
 		try {
 			objectFileOffset = randomFile.getFilePointer();
@@ -92,56 +121,48 @@ public class RandomAccessObjectStore<T extends Storeable> implements Releasable 
 	/**
 	 * Configures the state of this object instance for reading mode. If the
 	 * current state doesn't allow reading, an exception will be thrown.
-	 * 
-	 * @return true if data is available, false otherwise.
 	 */
-	private boolean initializeReadingStage() {
+	private void initializeReadingStage() {
 		// If we're already in the reading stage there's nothing to do.
 		if (stage.equals(StorageStage.Reading)) {
-			return true;
+			return;
 		}
 		
-		// If we've been released, we can't iterate.
-		if (stage.compareTo(StorageStage.Released) >= 0) {
-			throw new OsmosisRuntimeException("Cannot iterate over storage in stage " + stage + ".");
-		}
-		
-		// If no data was written, an empty iterator should be returned.
-		if (stage.compareTo(StorageStage.NotStarted) <= 0) {
-			return false;
-		}
-		
-		// If we're in the add stage, close the output streams.
-		if (stage.equals(StorageStage.Add)) {
-			stage = StorageStage.Reading;
+		// If we haven't reached the reading stage yet, configure for output
+		// first to ensure a file is available for reading.
+		if (stage.compareTo(StorageStage.Reading) < 0) {
+			initializeAddStage();
 			
-			return true;
+			stage = StorageStage.Reading;
 		}
 		
-		throw new OsmosisRuntimeException("The storage stage " + stage + " is not recognised.");
+		// If we've passed the reading stage, we can't continue.
+		if (stage.compareTo(StorageStage.Reading) > 0) {
+			throw new OsmosisRuntimeException("Cannot read from storage once we've reached stage " + stage + ".");
+		}
 	}
 	
 	
 	/**
-	 * Reads the object at the specified file offset.
+	 * Creates a new reader capable of accessing the contents of this store. The
+	 * reader must be explicitly released when no longer required. Readers must
+	 * be released prior to this store.
 	 * 
-	 * @param offset
-	 *            The file offset to read an object from.
-	 * @return The requested object.
+	 * @return A store reader.
 	 */
-	@SuppressWarnings("unchecked")
-	public T get(long offset) {
-		if (!initializeReadingStage()) {
-			throw new OsmosisRuntimeException("No data is available for reading.");
-		}
+	public RandomAccessObjectStoreReader<T> createReader() {
+		initializeReadingStage();
 		
 		try {
-			randomFile.seek(offset);
-		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to seek to position " + offset + " in temp file " + file + ".");
+			RandomAccessFile randomFileReader;
+			
+			randomFileReader = new RandomAccessFile(storageFile, "r");
+			
+			return new RandomAccessObjectStoreReader<T>(serializationFactory, storeClassRegister, randomFileReader);
+			
+		} catch (FileNotFoundException e) {
+			throw new OsmosisRuntimeException("Unable to create object stream reading from file " + storageFile + ".", e);
 		}
-		
-		return (T) objectReader.readObject();
 	}
 	
 	
@@ -158,9 +179,9 @@ public class RandomAccessObjectStore<T extends Storeable> implements Releasable 
 			randomFile = null;
 		}
 		
-		if (file != null) {
-			file.delete();
-			file = null;
+		if (tempFile != null) {
+			tempFile.delete();
+			tempFile = null;
 		}
 		
 		stage = StorageStage.Released;

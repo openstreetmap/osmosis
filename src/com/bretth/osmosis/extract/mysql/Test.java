@@ -4,8 +4,8 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
+import com.bretth.osmosis.core.store.GenericObjectSerializationFactory;
 import com.bretth.osmosis.core.store.IndexedObjectStore;
-import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 
 
 /**
@@ -22,11 +22,12 @@ public class Test {
 	 *            Command line arguments.
 	 */
 	public static void main(String[] args) {
-		IndexedObjectStore<Node> store = new IndexedObjectStore<Node>(new SingleClassObjectSerializationFactory(Node.class), "test");
+		//IndexedObjectStore<Node> store = new IndexedObjectStore<Node>(new SingleClassObjectSerializationFactory(Node.class), "test");
+		IndexedObjectStore<Node> store = new IndexedObjectStore<Node>(new GenericObjectSerializationFactory(), "test");
 		
 		try {
 			System.out.println("Start " + new Date());
-			for (int i = 0; i < 100000; i++) {
+			for (int i = 0; i < 10000; i++) {
 				Node node;
 				
 				node = new Node(i, new Date(), "user" + i, 0, 0);
@@ -37,7 +38,7 @@ public class Test {
 				store.add(i, node);
 			}
 			System.out.println("Middle " + new Date());
-			for (int i = 0; i < 100000; i++) {
+			for (int i = 0; i < 10000; i++) {
 				store.get(i).getUser();
 			}
 			System.out.println("Finish " + new Date());
