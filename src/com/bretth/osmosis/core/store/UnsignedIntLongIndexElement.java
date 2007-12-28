@@ -1,8 +1,5 @@
-package com.bretth.osmosis.core.index;
+package com.bretth.osmosis.core.store;
 
-import com.bretth.osmosis.core.store.StoreClassRegister;
-import com.bretth.osmosis.core.store.StoreReader;
-import com.bretth.osmosis.core.store.StoreWriter;
 
 
 /**
@@ -10,7 +7,7 @@ import com.bretth.osmosis.core.store.StoreWriter;
  * 
  * @author Brett Henderson
  */
-public class UnsignedIntLongElement implements IndexElement {
+public class UnsignedIntLongIndexElement implements IndexElement {
 	
 	/**
 	 * The value identifier.
@@ -31,7 +28,7 @@ public class UnsignedIntLongElement implements IndexElement {
 	 * @param value
 	 *            The data value.
 	 */
-	public UnsignedIntLongElement(int id, long value) {
+	public UnsignedIntLongIndexElement(int id, long value) {
 		this.id = id;
 		this.value = value;
 	}
@@ -46,7 +43,7 @@ public class UnsignedIntLongElement implements IndexElement {
 	 *            Maintains the mapping between classes and their identifiers
 	 *            within the store.
 	 */
-	public UnsignedIntLongElement(StoreReader sr, StoreClassRegister scr) {
+	public UnsignedIntLongIndexElement(StoreReader sr, StoreClassRegister scr) {
 		this(sr.readInteger(), sr.readLong());
 	}
 	

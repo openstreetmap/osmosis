@@ -6,11 +6,13 @@ import com.bretth.osmosis.core.container.v0_5.NodeContainer;
 import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.domain.v0_5.Node;
-import com.bretth.osmosis.core.index.IndexWriter;
-import com.bretth.osmosis.core.index.UnsignedIntLongElement;
-import com.bretth.osmosis.core.index.LongLongElement;
+import com.bretth.osmosis.core.domain.v0_5.Way;
+import com.bretth.osmosis.core.mysql.common.TileCalculator;
+import com.bretth.osmosis.core.store.IndexWriter;
+import com.bretth.osmosis.core.store.LongLongIndexElement;
 import com.bretth.osmosis.core.store.RandomAccessObjectStore;
 import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
+import com.bretth.osmosis.core.store.UnsignedIntLongIndexElement;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 
 
@@ -23,8 +25,11 @@ public class DatasetStore implements Sink, EntityProcessor {
 	
 	private TileCalculator tileCalculator;
 	private RandomAccessObjectStore<Node> nodeObjectStore;
-	private IndexWriter<LongLongElement> nodeObjectOffsetIndexWriter;
-	private IndexWriter<UnsignedIntLongElement> nodeTileIndexWriter;
+	private IndexWriter<LongLongIndexElement> nodeObjectOffsetIndexWriter;
+	private IndexWriter<UnsignedIntLongIndexElement> nodeTileIndexWriter;
+	private RandomAccessObjectStore<Way> wayObjectStore;
+	private IndexWriter<LongLongIndexElement> wayObjectOffsetIndexWriter;
+	private WayTileAreaIndex[] wayTileAreaIndexes;
 	
 	
 	/**
@@ -37,14 +42,17 @@ public class DatasetStore implements Sink, EntityProcessor {
 		tileCalculator = new TileCalculator();
 		
 		nodeObjectStore = new RandomAccessObjectStore<Node>(new SingleClassObjectSerializationFactory(Node.class), "nos");
-		nodeObjectOffsetIndexWriter = new IndexWriter<LongLongElement>(
+		nodeObjectOffsetIndexWriter = new IndexWriter<LongLongIndexElement>(
 			fileManager.getNodeObjectOffsetIndexFile(),
-			LongLongElement.class
+			LongLongIndexElement.class
 		);
-		nodeTileIndexWriter = new IndexWriter<UnsignedIntLongElement>(
+		nodeTileIndexWriter = new IndexWriter<UnsignedIntLongIndexElement>(
 			fileManager.getNodeTileIndexFile(),
-			UnsignedIntLongElement.class
+			UnsignedIntLongIndexElement.class
 		);
+		
+		// 32,28,24,16,8,0
+		wayTileAreaIndexes = new WayTileAreaIndex[6];
 	}
 	
 	
@@ -67,12 +75,16 @@ public class DatasetStore implements Sink, EntityProcessor {
 		node = nodeContainer.getEntity();
 		nodeId = node.getId();
 		
+		// Write the node to the object store and save the file offset in an
+		// index keyed by node id.
 		objectOffset = nodeObjectStore.add(node);
 		nodeObjectOffsetIndexWriter.write(
-			new LongLongElement(nodeId, objectOffset)
+			new LongLongIndexElement(nodeId, objectOffset)
 		);
+		
+		// Write the node id to an index keyed by tile.
 		nodeTileIndexWriter.write(
-			new UnsignedIntLongElement(tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()),
+			new UnsignedIntLongIndexElement((int) tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()),
 			nodeId)
 		);
 	}
@@ -81,8 +93,22 @@ public class DatasetStore implements Sink, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void process(WayContainer way) {
-		// Do nothing.
+	public void process(WayContainer wayContainer) {
+		Way way;
+		long wayId;
+		long objectOffset;
+		
+		way = wayContainer.getEntity();
+		wayId = way.getId();
+		
+		// Write the way to the object store and save the file offset in an
+		// index keyed by way id.
+		objectOffset = wayObjectStore.add(way);
+		wayObjectOffsetIndexWriter.write(
+			new LongLongIndexElement(wayId, objectOffset)
+		);
+		
+		// Write the way id to an index keyed by tile.
 	}
 	
 	

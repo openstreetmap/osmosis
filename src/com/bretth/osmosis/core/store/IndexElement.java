@@ -1,6 +1,5 @@
-package com.bretth.osmosis.core.index;
+package com.bretth.osmosis.core.store;
 
-import com.bretth.osmosis.core.store.Storeable;
 
 
 /**

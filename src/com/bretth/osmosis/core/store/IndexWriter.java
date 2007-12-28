@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.index;
+package com.bretth.osmosis.core.store;
 
 import java.io.File;
 import java.util.Comparator;
@@ -7,12 +7,6 @@ import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.sort.common.FileBasedSort;
-import com.bretth.osmosis.core.store.ObjectSerializationFactory;
-import com.bretth.osmosis.core.store.RandomAccessObjectStore;
-import com.bretth.osmosis.core.store.RandomAccessObjectStoreReader;
-import com.bretth.osmosis.core.store.Releasable;
-import com.bretth.osmosis.core.store.ReleasableIterator;
-import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 
 
 /**
