@@ -23,13 +23,15 @@ public class IndexedObjectStore<T extends Storeable> implements Releasable {
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param serializationFactory
+	 *            The factory defining the object serialisation implementation.
 	 * @param tmpFilePrefix
 	 *            The prefix of the storage file.
 	 */
-	public IndexedObjectStore(String tmpFilePrefix) {
+	public IndexedObjectStore(ObjectSerializationFactory serializationFactory, String tmpFilePrefix) {
 		activeIdIndex = new IndexStore(tmpFilePrefix + "aii");
 		storeOffsetIndex = new IndexStore(tmpFilePrefix + "soi");
-		objectStore = new RandomAccessObjectStore<T>(tmpFilePrefix + "osd");
+		objectStore = new RandomAccessObjectStore<T>(serializationFactory, tmpFilePrefix + "osd");
 		
 		objectCount = 0;
 		previousId = Long.MIN_VALUE;

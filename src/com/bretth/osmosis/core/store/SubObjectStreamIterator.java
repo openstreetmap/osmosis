@@ -19,6 +19,8 @@ public class SubObjectStreamIterator<T extends Storeable> extends ObjectStreamIt
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param serializationFactory
+	 *            The factory defining the object serialisation implementation.
 	 * @param inStream
 	 *            The stream to read objects from.
 	 * @param maxObjectCount
@@ -27,8 +29,8 @@ public class SubObjectStreamIterator<T extends Storeable> extends ObjectStreamIt
 	 *            The register defining the classes in the stream and their
 	 *            identifiers.
 	 */
-	public SubObjectStreamIterator(DataInputStream inStream, StoreClassRegister storeClassRegister, long maxObjectCount) {
-		super(inStream, storeClassRegister);
+	public SubObjectStreamIterator(ObjectSerializationFactory serializationFactory, DataInputStream inStream, StoreClassRegister storeClassRegister, long maxObjectCount) {
+		super(serializationFactory, inStream, storeClassRegister);
 		
 		this.maxObjectCount = maxObjectCount;
 		

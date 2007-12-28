@@ -7,6 +7,7 @@ import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 
 
 /**
@@ -36,12 +37,14 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 	 */
 	public CurrentRelationReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
 		relationReader = new PersistentIterator<Relation>(
+			new SingleClassObjectSerializationFactory(Relation.class),
 			new CurrentRelationTableReader(loginCredentials, readAllUsers),
 			"rel",
 			true
 		);
 		relationTagReader = new PeekableIterator<DBEntityTag>(
 			new PersistentIterator<DBEntityTag>(
+				new SingleClassObjectSerializationFactory(DBEntityTag.class),
 				new CurrentEntityTagTableReader(loginCredentials, "current_relation_tags"),
 				"reltag",
 				true
@@ -49,6 +52,7 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 		);
 		relationMemberReader = new PeekableIterator<DBRelationMember>(
 			new PersistentIterator<DBRelationMember>(
+				new SingleClassObjectSerializationFactory(DBRelationMember.class),
 				new CurrentRelationMemberTableReader(loginCredentials),
 				"relmbr",
 				true

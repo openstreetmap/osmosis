@@ -5,6 +5,7 @@ import java.util.Comparator;
 import com.bretth.osmosis.core.container.v0_5.ChangeContainer;
 import com.bretth.osmosis.core.sort.common.FileBasedSort;
 import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 import com.bretth.osmosis.core.task.v0_5.ChangeSink;
 import com.bretth.osmosis.core.task.v0_5.ChangeSinkChangeSource;
 
@@ -27,7 +28,7 @@ public class ChangeSorter implements ChangeSinkChangeSource {
 	 *            The comparator to use for sorting.
 	 */
 	public ChangeSorter(Comparator<ChangeContainer> comparator) {
-		fileBasedSort = new FileBasedSort<ChangeContainer>(comparator, true);
+		fileBasedSort = new FileBasedSort<ChangeContainer>(new SingleClassObjectSerializationFactory(ChangeContainer.class), comparator, true);
 	}
 	
 	

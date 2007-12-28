@@ -10,6 +10,7 @@ import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.mysql.common.EntityHistory;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
+import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 import com.bretth.osmosis.core.task.common.ChangeAction;
 
 
@@ -45,6 +46,7 @@ public class RelationChangeReader {
 		relationHistoryReader =
 			new PeekableIterator<EntityHistory<Relation>>(
 				new PersistentIterator<EntityHistory<Relation>>(
+					new SingleClassObjectSerializationFactory(EntityHistory.class),
 					new RelationHistoryReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd),
 					"rel",
 					true
@@ -53,6 +55,7 @@ public class RelationChangeReader {
 		relationMemberHistoryReader =
 			new PeekableIterator<EntityHistory<DBRelationMember>>(
 				new PersistentIterator<EntityHistory<DBRelationMember>>(
+					new SingleClassObjectSerializationFactory(EntityHistory.class),
 					new RelationMemberHistoryReader(loginCredentials, intervalBegin, intervalEnd),
 					"relmbr",
 					true
@@ -61,6 +64,7 @@ public class RelationChangeReader {
 		relationTagHistoryReader =
 			new PeekableIterator<EntityHistory<DBEntityTag>>(
 				new PersistentIterator<EntityHistory<DBEntityTag>>(
+					new SingleClassObjectSerializationFactory(EntityHistory.class),
 					new EntityTagHistoryReader(loginCredentials, "relations", "relation_tags", intervalBegin, intervalEnd),
 					"reltag",
 					true

@@ -4,6 +4,7 @@ import java.util.Comparator;
 
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.sort.common.FileBasedSort;
+import com.bretth.osmosis.core.store.GenericObjectSerializationFactory;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 import com.bretth.osmosis.core.task.v0_5.SinkSource;
@@ -27,7 +28,7 @@ public class EntitySorter implements SinkSource {
 	 *            The comparator to use for sorting.
 	 */
 	public EntitySorter(Comparator<EntityContainer> comparator) {
-		fileBasedSort = new FileBasedSort<EntityContainer>(comparator, true);
+		fileBasedSort = new FileBasedSort<EntityContainer>(new GenericObjectSerializationFactory(), comparator, true);
 	}
 	
 	

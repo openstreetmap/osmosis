@@ -8,6 +8,7 @@ import com.bretth.osmosis.core.mysql.common.EntityHistory;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 
 
 /**
@@ -36,12 +37,14 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 	 */
 	public RelationReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
 		relationReader = new PersistentIterator<EntityHistory<Relation>>(
+			new SingleClassObjectSerializationFactory(EntityHistory.class),
 			new RelationTableReader(loginCredentials, readAllUsers),
 			"rel",
 			true
 		);
 		relationTagReader = new PeekableIterator<EntityHistory<DBEntityTag>>(
 			new PersistentIterator<EntityHistory<DBEntityTag>>(
+				new SingleClassObjectSerializationFactory(EntityHistory.class),
 				new EntityTagTableReader(loginCredentials, "relation_tags"),
 				"reltag",
 				true
@@ -49,6 +52,7 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 		);
 		relationMemberReader = new PeekableIterator<EntityHistory<DBRelationMember>>(
 			new PersistentIterator<EntityHistory<DBRelationMember>>(
+				new SingleClassObjectSerializationFactory(EntityHistory.class),
 				new RelationMemberTableReader(loginCredentials),
 				"relmbr",
 				true

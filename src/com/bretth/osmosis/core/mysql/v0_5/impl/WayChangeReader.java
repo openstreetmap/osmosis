@@ -13,6 +13,7 @@ import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.mysql.common.EntityHistory;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
+import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 import com.bretth.osmosis.core.task.common.ChangeAction;
 
 
@@ -48,6 +49,7 @@ public class WayChangeReader {
 		wayHistoryReader =
 			new PeekableIterator<EntityHistory<Way>>(
 				new PersistentIterator<EntityHistory<Way>>(
+					new SingleClassObjectSerializationFactory(EntityHistory.class),
 					new WayHistoryReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd),
 					"way",
 					true
@@ -56,6 +58,7 @@ public class WayChangeReader {
 		wayNodeHistoryReader =
 			new PeekableIterator<EntityHistory<DBWayNode>>(
 				new PersistentIterator<EntityHistory<DBWayNode>>(
+					new SingleClassObjectSerializationFactory(EntityHistory.class),
 					new WayNodeHistoryReader(loginCredentials, intervalBegin, intervalEnd),
 					"waynod",
 					true
@@ -64,6 +67,7 @@ public class WayChangeReader {
 		wayTagHistoryReader =
 			new PeekableIterator<EntityHistory<DBEntityTag>>(
 				new PersistentIterator<EntityHistory<DBEntityTag>>(
+					new SingleClassObjectSerializationFactory(EntityHistory.class),
 					new EntityTagHistoryReader(loginCredentials, "ways", "way_tags", intervalBegin, intervalEnd),
 					"waytag",
 					true

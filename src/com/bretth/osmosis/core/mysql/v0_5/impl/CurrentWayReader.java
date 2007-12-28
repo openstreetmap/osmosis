@@ -10,6 +10,7 @@ import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 
 
 /**
@@ -38,12 +39,14 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 	 */
 	public CurrentWayReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
 		wayReader = new PersistentIterator<Way>(
+			new SingleClassObjectSerializationFactory(Way.class),
 			new CurrentWayTableReader(loginCredentials, readAllUsers),
 			"way",
 			true
 		);
 		wayTagReader = new PeekableIterator<DBEntityTag>(
 			new PersistentIterator<DBEntityTag>(
+				new SingleClassObjectSerializationFactory(DBEntityTag.class),
 				new CurrentEntityTagTableReader(loginCredentials, "current_way_tags"),
 				"waytag",
 				true
@@ -51,6 +54,7 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 		);
 		wayNodeReader = new PeekableIterator<DBWayNode>(
 			new PersistentIterator<DBWayNode>(
+				new SingleClassObjectSerializationFactory(DBWayNode.class),
 				new CurrentWayNodeTableReader(loginCredentials),
 				"waynod",
 				true

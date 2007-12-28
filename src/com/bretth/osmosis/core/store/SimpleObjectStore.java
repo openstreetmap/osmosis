@@ -21,25 +21,29 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class SimpleObjectStore<T extends Storeable> implements Releasable {
+	private ObjectSerializationFactory serializationFactory;
 	private StorageStage stage;
 	private String storageFilePrefix;
 	private File file;
 	private FileOutputStream fileOutStream;
 	private DataOutputStream dataOutStream;
 	private StoreClassRegister storeClassRegister;
-	private GenericObjectWriter objectWriter;
+	private ObjectWriter objectWriter;
 	private boolean useCompression;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param serializationFactory
+	 *            The factory defining the object serialisation implementation.
 	 * @param storageFilePrefix
 	 *            The prefix of the storage file.
 	 * @param useCompression
 	 *            If true, the storage file will be compressed.
 	 */
-	public SimpleObjectStore(String storageFilePrefix, boolean useCompression) {
+	public SimpleObjectStore(ObjectSerializationFactory serializationFactory, String storageFilePrefix, boolean useCompression) {
+		this.serializationFactory = serializationFactory;
 		this.storageFilePrefix = storageFilePrefix;
 		this.useCompression = useCompression;
 		
@@ -74,7 +78,7 @@ public class SimpleObjectStore<T extends Storeable> implements Releasable {
 					dataOutStream = new DataOutputStream(fileOutStream);
 				}
 				
-				objectWriter = new GenericObjectWriter(new StoreWriter(dataOutStream), storeClassRegister);
+				objectWriter = serializationFactory.createObjectWriter(new StoreWriter(dataOutStream), storeClassRegister);
 				
 				stage = StorageStage.Add;
 				
@@ -166,7 +170,7 @@ public class SimpleObjectStore<T extends Storeable> implements Releasable {
 			// the reference now so it isn't closed on method exit.
 			fileStream = null;
 			
-			return new ObjectStreamIterator<T>(dataInStream, storeClassRegister);
+			return new ObjectStreamIterator<T>(serializationFactory, dataInStream, storeClassRegister);
 			
 		} finally {
 			if (fileStream != null) {

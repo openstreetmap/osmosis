@@ -14,8 +14,10 @@ import java.util.logging.Logger;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.sort.common.FileBasedSort;
 import com.bretth.osmosis.core.store.EndOfStoreException;
+import com.bretth.osmosis.core.store.ObjectSerializationFactory;
 import com.bretth.osmosis.core.store.Releasable;
 import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 import com.bretth.osmosis.core.store.StorageStage;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
@@ -34,6 +36,7 @@ public class IndexWriter<T extends IndexElement> implements Releasable {
 	
 	private StorageStage stage;
 	private File indexFile;
+	private ObjectSerializationFactory serializationFactory;
 	private IndexElementFactory<T> elementFactory;
 	private DataOutputStream outputStream;
 	private DataInputStream inputStream;
@@ -50,10 +53,14 @@ public class IndexWriter<T extends IndexElement> implements Releasable {
 	 *            The file to use for storing the index.
 	 * @param elementFactory
 	 *            The factory for persisting and loading element data.
+	 * @param elementType
+	 *            The type of index element to be stored in the index.
 	 */
-	public IndexWriter(File indexFile, IndexElementFactory<T> elementFactory) {
+	public IndexWriter(File indexFile, IndexElementFactory<T> elementFactory, Class<T> elementType) {
 		this.indexFile = indexFile;
 		this.elementFactory = elementFactory;
+		
+		serializationFactory = new SingleClassObjectSerializationFactory(elementType);
 		
 		stage = StorageStage.NotStarted;
 		
@@ -182,6 +189,7 @@ public class IndexWriter<T extends IndexElement> implements Releasable {
 			FileBasedSort<T> fileSort;
 			
 			fileSort = new FileBasedSort<T>(
+				serializationFactory,
 				new Comparator<T>() {
 					
 					@Override

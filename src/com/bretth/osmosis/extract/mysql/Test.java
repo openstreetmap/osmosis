@@ -5,6 +5,7 @@ import java.util.Date;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.store.IndexedObjectStore;
+import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 
 
 /**
@@ -21,7 +22,7 @@ public class Test {
 	 *            Command line arguments.
 	 */
 	public static void main(String[] args) {
-		IndexedObjectStore<Node> store = new IndexedObjectStore<Node>("test");
+		IndexedObjectStore<Node> store = new IndexedObjectStore<Node>(new SingleClassObjectSerializationFactory(Node.class), "test");
 		
 		try {
 			System.out.println("Start " + new Date());

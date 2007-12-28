@@ -31,6 +31,8 @@ public class ChunkedObjectStore<T extends Storeable> implements Releasable {
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param serializationFactory
+	 *            The factory defining the object serialisation implementation.
 	 * @param storageFilePrefix
 	 *            The prefix of the storage file name.
 	 * @param indexFilePrefix
@@ -38,8 +40,8 @@ public class ChunkedObjectStore<T extends Storeable> implements Releasable {
 	 * @param useCompression
 	 *            If true, the storage file will be compressed.
 	 */
-	public ChunkedObjectStore(String storageFilePrefix, String indexFilePrefix, boolean useCompression) {
-		objectStore = new SegmentedObjectStore<T>(storageFilePrefix, useCompression);
+	public ChunkedObjectStore(ObjectSerializationFactory serializationFactory, String storageFilePrefix, String indexFilePrefix, boolean useCompression) {
+		objectStore = new SegmentedObjectStore<T>(serializationFactory, storageFilePrefix, useCompression);
 		indexStore = new IndexStore(indexFilePrefix);
 		
 		chunkCount = 0;

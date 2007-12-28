@@ -11,6 +11,7 @@ import com.bretth.osmosis.core.mysql.common.EntityHistory;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 
 
 /**
@@ -39,12 +40,14 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 	 */
 	public WayReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
 		wayReader = new PersistentIterator<EntityHistory<Way>>(
+			new SingleClassObjectSerializationFactory(EntityHistory.class),
 			new WayTableReader(loginCredentials, readAllUsers),
 			"way",
 			true
 		);
 		wayTagReader = new PeekableIterator<EntityHistory<DBEntityTag>>(
 			new PersistentIterator<EntityHistory<DBEntityTag>>(
+				new SingleClassObjectSerializationFactory(EntityHistory.class),
 				new EntityTagTableReader(loginCredentials, "way_tags"),
 				"waytag",
 				true
@@ -52,6 +55,7 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 		);
 		wayNodeReader = new PeekableIterator<EntityHistory<DBWayNode>>(
 			new PersistentIterator<EntityHistory<DBWayNode>>(
+				new SingleClassObjectSerializationFactory(EntityHistory.class),
 				new WayNodeTableReader(loginCredentials),
 				"waynod",
 				true

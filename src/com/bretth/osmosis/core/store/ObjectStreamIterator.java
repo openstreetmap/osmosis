@@ -15,23 +15,25 @@ import java.util.NoSuchElementException;
 public class ObjectStreamIterator<T extends Storeable> implements ReleasableIterator<T> {
 	
 	private DataInputStream inStream;
-	private GenericObjectReader objectReader;
+	private ObjectReader objectReader;
 	private T nextElement;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param serializationFactory
+	 *            The factory defining the object serialisation implementation.
 	 * @param inStream
 	 *            The stream to read objects from.
 	 * @param storeClassRegister
 	 *            The register defining the classes in the stream and their
 	 *            identifiers.
 	 */
-	public ObjectStreamIterator(DataInputStream inStream, StoreClassRegister storeClassRegister) {
+	public ObjectStreamIterator(ObjectSerializationFactory serializationFactory, DataInputStream inStream, StoreClassRegister storeClassRegister) {
 		this.inStream = inStream;
 		
-		objectReader = new GenericObjectReader(new StoreReader(inStream), storeClassRegister);
+		objectReader = serializationFactory.createObjectReader(new StoreReader(inStream), storeClassRegister);
 	}
 	
 	

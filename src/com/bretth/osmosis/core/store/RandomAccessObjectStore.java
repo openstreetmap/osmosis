@@ -16,22 +16,26 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class RandomAccessObjectStore<T extends Storeable> implements Releasable {
+	private ObjectSerializationFactory serializationFactory;
 	private StorageStage stage;
 	private String storageFilePrefix;
 	private File file;
 	private RandomAccessFile randomFile;
 	private StoreClassRegister storeClassRegister;
-	private GenericObjectWriter objectWriter;
-	private GenericObjectReader objectReader;
+	private ObjectWriter objectWriter;
+	private ObjectReader objectReader;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param serializationFactory
+	 *            The factory defining the object serialisation implementation.
 	 * @param storageFilePrefix
 	 *            The prefix of the storage file.
 	 */
-	public RandomAccessObjectStore(String storageFilePrefix) {
+	public RandomAccessObjectStore(ObjectSerializationFactory serializationFactory, String storageFilePrefix) {
+		this.serializationFactory = serializationFactory;
 		this.storageFilePrefix = storageFilePrefix;
 		
 		storeClassRegister = new StoreClassRegister();
@@ -62,8 +66,8 @@ public class RandomAccessObjectStore<T extends Storeable> implements Releasable 
 				
 				randomFile = new RandomAccessFile(file, "rw");
 				
-				objectWriter = new GenericObjectWriter(new StoreWriter(randomFile), storeClassRegister);
-				objectReader = new GenericObjectReader(new StoreReader(randomFile), storeClassRegister);
+				objectWriter = serializationFactory.createObjectWriter(new StoreWriter(randomFile), storeClassRegister);
+				objectReader = serializationFactory.createObjectReader(new StoreReader(randomFile), storeClassRegister);
 				
 				stage = StorageStage.Add;
 				

@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.bretth.osmosis.core.store.ChunkedObjectStore;
+import com.bretth.osmosis.core.store.ObjectSerializationFactory;
 import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.store.Releasable;
 import com.bretth.osmosis.core.store.ReleasableIterator;
@@ -48,7 +49,8 @@ public class FileBasedSort<T extends Storeable> implements Releasable {
 	 */
 	private static final int MAX_MEMORY_SORT_DEPTH = 8;
 	
-	
+
+	private ObjectSerializationFactory serializationFactory;
 	private Comparator<T> comparator;
 	private ChunkedObjectStore<T> chunkedEntityStore;
 	private List<T> addBuffer;
@@ -58,16 +60,19 @@ public class FileBasedSort<T extends Storeable> implements Releasable {
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param serializationFactory
+	 *            The factory defining the object serialisation implementation.
 	 * @param comparator
 	 *            The comparator to be used for sorting the results.
 	 * @param useCompression
 	 *            If true, the storage files will be compressed.
 	 */
-	public FileBasedSort(Comparator<T> comparator, boolean useCompression) {
+	public FileBasedSort(ObjectSerializationFactory serializationFactory, Comparator<T> comparator, boolean useCompression) {
+		this.serializationFactory = serializationFactory;
 		this.comparator = comparator;
 		this.useCompression = useCompression;
 		
-		chunkedEntityStore = new ChunkedObjectStore<T>("emta", "idx", useCompression);
+		chunkedEntityStore = new ChunkedObjectStore<T>(serializationFactory, "emta", "idx", useCompression);
 		addBuffer = new ArrayList<T>(MAX_MEMORY_SORT_COUNT);
 	}
 	
@@ -135,6 +140,7 @@ public class FileBasedSort<T extends Storeable> implements Releasable {
 		// Create a persistent iterator based on the requested underlying chunk
 		// iterator.
 		persistentIterator = new PersistentIterator<T>(
+			serializationFactory,
 			iterate(nestLevel, beginChunkIndex, chunkCount),
 			"emtb",
 			useCompression

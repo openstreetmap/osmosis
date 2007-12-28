@@ -25,6 +25,8 @@ public class PersistentIterator<T extends Storeable> implements ReleasableIterat
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param serializationFactory
+	 *            The factory defining the object serialisation implementation.
 	 * @param sourceIterator
 	 *            The source of data.
 	 * @param storageFilePrefix
@@ -32,10 +34,10 @@ public class PersistentIterator<T extends Storeable> implements ReleasableIterat
 	 * @param useCompression
 	 *            If true, the storage file will be compressed.
 	 */
-	public PersistentIterator(ReleasableIterator<T> sourceIterator, String storageFilePrefix, boolean useCompression) {
+	public PersistentIterator(ObjectSerializationFactory serializationFactory, ReleasableIterator<T> sourceIterator, String storageFilePrefix, boolean useCompression) {
 		this.sourceIterator = sourceIterator;
 		
-		store = new SimpleObjectStore<T>(storageFilePrefix, useCompression);
+		store = new SimpleObjectStore<T>(serializationFactory, storageFilePrefix, useCompression);
 		
 		initialized = false;
 	}

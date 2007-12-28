@@ -18,6 +18,7 @@ import com.bretth.osmosis.core.filter.common.IdTrackerFactory;
 import com.bretth.osmosis.core.filter.common.IdTrackerType;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.store.SimpleObjectStore;
+import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 import com.bretth.osmosis.core.task.v0_5.SinkSource;
 
@@ -60,13 +61,13 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		availableNodes = IdTrackerFactory.createInstance(idTrackerType);
 		if (completeWays) {
 			requiredNodes = IdTrackerFactory.createInstance(idTrackerType);
-			allNodes = new SimpleObjectStore<NodeContainer>("afnd", true);
-			allWays = new SimpleObjectStore<WayContainer>("afwy", true);
+			allNodes = new SimpleObjectStore<NodeContainer>(new SingleClassObjectSerializationFactory(NodeContainer.class), "afnd", true);
+			allWays = new SimpleObjectStore<WayContainer>(new SingleClassObjectSerializationFactory(WayContainer.class), "afwy", true);
 		}
 		availableWays = IdTrackerFactory.createInstance(idTrackerType);
 		availableRelations = IdTrackerFactory.createInstance(idTrackerType);
 		if (this.completeRelations || this.completeWays) {
-			allRelations = new SimpleObjectStore<RelationContainer>("afrl", true);
+			allRelations = new SimpleObjectStore<RelationContainer>(new SingleClassObjectSerializationFactory(RelationContainer.class), "afrl", true);
 		}
 	}
 	

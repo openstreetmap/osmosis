@@ -13,7 +13,7 @@ import com.bretth.osmosis.core.store.Storeable;
 
 
 /**
- * A data class representing a single OSM way.
+ * A data class representing a single OSM relation.
  * 
  * @author Brett Henderson
  */

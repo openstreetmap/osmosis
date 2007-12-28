@@ -25,6 +25,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class SegmentedObjectStore<T extends Storeable> implements Releasable {
+	private ObjectSerializationFactory serializationFactory;
 	private StorageStage stage;
 	private String storageFilePrefix;
 	private File file;
@@ -32,7 +33,7 @@ public class SegmentedObjectStore<T extends Storeable> implements Releasable {
 	private DataOutputStream dataOutStream;
 	private ByteArrayOutputStream arrayOutStream;
 	private StoreClassRegister storeClassRegister;
-	private GenericObjectWriter objectWriter;
+	private ObjectWriter objectWriter;
 	private boolean chunkActive; 
 	private boolean useCompression;
 	private long fileSize;
@@ -41,12 +42,15 @@ public class SegmentedObjectStore<T extends Storeable> implements Releasable {
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param serializationFactory
+	 *            The factory defining the object serialisation implementation.
 	 * @param storageFilePrefix
 	 *            The prefix of the storage file.
 	 * @param useCompression
 	 *            If true, the storage file will be compressed.
 	 */
-	public SegmentedObjectStore(String storageFilePrefix, boolean useCompression) {
+	public SegmentedObjectStore(ObjectSerializationFactory serializationFactory, String storageFilePrefix, boolean useCompression) {
+		this.serializationFactory = serializationFactory;
 		this.storageFilePrefix = storageFilePrefix;
 		this.useCompression = useCompression;
 		
@@ -96,7 +100,7 @@ public class SegmentedObjectStore<T extends Storeable> implements Releasable {
 					dataOutStream = new DataOutputStream(arrayOutStream);
 				}
 				
-				objectWriter = new GenericObjectWriter(new StoreWriter(dataOutStream), storeClassRegister);
+				objectWriter = serializationFactory.createObjectWriter(new StoreWriter(dataOutStream), storeClassRegister);
 				
 				chunkActive = true;
 				
@@ -264,9 +268,9 @@ public class SegmentedObjectStore<T extends Storeable> implements Releasable {
 			fileStream = null;
 			
 			if (maxObjectCount >= 0) {
-				return new SubObjectStreamIterator<T>(dataInStream, storeClassRegister, maxObjectCount);
+				return new SubObjectStreamIterator<T>(serializationFactory, dataInStream, storeClassRegister, maxObjectCount);
 			} else {
-				return new ObjectStreamIterator<T>(dataInStream, storeClassRegister);
+				return new ObjectStreamIterator<T>(serializationFactory, dataInStream, storeClassRegister);
 			}
 			
 		} finally {
