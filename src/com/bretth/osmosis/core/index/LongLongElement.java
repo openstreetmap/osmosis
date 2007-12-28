@@ -64,6 +64,16 @@ public class LongLongElement implements IndexElement {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public long getIndexId() {
+		return id;
+	}
+	
+	
+	/**
+	 * Returns the id of this index element.
+	 * 
+	 * @return The index id.
+	 */
 	public long getId() {
 		return id;
 	}

@@ -4,6 +4,13 @@ package com.bretth.osmosis.core.mysql.common;
 /**
  * Calculates a tile index based upon coordinate values. Note that this class
  * returns a signed integer due to the lack of an unsigned integer type in java.
+ * The result is a 32-bit unsigned integer but stored in a long value for ease
+ * of use.
+ * <p>
+ * The result can be cast directly to an int, but converting back to an unsigned
+ * long value must be performed like: <code>
+ * long tile = intTile & 0xFFFFFFFFl;
+ * </code>
  * 
  * @author Brett Henderson
  */

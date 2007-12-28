@@ -10,9 +10,12 @@ import com.bretth.osmosis.core.store.Storeable;
  */
 public interface IndexElement extends Storeable {
 	/**
-	 * Returns the identifier associated with this element.
+	 * Returns the identifier associated with this element for the purposes of
+	 * indexing. Note that this is always in the form of a long, the element
+	 * implementation may choose to use a shorter id internally and in its
+	 * persistence mechanism.
 	 * 
 	 * @return The identifier represented as a long.
 	 */
-	long getId();
+	long getIndexId();
 }

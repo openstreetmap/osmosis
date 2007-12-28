@@ -71,7 +71,7 @@ public class IndexWriter<T extends IndexElement> implements Releasable {
 		
 		fileOffset = indexStore.add(element);
 		
-		id = element.getId();
+		id = element.getIndexId();
 		if (previousId > id) {
 			sorted = false;
 		}
@@ -116,7 +116,7 @@ public class IndexWriter<T extends IndexElement> implements Releasable {
 					public int compare(T o1, T o2) {
 						long result;
 						
-						result = o1.getId() - o2.getId();
+						result = o1.getIndexId() - o2.getIndexId();
 						
 						if (result == 0) {
 							return 0;

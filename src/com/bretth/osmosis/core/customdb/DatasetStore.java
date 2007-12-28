@@ -7,7 +7,7 @@ import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.index.IndexWriter;
-import com.bretth.osmosis.core.index.IntLongElement;
+import com.bretth.osmosis.core.index.UnsignedIntLongElement;
 import com.bretth.osmosis.core.index.LongLongElement;
 import com.bretth.osmosis.core.store.RandomAccessObjectStore;
 import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
@@ -24,7 +24,7 @@ public class DatasetStore implements Sink, EntityProcessor {
 	private TileCalculator tileCalculator;
 	private RandomAccessObjectStore<Node> nodeObjectStore;
 	private IndexWriter<LongLongElement> nodeObjectOffsetIndexWriter;
-	private IndexWriter<IntLongElement> nodeTileIndexWriter;
+	private IndexWriter<UnsignedIntLongElement> nodeTileIndexWriter;
 	
 	
 	/**
@@ -41,9 +41,9 @@ public class DatasetStore implements Sink, EntityProcessor {
 			fileManager.getNodeObjectOffsetIndexFile(),
 			LongLongElement.class
 		);
-		nodeTileIndexWriter = new IndexWriter<IntLongElement>(
+		nodeTileIndexWriter = new IndexWriter<UnsignedIntLongElement>(
 			fileManager.getNodeTileIndexFile(),
-			IntLongElement.class
+			UnsignedIntLongElement.class
 		);
 	}
 	
@@ -72,7 +72,7 @@ public class DatasetStore implements Sink, EntityProcessor {
 			new LongLongElement(nodeId, objectOffset)
 		);
 		nodeTileIndexWriter.write(
-			new IntLongElement(tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()),
+			new UnsignedIntLongElement(tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()),
 			nodeId)
 		);
 	}

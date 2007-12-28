@@ -22,12 +22,49 @@ public class Test {
 	 *            Command line arguments.
 	 */
 	public static void main(String[] args) {
+		long value;
+		
+		value = Integer.MAX_VALUE;
+		
+		System.out.println(value);
+		System.out.println(toInt(value));
+		System.out.println(toLong(toInt(value)));
+		System.out.println();
+		
+		value++;
+		
+		System.out.println(value);
+		System.out.println(toInt(value));
+		System.out.println(toLong(toInt(value)));
+		System.out.println();
+		
+		value++;
+		
+		System.out.println(value);
+		System.out.println(toInt(value));
+		System.out.println(toLong(toInt(value)));
+		System.out.println();
+		
+		value++;
+		
+		System.out.println(value);
+		System.out.println(toInt(value));
+		System.out.println(toLong(toInt(value)));
+		System.out.println();
+		
+		value++;
+		
+		System.out.println(value);
+		System.out.println(toInt(value));
+		System.out.println(toLong(toInt(value)));
+		System.out.println();
+		
 		//IndexedObjectStore<Node> store = new IndexedObjectStore<Node>(new SingleClassObjectSerializationFactory(Node.class), "test");
 		IndexedObjectStore<Node> store = new IndexedObjectStore<Node>(new GenericObjectSerializationFactory(), "test");
 		
 		try {
 			System.out.println("Start " + new Date());
-			for (int i = 0; i < 10000; i++) {
+			for (int i = 0; i < 1000; i++) {
 				Node node;
 				
 				node = new Node(i, new Date(), "user" + i, 0, 0);
@@ -38,7 +75,7 @@ public class Test {
 				store.add(i, node);
 			}
 			System.out.println("Middle " + new Date());
-			for (int i = 0; i < 10000; i++) {
+			for (int i = 0; i < 1000; i++) {
 				store.get(i).getUser();
 			}
 			System.out.println("Finish " + new Date());
@@ -46,5 +83,15 @@ public class Test {
 		} finally {
 			store.release();
 		}
+	}
+	
+	
+	private static int toInt(long value) {
+		return (int) value;
+	}
+	
+	
+	private static long toLong(int value) {
+		return value & 0xFFFFFFFFl;
 	}
 }

@@ -6,11 +6,11 @@ import com.bretth.osmosis.core.store.StoreWriter;
 
 
 /**
- * A single index element for a int-long index.
+ * A single index element for a int-long index where the int is to be treated unsigned.
  * 
  * @author Brett Henderson
  */
-public class IntLongElement implements IndexElement {
+public class UnsignedIntLongElement implements IndexElement {
 	
 	/**
 	 * The value identifier.
@@ -31,7 +31,7 @@ public class IntLongElement implements IndexElement {
 	 * @param value
 	 *            The data value.
 	 */
-	public IntLongElement(int id, long value) {
+	public UnsignedIntLongElement(int id, long value) {
 		this.id = id;
 		this.value = value;
 	}
@@ -46,7 +46,7 @@ public class IntLongElement implements IndexElement {
 	 *            Maintains the mapping between classes and their identifiers
 	 *            within the store.
 	 */
-	public IntLongElement(StoreReader sr, StoreClassRegister scr) {
+	public UnsignedIntLongElement(StoreReader sr, StoreClassRegister scr) {
 		this(sr.readInteger(), sr.readLong());
 	}
 	
@@ -64,7 +64,19 @@ public class IntLongElement implements IndexElement {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public long getId() {
+	public long getIndexId() {
+		// This will cause the sign of the identifier to be ignored resulting in
+		// unsigned ordering of index values.
+		return id & 0xFFFFFFFFl;
+	}
+	
+	
+	/**
+	 * Returns the id of this index element.
+	 * 
+	 * @return The index id.
+	 */
+	public int getId() {
 		return id;
 	}
 	
