@@ -158,7 +158,10 @@ public class RandomAccessObjectStore<T extends Storeable> implements Releasable 
 			
 			randomFileReader = new RandomAccessFile(storageFile, "r");
 			
-			return new RandomAccessObjectStoreReader<T>(serializationFactory, storeClassRegister, randomFileReader);
+			return new RandomAccessObjectStoreReader<T>(
+				randomFileReader,
+				serializationFactory.createObjectReader(new StoreReader(randomFileReader), storeClassRegister)
+			);
 			
 		} catch (FileNotFoundException e) {
 			throw new OsmosisRuntimeException("Unable to create object stream reading from file " + storageFile + ".", e);

@@ -15,7 +15,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * cleaned up explicitly.
  * 
  * @param <T>
- *            The object type to be stored.
+ *            The object type being stored.
  * @author Brett Henderson
  */
 public class RandomAccessObjectStoreReader<T> implements Releasable {
@@ -26,18 +26,14 @@ public class RandomAccessObjectStoreReader<T> implements Releasable {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param serializationFactory
-	 *            The factory defining the object serialisation implementation.
-	 * @param storeClassRegister
-	 *            The register defining the classes in the stream and their
-	 *            identifiers.
 	 * @param randomFile
 	 *            A read-only random access file opened on the store file.
+	 * @param objectReader
+	 *            The reader containing the objects to be deserialized.
 	 */
-	public RandomAccessObjectStoreReader(ObjectSerializationFactory serializationFactory, StoreClassRegister storeClassRegister, RandomAccessFile randomFile) {
+	public RandomAccessObjectStoreReader(RandomAccessFile randomFile, ObjectReader objectReader) {
 		this.randomFile = randomFile;
-		
-		objectReader = serializationFactory.createObjectReader(new StoreReader(randomFile), storeClassRegister);
+		this.objectReader = objectReader;
 	}
 	
 	

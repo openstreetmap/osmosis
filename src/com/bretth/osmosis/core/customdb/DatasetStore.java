@@ -8,7 +8,7 @@ import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
-import com.bretth.osmosis.core.store.IndexWriter;
+import com.bretth.osmosis.core.store.IndexStore;
 import com.bretth.osmosis.core.store.LongLongIndexElement;
 import com.bretth.osmosis.core.store.RandomAccessObjectStore;
 import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
@@ -25,11 +25,11 @@ public class DatasetStore implements Sink, EntityProcessor {
 	
 	private TileCalculator tileCalculator;
 	private RandomAccessObjectStore<Node> nodeObjectStore;
-	private IndexWriter<LongLongIndexElement> nodeObjectOffsetIndexWriter;
-	private IndexWriter<UnsignedIntLongIndexElement> nodeTileIndexWriter;
+	private IndexStore<LongLongIndexElement> nodeObjectOffsetIndexWriter;
+	private IndexStore<UnsignedIntLongIndexElement> nodeTileIndexWriter;
 	private RandomAccessObjectStore<Way> wayObjectStore;
-	private IndexWriter<LongLongIndexElement> wayObjectOffsetIndexWriter;
-	private WayTileAreaIndex[] wayTileAreaIndexes;
+	private IndexStore<LongLongIndexElement> wayObjectOffsetIndexWriter;
+	//private WayTileAreaIndex[] wayTileAreaIndexes;
 	
 	
 	/**
@@ -42,17 +42,17 @@ public class DatasetStore implements Sink, EntityProcessor {
 		tileCalculator = new TileCalculator();
 		
 		nodeObjectStore = new RandomAccessObjectStore<Node>(new SingleClassObjectSerializationFactory(Node.class), "nos");
-		nodeObjectOffsetIndexWriter = new IndexWriter<LongLongIndexElement>(
-			fileManager.getNodeObjectOffsetIndexFile(),
-			LongLongIndexElement.class
+		nodeObjectOffsetIndexWriter = new IndexStore<LongLongIndexElement>(
+			LongLongIndexElement.class,
+			fileManager.getNodeObjectOffsetIndexFile()
 		);
-		nodeTileIndexWriter = new IndexWriter<UnsignedIntLongIndexElement>(
-			fileManager.getNodeTileIndexFile(),
-			UnsignedIntLongIndexElement.class
+		nodeTileIndexWriter = new IndexStore<UnsignedIntLongIndexElement>(
+			UnsignedIntLongIndexElement.class,
+			fileManager.getNodeTileIndexFile()
 		);
 		
 		// 32,28,24,16,8,0
-		wayTileAreaIndexes = new WayTileAreaIndex[6];
+		//wayTileAreaIndexes = new WayTileAreaIndex[6];
 	}
 	
 	

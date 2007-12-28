@@ -21,7 +21,8 @@ public class ChunkedObjectStore<T extends Storeable> implements Releasable {
 	 * within each chunk. The file position is written when a new chunk is
 	 * started, and the object count is written when a chunk is completed.
 	 */
-	private IndexStore indexStore;
+	private IndexStore<LongLongIndexElement> indexStore;
+	private IndexStoreReader<LongLongIndexElement> indexStoreReader;
 	private long chunkCount;
 	private boolean chunkInProgress;
 	private long newChunkFilePosition;
@@ -42,7 +43,7 @@ public class ChunkedObjectStore<T extends Storeable> implements Releasable {
 	 */
 	public ChunkedObjectStore(ObjectSerializationFactory serializationFactory, String storageFilePrefix, String indexFilePrefix, boolean useCompression) {
 		objectStore = new SegmentedObjectStore<T>(serializationFactory, storageFilePrefix, useCompression);
-		indexStore = new IndexStore(indexFilePrefix);
+		indexStore = new IndexStore<LongLongIndexElement>(LongLongIndexElement.class, indexFilePrefix);
 		
 		chunkCount = 0;
 		chunkInProgress = false;
@@ -63,7 +64,7 @@ public class ChunkedObjectStore<T extends Storeable> implements Releasable {
 		
 		if (!chunkInProgress) {
 			// Write the file index of the new chunk.
-			indexStore.write((chunkCount * 2), newChunkFilePosition);
+			indexStore.write(new LongLongIndexElement((chunkCount * 2), newChunkFilePosition));
 			
 			chunkInProgress = true;
 		}
@@ -86,7 +87,7 @@ public class ChunkedObjectStore<T extends Storeable> implements Releasable {
 			chunkInProgress = false;
 			
 			// Write then reset the object count of the current chunk.
-			indexStore.write((chunkCount * 2) + 1, chunkObjectCount);
+			indexStore.write(new LongLongIndexElement((chunkCount * 2) + 1, chunkObjectCount));
 			chunkObjectCount = 0;
 			
 			// Increment the chunk count.
@@ -124,11 +125,15 @@ public class ChunkedObjectStore<T extends Storeable> implements Releasable {
 			closeChunk();
 		}
 		
+		if (indexStoreReader == null) {
+			indexStoreReader = indexStore.createReader();
+		}
+		
 		// Retrieve the file position and number of objects for the specified
 		// chunk and iterate.
 		return objectStore.iterate(
-			indexStore.read(chunk * 2),
-			indexStore.read(chunk * 2 + 1)
+			indexStoreReader.get(chunk * 2).getValue(),
+			indexStoreReader.get(chunk * 2 + 1).getValue()
 		);
 	}
 	
@@ -138,6 +143,10 @@ public class ChunkedObjectStore<T extends Storeable> implements Releasable {
 	 */
 	public void release() {
 		objectStore.release();
+		if (indexStoreReader != null) {
+			indexStoreReader.release();
+			indexStoreReader = null;
+		}
 		indexStore.release();
 	}
 }

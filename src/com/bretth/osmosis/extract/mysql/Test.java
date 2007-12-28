@@ -6,6 +6,7 @@ import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.store.GenericObjectSerializationFactory;
 import com.bretth.osmosis.core.store.IndexedObjectStore;
+import com.bretth.osmosis.core.store.IndexedObjectStoreReader;
 
 
 /**
@@ -63,8 +64,10 @@ public class Test {
 		IndexedObjectStore<Node> store = new IndexedObjectStore<Node>(new GenericObjectSerializationFactory(), "test");
 		
 		try {
+			IndexedObjectStoreReader<Node> storeReader;
+			
 			System.out.println("Start " + new Date());
-			for (int i = 0; i < 1000; i++) {
+			for (int i = 0; i < 10000; i++) {
 				Node node;
 				
 				node = new Node(i, new Date(), "user" + i, 0, 0);
@@ -75,9 +78,16 @@ public class Test {
 				store.add(i, node);
 			}
 			System.out.println("Middle " + new Date());
-			for (int i = 0; i < 1000; i++) {
-				store.get(i).getUser();
+			
+			storeReader = store.createReader();
+			try {
+				for (int i = 0; i < 10000; i++) {
+					storeReader.get(i).getUser();
+				}
+			} finally {
+				storeReader.release();
 			}
+			
 			System.out.println("Finish " + new Date());
 			
 		} finally {

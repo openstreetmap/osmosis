@@ -1,100 +1,211 @@
 package com.bretth.osmosis.core.store;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.sort.common.FileBasedSort;
 
 
 /**
- * Manages a file containing a series of long data entities accessible via a
- * long index. This is used for building indexes into data files.
+ * Writes data into an index file and sorts it if input data is unordered. The
+ * data must be fixed width to allow index values to be randomly accessed later.
  * 
+ * @param <T>
+ *            The index element type to be stored.
  * @author Brett Henderson
  */
-public class IndexStore implements Releasable {
-	private StorageStage stage;
-	private String indexFilePrefix;
-	private File file;
-	private RandomAccessFile randomAccessFile;
+public class IndexStore<T extends IndexElement> implements Releasable {
+	static final Logger log = Logger.getLogger(IndexStore.class.getName());
+	
+	private ObjectSerializationFactory serializationFactory;
+	private RandomAccessObjectStore<T> indexStore;
+	private String tempFilePrefix;
+	private File indexFile;
+	private long previousId;
+	private boolean sorted;
+	private long elementCount;
+	private long elementSize;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param indexFilePrefix
-	 *            The prefix of the index file name.
+	 * @param elementFactory
+	 *            The factory for persisting and loading element data.
+	 * @param elementType
+	 *            The type of index element to be stored in the index.
+	 * @param indexFile
+	 *            The file to use for storing the index.
 	 */
-	public IndexStore(String indexFilePrefix) {
-		this.indexFilePrefix = indexFilePrefix;
-		stage = StorageStage.NotStarted;
+	public IndexStore(Class<T> elementType, File indexFile) {
+		this.indexFile = indexFile;
+		
+		serializationFactory = new SingleClassObjectSerializationFactory(elementType);
+		
+		indexStore = new RandomAccessObjectStore<T>(serializationFactory, indexFile);
+		
+		previousId = Long.MIN_VALUE;
+		sorted = true;
+		elementCount = 0;
+		elementSize = -1;
 	}
 	
 	
 	/**
-	 * Writes the specified value to the specified index.
+	 * Creates a new instance.
 	 * 
-	 * @param index
-	 *            The index of the value.
-	 * @param value
-	 *            The value.
+	 * 
+	 * @param indexFile
+	 *            The file to use for storing the index.
+	 * @param elementFactory
+	 *            The factory for persisting and loading element data.
+	 * @param elementType
+	 *            The type of index element to be stored in the index.
+	 * @param tempFilePrefix
+	 *            The prefix of the temporary file.
 	 */
-	public void write(long index, long value) {
-		// We can't add if we've passed the add stage.
-		if (stage.compareTo(StorageStage.Add) > 0) {
-			throw new OsmosisRuntimeException("Cannot add to storage in stage " + stage + ".");
-		}
+	public IndexStore(Class<T> elementType, String tempFilePrefix) {
+		this.tempFilePrefix = tempFilePrefix;
 		
-		// If we're not up to the add stage, initialise for adding.
-		if (stage.compareTo(StorageStage.Add) < 0) {
-			try {
-				file = File.createTempFile(indexFilePrefix, null);
-				
-				randomAccessFile = new RandomAccessFile(file, "rw");
-				
-				stage = StorageStage.Add;
-				
-			} catch (IOException e) {
-				throw new OsmosisRuntimeException("Unable to open temporary file " + file + " for writing.", e);
+		serializationFactory = new SingleClassObjectSerializationFactory(elementType);
+		
+		indexStore = new RandomAccessObjectStore<T>(serializationFactory, tempFilePrefix);
+		
+		previousId = Long.MIN_VALUE;
+		sorted = true;
+		elementCount = 0;
+		elementSize = -1;
+	}
+	
+	
+	/**
+	 * Writes the specified element to the index.
+	 * 
+	 * @param element
+	 *            The index element which includes the identifier when stored.
+	 */
+	public void write(T element) {
+		long id;
+		long fileOffset;
+		
+		fileOffset = indexStore.add(element);
+		
+		id = element.getIndexId();
+		if (previousId > id) {
+			sorted = false;
+		}
+		previousId = id;
+		
+		elementCount++;
+		
+		// Calculate and verify the element size.
+		if (elementCount < 2) {
+			// Can't do anything yet.
+		} else if (elementCount == 2) {
+			elementSize = fileOffset;
+		} else {
+			long expectedOffset;
+			
+			expectedOffset = (elementCount - 1) * elementSize;
+			
+			if (expectedOffset != fileOffset) {
+				throw new OsmosisRuntimeException(
+					"Inconsistent element sizes, new file offset=" + fileOffset
+					+ ", expected offset=" + expectedOffset
+					+ ", element size="+ elementSize
+					+ ", element count=" + elementCount
+				);
 			}
 		}
-		
-		try {
-			// Each long consists of 8 bytes, so we must multiply the index by 8
-			// to get the required location.
-			randomAccessFile.seek(index * 8);
-			randomAccessFile.writeLong(value);
-			
-		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to write object to file.", e);
-		}
 	}
 	
 	
 	/**
-	 * Reads the specified value from the store.
+	 * Creates a new reader capable of accessing the contents of this store. The
+	 * reader must be explicitly released when no longer required. Readers must
+	 * be released prior to this store.
 	 * 
-	 * @param index
-	 *            The index of the value.
-	 * @return The value.
+	 * @return A store reader.
 	 */
-	public long read(long index) {
-		// If we've been released, we can't read.
-		if (stage.compareTo(StorageStage.Released) >= 0) {
-			throw new OsmosisRuntimeException("Cannot iterate over storage in stage " + stage + ".");
-		}
-		
-		stage = StorageStage.Reading;
-		
-		try {
-			// Each long consists of 8 bytes, so we must multiply the index by 8
-			// to get the required location.
-			randomAccessFile.seek(index * 8);
+	public IndexStoreReader<T> createReader() {
+		return new IndexStoreReader<T>(indexStore.createReader(), elementCount, elementSize);
+	}
+	
+	
+	/**
+	 * Finishes all file writes and sorts the file contents if necessary.
+	 */
+	public void complete() {
+		if (!sorted) {
+			FileBasedSort<T> fileSort;
 			
-			return randomAccessFile.readLong();
-		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to read from index " + index + ".", e);
+			// Create a new file based sort instance ordering elements by their
+			// identifiers.
+			fileSort = new FileBasedSort<T>(
+				serializationFactory,
+				new Comparator<T>() {
+					
+					@Override
+					public int compare(T o1, T o2) {
+						long result;
+						
+						result = o1.getIndexId() - o2.getIndexId();
+						
+						if (result == 0) {
+							return 0;
+						} else if (result < 0) {
+							return -1;
+						} else {
+							return 1;
+						}
+					}
+				},
+				true
+			);
+			
+			try {
+				RandomAccessObjectStoreReader<T> indexStoreReader;
+				ReleasableIterator<T> sortIterator;
+				
+				
+				// Read all data from the index store into the sorting store.
+				indexStoreReader = indexStore.createReader();
+				try {
+					Iterator<T> indexIterator;
+					
+					indexIterator = indexStoreReader.iterate();
+					
+					while (indexIterator.hasNext()) {
+						fileSort.add(indexIterator.next());
+					}
+				} finally {
+					indexStoreReader.release();
+				}
+				
+				// Release the existing index store and create a new one.
+				indexStore.release();
+				if (indexFile != null) {
+					indexStore = new RandomAccessObjectStore<T>(serializationFactory, indexFile);
+				} else {
+					indexStore = new RandomAccessObjectStore<T>(serializationFactory, tempFilePrefix);
+				}
+				
+				// Read all data from the sorting store back into the index store.
+				sortIterator = fileSort.iterate();
+				try {
+					while (sortIterator.hasNext()) {
+						indexStore.add(sortIterator.next());
+					}
+				} finally {
+					sortIterator.release();
+				}
+				
+			} finally {
+				fileSort.release();
+			}
 		}
 	}
 	
@@ -103,20 +214,6 @@ public class IndexStore implements Releasable {
 	 * {@inheritDoc}
 	 */
 	public void release() {
-		if (randomAccessFile != null) {
-			try {
-				randomAccessFile.close();
-			} catch (Exception e) {
-				// Do nothing.
-			}
-			randomAccessFile = null;
-		}
-		
-		if (file != null) {
-			file.delete();
-			file = null;
-		}
-		
-		stage = StorageStage.Released;
+		indexStore.release();
 	}
 }
