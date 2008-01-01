@@ -14,7 +14,7 @@ package com.bretth.osmosis.core.store;
  */
 public class IndexedObjectStoreReader<T> implements Releasable {
 	private RandomAccessObjectStoreReader<T> objectStoreReader;
-	private IndexStoreReader<LongLongIndexElement> indexStoreReader;
+	private IndexStoreReader<Long, LongLongIndexElement> indexStoreReader;
 	
 	
 	/**
@@ -25,7 +25,7 @@ public class IndexedObjectStoreReader<T> implements Releasable {
 	 * @param indexStoreReader
 	 *            Provides access to the index data.
 	 */
-	public IndexedObjectStoreReader(RandomAccessObjectStoreReader<T> objectStoreReader, IndexStoreReader<LongLongIndexElement> indexStoreReader) {
+	public IndexedObjectStoreReader(RandomAccessObjectStoreReader<T> objectStoreReader, IndexStoreReader<Long, LongLongIndexElement> indexStoreReader) {
 		this.objectStoreReader = objectStoreReader;
 		this.indexStoreReader = indexStoreReader;
 	}

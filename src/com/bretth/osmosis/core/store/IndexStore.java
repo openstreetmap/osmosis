@@ -13,44 +13,50 @@ import com.bretth.osmosis.core.sort.common.FileBasedSort;
  * Writes data into an index file and sorts it if input data is unordered. The
  * data must be fixed width to allow index values to be randomly accessed later.
  * 
+ * @param <K>
+ *            The index key type.
  * @param <T>
  *            The index element type to be stored.
  * @author Brett Henderson
  */
-public class IndexStore<T extends IndexElement> implements Releasable {
+public class IndexStore<K, T extends IndexElement<K>> implements Releasable {
 	static final Logger log = Logger.getLogger(IndexStore.class.getName());
 	
 	private ObjectSerializationFactory serializationFactory;
 	private RandomAccessObjectStore<T> indexStore;
+	private Comparator<K> ordering;
 	private String tempFilePrefix;
 	private File indexFile;
-	private long previousId;
+	private K previousKey;
 	private boolean sorted;
 	private long elementCount;
 	private long elementSize;
+	private boolean complete;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param elementFactory
-	 *            The factory for persisting and loading element data.
 	 * @param elementType
 	 *            The type of index element to be stored in the index.
+	 * @param ordering
+	 *            A comparator that sorts index elements desired index key
+	 *            ordering.
 	 * @param indexFile
 	 *            The file to use for storing the index.
 	 */
-	public IndexStore(Class<T> elementType, File indexFile) {
+	public IndexStore(Class<T> elementType, Comparator<K> ordering, File indexFile) {
+		this.ordering = ordering;
 		this.indexFile = indexFile;
 		
 		serializationFactory = new SingleClassObjectSerializationFactory(elementType);
 		
 		indexStore = new RandomAccessObjectStore<T>(serializationFactory, indexFile);
 		
-		previousId = Long.MIN_VALUE;
 		sorted = true;
 		elementCount = 0;
 		elementSize = -1;
+		complete = false;
 	}
 	
 	
@@ -58,26 +64,26 @@ public class IndexStore<T extends IndexElement> implements Releasable {
 	 * Creates a new instance.
 	 * 
 	 * 
-	 * @param indexFile
-	 *            The file to use for storing the index.
-	 * @param elementFactory
-	 *            The factory for persisting and loading element data.
 	 * @param elementType
 	 *            The type of index element to be stored in the index.
+	 * @param ordering
+	 *            A comparator that sorts index elements desired index key
+	 *            ordering.
 	 * @param tempFilePrefix
 	 *            The prefix of the temporary file.
 	 */
-	public IndexStore(Class<T> elementType, String tempFilePrefix) {
+	public IndexStore(Class<T> elementType, Comparator<K> ordering, String tempFilePrefix) {
+		this.ordering = ordering;
 		this.tempFilePrefix = tempFilePrefix;
 		
 		serializationFactory = new SingleClassObjectSerializationFactory(elementType);
 		
 		indexStore = new RandomAccessObjectStore<T>(serializationFactory, tempFilePrefix);
 		
-		previousId = Long.MIN_VALUE;
 		sorted = true;
 		elementCount = 0;
 		elementSize = -1;
+		complete = false;
 	}
 	
 	
@@ -88,16 +94,21 @@ public class IndexStore<T extends IndexElement> implements Releasable {
 	 *            The index element which includes the identifier when stored.
 	 */
 	public void write(T element) {
-		long id;
+		K key;
 		long fileOffset;
 		
 		fileOffset = indexStore.add(element);
 		
-		id = element.getIndexId();
-		if (previousId > id) {
-			sorted = false;
+		key = element.getKey();
+		
+		// If the new element contains a key that is not sequential, we need to
+		// mark the index as unsorted so we can perform a sort prior to reading.
+		if (previousKey != null) {
+			if (ordering.compare(previousKey, key) > 0) {
+				sorted = false;
+			}
 		}
-		previousId = id;
+		previousKey = key;
 		
 		elementCount++;
 		
@@ -130,8 +141,12 @@ public class IndexStore<T extends IndexElement> implements Releasable {
 	 * 
 	 * @return A store reader.
 	 */
-	public IndexStoreReader<T> createReader() {
-		return new IndexStoreReader<T>(indexStore.createReader(), elementCount, elementSize);
+	public IndexStoreReader<K, T> createReader() {
+		if (!complete) {
+			throw new OsmosisRuntimeException("The complete method must be called prior to creating a reader.");
+		}
+		
+		return new IndexStoreReader<K, T>(indexStore.createReader(), ordering, elementCount, elementSize);
 	}
 	
 	
@@ -140,6 +155,8 @@ public class IndexStore<T extends IndexElement> implements Releasable {
 	 */
 	public void complete() {
 		if (!sorted) {
+			final Comparator<K> keyOrdering = ordering;
+			
 			FileBasedSort<T> fileSort;
 			
 			// Create a new file based sort instance ordering elements by their
@@ -147,20 +164,11 @@ public class IndexStore<T extends IndexElement> implements Releasable {
 			fileSort = new FileBasedSort<T>(
 				serializationFactory,
 				new Comparator<T>() {
+					private Comparator<K> elementKeyOrdering = keyOrdering;
 					
 					@Override
 					public int compare(T o1, T o2) {
-						long result;
-						
-						result = o1.getIndexId() - o2.getIndexId();
-						
-						if (result == 0) {
-							return 0;
-						} else if (result < 0) {
-							return -1;
-						} else {
-							return 1;
-						}
+						return elementKeyOrdering.compare(o1.getKey(), o2.getKey());
 					}
 				},
 				true
@@ -207,6 +215,8 @@ public class IndexStore<T extends IndexElement> implements Releasable {
 				fileSort.release();
 			}
 		}
+		
+		complete = true;
 	}
 	
 	

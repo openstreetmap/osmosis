@@ -3,11 +3,11 @@ package com.bretth.osmosis.core.store;
 
 
 /**
- * A single index element for a int-long index where the int is to be treated unsigned.
+ * A single index element for an int-long index.
  * 
  * @author Brett Henderson
  */
-public class UnsignedIntLongIndexElement implements IndexElement {
+public class IntegerLongIndexElement implements IndexElement<Integer> {
 	
 	/**
 	 * The value identifier.
@@ -28,7 +28,7 @@ public class UnsignedIntLongIndexElement implements IndexElement {
 	 * @param value
 	 *            The data value.
 	 */
-	public UnsignedIntLongIndexElement(int id, long value) {
+	public IntegerLongIndexElement(int id, long value) {
 		this.id = id;
 		this.value = value;
 	}
@@ -43,7 +43,7 @@ public class UnsignedIntLongIndexElement implements IndexElement {
 	 *            Maintains the mapping between classes and their identifiers
 	 *            within the store.
 	 */
-	public UnsignedIntLongIndexElement(StoreReader sr, StoreClassRegister scr) {
+	public IntegerLongIndexElement(StoreReader sr, StoreClassRegister scr) {
 		this(sr.readInteger(), sr.readLong());
 	}
 	
@@ -61,10 +61,10 @@ public class UnsignedIntLongIndexElement implements IndexElement {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public long getIndexId() {
+	public Integer getKey() {
 		// This will cause the sign of the identifier to be ignored resulting in
 		// unsigned ordering of index values.
-		return id & 0xFFFFFFFFl;
+		return id;
 	}
 	
 	

@@ -7,12 +7,18 @@ import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Way;
+import com.bretth.osmosis.core.domain.v0_5.WayNode;
+import com.bretth.osmosis.core.merge.v0_5.impl.SortedEntityPipeValidator;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
+import com.bretth.osmosis.core.store.ComparableComparator;
 import com.bretth.osmosis.core.store.IndexStore;
+import com.bretth.osmosis.core.store.IndexStoreReader;
 import com.bretth.osmosis.core.store.LongLongIndexElement;
 import com.bretth.osmosis.core.store.RandomAccessObjectStore;
+import com.bretth.osmosis.core.store.RandomAccessObjectStoreReader;
 import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
-import com.bretth.osmosis.core.store.UnsignedIntLongIndexElement;
+import com.bretth.osmosis.core.store.IntegerLongIndexElement;
+import com.bretth.osmosis.core.store.UnsignedIntegerComparator;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 
 
@@ -23,13 +29,17 @@ import com.bretth.osmosis.core.task.v0_5.Sink;
  */
 public class DatasetStore implements Sink, EntityProcessor {
 	
+	private SortedEntityPipeValidator sortedPipeValidator;
 	private TileCalculator tileCalculator;
 	private RandomAccessObjectStore<Node> nodeObjectStore;
-	private IndexStore<LongLongIndexElement> nodeObjectOffsetIndexWriter;
-	private IndexStore<UnsignedIntLongIndexElement> nodeTileIndexWriter;
+	private RandomAccessObjectStoreReader<Node> nodeObjectReader;
+	private IndexStore<Long, LongLongIndexElement> nodeObjectOffsetIndexWriter;
+	private IndexStoreReader<Long, LongLongIndexElement> nodeObjectOffsetIndexReader;
+	private IndexStore<Integer, IntegerLongIndexElement> nodeTileIndexWriter;
 	private RandomAccessObjectStore<Way> wayObjectStore;
-	private IndexStore<LongLongIndexElement> wayObjectOffsetIndexWriter;
-	//private WayTileAreaIndex[] wayTileAreaIndexes;
+	private IndexStore<Long, LongLongIndexElement> wayObjectOffsetIndexWriter;
+	private WayTileAreaIndex wayTileIndexWriter;
+	private UnsignedIntegerComparator uintComparator;
 	
 	
 	/**
@@ -39,20 +49,40 @@ public class DatasetStore implements Sink, EntityProcessor {
 	 *            The manager providing access to store files.
 	 */
 	public DatasetStore(DatasetStoreFileManager fileManager) {
+		// Validate all input data to ensure it is sorted.
+		sortedPipeValidator = new SortedEntityPipeValidator();
+		sortedPipeValidator.setSink(new Sink() {
+			@Override
+			public void complete() {
+				throw new UnsupportedOperationException();
+			}
+			
+			@Override
+			public void process(EntityContainer entityContainer) {
+				processImpl(entityContainer);
+			}
+			
+			@Override
+			public void release() {
+				throw new UnsupportedOperationException();
+			}});
+		
 		tileCalculator = new TileCalculator();
+		uintComparator = new UnsignedIntegerComparator();
 		
 		nodeObjectStore = new RandomAccessObjectStore<Node>(new SingleClassObjectSerializationFactory(Node.class), "nos");
-		nodeObjectOffsetIndexWriter = new IndexStore<LongLongIndexElement>(
+		nodeObjectOffsetIndexWriter = new IndexStore<Long, LongLongIndexElement>(
 			LongLongIndexElement.class,
+			new ComparableComparator<Long>(),
 			fileManager.getNodeObjectOffsetIndexFile()
 		);
-		nodeTileIndexWriter = new IndexStore<UnsignedIntLongIndexElement>(
-			UnsignedIntLongIndexElement.class,
+		nodeTileIndexWriter = new IndexStore<Integer, IntegerLongIndexElement>(
+			IntegerLongIndexElement.class,
+			uintComparator,
 			fileManager.getNodeTileIndexFile()
 		);
 		
-		// 32,28,24,16,8,0
-		//wayTileAreaIndexes = new WayTileAreaIndex[6];
+		wayTileIndexWriter = new WayTileAreaIndex(fileManager);
 	}
 	
 	
@@ -60,6 +90,18 @@ public class DatasetStore implements Sink, EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(EntityContainer entityContainer) {
+		sortedPipeValidator.process(entityContainer);
+	}
+	
+	
+	/**
+	 * The entity processing implementation. This must not be called directly,
+	 * it is called by the internal sorted pipe validator.
+	 * 
+	 * @param entityContainer
+	 *            The entity to be processed.
+	 */
+	protected void processImpl(EntityContainer entityContainer) {
 		entityContainer.process(this);
 	}
 	
@@ -84,7 +126,7 @@ public class DatasetStore implements Sink, EntityProcessor {
 		
 		// Write the node id to an index keyed by tile.
 		nodeTileIndexWriter.write(
-			new UnsignedIntLongIndexElement((int) tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()),
+			new IntegerLongIndexElement((int) tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()),
 			nodeId)
 		);
 	}
@@ -97,6 +139,16 @@ public class DatasetStore implements Sink, EntityProcessor {
 		Way way;
 		long wayId;
 		long objectOffset;
+		int minimumTile;
+		int maximumTile;
+		boolean tilesFound;
+		
+		if (nodeObjectReader == null) {
+			nodeObjectReader = nodeObjectStore.createReader();
+		}
+		if (nodeObjectOffsetIndexReader == null) {
+			nodeObjectOffsetIndexReader = nodeObjectOffsetIndexWriter.createReader();
+		}
 		
 		way = wayContainer.getEntity();
 		wayId = way.getId();
@@ -108,7 +160,40 @@ public class DatasetStore implements Sink, EntityProcessor {
 			new LongLongIndexElement(wayId, objectOffset)
 		);
 		
+		// Calculate the minimum and maximum tile indexes for the way.
+		tilesFound = false;
+		minimumTile = 0;
+		maximumTile = 0;
+		for (WayNode wayNode : way.getWayNodeList()) {
+			long nodeId;
+			Node node;
+			int tile;
+			
+			nodeId = wayNode.getNodeId();
+			node = nodeObjectReader.get(
+				nodeObjectOffsetIndexReader.get(nodeId).getValue()
+			);
+			
+			tile = (int) tileCalculator.calculateTile(node.getLatitude(), node.getLongitude());
+			
+			if (tilesFound) {
+				if (uintComparator.compare(tile, minimumTile) < 0) {
+					minimumTile = tile;
+				}
+				if (uintComparator.compare(maximumTile, tile) < 0) {
+					maximumTile = tile;
+				}
+				
+			} else {
+				minimumTile = tile;
+				maximumTile = tile;
+				
+				tilesFound = true;
+			}
+		}
+		
 		// Write the way id to an index keyed by tile.
+		wayTileIndexWriter.write(wayId, minimumTile, maximumTile);
 	}
 	
 	
@@ -133,6 +218,13 @@ public class DatasetStore implements Sink, EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void release() {
+		if (nodeObjectReader != null) {
+			nodeObjectReader.release();
+		}
+		if (nodeObjectOffsetIndexReader != null) {
+			nodeObjectOffsetIndexReader.release();
+		}
+		
 		nodeObjectStore.release();
 		nodeObjectOffsetIndexWriter.release();
 		nodeTileIndexWriter.release();

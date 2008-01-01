@@ -7,7 +7,7 @@ package com.bretth.osmosis.core.store;
  * 
  * @author Brett Henderson
  */
-public class LongLongIndexElement implements IndexElement {
+public class LongLongIndexElement implements IndexElement<Long> {
 	
 	/**
 	 * The value identifier.
@@ -61,7 +61,7 @@ public class LongLongIndexElement implements IndexElement {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public long getIndexId() {
+	public Long getKey() {
 		return id;
 	}
 	

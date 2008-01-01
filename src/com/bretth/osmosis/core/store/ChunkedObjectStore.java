@@ -21,8 +21,8 @@ public class ChunkedObjectStore<T extends Storeable> implements Releasable {
 	 * within each chunk. The file position is written when a new chunk is
 	 * started, and the object count is written when a chunk is completed.
 	 */
-	private IndexStore<LongLongIndexElement> indexStore;
-	private IndexStoreReader<LongLongIndexElement> indexStoreReader;
+	private IndexStore<Long, LongLongIndexElement> indexStore;
+	private IndexStoreReader<Long, LongLongIndexElement> indexStoreReader;
 	private long chunkCount;
 	private boolean chunkInProgress;
 	private long newChunkFilePosition;
@@ -43,7 +43,12 @@ public class ChunkedObjectStore<T extends Storeable> implements Releasable {
 	 */
 	public ChunkedObjectStore(ObjectSerializationFactory serializationFactory, String storageFilePrefix, String indexFilePrefix, boolean useCompression) {
 		objectStore = new SegmentedObjectStore<T>(serializationFactory, storageFilePrefix, useCompression);
-		indexStore = new IndexStore<LongLongIndexElement>(LongLongIndexElement.class, indexFilePrefix);
+		
+		indexStore = new IndexStore<Long, LongLongIndexElement>(
+			LongLongIndexElement.class,
+			new ComparableComparator<Long>(),
+			indexFilePrefix
+		);
 		
 		chunkCount = 0;
 		chunkInProgress = false;

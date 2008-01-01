@@ -1,5 +1,6 @@
 package com.bretth.osmosis.extract.mysql;
 
+import java.util.Comparator;
 import java.util.Date;
 
 import com.bretth.osmosis.core.domain.v0_5.Node;
@@ -7,6 +8,7 @@ import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.store.GenericObjectSerializationFactory;
 import com.bretth.osmosis.core.store.IndexedObjectStore;
 import com.bretth.osmosis.core.store.IndexedObjectStoreReader;
+import com.bretth.osmosis.core.store.UnsignedIntegerComparator;
 
 
 /**
@@ -23,41 +25,9 @@ public class Test {
 	 *            Command line arguments.
 	 */
 	public static void main(String[] args) {
-		long value;
+		Comparator<Integer> comparator = new UnsignedIntegerComparator();
 		
-		value = Integer.MAX_VALUE;
-		
-		System.out.println(value);
-		System.out.println(toInt(value));
-		System.out.println(toLong(toInt(value)));
-		System.out.println();
-		
-		value++;
-		
-		System.out.println(value);
-		System.out.println(toInt(value));
-		System.out.println(toLong(toInt(value)));
-		System.out.println();
-		
-		value++;
-		
-		System.out.println(value);
-		System.out.println(toInt(value));
-		System.out.println(toLong(toInt(value)));
-		System.out.println();
-		
-		value++;
-		
-		System.out.println(value);
-		System.out.println(toInt(value));
-		System.out.println(toLong(toInt(value)));
-		System.out.println();
-		
-		value++;
-		
-		System.out.println(value);
-		System.out.println(toInt(value));
-		System.out.println(toLong(toInt(value)));
+		System.out.println(comparator.compare(0, 0xFFFFFFFE));
 		System.out.println();
 		
 		//IndexedObjectStore<Node> store = new IndexedObjectStore<Node>(new SingleClassObjectSerializationFactory(Node.class), "test");
@@ -67,7 +37,7 @@ public class Test {
 			IndexedObjectStoreReader<Node> storeReader;
 			
 			System.out.println("Start " + new Date());
-			for (int i = 0; i < 10000; i++) {
+			for (int i = 0; i < 100; i++) {
 				Node node;
 				
 				node = new Node(i, new Date(), "user" + i, 0, 0);
@@ -77,11 +47,12 @@ public class Test {
 				
 				store.add(i, node);
 			}
+			store.complete();
 			System.out.println("Middle " + new Date());
 			
 			storeReader = store.createReader();
 			try {
-				for (int i = 0; i < 10000; i++) {
+				for (int i = 0; i < 100; i++) {
 					storeReader.get(i).getUser();
 				}
 			} finally {
@@ -93,15 +64,5 @@ public class Test {
 		} finally {
 			store.release();
 		}
-	}
-	
-	
-	private static int toInt(long value) {
-		return (int) value;
-	}
-	
-	
-	private static long toLong(int value) {
-		return value & 0xFFFFFFFFl;
 	}
 }

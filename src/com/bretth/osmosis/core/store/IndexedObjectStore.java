@@ -12,7 +12,7 @@ import java.io.File;
  */
 public class IndexedObjectStore<T extends Storeable> implements Releasable {
 	private RandomAccessObjectStore<T> objectStore;
-	private IndexStore<LongLongIndexElement> indexStore;
+	private IndexStore<Long, LongLongIndexElement> indexStore;
 	
 	
 	/**
@@ -25,7 +25,12 @@ public class IndexedObjectStore<T extends Storeable> implements Releasable {
 	 */
 	public IndexedObjectStore(ObjectSerializationFactory serializationFactory, String tmpFilePrefix) {
 		objectStore = new RandomAccessObjectStore<T>(serializationFactory, tmpFilePrefix + "d");
-		indexStore = new IndexStore<LongLongIndexElement>(LongLongIndexElement.class, tmpFilePrefix + "i");
+		
+		indexStore = new IndexStore<Long, LongLongIndexElement>(
+			LongLongIndexElement.class,
+			new ComparableComparator<Long>(), 
+			tmpFilePrefix + "i"
+		);
 	}
 	
 	
@@ -41,7 +46,11 @@ public class IndexedObjectStore<T extends Storeable> implements Releasable {
 	 */
 	public IndexedObjectStore(ObjectSerializationFactory serializationFactory, File objectStorageFile, File indexStorageFile) {
 		objectStore = new RandomAccessObjectStore<T>(serializationFactory, objectStorageFile);
-		indexStore = new IndexStore<LongLongIndexElement>(LongLongIndexElement.class, indexStorageFile);
+		indexStore = new IndexStore<Long, LongLongIndexElement>(
+			LongLongIndexElement.class,
+			new ComparableComparator<Long>(),
+			indexStorageFile
+		);
 	}
 	
 	
@@ -65,6 +74,14 @@ public class IndexedObjectStore<T extends Storeable> implements Releasable {
 	
 	
 	/**
+	 * Finishes all file writes and builds indexes as required.
+	 */
+	public void complete() {
+		indexStore.complete();
+	}
+	
+	
+	/**
 	 * Creates a new reader capable of accessing the contents of this store. The
 	 * reader must be explicitly released when no longer required. Readers must
 	 * be released prior to this store.
@@ -77,7 +94,7 @@ public class IndexedObjectStore<T extends Storeable> implements Releasable {
 		objectStoreReader = objectStore.createReader();
 		
 		try {
-			IndexStoreReader<LongLongIndexElement> indexStoreReader;
+			IndexStoreReader<Long, LongLongIndexElement> indexStoreReader;
 			IndexedObjectStoreReader<T> reader;
 			
 			indexStoreReader = indexStore.createReader();
