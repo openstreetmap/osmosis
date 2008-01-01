@@ -144,6 +144,14 @@ public class ChunkedObjectStore<T extends Storeable> implements Releasable {
 	
 	
 	/**
+	 * Finishes all file writes and builds indexes as required.
+	 */
+	public void complete() {
+		indexStore.complete();
+	}
+	
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public void release() {

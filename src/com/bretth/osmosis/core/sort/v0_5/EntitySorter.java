@@ -54,6 +54,8 @@ public class EntitySorter implements SinkSource {
 	public void complete() {
 		ReleasableIterator<EntityContainer> iterator = null;
 		
+		fileBasedSort.complete();
+		
 		try {
 			iterator = fileBasedSort.iterate();
 			

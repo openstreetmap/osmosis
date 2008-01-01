@@ -54,6 +54,8 @@ public class ChangeSorter implements ChangeSinkChangeSource {
 	public void complete() {
 		ReleasableIterator<ChangeContainer> iterator = null;
 		
+		fileBasedSort.complete();
+		
 		try {
 			iterator = fileBasedSort.iterate();
 			

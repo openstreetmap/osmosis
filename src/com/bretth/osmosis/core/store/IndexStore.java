@@ -178,7 +178,6 @@ public class IndexStore<K, T extends IndexElement<K>> implements Releasable {
 				RandomAccessObjectStoreReader<T> indexStoreReader;
 				ReleasableIterator<T> sortIterator;
 				
-				
 				// Read all data from the index store into the sorting store.
 				indexStoreReader = indexStore.createReader();
 				try {
@@ -202,6 +201,7 @@ public class IndexStore<K, T extends IndexElement<K>> implements Releasable {
 				}
 				
 				// Read all data from the sorting store back into the index store.
+				fileSort.complete();
 				sortIterator = fileSort.iterate();
 				try {
 					while (sortIterator.hasNext()) {
