@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.customdb;
+package com.bretth.osmosis.core.customdb.v0_5.impl;
 
 import java.io.File;
 

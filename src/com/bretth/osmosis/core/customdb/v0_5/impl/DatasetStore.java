@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.customdb;
+package com.bretth.osmosis.core.customdb.v0_5.impl;
 
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
