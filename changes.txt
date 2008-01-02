@@ -5,6 +5,7 @@ Modified the default pipe connectivity functionality to use stack-based connecti
 Added a populateCurrentTables option to the --write-mysql-change task to match the --write-mysql task.
 Added validation code to the merge tasks to verify that input data is sorted.
 Enhanced serialisation code to eliminate class identification information in the stream where single data types are being stored.
+Fixed a bug in the ListIdTracker class where unsorted ids were not being sorted correctly.
 
 0.24
 Fixed a bug in the XML node writing code where it would write a ',' character instead of '.' as the decimal separator in some locales.

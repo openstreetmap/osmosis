@@ -99,6 +99,7 @@ public class ListIdTracker implements IdTracker {
 		// it can be searched using a binary search algorithm.
 		if (integerId < maxIdAdded) {
 			sorted = false;
+		} else {
 			maxIdAdded = integerId;
 		}
 	}
