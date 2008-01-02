@@ -118,3 +118,7 @@ Add support to pass dates through the pipeline unparsed.
 **********
 Feature request from Frederik Ramm.
 Make osmosis return error codes if it fails to make it better suited to scripting.
+
+**********
+Karl Newman
+Add plugin support.
