@@ -339,28 +339,4 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 		nodeObjectOffsetIndexWriter.release();
 		nodeTileIndexWriter.release();
 	}
-	
-	
-	/*
-	 * Uses a RandomAccessObjectStore for storage of all node objects.
-	 * Uses a RandomAccessObjectStore for storage of all way objects.
-	 * Uses a RandomAccessObjectStore for storage of all relation objects.
-	 * 
-	 * A two-field index for storing a long node id with a long file offset for the node object store.
-	 * A two-field index for storing a long way id with a long file offset for the way object store.
-	 * A two-field index for storing a long relation id with a long file offset for the relation object store.
-	 * 
-	 * A two-field index for storing a 32 bit (int) tile id with an associated node id.
-	 * 
-	 * A two-field index for storing a 32 bit (int) tile id with an associated way id.
-	 * A two-field index for storing a 28 bit (int) tile id with an associated way id.
-	 * A two-field index for storing a 24 bit (int) tile id with an associated way id.
-	 * A two-field index for storing a 16 bit (char) tile id with an associated way id.
-	 * A two-field index for storing a 8 bit (byte) tile id with an associated way id.
-	 * A one-field index with all remaining way ids.
-	 * 
-	 * A two-field index for storing a long node id with an associated relation id.
-	 * A two-field index for storing a long way id with an associated relation id.
-	 * A two-field index for storing a long relation id with an associated relation id.
-	 */
 }

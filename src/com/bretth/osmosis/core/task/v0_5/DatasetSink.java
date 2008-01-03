@@ -12,20 +12,14 @@ import com.bretth.osmosis.core.task.common.Task;
 public interface DatasetSink extends Task {
 	
 	/**
-	 * Process the dataset.
+	 * Process the dataset. This must only be called once. This will perform all
+	 * finalisation tasks such as database commits as necessary to complete the
+	 * task.
 	 * 
 	 * @param dataset
 	 *            The dataset to be processed.
 	 */
 	public void process(Dataset dataset);
-	
-	/**
-	 * Performs finalisation tasks such as database commits as necessary to
-	 * complete the task. Must be called by clients when all objects have been
-	 * processed. It should not be called in exception scenarios. Chained
-	 * implementations will call their output sinks.
-	 */
-	public void complete();
 	
 	/**
 	 * Performs resource cleanup tasks such as closing files, or database
