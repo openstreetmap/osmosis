@@ -20,11 +20,6 @@ public class ObjectDataInputIterator<T> implements Iterator<T> {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param serializationFactory
-	 *            The factory defining the object serialisation implementation.
-	 * @param storeClassRegister
-	 *            The register defining the classes in the stream and their
-	 *            identifiers.
 	 * @param objectReader
 	 *            The reader containing the objects to be deserialized.
 	 */
