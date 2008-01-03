@@ -44,8 +44,10 @@ public abstract class PassiveTaskManager extends TaskManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void waitForCompletion() {
+	public boolean waitForCompletion() {
 		// Nothing to do for a sink because it passively receives data.
 		log.fine("Task " + getTaskId() + " is passive, no completion wait required.");
+		
+		return true;
 	}
 }

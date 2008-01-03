@@ -1,6 +1,7 @@
 package com.bretth.osmosis.core.pipeline.common;
 
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
@@ -15,7 +16,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 public abstract class ActiveTaskManager extends TaskManager {
 	private static final Logger log = Logger.getLogger(ActiveTaskManager.class.getName());
 	
-	private Thread thread;
+	private TaskRunner thread;
 	
 	
 	/**
@@ -54,7 +55,7 @@ public abstract class ActiveTaskManager extends TaskManager {
 					+ " is already running.");
 		}
 		
-		thread = new Thread(getTask(), "Thread-" + getTaskId());
+		thread = new TaskRunner(getTask(), "Thread-" + getTaskId());
 		
 		thread.start();
 	}
@@ -64,16 +65,28 @@ public abstract class ActiveTaskManager extends TaskManager {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void waitForCompletion() {
+	public boolean waitForCompletion() {
 		log.fine("Waiting for task " + getTaskId() + " to complete.");
 		if (thread != null) {
+			boolean successful;
+			
 			try {
 				thread.join();
 			} catch (InterruptedException e) {
 				// Do nothing.
 			}
-
+			
+			successful = thread.isSuccessful();
+			
+			if (!successful) {
+				log.log(Level.SEVERE, "Thread for task " + getTaskId() + " failed", thread.getException());
+			}
+			
 			thread = null;
+			
+			return successful;
 		}
+		
+		return true;
 	}
 }

@@ -126,9 +126,18 @@ public class Pipeline {
 	 * Waits for all tasks within the pipeline to complete.
 	 */
 	public void waitForCompletion() {
+		boolean successful;
+		
 		// Wait for completion of all nodes.
+		successful = true;
 		for (TaskManager taskManager: taskManagers) {
-			taskManager.waitForCompletion();
+			if (!taskManager.waitForCompletion()) {
+				successful = false;
+			}
+		}
+		
+		if (!successful) {
+			throw new OsmosisRuntimeException("One or more tasks failed.");
 		}
 	}
 }

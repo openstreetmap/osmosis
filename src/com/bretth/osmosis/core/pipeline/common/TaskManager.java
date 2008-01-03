@@ -221,6 +221,8 @@ public abstract class TaskManager {
 	 * Waits until all tasks have completed execution before returning. This is
 	 * intended for source tasks that run within a separate thread, sink tasks
 	 * will not do anything here.
+	 * 
+	 * @return True if the thread completed successfully.
 	 */
-	public abstract void waitForCompletion();
+	public abstract boolean waitForCompletion();
 }

@@ -54,6 +54,7 @@ public class OsmosisExtractMysql {
 	 */
 	public static void main(String[] args) {
 		FileBasedLock fileLock = new FileBasedLock(LOCK_FILE);
+		boolean success = false;
 		
 		try {
 			fileLock.lock();
@@ -62,8 +63,17 @@ public class OsmosisExtractMysql {
 			
 			fileLock.release();
 			
+			success = true;
+			
 		} finally {
 			fileLock.release();
+		}
+		
+		// Indicate success or otherwise.
+		if (success) {
+			System.exit(0);
+		} else {
+			System.exit(1);
 		}
 	}
 	

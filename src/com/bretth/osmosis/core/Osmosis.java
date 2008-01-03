@@ -55,9 +55,13 @@ public class Osmosis {
 			
 			log.info("Pipeline complete.");
 			
+			System.exit(0);
+			
 		} catch (Throwable t) {
-			log.log(Level.SEVERE, "Main thread aborted.", t);
+			log.log(Level.SEVERE, "Execution aborted.", t);
 		}
+		
+		System.exit(1);
 	}
 	
 	
