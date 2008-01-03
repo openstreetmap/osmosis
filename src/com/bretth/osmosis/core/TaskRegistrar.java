@@ -4,6 +4,7 @@ import com.bretth.osmosis.core.buffer.v0_5.ChangeBufferFactory;
 import com.bretth.osmosis.core.buffer.v0_5.EntityBufferFactory;
 import com.bretth.osmosis.core.change.v0_5.ChangeApplierFactory;
 import com.bretth.osmosis.core.change.v0_5.ChangeDeriverFactory;
+import com.bretth.osmosis.core.customdb.v0_5.DumpDatasetFactory;
 import com.bretth.osmosis.core.customdb.v0_5.WriteDatasetAndForwardFactory;
 import com.bretth.osmosis.core.filter.v0_5.BoundingBoxFilterFactory;
 import com.bretth.osmosis.core.filter.v0_5.DatasetBoundingBoxFilterFactory;
@@ -129,6 +130,8 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("dwr", new WriteDatasetAndForwardFactory());
 		TaskManagerFactory.register("dataset-bounding-box", new DatasetBoundingBoxFilterFactory());
 		TaskManagerFactory.register("dbb", new DatasetBoundingBoxFilterFactory());
+		TaskManagerFactory.register("dataset-dump", new DumpDatasetFactory());
+		TaskManagerFactory.register("dd", new DumpDatasetFactory());
 		
 		TaskManagerFactory.register("apply-change-0.5", new ChangeApplierFactory());
 		TaskManagerFactory.register("bounding-box-0.5", new BoundingBoxFilterFactory());
@@ -164,5 +167,6 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("write-pgsql-dump-0.5", new PostgreSqlDumpWriterFactory());
 		TaskManagerFactory.register("write-read-dataset-0.5", new WriteDatasetAndForwardFactory());
 		TaskManagerFactory.register("dataset-bounding-box-0.5", new DatasetBoundingBoxFilterFactory());
+		TaskManagerFactory.register("dataset-dump-0.5", new DumpDatasetFactory());
 	}
 }

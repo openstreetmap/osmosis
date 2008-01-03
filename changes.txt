@@ -6,7 +6,9 @@ Added a populateCurrentTables option to the --write-mysql-change task to match t
 Added validation code to the merge tasks to verify that input data is sorted.
 Enhanced serialisation code to eliminate class identification information in the stream where single data types are being stored.
 Fixed a bug in the ListIdTracker class where unsorted ids were not being sorted correctly.
-Added new dataset tasks --dataset-write-read for temporary dataset operations, and --dataset-bounding-box for extraction bounding boxes from them.
+Added new dataset task --dataset-write-read for creating temporary datasets.
+Added new dataset task --dataset-bounding-box for extracting bounding boxes from datasets.
+Added new dataset task --dataset-dump for reading the entire contents of a dataset.
 
 0.24
 Fixed a bug in the XML node writing code where it would write a ',' character instead of '.' as the decimal separator in some locales.

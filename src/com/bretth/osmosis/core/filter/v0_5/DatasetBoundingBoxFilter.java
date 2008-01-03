@@ -28,7 +28,8 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 	
 	/**
 	 * Creates a new instance with the specified geographical coordinates. When
-	 * filtering, nodes right on the edge of the box will be included.
+	 * filtering, nodes right on the left and bottom edges of the box will be
+	 * included, nodes on the top and right edges will be excluded.
 	 * 
 	 * @param left
 	 *            The longitude marking the left edge of the bounding box.
@@ -39,7 +40,8 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 	 * @param bottom
 	 *            The latitude marking the bottom edge of the bounding box.
 	 * @param completeWays
-	 *            Include all nodes for ways which have at least one node inside the filtered area.
+	 *            Include all nodes for ways which have some portion inside the
+	 *            filtered area.
 	 */
 	public DatasetBoundingBoxFilter(double left, double right, double top, double bottom, boolean completeWays) {
 		this.left = left;
