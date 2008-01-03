@@ -126,9 +126,7 @@ public class ChunkedObjectStore<T extends Storeable> implements Releasable {
 	 */
 	public ReleasableIterator<T> iterate(long chunk) {
 		// If a chunk is in progress, we need to complete it before continuing.
-		if (chunkInProgress) {
-			closeChunk();
-		}
+		closeChunk();
 		
 		if (indexStoreReader == null) {
 			indexStoreReader = indexStore.createReader();
@@ -147,6 +145,9 @@ public class ChunkedObjectStore<T extends Storeable> implements Releasable {
 	 * Finishes all file writes and builds indexes as required.
 	 */
 	public void complete() {
+		// If a chunk is in progress, we need to complete it.
+		closeChunk();
+		
 		indexStore.complete();
 	}
 	

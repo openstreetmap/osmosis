@@ -37,10 +37,11 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	
 	private SortedEntityPipeValidator sortedPipeValidator;
 	private TileCalculator tileCalculator;
+	private UnsignedIntegerComparator uintComparator;
+	
+	private ReleasableContainer storeContainer;
 	private RandomAccessObjectStore<Node> nodeObjectStore;
-	private RandomAccessObjectStoreReader<Node> nodeObjectReader;
 	private IndexStore<Long, LongLongIndexElement> nodeObjectOffsetIndexWriter;
-	private IndexStoreReader<Long, LongLongIndexElement> nodeObjectOffsetIndexReader;
 	private IndexStore<Integer, IntegerLongIndexElement> nodeTileIndexWriter;
 	private RandomAccessObjectStore<Way> wayObjectStore;
 	private IndexStore<Long, LongLongIndexElement> wayObjectOffsetIndexWriter;
@@ -49,7 +50,9 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	private IndexStore<Long, LongLongIndexElement> relationObjectOffsetIndexWriter;
 	private IndexStore<Long, LongLongIndexElement> wayRelationIndexWriter;
 	private IndexStore<Long, LongLongIndexElement> nodeRelationIndexWriter;
-	private UnsignedIntegerComparator uintComparator;
+	
+	private RandomAccessObjectStoreReader<Node> nodeObjectReader;
+	private IndexStoreReader<Long, LongLongIndexElement> nodeObjectOffsetIndexReader;
 	
 	
 	/**
@@ -59,6 +62,8 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	 *            The manager providing access to store files.
 	 */
 	public DatasetStore(DatasetStoreFileManager fileManager) {
+		storeContainer = new ReleasableContainer();
+		
 		// Validate all input data to ensure it is sorted.
 		sortedPipeValidator = new SortedEntityPipeValidator();
 		sortedPipeValidator.setSink(new Sink() {
@@ -81,52 +86,70 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 		uintComparator = new UnsignedIntegerComparator();
 		
 		// Create node store and indexes.
-		nodeObjectStore = new RandomAccessObjectStore<Node>(
-			new SingleClassObjectSerializationFactory(Node.class),
-			fileManager.getNodeObjectFile()
+		nodeObjectStore = storeContainer.add(
+			new RandomAccessObjectStore<Node>(
+				new SingleClassObjectSerializationFactory(Node.class),
+				fileManager.getNodeObjectFile()
+			)
 		);
-		nodeObjectOffsetIndexWriter = new IndexStore<Long, LongLongIndexElement>(
-			LongLongIndexElement.class,
-			new ComparableComparator<Long>(),
-			fileManager.getNodeObjectOffsetIndexFile()
+		nodeObjectOffsetIndexWriter = storeContainer.add(
+			new IndexStore<Long, LongLongIndexElement>(
+				LongLongIndexElement.class,
+				new ComparableComparator<Long>(),
+				fileManager.getNodeObjectOffsetIndexFile()
+			)
 		);
-		nodeTileIndexWriter = new IndexStore<Integer, IntegerLongIndexElement>(
-			IntegerLongIndexElement.class,
-			uintComparator,
-			fileManager.getNodeTileIndexFile()
+		nodeTileIndexWriter = storeContainer.add(
+			new IndexStore<Integer, IntegerLongIndexElement>(
+				IntegerLongIndexElement.class,
+				uintComparator,
+				fileManager.getNodeTileIndexFile()
+			)
 		);
 		
 		// Create way store and indexes.
-		wayObjectStore = new RandomAccessObjectStore<Way>(
-			new SingleClassObjectSerializationFactory(Way.class),
-			fileManager.getWayObjectFile()
+		wayObjectStore = storeContainer.add(
+			new RandomAccessObjectStore<Way>(
+				new SingleClassObjectSerializationFactory(Way.class),
+				fileManager.getWayObjectFile()
+			)
 		);
-		wayObjectOffsetIndexWriter = new IndexStore<Long, LongLongIndexElement>(
-			LongLongIndexElement.class,
-			new ComparableComparator<Long>(),
-			fileManager.getWayObjectOffsetIndexFile()
+		wayObjectOffsetIndexWriter = storeContainer.add(
+			new IndexStore<Long, LongLongIndexElement>(
+				LongLongIndexElement.class,
+				new ComparableComparator<Long>(),
+				fileManager.getWayObjectOffsetIndexFile()
+			)
 		);
-		wayTileIndexWriter = new WayTileAreaIndex(fileManager);
+		wayTileIndexWriter = storeContainer.add(new WayTileAreaIndex(fileManager));
 		
 		// Create relation store and indexes.
-		relationObjectStore = new RandomAccessObjectStore<Relation>(
-			new SingleClassObjectSerializationFactory(Relation.class),
-			fileManager.getRelationObjectFile()
+		relationObjectStore = storeContainer.add(
+			new RandomAccessObjectStore<Relation>(
+				new SingleClassObjectSerializationFactory(Relation.class),
+				fileManager.getRelationObjectFile()
+			)
 		);
-		relationObjectOffsetIndexWriter = new IndexStore<Long, LongLongIndexElement>(
-			LongLongIndexElement.class,
-			new ComparableComparator<Long>(),
-			fileManager.getRelationObjectOffsetIndexFile()
+		relationObjectOffsetIndexWriter = storeContainer.add(
+			new IndexStore<Long, LongLongIndexElement>(
+				LongLongIndexElement.class,
+				new ComparableComparator<Long>(),
+				fileManager.getRelationObjectOffsetIndexFile()
+			)
 		);
-		nodeRelationIndexWriter = new IndexStore<Long, LongLongIndexElement>(
-			LongLongIndexElement.class,
-			new ComparableComparator<Long>(),
-			fileManager.getNodeRelationIndexFile()
+		nodeRelationIndexWriter = storeContainer.add(
+			new IndexStore<Long, LongLongIndexElement>(
+				LongLongIndexElement.class,
+				new ComparableComparator<Long>(),
+				fileManager.getNodeRelationIndexFile()
+			)
 		);
-		wayRelationIndexWriter = new IndexStore<Long, LongLongIndexElement>(
-			LongLongIndexElement.class,
-			new ComparableComparator<Long>(),
-			fileManager.getWayRelationIndexFile()
+		wayRelationIndexWriter = storeContainer.add(
+			new IndexStore<Long, LongLongIndexElement>(
+				LongLongIndexElement.class,
+				new ComparableComparator<Long>(),
+				fileManager.getWayRelationIndexFile()
+			)
 		);
 	}
 	
@@ -192,6 +215,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 			nodeObjectReader = nodeObjectStore.createReader();
 		}
 		if (nodeObjectOffsetIndexReader == null) {
+			nodeObjectOffsetIndexWriter.complete();
 			nodeObjectOffsetIndexReader = nodeObjectOffsetIndexWriter.createReader();
 		}
 		
@@ -285,6 +309,11 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	public void complete() {
 		nodeObjectOffsetIndexWriter.complete();
 		nodeTileIndexWriter.complete();
+		wayObjectOffsetIndexWriter.complete();
+		wayTileIndexWriter.complete();
+		relationObjectOffsetIndexWriter.complete();
+		wayRelationIndexWriter.complete();
+		nodeRelationIndexWriter.complete();
 	}
 	
 	
@@ -335,8 +364,6 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 			nodeObjectOffsetIndexReader.release();
 		}
 		
-		nodeObjectStore.release();
-		nodeObjectOffsetIndexWriter.release();
-		nodeTileIndexWriter.release();
+		storeContainer.release();
 	}
 }

@@ -2,7 +2,9 @@ package com.bretth.osmosis.core.customdb.v0_5.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
@@ -15,6 +17,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  */
 public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager {
 	
+	private List<File> allFiles;
 	private File nodeObjectFile;
 	private File nodeObjectOffsetIndexFile;
 	private File nodeTileIndexFile;
@@ -32,6 +35,7 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	 * Creates a new instance.
 	 */
 	public TempFileDatasetStoreFileManager() {
+		allFiles = new ArrayList<File>();
 		wayTileIndexFileMap = new HashMap<Integer, File>();
 	}
 	
@@ -45,7 +49,14 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	 */
 	private File createTempFile(String prefix) {
 		try {
-			return File.createTempFile(prefix, null);
+			File file;
+			
+			file = File.createTempFile(prefix, null);
+			
+			allFiles.add(file);
+			
+			return file;
+			
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to create a new temporary file.", e);
 		}
@@ -200,18 +211,8 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	 */
 	@Override
 	public void release() {
-		nodeObjectFile.delete();
-		nodeObjectOffsetIndexFile.delete();
-		nodeTileIndexFile.delete();
-		wayObjectFile.delete();
-		wayObjectOffsetIndexFile.delete();
-		for (File file : wayTileIndexFileMap.values()) {
+		for (File file : allFiles) {
 			file.delete();
 		}
-		relationObjectFile.delete();
-		relationObjectOffsetIndexFile.delete();
-		nodeRelationIndexFile.delete();
-		wayRelationIndexFile.delete();
-		relationRelationIndexFile.delete();
 	}
 }

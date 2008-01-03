@@ -97,6 +97,10 @@ public class IndexStore<K, T extends IndexElement<K>> implements Releasable {
 		K key;
 		long fileOffset;
 		
+		if (complete) {
+			throw new OsmosisRuntimeException("Cannot write new data after complete has been called.");
+		}
+		
 		fileOffset = indexStore.add(element);
 		
 		key = element.getKey();
