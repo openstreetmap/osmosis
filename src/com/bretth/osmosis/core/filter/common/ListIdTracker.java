@@ -2,7 +2,9 @@ package com.bretth.osmosis.core.filter.common;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 
@@ -26,8 +28,16 @@ public class ListIdTracker implements IdTracker {
 	private static final double LIST_SIZE_EXTENSION_FACTOR = 1.5;
 	
 	
-	private int[] idList;
-	private int idOffset;
+	/**
+	 * This is the main list of id values. It is allocated in chunks and the
+	 * maximum valid offset is defined by idOffset.
+	 */
+	/* package */ int[] idList;
+	/**
+	 * Flags where the maximum written id offset occurs in the list. If new
+	 * values are added and the list is full, new space must be allocated.
+	 */
+	/* package */ int idOffset;
 	private int maxIdAdded;
 	private boolean sorted;
 	
@@ -81,6 +91,30 @@ public class ListIdTracker implements IdTracker {
 	
 	
 	/**
+	 * If the list is unsorted, this method will re-order the contents.
+	 */
+	private void ensureListIsSorted() {
+		if (!sorted) {
+			List<Integer> tmpList;
+			
+			tmpList = new ArrayList<Integer>(idOffset);
+			
+			for (int i = 0; i < idOffset; i++) {
+				tmpList.add(Integer.valueOf(idList[i]));
+			}
+			
+			Collections.sort(tmpList);
+			
+			for (int i = 0; i < idOffset; i++) {
+				idList[i] = tmpList.get(i).intValue();
+			}
+			
+			sorted = true;
+		}
+	}
+	
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public void set(long id) {
@@ -118,23 +152,7 @@ public class ListIdTracker implements IdTracker {
 		
 		// If the list is not sorted, it must be sorted prior to a search being
 		// performed.
-		if (!sorted) {
-			List<Integer> tmpList;
-			
-			tmpList = new ArrayList<Integer>(idOffset);
-			
-			for (int i = 0; i < idOffset; i++) {
-				tmpList.add(Integer.valueOf(idList[i]));
-			}
-			
-			Collections.sort(tmpList);
-			
-			for (int i = 0; i < idOffset; i++) {
-				idList[i] = tmpList.get(i).intValue();
-			}
-			
-			sorted = true;
-		}
+		ensureListIsSorted();
 		
 		// Perform a binary search splitting the list in half each time until
 		// the requested id is confirmed as existing or not.
@@ -187,5 +205,69 @@ public class ListIdTracker implements IdTracker {
 		}
 		
 		return idFound;
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterator<Long> iterator() {
+		// If the list is not sorted, it must be sorted prior to data being
+		// returned.
+		ensureListIsSorted();
+		
+		return new IdIterator();
+	}
+	
+	
+	/**
+	 * The iterator implementation for providing access to the list of ids.
+	 * 
+	 * @author Brett Henderson
+	 */
+	private class IdIterator implements Iterator<Long> {
+		
+		private int iteratorOffset;
+		
+		
+		/**
+		 * Creates a new instance.
+		 */
+		public IdIterator() {
+			iteratorOffset = 0;
+		}
+		
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public boolean hasNext() {
+			return (iteratorOffset < idOffset);
+		}
+		
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Long next() {
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			}
+			
+			return (long) idList[iteratorOffset++];
+		}
+		
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+		
 	}
 }

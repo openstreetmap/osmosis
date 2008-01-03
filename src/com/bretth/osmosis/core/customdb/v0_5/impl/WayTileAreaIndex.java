@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bretth.osmosis.core.store.IndexStore;
+import com.bretth.osmosis.core.store.IndexStoreReader;
 import com.bretth.osmosis.core.store.IntegerLongIndexElement;
 import com.bretth.osmosis.core.store.Releasable;
 import com.bretth.osmosis.core.store.UnsignedIntegerComparator;
@@ -66,6 +67,44 @@ public class WayTileAreaIndex implements Releasable {
 			if ((maskedMinimum) == (maskedMaximum)) {
 				indexes.get(i).write(new IntegerLongIndexElement(maskedMinimum, wayId));
 			}
+		}
+	}
+	
+	
+	/**
+	 * Creates a new reader capable of accessing the contents of this index. The
+	 * reader must be explicitly released when no longer required. Readers must
+	 * be released prior to this index.
+	 * 
+	 * @return An index reader.
+	 */
+	public WayTileAreaIndexReader createReader() {
+		ReleasableContainer releasableContainer = new ReleasableContainer();
+		
+		try {
+			List<IndexStoreReader<Integer, IntegerLongIndexElement>> indexReaders;
+			
+			indexReaders = new ArrayList<IndexStoreReader<Integer,IntegerLongIndexElement>>(masks.length);
+			for (IndexStore<Integer, IntegerLongIndexElement> index : indexes) {
+				indexReaders.add(releasableContainer.add(index.createReader()));
+			}
+			
+			releasableContainer.clear();
+			
+			return new WayTileAreaIndexReader(masks, indexReaders);
+			
+		} finally {
+			releasableContainer.release();
+		}
+	}
+	
+	
+	/**
+	 * Finishes all file writes and sorts the file contents if necessary.
+	 */
+	public void complete() {
+		for (IndexStore<Integer, IntegerLongIndexElement> index : indexes) {
+			index.complete();
 		}
 	}
 	

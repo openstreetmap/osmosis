@@ -1,11 +1,17 @@
 package com.bretth.osmosis.core.customdb.v0_5.impl;
 
+import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.container.v0_5.Dataset;
+import com.bretth.osmosis.core.container.v0_5.DatasetReader;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
 import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
+import com.bretth.osmosis.core.domain.v0_5.EntityType;
 import com.bretth.osmosis.core.domain.v0_5.Node;
+import com.bretth.osmosis.core.domain.v0_5.Relation;
+import com.bretth.osmosis.core.domain.v0_5.RelationMember;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.merge.v0_5.impl.SortedEntityPipeValidator;
@@ -27,7 +33,7 @@ import com.bretth.osmosis.core.task.v0_5.Sink;
  * 
  * @author Brett Henderson
  */
-public class DatasetStore implements Sink, EntityProcessor {
+public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	
 	private SortedEntityPipeValidator sortedPipeValidator;
 	private TileCalculator tileCalculator;
@@ -39,6 +45,10 @@ public class DatasetStore implements Sink, EntityProcessor {
 	private RandomAccessObjectStore<Way> wayObjectStore;
 	private IndexStore<Long, LongLongIndexElement> wayObjectOffsetIndexWriter;
 	private WayTileAreaIndex wayTileIndexWriter;
+	private RandomAccessObjectStore<Relation> relationObjectStore;
+	private IndexStore<Long, LongLongIndexElement> relationObjectOffsetIndexWriter;
+	private IndexStore<Long, LongLongIndexElement> wayRelationIndexWriter;
+	private IndexStore<Long, LongLongIndexElement> nodeRelationIndexWriter;
 	private UnsignedIntegerComparator uintComparator;
 	
 	
@@ -70,7 +80,11 @@ public class DatasetStore implements Sink, EntityProcessor {
 		tileCalculator = new TileCalculator();
 		uintComparator = new UnsignedIntegerComparator();
 		
-		nodeObjectStore = new RandomAccessObjectStore<Node>(new SingleClassObjectSerializationFactory(Node.class), "nos");
+		// Create node store and indexes.
+		nodeObjectStore = new RandomAccessObjectStore<Node>(
+			new SingleClassObjectSerializationFactory(Node.class),
+			fileManager.getNodeObjectFile()
+		);
 		nodeObjectOffsetIndexWriter = new IndexStore<Long, LongLongIndexElement>(
 			LongLongIndexElement.class,
 			new ComparableComparator<Long>(),
@@ -82,7 +96,38 @@ public class DatasetStore implements Sink, EntityProcessor {
 			fileManager.getNodeTileIndexFile()
 		);
 		
+		// Create way store and indexes.
+		wayObjectStore = new RandomAccessObjectStore<Way>(
+			new SingleClassObjectSerializationFactory(Way.class),
+			fileManager.getWayObjectFile()
+		);
+		wayObjectOffsetIndexWriter = new IndexStore<Long, LongLongIndexElement>(
+			LongLongIndexElement.class,
+			new ComparableComparator<Long>(),
+			fileManager.getWayObjectOffsetIndexFile()
+		);
 		wayTileIndexWriter = new WayTileAreaIndex(fileManager);
+		
+		// Create relation store and indexes.
+		relationObjectStore = new RandomAccessObjectStore<Relation>(
+			new SingleClassObjectSerializationFactory(Relation.class),
+			fileManager.getRelationObjectFile()
+		);
+		relationObjectOffsetIndexWriter = new IndexStore<Long, LongLongIndexElement>(
+			LongLongIndexElement.class,
+			new ComparableComparator<Long>(),
+			fileManager.getRelationObjectOffsetIndexFile()
+		);
+		nodeRelationIndexWriter = new IndexStore<Long, LongLongIndexElement>(
+			LongLongIndexElement.class,
+			new ComparableComparator<Long>(),
+			fileManager.getNodeRelationIndexFile()
+		);
+		wayRelationIndexWriter = new IndexStore<Long, LongLongIndexElement>(
+			LongLongIndexElement.class,
+			new ComparableComparator<Long>(),
+			fileManager.getWayRelationIndexFile()
+		);
 	}
 	
 	
@@ -200,8 +245,37 @@ public class DatasetStore implements Sink, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void process(RelationContainer relation) {
-		// Do nothing.
+	public void process(RelationContainer relationContainer) {
+		Relation relation;
+		long relationId;
+		long objectOffset;
+		
+		relation = relationContainer.getEntity();
+		relationId = relation.getId();
+		
+		// Write the relation to the object store and save the file offset in an
+		// index keyed by relation id.
+		objectOffset = relationObjectStore.add(relation);
+		relationObjectOffsetIndexWriter.write(
+			new LongLongIndexElement(relationId, objectOffset)
+		);
+		
+		// Write the relation id to indexes keyed by each of the relation members.
+		for (RelationMember member : relation.getMemberList()) {
+			EntityType memberType;
+			
+			memberType = member.getMemberType();
+			
+			if (memberType.equals(EntityType.Node)) {
+				nodeRelationIndexWriter.write(new LongLongIndexElement(member.getMemberId(), relationId));
+			} else if (memberType.equals(EntityType.Way)) {
+				wayRelationIndexWriter.write(new LongLongIndexElement(member.getMemberId(), relationId));
+			} else if (memberType.equals(EntityType.Relation)) {
+				// Do nothing.
+			} else {
+				throw new OsmosisRuntimeException("Member type " + memberType + " is not recognised.");
+			}
+		}
 	}
 	
 	
@@ -211,6 +285,42 @@ public class DatasetStore implements Sink, EntityProcessor {
 	public void complete() {
 		nodeObjectOffsetIndexWriter.complete();
 		nodeTileIndexWriter.complete();
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public DatasetReader createReader() {
+		ReleasableContainer releasableContainer = new ReleasableContainer();
+		
+		try {
+			DatasetReader reader;
+			
+			reader = new DatasetStoreReader(
+				releasableContainer.add(nodeObjectStore.createReader()),
+				releasableContainer.add(nodeObjectOffsetIndexWriter.createReader()),
+				releasableContainer.add(wayObjectStore.createReader()),
+				releasableContainer.add(wayObjectOffsetIndexWriter.createReader()),
+				releasableContainer.add(relationObjectStore.createReader()),
+				releasableContainer.add(relationObjectOffsetIndexWriter.createReader()),
+				tileCalculator,
+				uintComparator,
+				releasableContainer.add(nodeTileIndexWriter.createReader()),
+				releasableContainer.add(wayTileIndexWriter.createReader()),
+				releasableContainer.add(nodeRelationIndexWriter.createReader()),
+				releasableContainer.add(wayRelationIndexWriter.createReader())
+			);
+			
+			// Stop the release of all created objects.
+			releasableContainer.clear();
+			
+			return reader;
+			
+		} finally {
+			releasableContainer.release();
+		}
 	}
 	
 	

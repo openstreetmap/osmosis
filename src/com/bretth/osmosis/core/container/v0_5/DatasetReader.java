@@ -1,11 +1,11 @@
 package com.bretth.osmosis.core.container.v0_5;
 
-import com.bretth.osmosis.core.domain.v0_5.Entity;
+import java.util.Iterator;
+
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.store.Releasable;
-import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**
@@ -15,14 +15,6 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
  * @author Brett Henderson
  */
 public interface DatasetReader extends Releasable {
-
-	/**
-	 * Allows the entire dataset to be iterated across.
-	 * 
-	 * @return An iterator pointing to the start of the collection.
-	 */
-	public ReleasableIterator<Entity> iterate();
-	
 	
 	/**
 	 * Retrieves a specific node by its identifier.
@@ -31,7 +23,7 @@ public interface DatasetReader extends Releasable {
 	 *            The id of the node.
 	 * @return The node.
 	 */
-	public Node getNode(Node id);
+	public Node getNode(long id);
 	
 	
 	/**
@@ -41,7 +33,7 @@ public interface DatasetReader extends Releasable {
 	 *            The id of the way.
 	 * @return The way.
 	 */
-	public Way getWay(Way id);
+	public Way getWay(long id);
 	
 	
 	/**
@@ -51,13 +43,32 @@ public interface DatasetReader extends Releasable {
 	 *            The id of the relation.
 	 * @return The relation.
 	 */
-	public Relation getRelation(Relation id);
+	public Relation getRelation(long id);
+	
+	
+	/**
+	 * Allows the entire dataset to be iterated across.
+	 * 
+	 * @return An iterator pointing to the start of the collection.
+	 */
+	public Iterator<EntityContainer> iterate();
 	
 	
 	/**
 	 * Allows all data within a bounding box to be iterated across.
 	 * 
+	 * @param left
+	 *            The longitude marking the left edge of the bounding box.
+	 * @param right
+	 *            The longitude marking the right edge of the bounding box.
+	 * @param top
+	 *            The latitude marking the top edge of the bounding box.
+	 * @param bottom
+	 *            The latitude marking the bottom edge of the bounding box.
+	 * @param completeWays
+	 *            If true, all nodes within the ways will be returned even if
+	 *            they lie outside the box.
 	 * @return An iterator pointing to the start of the result data.
 	 */
-	public ReleasableIterator<Entity> iterateBoundingBox();
+	public Iterator<EntityContainer> iterateBoundingBox(double left, double right, double top, double bottom, boolean completeWays);
 }

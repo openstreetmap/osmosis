@@ -8,7 +8,7 @@ package com.bretth.osmosis.core.filter.common;
  * 
  * @author Brett Henderson
  */
-public interface IdTracker {
+public interface IdTracker extends Iterable<Long> {
 	/**
 	 * Marks the specified id as active.
 	 * 

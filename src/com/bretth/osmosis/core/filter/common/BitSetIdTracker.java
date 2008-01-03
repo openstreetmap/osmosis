@@ -1,6 +1,8 @@
 package com.bretth.osmosis.core.filter.common;
 
 import java.util.BitSet;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 
@@ -13,8 +15,8 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class BitSetIdTracker implements IdTracker {
-	private BitSet positiveSet;
-	private BitSet negativeSet;
+	/* package */ BitSet positiveSet;
+	/* package */ ListIdTracker negativeSet;
 	
 	
 	/**
@@ -22,7 +24,7 @@ public class BitSetIdTracker implements IdTracker {
 	 */
 	public BitSetIdTracker() {
 		positiveSet = new BitSet();
-		negativeSet = new BitSet();
+		negativeSet = new ListIdTracker();
 	}
 	
 	
@@ -47,21 +49,15 @@ public class BitSetIdTracker implements IdTracker {
 	 * {@inheritDoc}
 	 */
 	public void set(long id) {
-		BitSet activeSet;
-		long absoluteId;
-		int activeIndex;
+		int intId;
 		
-		if (id >= 0) {
-			activeSet = positiveSet;
-			absoluteId = id;
+		intId = longToInt(id);
+		
+		if (intId >= 0) {
+			positiveSet.set(intId);
 		} else {
-			activeSet = negativeSet;
-			absoluteId = id * -1;
+			negativeSet.set(intId);
 		}
-		
-		activeIndex = longToInt(absoluteId);
-		
-		activeSet.set(activeIndex);
 	}
 	
 	
@@ -69,20 +65,119 @@ public class BitSetIdTracker implements IdTracker {
 	 * {@inheritDoc}
 	 */
 	public boolean get(long id) {
-		BitSet activeSet;
-		long absoluteBit;
-		int activeBit;
+		int intId;
 		
-		if (id >= 0) {
-			activeSet = positiveSet;
-			absoluteBit = id;
+		intId = longToInt(id);
+		
+		if (intId >= 0) {
+			return positiveSet.get(intId);
 		} else {
-			activeSet = negativeSet;
-			absoluteBit = id * -1;
+			return negativeSet.get(intId);
+		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Iterator<Long> iterator() {
+		return new IdIterator();
+	}
+	
+	
+	/**
+	 * The iterator implementation for providing access to the list of ids.
+	 * 
+	 * @author Brett Henderson
+	 */
+	private class IdIterator implements Iterator<Long> {
+		
+		/**
+		 * Tracks whether we're currently reading positive or negative bitsets.
+		 */
+		private boolean readingPositive;
+		private long nextId;
+		private boolean nextIdAvailable;
+		private Iterator<Long> negativeIterator;
+		/**
+		 * The current bit offset in the positive bitset.
+		 */
+		private int positiveOffset;
+		
+		
+		/**
+		 * Creates a new instance.
+		 */
+		public IdIterator() {
+			readingPositive = false;
+			nextIdAvailable = false;
+			
+			positiveOffset = 0;
 		}
 		
-		activeBit = longToInt(absoluteBit);
 		
-		return activeSet.get(activeBit);
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public boolean hasNext() {
+			if (!nextIdAvailable) {
+				if (!readingPositive) {
+					// Create a negative set iterator if one doesn't already exist.
+					if (!(negativeIterator == null)) {
+						negativeIterator = negativeSet.iterator();
+					}
+					
+					// Get data from the negative iterator if available, if not
+					// available switch to positive reading.
+					if (negativeIterator.hasNext()) {
+						nextId = negativeIterator.next();
+						nextIdAvailable = true;
+					} else {
+						negativeIterator = null;
+						readingPositive = true;
+					}
+				}
+				
+				if (readingPositive) {
+					int nextBitOffset;
+					
+					nextBitOffset = positiveSet.nextSetBit(positiveOffset);
+					
+					if (nextBitOffset >= 0) {
+						nextId = nextBitOffset;
+						nextIdAvailable = true;
+						positiveOffset = nextBitOffset + 1;
+					}
+				}
+			}
+			
+			return nextIdAvailable;
+		}
+		
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public Long next() {
+			if (!hasNext()) {
+				throw new NoSuchElementException();
+			}
+			
+			nextIdAvailable = false;
+			
+			return (long) nextId;
+		}
+		
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
 	}
 }
