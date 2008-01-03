@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.mysql.v0_5.impl;
 
 import com.bretth.osmosis.core.domain.v0_5.WayNode;

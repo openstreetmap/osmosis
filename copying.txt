@@ -2,7 +2,7 @@ Osmosis consists of all files in this archive with the exception of the
 third party libraries in the lib subdirectory, and the apache bzip2
 implementation.
 
-Osmosis is Copyright 2007 by Brett Henderson and other
+Osmosis is Copyright 2007-2008 by Brett Henderson and other
 contributors.
 
 Osmosis is free software: you can redistribute it and/or modify

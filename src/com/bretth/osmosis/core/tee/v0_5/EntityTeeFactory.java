@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.tee.v0_5;
 
 import com.bretth.osmosis.core.cli.TaskConfiguration;

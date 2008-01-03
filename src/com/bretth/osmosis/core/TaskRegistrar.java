@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core;
 
 import com.bretth.osmosis.core.buffer.v0_5.ChangeBufferFactory;
