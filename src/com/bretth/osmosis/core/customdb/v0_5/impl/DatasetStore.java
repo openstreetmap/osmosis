@@ -261,8 +261,11 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 			}
 		}
 		
-		// Write the way id to an index keyed by tile.
-		wayTileIndexWriter.write(wayId, minimumTile, maximumTile);
+		// Write the way id to an index keyed by tile but only if tiles were
+		// actually found.
+		if (tilesFound) {
+			wayTileIndexWriter.write(wayId, minimumTile, maximumTile);
+		}
 	}
 	
 	
