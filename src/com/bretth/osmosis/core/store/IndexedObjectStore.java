@@ -74,14 +74,6 @@ public class IndexedObjectStore<T extends Storeable> implements Releasable {
 	
 	
 	/**
-	 * Finishes all file writes and builds indexes as required.
-	 */
-	public void complete() {
-		indexStore.complete();
-	}
-	
-	
-	/**
 	 * Creates a new reader capable of accessing the contents of this store. The
 	 * reader must be explicitly released when no longer required. Readers must
 	 * be released prior to this store.

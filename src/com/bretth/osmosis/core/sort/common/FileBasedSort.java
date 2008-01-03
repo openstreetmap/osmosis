@@ -272,14 +272,6 @@ public class FileBasedSort<T extends Storeable> implements Releasable {
 	
 	
 	/**
-	 * Finishes all file writes and builds indexes as required.
-	 */
-	public void complete() {
-		chunkedEntityStore.complete();
-	}
-	
-	
-	/**
 	 * {@inheritDoc}
 	 */
 	public void release() {

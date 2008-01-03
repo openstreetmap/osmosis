@@ -100,16 +100,6 @@ public class WayTileAreaIndex implements Releasable {
 	
 	
 	/**
-	 * Finishes all file writes and sorts the file contents if necessary.
-	 */
-	public void complete() {
-		for (IndexStore<Integer, IntegerLongIndexElement> index : indexes) {
-			index.complete();
-		}
-	}
-	
-	
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override

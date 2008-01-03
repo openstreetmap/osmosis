@@ -215,7 +215,6 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 			nodeObjectReader = nodeObjectStore.createReader();
 		}
 		if (nodeObjectOffsetIndexReader == null) {
-			nodeObjectOffsetIndexWriter.complete();
 			nodeObjectOffsetIndexReader = nodeObjectOffsetIndexWriter.createReader();
 		}
 		
@@ -307,13 +306,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	 * {@inheritDoc}
 	 */
 	public void complete() {
-		nodeObjectOffsetIndexWriter.complete();
-		nodeTileIndexWriter.complete();
-		wayObjectOffsetIndexWriter.complete();
-		wayTileIndexWriter.complete();
-		relationObjectOffsetIndexWriter.complete();
-		wayRelationIndexWriter.complete();
-		nodeRelationIndexWriter.complete();
+		// Do nothing.
 	}
 	
 	

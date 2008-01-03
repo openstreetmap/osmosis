@@ -47,7 +47,6 @@ public class Test {
 				
 				store.add(i, node);
 			}
-			store.complete();
 			System.out.println("Middle " + new Date());
 			
 			storeReader = store.createReader();
