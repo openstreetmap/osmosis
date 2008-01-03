@@ -1,6 +1,9 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.customdb.v0_5.impl;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.container.v0_5.Dataset;
 import com.bretth.osmosis.core.container.v0_5.DatasetReader;
@@ -21,6 +24,7 @@ import com.bretth.osmosis.core.store.ComparableComparator;
 import com.bretth.osmosis.core.store.IndexStore;
 import com.bretth.osmosis.core.store.IndexStoreReader;
 import com.bretth.osmosis.core.store.LongLongIndexElement;
+import com.bretth.osmosis.core.store.NoSuchIndexElementException;
 import com.bretth.osmosis.core.store.RandomAccessObjectStore;
 import com.bretth.osmosis.core.store.RandomAccessObjectStoreReader;
 import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
@@ -35,6 +39,9 @@ import com.bretth.osmosis.core.task.v0_5.Sink;
  * @author Brett Henderson
  */
 public class DatasetStore implements Sink, EntityProcessor, Dataset {
+	
+	private static final Logger log = Logger.getLogger(DatasetStore.class.getName());
+	
 	
 	private SortedEntityPipeValidator sortedPipeValidator;
 	private TileCalculator tileCalculator;
@@ -239,25 +246,37 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 			int tile;
 			
 			nodeId = wayNode.getNodeId();
-			node = nodeObjectReader.get(
-				nodeObjectOffsetIndexReader.get(nodeId).getValue()
-			);
 			
-			tile = (int) tileCalculator.calculateTile(node.getLatitude(), node.getLongitude());
-			
-			if (tilesFound) {
-				if (uintComparator.compare(tile, minimumTile) < 0) {
+			try {
+				node = nodeObjectReader.get(
+					nodeObjectOffsetIndexReader.get(nodeId).getValue()
+				);
+				
+				tile = (int) tileCalculator.calculateTile(node.getLatitude(), node.getLongitude());
+				
+				if (tilesFound) {
+					if (uintComparator.compare(tile, minimumTile) < 0) {
+						minimumTile = tile;
+					}
+					if (uintComparator.compare(maximumTile, tile) < 0) {
+						maximumTile = tile;
+					}
+					
+				} else {
 					minimumTile = tile;
-				}
-				if (uintComparator.compare(maximumTile, tile) < 0) {
 					maximumTile = tile;
+					
+					tilesFound = true;
 				}
 				
-			} else {
-				minimumTile = tile;
-				maximumTile = tile;
-				
-				tilesFound = true;
+			} catch (NoSuchIndexElementException e) {
+				// Ignore any referential integrity problems.
+				if (log.isLoggable(Level.FINER)) {
+					log.finest(
+						"Ignoring referential integrity problem where way " + wayId +
+						" refers to non-existent node " + nodeId
+					);
+				}
 			}
 		}
 		

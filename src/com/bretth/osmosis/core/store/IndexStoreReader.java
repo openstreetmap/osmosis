@@ -4,7 +4,6 @@ package com.bretth.osmosis.core.store;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.customdb.v0_5.impl.IndexRangeIterator;
 
 
@@ -114,7 +113,7 @@ public class IndexStoreReader<K, T extends IndexElement<K>> implements Releasabl
 				}
 				
 				if (!offsetFound) {
-					throw new OsmosisRuntimeException("Requested key " + key + " does not exist.");
+					throw new NoSuchIndexElementException("Requested key " + key + " does not exist.");
 				}
 			}
 		}
