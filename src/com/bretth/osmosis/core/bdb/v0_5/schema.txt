@@ -1,0 +1,18 @@
+The BDB schema looks like this:
+
+Node - Node object keyed by id.  Allows details of node to be retrieved.
+Way - Way object keyed by id. Allows details of way to be retrieved.
+Relation - Relation object keyed by id. Allows details of relation to be retrieved.
+
+TileNode - Combination key of tile id and node id.  Allows all nodes for a particular tile to be retrived.
+
+TileWay0 - Combination key of tile id and way id.  Allows all ways for a particular tile to be retrieved.
+TileWay1 - "
+TileWay2 - "
+TileWay3 - "
+TileWay4 - "
+TileWay5 - "
+
+NodeRelation - Combination key of node id and relation id.  Allows all relations referencing a particular node to be retrieved.
+WayRelation - Combination key of way id and relation id.  Allows all relations referencing a particular way to be retrieved.
+RelationRelation - Combination key of relation id and relation id.  Allows all relations referencing a particular relation to be retrieved.
