@@ -142,7 +142,7 @@ public class IndexStoreReader<K, T extends IndexElement<K>> implements Releasabl
 		// beginKey.
 		intervalBegin = 0;
 		intervalEnd = elementCount;
-		for (long intervalSize = intervalEnd - intervalBegin; intervalSize > 1; intervalSize = intervalEnd - intervalBegin) {
+		for (long intervalSize = intervalEnd - intervalBegin; intervalSize > 2; intervalSize = intervalEnd - intervalBegin) {
 			long intervalMid;
 			T element;
 			K currentKey;
