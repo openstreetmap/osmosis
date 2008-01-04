@@ -2,6 +2,7 @@
 package com.bretth.osmosis.core.customdb.v0_5.impl;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -34,6 +35,8 @@ public class PermanentFileDatasetStoreFileManager implements DatasetStoreFileMan
 	 */
 	public PermanentFileDatasetStoreFileManager(File directory) {
 		this.directory = directory;
+
+		wayTileIndexFileMap = new HashMap<Integer, File>();
 	}
 	
 	
