@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.customdb.v0_5;
+package com.bretth.osmosis.core.bdb.v0_5;
 
 import java.io.File;
 
@@ -10,13 +10,14 @@ import com.bretth.osmosis.core.pipeline.v0_5.SinkManager;
 
 
 /**
- * The task manager factory for writing an entity stream to a dataset.
+ * The task manager factory for reading the entire contents of a dataset.
  * 
  * @author Brett Henderson
  */
-public class WriteDatasetFactory extends TaskManagerFactory {
+public class BdbWriterFactory extends TaskManagerFactory {
 	private static final String ARG_DIRECTORY_NAME = "directory";
 	private static final String DEFAULT_DIRECTORY_NAME = "dataset";
+	
 	
 	/**
 	 * {@inheritDoc}
@@ -25,7 +26,7 @@ public class WriteDatasetFactory extends TaskManagerFactory {
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		String directoryName;
 		File directory;
-		WriteDataset task;
+		BdbWriter task;
 		
 		// Get the task arguments.
 		directoryName = getStringArgument(
@@ -38,7 +39,7 @@ public class WriteDatasetFactory extends TaskManagerFactory {
 		directory = new File(directoryName);
 		
 		// Build the task object.
-		task = new WriteDataset(directory);
+		task = new BdbWriter(directory);
 		
 		return new SinkManager(
 			taskConfig.getId(),

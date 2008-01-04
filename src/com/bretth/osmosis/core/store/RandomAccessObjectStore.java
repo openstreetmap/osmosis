@@ -83,7 +83,7 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 				
 				randomFile = new RandomAccessFile(storageFile, "rw");
 				
-				objectWriter = serializationFactory.createObjectWriter(new StoreWriter(randomFile), storeClassRegister);
+				objectWriter = serializationFactory.createObjectWriter(new DataOutputStoreWriter(randomFile), storeClassRegister);
 				
 				stage = StorageStage.Add;
 				

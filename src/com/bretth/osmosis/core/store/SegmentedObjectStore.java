@@ -104,7 +104,7 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 					dataOutStream = new DataOutputStream(arrayOutStream);
 				}
 				
-				objectWriter = serializationFactory.createObjectWriter(new StoreWriter(dataOutStream), storeClassRegister);
+				objectWriter = serializationFactory.createObjectWriter(new DataOutputStoreWriter(dataOutStream), storeClassRegister);
 				
 				chunkActive = true;
 				

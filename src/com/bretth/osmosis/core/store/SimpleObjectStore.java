@@ -79,7 +79,7 @@ public class SimpleObjectStore<T extends Storeable> implements Completable {
 					dataOutStream = new DataOutputStream(fileOutStream);
 				}
 				
-				objectWriter = serializationFactory.createObjectWriter(new StoreWriter(dataOutStream), storeClassRegister);
+				objectWriter = serializationFactory.createObjectWriter(new DataOutputStoreWriter(dataOutStream), storeClassRegister);
 				
 				stage = StorageStage.Add;
 				
