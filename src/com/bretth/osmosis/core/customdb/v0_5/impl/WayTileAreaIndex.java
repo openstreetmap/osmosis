@@ -68,6 +68,8 @@ public class WayTileAreaIndex implements Completable {
 			// granularity allows the way to fit within a single tile value.
 			if ((maskedMinimum) == (maskedMaximum)) {
 				indexes.get(i).write(new IntegerLongIndexElement(maskedMinimum, wayId));
+				// Stop once one index has received the way.
+				break;
 			}
 		}
 	}
