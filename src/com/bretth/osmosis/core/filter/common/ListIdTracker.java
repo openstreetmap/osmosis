@@ -97,6 +97,7 @@ public class ListIdTracker implements IdTracker {
 	private void ensureListIsSorted() {
 		if (!sorted) {
 			List<Integer> tmpList;
+			int newIdOffset;
 			
 			tmpList = new ArrayList<Integer>(idOffset);
 			
@@ -106,9 +107,17 @@ public class ListIdTracker implements IdTracker {
 			
 			Collections.sort(tmpList);
 			
+			newIdOffset = 0;
 			for (int i = 0; i < idOffset; i++) {
-				idList[i] = tmpList.get(i).intValue();
+				int nextValue;
+				
+				nextValue = tmpList.get(i).intValue();
+				
+				if (newIdOffset <= 0 || nextValue > idList[newIdOffset - 1]) {
+					idList[newIdOffset++] = nextValue;
+				}
 			}
+			idOffset = newIdOffset;
 			
 			sorted = true;
 		}
