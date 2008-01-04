@@ -3,6 +3,9 @@ package com.bretth.osmosis.core.bdb.v0_5;
 
 import java.io.File;
 
+import com.bretth.osmosis.core.bdb.v0_5.impl.DatasetContext;
+import com.bretth.osmosis.core.bdb.v0_5.impl.NodeDao;
+import com.bretth.osmosis.core.bdb.v0_5.impl.TransactionContext;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
@@ -28,11 +31,11 @@ public class BdbWriter implements Sink, EntityProcessor {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param directory
+	 * @param home
 	 *            The directory to store all data files in.
 	 */
-	public BdbWriter(File directory) {
-		dsCtx = new DatasetContext(directory, true, false);
+	public BdbWriter(File home) {
+		dsCtx = new DatasetContext(home, true, false);
 		
 		initialized = false;
 	}
@@ -44,6 +47,8 @@ public class BdbWriter implements Sink, EntityProcessor {
 	private void initialize() {
 		txnCtx = dsCtx.createTransaction();
 		nodeDao = txnCtx.getNodeDao();
+		
+		initialized = true;
 	}
 	
 	

@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.bdb.v0_5;
+package com.bretth.osmosis.core.bdb.v0_5.impl;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

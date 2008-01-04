@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.bdb.v0_5;
+package com.bretth.osmosis.core.bdb.v0_5.impl;
 
 import java.io.File;
 
@@ -24,7 +24,7 @@ public class DatasetContext implements Completable {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param directory
+	 * @param home
 	 *            The directory to store all data files in.
 	 * @param create
 	 *            If true a new environment will be created, otherwise it must
@@ -32,8 +32,8 @@ public class DatasetContext implements Completable {
 	 * @param readOnly
 	 *            If true, no updates will be allowed to the underlying data.
 	 */
-	public DatasetContext(File directory, boolean create, boolean readOnly) {
-		env = new DatabaseEnvironment(directory, create, readOnly);
+	public DatasetContext(File home, boolean create, boolean readOnly) {
+		env = new DatabaseEnvironment(home, create, readOnly);
 		
 		initialized = false;
 	}

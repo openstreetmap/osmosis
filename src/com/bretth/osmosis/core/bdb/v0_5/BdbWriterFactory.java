@@ -15,8 +15,8 @@ import com.bretth.osmosis.core.pipeline.v0_5.SinkManager;
  * @author Brett Henderson
  */
 public class BdbWriterFactory extends TaskManagerFactory {
-	private static final String ARG_DIRECTORY_NAME = "directory";
-	private static final String DEFAULT_DIRECTORY_NAME = "dataset";
+	private static final String ARG_HOME_NAME = "home";
+	private static final String DEFAULT_HOME_NAME = "dataset";
 	
 	
 	/**
@@ -24,22 +24,22 @@ public class BdbWriterFactory extends TaskManagerFactory {
 	 */
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
-		String directoryName;
-		File directory;
+		String homeName;
+		File home;
 		BdbWriter task;
 		
 		// Get the task arguments.
-		directoryName = getStringArgument(
+		homeName = getStringArgument(
 			taskConfig,
-			ARG_DIRECTORY_NAME,
-			getDefaultStringArgument(taskConfig, DEFAULT_DIRECTORY_NAME)
+			ARG_HOME_NAME,
+			getDefaultStringArgument(taskConfig, DEFAULT_HOME_NAME)
 		);
 		
 		// Create a file object from the directory name provided.
-		directory = new File(directoryName);
+		home = new File(homeName);
 		
 		// Build the task object.
-		task = new BdbWriter(directory);
+		task = new BdbWriter(home);
 		
 		return new SinkManager(
 			taskConfig.getId(),

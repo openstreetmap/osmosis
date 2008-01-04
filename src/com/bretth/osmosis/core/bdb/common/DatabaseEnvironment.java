@@ -23,8 +23,9 @@ import com.sleepycat.je.TransactionConfig;
  */
 public class DatabaseEnvironment implements Completable {
 	
-	private File directory;
-	private Environment environment;
+	private File home;
+	private EnvironmentConfig envConfig;
+	private Environment env;
 	private DatabaseConfig dbConfig;
 	private Map<String, Database> dbMap;
 	
@@ -32,7 +33,7 @@ public class DatabaseEnvironment implements Completable {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param directory
+	 * @param home
 	 *            The directory to store all data files in.
 	 * @param create
 	 *            If true a new environment will be created, otherwise it must
@@ -40,10 +41,15 @@ public class DatabaseEnvironment implements Completable {
 	 * @param readOnly
 	 *            If true, no updates will be allowed to the underlying data.
 	 */
-	public DatabaseEnvironment(File directory, boolean create, boolean readOnly) {
-		this.directory = directory;
+	public DatabaseEnvironment(File home, boolean create, boolean readOnly) {
+		this.home = home;
+		
+		envConfig = new EnvironmentConfig();
+		envConfig.setAllowCreate(create);
+		envConfig.setTransactional(true);
 		
 		dbConfig = new DatabaseConfig();
+		dbConfig.setTransactional(true);
 		if (create) {
 			dbConfig.setAllowCreate(create);
 			// If creating a new environment, it must not already exist.
@@ -62,19 +68,15 @@ public class DatabaseEnvironment implements Completable {
 	 * @return The environment instance.
 	 */
 	private Environment getEnvironment() {
-		if (environment == null) {
-			EnvironmentConfig envConfig;
-			
-			envConfig = new EnvironmentConfig();
-			
+		if (env == null) {
 			try {
-				environment = new Environment(directory, envConfig);
+				env = new Environment(home, envConfig);
 			} catch (DatabaseException e) {
 				throw new OsmosisRuntimeException("Unable to create a new bdb environment.", e);
 			}
 		}
 		
-		return environment;
+		return env;
 	}
 	
 	
@@ -90,7 +92,7 @@ public class DatabaseEnvironment implements Completable {
 		try {
 			Database database;
 			
-			database = environment.openDatabase(null, name, dbConfig);
+			database = getEnvironment().openDatabase(null, name, dbConfig);
 			
 			dbMap.put(name, database);
 			
@@ -116,7 +118,7 @@ public class DatabaseEnvironment implements Completable {
 			txnCfg = new TransactionConfig();
 			txnCfg.setSync(true);
 			
-			return environment.beginTransaction(null, txnCfg);
+			return getEnvironment().beginTransaction(null, txnCfg);
 			
 		} catch (DatabaseException e) {
 			throw new OsmosisRuntimeException("Unable to create a new transaction.", e);
@@ -136,12 +138,14 @@ public class DatabaseEnvironment implements Completable {
 				throw new OsmosisRuntimeException("Unable to close a database.", e);
 			}
 		}
+		dbMap.clear();
 		
 		try {
 			getEnvironment().close();
 		} catch (DatabaseException e) {
-			throw new OsmosisRuntimeException("Unable to close the bdb environment at location " + directory + ".", e);
+			throw new OsmosisRuntimeException("Unable to close the bdb environment at location " + home + ".", e);
 		}
+		env = null;
 	}
 	
 	
@@ -159,13 +163,13 @@ public class DatabaseEnvironment implements Completable {
 		}
 		dbMap.clear();
 		
-		if (environment != null) {
+		if (env != null) {
 			try {
-				environment.close();
+				env.close();
 			} catch (DatabaseException e) {
 				// Do nothing.
 			}
-			environment = null;
+			env = null;
 		}
 	}
 }
