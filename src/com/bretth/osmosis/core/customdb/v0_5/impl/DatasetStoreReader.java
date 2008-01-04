@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.container.v0_5.DatasetReader;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
@@ -27,6 +29,7 @@ import com.bretth.osmosis.core.store.EmptyIterator;
 import com.bretth.osmosis.core.store.IndexStoreReader;
 import com.bretth.osmosis.core.store.IntegerLongIndexElement;
 import com.bretth.osmosis.core.store.LongLongIndexElement;
+import com.bretth.osmosis.core.store.NoSuchIndexElementException;
 import com.bretth.osmosis.core.store.RandomAccessObjectStoreReader;
 
 
@@ -40,6 +43,9 @@ import com.bretth.osmosis.core.store.RandomAccessObjectStoreReader;
  * @author Brett Henderson
  */
 public class DatasetStoreReader implements DatasetReader {
+	
+	private static final Logger log = Logger.getLogger(DatasetStoreReader.class.getName());
+	
 	
 	private RandomAccessObjectStoreReader<Node> nodeObjectReader;
 	private IndexStoreReader<Long, LongLongIndexElement> nodeObjectOffsetIndexReader;
@@ -252,6 +258,15 @@ public class DatasetStoreReader implements DatasetReader {
 			maximumTile = calculatedTile;
 		}
 		
+		// The tile values at the corners are all zero. If max tile is 0 but if
+		// the maximum longitude and latitude are above minimum values set the
+		// maximum tile to the maximum value.
+		if (maximumTile == 0) {
+			if (right > -180 || top > -90) {
+				maximumTile = 0xFFFFFFFF;
+			}
+		}
+		
 		// Search through all nodes in the tile range and store the ids of those
 		// within the bounding box.
 		nodeIdTracker = new ListIdTracker();
@@ -274,7 +289,7 @@ public class DatasetStoreReader implements DatasetReader {
 		// within the bounding box.
 		wayIdTracker = new ListIdTracker();
 		wayTileIndexValues = wayTileIndexReader.getRange(minimumTile, maximumTile);
-		while (nodeTileIndexValues.hasNext()) {
+		while (wayTileIndexValues.hasNext()) {
 			long wayId;
 			Way way;
 			List<Node> nodes;
@@ -286,7 +301,17 @@ public class DatasetStoreReader implements DatasetReader {
 			// Load the nodes within the way.
 			nodes = new ArrayList<Node>();
 			for (WayNode wayNode : way.getWayNodeList()) {
-				nodes.add(getNode(wayNode.getNodeId()));
+				try {
+					nodes.add(getNode(wayNode.getNodeId()));
+				} catch (NoSuchIndexElementException e) {
+					// Ignore any referential integrity problems.
+					if (log.isLoggable(Level.FINER)) {
+						log.finest(
+							"Ignoring referential integrity problem where way " + wayId +
+							" refers to non-existent node " + wayNode.getNodeId() + "."
+						);
+					}
+				}
 			}
 			
 			// Determine if the way lies within the required bounding box.

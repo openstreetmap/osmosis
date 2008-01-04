@@ -274,7 +274,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 				if (log.isLoggable(Level.FINER)) {
 					log.finest(
 						"Ignoring referential integrity problem where way " + wayId +
-						" refers to non-existent node " + nodeId
+						" refers to non-existent node " + nodeId + "."
 					);
 				}
 			}
