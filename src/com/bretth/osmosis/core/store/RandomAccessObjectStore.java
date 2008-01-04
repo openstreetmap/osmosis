@@ -17,7 +17,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  *            The object type to be stored.
  * @author Brett Henderson
  */
-public class RandomAccessObjectStore<T extends Storeable> implements Releasable {
+public class RandomAccessObjectStore<T extends Storeable> implements Completable {
 	private ObjectSerializationFactory serializationFactory;
 	private StorageStage stage;
 	private String tempFilePrefix;
@@ -167,6 +167,15 @@ public class RandomAccessObjectStore<T extends Storeable> implements Releasable 
 		} catch (FileNotFoundException e) {
 			throw new OsmosisRuntimeException("Unable to create object stream reading from file " + storageFile + ".", e);
 		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void complete() {
+		initializeReadingStage();
 	}
 	
 	

@@ -20,12 +20,15 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * <p>
  * This class supports chunking where the stream is broken into segments. This
  * is achieved by calling the closeChunk method between add calls.
+ * <p>
+ * This store is only suitable for single-threaded use because it does not
+ * provide per-thread readers.
  * 
  * @param <T>
  *            The object type to be stored.
  * @author Brett Henderson
  */
-public class SegmentedObjectStore<T extends Storeable> implements Releasable {
+public class SegmentedObjectStore<T extends Storeable> implements Completable {
 	private ObjectSerializationFactory serializationFactory;
 	private StorageStage stage;
 	private String storageFilePrefix;
@@ -286,6 +289,15 @@ public class SegmentedObjectStore<T extends Storeable> implements Releasable {
 				}
 			}
 		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void complete() {
+		// Do nothing.
 	}
 	
 	

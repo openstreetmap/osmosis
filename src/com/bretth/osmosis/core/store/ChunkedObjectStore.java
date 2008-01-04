@@ -6,12 +6,15 @@ package com.bretth.osmosis.core.store;
  * Adds indexed chunking capabilities to a basic object store allowing groups of
  * objects to be written and retrieved later by their chunk index. The number of
  * objects and the size of the index is limited only by disk space.
+ * <p>
+ * This store is only suitable for single-threaded use because it does not
+ * provide per-thread readers.
  * 
  * @param <T>
  *            The class type to be stored.
  * @author Brett Henderson
  */
-public class ChunkedObjectStore<T extends Storeable> implements Releasable {
+public class ChunkedObjectStore<T extends Storeable> implements Completable {
 	/**
 	 * Stores all the objects written to this store.
 	 */
@@ -126,8 +129,7 @@ public class ChunkedObjectStore<T extends Storeable> implements Releasable {
 	 * @return An iterator providing access to contents of the store.
 	 */
 	public ReleasableIterator<T> iterate(long chunk) {
-		// If a chunk is in progress, we need to complete it before continuing.
-		closeChunk();
+		complete();
 		
 		if (indexStoreReader == null) {
 			indexStoreReader = indexStore.createReader();
@@ -139,6 +141,18 @@ public class ChunkedObjectStore<T extends Storeable> implements Releasable {
 			indexStoreReader.get(chunk * 2).getValue(),
 			indexStoreReader.get(chunk * 2 + 1).getValue()
 		);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void complete() {
+		// Any outstanding chunks must be closed before we can complete.
+		closeChunk();
+		
+		indexStore.complete();
 	}
 	
 	

@@ -11,7 +11,7 @@ import java.io.File;
  *            The object type to be stored.
  * @author Brett Henderson
  */
-public class IndexedObjectStore<T extends Storeable> implements Releasable {
+public class IndexedObjectStore<T extends Storeable> implements Completable {
 	private RandomAccessObjectStore<T> objectStore;
 	private IndexStore<Long, LongLongIndexElement> indexStore;
 	
@@ -103,6 +103,16 @@ public class IndexedObjectStore<T extends Storeable> implements Releasable {
 				objectStoreReader.release();
 			}
 		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void complete() {
+		objectStore.complete();
+		indexStore.complete();
 	}
 	
 	

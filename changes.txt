@@ -7,6 +7,7 @@ Added validation code to the merge tasks to verify that input data is sorted.
 Enhanced serialisation code to eliminate class identification information in the stream where single data types are being stored.
 Fixed a bug in the ListIdTracker class where unsorted ids were not being sorted correctly.
 Added new dataset task --dataset-write-read for creating temporary datasets.
+Added new dataset task --dataset-write for creating permanent datasets.
 Added new dataset task --dataset-bounding-box for extracting bounding boxes from datasets.
 Added new dataset task --dataset-dump for reading the entire contents of a dataset.
 Command line applications now returns status codes, 0 for success, non-zero for failure.

@@ -21,7 +21,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  *            The object type to be stored.
  * @author Brett Henderson
  */
-public class SimpleObjectStore<T extends Storeable> implements Releasable {
+public class SimpleObjectStore<T extends Storeable> implements Completable {
 	private ObjectSerializationFactory serializationFactory;
 	private StorageStage stage;
 	private String storageFilePrefix;
@@ -182,6 +182,15 @@ public class SimpleObjectStore<T extends Storeable> implements Releasable {
 				}
 			}
 		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void complete() {
+		// Do nothing.
 	}
 	
 	

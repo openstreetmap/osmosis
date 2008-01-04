@@ -4,6 +4,7 @@ package com.bretth.osmosis.core.customdb.v0_5.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bretth.osmosis.core.store.Completable;
 import com.bretth.osmosis.core.store.IndexStore;
 import com.bretth.osmosis.core.store.IndexStoreReader;
 import com.bretth.osmosis.core.store.IntegerLongIndexElement;
@@ -15,7 +16,7 @@ import com.bretth.osmosis.core.store.UnsignedIntegerComparator;
  * A class for managing a way tile index of varying granularity allowing
  * different sized tiles for different sized ways.
  */
-public class WayTileAreaIndex implements Releasable {
+public class WayTileAreaIndex implements Completable {
 	private static final int[] masks = {0xFFFFFFFF, 0xFFFFFFF0, 0xFFFFFF00, 0xFFFF0000, 0xFF000000, 0x00000000};
 	private List<IndexStore<Integer, IntegerLongIndexElement>> indexes;
 	
@@ -96,6 +97,17 @@ public class WayTileAreaIndex implements Releasable {
 			
 		} finally {
 			releasableContainer.release();
+		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void complete() {
+		for (Completable index : indexes) {
+			index.complete();
 		}
 	}
 	

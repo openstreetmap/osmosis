@@ -47,7 +47,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	private TileCalculator tileCalculator;
 	private UnsignedIntegerComparator uintComparator;
 	
-	private ReleasableContainer storeContainer;
+	private CompletableContainer storeContainer;
 	private RandomAccessObjectStore<Node> nodeObjectStore;
 	private IndexStore<Long, LongLongIndexElement> nodeObjectOffsetIndexWriter;
 	private IndexStore<Integer, IntegerLongIndexElement> nodeTileIndexWriter;
@@ -70,7 +70,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	 *            The manager providing access to store files.
 	 */
 	public DatasetStore(DatasetStoreFileManager fileManager) {
-		storeContainer = new ReleasableContainer();
+		storeContainer = new CompletableContainer();
 		
 		// Validate all input data to ensure it is sorted.
 		sortedPipeValidator = new SortedEntityPipeValidator();
@@ -329,7 +329,8 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	 * {@inheritDoc}
 	 */
 	public void complete() {
-		// Do nothing.
+		// Complete all the stores to ensure their data is fully persisted.
+		storeContainer.complete();
 	}
 	
 	

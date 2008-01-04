@@ -22,7 +22,7 @@ import com.bretth.osmosis.core.sort.common.FileBasedSort;
  *            The index element type to be stored.
  * @author Brett Henderson
  */
-public class IndexStore<K, T extends IndexElement<K>> implements Releasable {
+public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 	static final Logger log = Logger.getLogger(IndexStore.class.getName());
 	
 	private Lock completeLock;
@@ -161,9 +161,9 @@ public class IndexStore<K, T extends IndexElement<K>> implements Releasable {
 	
 	
 	/**
-	 * Sorts the file contents if necessary.
+	 * {@inheritDoc}
 	 */
-	private void complete() {
+	public void complete() {
 		if (!complete) {
 			completeLock.lock();
 			
