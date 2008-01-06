@@ -5,6 +5,7 @@ import java.io.File;
 
 import com.bretth.osmosis.core.bdb.v0_5.impl.DatasetContext;
 import com.bretth.osmosis.core.bdb.v0_5.impl.NodeDao;
+import com.bretth.osmosis.core.bdb.v0_5.impl.RelationDao;
 import com.bretth.osmosis.core.bdb.v0_5.impl.TransactionContext;
 import com.bretth.osmosis.core.bdb.v0_5.impl.WayDao;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
@@ -26,6 +27,7 @@ public class BdbWriter implements Sink, EntityProcessor {
 	private TransactionContext txnCtx;
 	private NodeDao nodeDao;
 	private WayDao wayDao;
+	private RelationDao relationDao;
 	
 	private boolean initialized;
 	
@@ -50,6 +52,7 @@ public class BdbWriter implements Sink, EntityProcessor {
 		txnCtx = dsCtx.createTransaction();
 		nodeDao = txnCtx.getNodeDao();
 		wayDao = txnCtx.getWayDao();
+		relationDao = txnCtx.getRelationDao();
 		
 		initialized = true;
 	}
@@ -89,9 +92,8 @@ public class BdbWriter implements Sink, EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void process(RelationContainer relation) {
-		// TODO Auto-generated method stub
-		
+	public void process(RelationContainer relationContainer) {
+		relationDao.putRelation(relationContainer.getEntity());
 	}
 	
 	

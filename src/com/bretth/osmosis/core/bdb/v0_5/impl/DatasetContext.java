@@ -16,11 +16,13 @@ import com.sleepycat.je.Database;
 public class DatasetContext implements Completable {
 	private static final String DB_NODE = "node";
 	private static final String DB_WAY = "way";
+	private static final String DB_RELATION = "relation";
 	
 	private DatabaseEnvironment env;
 	private boolean initialized;
 	private Database node;
 	private Database way;
+	private Database relation;
 	
 	
 	/**
@@ -51,6 +53,9 @@ public class DatasetContext implements Completable {
 		if (way == null) {
 			way = env.openDatabase(DB_WAY);
 		}
+		if (relation == null) {
+			relation = env.openDatabase(DB_RELATION);
+		}
 		
 		initialized = true;
 	}
@@ -66,7 +71,7 @@ public class DatasetContext implements Completable {
 			initialize();
 		}
 		
-		return new TransactionContext(env.createTransaction(), node, way);
+		return new TransactionContext(env.createTransaction(), node, way, relation);
 	}
 	
 	
