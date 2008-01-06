@@ -62,7 +62,7 @@ public class UnsignedIntegerLongIndexElement implements Storeable {
 	public void store(StoreWriter writer, StoreClassRegister storeClassRegister) {
 		// Toggle the upper bit of the integer so that the underlying bdb
 		// implementation sorts it as unsigned.
-		writer.writeLong(part1 ^ 0x80000000);
+		writer.writeInteger(part1 ^ 0x80000000);
 		// Write the long as a standard signed value.
 		writer.writeLong(part2);
 	}
