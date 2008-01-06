@@ -24,6 +24,7 @@ public class TransactionContext implements Completable {
 	private Database dbNode;
 	private Database dbWay;
 	private Database dbRelation;
+	private Database dbTileNode;
 	private boolean commited;
 	
 	
@@ -38,12 +39,15 @@ public class TransactionContext implements Completable {
 	 *            The way database.
 	 * @param dbRelation
 	 *            The relation database.
+	 * @param dbTileNode
+	 *            The tile-node database.
 	 */
-	public TransactionContext(Transaction transaction, Database dbNode, Database dbWay, Database dbRelation) {
+	public TransactionContext(Transaction transaction, Database dbNode, Database dbWay, Database dbRelation, Database dbTileNode) {
 		this.txn = transaction;
 		this.dbNode = dbNode;
 		this.dbWay = dbWay;
 		this.dbRelation = dbRelation;
+		this.dbTileNode = dbTileNode;
 		
 		commited = false;
 	}
@@ -55,7 +59,7 @@ public class TransactionContext implements Completable {
 	 * @return The node dao.
 	 */
 	public NodeDao getNodeDao() {
-		return new NodeDao(txn, dbNode);
+		return new NodeDao(txn, dbNode, dbTileNode);
 	}
 	
 	

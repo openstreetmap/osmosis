@@ -17,12 +17,14 @@ public class DatasetContext implements Completable {
 	private static final String DB_NODE = "node";
 	private static final String DB_WAY = "way";
 	private static final String DB_RELATION = "relation";
+	private static final String DB_TILE_NODE = "tile_node";
 	
 	private DatabaseEnvironment env;
 	private boolean initialized;
 	private Database node;
 	private Database way;
 	private Database relation;
+	private Database tileNode;
 	
 	
 	/**
@@ -56,6 +58,9 @@ public class DatasetContext implements Completable {
 		if (relation == null) {
 			relation = env.openDatabase(DB_RELATION);
 		}
+		if (tileNode == null) {
+			tileNode = env.openDatabase(DB_TILE_NODE);
+		}
 		
 		initialized = true;
 	}
@@ -71,7 +76,7 @@ public class DatasetContext implements Completable {
 			initialize();
 		}
 		
-		return new TransactionContext(env.createTransaction(), node, way, relation);
+		return new TransactionContext(env.createTransaction(), node, way, relation, tileNode);
 	}
 	
 	

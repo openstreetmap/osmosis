@@ -7,11 +7,11 @@ Relation - Relation object keyed by id. Allows details of relation to be retriev
 TileNode - Combination key of tile id and node id.  Allows all nodes for a particular tile to be retrived.
 
 TileWay0 - Combination key of tile id and way id.  Allows all ways for a particular tile to be retrieved.
-TileWay1 - "
-TileWay2 - "
-TileWay3 - "
 TileWay4 - "
-TileWay5 - "
+TileWay8 - "
+TileWay16 - "
+TileWay24 - "
+TileWay32 - "
 
 NodeRelation - Combination key of node id and relation id.  Allows all relations referencing a particular node to be retrieved.
 WayRelation - Combination key of way id and relation id.  Allows all relations referencing a particular way to be retrieved.
