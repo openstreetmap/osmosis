@@ -166,7 +166,7 @@ public class TransactionContext implements Completable {
 	 */
 	@Override
 	public void release() {
-		if (!committed) {
+		if (!committed && txn != null) {
 			try {
 				txn.abort();
 			} catch (DatabaseException e) {
