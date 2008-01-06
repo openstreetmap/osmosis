@@ -2,6 +2,7 @@
 package com.bretth.osmosis.core.bdb.v0_5.impl;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.bdb.common.NoSuchDatabaseEntryException;
 import com.bretth.osmosis.core.bdb.common.StoreableTupleBinding;
 import com.bretth.osmosis.core.bdb.common.UnsignedIntegerLongIndexElement;
 import com.bretth.osmosis.core.domain.v0_5.Node;
@@ -10,6 +11,7 @@ import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseEntry;
 import com.sleepycat.je.DatabaseException;
+import com.sleepycat.je.OperationStatus;
 import com.sleepycat.je.Transaction;
 
 
@@ -46,8 +48,8 @@ public class NodeDao {
 		this.dbTileNode = dbTileNode;
 		
 		idBinding = TupleBinding.getPrimitiveBinding(Long.class);
-		nodeBinding = new StoreableTupleBinding<Node>();
-		uintLongBinding = new StoreableTupleBinding<UnsignedIntegerLongIndexElement>();
+		nodeBinding = new StoreableTupleBinding<Node>(Node.class);
+		uintLongBinding = new StoreableTupleBinding<UnsignedIntegerLongIndexElement>(UnsignedIntegerLongIndexElement.class);
 		keyEntry = new DatabaseEntry();
 		dataEntry = new DatabaseEntry();
 		
@@ -56,10 +58,10 @@ public class NodeDao {
 	
 	
 	/**
-	 * Writes the node to the node database.
+	 * Stores the node in the node database.
 	 * 
 	 * @param node
-	 *            The node to be written.
+	 *            The node to be stored.
 	 */
 	public void putNode(Node node) {
 		// Write the node object to the node database.
@@ -87,5 +89,27 @@ public class NodeDao {
 		} catch (DatabaseException e) {
 			throw new OsmosisRuntimeException("Unable to write tile-node " + node.getId() + ".", e);
 		}
+	}
+	
+	
+	/**
+	 * Gets the specified node from the node database.
+	 * 
+	 * @param nodeId
+	 *            The id of the node to be retrieved.
+	 * @return The requested node.
+	 */
+	public Node getNode(long nodeId) {
+		idBinding.objectToEntry(nodeId, keyEntry);
+		
+		try {
+			if (!OperationStatus.SUCCESS.equals(dbNode.get(txn, keyEntry, dataEntry, null))) {
+				throw new NoSuchDatabaseEntryException("Node " + nodeId + " does not exist in the database.");
+			}
+		} catch (DatabaseException e) {
+			throw new OsmosisRuntimeException("Unable to retrieve node " + nodeId + " from the database.", e);
+		}
+		
+		return (Node) nodeBinding.entryToObject(dataEntry);
 	}
 }

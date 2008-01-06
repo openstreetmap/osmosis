@@ -56,7 +56,7 @@ public class Test {
 		db = env.openDatabase(null, "node", dbConfig);
 		
 		longBinding = TupleBinding.getPrimitiveBinding(Long.class);
-		nodeBinding = new StoreableTupleBinding<Node>();
+		nodeBinding = new StoreableTupleBinding<Node>(Node.class);
 		
 		
 		keyEntry = new DatabaseEntry();

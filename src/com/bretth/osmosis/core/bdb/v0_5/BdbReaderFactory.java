@@ -6,15 +6,15 @@ import java.io.File;
 import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
-import com.bretth.osmosis.core.pipeline.v0_5.SinkManager;
+import com.bretth.osmosis.core.pipeline.v0_5.RunnableDatasetSourceManager;
 
 
 /**
- * The task manager factory for a Berkeley database writer.
+ * The task manager factory for a Berkeley database reader.
  * 
  * @author Brett Henderson
  */
-public class BdbWriterFactory extends TaskManagerFactory {
+public class BdbReaderFactory extends TaskManagerFactory {
 	private static final String ARG_HOME_NAME = "home";
 	private static final String DEFAULT_HOME_NAME = "dataset";
 	
@@ -26,7 +26,7 @@ public class BdbWriterFactory extends TaskManagerFactory {
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		String homeName;
 		File home;
-		BdbWriter task;
+		BdbReader task;
 		
 		// Get the task arguments.
 		homeName = getStringArgument(
@@ -39,9 +39,9 @@ public class BdbWriterFactory extends TaskManagerFactory {
 		home = new File(homeName);
 		
 		// Build the task object.
-		task = new BdbWriter(home);
+		task = new BdbReader(home);
 		
-		return new SinkManager(
+		return new RunnableDatasetSourceManager(
 			taskConfig.getId(),
 			task,
 			taskConfig.getPipeArgs()

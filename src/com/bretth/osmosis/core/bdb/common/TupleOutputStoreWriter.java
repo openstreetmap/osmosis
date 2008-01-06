@@ -4,6 +4,7 @@ package com.bretth.osmosis.core.bdb.common;
 import com.bretth.osmosis.core.store.StoreWriter;
 import com.sleepycat.bind.tuple.TupleOutput;
 
+
 /**
  * Allows persisted output to be written to a TupleOutput implementation.
  * 

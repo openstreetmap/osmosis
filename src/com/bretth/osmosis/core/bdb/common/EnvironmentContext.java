@@ -21,7 +21,7 @@ import com.sleepycat.je.TransactionConfig;
  *  
  * @author Brett Henderson
  */
-public class DatabaseEnvironment implements Completable {
+public class EnvironmentContext implements Completable {
 	
 	private File home;
 	private EnvironmentConfig envConfig;
@@ -41,7 +41,7 @@ public class DatabaseEnvironment implements Completable {
 	 * @param readOnly
 	 *            If true, no updates will be allowed to the underlying data.
 	 */
-	public DatabaseEnvironment(File home, boolean create, boolean readOnly) {
+	public EnvironmentContext(File home, boolean create, boolean readOnly) {
 		this.home = home;
 		
 		envConfig = new EnvironmentConfig();

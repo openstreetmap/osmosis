@@ -2,12 +2,17 @@
 package com.bretth.osmosis.core.bdb.v0_5.impl;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.bdb.common.LongLongIndexElement;
+import com.bretth.osmosis.core.bdb.common.NoSuchDatabaseEntryException;
 import com.bretth.osmosis.core.bdb.common.StoreableTupleBinding;
+import com.bretth.osmosis.core.domain.v0_5.EntityType;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
+import com.bretth.osmosis.core.domain.v0_5.RelationMember;
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseEntry;
 import com.sleepycat.je.DatabaseException;
+import com.sleepycat.je.OperationStatus;
 import com.sleepycat.je.Transaction;
 
 
@@ -19,8 +24,12 @@ import com.sleepycat.je.Transaction;
 public class RelationDao {
 	private Transaction txn;
 	private Database dbRelation;
+	private Database dbNodeRelation;
+	private Database dbWayRelation;
+	private Database dbChildRelationParentRelation;
 	private TupleBinding idBinding;
 	private StoreableTupleBinding<Relation> relationBinding;
+	private StoreableTupleBinding<LongLongIndexElement> longLongBinding;
 	private DatabaseEntry keyEntry;
 	private DatabaseEntry dataEntry;
 	
@@ -31,26 +40,37 @@ public class RelationDao {
 	 * @param transaction
 	 *            The active transaction.
 	 * @param dbRelation
-	 *            The Relationtion database.
+	 *            The Relation database.
+	 * @param dbNodeRelation
+	 *            The node to relation index database.
+	 * @param dbWayRelation
+	 *            The way to relation index database.
+	 * @param dbChildRelationParentRelation
+	 *            The child relation to parent relation index database.
 	 */
-	public RelationDao(Transaction transaction, Database dbRelation) {
+	public RelationDao(Transaction transaction, Database dbRelation, Database dbNodeRelation, Database dbWayRelation, Database dbChildRelationParentRelation) {
 		this.txn = transaction;
 		this.dbRelation = dbRelation;
+		this.dbNodeRelation = dbNodeRelation;
+		this.dbWayRelation = dbWayRelation;
+		this.dbChildRelationParentRelation = dbChildRelationParentRelation;
 		
 		idBinding = TupleBinding.getPrimitiveBinding(Long.class);
-		relationBinding = new StoreableTupleBinding<Relation>();
+		relationBinding = new StoreableTupleBinding<Relation>(Relation.class);
+		longLongBinding = new StoreableTupleBinding<LongLongIndexElement>(LongLongIndexElement.class);
 		keyEntry = new DatabaseEntry();
 		dataEntry = new DatabaseEntry();
 	}
 	
 	
 	/**
-	 * Writes the relation to the relation database.
+	 * Stores the relation in the relation database.
 	 * 
 	 * @param relation
-	 *            The relation to be written.
+	 *            The relation to be stored.
 	 */
 	public void putRelation(Relation relation) {
+		// Write the relation object to the relation database.
 		idBinding.objectToEntry(relation.getId(), keyEntry);
 		relationBinding.objectToEntry(relation, dataEntry);
 		
@@ -59,5 +79,51 @@ public class RelationDao {
 		} catch (DatabaseException e) {
 			throw new OsmosisRuntimeException("Unable to write relation " + relation.getId() + ".", e);
 		}
+		
+		// Write the member to relation index elements for the relation.
+		for (RelationMember member : relation.getMemberList()) {
+			EntityType memberType;
+			
+			longLongBinding.objectToEntry(new LongLongIndexElement(member.getMemberId(), relation.getId()), keyEntry);
+			dataEntry.setSize(0);
+			
+			memberType = member.getMemberType();
+			
+			try {
+				if (EntityType.Node.equals(memberType)) {
+					dbNodeRelation.put(txn, keyEntry, dataEntry);
+				} else if (EntityType.Way.equals(memberType)) {
+					dbWayRelation.put(txn, keyEntry, dataEntry);
+				} else if (EntityType.Relation.equals(memberType)) {
+					dbChildRelationParentRelation.put(txn, keyEntry, dataEntry);
+				} else {
+					throw new OsmosisRuntimeException("Member type " + memberType + " is not recognised.");
+				}
+			} catch (DatabaseException e) {
+				throw new OsmosisRuntimeException("Unable to write member relation for relation " + relation.getId() + ".", e);
+			}
+		}
+	}
+	
+	
+	/**
+	 * Gets the specified relation from the relation database.
+	 * 
+	 * @param relationId
+	 *            The id of the relation to be retrieved.
+	 * @return The requested relation.
+	 */
+	public Relation getRelation(long relationId) {
+		idBinding.objectToEntry(relationId, keyEntry);
+		
+		try {
+			if (!OperationStatus.SUCCESS.equals(dbRelation.get(txn, keyEntry, dataEntry, null))) {
+				throw new NoSuchDatabaseEntryException("Relation " + relationId + " does not exist in the database.");
+			}
+		} catch (DatabaseException e) {
+			throw new OsmosisRuntimeException("Unable to retrieve relation " + relationId + " from the database.", e);
+		}
+		
+		return (Relation) relationBinding.entryToObject(dataEntry);
 	}
 }

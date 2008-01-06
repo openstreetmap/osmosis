@@ -3,7 +3,7 @@ package com.bretth.osmosis.core.bdb.v0_5;
 
 import java.io.File;
 
-import com.bretth.osmosis.core.bdb.v0_5.impl.DatasetContext;
+import com.bretth.osmosis.core.bdb.common.EnvironmentContext;
 import com.bretth.osmosis.core.bdb.v0_5.impl.NodeDao;
 import com.bretth.osmosis.core.bdb.v0_5.impl.RelationDao;
 import com.bretth.osmosis.core.bdb.v0_5.impl.TransactionContext;
@@ -23,7 +23,7 @@ import com.bretth.osmosis.core.task.v0_5.Sink;
  * @author Brett Henderson
  */
 public class BdbWriter implements Sink, EntityProcessor {
-	private DatasetContext dsCtx;
+	private EnvironmentContext envCtx;
 	private TransactionContext txnCtx;
 	private NodeDao nodeDao;
 	private WayDao wayDao;
@@ -39,7 +39,7 @@ public class BdbWriter implements Sink, EntityProcessor {
 	 *            The directory to store all data files in.
 	 */
 	public BdbWriter(File home) {
-		dsCtx = new DatasetContext(home, true, false);
+		envCtx = new EnvironmentContext(home, true, false);
 		
 		initialized = false;
 	}
@@ -49,7 +49,7 @@ public class BdbWriter implements Sink, EntityProcessor {
 	 * Opens all database resources for use.
 	 */
 	private void initialize() {
-		txnCtx = dsCtx.createTransaction();
+		txnCtx = new TransactionContext(envCtx);
 		nodeDao = txnCtx.getNodeDao();
 		wayDao = txnCtx.getWayDao();
 		relationDao = txnCtx.getRelationDao();
@@ -107,7 +107,7 @@ public class BdbWriter implements Sink, EntityProcessor {
 		}
 		
 		txnCtx.complete();
-		dsCtx.complete();
+		envCtx.complete();
 	}
 	
 	
@@ -116,6 +116,7 @@ public class BdbWriter implements Sink, EntityProcessor {
 	 */
 	@Override
 	public void release() {
-		dsCtx.release();
+		txnCtx.release();
+		envCtx.release();
 	}
 }

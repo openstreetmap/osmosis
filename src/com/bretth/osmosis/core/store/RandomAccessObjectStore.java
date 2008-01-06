@@ -161,7 +161,7 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 			
 			return new RandomAccessObjectStoreReader<T>(
 				randomFileReader,
-				serializationFactory.createObjectReader(new StoreReader(randomFileReader), storeClassRegister)
+				serializationFactory.createObjectReader(new DataInputStoreReader(randomFileReader), storeClassRegister)
 			);
 			
 		} catch (FileNotFoundException e) {

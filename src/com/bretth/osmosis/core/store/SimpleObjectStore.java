@@ -171,7 +171,7 @@ public class SimpleObjectStore<T extends Storeable> implements Completable {
 			// the reference now so it isn't closed on method exit.
 			fileStream = null;
 			
-			return new ObjectStreamIterator<T>(dataInStream, serializationFactory.createObjectReader(new StoreReader(dataInStream), storeClassRegister));
+			return new ObjectStreamIterator<T>(dataInStream, serializationFactory.createObjectReader(new DataInputStoreReader(dataInStream), storeClassRegister));
 			
 		} finally {
 			if (fileStream != null) {

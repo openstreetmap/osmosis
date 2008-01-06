@@ -272,7 +272,7 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 			// the reference now so it isn't closed on method exit.
 			fileStream = null;
 			
-			objectReader = serializationFactory.createObjectReader(new StoreReader(dataInStream), storeClassRegister);
+			objectReader = serializationFactory.createObjectReader(new DataInputStoreReader(dataInStream), storeClassRegister);
 			
 			if (maxObjectCount >= 0) {
 				return new SubObjectStreamIterator<T>(dataInStream, objectReader, maxObjectCount);
