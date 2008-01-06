@@ -31,6 +31,7 @@ import com.bretth.osmosis.core.store.IntegerLongIndexElement;
 import com.bretth.osmosis.core.store.LongLongIndexElement;
 import com.bretth.osmosis.core.store.NoSuchIndexElementException;
 import com.bretth.osmosis.core.store.RandomAccessObjectStoreReader;
+import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**
@@ -144,14 +145,14 @@ public class DatasetStoreReader implements DatasetReader {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Iterator<EntityContainer> iterate() {
-		List<Iterator<EntityContainer>> sources;
+	public ReleasableIterator<EntityContainer> iterate() {
+		List<ReleasableIterator<EntityContainer>> sources;
 		
-		sources = new ArrayList<Iterator<EntityContainer>>();
+		sources = new ArrayList<ReleasableIterator<EntityContainer>>();
 		
-		sources.add(new UpcastIterator<EntityContainer, NodeContainer>(new NodeContainerIterator(nodeObjectReader.iterate())));
-		sources.add(new UpcastIterator<EntityContainer, WayContainer>(new WayContainerIterator(wayObjectReader.iterate())));
-		sources.add(new UpcastIterator<EntityContainer, RelationContainer>(new RelationContainerIterator(relationObjectReader.iterate())));
+		sources.add(new UpcastIterator<EntityContainer, NodeContainer>(new NodeContainerIterator(new ReleasableIteratorIteratorAdapter<Node>(nodeObjectReader.iterate()))));
+		sources.add(new UpcastIterator<EntityContainer, WayContainer>(new WayContainerIterator(new ReleasableIteratorIteratorAdapter<Way>(wayObjectReader.iterate()))));
+		sources.add(new UpcastIterator<EntityContainer, RelationContainer>(new RelationContainerIterator(new ReleasableIteratorIteratorAdapter<Relation>(relationObjectReader.iterate()))));
 		
 		return new MultipleSourceIterator<EntityContainer>(sources);
 	}
@@ -209,7 +210,7 @@ public class DatasetStoreReader implements DatasetReader {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Iterator<EntityContainer> iterateBoundingBox(double left, double right, double top, double bottom, boolean completeWays) {
+	public ReleasableIterator<EntityContainer> iterateBoundingBox(double left, double right, double top, double bottom, boolean completeWays) {
 		Rectangle2D boundingBox;
 		int calculatedTile;
 		int maximumTile;
@@ -364,7 +365,7 @@ public class DatasetStoreReader implements DatasetReader {
 	 * 
 	 * @author Brett Henderson
 	 */
-	private class ResultIterator implements Iterator<EntityContainer> {
+	private class ResultIterator implements ReleasableIterator<EntityContainer> {
 		private Iterator<Long> nodeIds;
 		private Iterator<Long> wayIds;
 		private Iterator<Long> relationIds;
@@ -421,6 +422,15 @@ public class DatasetStoreReader implements DatasetReader {
 		@Override
 		public void remove() {
 			throw new UnsupportedOperationException();
+		}
+		
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void release() {
+			// Do nothing.
 		}
 	}
 }

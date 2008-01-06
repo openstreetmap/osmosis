@@ -8,6 +8,7 @@ import com.bretth.osmosis.core.bdb.common.StoreableTupleBinding;
 import com.bretth.osmosis.core.domain.v0_5.EntityType;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.RelationMember;
+import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseEntry;
@@ -125,5 +126,16 @@ public class RelationDao {
 		}
 		
 		return (Relation) relationBinding.entryToObject(dataEntry);
+	}
+	
+	
+	/**
+	 * Provides access to all relations in the database. The iterator must be
+	 * released after use.
+	 * 
+	 * @return An iterator pointing at the first way.
+	 */
+	public ReleasableIterator<Relation> iterate() {
+		return new DatabaseIterator<Relation>(dbRelation, txn, relationBinding);
 	}
 }

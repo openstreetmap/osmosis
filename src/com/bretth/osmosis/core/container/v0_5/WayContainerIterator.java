@@ -1,9 +1,8 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.container.v0_5;
 
-import java.util.Iterator;
-
 import com.bretth.osmosis.core.domain.v0_5.Way;
+import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**
@@ -11,8 +10,8 @@ import com.bretth.osmosis.core.domain.v0_5.Way;
  * 
  * @author Brett Henderson
  */
-public class WayContainerIterator implements Iterator<WayContainer> {
-	private Iterator<Way> source;
+public class WayContainerIterator implements ReleasableIterator<WayContainer> {
+	private ReleasableIterator<Way> source;
 	
 	
 	/**
@@ -20,7 +19,7 @@ public class WayContainerIterator implements Iterator<WayContainer> {
 	 * 
 	 * @param source The input source.
 	 */
-	public WayContainerIterator(Iterator<Way> source) {
+	public WayContainerIterator(ReleasableIterator<Way> source) {
 		this.source = source;
 	}
 	
@@ -47,5 +46,14 @@ public class WayContainerIterator implements Iterator<WayContainer> {
 	@Override
 	public void remove() {
 		source.remove();
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void release() {
+		source.release();
 	}
 }

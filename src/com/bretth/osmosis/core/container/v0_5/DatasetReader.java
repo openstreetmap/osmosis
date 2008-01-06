@@ -1,12 +1,11 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.container.v0_5;
 
-import java.util.Iterator;
-
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.store.Releasable;
+import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**
@@ -52,7 +51,7 @@ public interface DatasetReader extends Releasable {
 	 * 
 	 * @return An iterator pointing to the start of the collection.
 	 */
-	public Iterator<EntityContainer> iterate();
+	public ReleasableIterator<EntityContainer> iterate();
 	
 	
 	/**
@@ -71,5 +70,5 @@ public interface DatasetReader extends Releasable {
 	 *            they lie outside the box.
 	 * @return An iterator pointing to the start of the result data.
 	 */
-	public Iterator<EntityContainer> iterateBoundingBox(double left, double right, double top, double bottom, boolean completeWays);
+	public ReleasableIterator<EntityContainer> iterateBoundingBox(double left, double right, double top, double bottom, boolean completeWays);
 }

@@ -7,6 +7,7 @@ import com.bretth.osmosis.core.bdb.common.StoreableTupleBinding;
 import com.bretth.osmosis.core.bdb.common.UnsignedIntegerLongIndexElement;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
+import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseEntry;
@@ -111,5 +112,16 @@ public class NodeDao {
 		}
 		
 		return (Node) nodeBinding.entryToObject(dataEntry);
+	}
+	
+	
+	/**
+	 * Provides access to all nodes in the database. The iterator must be
+	 * released after use.
+	 * 
+	 * @return An iterator pointing at the first node.
+	 */
+	public ReleasableIterator<Node> iterate() {
+		return new DatabaseIterator<Node>(dbNode, txn, nodeBinding);
 	}
 }

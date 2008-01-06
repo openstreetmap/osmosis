@@ -1,12 +1,11 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.filter.v0_5;
 
-import java.util.Iterator;
-
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.container.v0_5.Dataset;
 import com.bretth.osmosis.core.container.v0_5.DatasetReader;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
+import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.task.v0_5.DatasetSinkSource;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 
@@ -67,7 +66,7 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 	 */
 	@Override
 	public void process(Dataset dataset) {
-		Iterator<EntityContainer> bboxData;
+		ReleasableIterator<EntityContainer> bboxData;
 		
 		if (datasetReader != null) {
 			throw new OsmosisRuntimeException("process may only be invoked once.");
@@ -77,11 +76,16 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 		
 		// Pass all data within the bounding box to the sink.
 		bboxData = datasetReader.iterateBoundingBox(left, right, top, bottom, completeWays);
-		while (bboxData.hasNext()) {
-			sink.process(bboxData.next());
+		try {
+			while (bboxData.hasNext()) {
+				sink.process(bboxData.next());
+			}
+			
+			sink.complete();
+			
+		} finally {
+			bboxData.release();
 		}
-		
-		sink.complete();
 	}
 	
 	

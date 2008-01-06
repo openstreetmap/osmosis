@@ -1,10 +1,11 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.customdb.v0_5.impl;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**
@@ -15,9 +16,9 @@ import java.util.NoSuchElementException;
  *            The type of data to be iterated over.
  * @author Brett Henderson
  */
-public class MultipleSourceIterator<T> implements Iterator<T> {
+public class MultipleSourceIterator<T> implements ReleasableIterator<T> {
 	
-	private List<Iterator<T>> sources;
+	private List<ReleasableIterator<T>> sources;
 	
 	
 	/**
@@ -26,8 +27,8 @@ public class MultipleSourceIterator<T> implements Iterator<T> {
 	 * @param sources
 	 *            The input iterators.
 	 */
-	public MultipleSourceIterator(List<Iterator<T>> sources) {
-		this.sources = new LinkedList<Iterator<T>>(sources);
+	public MultipleSourceIterator(List<ReleasableIterator<T>> sources) {
+		this.sources = new LinkedList<ReleasableIterator<T>>(sources);
 	}
 	
 	
@@ -67,6 +68,17 @@ public class MultipleSourceIterator<T> implements Iterator<T> {
 	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void release() {
+		for (ReleasableIterator<T> source : sources) {
+			source.release();
+		}
 	}
 	
 }

@@ -11,6 +11,7 @@ import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
+import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.store.UnsignedIntegerComparator;
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.je.Database;
@@ -186,5 +187,16 @@ public class WayDao {
 		}
 		
 		return (Way) wayBinding.entryToObject(dataEntry);
+	}
+	
+	
+	/**
+	 * Provides access to all ways in the database. The iterator must be
+	 * released after use.
+	 * 
+	 * @return An iterator pointing at the first way.
+	 */
+	public ReleasableIterator<Way> iterate() {
+		return new DatabaseIterator<Way>(dbWay, txn, wayBinding);
 	}
 }

@@ -1,7 +1,7 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.customdb.v0_5.impl;
 
-import java.util.Iterator;
+import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**
@@ -14,9 +14,9 @@ import java.util.Iterator;
  *            The more specific class type of the source data.
  * @author Brett Henderson
  */
-public class UpcastIterator<X, Y extends X> implements Iterator<X> {
+public class UpcastIterator<X, Y extends X> implements ReleasableIterator<X> {
 	
-	private Iterator<Y> source;
+	private ReleasableIterator<Y> source;
 	
 	
 	/**
@@ -25,7 +25,7 @@ public class UpcastIterator<X, Y extends X> implements Iterator<X> {
 	 * @param source
 	 *            The input source.
 	 */
-	public UpcastIterator(Iterator<Y> source) {
+	public UpcastIterator(ReleasableIterator<Y> source) {
 		this.source = source;
 	}
 	
@@ -54,5 +54,14 @@ public class UpcastIterator<X, Y extends X> implements Iterator<X> {
 	@Override
 	public void remove() {
 		source.remove();
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void release() {
+		source.release();
 	}
 }

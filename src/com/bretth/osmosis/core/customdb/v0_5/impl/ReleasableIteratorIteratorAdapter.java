@@ -1,25 +1,30 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.container.v0_5;
+package com.bretth.osmosis.core.customdb.v0_5.impl;
 
-import com.bretth.osmosis.core.domain.v0_5.Node;
+import java.util.Iterator;
+
 import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**
- * Wraps a set of nodes into node containers.
+ * Simple class for exposing an Iterator as a ReleasableIterator.
  * 
+ * @param <T>
+ *            The type of data to be iterated over.
  * @author Brett Henderson
  */
-public class NodeContainerIterator implements ReleasableIterator<NodeContainer> {
-	private ReleasableIterator<Node> source;
+public class ReleasableIteratorIteratorAdapter<T> implements ReleasableIterator<T> {
+	
+	private Iterator<T> source;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param source The input source.
+	 * @param source
+	 *            The source of input data.
 	 */
-	public NodeContainerIterator(ReleasableIterator<Node> source) {
+	public ReleasableIteratorIteratorAdapter(Iterator<T> source) {
 		this.source = source;
 	}
 	
@@ -36,9 +41,10 @@ public class NodeContainerIterator implements ReleasableIterator<NodeContainer> 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public NodeContainer next() {
-		return new NodeContainer(source.next());
+	public T next() {
+		return source.next();
 	}
+	
 	
 	/**
 	 * {@inheritDoc}
@@ -54,6 +60,6 @@ public class NodeContainerIterator implements ReleasableIterator<NodeContainer> 
 	 */
 	@Override
 	public void release() {
-		source.release();
+		// Do nothing.
 	}
 }
