@@ -155,6 +155,8 @@ public class TransactionContext implements Completable {
 			throw new OsmosisRuntimeException("Unable to commit the transaction.", e);
 		}
 		
+		txn = null;
+		
 		committed = true;
 	}
 	
@@ -171,6 +173,8 @@ public class TransactionContext implements Completable {
 				// Don't rethrow, just log the exception.
 				log.log(Level.SEVERE, "Unable to abort the transaction", e);
 			}
+			
+			txn = null;
 		}
 	}
 }
