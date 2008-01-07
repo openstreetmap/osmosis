@@ -2,6 +2,8 @@
 package com.bretth.osmosis.core.bdb.v0_5.impl;
 
 import java.util.Comparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.bdb.common.NoSuchDatabaseEntryException;
@@ -27,6 +29,8 @@ import com.sleepycat.je.Transaction;
  * @author Brett Henderson
  */
 public class WayDao {
+	
+	private static final Logger log = Logger.getLogger(WayDao.class.getName());
 	
 	private static final int[] tileMasks = {0xFFFFFFFF, 0xFFFFFFF0, 0xFFFFFF00, 0xFFFF0000, 0xFF000000, 0x00000000};
 	
@@ -94,53 +98,66 @@ public class WayDao {
 			
 			nodeId = wayNode.getNodeId();
 			
-			node = nodeDao.getNode(nodeId);
-			
-			tile = (int) tileCalculator.calculateTile(node.getLatitude(), node.getLongitude());
-			
-			if (tilesFound) {
-				if (uintComparator.compare(tile, minimumTile) < 0) {
+			try {
+				node = nodeDao.getNode(nodeId);
+				
+				tile = (int) tileCalculator.calculateTile(node.getLatitude(), node.getLongitude());
+				
+				if (tilesFound) {
+					if (uintComparator.compare(tile, minimumTile) < 0) {
+						minimumTile = tile;
+					}
+					if (uintComparator.compare(maximumTile, tile) < 0) {
+						maximumTile = tile;
+					}
+					
+				} else {
 					minimumTile = tile;
-				}
-				if (uintComparator.compare(maximumTile, tile) < 0) {
 					maximumTile = tile;
+					
+					tilesFound = true;
 				}
 				
-			} else {
-				minimumTile = tile;
-				maximumTile = tile;
-				
-				tilesFound = true;
+			} catch (NoSuchDatabaseEntryException e) {
+				// Ignore any referential integrity problems.
+				if (log.isLoggable(Level.FINER)) {
+					log.finest(
+						"Ignoring referential integrity problem where way " + way.getId() +
+						" refers to non-existent node " + nodeId + "."
+					);
+				}
 			}
 		}
 		
 		// Write the tile to way index element to the tile-way database matching
-		// the granularity of the way.
-		for (int i = 0; i < tileMasks.length; i++) {
-			int mask;
-			int maskedMinimum;
-			int maskedMaximum;
-			
-			mask = tileMasks[i];
-			maskedMinimum = mask & minimumTile;
-			maskedMaximum = mask & maximumTile;
-			
-			// Write the element to the current index if the index tile
-			// granularity allows the way to fit within a single tile value.
-			if ((maskedMinimum) == (maskedMaximum)) {
-				uintLongBinding.objectToEntry(
-					new UnsignedIntegerLongIndexElement(maskedMinimum, way.getId()), keyEntry
-				);
-				dataEntry.setSize(0);
+		// the granularity of the way, but only if tiles were found.
+		if (tilesFound) {
+			for (int i = 0; i < tileMasks.length; i++) {
+				int mask;
+				int maskedMinimum;
+				int maskedMaximum;
 				
-				try {
-					dbTileWay[i].put(txn, keyEntry, dataEntry);
-				} catch (DatabaseException e) {
-					throw new OsmosisRuntimeException("Unable to write tile-way " + way.getId() + ".", e);
+				mask = tileMasks[i];
+				maskedMinimum = mask & minimumTile;
+				maskedMaximum = mask & maximumTile;
+				
+				// Write the element to the current index if the index tile
+				// granularity allows the way to fit within a single tile value.
+				if ((maskedMinimum) == (maskedMaximum)) {
+					uintLongBinding.objectToEntry(
+						new UnsignedIntegerLongIndexElement(maskedMinimum, way.getId()), keyEntry
+					);
+					dataEntry.setSize(0);
+					
+					try {
+						dbTileWay[i].put(txn, keyEntry, dataEntry);
+					} catch (DatabaseException e) {
+						throw new OsmosisRuntimeException("Unable to write tile-way " + way.getId() + ".", e);
+					}
+					
+					// Stop once one index has received the way.
+					break;
 				}
-				
-				// Stop once one index has received the way.
-				break;
 			}
 		}
 	}
