@@ -1,6 +1,7 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core;
 
+import com.bretth.osmosis.core.bdb.v0_5.BdbReaderFactory;
 import com.bretth.osmosis.core.bdb.v0_5.BdbWriterFactory;
 import com.bretth.osmosis.core.buffer.v0_5.ChangeBufferFactory;
 import com.bretth.osmosis.core.buffer.v0_5.EntityBufferFactory;
@@ -139,8 +140,8 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("dd", new DumpDatasetFactory());
 		TaskManagerFactory.register("write-bdb", new BdbWriterFactory());
 		TaskManagerFactory.register("wb", new BdbWriterFactory());
-		TaskManagerFactory.register("read-bdb", new BdbWriterFactory());
-		TaskManagerFactory.register("rb", new BdbWriterFactory());
+		TaskManagerFactory.register("read-bdb", new BdbReaderFactory());
+		TaskManagerFactory.register("rb", new BdbReaderFactory());
 		
 		TaskManagerFactory.register("apply-change-0.5", new ChangeApplierFactory());
 		TaskManagerFactory.register("bounding-box-0.5", new BoundingBoxFilterFactory());
@@ -179,6 +180,6 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("dataset-bounding-box-0.5", new DatasetBoundingBoxFilterFactory());
 		TaskManagerFactory.register("dataset-dump-0.5", new DumpDatasetFactory());
 		TaskManagerFactory.register("write-bdb-0.5", new BdbWriterFactory());
-		TaskManagerFactory.register("read-bdb-0.5", new BdbWriterFactory());
+		TaskManagerFactory.register("read-bdb-0.5", new BdbReaderFactory());
 	}
 }
