@@ -41,7 +41,7 @@ public class MultipleSourceIterator<T> implements ReleasableIterator<T> {
 			if (sources.get(0).hasNext()) {
 				return true;
 			} else {
-				sources.remove(0);
+				sources.remove(0).release();
 			}
 		}
 		
