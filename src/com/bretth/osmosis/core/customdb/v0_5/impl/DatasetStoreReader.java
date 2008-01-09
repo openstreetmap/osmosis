@@ -22,8 +22,8 @@ import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.domain.v0_5.WayNode;
+import com.bretth.osmosis.core.filter.common.BitSetIdTracker;
 import com.bretth.osmosis.core.filter.common.IdTracker;
-import com.bretth.osmosis.core.filter.common.ListIdTracker;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
 import com.bretth.osmosis.core.store.EmptyIterator;
 import com.bretth.osmosis.core.store.IndexStoreReader;
@@ -270,7 +270,7 @@ public class DatasetStoreReader implements DatasetReader {
 		
 		// Search through all nodes in the tile range and store the ids of those
 		// within the bounding box.
-		nodeIdTracker = new ListIdTracker();
+		nodeIdTracker = new BitSetIdTracker();
 		nodeTileIndexValues = nodeTileIndexReader.getRange(minimumTile, maximumTile);
 		while (nodeTileIndexValues.hasNext()) {
 			long nodeId;
@@ -288,7 +288,7 @@ public class DatasetStoreReader implements DatasetReader {
 		
 		// Search through all ways in the tile range and store the ids of those
 		// within the bounding box.
-		wayIdTracker = new ListIdTracker();
+		wayIdTracker = new BitSetIdTracker();
 		wayTileIndexValues = wayTileIndexReader.getRange(minimumTile, maximumTile);
 		while (wayTileIndexValues.hasNext()) {
 			long wayId;
@@ -330,7 +330,7 @@ public class DatasetStoreReader implements DatasetReader {
 		}
 		
 		// Select all relations that contain the currently selected nodes and ways.
-		relationIdTracker = new ListIdTracker();
+		relationIdTracker = new BitSetIdTracker();
 		for (Long nodeId : nodeIdTracker) {
 			// Get all relation ids for relations containing the current node.
 			for (Iterator<LongLongIndexElement> rangeIterator = nodeRelationIndexReader.getRange(nodeId, nodeId); rangeIterator.hasNext(); ) {
