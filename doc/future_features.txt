@@ -125,3 +125,7 @@ Make osmosis return error codes if it fails to make it better suited to scriptin
 **********
 Karl Newman
 Add plugin support.
+
+**********
+Jeremy Adams
+Add a "simplify" polygon option to the --bounding-polygon task to improve performance.
