@@ -87,7 +87,7 @@ public class TransactionContext implements Completable {
 			dbChildRelationParentRelation = envCtx.openDatabase(DB_CHILD_RELATION_PARENT_RELATION);
 		}
 		
-		txn = envCtx.createTransaction();
+		//txn = envCtx.createTransaction();
 		
 		initialized = true;
 	}

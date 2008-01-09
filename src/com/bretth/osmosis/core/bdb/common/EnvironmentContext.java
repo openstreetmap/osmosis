@@ -49,7 +49,7 @@ public class EnvironmentContext implements Completable {
 		envConfig.setTransactional(true);
 		
 		dbConfig = new DatabaseConfig();
-		dbConfig.setTransactional(true);
+		//dbConfig.setTransactional(true);
 		if (create) {
 			dbConfig.setAllowCreate(create);
 			// If creating a new environment, it must not already exist.
