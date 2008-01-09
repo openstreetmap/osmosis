@@ -1,20 +1,13 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.bdb.v0_5.impl;
 
-import java.util.Comparator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.bdb.common.LongLongIndexElement;
 import com.bretth.osmosis.core.bdb.common.NoSuchDatabaseEntryException;
 import com.bretth.osmosis.core.bdb.common.StoreableTupleBinding;
-import com.bretth.osmosis.core.bdb.common.UnsignedIntegerLongIndexElement;
-import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.domain.v0_5.WayNode;
-import com.bretth.osmosis.core.mysql.common.TileCalculator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
-import com.bretth.osmosis.core.store.UnsignedIntegerComparator;
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseEntry;
@@ -30,21 +23,14 @@ import com.sleepycat.je.Transaction;
  */
 public class WayDao {
 	
-	private static final Logger log = Logger.getLogger(WayDao.class.getName());
-	
-	private static final int[] tileMasks = {0xFFFFFFFF, 0xFFFFFFF0, 0xFFFFFF00, 0xFFFF0000, 0xFF000000, 0x00000000};
-	
 	private Transaction txn;
 	private Database dbWay;
-	private Database dbTileWay[];
-	private NodeDao nodeDao;
+	private Database dbNodeWay;
 	private TupleBinding idBinding;
 	private StoreableTupleBinding<Way> wayBinding;
-	private StoreableTupleBinding<UnsignedIntegerLongIndexElement> uintLongBinding;
+	private StoreableTupleBinding<LongLongIndexElement> longLongIndexBinding;
 	private DatabaseEntry keyEntry;
 	private DatabaseEntry dataEntry;
-	private TileCalculator tileCalculator;
-	private Comparator<Integer> uintComparator;
 	
 	
 	/**
@@ -54,112 +40,19 @@ public class WayDao {
 	 *            The active transaction.
 	 * @param dbWay
 	 *            The way database.
-	 * @param dbTileWay
-	 *            The tile-way databases.
-	 * @param nodeDao
-	 *            The node DAO.
+	 * @param dbNodeWay
+	 *            The node-way database.
 	 */
-	public WayDao(Transaction transaction, Database dbWay, Database[] dbTileWay, NodeDao nodeDao) {
+	public WayDao(Transaction transaction, Database dbWay, Database dbNodeWay) {
 		this.txn = transaction;
 		this.dbWay = dbWay;
-		this.dbTileWay = dbTileWay;
-		this.nodeDao = nodeDao;
+		this.dbNodeWay = dbNodeWay;
 		
 		idBinding = TupleBinding.getPrimitiveBinding(Long.class);
 		wayBinding = new StoreableTupleBinding<Way>(Way.class);
-		uintLongBinding = new StoreableTupleBinding<UnsignedIntegerLongIndexElement>(UnsignedIntegerLongIndexElement.class);
+		longLongIndexBinding = new StoreableTupleBinding<LongLongIndexElement>(LongLongIndexElement.class);
 		keyEntry = new DatabaseEntry();
 		dataEntry = new DatabaseEntry();
-		
-		tileCalculator = new TileCalculator();
-		uintComparator = new UnsignedIntegerComparator();
-	}
-	
-	
-	/**
-	 * Calculates and writes the tile way index value for the way.
-	 * 
-	 * @param way
-	 *            The way requiring a tile index.
-	 */
-	private void createTileWayIndex(Way way) {
-		int minimumTile;
-		int maximumTile;
-		boolean tilesFound;
-		
-		// Calculate the minimum and maximum tile indexes for the way.
-		tilesFound = false;
-		minimumTile = 0;
-		maximumTile = 0;
-		for (WayNode wayNode : way.getWayNodeList()) {
-			long nodeId;
-			Node node;
-			int tile;
-			
-			nodeId = wayNode.getNodeId();
-			
-			try {
-				node = nodeDao.getNode(nodeId);
-				
-				tile = (int) tileCalculator.calculateTile(node.getLatitude(), node.getLongitude());
-				
-				if (tilesFound) {
-					if (uintComparator.compare(tile, minimumTile) < 0) {
-						minimumTile = tile;
-					}
-					if (uintComparator.compare(maximumTile, tile) < 0) {
-						maximumTile = tile;
-					}
-					
-				} else {
-					minimumTile = tile;
-					maximumTile = tile;
-					
-					tilesFound = true;
-				}
-				
-			} catch (NoSuchDatabaseEntryException e) {
-				// Ignore any referential integrity problems.
-				if (log.isLoggable(Level.FINER)) {
-					log.finest(
-						"Ignoring referential integrity problem where way " + way.getId() +
-						" refers to non-existent node " + nodeId + "."
-					);
-				}
-			}
-		}
-		
-		// Write the tile to way index element to the tile-way database matching
-		// the granularity of the way, but only if tiles were found.
-		if (tilesFound) {
-			for (int i = 0; i < tileMasks.length; i++) {
-				int mask;
-				int maskedMinimum;
-				int maskedMaximum;
-				
-				mask = tileMasks[i];
-				maskedMinimum = mask & minimumTile;
-				maskedMaximum = mask & maximumTile;
-				
-				// Write the element to the current index if the index tile
-				// granularity allows the way to fit within a single tile value.
-				if ((maskedMinimum) == (maskedMaximum)) {
-					uintLongBinding.objectToEntry(
-						new UnsignedIntegerLongIndexElement(maskedMinimum, way.getId()), keyEntry
-					);
-					dataEntry.setSize(0);
-					
-					try {
-						dbTileWay[i].put(txn, keyEntry, dataEntry);
-					} catch (DatabaseException e) {
-						throw new OsmosisRuntimeException("Unable to write tile-way " + way.getId() + ".", e);
-					}
-					
-					// Stop once one index has received the way.
-					break;
-				}
-			}
-		}
 	}
 	
 	
@@ -180,8 +73,17 @@ public class WayDao {
 			throw new OsmosisRuntimeException("Unable to write way " + way.getId() + ".", e);
 		}
 		
-		// Write the tile to way index element to the relevant tile-way database.
-		createTileWayIndex(way);
+		// Write a node to way index records for the way.
+		for (WayNode wayNode : way.getWayNodeList()) {
+			longLongIndexBinding.objectToEntry(new LongLongIndexElement(wayNode.getNodeId(), way.getId()), keyEntry);
+			dataEntry.setSize(0);
+			
+			try {
+				dbNodeWay.put(txn, keyEntry, dataEntry);
+			} catch (DatabaseException e) {
+				throw new OsmosisRuntimeException("Unable to write way node index for way " + way.getId() + ".", e);
+			}
+		}
 	}
 	
 	
@@ -215,5 +117,18 @@ public class WayDao {
 	 */
 	public ReleasableIterator<Way> iterate() {
 		return new DatabaseIterator<Way>(dbWay, txn, wayBinding);
+	}
+	
+	
+	/**
+	 * Returns an iterator for the ids of all ways containing the specified
+	 * node.
+	 * 
+	 * @param nodeId
+	 *            The id of the node to search on.
+	 * @return The ids of the matching ways.
+	 */
+	public ReleasableIterator<Long> getWayIdsOwningNode(long nodeId) {
+		return new DatabaseRelationIterator(dbNodeWay, txn, nodeId);
 	}
 }

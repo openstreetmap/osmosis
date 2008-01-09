@@ -138,4 +138,43 @@ public class RelationDao {
 	public ReleasableIterator<Relation> iterate() {
 		return new DatabaseIterator<Relation>(dbRelation, txn, relationBinding);
 	}
+	
+	
+	/**
+	 * Returns an iterator for the ids of all relations containing the specified
+	 * node.
+	 * 
+	 * @param nodeId
+	 *            The id of the node to search on.
+	 * @return The ids of the matching relations.
+	 */
+	public ReleasableIterator<Long> getRelationIdsOwningNode(long nodeId) {
+		return new DatabaseRelationIterator(dbNodeRelation, txn, nodeId);
+	}
+	
+	
+	/**
+	 * Returns an iterator for the ids of all relations containing the specified
+	 * way.
+	 * 
+	 * @param wayId
+	 *            The id of the way to search on.
+	 * @return The ids of the matching relations.
+	 */
+	public ReleasableIterator<Long> getRelationIdsOwningWay(long wayId) {
+		return new DatabaseRelationIterator(dbWayRelation, txn, wayId);
+	}
+	
+	
+	/**
+	 * Returns an iterator for the ids of all relations containing the specified
+	 * relation.
+	 * 
+	 * @param relationId
+	 *            The id of the relation to search on.
+	 * @return The ids of the matching relations.
+	 */
+	public ReleasableIterator<Long> getRelationIdsOwningRelation(long relationId) {
+		return new DatabaseRelationIterator(dbChildRelationParentRelation, txn, relationId);
+	}
 }

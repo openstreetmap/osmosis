@@ -232,6 +232,17 @@ public class ListIdTracker implements IdTracker {
 	
 	
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setAll(IdTracker idTracker) {
+		for (Long id : idTracker) {
+			set(id);
+		}
+	}
+	
+	
+	/**
 	 * The iterator implementation for providing access to the list of ids.
 	 * 
 	 * @author Brett Henderson

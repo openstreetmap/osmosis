@@ -25,7 +25,7 @@ public class TransactionContext implements Completable {
 	private static final String DB_WAY = "way";
 	private static final String DB_RELATION = "relation";
 	private static final String DB_TILE_NODE = "tile_node";
-	private static final String[] DB_TILE_WAY = {"tile_way_0", "tile_way_4", "tile_way_8", "tile_way_16", "tile_way_24", "tile_way_32"};
+	private static final String DB_NODE_WAY = "node_way";
 	private static final String DB_NODE_RELATION = "node_relation";
 	private static final String DB_WAY_RELATION = "way_relation";
 	private static final String DB_CHILD_RELATION_PARENT_RELATION = "child_relation_parent_relation";
@@ -37,7 +37,7 @@ public class TransactionContext implements Completable {
 	private Database dbWay;
 	private Database dbRelation;
 	private Database dbTileNode;
-	private Database dbTileWay[];
+	private Database dbNodeWay;
 	private Database dbNodeRelation;
 	private Database dbWayRelation;
 	private Database dbChildRelationParentRelation;
@@ -74,12 +74,8 @@ public class TransactionContext implements Completable {
 		if (dbTileNode == null) {
 			dbTileNode = envCtx.openDatabase(DB_TILE_NODE);
 		}
-		if (dbTileWay == null) {
-			dbTileWay = new Database[DB_TILE_WAY.length];
-			
-			for (int i = 0; i < DB_TILE_WAY.length; i++) {
-				dbTileWay[i] = envCtx.openDatabase(DB_TILE_WAY[i]);
-			}
+		if (dbNodeWay == null) {
+			dbNodeWay = envCtx.openDatabase(DB_NODE_WAY);
 		}
 		if (dbNodeRelation == null) {
 			dbNodeRelation = envCtx.openDatabase(DB_NODE_RELATION);
@@ -121,7 +117,7 @@ public class TransactionContext implements Completable {
 			initialize();
 		}
 		
-		return new WayDao(txn, dbWay, dbTileWay, getNodeDao());
+		return new WayDao(txn, dbWay, dbNodeWay);
 	}
 	
 	
@@ -148,14 +144,16 @@ public class TransactionContext implements Completable {
 			initialize();
 		}
 		
-		try {
-			txn.commit();
+		if (txn != null) {
+			try {
+				txn.commit();
+				
+			} catch (DatabaseException e) {
+				throw new OsmosisRuntimeException("Unable to commit the transaction.", e);
+			}
 			
-		} catch (DatabaseException e) {
-			throw new OsmosisRuntimeException("Unable to commit the transaction.", e);
+			txn = null;
 		}
-		
-		txn = null;
 		
 		committed = true;
 	}

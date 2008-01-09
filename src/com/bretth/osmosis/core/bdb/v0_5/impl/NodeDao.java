@@ -124,4 +124,18 @@ public class NodeDao {
 	public ReleasableIterator<Node> iterate() {
 		return new DatabaseIterator<Node>(dbNode, txn, nodeBinding);
 	}
+	
+	
+	/**
+	 * Returns an iterator for the ids of all nodes inside the specified tile.
+	 * 
+	 * @param minimumTile
+	 *            The minimum tile (inclusive).
+	 * @param maximumTile
+	 *            The maximum tile (inclusive).
+	 * @return The ids of the matching nodes.
+	 */
+	public ReleasableIterator<Long> getNodeIdsForTile(int minimumTile, int maximumTile) {
+		return new DatabaseTileIndexIterator(dbTileNode, txn, minimumTile, maximumTile);
+	}
 }

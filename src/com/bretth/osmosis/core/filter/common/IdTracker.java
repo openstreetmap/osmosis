@@ -27,4 +27,13 @@ public interface IdTracker extends Iterable<Long> {
 	 * @return True if the identifier is active, false otherwise.
 	 */
 	boolean get(long id);
+	
+	
+	/**
+	 * Sets all the ids contained in the specified tracker.
+	 * 
+	 * @param idTracker
+	 *            The id tracker containing the ids to set.
+	 */
+	void setAll(IdTracker idTracker);
 }

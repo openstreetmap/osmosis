@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.bdb.common.LongLongIndexElement;
+import com.bretth.osmosis.core.bdb.common.StoreableTupleBinding;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.je.Cursor;
@@ -17,23 +19,25 @@ import com.sleepycat.je.Transaction;
 
 
 /**
- * An iterator for accessing the contents of a database.
+ * The bdb schema used for OSM data uses several databases with two-part keys
+ * relating two databases. This returns all values of the second part of the key
+ * for all records matching the first part of the key.
  * 
- * @param <T>
- *            The type of data to be iterated over.
  * @author Brett Henderson
  */
-public class DatabaseIterator<T> implements ReleasableIterator<T> {
+public class DatabaseRelationIterator implements ReleasableIterator<Long> {
 	
 	private static final Logger log = Logger.getLogger(DatabaseIterator.class.getName());
 	
 	private Database db;
 	private Transaction txn;
-	private TupleBinding dataBinding;
+	private long searchId;
+	private TupleBinding keyBinding;
 	private Cursor cursor;
 	private boolean initialized;
-	private T nextRecord;
+	private Long nextRecord;
 	private boolean nextRecordAvailable;
+	private boolean cursorLive;
 	private DatabaseEntry keyEntry;
 	private DatabaseEntry dataEntry;
 	
@@ -45,14 +49,18 @@ public class DatabaseIterator<T> implements ReleasableIterator<T> {
 	 *            The database to read from.
 	 * @param transaction
 	 *            The active transaction.
-	 * @param dataBinding
-	 *            The binding allowing database data to be converted into the
-	 *            result object.
+	 * @param searchId
+	 *            Part 1 of the key identifying the range of records for which
+	 *            to retrieve part 2 of the key. Part 1 represents the known id
+	 *            for which we wish to retrieve related records in another
+	 *            database identified by part 2.
 	 */
-	public DatabaseIterator(Database database, Transaction transaction, TupleBinding dataBinding) {
+	public DatabaseRelationIterator(Database database, Transaction transaction, long searchId) {
 		this.db = database;
 		this.txn = transaction;
-		this.dataBinding = dataBinding;
+		this.searchId = searchId;
+		
+		keyBinding = new StoreableTupleBinding<LongLongIndexElement>(LongLongIndexElement.class);
 		
 		initialized = false;
 		nextRecordAvailable = false;
@@ -64,13 +72,44 @@ public class DatabaseIterator<T> implements ReleasableIterator<T> {
 	
 	private void initialize() {
 		try {
+			LongLongIndexElement startKey;
+			
+			// We want to start retrieving records from the first record with a
+			// part 1 of searchId. Therefore part2 must be the minimum value.
+			startKey = new LongLongIndexElement(searchId, Long.MIN_VALUE);
+			keyBinding.objectToEntry(startKey, keyEntry);
+			
 			cursor = db.openCursor(txn, null);
+			cursorLive = true;
+			if (OperationStatus.SUCCESS.equals(cursor.getSearchKeyRange(keyEntry, dataEntry, null))) {
+				extractNextRecord();
+			} else {
+				cursorLive = false;
+			}
 			
 		} catch (DatabaseException e) {
 			throw new OsmosisRuntimeException("Unable to open database cursor.", e);
 		}
 		
 		initialized = true;
+	}
+	
+	
+	/**
+	 * Extracts the next record from the cursor and checks if the end of the
+	 * range has been reached.
+	 */
+	private void extractNextRecord() {
+		LongLongIndexElement indexElement;
+		
+		indexElement = (LongLongIndexElement) keyBinding.entryToObject(keyEntry);
+		
+		if (indexElement.getPart1() == searchId) {
+			nextRecord = indexElement.getPart2();
+			nextRecordAvailable = true;
+		} else {
+			cursorLive = false;
+		}
 	}
 	
 	
@@ -84,11 +123,10 @@ public class DatabaseIterator<T> implements ReleasableIterator<T> {
 			initialize();
 		}
 		
-		if (!nextRecordAvailable) {
+		if (cursorLive && !nextRecordAvailable) {
 			try {
 				if (OperationStatus.SUCCESS.equals(cursor.getNext(keyEntry, dataEntry, null))) {
-					nextRecord = (T) dataBinding.entryToObject(dataEntry);
-					nextRecordAvailable = true;
+					extractNextRecord();
 				}
 				
 			} catch (DatabaseException e) {
@@ -104,7 +142,7 @@ public class DatabaseIterator<T> implements ReleasableIterator<T> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public T next() {
+	public Long next() {
 		if (!hasNext()) {
 			throw new NoSuchElementException();
 		}
