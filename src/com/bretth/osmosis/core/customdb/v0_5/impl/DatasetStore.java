@@ -56,8 +56,9 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	private WayTileAreaIndex wayTileIndexWriter;
 	private RandomAccessObjectStore<Relation> relationObjectStore;
 	private IndexStore<Long, LongLongIndexElement> relationObjectOffsetIndexWriter;
-	private IndexStore<Long, LongLongIndexElement> wayRelationIndexWriter;
 	private IndexStore<Long, LongLongIndexElement> nodeRelationIndexWriter;
+	private IndexStore<Long, LongLongIndexElement> wayRelationIndexWriter;
+	private IndexStore<Long, LongLongIndexElement> relationRelationIndexWriter;
 	
 	private RandomAccessObjectStoreReader<Node> nodeObjectReader;
 	private IndexStoreReader<Long, LongLongIndexElement> nodeObjectOffsetIndexReader;
@@ -157,6 +158,13 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 				LongLongIndexElement.class,
 				new ComparableComparator<Long>(),
 				fileManager.getWayRelationIndexFile()
+			)
+		);
+		relationRelationIndexWriter = storeContainer.add(
+			new IndexStore<Long, LongLongIndexElement>(
+				LongLongIndexElement.class,
+				new ComparableComparator<Long>(),
+				fileManager.getRelationRelationIndexFile()
 			)
 		);
 	}
@@ -317,7 +325,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 			} else if (memberType.equals(EntityType.Way)) {
 				wayRelationIndexWriter.write(new LongLongIndexElement(member.getMemberId(), relationId));
 			} else if (memberType.equals(EntityType.Relation)) {
-				// Do nothing.
+				relationRelationIndexWriter.write(new LongLongIndexElement(member.getMemberId(), relationId));
 			} else {
 				throw new OsmosisRuntimeException("Member type " + memberType + " is not recognised.");
 			}
@@ -356,7 +364,8 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 				releasableContainer.add(nodeTileIndexWriter.createReader()),
 				releasableContainer.add(wayTileIndexWriter.createReader()),
 				releasableContainer.add(nodeRelationIndexWriter.createReader()),
-				releasableContainer.add(wayRelationIndexWriter.createReader())
+				releasableContainer.add(wayRelationIndexWriter.createReader()),
+				releasableContainer.add(relationRelationIndexWriter.createReader())
 			);
 			
 			// Stop the release of all created objects.

@@ -1,16 +1,10 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.customdb.v0_5.impl;
 
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import com.bretth.osmosis.core.container.v0_5.DatasetReader;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
 import com.bretth.osmosis.core.container.v0_5.NodeContainerIterator;
@@ -21,16 +15,13 @@ import com.bretth.osmosis.core.container.v0_5.WayContainerIterator;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Way;
-import com.bretth.osmosis.core.domain.v0_5.WayNode;
-import com.bretth.osmosis.core.filter.common.BitSetIdTracker;
-import com.bretth.osmosis.core.filter.common.IdTracker;
+import com.bretth.osmosis.core.filter.v0_5.impl.BaseDatasetReader;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
-import com.bretth.osmosis.core.store.EmptyIterator;
 import com.bretth.osmosis.core.store.IndexStoreReader;
 import com.bretth.osmosis.core.store.IntegerLongIndexElement;
 import com.bretth.osmosis.core.store.LongLongIndexElement;
-import com.bretth.osmosis.core.store.NoSuchIndexElementException;
 import com.bretth.osmosis.core.store.RandomAccessObjectStoreReader;
+import com.bretth.osmosis.core.store.ReleasableAdaptorForIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
@@ -43,10 +34,7 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
  * 
  * @author Brett Henderson
  */
-public class DatasetStoreReader implements DatasetReader {
-	
-	private static final Logger log = Logger.getLogger(DatasetStoreReader.class.getName());
-	
+public class DatasetStoreReader extends BaseDatasetReader {
 	
 	private RandomAccessObjectStoreReader<Node> nodeObjectReader;
 	private IndexStoreReader<Long, LongLongIndexElement> nodeObjectOffsetIndexReader;
@@ -55,12 +43,11 @@ public class DatasetStoreReader implements DatasetReader {
 	private RandomAccessObjectStoreReader<Relation> relationObjectReader;
 	private IndexStoreReader<Long, LongLongIndexElement> relationObjectOffsetIndexReader;
 	
-	private TileCalculator tileCalculator;
-	private Comparator<Integer> tileOrdering;
 	private IndexStoreReader<Integer, IntegerLongIndexElement> nodeTileIndexReader;
 	private WayTileAreaIndexReader wayTileIndexReader;
 	private IndexStoreReader<Long, LongLongIndexElement> nodeRelationIndexReader;
 	private IndexStoreReader<Long, LongLongIndexElement> wayRelationIndexReader;
+	private IndexStoreReader<Long, LongLongIndexElement> relationRelationIndexReader;
 	
 	
 	/**
@@ -90,8 +77,10 @@ public class DatasetStoreReader implements DatasetReader {
 	 *            The node to relation index.
 	 * @param wayRelationIndexReader
 	 *            The way to relation index.
+	 * @param relationRelationIndexReader
+	 *            The relation to relation index.
 	 */
-	public DatasetStoreReader(RandomAccessObjectStoreReader<Node> nodeObjectReader, IndexStoreReader<Long, LongLongIndexElement> nodeObjectOffsetIndexReader, RandomAccessObjectStoreReader<Way> wayObjectReader, IndexStoreReader<Long, LongLongIndexElement> wayObjectOffsetIndexReader, RandomAccessObjectStoreReader<Relation> relationObjectReader, IndexStoreReader<Long, LongLongIndexElement> relationObjectOffsetIndexReader, TileCalculator tileCalculator, Comparator<Integer> tileOrdering, IndexStoreReader<Integer, IntegerLongIndexElement> nodeTileIndexReader, WayTileAreaIndexReader wayTileIndexReader, IndexStoreReader<Long, LongLongIndexElement> nodeRelationIndexReader, IndexStoreReader<Long, LongLongIndexElement> wayRelationIndexReader) {
+	public DatasetStoreReader(RandomAccessObjectStoreReader<Node> nodeObjectReader, IndexStoreReader<Long, LongLongIndexElement> nodeObjectOffsetIndexReader, RandomAccessObjectStoreReader<Way> wayObjectReader, IndexStoreReader<Long, LongLongIndexElement> wayObjectOffsetIndexReader, RandomAccessObjectStoreReader<Relation> relationObjectReader, IndexStoreReader<Long, LongLongIndexElement> relationObjectOffsetIndexReader, TileCalculator tileCalculator, Comparator<Integer> tileOrdering, IndexStoreReader<Integer, IntegerLongIndexElement> nodeTileIndexReader, WayTileAreaIndexReader wayTileIndexReader, IndexStoreReader<Long, LongLongIndexElement> nodeRelationIndexReader, IndexStoreReader<Long, LongLongIndexElement> wayRelationIndexReader, IndexStoreReader<Long, LongLongIndexElement> relationRelationIndexReader) {
 		this.nodeObjectReader = nodeObjectReader;
 		this.nodeObjectOffsetIndexReader = nodeObjectOffsetIndexReader;
 		this.wayObjectReader = wayObjectReader;
@@ -99,12 +88,74 @@ public class DatasetStoreReader implements DatasetReader {
 		this.relationObjectReader = relationObjectReader;
 		this.relationObjectOffsetIndexReader = relationObjectOffsetIndexReader;
 		
-		this.tileCalculator = tileCalculator;
-		this.tileOrdering = tileOrdering;
 		this.nodeTileIndexReader = nodeTileIndexReader;
 		this.wayTileIndexReader = wayTileIndexReader;
 		this.nodeRelationIndexReader = nodeRelationIndexReader;
 		this.wayRelationIndexReader = wayRelationIndexReader;
+		this.relationRelationIndexReader = relationRelationIndexReader;
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected ReleasableIterator<Long> getNodeIdsForTileRange(int minimumTile, int maximumTile) {
+		return new TileIndexValueIdIterator(nodeTileIndexReader.getRange(minimumTile, maximumTile));
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected ReleasableIterator<Long> getWayIdsForTileRange(int minimumTile, int maximumTile) {
+		return new ReleasableAdaptorForIterator<Long>(wayTileIndexReader.getRange(minimumTile, maximumTile));
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected ReleasableIterator<Long> getWayIdsOwningNode(long nodeId) {
+		throw new UnsupportedOperationException();
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected ReleasableIterator<Long> getRelationIdsOwningNode(long nodeId) {
+		return new RelationalIndexValueIdIterator(nodeRelationIndexReader.getRange(nodeId, nodeId));
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected ReleasableIterator<Long> getRelationIdsOwningWay(long wayId) {
+		return new RelationalIndexValueIdIterator(wayRelationIndexReader.getRange(wayId, wayId));
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected ReleasableIterator<Long> getRelationIdsOwningRelation(long relationId) {
+		return new RelationalIndexValueIdIterator(relationRelationIndexReader.getRange(relationId, relationId));
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected boolean isTileWayIndexAvailable() {
+		return true;
 	}
 	
 	
@@ -150,201 +201,11 @@ public class DatasetStoreReader implements DatasetReader {
 		
 		sources = new ArrayList<ReleasableIterator<EntityContainer>>();
 		
-		sources.add(new UpcastIterator<EntityContainer, NodeContainer>(new NodeContainerIterator(new ReleasableIteratorIteratorAdapter<Node>(nodeObjectReader.iterate()))));
-		sources.add(new UpcastIterator<EntityContainer, WayContainer>(new WayContainerIterator(new ReleasableIteratorIteratorAdapter<Way>(wayObjectReader.iterate()))));
-		sources.add(new UpcastIterator<EntityContainer, RelationContainer>(new RelationContainerIterator(new ReleasableIteratorIteratorAdapter<Relation>(relationObjectReader.iterate()))));
+		sources.add(new UpcastIterator<EntityContainer, NodeContainer>(new NodeContainerIterator(new ReleasableAdaptorForIterator<Node>(nodeObjectReader.iterate()))));
+		sources.add(new UpcastIterator<EntityContainer, WayContainer>(new WayContainerIterator(new ReleasableAdaptorForIterator<Way>(wayObjectReader.iterate()))));
+		sources.add(new UpcastIterator<EntityContainer, RelationContainer>(new RelationContainerIterator(new ReleasableAdaptorForIterator<Relation>(relationObjectReader.iterate()))));
 		
 		return new MultipleSourceIterator<EntityContainer>(sources);
-	}
-	
-	
-	/**
-	 * Determines if a node lies within the bounding box.
-	 * 
-	 * @param boundingBox
-	 *            The bounding box.
-	 * @param node
-	 *            The node to be checked.
-	 * @return True if the node lies within the box.
-	 */
-	private boolean isNodeInsideBox(Rectangle2D boundingBox, Node node) {
-		return boundingBox.contains(node.getLongitude(), node.getLatitude());
-	}
-	
-	
-	/**
-	 * Determines if a way lies within the bounding box.
-	 * 
-	 * @param boundingBox
-	 *            The bounding box.
-	 * @param nodes
-	 *            The ordered nodes of the way in order.
-	 * @return True if the way is at least partially within the box.
-	 */
-	private boolean isWayInsideBox(Rectangle2D boundingBox, List<Node> nodes) {
-		// If at least one node lies within the box, the way is inside the box.
-		for (Node node : nodes) {
-			if (isNodeInsideBox(boundingBox, node)) {
-				return true;
-			}
-		}
-		
-		// Now we need to check if any of the segments cross the box.
-		for (int i = 0; i < nodes.size() - 1; i++) {
-			Node nodeA;
-			Node nodeB;
-			
-			nodeA = nodes.get(i);
-			nodeB = nodes.get(i + 1);
-			
-			if (boundingBox.intersectsLine(nodeA.getLongitude(), nodeA.getLatitude(), nodeB.getLongitude(), nodeB.getLatitude())) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ReleasableIterator<EntityContainer> iterateBoundingBox(double left, double right, double top, double bottom, boolean completeWays) {
-		Rectangle2D boundingBox;
-		int calculatedTile;
-		int maximumTile;
-		int minimumTile;
-		IdTracker nodeIdTracker;
-		IdTracker wayIdTracker;
-		IdTracker relationIdTracker;
-		Iterator<IntegerLongIndexElement> nodeTileIndexValues;
-		Iterator<Long> wayTileIndexValues;
-		
-		// Verify that the input coordinates create a positive box, if not just
-		// return an empty result set.
-		if (left > right || bottom > top) {
-			return new EmptyIterator<EntityContainer>();
-		}
-		
-		// Create a rectangle representing the bounding box.
-		boundingBox = new Rectangle2D.Double(left, bottom, right - left, top - bottom);
-		
-		// Calculate the maximum and minimum tile values for the bounding box.
-		calculatedTile = (int) tileCalculator.calculateTile(top, left);
-		maximumTile = calculatedTile;
-		minimumTile = calculatedTile;
-		
-		calculatedTile = (int) tileCalculator.calculateTile(top, right);
-		if (tileOrdering.compare(calculatedTile, minimumTile) < 0) {
-			minimumTile = calculatedTile;
-		}
-		if (tileOrdering.compare(calculatedTile, maximumTile) > 0) {
-			maximumTile = calculatedTile;
-		}
-		
-		calculatedTile = (int) tileCalculator.calculateTile(bottom, left);
-		if (tileOrdering.compare(calculatedTile, minimumTile) < 0) {
-			minimumTile = calculatedTile;
-		}
-		if (tileOrdering.compare(calculatedTile, maximumTile) > 0) {
-			maximumTile = calculatedTile;
-		}
-		
-		calculatedTile = (int) tileCalculator.calculateTile(bottom, right);
-		if (tileOrdering.compare(calculatedTile, minimumTile) < 0) {
-			minimumTile = calculatedTile;
-		}
-		if (tileOrdering.compare(calculatedTile, maximumTile) > 0) {
-			maximumTile = calculatedTile;
-		}
-		
-		// The tile values at the corners are all zero. If max tile is 0 but if
-		// the maximum longitude and latitude are above minimum values set the
-		// maximum tile to the maximum value.
-		if (maximumTile == 0) {
-			if (right > -180 || top > -90) {
-				maximumTile = 0xFFFFFFFF;
-			}
-		}
-		
-		// Search through all nodes in the tile range and store the ids of those
-		// within the bounding box.
-		nodeIdTracker = new BitSetIdTracker();
-		nodeTileIndexValues = nodeTileIndexReader.getRange(minimumTile, maximumTile);
-		while (nodeTileIndexValues.hasNext()) {
-			long nodeId;
-			Node node;
-			
-			// Load the current tile.
-			nodeId = nodeTileIndexValues.next().getValue();
-			node = getNode(nodeId);
-			
-			// Determine if the node lies within the required bounding box.
-			if (isNodeInsideBox(boundingBox, node)) {
-				nodeIdTracker.set(nodeId);
-			}
-		}
-		
-		// Search through all ways in the tile range and store the ids of those
-		// within the bounding box.
-		wayIdTracker = new BitSetIdTracker();
-		wayTileIndexValues = wayTileIndexReader.getRange(minimumTile, maximumTile);
-		while (wayTileIndexValues.hasNext()) {
-			long wayId;
-			Way way;
-			List<Node> nodes;
-			
-			// Load the current way.
-			wayId = wayTileIndexValues.next();
-			way = getWay(wayId);
-			
-			// Load the nodes within the way.
-			nodes = new ArrayList<Node>();
-			for (WayNode wayNode : way.getWayNodeList()) {
-				try {
-					nodes.add(getNode(wayNode.getNodeId()));
-				} catch (NoSuchIndexElementException e) {
-					// Ignore any referential integrity problems.
-					if (log.isLoggable(Level.FINER)) {
-						log.finest(
-							"Ignoring referential integrity problem where way " + wayId +
-							" refers to non-existent node " + wayNode.getNodeId() + "."
-						);
-					}
-				}
-			}
-			
-			// Determine if the way lies within the required bounding box.
-			if (isWayInsideBox(boundingBox, nodes)) {
-				wayIdTracker.set(wayId);
-				
-				// If complete ways are required, ensure all nodes within the
-				// way are marked for return.
-				if (completeWays) {
-					for (Node node : nodes) {
-						nodeIdTracker.set(node.getId());
-					}
-				}
-			}
-		}
-		
-		// Select all relations that contain the currently selected nodes and ways.
-		relationIdTracker = new BitSetIdTracker();
-		for (Long nodeId : nodeIdTracker) {
-			// Get all relation ids for relations containing the current node.
-			for (Iterator<LongLongIndexElement> rangeIterator = nodeRelationIndexReader.getRange(nodeId, nodeId); rangeIterator.hasNext(); ) {
-				relationIdTracker.set(rangeIterator.next().getValue());
-			}
-		}
-		for (Long wayId : wayIdTracker) {
-			// Get all relation ids for relations containing the current way.
-			for (Iterator<LongLongIndexElement> rangeIterator = wayRelationIndexReader.getRange(wayId, wayId); rangeIterator.hasNext(); ) {
-				relationIdTracker.set(rangeIterator.next().getValue());
-			}
-		}
-		
-		return new ResultIterator(nodeIdTracker, wayIdTracker, relationIdTracker);
 	}
 	
 	
@@ -355,82 +216,5 @@ public class DatasetStoreReader implements DatasetReader {
 	public void release() {
 		nodeObjectReader.release();
 		nodeObjectOffsetIndexReader.release();
-	}
-	
-	
-	/**
-	 * Returns a complete result set of matching records based on lists of
-	 * entity ids. It will return the nodes, followed by the ways, followed by
-	 * the relations.
-	 * 
-	 * @author Brett Henderson
-	 */
-	private class ResultIterator implements ReleasableIterator<EntityContainer> {
-		private Iterator<Long> nodeIds;
-		private Iterator<Long> wayIds;
-		private Iterator<Long> relationIds;
-		
-		
-		/**
-		 * Creates a new instance.
-		 * 
-		 * @param nodeIdList
-		 *            The set of nodes to be returned.
-		 * @param wayIdList
-		 *            The set of ways to be returned.
-		 * @param relationIdList
-		 *            The set of relations to be returned.
-		 */
-		public ResultIterator(IdTracker nodeIdList, IdTracker wayIdList, IdTracker relationIdList) {
-			nodeIds = nodeIdList.iterator();
-			wayIds = wayIdList.iterator();
-			relationIds = relationIdList.iterator();
-		}
-		
-		
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public boolean hasNext() {
-			return (nodeIds.hasNext() || wayIds.hasNext() || relationIds.hasNext());
-		}
-		
-		
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public EntityContainer next() {
-			if (nodeIds.hasNext()) {
-				return new NodeContainer(getNode(nodeIds.next()));
-			}
-			if (wayIds.hasNext()) {
-				return new WayContainer(getWay(wayIds.next()));
-			}
-			if (relationIds.hasNext()) {
-				return new RelationContainer(getRelation(relationIds.next()));
-			}
-			
-			throw new NoSuchElementException();
-		}
-		
-		
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void remove() {
-			throw new UnsupportedOperationException();
-		}
-		
-		
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void release() {
-			// Do nothing.
-		}
 	}
 }

@@ -1,30 +1,28 @@
-// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.customdb.v0_5.impl;
 
 import java.util.Iterator;
 
+import com.bretth.osmosis.core.store.LongLongIndexElement;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**
- * Simple class for exposing an Iterator as a ReleasableIterator.
+ * Iterates over a relational index iterator and returns all the id values
+ * stored against the index elements.
  * 
- * @param <T>
- *            The type of data to be iterated over.
  * @author Brett Henderson
  */
-public class ReleasableIteratorIteratorAdapter<T> implements ReleasableIterator<T> {
-	
-	private Iterator<T> source;
+public class RelationalIndexValueIdIterator implements ReleasableIterator<Long> {
+	private Iterator<LongLongIndexElement> source;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
 	 * @param source
-	 *            The source of input data.
+	 *            The input source.
 	 */
-	public ReleasableIteratorIteratorAdapter(Iterator<T> source) {
+	public RelationalIndexValueIdIterator(Iterator<LongLongIndexElement> source) {
 		this.source = source;
 	}
 	
@@ -37,12 +35,13 @@ public class ReleasableIteratorIteratorAdapter<T> implements ReleasableIterator<
 		return source.hasNext();
 	}
 	
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public T next() {
-		return source.next();
+	public Long next() {
+		return source.next().getValue();
 	}
 	
 	

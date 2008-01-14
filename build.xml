@@ -6,7 +6,7 @@
 	
 	<!-- set global properties for this build -->
 	<property name="project.name" value="osmosis"/>
-	<property name="project.version" value="0.24.1"/>
+	<property name="project.version" value="0.24.2"/>
 	
 	<!-- Define a classpath containing all lib jars. -->
 	<path id="libclasspath">
@@ -132,11 +132,6 @@
 		<zip destfile="dist/${project.name}-${project.version}.zip">
 			<zipfileset prefix="${project.name}-${project.version}" dir="build/dist"/>
 		</zip>
-		<!-- Create the distribution tgz file. -->
-		<tar destfile="dist/${project.name}-${project.version}.tar">
-			<tarfileset prefix="${project.name}-${project.version}" dir="build/dist"/>
-		</tar>
-		<gzip destfile="dist/${project.name}-${project.version}.tgz" src="dist/${project.name}-${project.version}.tar"/>
 	</target>
 	
 	<!-- Runs all of the unit tests in the application.  Uses the AllTests suite to achieve this. -->
