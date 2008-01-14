@@ -137,7 +137,7 @@ public class BitSetIdTracker implements IdTracker {
 			if (!nextIdAvailable) {
 				if (!readingPositive) {
 					// Create a negative set iterator if one doesn't already exist.
-					if (!(negativeIterator == null)) {
+					if (negativeIterator == null) {
 						negativeIterator = negativeSet.iterator();
 					}
 					
