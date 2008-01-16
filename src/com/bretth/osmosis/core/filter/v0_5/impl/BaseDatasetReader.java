@@ -371,6 +371,8 @@ public abstract class BaseDatasetReader implements DatasetReader {
 	public ReleasableIterator<EntityContainer> iterateBoundingBox(double left, double right, double top, double bottom, boolean completeWays) {
 		BoundingBoxContext bboxCtx;
 		
+		log.fine("Beginning bounding box iteration.");
+		
 		// Create the bounding box context to manage the data associated with
 		// this call.
 		bboxCtx = new BoundingBoxContext(left, right, top, bottom);
@@ -378,22 +380,28 @@ public abstract class BaseDatasetReader implements DatasetReader {
 		// Verify that the input coordinates create a positive box, if not just
 		// return an empty result set.
 		if (left > right || bottom > top) {
+			log.fine("Bounding box is zero size, returning an empty iterator.");
 			return new EmptyIterator<EntityContainer>();
 		}
 		
+		log.fine("Populating node ids.");
 		populateNodeIds(bboxCtx);
 		
 		if (isTileWayIndexAvailable()) {
+			log.fine("Populating way ids using tile-way index.");
 			populateWayIdsUsingTileWayIndex(bboxCtx, completeWays);
 		} else {
+			log.fine("Populating way ids using node-way index.");
 			populateWayIdsUsingNodeWayIndex(bboxCtx, completeWays);
 		}
 		
+		log.fine("Populating relation ids.");
 		populateRelationIds(bboxCtx);
 		
 		// Now we need to add any external nodes that might have been included outside the bounding box.
 		bboxCtx.nodeIdTracker.setAll(bboxCtx.externalNodeIdTracker);
 		
+		log.fine("Iterating all entities matching result ids.");
 		return new ResultIterator(bboxCtx.nodeIdTracker, bboxCtx.wayIdTracker, bboxCtx.relationIdTracker);
 	}
 	
