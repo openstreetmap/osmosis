@@ -12,6 +12,7 @@ import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
 import com.bretth.osmosis.core.store.Storeable;
+import com.bretth.osmosis.core.util.IntAsChar;
 import com.bretth.osmosis.core.util.LongAsInt;
 
 
@@ -69,7 +70,7 @@ public abstract class Entity implements Storeable {
 		
 		tagList = new ArrayList<Tag>();
 		
-		tagCount = sr.readInteger();
+		tagCount = sr.readCharacter();
 		
 		for (int i = 0; i < tagCount; i++) {
 			addTag(new Tag(sr, scr));
@@ -95,7 +96,7 @@ public abstract class Entity implements Storeable {
 			sw.writeBoolean(false);
 		}
 		
-		sw.writeInteger(tagList.size());
+		sw.writeCharacter(IntAsChar.intToChar(tagList.size()));
 		for (Tag tag : tagList) {
 			tag.store(sw, scr);
 		}

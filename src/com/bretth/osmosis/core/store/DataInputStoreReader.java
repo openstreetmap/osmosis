@@ -29,10 +29,9 @@ public class DataInputStoreReader implements StoreReader {
 	
 	
 	/**
-	 * Reads a boolean from storage.
-	 * 
-	 * @return The loaded value.
+	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean readBoolean() {
 		try {
 			return input.readBoolean();
@@ -45,10 +44,9 @@ public class DataInputStoreReader implements StoreReader {
 	
 	
 	/**
-	 * Reads a byte from storage.
-	 * 
-	 * @return The loaded value.
+	 * {@inheritDoc}
 	 */
+	@Override
 	public byte readByte() {
 		try {
 			return input.readByte();
@@ -61,10 +59,24 @@ public class DataInputStoreReader implements StoreReader {
 	
 	
 	/**
-	 * Reads an integer from storage.
-	 * 
-	 * @return The loaded value.
+	 * {@inheritDoc}
 	 */
+	@Override
+	public char readCharacter() {
+		try {
+			return input.readChar();
+		} catch (EOFException e) {
+			throw new EndOfStoreException("End of stream was reached while attempting to read a character from the store.", e);
+		} catch (IOException e) {
+			throw new OsmosisRuntimeException("Unable to read a character from the store.", e);
+		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public int readInteger() {
 		try {
 			return input.readInt();
@@ -77,10 +89,9 @@ public class DataInputStoreReader implements StoreReader {
 	
 	
 	/**
-	 * Reads a long from storage.
-	 * 
-	 * @return The loaded value.
+	 * {@inheritDoc}
 	 */
+	@Override
 	public long readLong() {
 		try {
 			return input.readLong();
@@ -93,10 +104,9 @@ public class DataInputStoreReader implements StoreReader {
 	
 	
 	/**
-	 * Reads a double from storage.
-	 * 
-	 * @return The loaded value.
+	 * {@inheritDoc}
 	 */
+	@Override
 	public double readDouble() {
 		try {
 			return input.readDouble();
@@ -109,10 +119,9 @@ public class DataInputStoreReader implements StoreReader {
 	
 	
 	/**
-	 * Reads a String from storage.
-	 * 
-	 * @return The loaded value.
+	 * {@inheritDoc}
 	 */
+	@Override
 	public String readString() {
 		try {
 			return input.readUTF();

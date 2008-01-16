@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.mysql.common;
+package com.bretth.osmosis.core.util;
 
 
 /**
@@ -8,9 +8,17 @@ package com.bretth.osmosis.core.mysql.common;
  * 
  * @author Brett Henderson
  */
-public class FixedPrecisionCoordinateConvertor {
+public final class FixedPrecisionCoordinateConvertor {
 	private static final int PRECISION = 7;
 	private static final int MULTIPLICATION_FACTOR = calculateMultiplicationFactor();
+	
+	
+	/**
+	 * This class cannot be instantiated.
+	 */
+	private FixedPrecisionCoordinateConvertor() {
+		// Do nothing.
+	}
 	
 	
 	/**
@@ -39,7 +47,7 @@ public class FixedPrecisionCoordinateConvertor {
 	 *            The double coordinate value.
 	 * @return The fixed coordinate value.
 	 */
-	public int convertToFixed(double coordinate) {
+	public static int convertToFixed(double coordinate) {
 		int result;
 		
 		result = (int) Math.round(coordinate * MULTIPLICATION_FACTOR);
@@ -55,7 +63,7 @@ public class FixedPrecisionCoordinateConvertor {
 	 *            The fixed coordinate value.
 	 * @return The double coordinate value.
 	 */
-	public double convertToDouble(int coordinate) {
+	public static double convertToDouble(int coordinate) {
 		double result;
 		
 		result = ((double) coordinate) / MULTIPLICATION_FACTOR;

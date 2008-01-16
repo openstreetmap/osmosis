@@ -28,7 +28,7 @@ public final class LongAsInt {
 	 * @return The integer representation of the id.
 	 */
 	public static int longToInt(long value) {
-		// Verify that the bit can be safely cast to an integer.
+		// Verify that the value can be safely cast to an integer.
 		if (value > Integer.MAX_VALUE) {
 			throw new OsmosisRuntimeException("Cannot represent " + value + " as an integer.");
 		}

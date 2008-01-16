@@ -6,6 +6,7 @@ import java.util.Date;
 import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
+import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
 
 /**
@@ -53,8 +54,8 @@ public class Node extends Entity implements Comparable<Node> {
 	public Node(StoreReader sr, StoreClassRegister scr) {
 		super(sr, scr);
 		
-		this.latitude = sr.readDouble();
-		this.longitude = sr.readDouble();
+		this.latitude = FixedPrecisionCoordinateConvertor.convertToDouble(sr.readInteger());
+		this.longitude = FixedPrecisionCoordinateConvertor.convertToDouble(sr.readInteger());
 	}
 	
 	
@@ -65,8 +66,8 @@ public class Node extends Entity implements Comparable<Node> {
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		super.store(sw, scr);
 		
-		sw.writeDouble(latitude);
-		sw.writeDouble(longitude);
+		sw.writeInteger(FixedPrecisionCoordinateConvertor.convertToFixed(latitude));
+		sw.writeInteger(FixedPrecisionCoordinateConvertor.convertToFixed(longitude));
 	}
 	
 	

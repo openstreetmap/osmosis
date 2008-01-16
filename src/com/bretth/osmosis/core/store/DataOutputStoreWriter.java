@@ -54,6 +54,19 @@ public class DataOutputStoreWriter implements StoreWriter {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
+	public void writeCharacter(char value) {
+		try {
+			output.writeChar(value);
+		} catch (IOException e) {
+			throw new OsmosisRuntimeException("Unable to write character " + ((int) value) + " to the store.", e);
+		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void writeInteger(int value) {
 		try {
 			output.writeInt(value);

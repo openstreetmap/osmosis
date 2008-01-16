@@ -41,6 +41,15 @@ public class TupleInputStoreReader implements StoreReader {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public char readCharacter() {
+		return input.readChar();
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public double readDouble() {
 		return input.readDouble();
 	}

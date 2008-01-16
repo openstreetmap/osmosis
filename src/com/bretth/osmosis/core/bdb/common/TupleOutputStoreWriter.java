@@ -41,6 +41,15 @@ import com.sleepycat.bind.tuple.TupleOutput;
 	 * {@inheritDoc}
 	 */
 	@Override
+	public void writeCharacter(char value) {
+		output.writeChar(value);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void writeDouble(double value) {
 		output.writeDouble(value);
 	}

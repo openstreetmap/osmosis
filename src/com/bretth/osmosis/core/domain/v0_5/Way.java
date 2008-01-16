@@ -11,6 +11,7 @@ import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
 import com.bretth.osmosis.core.store.Storeable;
+import com.bretth.osmosis.core.util.IntAsChar;
 
 
 /**
@@ -54,7 +55,7 @@ public class Way extends Entity implements Comparable<Way>, Storeable {
 		
 		int nodeCount;
 		
-		nodeCount = sr.readInteger();
+		nodeCount = sr.readCharacter();
 		
 		wayNodeList = new ArrayList<WayNode>();
 		for (int i = 0; i < nodeCount; i++) {
@@ -70,7 +71,7 @@ public class Way extends Entity implements Comparable<Way>, Storeable {
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		super.store(sw, scr);
 		
-		sw.writeInteger(wayNodeList.size());
+		sw.writeCharacter(IntAsChar.intToChar(wayNodeList.size()));
 		for (WayNode wayNode : wayNodeList) {
 			wayNode.store(sw, scr);
 		}

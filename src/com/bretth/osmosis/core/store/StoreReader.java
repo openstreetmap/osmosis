@@ -28,6 +28,14 @@ public interface StoreReader {
 	
 	
 	/**
+	 * Reads a character from storage.
+	 * 
+	 * @return The loaded value.
+	 */
+	public char readCharacter();
+	
+	
+	/**
 	 * Reads an integer from storage.
 	 * 
 	 * @return The loaded value.

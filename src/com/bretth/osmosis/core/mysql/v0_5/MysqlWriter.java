@@ -22,7 +22,6 @@ import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
-import com.bretth.osmosis.core.mysql.common.FixedPrecisionCoordinateConvertor;
 import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
 import com.bretth.osmosis.core.mysql.common.UserIdManager;
@@ -32,6 +31,7 @@ import com.bretth.osmosis.core.mysql.v0_5.impl.DBWayNode;
 import com.bretth.osmosis.core.mysql.v0_5.impl.EmbeddedTagProcessor;
 import com.bretth.osmosis.core.mysql.v0_5.impl.MemberTypeRenderer;
 import com.bretth.osmosis.core.task.v0_5.Sink;
+import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
 
 /**
@@ -234,7 +234,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private long maxWayId;
 	private long maxRelationId;
 	private EmbeddedTagProcessor tagProcessor;
-	private FixedPrecisionCoordinateConvertor fixedPrecisionConvertor;
 	private TileCalculator tileCalculator;
 	private MemberTypeRenderer memberTypeRenderer;
 	private boolean initialized;
@@ -299,7 +298,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		maxRelationId = 0;
 		
 		tagProcessor = new EmbeddedTagProcessor();
-		fixedPrecisionConvertor = new FixedPrecisionCoordinateConvertor();
 		tileCalculator = new TileCalculator();
 		memberTypeRenderer = new MemberTypeRenderer();
 		
@@ -378,8 +376,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		try {
 			statement.setLong(prmIndex++, node.getId());
 			statement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
-			statement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLatitude()));
-			statement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLongitude()));
+			statement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
+			statement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
 			statement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));;
 			statement.setString(prmIndex++, tagProcessor.format(node.getTagList()));
 			statement.setBoolean(prmIndex++, true);

@@ -11,6 +11,7 @@ import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
 import com.bretth.osmosis.core.store.Storeable;
+import com.bretth.osmosis.core.util.IntAsChar;
 
 
 /**
@@ -56,7 +57,7 @@ public class Relation extends Entity implements Comparable<Relation>, Storeable 
 		
 		int nodeCount;
 		
-		nodeCount = sr.readInteger();
+		nodeCount = sr.readCharacter();
 		
 		memberList = new ArrayList<RelationMember>();
 		for (int i = 0; i < nodeCount; i++) {
@@ -72,7 +73,7 @@ public class Relation extends Entity implements Comparable<Relation>, Storeable 
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		super.store(sw, scr);
 		
-		sw.writeInteger(memberList.size());
+		sw.writeCharacter(IntAsChar.intToChar(memberList.size()));
 		for (RelationMember relationMember : memberList) {
 			relationMember.store(sw, scr);
 		}

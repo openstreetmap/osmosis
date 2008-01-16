@@ -16,10 +16,10 @@ import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
-import com.bretth.osmosis.core.mysql.common.FixedPrecisionCoordinateConvertor;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
 import com.bretth.osmosis.core.mysql.common.UserIdManager;
 import com.bretth.osmosis.core.task.common.ChangeAction;
+import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
 
 /**
@@ -106,7 +106,6 @@ public class ChangeWriter {
 	private PreparedStatement queryRelationCurrentVersion;
 	private EmbeddedTagProcessor tagFormatter;
 	private MemberTypeRenderer memberTypeRenderer;
-	private FixedPrecisionCoordinateConvertor fixedPrecisionConvertor;
 	private TileCalculator tileCalculator;
 	
 	
@@ -127,7 +126,6 @@ public class ChangeWriter {
 		this.populateCurrentTables = populateCurrentTables;
 		
 		tagFormatter = new EmbeddedTagProcessor();
-		fixedPrecisionConvertor = new FixedPrecisionCoordinateConvertor();
 		tileCalculator = new TileCalculator();
 		memberTypeRenderer = new MemberTypeRenderer();
 	}
@@ -243,8 +241,8 @@ public class ChangeWriter {
 			prmIndex = 1;
 			insertNodeStatement.setLong(prmIndex++, node.getId());
 			insertNodeStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
-			insertNodeStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLatitude()));
-			insertNodeStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLongitude()));
+			insertNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
+			insertNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
 			insertNodeStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
 			insertNodeStatement.setString(prmIndex++, tagFormatter.format(node.getTagList()));
 			insertNodeStatement.setBoolean(prmIndex++, visible);
@@ -272,8 +270,8 @@ public class ChangeWriter {
 				prmIndex = 1;
 				insertNodeCurrentStatement.setLong(prmIndex++, node.getId());
 				insertNodeCurrentStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
-				insertNodeCurrentStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLatitude()));
-				insertNodeCurrentStatement.setInt(prmIndex++, fixedPrecisionConvertor.convertToFixed(node.getLongitude()));
+				insertNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
+				insertNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
 				insertNodeCurrentStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
 				insertNodeCurrentStatement.setString(prmIndex++, tagFormatter.format(node.getTagList()));
 				insertNodeCurrentStatement.setBoolean(prmIndex++, visible);

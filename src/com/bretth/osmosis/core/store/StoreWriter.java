@@ -28,6 +28,15 @@ public interface StoreWriter {
 	
 	
 	/**
+	 * Writes a character to storage.
+	 * 
+	 * @param value
+	 *            The value to be written.
+	 */
+	public void writeCharacter(char value);
+	
+	
+	/**
 	 * Writes an integer to storage.
 	 * 
 	 * @param value
