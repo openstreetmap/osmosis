@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.CharConversionException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
@@ -110,10 +111,15 @@ public class TestUsersForUtf8 {
 		writer.write(displayName);
 		writer.close();
 		
-		inBuffer = new ByteArrayInputStream(outBuffer.toByteArray());
-		reader = new BufferedReader(new InputStreamReader(inBuffer, "UTF-8"));
-		
-		reader.readLine();
+		try {
+			inBuffer = new ByteArrayInputStream(outBuffer.toByteArray());
+			reader = new BufferedReader(new InputStreamReader(inBuffer, "UTF-8"));
+			
+			reader.readLine();
+			
+		} catch (CharConversionException e) {
+			return false;
+		}
 		
 		return true;
 	}
