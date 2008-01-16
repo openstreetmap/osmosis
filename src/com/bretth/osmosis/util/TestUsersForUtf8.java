@@ -86,6 +86,8 @@ public class TestUsersForUtf8 {
 			} else {
 				fileWriter.write(" FAIL");
 			}
+			
+			fileWriter.newLine();
 		}
 		
 		// Release the database resources.
