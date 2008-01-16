@@ -5,6 +5,7 @@ import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
 import com.bretth.osmosis.core.store.Storeable;
+import com.bretth.osmosis.core.util.LongAsInt;
 
 
 /**
@@ -25,7 +26,7 @@ public class UnsignedIntegerLongIndexElement implements Storeable {
 	/**
 	 * Part 2 of the key.
 	 */
-	private long part2;
+	private int part2;
 	
 	
 	/**
@@ -38,7 +39,7 @@ public class UnsignedIntegerLongIndexElement implements Storeable {
 	 */
 	public UnsignedIntegerLongIndexElement(int part1, long part2) {
 		this.part1 = part1;
-		this.part2 = part2;
+		this.part2 = LongAsInt.longToInt(part2);
 	}
 	
 	
@@ -52,7 +53,7 @@ public class UnsignedIntegerLongIndexElement implements Storeable {
 	 *            within the store.
 	 */
 	public UnsignedIntegerLongIndexElement(StoreReader sr, StoreClassRegister scr) {
-		this(sr.readInteger(), sr.readLong());
+		this(sr.readInteger() ^ 0x80000000, sr.readInteger());
 	}
 	
 	
@@ -63,8 +64,8 @@ public class UnsignedIntegerLongIndexElement implements Storeable {
 		// Toggle the upper bit of the integer so that the underlying bdb
 		// implementation sorts it as unsigned.
 		writer.writeInteger(part1 ^ 0x80000000);
-		// Write the long as a standard signed value.
-		writer.writeLong(part2);
+		// Write the long (currently represented as an int) as a standard signed value.
+		writer.writeInteger(part2);
 	}
 	
 	

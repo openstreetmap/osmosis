@@ -5,7 +5,7 @@ import java.util.BitSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.util.LongAsInt;
 
 
 /**
@@ -30,29 +30,12 @@ public class BitSetIdTracker implements IdTracker {
 	
 	
 	/**
-	 * Converts the specified long to an int and verifies that it is legal.
-	 * 
-	 * @param value
-	 *            The identifier to be converted.
-	 * @return The integer representation of the id.
-	 */
-	private int longToInt(long value) {
-		// Verify that the bit can be safely cast to an integer.
-		if (value > Integer.MAX_VALUE) {
-			throw new OsmosisRuntimeException("Requested value " + value + " exceeds the maximum supported size of " + Integer.MAX_VALUE + ".");
-		}
-		
-		return (int) value;
-	}
-	
-	
-	/**
 	 * {@inheritDoc}
 	 */
 	public void set(long id) {
 		int intId;
 		
-		intId = longToInt(id);
+		intId = LongAsInt.longToInt(id);
 		
 		if (intId >= 0) {
 			positiveSet.set(intId);
@@ -68,7 +51,7 @@ public class BitSetIdTracker implements IdTracker {
 	public boolean get(long id) {
 		int intId;
 		
-		intId = longToInt(id);
+		intId = LongAsInt.longToInt(id);
 		
 		if (intId >= 0) {
 			return positiveSet.get(intId);
@@ -180,7 +163,7 @@ public class BitSetIdTracker implements IdTracker {
 			
 			nextIdAvailable = false;
 			
-			return (long) nextId;
+			return nextId;
 		}
 		
 		

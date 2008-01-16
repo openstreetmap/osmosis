@@ -5,6 +5,7 @@ import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
 import com.bretth.osmosis.core.store.Storeable;
+import com.bretth.osmosis.core.util.LongAsInt;
 
 
 /**
@@ -14,7 +15,7 @@ import com.bretth.osmosis.core.store.Storeable;
  */
 public class RelationMember implements Comparable<RelationMember>, Storeable {
 	
-	private long memberId;
+	private int memberId;
 	private EntityType memberType;
 	private String memberRole;
 	
@@ -30,7 +31,7 @@ public class RelationMember implements Comparable<RelationMember>, Storeable {
 	 *            The role that this member forms within the relation.
 	 */
 	public RelationMember(long memberId, EntityType memberType, String memberRole) {
-		this.memberId = memberId;
+		this.memberId = LongAsInt.longToInt(memberId);
 		this.memberType = memberType;
 		this.memberRole = memberRole;
 	}
@@ -47,7 +48,7 @@ public class RelationMember implements Comparable<RelationMember>, Storeable {
 	 */
 	public RelationMember(StoreReader sr, StoreClassRegister scr) {
 		this(
-			sr.readLong(),
+			sr.readInteger(),
 			EntityType.valueOf(sr.readString()),
 			sr.readString()
 		);
@@ -58,7 +59,7 @@ public class RelationMember implements Comparable<RelationMember>, Storeable {
 	 * {@inheritDoc}
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
-		sw.writeLong(memberId);
+		sw.writeInteger(memberId);
 		sw.writeString(memberType.toString());
 		sw.writeString(memberRole);
 	}

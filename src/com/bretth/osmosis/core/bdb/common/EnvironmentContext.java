@@ -4,6 +4,7 @@ package com.bretth.osmosis.core.bdb.common;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.store.Completable;
@@ -22,6 +23,9 @@ import com.sleepycat.je.TransactionConfig;
  * @author Brett Henderson
  */
 public class EnvironmentContext implements Completable {
+	
+	private static final Logger log = Logger.getLogger(EnvironmentContext.class.getName());
+	
 	
 	private File home;
 	private EnvironmentConfig envConfig;
@@ -141,7 +145,11 @@ public class EnvironmentContext implements Completable {
 		dbMap.clear();
 		
 		try {
+			log.fine("Cleaning database log.");
+			getEnvironment().cleanLog();
+			log.fine("Closing environment.");
 			getEnvironment().close();
+			log.fine("Environment closed successfully.");
 		} catch (DatabaseException e) {
 			throw new OsmosisRuntimeException("Unable to close the bdb environment at location " + home + ".", e);
 		}

@@ -5,6 +5,7 @@ import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
 import com.bretth.osmosis.core.store.Storeable;
+import com.bretth.osmosis.core.util.LongAsInt;
 
 
 /**
@@ -14,7 +15,7 @@ import com.bretth.osmosis.core.store.Storeable;
  */
 public class WayNode implements Comparable<WayNode>, Storeable {
 	
-	private long nodeId;
+	private int nodeId;
 	
 	
 	/**
@@ -24,7 +25,7 @@ public class WayNode implements Comparable<WayNode>, Storeable {
 	 *            The unique identifier of the node being referred to.
 	 */
 	public WayNode(long nodeId) {
-		this.nodeId = nodeId;
+		this.nodeId = LongAsInt.longToInt(nodeId);
 	}
 	
 	
@@ -38,7 +39,7 @@ public class WayNode implements Comparable<WayNode>, Storeable {
 	 *            within the store.
 	 */
 	public WayNode(StoreReader sr, StoreClassRegister scr) {
-		this(sr.readLong());
+		this(sr.readInteger());
 	}
 	
 	
@@ -46,7 +47,7 @@ public class WayNode implements Comparable<WayNode>, Storeable {
 	 * {@inheritDoc}
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
-		sw.writeLong(nodeId);
+		sw.writeInteger(nodeId);
 	}
 	
 	

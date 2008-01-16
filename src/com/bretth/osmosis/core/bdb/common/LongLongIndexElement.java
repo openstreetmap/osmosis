@@ -5,6 +5,7 @@ import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
 import com.bretth.osmosis.core.store.Storeable;
+import com.bretth.osmosis.core.util.LongAsInt;
 
 
 /**
@@ -18,12 +19,12 @@ public class LongLongIndexElement implements Storeable {
 	/**
 	 * Part 1 of the key.
 	 */
-	private long part1;
+	private int part1;
 	
 	/**
 	 * Part 2 of the key.
 	 */
-	private long part2;
+	private int part2;
 	
 	
 	/**
@@ -35,8 +36,8 @@ public class LongLongIndexElement implements Storeable {
 	 *            Part 2 of the key.
 	 */
 	public LongLongIndexElement(long part1, long part2) {
-		this.part1 = part1;
-		this.part2 = part2;
+		this.part1 = LongAsInt.longToInt(part1);
+		this.part2 = LongAsInt.longToInt(part2);
 	}
 	
 	
@@ -50,7 +51,7 @@ public class LongLongIndexElement implements Storeable {
 	 *            within the store.
 	 */
 	public LongLongIndexElement(StoreReader sr, StoreClassRegister scr) {
-		this(sr.readLong(), sr.readLong());
+		this(sr.readInteger(), sr.readInteger());
 	}
 	
 	
@@ -58,8 +59,8 @@ public class LongLongIndexElement implements Storeable {
 	 * {@inheritDoc}
 	 */
 	public void store(StoreWriter writer, StoreClassRegister storeClassRegister) {
-		writer.writeLong(part1);
-		writer.writeLong(part2);
+		writer.writeInteger(part1);
+		writer.writeInteger(part2);
 	}
 	
 	

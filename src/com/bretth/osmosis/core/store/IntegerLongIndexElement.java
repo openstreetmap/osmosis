@@ -1,6 +1,8 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.store;
 
+import com.bretth.osmosis.core.util.LongAsInt;
+
 
 
 /**
@@ -18,7 +20,7 @@ public class IntegerLongIndexElement implements IndexElement<Integer> {
 	/**
 	 * The data value.
 	 */
-	private long value;
+	private int value;
 	
 	
 	/**
@@ -31,7 +33,7 @@ public class IntegerLongIndexElement implements IndexElement<Integer> {
 	 */
 	public IntegerLongIndexElement(int id, long value) {
 		this.id = id;
-		this.value = value;
+		this.value = LongAsInt.longToInt(value);
 	}
 	
 	
@@ -45,7 +47,7 @@ public class IntegerLongIndexElement implements IndexElement<Integer> {
 	 *            within the store.
 	 */
 	public IntegerLongIndexElement(StoreReader sr, StoreClassRegister scr) {
-		this(sr.readInteger(), sr.readLong());
+		this(sr.readInteger(), sr.readInteger());
 	}
 	
 	
@@ -54,7 +56,7 @@ public class IntegerLongIndexElement implements IndexElement<Integer> {
 	 */
 	public void store(StoreWriter writer, StoreClassRegister storeClassRegister) {
 		writer.writeInteger(id);
-		writer.writeLong(value);
+		writer.writeInteger(value);
 	}
 	
 	

@@ -1,6 +1,8 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.store;
 
+import com.bretth.osmosis.core.util.LongAsInt;
+
 
 
 /**
@@ -13,12 +15,12 @@ public class LongLongIndexElement implements IndexElement<Long> {
 	/**
 	 * The value identifier.
 	 */
-	private long id;
+	private int id;
 	
 	/**
 	 * The data value.
 	 */
-	private long value;
+	private int value;
 	
 	
 	/**
@@ -30,8 +32,8 @@ public class LongLongIndexElement implements IndexElement<Long> {
 	 *            The data value.
 	 */
 	public LongLongIndexElement(long id, long value) {
-		this.id = id;
-		this.value = value;
+		this.id = LongAsInt.longToInt(id);
+		this.value = LongAsInt.longToInt(value);
 	}
 	
 	
@@ -45,7 +47,7 @@ public class LongLongIndexElement implements IndexElement<Long> {
 	 *            within the store.
 	 */
 	public LongLongIndexElement(StoreReader sr, StoreClassRegister scr) {
-		this(sr.readLong(), sr.readLong());
+		this(sr.readInteger(), sr.readInteger());
 	}
 	
 	
@@ -53,8 +55,8 @@ public class LongLongIndexElement implements IndexElement<Long> {
 	 * {@inheritDoc}
 	 */
 	public void store(StoreWriter writer, StoreClassRegister storeClassRegister) {
-		writer.writeLong(id);
-		writer.writeLong(value);
+		writer.writeInteger(id);
+		writer.writeInteger(value);
 	}
 	
 	
@@ -63,7 +65,7 @@ public class LongLongIndexElement implements IndexElement<Long> {
 	 */
 	@Override
 	public Long getKey() {
-		return id;
+		return (long) id;
 	}
 	
 	

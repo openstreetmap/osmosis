@@ -86,7 +86,9 @@ public class DatabaseTileIndexIterator implements ReleasableIterator<Long> {
 			
 			// We want to start retrieving records from the first record with a
 			// part 1 of tileId. Therefore part2 must be the minimum value.
-			startKey = new UnsignedIntegerLongIndexElement(minimumTile, Long.MIN_VALUE);
+			// HACK: Note that this should be using Long.MIN_VALUE but the
+			// internal implementation is currently using an integer.
+			startKey = new UnsignedIntegerLongIndexElement(minimumTile, Integer.MIN_VALUE);
 			keyBinding.objectToEntry(startKey, keyEntry);
 			
 			cursor = db.openCursor(txn, null);

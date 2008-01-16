@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.util.LongAsInt;
 
 
 /**
@@ -51,26 +51,6 @@ public class ListIdTracker implements IdTracker {
 		idOffset = 0;
 		maxIdAdded = Integer.MIN_VALUE;
 		sorted = true;
-	}
-	
-	
-	/**
-	 * Converts the specified long to an int and verifies that it is legal.
-	 * 
-	 * @param value
-	 *            The identifier to be converted.
-	 * @return The integer representation of the id.
-	 */
-	private int longToInt(long value) {
-		// Verify that the bit can be safely cast to an integer.
-		if (value > Integer.MAX_VALUE) {
-			throw new OsmosisRuntimeException("Requested value " + value + " exceeds the maximum supported size of " + Integer.MAX_VALUE + ".");
-		}
-		if (value < Integer.MIN_VALUE) {
-			throw new OsmosisRuntimeException("Requested value " + value + " exceeds the minimum supported size of " + Integer.MIN_VALUE + ".");
-		}
-		
-		return (int) value;
 	}
 	
 	
@@ -130,7 +110,7 @@ public class ListIdTracker implements IdTracker {
 	public void set(long id) {
 		int integerId;
 		
-		integerId = longToInt(id);
+		integerId = LongAsInt.longToInt(id);
 		
 		// Increase the id list size if it is full.
 		if (idOffset >= idList.length) {
@@ -158,7 +138,7 @@ public class ListIdTracker implements IdTracker {
 		int intervalEnd;
 		boolean idFound;
 		
-		integerId = longToInt(id);
+		integerId = LongAsInt.longToInt(id);
 		
 		// If the list is not sorted, it must be sorted prior to a search being
 		// performed.

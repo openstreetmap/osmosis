@@ -12,6 +12,7 @@ import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
 import com.bretth.osmosis.core.store.Storeable;
+import com.bretth.osmosis.core.util.LongAsInt;
 
 
 /**
@@ -21,7 +22,7 @@ import com.bretth.osmosis.core.store.Storeable;
  * @author Brett Henderson
  */
 public abstract class Entity implements Storeable {
-	private long id;
+	private int id;
 	private Date timestamp;
 	private List<Tag> tagList;
 	private String user;
@@ -38,7 +39,7 @@ public abstract class Entity implements Storeable {
 	 *            The name of the user that last modified this entity.
 	 */
 	public Entity(long id, Date timestamp, String user) {
-		this.id = id;
+		this.id = LongAsInt.longToInt(id);
 		this.timestamp = timestamp;
 		this.user = user;
 		
@@ -58,7 +59,7 @@ public abstract class Entity implements Storeable {
 	public Entity(StoreReader sr, StoreClassRegister scr) {
 		int tagCount;
 		
-		id = sr.readLong();
+		id = sr.readInteger();
 		if (sr.readBoolean()) {
 			timestamp = new Date(sr.readLong());
 		}
@@ -80,7 +81,7 @@ public abstract class Entity implements Storeable {
 	 * {@inheritDoc}
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
-		sw.writeLong(id);
+		sw.writeInteger(id);
 		if (timestamp != null) {
 			sw.writeBoolean(true);
 			sw.writeLong(timestamp.getTime());
