@@ -20,7 +20,7 @@ public class ProductionDbCharset extends Charset {
 	/**
 	 * Creates a new instance.
 	 */
-	protected ProductionDbCharset() {
+	public ProductionDbCharset() {
 		super(CHARSET_NAME, new String[0]);
 	}
 	
