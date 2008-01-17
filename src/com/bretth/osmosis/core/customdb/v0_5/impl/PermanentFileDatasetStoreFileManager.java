@@ -20,6 +20,7 @@ public class PermanentFileDatasetStoreFileManager implements DatasetStoreFileMan
 	private File wayObjectFile;
 	private File wayObjectOffsetIndexFile;
 	private Map<Integer, File> wayTileIndexFileMap;
+	private File nodeWayIndexFile;
 	private File relationObjectFile;
 	private File relationObjectOffsetIndexFile;
 	private File nodeRelationIndexFile;
@@ -128,6 +129,19 @@ public class PermanentFileDatasetStoreFileManager implements DatasetStoreFileMan
 		}
 		
 		return wayTileIndexFileMap.get(instance);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public File getNodeWayIndexFile() {
+		if (nodeWayIndexFile == null) {
+			nodeWayIndexFile = createDataFile("dsnwi");
+		}
+		
+		return nodeWayIndexFile;
 	}
 	
 	

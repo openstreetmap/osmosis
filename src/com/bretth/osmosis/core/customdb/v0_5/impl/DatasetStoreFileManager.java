@@ -67,6 +67,15 @@ public interface DatasetStoreFileManager extends Releasable {
 	
 	
 	/**
+	 * Returns the file to be used for storing relationships between nodes and
+	 * ways.
+	 * 
+	 * @return The node way index file.
+	 */
+	public File getNodeWayIndexFile();
+	
+	
+	/**
 	 * Returns the file to be used for storing relation objects.
 	 * 
 	 * @return The relation object file.
@@ -75,8 +84,8 @@ public interface DatasetStoreFileManager extends Releasable {
 	
 	
 	/**
-	 * Returns the file to be used for storing relation object offsets against their
-	 * id.
+	 * Returns the file to be used for storing relation object offsets against
+	 * their id.
 	 * 
 	 * @return The relation object offset index file.
 	 */

@@ -25,6 +25,7 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	private File wayObjectFile;
 	private File wayObjectOffsetIndexFile;
 	private Map<Integer, File> wayTileIndexFileMap;
+	private File nodeWayIndexFile;
 	private File relationObjectFile;
 	private File relationObjectOffsetIndexFile;
 	private File nodeRelationIndexFile;
@@ -139,6 +140,19 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 		}
 		
 		return wayTileIndexFileMap.get(instance);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public File getNodeWayIndexFile() {
+		if (nodeWayIndexFile == null) {
+			nodeWayIndexFile = createTempFile("dsnwi");
+		}
+		
+		return nodeWayIndexFile;
 	}
 	
 	

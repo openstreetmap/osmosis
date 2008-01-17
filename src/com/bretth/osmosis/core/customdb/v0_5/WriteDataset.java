@@ -27,10 +27,13 @@ public class WriteDataset implements Sink {
 	 * 
 	 * @param directory
 	 *            The directory to store all data files in.
+	 * @param enableWayTileIndex
+	 *            If true a tile index is created for ways, otherwise a node-way
+	 *            index is used.
 	 */
-	public WriteDataset(File directory) {
+	public WriteDataset(File directory, boolean enableWayTileIndex) {
 		fileManager = new PermanentFileDatasetStoreFileManager(directory);
-		store = new DatasetStore(fileManager);
+		store = new DatasetStore(fileManager, enableWayTileIndex);
 	}
 	
 	

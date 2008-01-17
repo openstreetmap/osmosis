@@ -47,6 +47,8 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	private TileCalculator tileCalculator;
 	private UnsignedIntegerComparator uintComparator;
 	
+	private boolean enableWayTileIndex;
+	
 	private CompletableContainer storeContainer;
 	private RandomAccessObjectStore<Node> nodeObjectStore;
 	private IndexStore<Long, LongLongIndexElement> nodeObjectOffsetIndexWriter;
@@ -54,6 +56,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	private RandomAccessObjectStore<Way> wayObjectStore;
 	private IndexStore<Long, LongLongIndexElement> wayObjectOffsetIndexWriter;
 	private WayTileAreaIndex wayTileIndexWriter;
+	private IndexStore<Long, LongLongIndexElement> nodeWayIndexWriter;
 	private RandomAccessObjectStore<Relation> relationObjectStore;
 	private IndexStore<Long, LongLongIndexElement> relationObjectOffsetIndexWriter;
 	private IndexStore<Long, LongLongIndexElement> nodeRelationIndexWriter;
@@ -69,8 +72,13 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	 * 
 	 * @param fileManager
 	 *            The manager providing access to store files.
+	 * @param enableWayTileIndex
+	 *            If true a tile index is created for ways, otherwise a node-way
+	 *            index is used.
 	 */
-	public DatasetStore(DatasetStoreFileManager fileManager) {
+	public DatasetStore(DatasetStoreFileManager fileManager, boolean enableWayTileIndex) {
+		this.enableWayTileIndex = enableWayTileIndex;
+		
 		storeContainer = new CompletableContainer();
 		
 		// Validate all input data to ensure it is sorted.
@@ -131,6 +139,13 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 			)
 		);
 		wayTileIndexWriter = storeContainer.add(new WayTileAreaIndex(fileManager));
+		nodeWayIndexWriter = storeContainer.add(
+			new IndexStore<Long, LongLongIndexElement>(
+				LongLongIndexElement.class,
+				new ComparableComparator<Long>(),
+				fileManager.getNodeWayIndexFile()
+			)
+		);
 		
 		// Create relation store and indexes.
 		relationObjectStore = storeContainer.add(
@@ -244,54 +259,65 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 			new LongLongIndexElement(wayId, objectOffset)
 		);
 		
-		// Calculate the minimum and maximum tile indexes for the way.
-		tilesFound = false;
-		minimumTile = 0;
-		maximumTile = 0;
-		for (WayNode wayNode : way.getWayNodeList()) {
-			long nodeId;
-			Node node;
-			int tile;
-			
-			nodeId = wayNode.getNodeId();
-			
-			try {
-				node = nodeObjectReader.get(
-					nodeObjectOffsetIndexReader.get(nodeId).getValue()
-				);
+		if (enableWayTileIndex) {
+			// Calculate the minimum and maximum tile indexes for the way.
+			tilesFound = false;
+			minimumTile = 0;
+			maximumTile = 0;
+			for (WayNode wayNode : way.getWayNodeList()) {
+				long nodeId;
+				Node node;
+				int tile;
 				
-				tile = (int) tileCalculator.calculateTile(node.getLatitude(), node.getLongitude());
+				nodeId = wayNode.getNodeId();
 				
-				if (tilesFound) {
-					if (uintComparator.compare(tile, minimumTile) < 0) {
-						minimumTile = tile;
-					}
-					if (uintComparator.compare(maximumTile, tile) < 0) {
-						maximumTile = tile;
-					}
-					
-				} else {
-					minimumTile = tile;
-					maximumTile = tile;
-					
-					tilesFound = true;
-				}
-				
-			} catch (NoSuchIndexElementException e) {
-				// Ignore any referential integrity problems.
-				if (log.isLoggable(Level.FINER)) {
-					log.finest(
-						"Ignoring referential integrity problem where way " + wayId +
-						" refers to non-existent node " + nodeId + "."
+				try {
+					node = nodeObjectReader.get(
+						nodeObjectOffsetIndexReader.get(nodeId).getValue()
 					);
+					
+					tile = (int) tileCalculator.calculateTile(node.getLatitude(), node.getLongitude());
+					
+					if (tilesFound) {
+						if (uintComparator.compare(tile, minimumTile) < 0) {
+							minimumTile = tile;
+						}
+						if (uintComparator.compare(maximumTile, tile) < 0) {
+							maximumTile = tile;
+						}
+						
+					} else {
+						minimumTile = tile;
+						maximumTile = tile;
+						
+						tilesFound = true;
+					}
+					
+				} catch (NoSuchIndexElementException e) {
+					// Ignore any referential integrity problems.
+					if (log.isLoggable(Level.FINER)) {
+						log.finest(
+							"Ignoring referential integrity problem where way " + wayId +
+							" refers to non-existent node " + nodeId + "."
+						);
+					}
 				}
 			}
-		}
-		
-		// Write the way id to an index keyed by tile but only if tiles were
-		// actually found.
-		if (tilesFound) {
-			wayTileIndexWriter.write(wayId, minimumTile, maximumTile);
+			
+			// Write the way id to an index keyed by tile but only if tiles were
+			// actually found.
+			if (tilesFound) {
+				wayTileIndexWriter.write(wayId, minimumTile, maximumTile);
+			}
+			
+		} else {
+			for (WayNode wayNode : way.getWayNodeList()) {
+				long nodeId;
+				
+				nodeId = wayNode.getNodeId();
+				
+				nodeWayIndexWriter.write(new LongLongIndexElement(nodeId, wayId));
+			}
 		}
 	}
 	
