@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 
+
 /**
  * Provides functionality common to all object writer implementations.
  * 

@@ -45,9 +45,12 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	
 	private IndexStoreReader<Integer, IntegerLongIndexElement> nodeTileIndexReader;
 	private WayTileAreaIndexReader wayTileIndexReader;
+	private IndexStoreReader<Long, LongLongIndexElement> nodeWayIndexReader;
 	private IndexStoreReader<Long, LongLongIndexElement> nodeRelationIndexReader;
 	private IndexStoreReader<Long, LongLongIndexElement> wayRelationIndexReader;
 	private IndexStoreReader<Long, LongLongIndexElement> relationRelationIndexReader;
+	
+	private boolean enableWayTileIndex;
 	
 	
 	/**
@@ -73,14 +76,19 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	 *            The tile to node index.
 	 * @param wayTileIndexReader
 	 *            The tile to way index.
+	 * @param nodeWayIndexReader
+	 *            The node to way index.
 	 * @param nodeRelationIndexReader
 	 *            The node to relation index.
 	 * @param wayRelationIndexReader
 	 *            The way to relation index.
 	 * @param relationRelationIndexReader
 	 *            The relation to relation index.
+	 * @param enableWayTileIndex
+	 *            If true a tile index is created for ways, otherwise a node-way
+	 *            index is used.
 	 */
-	public DatasetStoreReader(RandomAccessObjectStoreReader<Node> nodeObjectReader, IndexStoreReader<Long, LongLongIndexElement> nodeObjectOffsetIndexReader, RandomAccessObjectStoreReader<Way> wayObjectReader, IndexStoreReader<Long, LongLongIndexElement> wayObjectOffsetIndexReader, RandomAccessObjectStoreReader<Relation> relationObjectReader, IndexStoreReader<Long, LongLongIndexElement> relationObjectOffsetIndexReader, TileCalculator tileCalculator, Comparator<Integer> tileOrdering, IndexStoreReader<Integer, IntegerLongIndexElement> nodeTileIndexReader, WayTileAreaIndexReader wayTileIndexReader, IndexStoreReader<Long, LongLongIndexElement> nodeRelationIndexReader, IndexStoreReader<Long, LongLongIndexElement> wayRelationIndexReader, IndexStoreReader<Long, LongLongIndexElement> relationRelationIndexReader) {
+	public DatasetStoreReader(RandomAccessObjectStoreReader<Node> nodeObjectReader, IndexStoreReader<Long, LongLongIndexElement> nodeObjectOffsetIndexReader, RandomAccessObjectStoreReader<Way> wayObjectReader, IndexStoreReader<Long, LongLongIndexElement> wayObjectOffsetIndexReader, RandomAccessObjectStoreReader<Relation> relationObjectReader, IndexStoreReader<Long, LongLongIndexElement> relationObjectOffsetIndexReader, TileCalculator tileCalculator, Comparator<Integer> tileOrdering, IndexStoreReader<Integer, IntegerLongIndexElement> nodeTileIndexReader, WayTileAreaIndexReader wayTileIndexReader, IndexStoreReader<Long, LongLongIndexElement> nodeWayIndexReader, IndexStoreReader<Long, LongLongIndexElement> nodeRelationIndexReader, IndexStoreReader<Long, LongLongIndexElement> wayRelationIndexReader, IndexStoreReader<Long, LongLongIndexElement> relationRelationIndexReader, boolean enableWayTileIndex) {
 		this.nodeObjectReader = nodeObjectReader;
 		this.nodeObjectOffsetIndexReader = nodeObjectOffsetIndexReader;
 		this.wayObjectReader = wayObjectReader;
@@ -90,9 +98,12 @@ public class DatasetStoreReader extends BaseDatasetReader {
 		
 		this.nodeTileIndexReader = nodeTileIndexReader;
 		this.wayTileIndexReader = wayTileIndexReader;
+		this.nodeWayIndexReader = nodeWayIndexReader;
 		this.nodeRelationIndexReader = nodeRelationIndexReader;
 		this.wayRelationIndexReader = wayRelationIndexReader;
 		this.relationRelationIndexReader = relationRelationIndexReader;
+		
+		this.enableWayTileIndex = enableWayTileIndex;
 	}
 	
 	
@@ -119,7 +130,7 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	 */
 	@Override
 	protected ReleasableIterator<Long> getWayIdsOwningNode(long nodeId) {
-		throw new UnsupportedOperationException();
+		return new RelationalIndexValueIdIterator(nodeWayIndexReader.getRange(nodeId, nodeId));
 	}
 	
 	
@@ -155,7 +166,7 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	 */
 	@Override
 	protected boolean isTileWayIndexAvailable() {
-		return true;
+		return enableWayTileIndex;
 	}
 	
 	

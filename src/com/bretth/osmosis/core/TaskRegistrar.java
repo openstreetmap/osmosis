@@ -8,6 +8,7 @@ import com.bretth.osmosis.core.buffer.v0_5.EntityBufferFactory;
 import com.bretth.osmosis.core.change.v0_5.ChangeApplierFactory;
 import com.bretth.osmosis.core.change.v0_5.ChangeDeriverFactory;
 import com.bretth.osmosis.core.customdb.v0_5.DumpDatasetFactory;
+import com.bretth.osmosis.core.customdb.v0_5.ReadDatasetFactory;
 import com.bretth.osmosis.core.customdb.v0_5.WriteDatasetFactory;
 import com.bretth.osmosis.core.filter.v0_5.BoundingBoxFilterFactory;
 import com.bretth.osmosis.core.filter.v0_5.DatasetBoundingBoxFilterFactory;
@@ -139,6 +140,8 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("wb", new BdbWriterFactory());
 		TaskManagerFactory.register("read-bdb", new BdbReaderFactory());
 		TaskManagerFactory.register("rb", new BdbReaderFactory());
+		TaskManagerFactory.register("read-customdb", new ReadDatasetFactory());
+		TaskManagerFactory.register("rc", new ReadDatasetFactory());
 		
 		TaskManagerFactory.register("apply-change-0.5", new ChangeApplierFactory());
 		TaskManagerFactory.register("bounding-box-0.5", new BoundingBoxFilterFactory());
@@ -177,5 +180,6 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("dataset-dump-0.5", new DumpDatasetFactory());
 		TaskManagerFactory.register("write-bdb-0.5", new BdbWriterFactory());
 		TaskManagerFactory.register("read-bdb-0.5", new BdbReaderFactory());
+		TaskManagerFactory.register("read-customdb-0.5", new ReadDatasetFactory());
 	}
 }

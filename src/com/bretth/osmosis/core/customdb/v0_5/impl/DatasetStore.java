@@ -389,9 +389,11 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 				uintComparator,
 				releasableContainer.add(nodeTileIndexWriter.createReader()),
 				releasableContainer.add(wayTileIndexWriter.createReader()),
+				releasableContainer.add(nodeWayIndexWriter.createReader()),
 				releasableContainer.add(nodeRelationIndexWriter.createReader()),
 				releasableContainer.add(wayRelationIndexWriter.createReader()),
-				releasableContainer.add(relationRelationIndexWriter.createReader())
+				releasableContainer.add(relationRelationIndexWriter.createReader()),
+				enableWayTileIndex
 			);
 			
 			// Stop the release of all created objects.
