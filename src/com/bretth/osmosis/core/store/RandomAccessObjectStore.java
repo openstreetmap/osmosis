@@ -1,8 +1,11 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.store;
 
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
@@ -23,7 +26,7 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 	private String tempFilePrefix;
 	private File tempFile;
 	private File storageFile;
-	private RandomAccessFile randomFile;
+	private OffsetTrackingOutputStream offsetTrackingStream;
 	private StoreClassRegister storeClassRegister;
 	private ObjectWriter objectWriter;
 	
@@ -75,20 +78,36 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 		
 		// If we're not up to the add stage, initialise for adding.
 		if (stage.compareTo(StorageStage.Add) < 0) {
+			FileOutputStream fileStream = null;
 			try {
 				if (storageFile == null) {
 					tempFile = File.createTempFile(tempFilePrefix, null);
 					storageFile = tempFile;
 				} 
 				
-				randomFile = new RandomAccessFile(storageFile, "rw");
+				fileStream = new FileOutputStream(storageFile);
+				offsetTrackingStream = new OffsetTrackingOutputStream(new BufferedOutputStream(fileStream, 65536));
 				
-				objectWriter = serializationFactory.createObjectWriter(new DataOutputStoreWriter(randomFile), storeClassRegister);
+				// Clear reference so that the stream doesn't get closed at the end of this method.
+				fileStream = null;
+				
+				objectWriter = serializationFactory.createObjectWriter(
+					new DataOutputStoreWriter(new DataOutputStream(offsetTrackingStream)),
+					storeClassRegister
+				);
 				
 				stage = StorageStage.Add;
 				
 			} catch (IOException e) {
 				throw new OsmosisRuntimeException("Unable to create object stream writing to file " + storageFile + ".", e);
+			} finally {
+				if (fileStream != null) {
+					try {
+						fileStream.close();
+					} catch (IOException e) {
+						// Do nothing.
+					}
+				}
 			}
 		}
 	}
@@ -106,11 +125,7 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 		
 		initializeAddStage();
 		
-		try {
-			objectFileOffset = randomFile.getFilePointer();
-		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to obtain the current file offset.", e);
-		}
+		objectFileOffset = offsetTrackingStream.getByteCount();
 		
 		// Write the object to the store.
 		objectWriter.writeObject(data);
@@ -133,6 +148,14 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 		// first to ensure a file is available for reading.
 		if (stage.compareTo(StorageStage.Reading) < 0) {
 			initializeAddStage();
+			
+			try {
+				offsetTrackingStream.close();
+				offsetTrackingStream = null;
+				
+			} catch (IOException e) {
+				throw new OsmosisRuntimeException("Unable to close the file " + storageFile + ".");
+			}
 			
 			stage = StorageStage.Reading;
 		}
@@ -183,13 +206,13 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 	 * {@inheritDoc}
 	 */
 	public void release() {
-		if (randomFile != null) {
+		if (offsetTrackingStream != null) {
 			try {
-				randomFile.close();
+				offsetTrackingStream.close();
 			} catch (Exception e) {
 				// Do nothing.
 			}
-			randomFile = null;
+			offsetTrackingStream = null;
 		}
 		
 		if (tempFile != null) {

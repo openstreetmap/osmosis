@@ -1,6 +1,8 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.store;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -99,9 +101,9 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 				arrayOutStream = new ByteArrayOutputStream();
 				
 				if (useCompression) {
-					dataOutStream = new DataOutputStream(new GZIPOutputStream(arrayOutStream));
+					dataOutStream = new DataOutputStream(new BufferedOutputStream(new GZIPOutputStream(arrayOutStream), 65536));
 				} else {
-					dataOutStream = new DataOutputStream(arrayOutStream);
+					dataOutStream = new DataOutputStream(new BufferedOutputStream(arrayOutStream, 65536));
 				}
 				
 				objectWriter = serializationFactory.createObjectWriter(new DataOutputStoreWriter(dataOutStream), storeClassRegister);
@@ -259,9 +261,9 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 			// Create the object input stream.
 			try {
 				if (useCompression) {
-					dataInStream = new DataInputStream(new GZIPInputStream(fileStream));
+					dataInStream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(fileStream), 65536));
 				} else {
-					dataInStream = new DataInputStream(fileStream);
+					dataInStream = new DataInputStream(new BufferedInputStream(fileStream, 65536));
 				}
 				
 			} catch (IOException e) {
