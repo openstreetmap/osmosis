@@ -109,7 +109,7 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("merge-change", new ChangeMergerFactory());
 		TaskManagerFactory.register("mc", new ChangeMergerFactory());
 		TaskManagerFactory.register("read-api", new XmlDownloaderFactory());
-		TaskManagerFactory.register("wa", new XmlDownloaderFactory());
+		TaskManagerFactory.register("ra", new XmlDownloaderFactory());
 		TaskManagerFactory.register("bounding-polygon", new PolygonFilterFactory());
 		TaskManagerFactory.register("bp", new PolygonFilterFactory());
 		TaskManagerFactory.register("report-entity", new EntityReporterFactory());
