@@ -123,7 +123,7 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 	@Override
 	public int read() throws IOException {
 		if (populateBuffer()) {
-			return buffer[currentBufferOffset++];
+			return buffer[currentBufferOffset++] & 0xff;
 		} else {
 			return -1;
 		}
