@@ -2,7 +2,6 @@
 package com.bretth.osmosis.core.store;
 
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.Iterator;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
@@ -20,7 +19,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class RandomAccessObjectStoreReader<T> implements Releasable {
-	private RandomAccessFile randomFile;
+	private BufferedRandomAccessFileInputStream randomFile;
 	private ObjectReader objectReader;
 	
 	
@@ -32,7 +31,7 @@ public class RandomAccessObjectStoreReader<T> implements Releasable {
 	 * @param objectReader
 	 *            The reader containing the objects to be deserialized.
 	 */
-	public RandomAccessObjectStoreReader(RandomAccessFile randomFile, ObjectReader objectReader) {
+	public RandomAccessObjectStoreReader(BufferedRandomAccessFileInputStream randomFile, ObjectReader objectReader) {
 		this.randomFile = randomFile;
 		this.objectReader = objectReader;
 	}

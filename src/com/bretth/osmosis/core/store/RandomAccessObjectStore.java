@@ -2,12 +2,12 @@
 package com.bretth.osmosis.core.store;
 
 import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 
@@ -178,13 +178,13 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 		initializeReadingStage();
 		
 		try {
-			RandomAccessFile randomFileReader;
+			BufferedRandomAccessFileInputStream randomFileReader;
 			
-			randomFileReader = new RandomAccessFile(storageFile, "r");
+			randomFileReader = new BufferedRandomAccessFileInputStream(storageFile);
 			
 			return new RandomAccessObjectStoreReader<T>(
 				randomFileReader,
-				serializationFactory.createObjectReader(new DataInputStoreReader(randomFileReader), storeClassRegister)
+				serializationFactory.createObjectReader(new DataInputStoreReader(new DataInputStream(randomFileReader)), storeClassRegister)
 			);
 			
 		} catch (FileNotFoundException e) {

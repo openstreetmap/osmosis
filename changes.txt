@@ -13,6 +13,7 @@ Added new dataset task --dataset-dump for reading the entire contents of a datas
 Command line applications now returns status codes, 0 for success, non-zero for failure.
 Added new task --write-bdb for creating permanent bdb datasets.
 Fixed the --read-api short name to be --ra instead of --wa.
+Updated store implementations to use buffered io providing significant performance improvements.
 
 0.24
 Fixed a bug in the XML node writing code where it would write a ',' character instead of '.' as the decimal separator in some locales.
