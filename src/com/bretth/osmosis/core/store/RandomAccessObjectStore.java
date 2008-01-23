@@ -144,19 +144,13 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 			return;
 		}
 		
+		if (stage.equals(StorageStage.Add)) {
+			throw new OsmosisRuntimeException("Cannot begin reading in " + StorageStage.Add + " stage, must call complete first.");
+		}
+		
 		// If we haven't reached the reading stage yet, configure for output
 		// first to ensure a file is available for reading.
 		if (stage.compareTo(StorageStage.Reading) < 0) {
-			initializeAddStage();
-			
-			try {
-				offsetTrackingStream.close();
-				offsetTrackingStream = null;
-				
-			} catch (IOException e) {
-				throw new OsmosisRuntimeException("Unable to close the file " + storageFile + ".");
-			}
-			
 			stage = StorageStage.Reading;
 		}
 		
@@ -198,7 +192,23 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 	 */
 	@Override
 	public void complete() {
-		initializeReadingStage();
+		// If we're already in the reading stage, we don't need to perform a
+		// complete.
+		if (stage.compareTo(StorageStage.Reading) != 0) {
+			// We need to make sure we pass through the add stage to ensure an
+			// output file is created.
+			initializeAddStage();
+			
+			try {
+				offsetTrackingStream.close();
+				offsetTrackingStream = null;
+				
+			} catch (IOException e) {
+				throw new OsmosisRuntimeException("Unable to close the file " + storageFile + ".");
+			}
+			
+			stage = StorageStage.Reading;
+		}
 	}
 	
 	

@@ -154,8 +154,6 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 	 * @return A store reader.
 	 */
 	public IndexStoreReader<K, T> createReader() {
-		complete();
-		
 		return new IndexStoreReader<K, T>(indexStore.createReader(), ordering, elementCount, elementSize);
 	}
 	
@@ -169,6 +167,8 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 			
 			try {
 				if (!complete) {
+					indexStore.complete();
+					
 					if (!sorted) {
 						final Comparator<K> keyOrdering = ordering;
 						

@@ -243,9 +243,11 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 		boolean tilesFound;
 		
 		if (nodeObjectReader == null) {
+			nodeObjectStore.complete();
 			nodeObjectReader = nodeObjectStore.createReader();
 		}
 		if (nodeObjectOffsetIndexReader == null) {
+			nodeObjectOffsetIndexWriter.complete();
 			nodeObjectOffsetIndexReader = nodeObjectOffsetIndexWriter.createReader();
 		}
 		
