@@ -4,8 +4,6 @@ package com.bretth.osmosis.core.store;
 import java.io.File;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
@@ -25,7 +23,6 @@ import com.bretth.osmosis.core.sort.common.FileBasedSort;
 public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 	static final Logger log = Logger.getLogger(IndexStore.class.getName());
 	
-	private Lock completeLock;
 	private ObjectSerializationFactory serializationFactory;
 	private RandomAccessObjectStore<T> indexStore;
 	private Comparator<K> ordering;
@@ -53,8 +50,6 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 		this.ordering = ordering;
 		this.indexFile = indexFile;
 		
-		completeLock = new ReentrantLock();
-		
 		serializationFactory = new SingleClassObjectSerializationFactory(elementType);
 		
 		indexStore = new RandomAccessObjectStore<T>(serializationFactory, indexFile);
@@ -81,8 +76,6 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 	public IndexStore(Class<T> elementType, Comparator<K> ordering, String tempFilePrefix) {
 		this.ordering = ordering;
 		this.tempFilePrefix = tempFilePrefix;
-		
-		completeLock = new ReentrantLock();
 		
 		serializationFactory = new SingleClassObjectSerializationFactory(elementType);
 		
@@ -154,7 +147,7 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 	 * @return A store reader.
 	 */
 	public IndexStoreReader<K, T> createReader() {
-		return new IndexStoreReader<K, T>(indexStore.createReader(), ordering, elementCount, elementSize);
+		return new IndexStoreReader<K, T>(indexStore.createReader(), ordering);
 	}
 	
 	
@@ -163,81 +156,71 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 	 */
 	public void complete() {
 		if (!complete) {
-			completeLock.lock();
+			indexStore.complete();
 			
-			try {
-				if (!complete) {
-					indexStore.complete();
-					
-					if (!sorted) {
-						final Comparator<K> keyOrdering = ordering;
+			if (!sorted) {
+				final Comparator<K> keyOrdering = ordering;
+				
+				FileBasedSort<T> fileSort;
+				
+				// Create a new file based sort instance ordering elements by their
+				// identifiers.
+				fileSort = new FileBasedSort<T>(
+					serializationFactory,
+					new Comparator<T>() {
+						private Comparator<K> elementKeyOrdering = keyOrdering;
 						
-						FileBasedSort<T> fileSort;
-						
-						// Create a new file based sort instance ordering elements by their
-						// identifiers.
-						fileSort = new FileBasedSort<T>(
-							serializationFactory,
-							new Comparator<T>() {
-								private Comparator<K> elementKeyOrdering = keyOrdering;
-								
-								@Override
-								public int compare(T o1, T o2) {
-									return elementKeyOrdering.compare(o1.getKey(), o2.getKey());
-								}
-							},
-							true
-						);
-						
-						try {
-							RandomAccessObjectStoreReader<T> indexStoreReader;
-							ReleasableIterator<T> sortIterator;
-							
-							// Read all data from the index store into the sorting store.
-							indexStoreReader = indexStore.createReader();
-							try {
-								Iterator<T> indexIterator;
-								
-								indexIterator = indexStoreReader.iterate();
-								
-								while (indexIterator.hasNext()) {
-									fileSort.add(indexIterator.next());
-								}
-							} finally {
-								indexStoreReader.release();
-							}
-							
-							// Release the existing index store and create a new one.
-							indexStore.release();
-							if (indexFile != null) {
-								indexStore = new RandomAccessObjectStore<T>(serializationFactory, indexFile);
-							} else {
-								indexStore = new RandomAccessObjectStore<T>(serializationFactory, tempFilePrefix);
-							}
-							
-							// Read all data from the sorting store back into the index store.
-							sortIterator = fileSort.iterate();
-							try {
-								while (sortIterator.hasNext()) {
-									indexStore.add(sortIterator.next());
-								}
-							} finally {
-								sortIterator.release();
-							}
-							
-						} finally {
-							fileSort.release();
+						@Override
+						public int compare(T o1, T o2) {
+							return elementKeyOrdering.compare(o1.getKey(), o2.getKey());
 						}
+					},
+					true
+				);
+				
+				try {
+					RandomAccessObjectStoreReader<T> indexStoreReader;
+					ReleasableIterator<T> sortIterator;
+					
+					// Read all data from the index store into the sorting store.
+					indexStoreReader = indexStore.createReader();
+					try {
+						Iterator<T> indexIterator;
+						
+						indexIterator = indexStoreReader.iterate();
+						
+						while (indexIterator.hasNext()) {
+							fileSort.add(indexIterator.next());
+						}
+					} finally {
+						indexStoreReader.release();
 					}
 					
-					complete = true;
+					// Release the existing index store and create a new one.
+					indexStore.release();
+					if (indexFile != null) {
+						indexStore = new RandomAccessObjectStore<T>(serializationFactory, indexFile);
+					} else {
+						indexStore = new RandomAccessObjectStore<T>(serializationFactory, tempFilePrefix);
+					}
+					
+					// Read all data from the sorting store back into the index store.
+					sortIterator = fileSort.iterate();
+					try {
+						while (sortIterator.hasNext()) {
+							indexStore.add(sortIterator.next());
+						}
+					} finally {
+						sortIterator.release();
+					}
+					
+				} finally {
+					fileSort.release();
 				}
-				
-			} finally {
-				completeLock.unlock();
 			}
+			
+			complete = true;
 		}
-
 	}
 	
 	
