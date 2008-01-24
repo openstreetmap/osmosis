@@ -23,6 +23,7 @@ import com.bretth.osmosis.core.customdb.v0_5.impl.IndexRangeIterator;
 public class IndexStoreReader<K, T extends IndexElement<K>> implements Releasable {
 	private RandomAccessObjectStoreReader<T> indexStoreReader;
 	private Comparator<K> ordering;
+	private boolean elementDetailsInitialized;
 	private long elementCount;
 	private long elementSize;
 	
@@ -35,16 +36,34 @@ public class IndexStoreReader<K, T extends IndexElement<K>> implements Releasabl
 	 * @param ordering
 	 *            A comparator that sorts index elements desired index key
 	 *            ordering.
-	 * @param elementCount
-	 *            The number of elements in the index.
-	 * @param elementSize
-	 *            The size of each element within the index.
 	 */
-	public IndexStoreReader(RandomAccessObjectStoreReader<T> indexStoreReader, Comparator<K> ordering, long elementCount, long elementSize) {
+	public IndexStoreReader(RandomAccessObjectStoreReader<T> indexStoreReader, Comparator<K> ordering) {
 		this.indexStoreReader = indexStoreReader;
 		this.ordering = ordering;
-		this.elementCount = elementCount;
-		this.elementSize = elementSize;
+		
+		elementDetailsInitialized = false;
+	}
+	
+	
+	/**
+	 * Initialises the element count and element size required for performing
+	 * binary searches within the index.
+	 */
+	private void initializeElementDetails() {
+		long dataLength;
+		
+		dataLength = indexStoreReader.length();
+		
+		if (dataLength <= 0) {
+			elementCount = 0;
+			elementSize = 0;
+		} else {
+			indexStoreReader.get(0);
+			elementSize = indexStoreReader.position();
+			elementCount = dataLength / elementSize;
+		}
+		
+		elementDetailsInitialized = true;
 	}
 	
 	
@@ -59,6 +78,11 @@ public class IndexStoreReader<K, T extends IndexElement<K>> implements Releasabl
 		long intervalBegin;
 		long intervalEnd;
 		T element = null;
+		
+		// The element details must be initialised before searching.
+		if (!elementDetailsInitialized) {
+			initializeElementDetails();
+		}
 		
 		// Perform a binary search within the index.
 		intervalBegin = 0;
@@ -137,6 +161,11 @@ public class IndexStoreReader<K, T extends IndexElement<K>> implements Releasabl
 	public Iterator<T> getRange(K beginKey, K endKey) {
 		long intervalBegin;
 		long intervalEnd;
+		
+		// The element details must be initialised before searching.
+		if (!elementDetailsInitialized) {
+			initializeElementDetails();
+		}
 		
 		// Perform a binary search within the index for the first element with
 		// beginKey.

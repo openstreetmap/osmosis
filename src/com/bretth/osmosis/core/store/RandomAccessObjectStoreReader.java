@@ -47,7 +47,7 @@ public class RandomAccessObjectStoreReader<T> implements Releasable {
 		try {
 			randomFile.seek(offset);
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to seek to position " + offset + " in the storage file.");
+			throw new OsmosisRuntimeException("Unable to seek to position " + offset + " in the storage file.", e);
 		}
 	}
 	
@@ -64,6 +64,34 @@ public class RandomAccessObjectStoreReader<T> implements Releasable {
 		seek(offset);
 		
 		return (T) objectReader.readObject();
+	}
+	
+	
+	/**
+	 * Returns the length of data.
+	 * 
+	 * @return The data length in bytes.
+	 */
+	public long length() {
+		try {
+			return randomFile.length();
+		} catch (IOException e) {
+			throw new OsmosisRuntimeException("Unable to obtain the length of the storage file.", e);
+		}
+	}
+	
+	
+	/**
+	 * Returns the current read position.
+	 * 
+	 * @return The current offset offset in bytes.
+	 */
+	public long position() {
+		try {
+			return randomFile.position();
+		} catch (IOException e) {
+			throw new OsmosisRuntimeException("Unable to obtain the current position in the storage file.", e);
+		}
 	}
 	
 	

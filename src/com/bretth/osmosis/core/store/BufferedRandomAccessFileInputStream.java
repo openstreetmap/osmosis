@@ -202,6 +202,30 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 	
 	
 	/**
+	 * Returns the length of the data file.
+	 * 
+	 * @return The file length in bytes.
+	 * @throws IOException
+	 *             if an error occurs during the length operation.
+	 */
+	public long length() throws IOException {
+		return randomFile.length();
+	}
+	
+	
+	/**
+	 * Returns the current read position in the data file.
+	 * 
+	 * @return The current file offset in bytes.
+	 * @throws IOException
+	 *             if an error occurs during the position operation.
+	 */
+	public long position() throws IOException {
+		return randomFile.getFilePointer() - currentBufferByteCount + currentBufferOffset;
+	}
+	
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
