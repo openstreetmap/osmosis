@@ -42,7 +42,7 @@ public class User {
 	/**
 	 * The publicly displayed name of the user.
 	 * 
-	 * @return
+	 * @return The display name.
 	 */
 	public String getDisplayName() {
 		return displayName;
