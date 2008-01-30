@@ -274,34 +274,34 @@ public abstract class BaseDatasetReader implements DatasetReader {
 			ReleasableIterator<Long> wayIdIterator = getWayIdsOwningNode(nodeId);
 			try {
 				while (wayIdIterator.hasNext()) {
-					long wayId;
-					
-					wayId = wayIdIterator.next();
-					
-					bboxCtx.wayIdTracker.set(wayId);
-					
-					// If we want complete ways, we need to load each way and
-					// check the list of nodes adding any nodes that haven't
-					// already been selected (ie. those that are outside the box).
-					if (completeWays) {
-						Way way;
-						
-						way = getWay(wayId);
-						
-						for (WayNode wayNode : way.getWayNodeList()) {
-							long externalNodeId;
-							
-							externalNodeId = wayNode.getNodeId();
-							
-							if (!bboxCtx.nodeIdTracker.get(externalNodeId)) {
-								bboxCtx.externalNodeIdTracker.set(externalNodeId);
-							}
-						}
-					}
+					bboxCtx.wayIdTracker.set(wayIdIterator.next());
 				}
 				
 			} finally {
 				wayIdIterator.release();
+			}
+		}
+		
+		// If we want complete ways, we need to load each way and
+		// check the list of nodes adding any nodes that haven't
+		// already been selected (ie. those that are outside the box).
+		// This is done outside the main loop so that ways are loaded
+		// in ascending order which utilises index caching more effectively
+		if (completeWays) {
+			for (Long wayId : bboxCtx.wayIdTracker) {
+				Way way;
+				
+				way = getWay(wayId);
+				
+				for (WayNode wayNode : way.getWayNodeList()) {
+					long externalNodeId;
+					
+					externalNodeId = wayNode.getNodeId();
+					
+					if (!bboxCtx.nodeIdTracker.get(externalNodeId)) {
+						bboxCtx.externalNodeIdTracker.set(externalNodeId);
+					}
+				}
 			}
 		}
 	}
