@@ -16,6 +16,7 @@ import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.domain.v0_5.WayNode;
+import com.bretth.osmosis.core.filter.common.BitSetIdTracker;
 import com.bretth.osmosis.core.filter.common.IdTracker;
 import com.bretth.osmosis.core.store.EmptyIterator;
 import com.bretth.osmosis.core.store.NoSuchIndexElementException;
@@ -162,32 +163,33 @@ public abstract class BaseDatasetReader implements DatasetReader {
 	 */
 	private void populateNodeIds(BoundingBoxContext bboxCtx) {
 		ReleasableIterator<Long> nodeIdsForTileset;
+		IdTracker idTracker;
 		
-		// Search through all nodes in the tile range and store the ids of those
-		// within the bounding box.
+		idTracker = new BitSetIdTracker();
+		
+		// Search through all nodes in the tile range and add them to a
+		// temporary id tracker. This temporary id tracker allows all node ids
+		// to be sorted ascendingly prior to retrieving the nodes themselves
+		// which improves index performance.
 		nodeIdsForTileset = getNodeIdsForTileRange(bboxCtx.minimumTile, bboxCtx.maximumTile);
 		try {
 			while (nodeIdsForTileset.hasNext()) {
-				long nodeId;
-				Node node;
-				
-				// Get the next node id.
-				nodeId = nodeIdsForTileset.next();
-				
-				// If the node id is new, check if it's inside the bounding box
-				// and add it to the id tracker if it is.
-				if (!bboxCtx.nodeIdTracker.get(nodeId)) {
-					node = getNode(nodeId);
-					
-					// Determine if the node lies within the required bounding box.
-					if (isNodeInsideBox(bboxCtx.boundingBox, node)) {
-						bboxCtx.nodeIdTracker.set(nodeId);
-					}
-				}
+				idTracker.set(nodeIdsForTileset.next());
 			}
 			
 		} finally {
 			nodeIdsForTileset.release();
+		}
+		
+		// Check to see whether each applicable node lies within the bounding
+		// box and add them to the result id list if they are.
+		for (long nodeId : idTracker) {
+			Node node = getNode(nodeId);
+			
+			// Determine if the node lies within the required bounding box.
+			if (isNodeInsideBox(bboxCtx.boundingBox, node)) {
+				bboxCtx.nodeIdTracker.set(nodeId);
+			}
 		}
 	}
 	
