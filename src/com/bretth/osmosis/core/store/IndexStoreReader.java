@@ -1,8 +1,10 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.store;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 
 import com.bretth.osmosis.core.customdb.v0_5.impl.IndexRangeIterator;
 
@@ -26,6 +28,9 @@ public class IndexStoreReader<K, T extends IndexElement<K>> implements Releasabl
 	private boolean elementDetailsInitialized;
 	private long elementCount;
 	private long elementSize;
+	private long binarySearchElementCount;
+	private int binarySearchDepth;
+	private List<ComparisonElement<K>> binarySearchCache;
 	
 	
 	/**
@@ -63,7 +68,103 @@ public class IndexStoreReader<K, T extends IndexElement<K>> implements Releasabl
 			elementCount = dataLength / elementSize;
 		}
 		
+		// Determine how many levels of a binary tree must be traversed to reach a result.
+		binarySearchDepth = 0;
+		binarySearchElementCount = 1;
+		while (binarySearchElementCount < elementCount) {
+			binarySearchDepth++;
+			binarySearchElementCount *= 2;
+		}
+		
+		// Initialise the binary search cache.
+		binarySearchCache = new ArrayList<ComparisonElement<K>>(binarySearchDepth);
+		for (int i = 0; i < binarySearchDepth; i++) {
+			binarySearchCache.add(null);
+		}
+		
 		elementDetailsInitialized = true;
+	}
+	
+	
+	/**
+	 * Returns the index of the first index element with a key greater than or
+	 * equal to the specified key.
+	 * 
+	 * @param searchKey
+	 *            The key to search for.
+	 * @return The matching index.
+	 */
+	private long getKeyIndex(K searchKey) {
+		long intervalBegin;
+		long intervalEnd;
+		int currentSearchDepth;
+		boolean useCache;
+		boolean higherThanPrevious;
+		
+		// The element details must be initialised before searching.
+		if (!elementDetailsInitialized) {
+			initializeElementDetails();
+		}
+		
+		intervalBegin = -1;
+		intervalEnd = binarySearchElementCount;
+		currentSearchDepth = 0;
+		useCache = true;
+		higherThanPrevious = true;
+		while ((intervalBegin + 1) < intervalEnd) {
+			long intervalMid;
+			
+			// Calculate the mid point of the current interval.
+			intervalMid = (intervalBegin + intervalEnd) / 2;
+			
+			// We can only perform a comparison if the mid point of the current
+			// search interval is within the data set.
+			if (intervalMid < elementCount) {
+				K intervalMidKey = null;
+				ComparisonElement<K> searchElement;
+				boolean comparisonHigher;
+				
+				// Attempt to retrieve the key for the mid point from the search
+				// cache.
+				if (useCache) {
+					searchElement = binarySearchCache.get(currentSearchDepth);
+					
+					if (searchElement != null && searchElement.getIndexOffset() == intervalMid) {
+						intervalMidKey = searchElement.getKey();
+					} else {
+						useCache = false;
+					}
+				}
+				
+				// If the value couldn't be retrieved from cache, load it from
+				// the underlying dataset.
+				if (!useCache) {
+					intervalMidKey = indexStoreReader.get(intervalMid * elementSize).getKey();
+				}
+				
+				// Compare the current key for equality with the desired key.
+				comparisonHigher = ordering.compare(searchKey, intervalMidKey) > 0;
+				
+				if (!useCache) {
+					binarySearchCache.set(currentSearchDepth, new ComparisonElement<K>(intervalMid, intervalMidKey));
+				}
+				
+				higherThanPrevious = comparisonHigher;
+				
+			} else {
+				higherThanPrevious = false;
+			}
+			
+			// Update binary search attributes based on recent comparison.
+			currentSearchDepth++;
+			if (higherThanPrevious) {
+				intervalBegin = intervalMid;
+			} else {
+				intervalEnd = intervalMid;
+			}
+		}
+		
+		return intervalEnd;
 	}
 	
 	
@@ -75,74 +176,24 @@ public class IndexStoreReader<K, T extends IndexElement<K>> implements Releasabl
 	 * @return The requested object.
 	 */
 	public T get(K key) {
-		long intervalBegin;
-		long intervalEnd;
-		T element = null;
+		long keyIndex;
 		
-		// The element details must be initialised before searching.
-		if (!elementDetailsInitialized) {
-			initializeElementDetails();
-		}
+		// Determine the location of the key within the index.
+		keyIndex = getKeyIndex(key);
 		
-		// Perform a binary search within the index.
-		intervalBegin = 0;
-		intervalEnd = elementCount;
-		for (boolean offsetFound = false; !offsetFound; ) {
-			long intervalSize;
+		if (keyIndex < elementCount) {
+			T element;
+			K locatedKey;
 			
-			// Calculate the interval size.
-			intervalSize = intervalEnd - intervalBegin;
+			element = indexStoreReader.get(keyIndex * elementSize);
+			locatedKey = element.getKey();
 			
-			// Divide and conquer if the size is large, otherwise commence
-			// linear search.
-			if (intervalSize >= 2) {
-				long intervalMid;
-				K currentKey;
-				int comparison;
-				
-				// Split the interval in two.
-				intervalMid = intervalSize / 2 + intervalBegin;
-				
-				// Check whether the midpoint id is above or below the id
-				// required.
-				element = indexStoreReader.get(intervalMid * elementSize);
-				currentKey = element.getKey();
-				
-				// Compare the current key for equality with the desired key.
-				comparison = ordering.compare(currentKey, key);
-				
-				if (comparison == 0) {
-					intervalBegin = intervalMid;
-					offsetFound = true;
-				} else if (comparison < 0) {
-					intervalBegin = intervalMid + 1;
-				} else {
-					intervalEnd = intervalMid;
-				}
-				
-			} else {
-				// Iterate through the entire interval.
-				for (long currentOffset = intervalBegin; currentOffset < intervalEnd; currentOffset++) {
-					K currentKey;
-					
-					// Check if the current offset contains the key required.
-					element = indexStoreReader.get(currentOffset * elementSize);
-					currentKey = element.getKey();
-					
-					if (ordering.compare(currentKey, key) == 0) {
-						intervalBegin = currentOffset;
-						offsetFound = true;
-						break;
-					}
-				}
-				
-				if (!offsetFound) {
-					throw new NoSuchIndexElementException("Requested key " + key + " does not exist.");
-				}
+			if (ordering.compare(key, locatedKey) == 0) {
+				return element;
 			}
 		}
 		
-		return element;
+		throw new NoSuchIndexElementException("Requested key " + key + " does not exist.");
 	}
 	
 	
@@ -159,46 +210,14 @@ public class IndexStoreReader<K, T extends IndexElement<K>> implements Releasabl
 	 * @return An iterator pointing to the requested range.
 	 */
 	public Iterator<T> getRange(K beginKey, K endKey) {
-		long intervalBegin;
-		long intervalEnd;
+		long keyIndex;
 		
-		// The element details must be initialised before searching.
-		if (!elementDetailsInitialized) {
-			initializeElementDetails();
-		}
+		// Determine the location of the begin key within the index.
+		keyIndex = getKeyIndex(beginKey);
 		
-		// Perform a binary search within the index for the first element with
-		// beginKey.
-		intervalBegin = 0;
-		intervalEnd = elementCount;
-		for (long intervalSize = intervalEnd - intervalBegin; intervalSize > 2; intervalSize = intervalEnd - intervalBegin) {
-			long intervalMid;
-			T element;
-			K currentKey;
-			int comparison;
-			
-			// Split the interval in two.
-			intervalMid = intervalSize / 2 + intervalBegin;
-			
-			// Check whether the midpoint id is above or below the id
-			// required.
-			element = indexStoreReader.get(intervalMid * elementSize);
-			currentKey = element.getKey();
-			
-			// Compare the current key for equality with the desired key.
-			comparison = ordering.compare(currentKey, beginKey);
-			
-			if (comparison == 0) {
-				intervalEnd = intervalMid + 1;
-			} else if (comparison < 0) {
-				intervalBegin = intervalMid + 1;
-			} else {
-				intervalEnd = intervalMid;
-			}
-		}
-		
+		// Iterate across the range.
 		return new IndexRangeIterator<K, T>(
-			indexStoreReader.iterate(intervalBegin * elementSize),
+			indexStoreReader.iterate(keyIndex * elementSize),
 			beginKey,
 			endKey,
 			ordering
@@ -212,5 +231,51 @@ public class IndexStoreReader<K, T extends IndexElement<K>> implements Releasabl
 	@Override
 	public void release() {
 		indexStoreReader.release();
+	}
+	
+	
+	/**
+	 * Maintains the state associated with a single index search comparison. The
+	 * complete path to the previously searched element is maintained using a
+	 * list of these elements between searches, improving performance for
+	 * searches on keys that are closely located.
+	 */
+	private static class ComparisonElement<K> {
+		private long indexOffset;
+		private K key;
+		
+		
+		/**
+		 * Creates a new instance.
+		 * 
+		 * @param indexOffset
+		 *            The offset of the current key within the index.
+		 * @param key
+		 *            The key of the index element compared against.
+		 */
+		public ComparisonElement(long indexOffset, K key) {
+			this.indexOffset = indexOffset;
+			this.key = key;
+		}
+		
+		
+		/**
+		 * Returns the index offset this key is located at.
+		 * 
+		 * @return The offset of the key within the index.
+		 */
+		public long getIndexOffset() {
+			return indexOffset;
+		}
+		
+		
+		/**
+		 * Returns the key associated with this comparison.
+		 * 
+		 * @return The comparison key.
+		 */
+		public K getKey() {
+			return key;
+		}
 	}
 }
