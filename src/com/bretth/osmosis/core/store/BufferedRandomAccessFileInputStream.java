@@ -16,9 +16,9 @@ import java.io.RandomAccessFile;
  */
 public class BufferedRandomAccessFileInputStream extends InputStream {
 	
-	private static final int DEFAULT_INITIAL_BUFFER_SIZE = 100;
-	private static final int DEFAULT_MAXIMUM_BUFFER_SIZE = 65536;
-	private static final float DEFAULT_BUFFER_INCREASE_FACTOR = 2;
+	private static final int DEFAULT_INITIAL_BUFFER_SIZE = 16;
+	private static final int DEFAULT_MAXIMUM_BUFFER_SIZE = 4096;
+	private static final float DEFAULT_BUFFER_INCREASE_FACTOR = 256;
 	
 	
 	private RandomAccessFile randomFile;
@@ -29,6 +29,7 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 	
 	private byte[] buffer;
 	
+	private long filePosition;
 	private int currentBufferSize;
 	private int currentBufferByteCount;
 	private int currentBufferOffset;
@@ -76,6 +77,7 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 		
 		randomFile = new RandomAccessFile(file, "r");
 		
+		filePosition = 0;
 		currentBufferSize = 0;
 		currentBufferByteCount = 0;
 		currentBufferOffset = 0;
@@ -110,6 +112,8 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 			
 			if (currentBufferByteCount < 0) {
 				endOfStream = true;
+			} else {
+				filePosition += currentBufferByteCount;
 			}
 		}
 		
@@ -135,24 +139,7 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 	 */
 	@Override
 	public int read(byte[] b) throws IOException {
-		if (populateBuffer()) {
-			int readLength;
-			
-			// Determine how many bytes to read from the current buffer.
-			readLength = currentBufferByteCount - currentBufferOffset;
-			if (readLength > b.length) {
-				readLength = b.length;
-			}
-			
-			// Copy the bytes into the output buffer and update the current buffer position.
-			System.arraycopy(buffer, currentBufferOffset, b, 0, readLength);
-			currentBufferOffset += readLength;
-			
-			return readLength;
-			
-		} else {
-			return -1;
-		}
+		return read(b, 0, b.length);
 	}
 	
 	
@@ -191,13 +178,48 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 	 *             if an error occurs during seeking.
 	 */
 	public void seek(long pos) throws IOException {
-		randomFile.seek(pos);
+		long bufferBeginFileOffset;
+		long bufferEndFileOffset;
 		
-		// Clear all buffered data.
-		currentBufferSize = 0;
-		currentBufferByteCount = 0;
-		currentBufferOffset = 0;
-		endOfStream = false;
+		bufferBeginFileOffset = filePosition - currentBufferByteCount;
+		bufferEndFileOffset = filePosition;
+		
+		// If the requested position is within the current buffer just move to
+		// that position.
+		if ((pos >= bufferBeginFileOffset) && pos <= (bufferEndFileOffset)) {
+			// The request position is within the current buffer so just move to
+			// that position.
+			currentBufferOffset = (int) (pos - bufferBeginFileOffset);
+		} else if ((pos < bufferBeginFileOffset) && (bufferBeginFileOffset - pos) <= maxBufferSize) {
+			// The request position is within a max buffer size of the beginning
+			// of the buffer so just move there without resetting the current
+			// buffer size.
+			randomFile.seek(pos);
+			filePosition = pos;
+			// Mark the current buffer as empty so that the next read will read
+			// from disk.
+			currentBufferByteCount = 0;
+			endOfStream = false;
+		} else if ((pos > bufferEndFileOffset) && (pos - bufferEndFileOffset) <= maxBufferSize) {
+			// The request position is within a max buffer size of the end
+			// of the buffer so just move there without resetting the current
+			// buffer size.
+			randomFile.seek(pos);
+			filePosition = pos;
+			// Mark the current buffer as empty so that the next read will read
+			// from disk.
+			currentBufferByteCount = 0;
+			endOfStream = false;
+		} else {
+			// The request position is not close to the current position so move
+			// there and reset the buffer completely.
+			randomFile.seek(pos);
+			filePosition = pos;
+			currentBufferSize = 0;
+			currentBufferByteCount = 0;
+			currentBufferOffset = 0;
+			endOfStream = false;
+		}
 	}
 	
 	
@@ -220,8 +242,9 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 	 * @throws IOException
 	 *             if an error occurs during the position operation.
 	 */
+	@SuppressWarnings("unused")
 	public long position() throws IOException {
-		return randomFile.getFilePointer() - currentBufferByteCount + currentBufferOffset;
+		return filePosition - currentBufferByteCount + currentBufferOffset;
 	}
 	
 	
