@@ -15,6 +15,7 @@ Added new task --write-bdb for creating permanent bdb datasets.
 Fixed the --read-api short name to be --ra instead of --wa.
 Updated store implementations to use buffered io providing significant performance improvements.
 Added a new osmosis-test-users-for-utf8 application for verifying the data integrity of the production user table.
+Added "bound" support to the pipeline.
 
 0.24
 Fixed a bug in the XML node writing code where it would write a ',' character instead of '.' as the decimal separator in some locales.
