@@ -143,7 +143,12 @@
 				<path location="build/src"/>
 				<path location="build/test/java"/>
 			</classpath>
-			<test name="com.bretth.codec.AllTests" todir="build_test"/>
+			<batchtest todir="build/test">
+				<fileset dir="build/test/java">
+					<include name="**/*Test*.class"/>
+					<exclude name="**/*TestSuite*.class"/>
+				</fileset>
+			</batchtest>
 		</junit>
 	</target>
 	
