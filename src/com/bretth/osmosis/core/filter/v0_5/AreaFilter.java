@@ -2,6 +2,7 @@
 package com.bretth.osmosis.core.filter.v0_5;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.container.v0_5.BoundContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
@@ -12,7 +13,6 @@ import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.RelationMember;
 import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
-import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.filter.common.IdTracker;
 import com.bretth.osmosis.core.filter.common.IdTrackerFactory;
@@ -83,6 +83,14 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void process(BoundContainer boundContainer) {
+		// By default, pass it on unchanged
+		sink.process(boundContainer);
+	}
+
 	/**
 	 * Indicates if the node lies within the area required.
 	 * 
@@ -174,9 +182,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		// Only add ways that contain nodes.
 		if (filteredWay.getWayNodeList().size() > 0) {
 			// Add all tags to the filtered way.
-			for (Tag tag : way.getTagList()) {
-				filteredWay.addTag(tag);
-			}
+			filteredWay.addTags(way.getTagList());
 			
 			sink.process(new WayContainer(filteredWay));
 		}
@@ -267,9 +273,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		// Only add relations that contain entities.
 		if (filteredRelation.getMemberList().size() > 0) {
 			// Add all tags to the filtered relation.
-			for (Tag tag : relation.getTagList()) {
-				filteredRelation.addTag(tag);
-			}
+			filteredRelation.addTags(relation.getTagList());
 			
 			sink.process(new RelationContainer(filteredRelation));
 		}

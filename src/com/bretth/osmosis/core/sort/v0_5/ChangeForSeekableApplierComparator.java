@@ -16,15 +16,18 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
  * prevents a way being added before the underlying nodes are created. The
  * changes are ordered as follows:
  * <ul>
+ * <li>Bound creation</li>
  * <li>Node creation</li>
  * <li>Way creation</li>
  * <li>Relation creation</li>
  * <li>Relation modification</li>
  * <li>Way modification</li>
  * <li>Node modification</li>
+ * <li>Bound modification</li>
  * <li>Relation deletion</li>
  * <li>Way deletion</li>
  * <li>Node deletion</li>
+ * <li>Bound deletion</li>
  * </ul>
  * 
  * @author Brett Henderson
@@ -43,35 +46,45 @@ public class ChangeForSeekableApplierComparator implements Comparator<ChangeCont
 		ChangeAction action = changeEntity.getAction();
 		Entity entity = changeEntity.getEntityContainer().getEntity();
 		
-		if (entity.getType().equals(EntityType.Node)) {
+		if (entity.getType().equals(EntityType.Bound)) {
 			if (action.equals(ChangeAction.Create)) {
 				return 1;
+			}
+			if (action.equals(ChangeAction.Modify)) {
+				return 8;
+			}
+			if (action.equals(ChangeAction.Delete)) {
+				return 12;
+			}
+		} else if (entity.getType().equals(EntityType.Node)) {
+			if (action.equals(ChangeAction.Create)) {
+				return 2;
+			}
+			if (action.equals(ChangeAction.Modify)) {
+				return 7;
+			}
+			if (action.equals(ChangeAction.Delete)) {
+				return 11;
+			}
+		} else if (entity.getType().equals(EntityType.Way)) {
+			if (action.equals(ChangeAction.Create)) {
+				return 3;
 			}
 			if (action.equals(ChangeAction.Modify)) {
 				return 6;
 			}
 			if (action.equals(ChangeAction.Delete)) {
-				return 9;
+				return 10;
 			}
-		} else if (entity.getType().equals(EntityType.Way)) {
+		} else if (entity.getType().equals(EntityType.Relation)) {
 			if (action.equals(ChangeAction.Create)) {
-				return 2;
+				return 4;
 			}
 			if (action.equals(ChangeAction.Modify)) {
 				return 5;
 			}
 			if (action.equals(ChangeAction.Delete)) {
-				return 8;
-			}
-		} else if (entity.getType().equals(EntityType.Relation)) {
-			if (action.equals(ChangeAction.Create)) {
-				return 3;
-			}
-			if (action.equals(ChangeAction.Modify)) {
-				return 4;
-			}
-			if (action.equals(ChangeAction.Delete)) {
-				return 7;
+				return 9;
 			}
 		}
 		

@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import org.xml.sax.Attributes;
 
+import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 import com.bretth.osmosis.core.xml.common.BaseElementProcessor;
 import com.bretth.osmosis.core.xml.common.ElementProcessor;
@@ -19,15 +20,20 @@ public class OsmElementProcessor extends SourceElementProcessor {
 	
 	private static final Logger log = Logger.getLogger(OsmElementProcessor.class.getName());
 	
+	private static final String ELEMENT_NAME_BOUND = "bound";
 	private static final String ELEMENT_NAME_NODE = "node";
 	private static final String ELEMENT_NAME_WAY = "way";
 	private static final String ELEMENT_NAME_RELATION = "relation";
 	private static final String ATTRIBUTE_NAME_VERSION = "version";
 	
 	
+	private BoundElementProcessor boundElementProcessor;
 	private NodeElementProcessor nodeElementProcessor;
 	private WayElementProcessor wayElementProcessor;
 	private RelationElementProcessor relationElementProcessor;
+	
+	private boolean foundBound = false;
+	private boolean foundEntities = false;
 	
 	
 	/**
@@ -44,6 +50,7 @@ public class OsmElementProcessor extends SourceElementProcessor {
 	public OsmElementProcessor(BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing) {
 		super(parentProcessor, sink, enableDateParsing);
 		
+		boundElementProcessor = new BoundElementProcessor(this, getSink(), enableDateParsing);
 		nodeElementProcessor = new NodeElementProcessor(this, getSink(), enableDateParsing);
 		wayElementProcessor = new WayElementProcessor(this, getSink(), enableDateParsing);
 		relationElementProcessor = new RelationElementProcessor(this, getSink(), enableDateParsing);
@@ -81,11 +88,23 @@ public class OsmElementProcessor extends SourceElementProcessor {
 	 */
 	@Override
 	public ElementProcessor getChild(String uri, String localName, String qName) {
-		if (ELEMENT_NAME_NODE.equals(qName)) {
+		if (ELEMENT_NAME_BOUND.equals(qName)) {
+			if (foundEntities) {
+				throw new OsmosisRuntimeException("Bound element must come before any entities.");
+			}
+			if (foundBound) {
+				throw new OsmosisRuntimeException("Only one bound element allowed.");
+			}
+			foundBound = true;
+			return boundElementProcessor;
+		} else if (ELEMENT_NAME_NODE.equals(qName)) {
+			foundEntities = true;
 			return nodeElementProcessor;
 		} else if (ELEMENT_NAME_WAY.equals(qName)) {
+			foundEntities = true;
 			return wayElementProcessor;
 		} else if (ELEMENT_NAME_RELATION.equals(qName)) {
+			foundEntities = true;
 			return relationElementProcessor;
 		}
 		

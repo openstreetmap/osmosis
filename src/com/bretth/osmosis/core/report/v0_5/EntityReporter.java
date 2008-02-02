@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.container.v0_5.BoundContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
@@ -82,6 +83,10 @@ public class EntityReporter implements Sink {
 		entityContainer.process(
 			new EntityProcessor() {
 				private UserStatistics processorUser = user;
+				
+				public void process(BoundContainer bound) {
+					// Do nothing.
+				}
 				
 				public void process(NodeContainer node) {
 					processorUser.incrementNodeCount();

@@ -2,8 +2,11 @@
 package com.bretth.osmosis.core.filter.v0_5;
 
 import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 
+import com.bretth.osmosis.core.container.v0_5.BoundContainer;
+import com.bretth.osmosis.core.domain.v0_5.Bound;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.filter.common.IdTrackerType;
 import com.bretth.osmosis.core.filter.common.PolygonFileReader;
@@ -42,6 +45,78 @@ public class PolygonFilter extends AreaFilter {
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void process(BoundContainer boundContainer) {
+		Bound newBound = null;
+
+		// Configure the area if it hasn't been created yet. (Should this be in an "initialize" method?)
+		if (area == null) {
+			area = new PolygonFileReader(polygonFile).loadPolygon();
+		}
+		
+		for (Bound b : boundContainer.getEntity().toSimpleBound()) {
+			if (newBound == null) {
+				newBound = simpleBoundIntersect(b);
+			} else {
+				newBound = newBound.union(simpleBoundIntersect(b));
+			}
+		}
+
+		if (newBound != null) {
+			super.process(new BoundContainer(newBound));
+		}
+	}
+
+
+	/**
+	 * Get the simple intersection of this polygon with the passed Bound.
+	 * 
+	 * @param bound
+	 *            Bound with which to intersect. Must be "simple" (not cross antimeridian).
+	 * @return Bound resulting rectangular area after intersection
+	 */
+	private Bound simpleBoundIntersect(Bound bound) {
+		Rectangle2D r;
+		double width, height;
+
+		Bound newBound = null;
+		Area a2 = (Area)area.clone(); // make a copy so we don't disturb the original
+
+		/*
+		 * Note that AWT uses the computer graphics convention with the origin at the top left, so
+		 * top and bottom are reversed for a Rectangle2D vs. a Bound.
+		 */
+
+		if (bound.getLeft() > bound.getRight()) {
+			return null;
+		}
+		width = bound.getRight() - bound.getLeft();
+		height = bound.getTop() - bound.getBottom();
+		/*
+		 * Perform the intersect against the Area itself instead of its bounding box for maximum
+		 * precision.
+		 */
+		a2.intersect(new Area(new Rectangle2D.Double(
+		        bound.getLeft(),
+		        bound.getBottom(),
+		        width,
+		        height)));
+		if (!a2.isEmpty()) {
+			r = a2.getBounds2D();
+			newBound = new Bound(
+			        r.getMaxX(),
+			        r.getMinX(),
+			        r.getMaxY(),
+			        r.getMinY(),
+			        bound.getOrigin());
+		}
+		return newBound;
+	}
+
+
 	/**
 	 * {@inheritDoc}
 	 */

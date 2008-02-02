@@ -4,6 +4,7 @@ package com.bretth.osmosis.core.pgsql.common.v0_5;
 import java.io.File;
 import java.util.Map.Entry;
 
+import com.bretth.osmosis.core.container.v0_5.BoundContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
@@ -56,6 +57,14 @@ public class PostgreSqlDumpWriter implements Sink, EntityProcessor {
 	 */
 	public void process(EntityContainer entityContainer) {
 		entityContainer.process(this);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void process(BoundContainer boundContainer) {
+		// Do nothing.
 	}
 	
 	

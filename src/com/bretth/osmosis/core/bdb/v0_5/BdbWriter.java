@@ -8,6 +8,7 @@ import com.bretth.osmosis.core.bdb.v0_5.impl.NodeDao;
 import com.bretth.osmosis.core.bdb.v0_5.impl.RelationDao;
 import com.bretth.osmosis.core.bdb.v0_5.impl.TransactionContext;
 import com.bretth.osmosis.core.bdb.v0_5.impl.WayDao;
+import com.bretth.osmosis.core.container.v0_5.BoundContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
@@ -68,6 +69,15 @@ public class BdbWriter implements Sink, EntityProcessor {
 		}
 		entityContainer.process(this);
 	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+    public void process(BoundContainer bound) {
+        // Do nothing.
+    }
 	
 	
 	/**

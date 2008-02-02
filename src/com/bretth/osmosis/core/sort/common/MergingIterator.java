@@ -97,6 +97,10 @@ public class MergingIterator<DataType> implements ReleasableIterator<DataType> {
 				indexMinimum = indexCurrent;
 			}
 		}
+		/*
+		 * TODO: if there are two or more Bound entities (which will currently compare as 
+		 * equal for the TypeThenId comparator), they should be merged with the union operation.
+		 */
 		
 		// Get the next entity from the source if available.
 		// Otherwise remove the source and its current data.

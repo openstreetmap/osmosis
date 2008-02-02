@@ -1,6 +1,7 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.mysql.v0_5.impl;
 
+import com.bretth.osmosis.core.container.v0_5.BoundContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
 import com.bretth.osmosis.core.container.v0_5.RelationContainer;
@@ -32,6 +33,14 @@ public class ActionChangeWriter implements EntityProcessor {
 	}
 	
 	
+	/**
+     * {@inheritDoc}
+     */
+    public void process(BoundContainer bound) {
+        // Do nothing.
+    }
+    
+    
 	/**
 	 * {@inheritDoc}
 	 */

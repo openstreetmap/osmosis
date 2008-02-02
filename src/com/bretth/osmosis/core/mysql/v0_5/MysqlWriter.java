@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.container.v0_5.BoundContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
@@ -1003,6 +1004,14 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		initialize();
 		
 		entityContainer.process(this);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void process(BoundContainer boundContainer) {
+		// Do nothing.
 	}
 	
 	

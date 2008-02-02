@@ -11,13 +11,21 @@ package com.bretth.osmosis.core.container.v0_5;
 public interface EntityProcessor {
 	
 	/**
+	 * Process the bound.
+	 * 
+	 * @param bound
+	 *            The bound to be processed.
+	 */
+	public void process(BoundContainer bound);
+	
+	/**
 	 * Process the node.
 	 * 
 	 * @param node
 	 *            The node to be processed.
 	 */
 	public void process(NodeContainer node);
-	
+
 	/**
 	 * Process the way.
 	 * 

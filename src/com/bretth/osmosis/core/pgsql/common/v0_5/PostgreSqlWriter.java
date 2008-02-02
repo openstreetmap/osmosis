@@ -10,6 +10,7 @@ import java.util.List;
 import org.postgresql.geometric.PGpoint;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.container.v0_5.BoundContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
@@ -447,6 +448,14 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
+	public void process(BoundContainer boundContainer) {
+		// Do nothing.
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(NodeContainer nodeContainer) {
 		Node node;
 		long nodeId;
@@ -476,7 +485,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(RelationContainer relationContainer) {
-		// Do nothing.
+		// Ignore it
 	}
 	
 	

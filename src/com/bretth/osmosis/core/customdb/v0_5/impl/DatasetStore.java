@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.container.v0_5.BoundContainer;
 import com.bretth.osmosis.core.container.v0_5.Dataset;
 import com.bretth.osmosis.core.container.v0_5.DatasetReader;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
@@ -111,16 +112,16 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 		);
 		nodeObjectOffsetIndexWriter = storeContainer.add(
 			new IndexStore<Long, LongLongIndexElement>(
-				LongLongIndexElement.class,
-				new ComparableComparator<Long>(),
-				fileManager.getNodeObjectOffsetIndexFile()
+			LongLongIndexElement.class,
+			new ComparableComparator<Long>(),
+			fileManager.getNodeObjectOffsetIndexFile()
 			)
 		);
 		nodeTileIndexWriter = storeContainer.add(
 			new IndexStore<Integer, IntegerLongIndexElement>(
-				IntegerLongIndexElement.class,
-				uintComparator,
-				fileManager.getNodeTileIndexFile()
+			IntegerLongIndexElement.class,
+			uintComparator,
+			fileManager.getNodeTileIndexFile()
 			)
 		);
 		
@@ -208,6 +209,15 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
+    public void process(BoundContainer bound) {
+        // Do nothing.
+    }
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void process(NodeContainer nodeContainer) {
 		Node node;
 		long nodeId;
@@ -262,54 +272,54 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 		);
 		
 		if (enableWayTileIndex) {
-			// Calculate the minimum and maximum tile indexes for the way.
-			tilesFound = false;
-			minimumTile = 0;
-			maximumTile = 0;
-			for (WayNode wayNode : way.getWayNodeList()) {
-				long nodeId;
-				Node node;
-				int tile;
-				
-				nodeId = wayNode.getNodeId();
-				
-				try {
-					node = nodeObjectReader.get(
-						nodeObjectOffsetIndexReader.get(nodeId).getValue()
-					);
-					
-					tile = (int) tileCalculator.calculateTile(node.getLatitude(), node.getLongitude());
-					
-					if (tilesFound) {
-						if (uintComparator.compare(tile, minimumTile) < 0) {
-							minimumTile = tile;
-						}
-						if (uintComparator.compare(maximumTile, tile) < 0) {
-							maximumTile = tile;
-						}
-						
-					} else {
-						minimumTile = tile;
-						maximumTile = tile;
-						
-						tilesFound = true;
-					}
-					
-				} catch (NoSuchIndexElementException e) {
-					// Ignore any referential integrity problems.
-					if (log.isLoggable(Level.FINER)) {
-						log.finest(
-							"Ignoring referential integrity problem where way " + wayId +
-							" refers to non-existent node " + nodeId + "."
-						);
-					}
-				}
-			}
+		// Calculate the minimum and maximum tile indexes for the way.
+		tilesFound = false;
+		minimumTile = 0;
+		maximumTile = 0;
+		for (WayNode wayNode : way.getWayNodeList()) {
+			long nodeId;
+			Node node;
+			int tile;
 			
-			// Write the way id to an index keyed by tile but only if tiles were
-			// actually found.
+			nodeId = wayNode.getNodeId();
+			
+			try {
+			node = nodeObjectReader.get(
+				nodeObjectOffsetIndexReader.get(nodeId).getValue()
+			);
+			
+			tile = (int) tileCalculator.calculateTile(node.getLatitude(), node.getLongitude());
+			
 			if (tilesFound) {
-				wayTileIndexWriter.write(wayId, minimumTile, maximumTile);
+				if (uintComparator.compare(tile, minimumTile) < 0) {
+					minimumTile = tile;
+				}
+				if (uintComparator.compare(maximumTile, tile) < 0) {
+					maximumTile = tile;
+				}
+				
+			} else {
+				minimumTile = tile;
+				maximumTile = tile;
+				
+				tilesFound = true;
+			}
+				
+			} catch (NoSuchIndexElementException e) {
+				// Ignore any referential integrity problems.
+				if (log.isLoggable(Level.FINER)) {
+					log.finest(
+						"Ignoring referential integrity problem where way " + wayId +
+						" refers to non-existent node " + nodeId + "."
+					);
+		}
+			}
+		}
+		
+		// Write the way id to an index keyed by tile but only if tiles were
+		// actually found.
+		if (tilesFound) {
+		wayTileIndexWriter.write(wayId, minimumTile, maximumTile);
 			}
 			
 		} else {
@@ -320,7 +330,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 				
 				nodeWayIndexWriter.write(new LongLongIndexElement(nodeId, wayId));
 			}
-		}
+	}
 	}
 	
 	

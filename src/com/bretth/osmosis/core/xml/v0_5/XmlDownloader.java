@@ -19,6 +19,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.container.v0_5.BoundContainer;
+import com.bretth.osmosis.core.domain.v0_5.Bound;
 import com.bretth.osmosis.core.task.v0_5.RunnableSource;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 import com.bretth.osmosis.core.xml.v0_5.impl.OsmHandler;
@@ -177,6 +179,9 @@ public class XmlDownloader implements RunnableSource {
         try {
             SAXParser    parser = createParser();
             InputStream  inputStream = getInputStream(myBaseUrl + "/map?bbox=" + myLeft + "," + myBottom + "," + myRight + "," + myTop);
+
+            // First send the Bound down the pipeline
+            mySink.process(new BoundContainer(new Bound(myRight, myLeft, myTop, myBottom, myBaseUrl)));
 
             try {
                 parser.parse(inputStream, new OsmHandler(mySink, true));

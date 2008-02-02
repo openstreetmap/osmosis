@@ -9,6 +9,11 @@ package com.bretth.osmosis.core.domain.v0_5;
  */
 public enum EntityType {
 	/**
+	 * Representation of the latitude/longitude bounding box of the entity stream.
+	 */
+	Bound,
+	
+	/**
 	 * Represents a geographical point.
 	 */
 	Node,

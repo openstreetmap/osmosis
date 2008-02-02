@@ -1,11 +1,14 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.mysql.v0_5;
 
+import com.bretth.osmosis.core.OsmosisConstants;
+import com.bretth.osmosis.core.container.v0_5.BoundContainer;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
 import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
+import com.bretth.osmosis.core.domain.v0_5.Bound;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Way;
@@ -122,6 +125,8 @@ public class MySqlCurrentReader implements RunnableSource {
 			if (preferences.getValidateSchemaVersion()) {
 				new SchemaVersionValidator(loginCredentials).validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
 			}
+			
+			sink.process(new BoundContainer(new Bound("Osmosis " + OsmosisConstants.VERSION)));
 			processNodes();
 			processWays();
 			processRelations();

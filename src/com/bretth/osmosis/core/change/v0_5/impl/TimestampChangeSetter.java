@@ -6,6 +6,7 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.container.v0_5.ChangeContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
+import com.bretth.osmosis.core.container.v0_5.BoundContainer;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
 import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
@@ -45,6 +46,14 @@ public class TimestampChangeSetter implements EntityProcessor {
 		calendar = Calendar.getInstance();
 		calendar.set(Calendar.MILLISECOND, 0);
 		timestamp = calendar.getTime();
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void process(BoundContainer boundContainer) {
+		changeSink.process(new ChangeContainer(boundContainer, action));
 	}
 	
 	

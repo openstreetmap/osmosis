@@ -4,6 +4,8 @@ package com.bretth.osmosis.core.xml.v0_5.impl;
 import java.io.BufferedWriter;
 
 import com.bretth.osmosis.core.OsmosisConstants;
+import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.container.v0_5.BoundContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
@@ -91,7 +93,9 @@ public class OsmWriter extends ElementWriter {
 		private NodeWriter nodeWriter;
 		private WayWriter wayWriter;
 		private RelationWriter relationWriter;
-		
+		private BoundWriter boundWriter;
+		private boolean boundWritten = false; // can't write a Bound twice
+		private boolean entitiesWritten = false; // can't write a Bound after any Entities
 		
 		/**
 		 * Creates a new instance.
@@ -103,6 +107,7 @@ public class OsmWriter extends ElementWriter {
 			nodeWriter = new NodeWriter("node", indentLevel);
 			wayWriter = new WayWriter("way", indentLevel);
 			relationWriter = new RelationWriter("relation", indentLevel);
+			boundWriter = new BoundWriter("bound", indentLevel);
 		}
 		
 		
@@ -116,6 +121,10 @@ public class OsmWriter extends ElementWriter {
 			nodeWriter.setWriter(writer);
 			wayWriter.setWriter(writer);
 			relationWriter.setWriter(writer);
+			boundWriter.setWriter(writer);
+			// reset the flags indicating which data has been written
+			boundWritten = false;
+			entitiesWritten = false;
 		}
 		
 		
@@ -124,6 +133,7 @@ public class OsmWriter extends ElementWriter {
 		 */
 		public void process(NodeContainer node) {
 			nodeWriter.process(node.getEntity());
+			entitiesWritten = true;
 		}
 		
 		
@@ -132,6 +142,7 @@ public class OsmWriter extends ElementWriter {
 		 */
 		public void process(WayContainer way) {
 			wayWriter.process(way.getEntity());
+			entitiesWritten = true;
 		}
 		
 		
@@ -140,6 +151,22 @@ public class OsmWriter extends ElementWriter {
 		 */
 		public void process(RelationContainer relation) {
 			relationWriter.process(relation.getEntity());
+			entitiesWritten = true;
 		}
+		
+		
+		/**
+		 * {@inheritDoc}
+		 */
+        public void process(BoundContainer bound) {
+    		if (boundWritten) {
+    			throw new OsmosisRuntimeException("Bound element already written and only one allowed.");
+    		}
+    		if (entitiesWritten) {
+    			throw new OsmosisRuntimeException("Can't write bound element after other entities.");    			
+    		}
+        	boundWriter.process(bound.getEntity());
+    		boundWritten = true;
+        }
 	}
 }
