@@ -23,6 +23,8 @@ import com.bretth.osmosis.core.mysql.v0_5.MysqlChangeWriterFactory;
 import com.bretth.osmosis.core.mysql.v0_5.MysqlReaderFactory;
 import com.bretth.osmosis.core.mysql.v0_5.MysqlTruncatorFactory;
 import com.bretth.osmosis.core.mysql.v0_5.MysqlWriterFactory;
+import com.bretth.osmosis.core.pdb.v0_5.PostgreSqlDatasetTruncatorFactory;
+import com.bretth.osmosis.core.pdb.v0_5.PostgreSqlDatasetWriterFactory;
 import com.bretth.osmosis.core.pgsql.common.v0_5.PostgreSqlDumpWriterFactory;
 import com.bretth.osmosis.core.pgsql.common.v0_5.PostgreSqlTruncatorFactory;
 import com.bretth.osmosis.core.pgsql.common.v0_5.PostgreSqlWriterFactory;
@@ -142,6 +144,10 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("rb", new BdbReaderFactory());
 		TaskManagerFactory.register("read-customdb", new ReadDatasetFactory());
 		TaskManagerFactory.register("rc", new ReadDatasetFactory());
+		TaskManagerFactory.register("write-pgsql-simple", new PostgreSqlDatasetWriterFactory());
+		TaskManagerFactory.register("wps", new PostgreSqlDatasetWriterFactory());
+		TaskManagerFactory.register("truncate-pgsql-simple", new PostgreSqlDatasetTruncatorFactory());
+		TaskManagerFactory.register("tps", new PostgreSqlDatasetTruncatorFactory());
 		
 		TaskManagerFactory.register("apply-change-0.5", new ChangeApplierFactory());
 		TaskManagerFactory.register("bounding-box-0.5", new BoundingBoxFilterFactory());
@@ -181,5 +187,7 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("write-bdb-0.5", new BdbWriterFactory());
 		TaskManagerFactory.register("read-bdb-0.5", new BdbReaderFactory());
 		TaskManagerFactory.register("read-customdb-0.5", new ReadDatasetFactory());
+		TaskManagerFactory.register("write-pgsql-simple-0.5", new PostgreSqlDatasetWriterFactory());
+		TaskManagerFactory.register("truncate-pgsql-simple-0.5", new PostgreSqlDatasetTruncatorFactory());
 	}
 }
