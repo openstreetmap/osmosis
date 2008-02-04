@@ -9,7 +9,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
   AreaFilterTest.class,
   BoundingBoxFilterTest.class,
-  PolygonFilterTest.class,
+  PolygonFilterTest.class
 })
 public class AreaFilterTestSuite {
     // Empty class; placeholder for suite annotations
