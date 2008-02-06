@@ -1,5 +1,4 @@
 0.25
-Added "-" alias for stdin for --read-xml task for Cygwin & Windows
 Added a new osmosis-extract-mysql application for extracting regular changesets from mysql.
 Removed use of String.isEmpty to minimise Java5 incompatibility.
 Modified the default pipe connectivity functionality to use stack-based connectivity instead of queue-based connectivity.
@@ -17,6 +16,7 @@ Fixed the --read-api short name to be --ra instead of --wa.
 Updated store implementations to use buffered io providing significant performance improvements.
 Added a new osmosis-test-users-for-utf8 application for verifying the data integrity of the production user table.
 Added "bound" support to the pipeline.
+Added "-" alias for stdin for --read-xml task for Cygwin & Windows
 
 0.24
 Fixed a bug in the XML node writing code where it would write a ',' character instead of '.' as the decimal separator in some locales.
