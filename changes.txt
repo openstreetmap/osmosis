@@ -1,4 +1,5 @@
 0.25
+Added "-" alias for stdin for --read-xml task for Cygwin & Windows
 Added a new osmosis-extract-mysql application for extracting regular changesets from mysql.
 Removed use of String.isEmpty to minimise Java5 incompatibility.
 Modified the default pipe connectivity functionality to use stack-based connectivity instead of queue-based connectivity.
