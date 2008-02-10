@@ -22,11 +22,11 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
  * @author Brett Henderson
  */
 public class PostgreSqlDatasetReader implements DatasetReader {
-	private static final String SQL_SELECT_NODE = "SELECT id, tstamp, user_name, coordinate FROM node where id=?";
-	
 	private DatabaseLoginCredentials loginCredentials;
 	private DatabasePreferences preferences;
+	private boolean initialized;
 	private DatabaseContext dbCtx;
+	private NodeDao nodeDao;
 	
 	
 	/**
@@ -40,25 +40,26 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	public PostgreSqlDatasetReader(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
 		this.loginCredentials = loginCredentials;
 		this.preferences = preferences;
+		
+		initialized = false;
 	}
 	
 	
 	/**
-	 * Returns the database connection and creates one if it doesn't already
-	 * exist.
-	 * 
-	 * @return The database connection.
+	 * Initialises the database connection and associated data access objects.
 	 */
-	private DatabaseContext getDatabaseContext() {
+	private void initialize() {
 		if (dbCtx == null) {
 			dbCtx = new DatabaseContext(loginCredentials);
 			
 			if (preferences.getValidateSchemaVersion()) {
 				new SchemaVersionValidator(loginCredentials).validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
 			}
+			
+			nodeDao = new NodeDao(dbCtx);
 		}
 		
-		return dbCtx;
+		initialized = true;
 	}
 	
 	
@@ -67,8 +68,11 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	 */
 	@Override
 	public Node getNode(long id) {
-		getDatabaseContext().prepareStatement(SQL_SELECT_NODE);
-		return null;
+		if (!initialized) {
+			initialize();
+		}
+		
+		return nodeDao.getNode(id);
 	}
 	
 	
@@ -116,6 +120,9 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	 */
 	@Override
 	public void release() {
+		if (nodeDao != null) {
+			nodeDao.release();
+		}
 		if (dbCtx != null) {
 			dbCtx.release();
 			

@@ -6,8 +6,10 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
-import org.postgresql.geometric.PGpoint;
+import org.postgis.PGgeometry;
+import org.postgis.Point;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.container.v0_5.BoundContainer;
@@ -41,6 +43,33 @@ import com.bretth.osmosis.core.task.v0_5.Sink;
  * @author Brett Henderson
  */
 public class PostgreSqlWriter implements Sink, EntityProcessor {
+	
+	private static final Logger log = Logger.getLogger(PostgreSqlWriter.class.getName());
+	
+	
+	private static final String DROP_CONSTRAINT_SQL[] = {
+		"ALTER TABLE node DROP CONSTRAINT pk_node",
+		"ALTER TABLE way DROP CONSTRAINT pk_way",
+		"ALTER TABLE way_node DROP CONSTRAINT pk_way_node",
+		"ALTER TABLE relation DROP CONSTRAINT pk_relation",
+		"DROP INDEX idx_node_tag_node_id",
+		"DROP INDEX idx_node_location",
+		"DROP INDEX idx_way_tag_way_id",
+		"DROP INDEX idx_relation_tag_relation_id"
+	};
+	
+	private static final String ADD_CONSTRAINT_SQL[] = {
+		"ALTER TABLE ONLY node ADD CONSTRAINT pk_node PRIMARY KEY (id)",
+		"ALTER TABLE ONLY way ADD CONSTRAINT pk_way PRIMARY KEY (id)",
+		"ALTER TABLE ONLY way_node ADD CONSTRAINT pk_way_node PRIMARY KEY (way_id, sequence_id)",
+		"ALTER TABLE ONLY relation ADD CONSTRAINT pk_relation PRIMARY KEY (id)",
+		"CREATE INDEX idx_node_tag_node_id ON node_tag USING btree (node_id)",
+		"CREATE INDEX idx_node_location ON node USING gist (coordinate)",
+		"CREATE INDEX idx_way_tag_way_id ON way_tag USING btree (way_id)",
+		"CREATE INDEX idx_relation_tag_relation_id ON relation_tag USING btree (relation_id)"
+	};
+	
+	
 	// These SQL strings are the prefix to statements that will be built based
 	// on how many rows of data are to be inserted at a time.
 	private static final String INSERT_SQL_NODE =
@@ -70,14 +99,14 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	
 	// These constants define how many rows of each data type will be inserted
 	// with single insert statements.
-	private static final int INSERT_BULK_ROW_COUNT_NODE = 100;
-	private static final int INSERT_BULK_ROW_COUNT_NODE_TAG = 100;
-	private static final int INSERT_BULK_ROW_COUNT_WAY = 100;
-	private static final int INSERT_BULK_ROW_COUNT_WAY_TAG = 100;
-	private static final int INSERT_BULK_ROW_COUNT_WAY_NODE = 100;
-	private static final int INSERT_BULK_ROW_COUNT_RELATION = 100;
-	private static final int INSERT_BULK_ROW_COUNT_RELATION_TAG = 100;
-	private static final int INSERT_BULK_ROW_COUNT_RELATION_MEMBER = 100;
+	private static final int INSERT_BULK_ROW_COUNT_NODE = 1000;
+	private static final int INSERT_BULK_ROW_COUNT_NODE_TAG = 1000;
+	private static final int INSERT_BULK_ROW_COUNT_WAY = 1000;
+	private static final int INSERT_BULK_ROW_COUNT_WAY_TAG = 1000;
+	private static final int INSERT_BULK_ROW_COUNT_WAY_NODE = 1000;
+	private static final int INSERT_BULK_ROW_COUNT_RELATION = 1000;
+	private static final int INSERT_BULK_ROW_COUNT_RELATION_TAG = 1000;
+	private static final int INSERT_BULK_ROW_COUNT_RELATION_MEMBER = 1000;
 	
 	// These constants will be configured by a static code block.
 	private static final String INSERT_SQL_SINGLE_NODE;
@@ -100,7 +129,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	/**
 	 * Defines the number of entities to write between each commit.
 	 */
-	private static final int COMMIT_ENTITY_COUNT = 100000;
+	private static final int COMMIT_ENTITY_COUNT = -1;
 	
 	
 	/**
@@ -271,6 +300,13 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			bulkRelationMemberStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_RELATION_MEMBER);
 			singleRelationMemberStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_RELATION_MEMBER);
 			
+			// Drop all constraints and indexes.
+			log.fine("Disabling indexes.");
+			for (int i = 0; i < DROP_CONSTRAINT_SQL.length; i++) {
+				dbCtx.executeStatement(DROP_CONSTRAINT_SQL[i]);
+			}
+			log.fine("Indexes disabled.");
+			
 			initialized = true;
 		}
 	}
@@ -282,7 +318,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 * provide maximum performance.
 	 */
 	private void performIntervalCommit() {
-		if (uncommittedEntityCount >= COMMIT_ENTITY_COUNT) {
+		if (COMMIT_ENTITY_COUNT >= 0 && uncommittedEntityCount >= COMMIT_ENTITY_COUNT) {
 			System.err.println("Commit");
 			dbCtx.commit();
 			
@@ -379,7 +415,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		
 		try {
 			// Set the node level parameters.
-			statement.setObject(prmIndex++, new PGpoint(node.getLongitude(), node.getLatitude()));
+			statement.setObject(prmIndex++, new PGgeometry(new Point(node.getLongitude(), node.getLatitude())));
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for node " + node.getId() + ".", e);
@@ -946,6 +982,13 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		flushRelations(true);
 		flushRelationTags(true);
 		flushRelationMembers(true);
+		
+		// Add all constraints and indexes.
+		log.fine("Enabling indexes.");
+		for (int i = 0; i < ADD_CONSTRAINT_SQL.length; i++) {
+			dbCtx.executeStatement(ADD_CONSTRAINT_SQL[i]);
+		}
+		log.fine("Indexes enabled.");
 		
 		dbCtx.commit();
 	}

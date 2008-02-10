@@ -1,6 +1,7 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.pgsql.common;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,9 +13,12 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.postgis.Geometry;
+import org.postgis.binary.BinaryWriter;
 import org.postgresql.geometric.PGpoint;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.store.Completable;
 
 
 /**
@@ -23,7 +27,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * 
  * @author Brett Henderson
  */
-public class CopyFileWriter {
+public class CopyFileWriter implements Completable {
 	
 	private static Logger log = Logger.getLogger(CopyFileWriter.class.getName());
 	
@@ -33,6 +37,7 @@ public class CopyFileWriter {
 	private BufferedWriter writer;
 	private boolean midRecord;
 	private SimpleDateFormat dateFormat;
+	private BinaryWriter postgisBinaryWriter;
 	
 	
 	/**
@@ -47,6 +52,7 @@ public class CopyFileWriter {
 		midRecord = false;
 		
 		dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ");
+		postgisBinaryWriter = new BinaryWriter();
 	}
 	
 	
@@ -242,6 +248,27 @@ public class CopyFileWriter {
 	
 	
 	/**
+	 * Writes data to the output file.
+	 * 
+	 * @param data
+	 *            The data to be written.
+	 */
+	public void writeField(Geometry data) {
+		initialize();
+		
+		try {
+			separateField();
+			
+			//writer.write(new PGgeometry(data).toString());
+			writer.write(postgisBinaryWriter.writeHexed(data));
+			
+		} catch (IOException e) {
+			throw new OsmosisRuntimeException("Unable to write value (" + data + ")", e);
+		}
+	}
+	
+	
+	/**
 	 * Writes a new line in the output file.
 	 */
 	public void endRecord() {
@@ -268,7 +295,7 @@ public class CopyFileWriter {
 			try {
 				outStream = new FileOutputStream(file);
 				
-				writer = new BufferedWriter(new OutputStreamWriter(outStream, "UTF-8"));
+				writer = new BufferedWriter(new OutputStreamWriter(new BufferedOutputStream(outStream, 65536), "UTF-8"));
 				
 				outStream = null;
 				
