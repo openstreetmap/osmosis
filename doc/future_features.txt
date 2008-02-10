@@ -123,9 +123,13 @@ Feature request from Frederik Ramm.
 Make osmosis return error codes if it fails to make it better suited to scripting.
 
 **********
-Karl Newman
+Request from Karl Newman
 Add plugin support.
 
 **********
-Jeremy Adams
+Request from Jeremy Adams
 Add a "simplify" polygon option to the --bounding-polygon task to improve performance.
+
+**********
+Request from Jochen Topf
+Make osmosis error if an unknown command line parameter is received instead of silently ignoring it.
