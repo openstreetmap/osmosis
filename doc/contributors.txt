@@ -1,4 +1,4 @@
 Brett Henderson - Majority of existing code.
 Marcus Wolschon - XmlDownloader (--read-api) task.
 Karl Newman - Area filtering task (--bounding-box, --bounding-polygon) improvements.  Pipeline bound support.
-Stefan Baebler - "-" alias for stdin for --read-xml task
+Stefan Baebler - "-" alias for stdin/stdout to file rading/writing tasks

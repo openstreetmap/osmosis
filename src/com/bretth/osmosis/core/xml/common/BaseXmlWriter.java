@@ -112,7 +112,13 @@ public abstract class BaseXmlWriter {
 			try {
 				OutputStreamWriter outStreamWriter;
 				
-				outStream = new FileOutputStream(file);
+				// make "-" an alias for /dev/stdout
+				if(file.getName().equals("-"))
+				{
+					outStream = System.out;
+				} else {
+					outStream = new FileOutputStream(file);
+				}
 				
 				outStream =
 					new CompressionActivator(compressionMethod).createCompressionOutputStream(outStream);

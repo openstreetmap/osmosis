@@ -91,7 +91,13 @@ public class XmlChangeReader implements RunnableChangeSource {
 		try {
 			SAXParser parser;
 			
-			inputStream = new FileInputStream(file);
+			// make "-" an alias for /dev/stdin
+			if(file.getName().equals("-"))
+			{
+				inputStream = System.in;
+			} else {
+				inputStream = new FileInputStream(file);
+			}
 			
 			inputStream =
 				new CompressionActivator(compressionMethod).
