@@ -27,6 +27,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	private boolean initialized;
 	private DatabaseContext dbCtx;
 	private NodeDao nodeDao;
+	private WayDao wayDao;
 	
 	
 	/**
@@ -57,6 +58,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			}
 			
 			nodeDao = new NodeDao(dbCtx);
+			wayDao = new WayDao(dbCtx);
 		}
 		
 		initialized = true;
@@ -81,8 +83,11 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	 */
 	@Override
 	public Way getWay(long id) {
-		//getDatabaseContext().prepareStatement(sql);
-		return null;
+		if (!initialized) {
+			initialize();
+		}
+		
+		return wayDao.getWay(id);
 	}
 	
 	
