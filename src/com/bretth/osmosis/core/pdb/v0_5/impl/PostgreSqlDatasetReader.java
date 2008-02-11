@@ -28,6 +28,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	private DatabaseContext dbCtx;
 	private NodeDao nodeDao;
 	private WayDao wayDao;
+	private RelationDao relationDao;
 	
 	
 	/**
@@ -59,6 +60,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			
 			nodeDao = new NodeDao(dbCtx);
 			wayDao = new WayDao(dbCtx);
+			relationDao = new RelationDao(dbCtx);
 		}
 		
 		initialized = true;
@@ -96,8 +98,11 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	 */
 	@Override
 	public Relation getRelation(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		if (!initialized) {
+			initialize();
+		}
+		
+		return relationDao.getRelation(id);
 	}
 	
 	
