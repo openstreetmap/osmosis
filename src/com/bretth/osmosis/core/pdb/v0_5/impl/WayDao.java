@@ -179,6 +179,16 @@ public class WayDao implements Releasable {
 	
 	
 	/**
+	 * Returns an iterator providing access to all ways in the database.
+	 * 
+	 * @return The way iterator.
+	 */
+	public ReleasableIterator<Way> iterate() {
+		return new WayReader(dbCtx);
+	}
+	
+	
+	/**
 	 * Allows all data within a bounding box to be iterated across.
 	 * 
 	 * @param left

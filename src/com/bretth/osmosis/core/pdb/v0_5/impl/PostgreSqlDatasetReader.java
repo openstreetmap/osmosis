@@ -1,7 +1,18 @@
 package com.bretth.osmosis.core.pdb.v0_5.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.bretth.osmosis.core.container.v0_5.DatasetReader;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
+import com.bretth.osmosis.core.container.v0_5.NodeContainer;
+import com.bretth.osmosis.core.container.v0_5.NodeContainerIterator;
+import com.bretth.osmosis.core.container.v0_5.RelationContainer;
+import com.bretth.osmosis.core.container.v0_5.RelationContainerIterator;
+import com.bretth.osmosis.core.container.v0_5.WayContainer;
+import com.bretth.osmosis.core.container.v0_5.WayContainerIterator;
+import com.bretth.osmosis.core.customdb.v0_5.impl.MultipleSourceIterator;
+import com.bretth.osmosis.core.customdb.v0_5.impl.UpcastIterator;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.domain.v0_5.Node;
@@ -111,7 +122,19 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	 */
 	@Override
 	public ReleasableIterator<EntityContainer> iterate() {
-		return null;
+		List<ReleasableIterator<EntityContainer>> sources;
+		
+		if (!initialized) {
+			initialize();
+		}
+		
+		sources = new ArrayList<ReleasableIterator<EntityContainer>>();
+		
+		sources.add(new UpcastIterator<EntityContainer, NodeContainer>(new NodeContainerIterator(nodeDao.iterate())));
+		sources.add(new UpcastIterator<EntityContainer, WayContainer>(new WayContainerIterator(wayDao.iterate())));
+		sources.add(new UpcastIterator<EntityContainer, RelationContainer>(new RelationContainerIterator(relationDao.iterate())));
+		
+		return new MultipleSourceIterator<EntityContainer>(sources);
 	}
 	
 	
@@ -132,6 +155,12 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	public void release() {
 		if (nodeDao != null) {
 			nodeDao.release();
+		}
+		if (wayDao != null) {
+			wayDao.release();
+		}
+		if (relationDao != null) {
+			relationDao.release();
 		}
 		if (dbCtx != null) {
 			dbCtx.release();

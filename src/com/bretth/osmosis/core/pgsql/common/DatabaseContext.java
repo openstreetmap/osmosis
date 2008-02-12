@@ -4,6 +4,7 @@ package com.bretth.osmosis.core.pgsql.common;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -22,6 +23,7 @@ public class DatabaseContext {
 	
 	private DatabaseLoginCredentials loginCredentials;
 	private Connection connection;
+	Statement statement;
 	
 	
 	/**
@@ -97,7 +99,9 @@ public class DatabaseContext {
 	 */
 	public void executeStatement(String sql) {
 		try {
-			Statement statement;
+			if (statement != null) {
+				statement.close();
+			}
 			
 			statement = getConnection().createStatement();
 			
@@ -137,14 +141,46 @@ public class DatabaseContext {
 	 */
 	public Statement createStatement() {
 		try {
-			Statement statement;
+			Statement resultStatement;
 			
-			statement = getConnection().createStatement();
+			resultStatement = getConnection().createStatement();
 			
-			return statement;
+			return resultStatement;
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to create database statement.", e);
+		}
+	}
+	
+	
+	/**
+	 * Executes a query and returns a result set. The returned result set must
+	 * be closed by the caller.
+	 * 
+	 * @param sql
+	 *            The query to execute.
+	 * @return The newly created result set.
+	 */
+	public ResultSet executeQuery(String sql) {
+		try {
+			ResultSet resultSet;
+			
+			if (statement != null) {
+				statement.close();
+			}
+			
+			statement = getConnection().createStatement(
+				ResultSet.TYPE_FORWARD_ONLY,
+				ResultSet.CONCUR_READ_ONLY
+			);
+			statement.setFetchSize(10000);
+			
+			resultSet = statement.executeQuery(sql);
+			
+			return resultSet;
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to create streaming resultset.", e);
 		}
 	}
 	

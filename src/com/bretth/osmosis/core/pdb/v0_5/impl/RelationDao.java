@@ -8,9 +8,9 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_5.EntityType;
-import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.RelationMember;
+import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.mysql.v0_5.impl.DBEntityTag;
 import com.bretth.osmosis.core.mysql.v0_5.impl.DBRelationMember;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
@@ -183,6 +183,16 @@ public class RelationDao implements Releasable {
 				}
 			}
 		}
+	}
+	
+	
+	/**
+	 * Returns an iterator providing access to all nodes in the database.
+	 * 
+	 * @return The node iterator.
+	 */
+	public ReleasableIterator<Relation> iterate() {
+		return new RelationReader(dbCtx);
 	}
 	
 	

@@ -148,6 +148,16 @@ public class NodeDao implements Releasable {
 	
 	
 	/**
+	 * Returns an iterator providing access to all nodes in the database.
+	 * 
+	 * @return The node iterator.
+	 */
+	public ReleasableIterator<Node> iterate() {
+		return new NodeReader(dbCtx);
+	}
+	
+	
+	/**
 	 * Allows all data within a bounding box to be iterated across.
 	 * 
 	 * @param left
