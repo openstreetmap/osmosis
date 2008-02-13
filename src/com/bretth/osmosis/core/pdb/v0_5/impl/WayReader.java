@@ -12,7 +12,9 @@ import com.bretth.osmosis.core.mysql.v0_5.impl.DBWayNode;
 import com.bretth.osmosis.core.mysql.v0_5.impl.WayNodeComparator;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.store.PeekableIterator;
+import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 
 
 /**
@@ -37,9 +39,22 @@ public class WayReader implements ReleasableIterator<Way> {
 	 *            The database context to use for accessing the database.
 	 */
 	public WayReader(DatabaseContext dbCtx) {
-		wayReader = new WayTableReader(dbCtx);
+		// The postgres jdbc driver doesn't appear to allow concurrent result
+		// sets on the same connection so only the last opened result set may be
+		// streamed. The rest of the result sets must be persisted first.
+		wayReader = new PersistentIterator<Way>(
+			new SingleClassObjectSerializationFactory(Way.class),
+			new WayTableReader(dbCtx),
+			"way",
+			true
+		);
 		wayTagReader = new PeekableIterator<DBEntityTag>(
-			new EntityTagTableReader(dbCtx, "way_tag", "way_id")
+			new PersistentIterator<DBEntityTag>(
+				new SingleClassObjectSerializationFactory(DBEntityTag.class),
+				new EntityTagTableReader(dbCtx, "way_tag", "way_id"),
+				"waytag",
+				true
+			)
 		);
 		wayNodeReader = new PeekableIterator<DBWayNode>(
 			new WayNodeTableReader(dbCtx)

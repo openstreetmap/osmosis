@@ -7,7 +7,9 @@ import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.mysql.v0_5.impl.DBEntityTag;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.store.PeekableIterator;
+import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 
 
 /**
@@ -31,7 +33,15 @@ public class NodeReader implements ReleasableIterator<Node> {
 	 *            The database context to use for accessing the database.
 	 */
 	public NodeReader(DatabaseContext dbCtx) {
-		nodeReader = new NodeTableReader(dbCtx);
+		// The postgres jdbc driver doesn't appear to allow concurrent result
+		// sets on the same connection so only the last opened result set may be
+		// streamed. The rest of the result sets must be persisted first.
+		nodeReader = new PersistentIterator<Node>(
+			new SingleClassObjectSerializationFactory(Node.class),
+			new NodeTableReader(dbCtx),
+			"nod",
+			true
+		);
 		nodeTagReader = new PeekableIterator<DBEntityTag>(
 			new EntityTagTableReader(dbCtx, "node_tag", "node_id")
 		);

@@ -8,7 +8,9 @@ import com.bretth.osmosis.core.mysql.v0_5.impl.DBEntityTag;
 import com.bretth.osmosis.core.mysql.v0_5.impl.DBRelationMember;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.store.PeekableIterator;
+import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 
 
 /**
@@ -33,9 +35,19 @@ public class RelationReader implements ReleasableIterator<Relation> {
 	 *            The database context to use for accessing the database.
 	 */
 	public RelationReader(DatabaseContext dbCtx) {
-		relationReader = new RelationTableReader(dbCtx);
+		relationReader = new PersistentIterator<Relation>(
+			new SingleClassObjectSerializationFactory(Relation.class),
+			new RelationTableReader(dbCtx),
+			"rel",
+			true
+		);
 		relationTagReader = new PeekableIterator<DBEntityTag>(
-			new EntityTagTableReader(dbCtx, "relation_tag", "relation_id")
+			new PersistentIterator<DBEntityTag>(
+				new SingleClassObjectSerializationFactory(DBEntityTag.class),
+				new EntityTagTableReader(dbCtx, "relation_tag", "relation_id"),
+				"reltag",
+				true
+			)
 		);
 		relationMemberReader = new PeekableIterator<DBRelationMember>(
 			new RelationMemberTableReader(dbCtx)
