@@ -6,6 +6,7 @@ DROP INDEX idx_node_tag_node_id;
 DROP INDEX idx_node_location;
 DROP INDEX idx_way_tag_way_id;
 DROP INDEX idx_relation_tag_relation_id;
+DROP INDEX idx_way_bbox;
 
 COPY node FROM E'C:\\tmp\\pgimport\\node.txt';
 COPY node_tag FROM E'C:\\tmp\\pgimport\\node_tag.txt';
@@ -24,3 +25,14 @@ CREATE INDEX idx_node_tag_node_id ON node_tag USING btree (node_id);
 CREATE INDEX idx_node_location ON node USING gist (coordinate);
 CREATE INDEX idx_way_tag_way_id ON way_tag USING btree (way_id);
 CREATE INDEX idx_relation_tag_relation_id ON relation_tag USING btree (relation_id);
+
+UPDATE way SET bbox = (
+	SELECT Envelope(Collect(coordinate))
+	FROM node JOIN way_node ON way_node.node_id = node.id
+	WHERE way_node.way_id = way.id
+);
+
+CREATE INDEX idx_way_bbox ON way USING gist (bbox);
+
+VACUUM;
+ANALYZE;

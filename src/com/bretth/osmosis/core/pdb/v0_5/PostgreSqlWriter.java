@@ -47,7 +47,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private static final Logger log = Logger.getLogger(PostgreSqlWriter.class.getName());
 	
 	
-	private static final String DROP_CONSTRAINT_SQL[] = {
+	private static final String PRE_LOAD_SQL[] = {
 		"ALTER TABLE node DROP CONSTRAINT pk_node",
 		"ALTER TABLE way DROP CONSTRAINT pk_way",
 		"ALTER TABLE way_node DROP CONSTRAINT pk_way_node",
@@ -55,10 +55,11 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"DROP INDEX idx_node_tag_node_id",
 		"DROP INDEX idx_node_location",
 		"DROP INDEX idx_way_tag_way_id",
-		"DROP INDEX idx_relation_tag_relation_id"
+		"DROP INDEX idx_relation_tag_relation_id",
+		"DROP INDEX idx_way_bbox"
 	};
 	
-	private static final String ADD_CONSTRAINT_SQL[] = {
+	private static final String POST_LOAD_SQL[] = {
 		"ALTER TABLE ONLY node ADD CONSTRAINT pk_node PRIMARY KEY (id)",
 		"ALTER TABLE ONLY way ADD CONSTRAINT pk_way PRIMARY KEY (id)",
 		"ALTER TABLE ONLY way_node ADD CONSTRAINT pk_way_node PRIMARY KEY (way_id, sequence_id)",
@@ -66,7 +67,9 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"CREATE INDEX idx_node_tag_node_id ON node_tag USING btree (node_id)",
 		"CREATE INDEX idx_node_location ON node USING gist (coordinate)",
 		"CREATE INDEX idx_way_tag_way_id ON way_tag USING btree (way_id)",
-		"CREATE INDEX idx_relation_tag_relation_id ON relation_tag USING btree (relation_id)"
+		"CREATE INDEX idx_relation_tag_relation_id ON relation_tag USING btree (relation_id)",
+		"UPDATE way SET bbox = (SELECT Envelope(Collect(coordinate)) FROM node JOIN way_node ON way_node.node_id = node.id WHERE way_node.way_id = way.id)",
+		"CREATE INDEX idx_way_bbox ON way USING gist (bbox)"
 	};
 	
 	
@@ -301,11 +304,13 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			singleRelationMemberStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_RELATION_MEMBER);
 			
 			// Drop all constraints and indexes.
-			log.fine("Disabling indexes.");
-			for (int i = 0; i < DROP_CONSTRAINT_SQL.length; i++) {
-				dbCtx.executeStatement(DROP_CONSTRAINT_SQL[i]);
+			log.fine("Running pre-load SQL statements.");
+			for (int i = 0; i < PRE_LOAD_SQL.length; i++) {
+				log.finer("SQL: " + PRE_LOAD_SQL[i]);
+				dbCtx.executeStatement(PRE_LOAD_SQL[i]);
 			}
-			log.fine("Indexes disabled.");
+			log.fine("Pre-load SQL statements complete.");
+			log.fine("Loading data.");
 			
 			initialized = true;
 		}
@@ -974,6 +979,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	public void complete() {
 		initialize();
 		
+		log.fine("Flushing buffers.");
+		
 		flushNodes(true);
 		flushNodeTags(true);
 		flushWays(true);
@@ -983,14 +990,19 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		flushRelationTags(true);
 		flushRelationMembers(true);
 		
+		log.fine("Data load complete.");
+		
 		// Add all constraints and indexes.
-		log.fine("Enabling indexes.");
-		for (int i = 0; i < ADD_CONSTRAINT_SQL.length; i++) {
-			dbCtx.executeStatement(ADD_CONSTRAINT_SQL[i]);
+		log.fine("Running post-load SQL.");
+		for (int i = 0; i < POST_LOAD_SQL.length; i++) {
+			log.finer("SQL: " + POST_LOAD_SQL[i]);
+			dbCtx.executeStatement(POST_LOAD_SQL[i]);
 		}
-		log.fine("Indexes enabled.");
+		log.fine("Post-load SQL complete.");
 		
 		dbCtx.commit();
+		
+		log.fine("Commit complete");
 	}
 	
 	

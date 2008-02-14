@@ -20,11 +20,7 @@ CREATE TABLE node (
     user_name text NOT NULL,
     tstamp timestamp without time zone NOT NULL
 );
-
-
---SELECT AddGeometryColumn( 'node', 'coordinate', 4326, 'POINT', 2);
-SELECT AddGeometryColumn( 'node', 'coordinate', -1, 'POINT', 2);
-
+SELECT AddGeometryColumn('node', 'coordinate', -1, 'POINT', 2);
 
 CREATE TABLE node_tag (
     node_id bigint NOT NULL,
@@ -38,6 +34,7 @@ CREATE TABLE way (
     user_name text NOT NULL,
     tstamp timestamp without time zone NOT NULL
 );
+SELECT AddGeometryColumn('way', 'bbox', -1, 'GEOMETRY', 2);
 
 
 CREATE TABLE way_node (
@@ -99,6 +96,7 @@ CREATE INDEX idx_node_location ON node USING gist (coordinate);
 
 
 CREATE INDEX idx_way_tag_way_id ON way_tag USING btree (way_id);
+CREATE INDEX idx_way_bbox ON way USING gist (bbox);
 
 
 CREATE INDEX idx_relation_tag_relation_id ON relation_tag USING btree (relation_id);

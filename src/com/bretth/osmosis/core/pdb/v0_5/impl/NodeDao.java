@@ -158,27 +158,6 @@ public class NodeDao implements Releasable {
 	
 	
 	/**
-	 * Allows all data within a bounding box to be iterated across.
-	 * 
-	 * @param left
-	 *            The longitude marking the left edge of the bounding box.
-	 * @param right
-	 *            The longitude marking the right edge of the bounding box.
-	 * @param top
-	 *            The latitude marking the top edge of the bounding box.
-	 * @param bottom
-	 *            The latitude marking the bottom edge of the bounding box.
-	 * @param completeWays
-	 *            If true, all nodes within the ways will be returned even if
-	 *            they lie outside the box.
-	 * @return An iterator pointing to the start of the result data.
-	 */
-	public ReleasableIterator<Node> iterateBoundingBox(double left, double right, double top, double bottom, boolean completeWays) {
-		return null;
-	}
-	
-	
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
