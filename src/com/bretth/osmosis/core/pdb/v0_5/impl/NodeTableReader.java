@@ -15,28 +15,48 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 
 
 /**
- * Reads all nodes from a database ordered by their identifier. These nodes won't
- * be populated with tags.
+ * Reads nodes from a database ordered by their identifier. These nodes won't be
+ * populated with tags.
  * 
  * @author Brett Henderson
  */
 public class NodeTableReader extends BaseTableReader<Node> {
-	private static final String SELECT_SQL =
-		"SELECT id, user_name, tstamp, coordinate"
-		+ " FROM node"
-		+ " ORDER BY id";
+	private String sql;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param loginCredentials
-	 *            Contains all information required to connect to the database.
 	 * @param dbCtx
 	 *            The active connection to use for reading from the database.
 	 */
 	public NodeTableReader(DatabaseContext dbCtx) {
 		super(dbCtx);
+		
+		sql =
+			"SELECT n.id, n.user_name, n.tstamp, n.coordinate" +
+			" FROM node n" +
+			" ORDER BY n.id";
+	}
+	
+	
+	/**
+	 * Creates a new instance with a constrained search.
+	 * 
+	 * @param dbCtx
+	 *            The active connection to use for reading from the database.
+	 * @param constraintTable
+	 *            The table containing a column named id defining the list of
+	 *            entities to be returned.
+	 */
+	public NodeTableReader(DatabaseContext dbCtx, String constraintTable) {
+		super(dbCtx);
+		
+		sql =
+			"SELECT n.id, n.user_name, n.tstamp, n.coordinate" +
+			" FROM node n" +
+			" INNER JOIN " + constraintTable + " c ON n.id = c.id" +
+			" ORDER BY n.id";
 	}
 	
 	
@@ -45,7 +65,7 @@ public class NodeTableReader extends BaseTableReader<Node> {
 	 */
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-		return queryDbCtx.executeQuery(SELECT_SQL);
+		return queryDbCtx.executeQuery(sql);
 	}
 	
 	

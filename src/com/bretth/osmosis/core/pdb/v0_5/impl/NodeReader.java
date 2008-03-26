@@ -49,6 +49,31 @@ public class NodeReader implements ReleasableIterator<Node> {
 	
 	
 	/**
+	 * Creates a new instance.
+	 * 
+	 * @param dbCtx
+	 *            The database context to use for accessing the database.
+	 * @param constraintTable
+	 *            The table containing a column named id defining the list of
+	 *            entities to be returned.
+	 */
+	public NodeReader(DatabaseContext dbCtx, String constraintTable) {
+		// The postgres jdbc driver doesn't appear to allow concurrent result
+		// sets on the same connection so only the last opened result set may be
+		// streamed. The rest of the result sets must be persisted first.
+		nodeReader = new PersistentIterator<Node>(
+			new SingleClassObjectSerializationFactory(Node.class),
+			new NodeTableReader(dbCtx, constraintTable),
+			"nod",
+			true
+		);
+		nodeTagReader = new PeekableIterator<DBEntityTag>(
+			new EntityTagTableReader(dbCtx, "node_tag", "node_id", constraintTable)
+		);
+	}
+	
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public boolean hasNext() {

@@ -63,6 +63,39 @@ public class WayReader implements ReleasableIterator<Way> {
 	
 	
 	/**
+	 * Creates a new instance.
+	 * 
+	 * @param dbCtx
+	 *            The database context to use for accessing the database.
+	 * @param constraintTable
+	 *            The table containing a column named id defining the list of
+	 *            entities to be returned.
+	 */
+	public WayReader(DatabaseContext dbCtx, String constraintTable) {
+		// The postgres jdbc driver doesn't appear to allow concurrent result
+		// sets on the same connection so only the last opened result set may be
+		// streamed. The rest of the result sets must be persisted first.
+		wayReader = new PersistentIterator<Way>(
+			new SingleClassObjectSerializationFactory(Way.class),
+			new WayTableReader(dbCtx, constraintTable),
+			"way",
+			true
+		);
+		wayTagReader = new PeekableIterator<DBEntityTag>(
+			new PersistentIterator<DBEntityTag>(
+				new SingleClassObjectSerializationFactory(DBEntityTag.class),
+				new EntityTagTableReader(dbCtx, "way_tag", "way_id", constraintTable),
+				"waytag",
+				true
+			)
+		);
+		wayNodeReader = new PeekableIterator<DBWayNode>(
+			new WayNodeTableReader(dbCtx, constraintTable)
+		);
+	}
+	
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public boolean hasNext() {

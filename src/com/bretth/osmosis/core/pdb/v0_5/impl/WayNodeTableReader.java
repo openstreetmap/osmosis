@@ -18,10 +18,7 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
  * @author Brett Henderson
  */
 public class WayNodeTableReader extends BaseTableReader<DBWayNode> {
-	private static final String SELECT_SQL =
-		"SELECT way_id, node_id, sequence_id"
-		+ " FROM way_node"
-		+ " ORDER BY way_id";
+	private String sql;
 	
 	
 	/**
@@ -32,6 +29,31 @@ public class WayNodeTableReader extends BaseTableReader<DBWayNode> {
 	 */
 	public WayNodeTableReader(DatabaseContext dbCtx) {
 		super(dbCtx);
+		
+		sql =
+			"SELECT wn.way_id, wn.node_id, wn.sequence_id" +
+			" FROM way_node wn" +
+			" ORDER BY wn.way_id";
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param dbCtx
+	 *            The active connection to use for reading from the database.
+	 * @param constraintTable
+	 *            The table containing a column named id defining the list of
+	 *            entities to be returned.
+	 */
+	public WayNodeTableReader(DatabaseContext dbCtx, String constraintTable) {
+		super(dbCtx);
+		
+		sql =
+			"SELECT wn.way_id, wn.node_id, wn.sequence_id" +
+			" FROM way_node wn" +
+			" INNER JOIN " + constraintTable + " c ON wn.way_id = c.id" +
+			" ORDER BY wn.way_id";
 	}
 	
 	
@@ -40,7 +62,7 @@ public class WayNodeTableReader extends BaseTableReader<DBWayNode> {
 	 */
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-		return queryDbCtx.executeQuery(SELECT_SQL);
+		return queryDbCtx.executeQuery(sql);
 	}
 	
 	

@@ -18,22 +18,42 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
  * @author Brett Henderson
  */
 public class RelationTableReader extends BaseTableReader<Relation> {
-	private static final String SELECT_SQL =
-		"SELECT id, user_name, tstamp"
-		+ " FROM relation"
-		+ " ORDER BY id";
+	private String sql;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param loginCredentials
-	 *            Contains all information required to connect to the database.
 	 * @param dbCtx
 	 *            The active connection to use for reading from the database.
 	 */
 	public RelationTableReader(DatabaseContext dbCtx) {
 		super(dbCtx);
+		
+		sql =
+			"SELECT r.id, r.user_name, r.tstamp" +
+			" FROM relation r" +
+			" ORDER BY r.id";
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param dbCtx
+	 *            The active connection to use for reading from the database.
+	 * @param constraintTable
+	 *            The table containing a column named id defining the list of
+	 *            entities to be returned.
+	 */
+	public RelationTableReader(DatabaseContext dbCtx, String constraintTable) {
+		super(dbCtx);
+		
+		sql =
+			"SELECT r.id, r.user_name, r.tstamp" +
+			" FROM relation r" +
+			" INNER JOIN " + constraintTable + " c ON r.id = c.id" +
+			" ORDER BY r.id";
 	}
 	
 	
@@ -42,7 +62,7 @@ public class RelationTableReader extends BaseTableReader<Relation> {
 	 */
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-		return queryDbCtx.executeQuery(SELECT_SQL);
+		return queryDbCtx.executeQuery(sql);
 	}
 	
 	

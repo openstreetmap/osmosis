@@ -56,6 +56,36 @@ public class RelationReader implements ReleasableIterator<Relation> {
 	
 	
 	/**
+	 * Creates a new instance.
+	 * 
+	 * @param dbCtx
+	 *            The database context to use for accessing the database.
+	 * @param constraintTable
+	 *            The table containing a column named id defining the list of
+	 *            entities to be returned.
+	 */
+	public RelationReader(DatabaseContext dbCtx, String constraintTable) {
+		relationReader = new PersistentIterator<Relation>(
+			new SingleClassObjectSerializationFactory(Relation.class),
+			new RelationTableReader(dbCtx, constraintTable),
+			"rel",
+			true
+		);
+		relationTagReader = new PeekableIterator<DBEntityTag>(
+			new PersistentIterator<DBEntityTag>(
+				new SingleClassObjectSerializationFactory(DBEntityTag.class),
+				new EntityTagTableReader(dbCtx, "relation_tag", "relation_id", constraintTable),
+				"reltag",
+				true
+			)
+		);
+		relationMemberReader = new PeekableIterator<DBRelationMember>(
+			new RelationMemberTableReader(dbCtx, constraintTable)
+		);
+	}
+	
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public boolean hasNext() {

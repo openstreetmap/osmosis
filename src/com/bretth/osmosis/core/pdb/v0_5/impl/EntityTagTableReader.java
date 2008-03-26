@@ -19,13 +19,14 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
  * @author Brett Henderson
  */
 public class EntityTagTableReader extends BaseTableReader<DBEntityTag> {
-	private static final String SELECT_SQL_1 = "SELECT ";
-	private static final String SELECT_SQL_2 = " as entity_id, name, value FROM ";
-	private static final String SELECT_SQL_3 = " ORDER BY ";
+	private static final String SELECT_SQL_1 = "SELECT t.";
+	private static final String SELECT_SQL_2 = " as entity_id, t.name, t.value FROM ";
+	private static final String SELECT_SQL_3 = " t ";
+	private static final String SELECT_SQL_4 = " ORDER BY t.";
 	
 	
 	private String tableName;
-	private String idColumnName;
+	private String sql;
 	
 	
 	/**
@@ -42,7 +43,30 @@ public class EntityTagTableReader extends BaseTableReader<DBEntityTag> {
 		super(dbCtx);
 		
 		this.tableName = tableName;
-		this.idColumnName = idColumnName;
+		
+		sql = SELECT_SQL_1 + idColumnName + SELECT_SQL_2 + tableName + SELECT_SQL_3 + SELECT_SQL_4 + idColumnName;
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param dbCtx
+	 *            The active connection to use for reading from the database.
+	 * @param tableName
+	 *            The name of the table to query tag information from.
+	 * @param idColumnName
+	 *            The name of the column containing the entity id.
+	 * @param constraintTable
+	 *            The table containing a column named id defining the list of
+	 *            entities to be returned.
+	 */
+	public EntityTagTableReader(DatabaseContext dbCtx, String tableName, String idColumnName, String constraintTable) {
+		super(dbCtx);
+		
+		this.tableName = tableName;
+		
+		sql = SELECT_SQL_1 + idColumnName + SELECT_SQL_2 + tableName + SELECT_SQL_3 + "INNER JOIN " + constraintTable + " c ON t." + idColumnName + "=c.id" + SELECT_SQL_4 + idColumnName;
 	}
 	
 	
@@ -51,7 +75,7 @@ public class EntityTagTableReader extends BaseTableReader<DBEntityTag> {
 	 */
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-		return queryDbCtx.executeQuery(SELECT_SQL_1 + idColumnName + SELECT_SQL_2 + tableName + SELECT_SQL_3 + idColumnName);
+		return queryDbCtx.executeQuery(sql);
 	}
 	
 	

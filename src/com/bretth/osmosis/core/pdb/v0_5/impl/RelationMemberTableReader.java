@@ -19,10 +19,7 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
  * @author Brett Henderson
  */
 public class RelationMemberTableReader extends BaseTableReader<DBRelationMember> {
-	private static final String SELECT_SQL =
-		"SELECT relation_id, member_id, member_role, member_type"
-		+ " FROM relation_member"
-		+ " ORDER BY relation_id";
+	private String sql;
 	
 	
 	/**
@@ -33,6 +30,31 @@ public class RelationMemberTableReader extends BaseTableReader<DBRelationMember>
 	 */
 	public RelationMemberTableReader(DatabaseContext dbCtx) {
 		super(dbCtx);
+		
+		sql =
+			"SELECT rm.relation_id, rm.member_id, rm.member_role, rm.member_type"
+			+ " FROM relation_member rm"
+			+ " ORDER BY rm.relation_id";
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param dbCtx
+	 *            The active connection to use for reading from the database.
+	 * @param constraintTable
+	 *            The table containing a column named id defining the list of
+	 *            entities to be returned.
+	 */
+	public RelationMemberTableReader(DatabaseContext dbCtx, String constraintTable) {
+		super(dbCtx);
+		
+		sql =
+			"SELECT rm.relation_id, rm.member_id, rm.member_role, rm.member_type" +
+			" FROM relation_member rm" +
+			" INNER JOIN " + constraintTable + " c ON rm.relation_id = c.id" +
+			" ORDER BY rm.relation_id";
 	}
 	
 	
@@ -41,7 +63,7 @@ public class RelationMemberTableReader extends BaseTableReader<DBRelationMember>
 	 */
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-		return queryDbCtx.executeQuery(SELECT_SQL);
+		return queryDbCtx.executeQuery(sql);
 	}
 	
 	

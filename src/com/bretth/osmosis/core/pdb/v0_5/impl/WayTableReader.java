@@ -18,22 +18,42 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
  * @author Brett Henderson
  */
 public class WayTableReader extends BaseTableReader<Way> {
-	private static final String SELECT_SQL =
-		"SELECT id, user_name, tstamp"
-		+ " FROM way"
-		+ " ORDER BY id";
+	private String sql;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param loginCredentials
-	 *            Contains all information required to connect to the database.
 	 * @param dbCtx
 	 *            The active connection to use for reading from the database.
 	 */
 	public WayTableReader(DatabaseContext dbCtx) {
 		super(dbCtx);
+		
+		sql =
+			"SELECT w.id, w.user_name, w.tstamp" +
+			" FROM way w" +
+			" ORDER BY w.id";
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param dbCtx
+	 *            The active connection to use for reading from the database.
+	 * @param constraintTable
+	 *            The table containing a column named id defining the list of
+	 *            entities to be returned.
+	 */
+	public WayTableReader(DatabaseContext dbCtx, String constraintTable) {
+		super(dbCtx);
+		
+		sql =
+			"SELECT id, user_name, tstamp" +
+			" FROM way w" +
+			" INNER JOIN " + constraintTable + " c ON w.id = c.id" +
+			" ORDER BY w.id";
 	}
 	
 	
@@ -42,7 +62,7 @@ public class WayTableReader extends BaseTableReader<Way> {
 	 */
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-		return queryDbCtx.executeQuery(SELECT_SQL);
+		return queryDbCtx.executeQuery(sql);
 	}
 	
 	
