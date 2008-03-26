@@ -162,6 +162,10 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 		int rowCount;
 		List<ReleasableIterator<EntityContainer>> resultSets;
 		
+		if (!initialized) {
+			initialize();
+		}
+		
 		try {
 			// Create a temporary table capable of holding node ids.
 			dbCtx.executeStatement("CREATE TEMPORARY TABLE box_node_list (id bigint PRIMARY KEY) ON COMMIT DROP");
