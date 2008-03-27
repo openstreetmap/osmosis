@@ -1,6 +1,7 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.pdb.v0_5.impl;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
@@ -21,6 +22,9 @@ public class MemberTypeValueMapper {
 		EntityType[] entityTypes;
 		
 		entityTypes = EntityType.values();
+		
+		entityToMemberMap = new HashMap<EntityType, Byte>(entityTypes.length);
+		memberToEntityMap = new HashMap<Byte, EntityType>(entityTypes.length);
 		
 		for (byte memberType = 0; memberType < entityTypes.length; memberType++) {
 			EntityType entityType;
