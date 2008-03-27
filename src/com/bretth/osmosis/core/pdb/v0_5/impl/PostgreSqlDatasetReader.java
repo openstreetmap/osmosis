@@ -175,11 +175,12 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			dbCtx.executeStatement("CREATE TEMPORARY TABLE box_relation_list (id bigint PRIMARY KEY) ON COMMIT DROP");
 			
 			// Build a polygon representing the bounding box.
-			bboxPoints = new Point[4];
+			bboxPoints = new Point[5];
 			bboxPoints[0] = new Point(left, bottom);
 			bboxPoints[1] = new Point(left, top);
 			bboxPoints[2] = new Point(right, top);
 			bboxPoints[3] = new Point(right, bottom);
+			bboxPoints[4] = new Point(left, bottom);
 			bboxPolygon = new Polygon(new LinearRing[] {new LinearRing(bboxPoints)});
 			
 			// Instantiate the mapper for converting between entity types and
@@ -200,13 +201,14 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			// The outer query constrains the query to the linestrings inside the bounding box.  These aren't indexed but the inner query
 			// way bbox constraint will minimise the unnecessary data.
 			preparedStatement = dbCtx.prepareStatement(
+				"INSERT INTO box_way_list " +
 				"SELECT way_id FROM (" +
 				"SELECT c.way_id AS way_id, MakeLine(c.coordinate) AS way_line FROM (" +
-				"SELECT w.id AS way_id, n.coordinate AS coordinate FROM node n INNER JOIN way_node wn ON n.id = wn.node_id INNER JOIN way w ON wn.way_id = w.id WHERE w.bbox && ? ORDER BY wn.way_id, wn.sequence_id" +
-				") c" +
+				"SELECT w.id AS way_id, n.coordinate AS coordinate FROM node n INNER JOIN way_node wn ON n.id = wn.node_id INNER JOIN way w ON wn.way_id = w.id WHERE (w.bbox && ?) ORDER BY wn.way_id, wn.sequence_id" +
+				") c " +
 				"GROUP BY c.way_id" +
-				") w" +
-				"WHERE w.way_line && ?"
+				") w " +
+				"WHERE (w.way_line && ?)"
 			);
 			prmIndex = 1;
 			preparedStatement.setObject(prmIndex++, new PGgeometry(bboxPolygon));
@@ -218,8 +220,8 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			// Select all relations containing the nodes or ways into the relation table.
 			preparedStatement = dbCtx.prepareStatement(
 				"INSERT INTO box_relation_list (" +
-				"SELECT rm.relation_id AS relation_id FROM relation_member rm INNER JOIN box_node_list n ON rm.member_id = n.id WHERE rm.member_type = ?" +
-				"UNION" +
+				"SELECT rm.relation_id AS relation_id FROM relation_member rm INNER JOIN box_node_list n ON rm.member_id = n.id WHERE rm.member_type = ? " +
+				"UNION " +
 				"SELECT rm.relation_id AS relation_id FROM relation_member rm INNER JOIN box_way_list w ON rm.member_id = w.id WHERE rm.member_type = ?" +
 				")"
 			);
@@ -234,8 +236,9 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			// relation table and repeat until no more inclusions occur.
 			do {
 				preparedStatement = dbCtx.prepareStatement(
-					"SELECT rm.relation_id AS relation_id FROM relation_member rm INNER JOIN box_relation_list r ON rm.member_id = r.id WHERE rm.member_type = ?" +
-					"EXCEPT" +
+					"INSERT INTO box_relation_list " +
+					"SELECT rm.relation_id AS relation_id FROM relation_member rm INNER JOIN box_relation_list r ON rm.member_id = r.id WHERE rm.member_type = ? " +
+					"EXCEPT " +
 					"SELECT id AS relation_id FROM box_relation_list"
 				);
 				prmIndex = 1;
@@ -248,13 +251,12 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			// If complete ways is set, select all nodes contained by the ways into the node temp table.
 			if (completeWays) {
 				preparedStatement = dbCtx.prepareStatement(
-					"SELECT n.id AS node_id FROM node n INNER JOIN way_node wn ON n.id = wn.node_id INNER JOIN box_way_list bw ON wn.way_id = bw.id" +
-					"EXCEPT" +
+					"INSERT INTO box_node_list " +
+					"SELECT wn.node_id AS id FROM way_node wn INNER JOIN box_way_list bw ON wn.way_id = bw.id " +
+					"EXCEPT " +
 					"SELECT id AS node_id FROM box_node_list"
 				);
 				prmIndex = 1;
-				preparedStatement.setObject(prmIndex++, new PGgeometry(bboxPolygon));
-				preparedStatement.setObject(prmIndex++, new PGgeometry(bboxPolygon));
 				preparedStatement.executeUpdate();
 				preparedStatement.close();
 				preparedStatement = null;
