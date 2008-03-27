@@ -50,7 +50,7 @@ public class WayTableReader extends BaseTableReader<Way> {
 		super(dbCtx);
 		
 		sql =
-			"SELECT id, user_name, tstamp" +
+			"SELECT w.id, w.user_name, w.tstamp" +
 			" FROM way w" +
 			" INNER JOIN " + constraintTable + " c ON w.id = c.id" +
 			" ORDER BY w.id";
