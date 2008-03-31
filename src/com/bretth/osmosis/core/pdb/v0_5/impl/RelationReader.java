@@ -100,7 +100,7 @@ public class RelationReader implements ReleasableIterator<Relation> {
 			while (relationTagReader.hasNext()) {
 				DBEntityTag relationTag;
 				
-				relationTag = relationTagReader.next();
+				relationTag = relationTagReader.peekNext();
 				
 				if (relationTag.getEntityId() < relationId) {
 					relationTagReader.next();
@@ -125,6 +125,11 @@ public class RelationReader implements ReleasableIterator<Relation> {
 				} else {
 					break;
 				}
+			}
+			
+			// Load all members matching this version of the relation.
+			while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getRelationId() == relationId) {
+				relation.addMember(relationMemberReader.next().getRelationMember());
 			}
 			
 			nextValue = relation;

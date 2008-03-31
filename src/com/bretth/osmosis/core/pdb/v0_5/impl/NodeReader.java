@@ -88,7 +88,7 @@ public class NodeReader implements ReleasableIterator<Node> {
 			while (nodeTagReader.hasNext()) {
 				DBEntityTag nodeTag;
 				
-				nodeTag = nodeTagReader.next();
+				nodeTag = nodeTagReader.peekNext();
 				
 				if (nodeTag.getEntityId() < nodeId) {
 					nodeTagReader.next();

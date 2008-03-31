@@ -175,6 +175,8 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			dbCtx.executeStatement("CREATE TEMPORARY TABLE box_relation_list (id bigint PRIMARY KEY) ON COMMIT DROP");
 			
 			// Build a polygon representing the bounding box.
+			// Sample box for query testing may be:
+			// GeomFromText('POLYGON((144.93912192855174 -37.82981987499741, 144.93912192855174 -37.79310006709244, 144.98188026000003 -37.79310006709244, 144.98188026000003 -37.82981987499741, 144.93912192855174 -37.82981987499741))', -1)
 			bboxPoints = new Point[5];
 			bboxPoints[0] = new Point(left, bottom);
 			bboxPoints[1] = new Point(left, top);

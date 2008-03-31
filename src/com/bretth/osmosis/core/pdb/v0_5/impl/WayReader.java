@@ -111,7 +111,7 @@ public class WayReader implements ReleasableIterator<Way> {
 			while (wayTagReader.hasNext()) {
 				DBEntityTag wayTag;
 				
-				wayTag = wayTagReader.next();
+				wayTag = wayTagReader.peekNext();
 				
 				if (wayTag.getEntityId() < wayId) {
 					wayTagReader.next();

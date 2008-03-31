@@ -23,7 +23,7 @@ public class DatasetBoundingBoxFilterFactory extends TaskManagerFactory {
 	private static final double DEFAULT_BOTTOM = -90;
 	private static final String ARG_COMPLETE_WAYS = "completeWays";
 	private static final boolean DEFAULT_COMPLETE_WAYS = false;
-
+	
 	
 	/**
 	 * {@inheritDoc}

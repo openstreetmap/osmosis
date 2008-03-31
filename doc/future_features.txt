@@ -1,4 +1,4 @@
-**********
+********** DONE
 Fix problems with current command line default pipe feature where sometimes
 you have to explicitly specify pipes.
 
@@ -67,7 +67,7 @@ Add referential integrity checking to database writing code.
 **********
 Add a task for reading and writing changes from JOSM style change files.
 
-**********
+********** DONE
 A new cron or daemon run osmosis-extract application for producing regular changesets (ie. daily snapshots or perhaps even less).
 
 ********** DONE
