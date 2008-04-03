@@ -21,7 +21,6 @@ import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.domain.v0_5.Entity;
-import com.bretth.osmosis.core.domain.v0_5.EntityType;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.RelationMember;
@@ -31,6 +30,7 @@ import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.mysql.v0_5.impl.DBEntityTag;
 import com.bretth.osmosis.core.mysql.v0_5.impl.DBRelationMember;
 import com.bretth.osmosis.core.mysql.v0_5.impl.DBWayNode;
+import com.bretth.osmosis.core.pdb.v0_5.impl.MemberTypeValueMapper;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.task.v0_5.Sink;
@@ -238,6 +238,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private PreparedStatement bulkRelationTagStatement;
 	private PreparedStatement singleRelationMemberStatement;
 	private PreparedStatement bulkRelationMemberStatement;
+	private MemberTypeValueMapper memberTypeValueMapper;
 	private int uncommittedEntityCount;
 	
 	
@@ -269,6 +270,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		relationBuffer = new ArrayList<Relation>();
 		relationTagBuffer = new ArrayList<DBEntityTag>();
 		relationMemberBuffer = new ArrayList<DBRelationMember>();
+		
+		memberTypeValueMapper = new MemberTypeValueMapper();
 		
 		uncommittedEntityCount = 0;
 		
@@ -473,9 +476,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	private int populateRelationMemberParameters(PreparedStatement statement, int initialIndex, DBRelationMember dbRelationMember) {
 		int prmIndex;
-		EntityType[] entityTypes;
-		
-		entityTypes = EntityType.values();
 		
 		prmIndex = initialIndex;
 		
@@ -483,11 +483,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			// statement parameters.
 			statement.setLong(prmIndex++, dbRelationMember.getRelationId());
 			statement.setLong(prmIndex++, dbRelationMember.getRelationMember().getMemberId());
-			for (byte i = 0; i < entityTypes.length; i++) {
-				if (entityTypes[i].equals(dbRelationMember.getRelationMember().getMemberType())) {
-					statement.setByte(prmIndex++, i);
-				}
-			}
+			statement.setByte(prmIndex++, memberTypeValueMapper.getMemberType(dbRelationMember.getRelationMember().getMemberType()));
 			statement.setString(prmIndex++, dbRelationMember.getRelationMember().getMemberRole());
 			
 		} catch (SQLException e) {
