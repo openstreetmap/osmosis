@@ -6,6 +6,7 @@ ALTER TABLE relation DROP CONSTRAINT pk_relation;
 DROP INDEX idx_node_tag_node_id;
 DROP INDEX idx_node_location;
 DROP INDEX idx_way_tag_way_id;
+DROP INDEX idx_way_node_node_id;
 DROP INDEX idx_relation_tag_relation_id;
 DROP INDEX idx_way_bbox;
 
@@ -27,6 +28,7 @@ ALTER TABLE ONLY relation ADD CONSTRAINT pk_relation PRIMARY KEY (id);
 CREATE INDEX idx_node_tag_node_id ON node_tag USING btree (node_id);
 CREATE INDEX idx_node_location ON node USING gist (coordinate);
 CREATE INDEX idx_way_tag_way_id ON way_tag USING btree (way_id);
+CREATE INDEX idx_way_node_node_id ON way_node USING btree (node_id);
 CREATE INDEX idx_relation_tag_relation_id ON relation_tag USING btree (relation_id);
 
 -- Update the bbox column of the way table.

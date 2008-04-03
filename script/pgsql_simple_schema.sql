@@ -115,6 +115,7 @@ CREATE INDEX idx_node_location ON node USING gist (coordinate);
 
 CREATE INDEX idx_way_tag_way_id ON way_tag USING btree (way_id);
 CREATE INDEX idx_way_bbox ON way USING gist (bbox);
+CREATE INDEX idx_way_node_node_id ON way_node USING btree (node_id);
 
 
 CREATE INDEX idx_relation_tag_relation_id ON relation_tag USING btree (relation_id);
