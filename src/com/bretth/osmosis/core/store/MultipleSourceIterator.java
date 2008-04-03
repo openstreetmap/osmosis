@@ -1,11 +1,10 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.customdb.v0_5.impl;
+package com.bretth.osmosis.core.store;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**

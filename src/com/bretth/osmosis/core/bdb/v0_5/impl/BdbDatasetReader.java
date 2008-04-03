@@ -11,13 +11,13 @@ import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.RelationContainerIterator;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainerIterator;
-import com.bretth.osmosis.core.customdb.v0_5.impl.MultipleSourceIterator;
-import com.bretth.osmosis.core.customdb.v0_5.impl.UpcastIterator;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.filter.v0_5.impl.BaseDatasetReader;
+import com.bretth.osmosis.core.store.MultipleSourceIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.store.UpcastIterator;
 
 
 /**

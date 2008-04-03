@@ -20,8 +20,6 @@ import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.RelationContainerIterator;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainerIterator;
-import com.bretth.osmosis.core.customdb.v0_5.impl.MultipleSourceIterator;
-import com.bretth.osmosis.core.customdb.v0_5.impl.UpcastIterator;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.domain.v0_5.EntityType;
@@ -31,7 +29,9 @@ import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.pdb.v0_5.PostgreSqlVersionConstants;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
+import com.bretth.osmosis.core.store.MultipleSourceIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.store.UpcastIterator;
 
 
 /**

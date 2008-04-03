@@ -20,9 +20,11 @@ import com.bretth.osmosis.core.mysql.common.TileCalculator;
 import com.bretth.osmosis.core.store.IndexStoreReader;
 import com.bretth.osmosis.core.store.IntegerLongIndexElement;
 import com.bretth.osmosis.core.store.LongLongIndexElement;
+import com.bretth.osmosis.core.store.MultipleSourceIterator;
 import com.bretth.osmosis.core.store.RandomAccessObjectStoreReader;
 import com.bretth.osmosis.core.store.ReleasableAdaptorForIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.store.UpcastIterator;
 
 
 /**

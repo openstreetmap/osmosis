@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 /**
  * A container for completable objects that require complete and release calls
  * to be performed as a unit.

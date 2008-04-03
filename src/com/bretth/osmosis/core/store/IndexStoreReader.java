@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 
 
-
 /**
  * Provides read-only access to an index store. Each thread accessing the object
  * store must create its own reader. The reader maintains all references to
