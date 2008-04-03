@@ -13,6 +13,8 @@ import com.bretth.osmosis.core.customdb.v0_5.WriteDatasetFactory;
 import com.bretth.osmosis.core.filter.v0_5.BoundingBoxFilterFactory;
 import com.bretth.osmosis.core.filter.v0_5.DatasetBoundingBoxFilterFactory;
 import com.bretth.osmosis.core.filter.v0_5.PolygonFilterFactory;
+import com.bretth.osmosis.core.filter.v0_5.UsedNodeFilterFactory;
+import com.bretth.osmosis.core.filter.v0_5.WayKeyValueFilterFactory;
 import com.bretth.osmosis.core.merge.v0_5.ChangeMergerFactory;
 import com.bretth.osmosis.core.merge.v0_5.EntityMergerFactory;
 import com.bretth.osmosis.core.misc.v0_5.NullChangeWriterFactory;
@@ -157,6 +159,10 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("rps", new PostgreSqlDatasetReaderFactory());
 		TaskManagerFactory.register("write-pgsql-simple-change", new PostgreSqlChangeWriterFactory());
 		TaskManagerFactory.register("wpsc", new PostgreSqlChangeWriterFactory());
+		TaskManagerFactory.register("used-node", new UsedNodeFilterFactory());
+		TaskManagerFactory.register("un", new UsedNodeFilterFactory());
+		TaskManagerFactory.register("way-key-value", new WayKeyValueFilterFactory());
+		TaskManagerFactory.register("wkv", new WayKeyValueFilterFactory());
 		
 		TaskManagerFactory.register("apply-change-0.5", new ChangeApplierFactory());
 		TaskManagerFactory.register("bounding-box-0.5", new BoundingBoxFilterFactory());
@@ -201,5 +207,7 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("write-pgsql-simple-dump-0.5", new PostgreSqlDatasetDumpWriterFactory());
 		TaskManagerFactory.register("read-pgsql-simple-0.5", new PostgreSqlDatasetReaderFactory());
 		TaskManagerFactory.register("write-pgsql-simple-change-0.5", new PostgreSqlChangeWriterFactory());
+		TaskManagerFactory.register("used-node-0.5", new UsedNodeFilterFactory());
+		TaskManagerFactory.register("way-key-value-0.5", new WayKeyValueFilterFactory());
 	}
 }

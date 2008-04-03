@@ -22,6 +22,7 @@ Added a new dataset task --truncate-pgsql-simple for truncating all PostgreSQL d
 Added a new dataset task --read-pgsql-simple for reading from a PostgreSQL implementation of a dataset.
 Added a new dataset task --dataset-bounding-box for extracting a bounding box from a dataset.
 Added a new dataset task --dataset-dump for dumping the entire contents of a dataset.
+Added new --used-node and --way-key-value tasks for filtering ways and their associated nodes with specific tags.
 
 0.24
 Fixed a bug in the XML node writing code where it would write a ',' character instead of '.' as the decimal separator in some locales.
