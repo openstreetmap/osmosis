@@ -18,7 +18,7 @@ import com.bretth.osmosis.core.domain.v0_5.RelationMember;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.domain.v0_5.WayNode;
-import com.bretth.osmosis.core.mysql.common.DatabaseContext;
+import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.task.common.ChangeAction;
 
 
@@ -38,19 +38,19 @@ public class ChangeWriter {
 		"DELETE FROM node_tag WHERE node_id = ?";
 	private static final String UPDATE_NODE_WAY_BBOX =
 		"UPDATE way w SET bbox = (" +
-		"SELECT Envelope(Collect(n.coordinate))" +
-		"FROM node n JOIN way_node wn ON wn.node_id = n.id" +
-		"WHERE wn.way_id = w.id" +
-		")" +
-		"WHERE w.id IN (" +
-		"SELECT w.id FROM way w INNER JOIN way_node wn ON w.id = wn.way_id WHERE wn.node_id = ? GROUP BY w.id" +
-		")";
+		" SELECT Envelope(Collect(n.coordinate))" +
+		" FROM node n INNER JOIN way_node wn ON wn.node_id = n.id" +
+		" WHERE wn.way_id = w.id" +
+		" )" +
+		" WHERE w.id IN (" +
+		" SELECT w.id FROM way w INNER JOIN way_node wn ON w.id = wn.way_id WHERE wn.node_id = ? GROUP BY w.id" +
+		" )";
 	private static final String INSERT_SQL_WAY =
-		"INSERT INTO way (id, user_name, stamp) VALUES (?, ?, ?)";
+		"INSERT INTO way (id, user_name, tstamp) VALUES (?, ?, ?)";
 	private static final String DELETE_SQL_WAY =
 		"DELETE FROM way WHERE id = ?";
 	private static final String INSERT_SQL_WAY_TAG =
-		"INSERT INTO way_tag (id, name, value) VALUES (?, ?, ?)";
+		"INSERT INTO way_tag (way_id, name, value) VALUES (?, ?, ?)";
 	private static final String DELETE_SQL_WAY_TAG =
 		"DELETE FROM way_tag WHERE way_id = ?";
 	private static final String INSERT_SQL_WAY_NODE =
@@ -69,7 +69,7 @@ public class ChangeWriter {
 	private static final String DELETE_SQL_RELATION =
 		"DELETE FROM relation WHERE id = ?";
 	private static final String INSERT_SQL_RELATION_TAG =
-		"INSERT INTO relation_tag (id, name, value) VALUES (?, ?, ?)";
+		"INSERT INTO relation_tag (relation_id, name, value) VALUES (?, ?, ?)";
 	private static final String DELETE_SQL_RELATION_TAG =
 		"DELETE FROM relation_tag WHERE relation_id = ?";
 	private static final String INSERT_SQL_RELATION_MEMBER =
@@ -126,14 +126,14 @@ public class ChangeWriter {
 	private int populateEntityParameters(PreparedStatement statement, Entity entity) {
 		int prmIndex;
 		
-		prmIndex = 1;
-		
 		// We can't write an entity with a null timestamp.
 		if (entity.getTimestamp() == null) {
 			throw new OsmosisRuntimeException("Entity(" + entity.getType() + ") " + entity.getId() + " does not have a timestamp set.");
 		}
 		
 		try {
+			prmIndex = 1;
+			
 			statement.setLong(prmIndex++, entity.getId());
 			statement.setString(prmIndex++, entity.getUser());
 			statement.setTimestamp(prmIndex++, new Timestamp(entity.getTimestamp().getTime()));
@@ -159,10 +159,10 @@ public class ChangeWriter {
 	private void writeEntityTags(PreparedStatement statement, Entity entity) {
 		int prmIndex;
 		
-		prmIndex = 1;
-		
 		for (Tag tag : entity.getTagList()) {
 			try {
+				prmIndex = 1;
+				
 				statement.setLong(prmIndex++, entity.getId());
 				statement.setString(prmIndex++, tag.getKey());
 				statement.setString(prmIndex++, tag.getValue());
@@ -302,14 +302,14 @@ public class ChangeWriter {
 			
 			writeEntityTags(insertWayTagStatement, way);
 			
-			prmIndex = 1;
-			
 			wayNodeList = way.getWayNodeList();
 			for (int i = 0; i < wayNodeList.size(); i++) {
 				WayNode wayNode;
 				
 				wayNode = wayNodeList.get(i);
 				try {
+					prmIndex = 1;
+					
 					insertWayNodeStatement.setLong(prmIndex++, way.getId());
 					insertWayNodeStatement.setLong(prmIndex++, wayNode.getNodeId());
 					insertWayNodeStatement.setInt(prmIndex++, i);
@@ -393,14 +393,13 @@ public class ChangeWriter {
 			
 			writeEntityTags(insertRelationTagStatement, relation);
 			
-			prmIndex = 1;
-			
 			memberList = relation.getMemberList();
 			for (int i = 0; i < memberList.size(); i++) {
 				RelationMember member;
 				
 				member = memberList.get(i);
 				try {
+					prmIndex = 1;
 					insertRelationMemberStatement.setLong(prmIndex++, relation.getId());
 					insertRelationMemberStatement.setLong(prmIndex++, member.getMemberId());
 					insertRelationMemberStatement.setByte(prmIndex++, memberTypeValueMapper.getMemberType(member.getMemberType()));
