@@ -15,11 +15,6 @@ import com.bretth.osmosis.core.pipeline.v0_5.SinkManager;
  * @author Brett Henderson
  */
 public class PostgreSqlDatasetWriterFactory extends DatabaseTaskManagerFactory {
-	private static final String ARG_LOCK_TABLES = "lockTables";
-	private static final String ARG_POPULATE_CURRENT_TABLES = "populateCurrentTables";
-	private static final boolean DEFAULT_LOCK_TABLES = true;
-	private static final boolean DEFAULT_POPULATE_CURRENT_TABLES = true;
-	
 	
 	/**
 	 * {@inheritDoc}
@@ -28,18 +23,14 @@ public class PostgreSqlDatasetWriterFactory extends DatabaseTaskManagerFactory {
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		DatabaseLoginCredentials loginCredentials;
 		DatabasePreferences preferences;
-		boolean lockTables;
-		boolean populateCurrentTables;
 		
 		// Get the task arguments.
 		loginCredentials = getDatabaseLoginCredentials(taskConfig);
 		preferences = getDatabasePreferences(taskConfig);
-		lockTables = getBooleanArgument(taskConfig, ARG_LOCK_TABLES, DEFAULT_LOCK_TABLES);
-		populateCurrentTables = getBooleanArgument(taskConfig, ARG_POPULATE_CURRENT_TABLES, DEFAULT_POPULATE_CURRENT_TABLES);
 		
 		return new SinkManager(
 			taskConfig.getId(),
-			new PostgreSqlWriter(loginCredentials, preferences, lockTables, populateCurrentTables),
+			new PostgreSqlWriter(loginCredentials, preferences),
 			taskConfig.getPipeArgs()
 		);
 	}

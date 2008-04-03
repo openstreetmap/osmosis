@@ -249,13 +249,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 *            Contains all information required to connect to the database.
 	 * @param preferences
 	 *            Contains preferences configuring database behaviour.
-	 * @param lockTables
-	 *            If true, all tables will be locked during loading.
-	 * @param populateCurrentTables
-	 *            If true, the current tables will be populated as well as
-	 *            history tables.
 	 */
-	public PostgreSqlWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean lockTables, boolean populateCurrentTables) {
+	public PostgreSqlWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
 		this.preferences = preferences;
 		
 		dbCtx = new DatabaseContext(loginCredentials);
