@@ -6,7 +6,7 @@
 	
 	<!-- set global properties for this build -->
 	<property name="project.name" value="osmosis"/>
-	<property name="project.version" value="0.24.3"/>
+	<property name="project.version" value="0.24.4"/>
 	
 	<!-- Define a classpath containing all lib jars. -->
 	<path id="libclasspath">
@@ -115,9 +115,14 @@
 			</fileset>
 		</copy>
 		
-		<!-- Copy scripts into the distribution. -->
+		<!-- Copy binary launch scripts into the distribution. -->
 		<copy todir="build/dist/bin">
 			<fileset dir="bin"/>
+		</copy>
+		
+		<!-- Copy utility scripts into the distribution. -->
+		<copy todir="build/dist/script">
+			<fileset dir="script"/>
 		</copy>
 		
 		<!-- Copy readme file. -->
@@ -126,6 +131,10 @@
 		<copy todir="build/dist" file="changes.txt"/>
 		<!-- Copy build script. -->
 		<copy todir="build/dist" file="build.xml"/>
+		<!-- Copy copying.txt file. -->
+		<copy todir="build/dist" file="copying.txt"/>
+		<!-- Copy gpl.txt file. -->
+		<copy todir="build/dist" file="gpl.txt"/>
 		
 		<!-- Create the distribution zip file. -->
 		<mkdir dir="dist"/>
