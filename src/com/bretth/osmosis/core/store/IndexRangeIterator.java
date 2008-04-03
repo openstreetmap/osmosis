@@ -1,11 +1,10 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.customdb.v0_5.impl;
+package com.bretth.osmosis.core.store;
 
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.bretth.osmosis.core.store.IndexElement;
 
 /**
  * Iterates over specific range within an index source. It will skip records until

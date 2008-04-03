@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import com.bretth.osmosis.core.customdb.v0_5.impl.IndexRangeIterator;
 
 
 /**

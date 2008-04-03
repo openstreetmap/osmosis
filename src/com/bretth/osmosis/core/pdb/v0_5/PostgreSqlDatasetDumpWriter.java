@@ -11,7 +11,6 @@ import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
 import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
-import com.bretth.osmosis.core.customdb.v0_5.impl.CompletableContainer;
 import com.bretth.osmosis.core.domain.v0_5.EntityType;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
@@ -20,6 +19,7 @@ import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.pgsql.common.CopyFileWriter;
+import com.bretth.osmosis.core.store.CompletableContainer;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 
 

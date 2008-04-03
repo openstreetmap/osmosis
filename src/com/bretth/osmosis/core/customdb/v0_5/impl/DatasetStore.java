@@ -22,6 +22,7 @@ import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.merge.v0_5.impl.SortedEntityPipeValidator;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
 import com.bretth.osmosis.core.store.ComparableComparator;
+import com.bretth.osmosis.core.store.CompletableContainer;
 import com.bretth.osmosis.core.store.IndexStore;
 import com.bretth.osmosis.core.store.IndexStoreReader;
 import com.bretth.osmosis.core.store.LongLongIndexElement;
