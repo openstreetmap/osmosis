@@ -1,8 +1,6 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core;
 
-import com.bretth.osmosis.core.bdb.v0_5.BdbReaderFactory;
-import com.bretth.osmosis.core.bdb.v0_5.BdbWriterFactory;
 import com.bretth.osmosis.core.buffer.v0_5.ChangeBufferFactory;
 import com.bretth.osmosis.core.buffer.v0_5.EntityBufferFactory;
 import com.bretth.osmosis.core.change.v0_5.ChangeApplierFactory;
@@ -143,10 +141,6 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("dbb", new DatasetBoundingBoxFilterFactory());
 		TaskManagerFactory.register("dataset-dump", new DumpDatasetFactory());
 		TaskManagerFactory.register("dd", new DumpDatasetFactory());
-		TaskManagerFactory.register("write-bdb", new BdbWriterFactory());
-		TaskManagerFactory.register("wb", new BdbWriterFactory());
-		TaskManagerFactory.register("read-bdb", new BdbReaderFactory());
-		TaskManagerFactory.register("rb", new BdbReaderFactory());
 		TaskManagerFactory.register("read-customdb", new ReadDatasetFactory());
 		TaskManagerFactory.register("rc", new ReadDatasetFactory());
 		TaskManagerFactory.register("write-pgsql-simple", new PostgreSqlDatasetWriterFactory());
@@ -199,8 +193,6 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("write-customdb-0.5", new WriteDatasetFactory());
 		TaskManagerFactory.register("dataset-bounding-box-0.5", new DatasetBoundingBoxFilterFactory());
 		TaskManagerFactory.register("dataset-dump-0.5", new DumpDatasetFactory());
-		TaskManagerFactory.register("write-bdb-0.5", new BdbWriterFactory());
-		TaskManagerFactory.register("read-bdb-0.5", new BdbReaderFactory());
 		TaskManagerFactory.register("read-customdb-0.5", new ReadDatasetFactory());
 		TaskManagerFactory.register("write-pgsql-simple-0.5", new PostgreSqlDatasetWriterFactory());
 		TaskManagerFactory.register("truncate-pgsql-simple-0.5", new PostgreSqlDatasetTruncatorFactory());
