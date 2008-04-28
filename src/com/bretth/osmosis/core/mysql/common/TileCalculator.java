@@ -31,8 +31,8 @@ public class TileCalculator {
 		int y;
 		long tile;
 		
-		x = (int) Math.round((longitude + 180) * 65536 / 360);
-		y = (int) Math.round((latitude + 90) * 65536 / 180);
+		x = (int) Math.round((longitude + 180) * 65535 / 360);
+		y = (int) Math.round((latitude + 90) * 65535 / 180);
 		
 		tile = 0;
 		

@@ -1,5 +1,6 @@
 0.26
 Removed the bdb dataset implementation.
+Fixed an incorrect constant bug in the mysql tile calculator causing incorrect tile values to be generated. 
 
 0.25
 Added a new osmosis-extract-mysql application for extracting regular changesets from mysql.
