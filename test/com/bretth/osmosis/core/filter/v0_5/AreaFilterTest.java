@@ -13,7 +13,7 @@ import org.junit.Test;
 import com.bretth.osmosis.core.container.v0_5.*;
 import com.bretth.osmosis.core.domain.v0_5.*;
 import com.bretth.osmosis.core.filter.common.IdTrackerType;
-import com.bretth.osmosis.test.task.SinkEntityInspector;
+import com.bretth.osmosis.test.task.v0_5.SinkEntityInspector;
 
 
 public class AreaFilterTest {

@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.test.task;
+package com.bretth.osmosis.test.task.v0_5;
 
 import java.util.Collections;
 import java.util.LinkedList;

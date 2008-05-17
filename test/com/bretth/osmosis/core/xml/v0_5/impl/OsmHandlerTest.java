@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_5.Bound;
-import com.bretth.osmosis.test.task.SinkEntityInspector;
+import com.bretth.osmosis.test.task.v0_5.SinkEntityInspector;
 
 /**
  * Not sure how to go about unit testing this. The individual parser classes seem to require a lot

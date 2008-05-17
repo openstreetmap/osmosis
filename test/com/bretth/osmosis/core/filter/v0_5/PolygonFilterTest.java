@@ -14,7 +14,7 @@ import com.bretth.osmosis.core.container.v0_5.BoundContainer;
 import com.bretth.osmosis.core.domain.v0_5.Bound;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.filter.common.IdTrackerType;
-import com.bretth.osmosis.test.task.SinkEntityInspector;
+import com.bretth.osmosis.test.task.v0_5.SinkEntityInspector;
 
 public class PolygonFilterTest {
 
