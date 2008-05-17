@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.pgsql.common.v0_6;
+package com.bretth.osmosis.core.pgsql.v0_6;
 
 import java.io.File;
 import java.util.Map.Entry;
@@ -10,9 +10,9 @@ import com.bretth.osmosis.core.container.v0_6.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_6.NodeContainer;
 import com.bretth.osmosis.core.container.v0_6.RelationContainer;
 import com.bretth.osmosis.core.container.v0_6.WayContainer;
-import com.bretth.osmosis.core.pgsql.common.v0_6.impl.AllocatingUserIdManager;
-import com.bretth.osmosis.core.pgsql.common.v0_6.impl.NodeCopyFileWriter;
-import com.bretth.osmosis.core.pgsql.common.v0_6.impl.UserFileWriter;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.AllocatingUserIdManager;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.NodeCopyFileWriter;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.UserFileWriter;
 import com.bretth.osmosis.core.task.v0_6.Sink;
 
 

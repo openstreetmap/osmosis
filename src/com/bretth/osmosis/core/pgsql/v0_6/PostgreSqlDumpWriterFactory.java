@@ -1,12 +1,12 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.pgsql.common.v0_5;
+package com.bretth.osmosis.core.pgsql.v0_6;
 
 import java.io.File;
 
 import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
-import com.bretth.osmosis.core.pipeline.v0_5.SinkManager;
+import com.bretth.osmosis.core.pipeline.v0_6.SinkManager;
 
 
 /**

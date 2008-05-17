@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.pgsql.common.v0_6;
+package com.bretth.osmosis.core.pgsql.v0_5;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -10,21 +10,21 @@ import java.util.List;
 import org.postgresql.geometric.PGpoint;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.container.v0_6.BoundContainer;
-import com.bretth.osmosis.core.container.v0_6.EntityContainer;
-import com.bretth.osmosis.core.container.v0_6.EntityProcessor;
-import com.bretth.osmosis.core.container.v0_6.NodeContainer;
-import com.bretth.osmosis.core.container.v0_6.RelationContainer;
-import com.bretth.osmosis.core.container.v0_6.WayContainer;
+import com.bretth.osmosis.core.container.v0_5.BoundContainer;
+import com.bretth.osmosis.core.container.v0_5.EntityContainer;
+import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
+import com.bretth.osmosis.core.container.v0_5.NodeContainer;
+import com.bretth.osmosis.core.container.v0_5.RelationContainer;
+import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
-import com.bretth.osmosis.core.domain.v0_6.Node;
-import com.bretth.osmosis.core.domain.v0_6.Tag;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityTag;
+import com.bretth.osmosis.core.domain.v0_5.Node;
+import com.bretth.osmosis.core.domain.v0_5.Tag;
+import com.bretth.osmosis.core.mysql.v0_5.impl.DBEntityTag;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.pgsql.common.UserIdManager;
-import com.bretth.osmosis.core.task.v0_6.Sink;
+import com.bretth.osmosis.core.task.v0_5.Sink;
 
 
 /**
