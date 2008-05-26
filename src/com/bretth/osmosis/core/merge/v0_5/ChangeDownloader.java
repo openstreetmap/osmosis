@@ -25,7 +25,7 @@ import com.bretth.osmosis.core.pipeline.common.TaskRunner;
 import com.bretth.osmosis.core.task.v0_5.ChangeSink;
 import com.bretth.osmosis.core.task.v0_5.RunnableChangeSource;
 import com.bretth.osmosis.core.util.FileBasedLock;
-import com.bretth.osmosis.core.xml.common.CompressionMethodDeriver;
+import com.bretth.osmosis.core.xml.common.CompressionMethod;
 import com.bretth.osmosis.core.xml.common.DateParser;
 import com.bretth.osmosis.core.xml.v0_5.XmlChangeReader;
 import com.bretth.osmosis.extract.mysql.TimestampTracker;
@@ -173,6 +173,7 @@ public class ChangeDownloader implements RunnableChangeSource {
 			for (int bytesRead = source.read(buffer); bytesRead > 0; bytesRead = source.read(buffer)) {
 				sink.write(buffer, 0, bytesRead);
 			}
+			sink.flush();
 			
 			// Clean up all file handles.
 			inputStream.close();
@@ -211,7 +212,6 @@ public class ChangeDownloader implements RunnableChangeSource {
 		DownloaderConfiguration configuration;
 		TimestampTracker timestampTracker;
 		ChangesetFileNameFormatter fileNameFormatter;
-		CompressionMethodDeriver compressionMethodDeriver;
 		Date currentTime;
 		Date maximumTime;
 		URL baseUrl;
@@ -230,7 +230,6 @@ public class ChangeDownloader implements RunnableChangeSource {
 			configuration.getChangeFileBeginFormat(),
 			configuration.getChangeFileEndFormat()
 		);
-		compressionMethodDeriver = new CompressionMethodDeriver();
 		
 		// Create the base url.
 		try {
@@ -275,7 +274,7 @@ public class ChangeDownloader implements RunnableChangeSource {
 			changeReader = new XmlChangeReader(
 				tmpFile,
 				true,
-				compressionMethodDeriver.deriveCompressionMethod(tmpFile.getName())
+				CompressionMethod.GZip
 			);
 			
 			// If tasks already exist, a change merge task must be used to merge
@@ -300,44 +299,55 @@ public class ChangeDownloader implements RunnableChangeSource {
 			}
 		}
 		
-		// Create task runners for each of the tasks to provide thread
-		// management.
-		taskRunners = new ArrayList<TaskRunner>(tasks.size());
-		for (int i = 0; i < tasks.size(); i++) {
-			taskRunners.add(new TaskRunner(tasks.get(i), "Thread-" + taskId + "-worker" + i));
-		}
-		
-		// Launch all of the tasks.
-		for (int i = 0; i < taskRunners.size(); i++) {
-			TaskRunner taskRunner;
+		// We only need to execute sub-threads if tasks exist, otherwise we must
+		// notify the sink that we have completed.
+		if (tasks.size() > 0) {
+			// Connect the last task to the change sink.
+			tasks.get(tasks.size() - 1).setChangeSink(changeSink);
 			
-			taskRunner = taskRunners.get(i);
-			
-			log.fine("Launching changeset worker + " + i + " in a new thread.");
-			
-			taskRunner.start();
-		}
-		
-		// Wait for all the tasks to complete.
-		tasksSuccessful = true;
-		for (int i = 0; i < taskRunners.size(); i++) {
-			TaskRunner taskRunner;
-			
-			taskRunner = taskRunners.get(i);
-			
-			log.fine("Waiting for changeset worker " + i + " to complete.");
-			
-			try {
-				taskRunner.join();
-			} catch (InterruptedException e) {
-				// Do nothing.
+			// Create task runners for each of the tasks to provide thread
+			// management.
+			taskRunners = new ArrayList<TaskRunner>(tasks.size());
+			for (int i = 0; i < tasks.size(); i++) {
+				taskRunners.add(new TaskRunner(tasks.get(i), "Thread-" + taskId + "-worker" + i));
 			}
 			
-			if (!taskRunner.isSuccessful()) {
-				log.log(Level.SEVERE, "Changeset worker " + i + " failed", taskRunner.getException());
+			// Launch all of the tasks.
+			for (int i = 0; i < taskRunners.size(); i++) {
+				TaskRunner taskRunner;
 				
-				tasksSuccessful = false;
+				taskRunner = taskRunners.get(i);
+				
+				log.fine("Launching changeset worker + " + i + " in a new thread.");
+				
+				taskRunner.start();
 			}
+			
+			// Wait for all the tasks to complete.
+			tasksSuccessful = true;
+			for (int i = 0; i < taskRunners.size(); i++) {
+				TaskRunner taskRunner;
+				
+				taskRunner = taskRunners.get(i);
+				
+				log.fine("Waiting for changeset worker " + i + " to complete.");
+				
+				try {
+					taskRunner.join();
+				} catch (InterruptedException e) {
+					// Do nothing.
+				}
+				
+				if (!taskRunner.isSuccessful()) {
+					log.log(Level.SEVERE, "Changeset worker " + i + " failed", taskRunner.getException());
+					
+					tasksSuccessful = false;
+				}
+			}
+			
+		} else {
+			changeSink.complete();
+			tasksSuccessful = true;
 		}
 		
 		// Remove the temporary files.
