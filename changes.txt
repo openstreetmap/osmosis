@@ -1,3 +1,5 @@
+0.28
+
 0.27
 Added change downloader tasks providing the basis for automatic synchronisation of data sets.
 
