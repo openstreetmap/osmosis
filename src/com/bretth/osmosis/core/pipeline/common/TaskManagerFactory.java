@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.cli.TaskConfiguration;
@@ -308,6 +309,46 @@ public abstract class TaskManagerFactory {
 			}
 		} else {
 			return defaultValue;
+		}
+	}
+	
+	
+	/**
+	 * Utility method for retrieving a date argument value from a Map of task
+	 * arguments.
+	 * 
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
+	 * @param argName
+	 *            The name of the argument.
+	 * @param timeZone
+	 *            The time zone to parse the date in.
+	 * @return The value of the argument.
+	 */
+	protected Date getDateArgument(TaskConfiguration taskConfig, 
+			String argName, TimeZone timeZone) {
+		Map<String, String> configArgs;
+		
+		configArgs = taskConfig.getConfigArgs();
+		
+		if (configArgs.containsKey(argName)) {
+			try {
+				SimpleDateFormat dateFormat;
+				
+				dateFormat = new SimpleDateFormat(DATE_FORMAT, DATE_LOCALE);
+				dateFormat.setTimeZone(timeZone);
+				
+				return dateFormat.parse(configArgs.get(argName));
+				
+			} catch (ParseException e) {
+				throw new OsmosisRuntimeException(
+					"Argument " + argName + " for task " + taskConfig.getId()
+					+ " must be a date in format " + DATE_FORMAT + ".", e);
+			}
+		} else {
+			throw new OsmosisRuntimeException("Argument " + argName
+					+ " for task " + taskConfig.getId() + " does not exist.");
 		}
 	}
 	

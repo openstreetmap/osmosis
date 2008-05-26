@@ -1,6 +1,7 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core;
 
+
 import com.bretth.osmosis.core.buffer.v0_6.ChangeBufferFactory;
 import com.bretth.osmosis.core.buffer.v0_6.EntityBufferFactory;
 import com.bretth.osmosis.core.change.v0_6.ChangeApplierFactory;
@@ -13,6 +14,8 @@ import com.bretth.osmosis.core.filter.v0_6.DatasetBoundingBoxFilterFactory;
 import com.bretth.osmosis.core.filter.v0_6.PolygonFilterFactory;
 import com.bretth.osmosis.core.filter.v0_6.UsedNodeFilterFactory;
 import com.bretth.osmosis.core.filter.v0_6.WayKeyValueFilterFactory;
+import com.bretth.osmosis.core.merge.v0_5.ChangeDownloadInitializerFactory;
+import com.bretth.osmosis.core.merge.v0_5.ChangeDownloaderFactory;
 import com.bretth.osmosis.core.merge.v0_6.ChangeMergerFactory;
 import com.bretth.osmosis.core.merge.v0_6.EntityMergerFactory;
 import com.bretth.osmosis.core.misc.v0_6.NullChangeWriterFactory;
@@ -164,6 +167,10 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("un", new com.bretth.osmosis.core.filter.v0_5.UsedNodeFilterFactory());
 		TaskManagerFactory.register("way-key-value", new com.bretth.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
 		TaskManagerFactory.register("wkv", new com.bretth.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
+		TaskManagerFactory.register("read-change-interval", new ChangeDownloaderFactory());
+		TaskManagerFactory.register("rci", new ChangeDownloaderFactory());
+		TaskManagerFactory.register("read-change-interval-init", new ChangeDownloadInitializerFactory());
+		TaskManagerFactory.register("rcii", new ChangeDownloadInitializerFactory());
 		
 		TaskManagerFactory.register("apply-change-0.5", new com.bretth.osmosis.core.change.v0_5.ChangeApplierFactory());
 		TaskManagerFactory.register("bounding-box-0.5", new com.bretth.osmosis.core.filter.v0_5.BoundingBoxFilterFactory());
@@ -208,6 +215,8 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("write-pgsql-simple-change-0.5", new com.bretth.osmosis.core.pdb.v0_5.PostgreSqlChangeWriterFactory());
 		TaskManagerFactory.register("used-node-0.5", new com.bretth.osmosis.core.filter.v0_5.UsedNodeFilterFactory());
 		TaskManagerFactory.register("way-key-value-0.5", new com.bretth.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
+		TaskManagerFactory.register("read-change-interval-0.5", new ChangeDownloaderFactory());
+		TaskManagerFactory.register("read-change-interval-init-0.5", new ChangeDownloadInitializerFactory());
 		
 		TaskManagerFactory.register("apply-change-0.6", new ChangeApplierFactory());
 		TaskManagerFactory.register("bounding-box-0.6", new BoundingBoxFilterFactory());

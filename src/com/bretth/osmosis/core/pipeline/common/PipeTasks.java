@@ -151,7 +151,7 @@ public class PipeTasks {
 		
 		// Ensure the task is of the correct type.
 		if (!verifyPipeType(requiredTaskType, task)) {
-			throw new OsmosisRuntimeException("Task " + taskId + " does not support data provided by default pipe stored at level " + defaultTasks.size() + " in the default pipe stack.");
+			throw new OsmosisRuntimeException("Task " + taskId + " does not support data provided by default pipe stored at level " + (defaultTasks.size() + 1) + " in the default pipe stack.");
 		}
 		
 		if (log.isLoggable(Level.FINE)) {

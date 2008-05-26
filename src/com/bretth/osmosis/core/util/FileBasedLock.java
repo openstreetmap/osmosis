@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.extract.mysql;
+package com.bretth.osmosis.core.util;
 
 import java.io.File;
 import java.io.FileOutputStream;

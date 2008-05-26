@@ -14,10 +14,7 @@ import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 public abstract class XmlTaskManagerFactory extends TaskManagerFactory {
 	private static final String ARG_COMPRESSION_METHOD = "compressionMethod";
 	private static final String ARG_ENCODING_HACK = "encodingHack";
-	private static final CompressionMethod DEFAULT_COMPRESSION_METHOD = CompressionMethod.None;
 	private static final boolean DEFAULT_ENCODING_HACK = false;
-	private static final String FILE_SUFFIX_GZIP = ".gz";
-	private static final String FILE_SUFFIX_BZIP2 = ".bz2";
 	
 	
 	/**
@@ -54,13 +51,7 @@ public abstract class XmlTaskManagerFactory extends TaskManagerFactory {
 			}
 			
 		} else {
-			if (fileName.endsWith(FILE_SUFFIX_GZIP)) {
-				result = CompressionMethod.GZip;
-			} else if (fileName.endsWith(FILE_SUFFIX_BZIP2)) {
-				result = CompressionMethod.BZip2;
-			} else {
-				result = DEFAULT_COMPRESSION_METHOD;
-			}
+			result = new CompressionMethodDeriver().deriveCompressionMethod(fileName);
 		}
 		
 		return result;

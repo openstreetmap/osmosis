@@ -2,19 +2,16 @@
 package com.bretth.osmosis.extract.mysql;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisConstants;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.util.FileBasedLock;
+import com.bretth.osmosis.core.util.ResourceFileManager;
 
 
 /**
@@ -24,14 +21,13 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  */
 public class OsmosisExtractMysql {
 	
-	private static final Logger log = Logger.getLogger(OsmosisExtractMysql.class.getName());
-	
-	
 	private static final File LOCK_FILE = new File("osmosis-extract-mysql.lock");
 	private static final File CONFIG_FILE = new File("osmosis-extract-mysql.conf");
+	private static final File DATA_DIR = new File("data");
 	private static final File TSTAMP_FILE = new File("timestamp.txt");
 	private static final File TSTAMP_NEW_FILE = new File("timestampnew.txt");
-	private static final File DATA_DIR = new File("data");
+	private static final File DATA_TSTAMP_FILE = new File("data/timestamp.txt");
+	private static final File DATA_TSTAMP_NEW_FILE = new File("data/timestampnew.txt");
 	
 	private static final String CONFIG_RESOURCE = "osmosis-extract-mysql.conf";
 	
@@ -62,7 +58,7 @@ public class OsmosisExtractMysql {
 			
 			new OsmosisExtractMysql(args).run();
 			
-			fileLock.release();
+			fileLock.unlock();
 			
 			success = true;
 			
@@ -129,12 +125,24 @@ public class OsmosisExtractMysql {
 	
 	
 	/**
-	 * Creates a timestamp tracker object.
+	 * Creates a timestamp tracker object for persisting the currently extracted
+	 * timestamp.
 	 * 
 	 * @return The timestamp tracker.
 	 */
 	private TimestampTracker getTimestampTracker() {
 		return new TimestampTracker(TSTAMP_FILE, TSTAMP_NEW_FILE);
+	}
+	
+	
+	/**
+	 * Creates a timestamp tracker object for persisting the currently extracted
+	 * timestamp into the data directory for consumers to download.
+	 * 
+	 * @return The timestamp tracker.
+	 */
+	private TimestampTracker getDataTimestampSetter() {
+		return new TimestampTracker(DATA_TSTAMP_FILE, DATA_TSTAMP_NEW_FILE);
 	}
 	
 	
@@ -182,62 +190,6 @@ public class OsmosisExtractMysql {
 	
 	
 	/**
-	 * Copies a packaged resource to a file on the file system.
-	 * 
-	 * @param sourceResource
-	 *            The input resource.
-	 * @param destinationFile
-	 *            The output file.
-	 */
-	private void copyResourceToFile(String sourceResource, File destinationFile) {
-		InputStream is = null;
-		OutputStream os = null;
-		
-		try {
-			byte buffer[];
-			int bytesRead;
-			
-			buffer = new byte[4096];
-			
-			is = getClass().getResourceAsStream(sourceResource);
-			os = new FileOutputStream(destinationFile);
-			
-			while (true) {
-				bytesRead = is.read(buffer);
-				
-				// Stop reading if no more data is available.
-				if (bytesRead < 0) {
-					break;
-				}
-				
-				os.write(buffer, 0, bytesRead);
-			}
-			
-			is.close();
-			os.close();
-			
-		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to copy resource " + sourceResource + " to file " + destinationFile);
-		} finally {
-			if (is != null) {
-				try {
-					is.close();
-				} catch (Exception e) {
-					log.warning("Unable to close input stream for resource " + sourceResource);
-				}
-			}
-			if (os != null) {
-				try {
-					os.close();
-				} catch (Exception e) {
-					log.warning("Unable to close output stream for file " + destinationFile);
-				}
-			}
-		}
-	}
-	
-	
-	/**
 	 * Initialises the current working directory.
 	 * 
 	 * @param args
@@ -248,6 +200,7 @@ public class OsmosisExtractMysql {
 	private void initializeCommand(String args[], int initialArgIndex) {
 		int currentArgIndex;
 		Date initialExtractDate;
+		ResourceFileManager resourceFileManager;
 		
 		// Get the command line arguments.
 		currentArgIndex = initialArgIndex;
@@ -256,7 +209,8 @@ public class OsmosisExtractMysql {
 		if (CONFIG_FILE.exists()) {
 			throw new OsmosisRuntimeException("Config file " + CONFIG_FILE + " already exists.");
 		}
-		copyResourceToFile(CONFIG_RESOURCE, CONFIG_FILE);
+		resourceFileManager = new ResourceFileManager();
+		resourceFileManager.copyResourceToFile(getClass(), CONFIG_RESOURCE, CONFIG_FILE);
 		
 		if (!DATA_DIR.exists()) {
 			if (!DATA_DIR.mkdir()) {
@@ -302,12 +256,14 @@ public class OsmosisExtractMysql {
 	private void extractCommand() {
 		Configuration configuration;
 		TimestampTracker timestampTracker;
+		TimestampTracker dataTimestampSetter;
 		long extractTime;
 		long maximumExtractTime;
 		long nextExtractTime;
 		
 		configuration = getConfiguration();
 		timestampTracker = getTimestampTracker();
+		dataTimestampSetter = getDataTimestampSetter();
 		
 		// Determine the last extraction time.
 		extractTime = timestampTracker.getTime().getTime();
@@ -335,10 +291,11 @@ public class OsmosisExtractMysql {
 			extractor = new IntervalExtractor(configuration, DATA_DIR, intervalBegin, intervalEnd);
 			extractor.run();
 			
-			// Update and persist the latest extract timestamp.
+			// Update and persist the latest extract timestamp to both the
+			// working directory and the output data directory.
 			extractTime = nextExtractTime;
 			timestampTracker.setTime(new Date(extractTime));
-			
+			dataTimestampSetter.setTime(new Date(extractTime));
 		}
 	}
 }

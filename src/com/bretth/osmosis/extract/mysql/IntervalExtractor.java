@@ -2,14 +2,12 @@
 package com.bretth.osmosis.extract.mysql;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
+import com.bretth.osmosis.core.merge.v0_5.impl.ChangesetFileNameFormatter;
 import com.bretth.osmosis.core.mysql.v0_5.MysqlChangeReader;
 import com.bretth.osmosis.core.xml.common.CompressionMethod;
 import com.bretth.osmosis.core.xml.v0_5.XmlChangeWriter;
@@ -57,27 +55,22 @@ public class IntervalExtractor {
 		MysqlChangeReader reader;
 		XmlChangeWriter writer;
 		String fileName;
-		SimpleDateFormat beginDateFormat;
-		SimpleDateFormat endDateFormat;
-		TimeZone utcTimezone;
 		File tmpFile;
 		File file;
 		
-		beginDateFormat = new SimpleDateFormat(config.getChangeFileBeginFormat(), Locale.US);
-		endDateFormat = new SimpleDateFormat(config.getChangeFileEndFormat(), Locale.US);
-		utcTimezone = TimeZone.getTimeZone("UTC");
-		beginDateFormat.setTimeZone(utcTimezone);
-		endDateFormat.setTimeZone(utcTimezone);
+		// Generate the changeset file name.
+		fileName = new ChangesetFileNameFormatter(
+			config.getChangeFileBeginFormat(),
+			config.getChangeFileEndFormat()
+		).generateFileName(
+			intervalBegin,
+			intervalEnd
+		);
 		
 		// Generate the temporary output file.
 		tmpFile = new File(baseDirectory, TMP_FILE_NAME);
 		
-		// Generate the final file.
-		fileName =
-			beginDateFormat.format(intervalBegin) +
-			"-" +
-			endDateFormat.format(intervalEnd) +
-			".osc.gz";
+		// Generate the changeset output file.
 		file = new File(baseDirectory, fileName);
 		
 		// Create the output task to write to a compressed xml file.
