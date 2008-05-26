@@ -215,6 +215,8 @@ public class ChangeDownloader implements RunnableChangeSource {
 		Date currentTime;
 		Date maximumTime;
 		URL baseUrl;
+		int maxDownloadCount;
+		int downloadCount;
 		ArrayList<File> tmpFileList;
 		ArrayList<RunnableChangeSource> tasks;
 		ArrayList<TaskRunner> taskRunners;
@@ -247,7 +249,9 @@ public class ChangeDownloader implements RunnableChangeSource {
 		maximumTime = getServerTimestamp(baseUrl);
 		
 		// Process until all files have been retrieved from the server.
-		while (currentTime.before(maximumTime)) {
+		maxDownloadCount = configuration.getMaxDownloadCount();
+		downloadCount = 0;
+		while ((maxDownloadCount == 0 || downloadCount < maxDownloadCount) && currentTime.before(maximumTime)) {
 			Date nextTime;
 			String downloadFileName;
 			

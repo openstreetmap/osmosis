@@ -19,6 +19,7 @@ public class DownloaderConfiguration {
 	private static final String KEY_CHANGE_FILE_BEGIN_FORMAT = "changeFileBeginFormat";
 	private static final String KEY_CHANGE_FILE_END_FORMAT = "changeFileEndFormat";
 	private static final String KEY_INTERVAL_LENGTH = "intervalLength";
+	private static final String KEY_MAX_DOWNLOAD_COUNT = "maxDownloadCount";
 	
 	
 	private Properties properties;
@@ -106,5 +107,15 @@ public class DownloaderConfiguration {
 	 */
 	public int getIntervalLength() {
 		return Integer.parseInt(properties.getProperty(KEY_INTERVAL_LENGTH)) * 1000;
+	}
+	
+	
+	/**
+	 * Returns the maximum number of files to download in a single invocation.
+	 * 
+	 * @return The maximum download count.
+	 */
+	public int getMaxDownloadCount() {
+		return Integer.parseInt(properties.getProperty(KEY_MAX_DOWNLOAD_COUNT));
 	}
 }

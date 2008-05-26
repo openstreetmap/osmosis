@@ -261,7 +261,7 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("write-pgsql-simple-change-0.6", new PostgreSqlChangeWriterFactory());
 		TaskManagerFactory.register("used-node-0.6", new UsedNodeFilterFactory());
 		TaskManagerFactory.register("way-key-value-0.6", new WayKeyValueFilterFactory());
-		TaskManagerFactory.register("read-change-interval", new ChangeDownloaderFactory());
-		TaskManagerFactory.register("read-change-interval-init", new ChangeDownloadInitializerFactory());
+		TaskManagerFactory.register("read-change-interval-0.6", new ChangeDownloaderFactory());
+		TaskManagerFactory.register("read-change-interval-init-0.6", new ChangeDownloadInitializerFactory());
 	}
 }

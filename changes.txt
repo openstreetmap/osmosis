@@ -1,4 +1,6 @@
 0.28
+Added a maximum file download count feature to the change downloader to limit processing overhead when synchronising long time intervals. 
+Fixed a major error in the TaskRegistrar from 0.27 where multiple tasks had the same name preventing osmosis from launching.
 
 0.27
 Added change downloader tasks providing the basis for automatic synchronisation of data sets.
