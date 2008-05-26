@@ -67,7 +67,15 @@ public class DownloaderConfiguration {
 	 * @return The download URL.
 	 */
 	public String getBaseUrl() {
-		return properties.getProperty(KEY_BASE_URL);
+		String baseUrl;
+		
+		baseUrl = properties.getProperty(KEY_BASE_URL);
+		
+		if (!baseUrl.substring(baseUrl.length() - 1).equals("/")) {
+			baseUrl += "/";
+		}
+		
+		return baseUrl;
 	}
 	
 	
