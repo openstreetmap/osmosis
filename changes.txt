@@ -1,3 +1,6 @@
+0.29
+Fixed the --write-pgsql-simple-dump task to properly escape '\' characters. 
+
 0.28
 Added a maximum file download count feature to the change downloader to limit processing overhead when synchronising long time intervals. 
 Fixed a major error in the TaskRegistrar from 0.27 where multiple tasks had the same name preventing osmosis from launching.

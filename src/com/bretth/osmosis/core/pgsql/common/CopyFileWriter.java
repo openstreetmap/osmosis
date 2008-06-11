@@ -159,6 +159,9 @@ public class CopyFileWriter implements Completable {
 			currentChar = dataArray[i];
 			
 			switch (currentChar) {
+			case '\\': // Slash
+				result.append("\\\\");
+				break;
 			case 8: // Backspace
 				result.append("\\b");
 				break;
