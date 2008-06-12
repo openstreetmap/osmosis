@@ -52,12 +52,12 @@ REM Change back to the original directory
 cd %SAVEDIR%
 
 REM MAINCLASS=com.bretth.osmosis.core.Osmosis
-REM EXEC="$JAVACMD -cp $MYAPP_HOME/osmosis.jar:$MYAPP_HOME/lib/mysql-connector-java-5.0.7-bin.jar:$MYAPP_HOME/lib/postgresql-8.2-506.jdbc4.jar $MAINCLASS $@"
+REM EXEC="$JAVACMD -cp $MYAPP_HOME/osmosis.jar:$MYAPP_HOME/lib/mysql-connector-java-5.0.7-bin.jar:$MYAPP_HOME/lib/postgresql-8.3-603.jdbc4.jar:$MYAPP_HOME/lib/postgis_1.3.2.jar $MAINCLASS $@"
 REM 
 REM #echo $EXEC
 REM exec $EXEC
 set MAINCLASS=com.bretth.osmosis.core.Osmosis
 
-SET EXEC=%JAVACMD% -cp %MYAPP_HOME%\osmosis.jar;%MYAPP_HOME%\lib\mysql-connector-java-5.0.7-bin.jar;%MYAPP_HOME%\lib\postgresql-8.2-506.jdbc4.jar %MAINCLASS% %*
+SET EXEC=%JAVACMD% -cp %MYAPP_HOME%\osmosis.jar;%MYAPP_HOME%\lib\mysql-connector-java-5.0.7-bin.jar;%MYAPP_HOME%\lib\postgresql-8.3-603.jdbc4.jar;%MYAPP_HOME%\lib\postgis_1.3.2.jar %MAINCLASS% %*
 
 %EXEC%

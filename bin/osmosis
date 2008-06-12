@@ -36,7 +36,7 @@ cd "$saveddir"
 #echo "myapp is installed in $MYAPP_HOME"
 
 MAINCLASS=com.bretth.osmosis.core.Osmosis
-EXEC="$JAVACMD -cp $MYAPP_HOME/osmosis.jar:$MYAPP_HOME/lib/mysql-connector-java-5.0.7-bin.jar:$MYAPP_HOME/lib/postgresql-8.2-506.jdbc4.jar $MAINCLASS $@"
+EXEC="$JAVACMD -cp $MYAPP_HOME/osmosis.jar:$MYAPP_HOME/lib/mysql-connector-java-5.0.7-bin.jar:$MYAPP_HOME/lib/postgresql-8.3-603.jdbc4.jar:$MYAPP_HOME/lib/postgis_1.3.2.jar $MAINCLASS $@"
 
 #echo $EXEC
 exec $EXEC
