@@ -3,8 +3,6 @@ package com.bretth.osmosis.core.pdb.v0_5;
 
 import java.io.File;
 
-import org.postgis.Point;
-
 import com.bretth.osmosis.core.container.v0_5.BoundContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
@@ -18,6 +16,7 @@ import com.bretth.osmosis.core.domain.v0_5.RelationMember;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.domain.v0_5.WayNode;
+import com.bretth.osmosis.core.pdb.common.PointBuilder;
 import com.bretth.osmosis.core.pgsql.common.CopyFileWriter;
 import com.bretth.osmosis.core.store.CompletableContainer;
 import com.bretth.osmosis.core.task.v0_5.Sink;
@@ -50,6 +49,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 	private CopyFileWriter relationWriter;
 	private CopyFileWriter relationTagWriter;
 	private CopyFileWriter relationMemberWriter;
+	private PointBuilder pointBuilder;
 	
 	
 	/**
@@ -69,6 +69,8 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		relationWriter = writerContainer.add(new CopyFileWriter(new File(filePrefix, RELATION_SUFFIX)));
 		relationTagWriter = writerContainer.add(new CopyFileWriter(new File(filePrefix, RELATION_TAG_SUFFIX)));
 		relationMemberWriter = writerContainer.add(new CopyFileWriter(new File(filePrefix, RELATION_MEMBER_SUFFIX)));
+		
+		pointBuilder = new PointBuilder();
 	}
 	
 	
@@ -99,7 +101,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		nodeWriter.writeField(node.getId());
 		nodeWriter.writeField(node.getUser());
 		nodeWriter.writeField(node.getTimestamp());
-		nodeWriter.writeField(new Point(node.getLongitude(), node.getLatitude()));
+		nodeWriter.writeField(pointBuilder.createPoint(node.getLatitude(), node.getLongitude()));
 		nodeWriter.endRecord();
 		
 		for (Tag tag : node.getTagList()) {
@@ -120,24 +122,27 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		
 		way = wayContainer.getEntity();
 		
-		wayWriter.writeField(way.getId());
-		wayWriter.writeField(way.getUser());
-		wayWriter.writeField(way.getTimestamp());
-		wayWriter.endRecord();
-		
-		for (Tag tag : way.getTagList()) {
-			wayTagWriter.writeField(way.getId());
-			wayTagWriter.writeField(tag.getKey());
-			wayTagWriter.writeField(tag.getValue());
-			wayTagWriter.endRecord();
-		}
-		
-		sequenceId = 0;
-		for (WayNode wayNode : way.getWayNodeList()) {
-			wayNodeWriter.writeField(way.getId());
-			wayNodeWriter.writeField(wayNode.getNodeId());
-			wayNodeWriter.writeField(sequenceId++);
-			wayNodeWriter.endRecord();
+		// Ignore ways with a single node because they can't be loaded into postgis.
+		if (way.getWayNodeList().size() > 1) {
+			wayWriter.writeField(way.getId());
+			wayWriter.writeField(way.getUser());
+			wayWriter.writeField(way.getTimestamp());
+			wayWriter.endRecord();
+			
+			for (Tag tag : way.getTagList()) {
+				wayTagWriter.writeField(way.getId());
+				wayTagWriter.writeField(tag.getKey());
+				wayTagWriter.writeField(tag.getValue());
+				wayTagWriter.endRecord();
+			}
+			
+			sequenceId = 0;
+			for (WayNode wayNode : way.getWayNodeList()) {
+				wayNodeWriter.writeField(way.getId());
+				wayNodeWriter.writeField(wayNode.getNodeId());
+				wayNodeWriter.writeField(sequenceId++);
+				wayNodeWriter.endRecord();
+			}
 		}
 	}
 	

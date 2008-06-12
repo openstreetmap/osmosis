@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.postgis.PGgeometry;
-import org.postgis.Point;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.container.v0_6.BoundContainer;
@@ -30,6 +29,7 @@ import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityTag;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBRelationMember;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBWayNode;
+import com.bretth.osmosis.core.pdb.common.PointBuilder;
 import com.bretth.osmosis.core.pdb.v0_6.impl.MemberTypeValueMapper;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
@@ -240,6 +240,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private PreparedStatement bulkRelationMemberStatement;
 	private MemberTypeValueMapper memberTypeValueMapper;
 	private int uncommittedEntityCount;
+	private PointBuilder pointBuilder;
 	
 	
 	/**
@@ -267,6 +268,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		relationMemberBuffer = new ArrayList<DBRelationMember>();
 		
 		memberTypeValueMapper = new MemberTypeValueMapper();
+		pointBuilder = new PointBuilder();
 		
 		uncommittedEntityCount = 0;
 		
@@ -418,7 +420,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		
 		try {
 			// Set the node level parameters.
-			statement.setObject(prmIndex++, new PGgeometry(new Point(node.getLongitude(), node.getLatitude())));
+			statement.setObject(prmIndex++, new PGgeometry(pointBuilder.createPoint(node.getLatitude(), node.getLongitude())));
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for node " + node.getId() + ".", e);
@@ -1038,6 +1040,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(WayContainer wayContainer) {
+		// Ignore ways with a single node because they can't be loaded into postgis.
 		wayBuffer.add(wayContainer.getEntity());
 		
 		flushWays(false);

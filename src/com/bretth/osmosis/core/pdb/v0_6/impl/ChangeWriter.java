@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import org.postgis.PGgeometry;
-import org.postgis.Point;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
@@ -18,6 +17,7 @@ import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
+import com.bretth.osmosis.core.pdb.common.PointBuilder;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.task.common.ChangeAction;
 
@@ -99,6 +99,7 @@ public class ChangeWriter {
 	private PreparedStatement insertRelationMemberStatement;
 	private PreparedStatement deleteRelationMemberStatement;
 	private MemberTypeValueMapper memberTypeValueMapper;
+	private PointBuilder pointBuilder;
 	
 	
 	/**
@@ -111,6 +112,7 @@ public class ChangeWriter {
 		dbCtx = new DatabaseContext(loginCredentials);
 		
 		memberTypeValueMapper = new MemberTypeValueMapper();
+		pointBuilder = new PointBuilder();
 	}
 	
 	
@@ -221,14 +223,14 @@ public class ChangeWriter {
 		if (ChangeAction.Create.equals(action) || ChangeAction.Modify.equals(action)) {
 			prmIndex = populateEntityParameters(insertNodeStatement, node);
 			try {
-				insertNodeStatement.setObject(prmIndex++, new PGgeometry(new Point(node.getLongitude(), node.getLatitude())));
+				insertNodeStatement.setObject(prmIndex++, new PGgeometry(pointBuilder.createPoint(node.getLatitude(), node.getLongitude())));
 				insertNodeStatement.executeUpdate();
 			} catch (SQLException e) {
 				throw new OsmosisRuntimeException("Unable to insert node " + node.getId() + ".", e);
 			}
 			
 			writeEntityTags(insertNodeTagStatement, node);
-
+			
 			prmIndex = 1;
 			try {
 				updateNodeWayPreparedStatement.setLong(prmIndex++, node.getId());
@@ -293,40 +295,43 @@ public class ChangeWriter {
 		
 		// If this is a create or modify, insert the new way records.
 		if (ChangeAction.Create.equals(action) || ChangeAction.Modify.equals(action)) {
-			prmIndex = populateEntityParameters(insertWayStatement, way);
-			try {
-				insertWayStatement.executeUpdate();
-			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to insert way " + way.getId() + ".", e);
-			}
-			
-			writeEntityTags(insertWayTagStatement, way);
-			
-			wayNodeList = way.getWayNodeList();
-			for (int i = 0; i < wayNodeList.size(); i++) {
-				WayNode wayNode;
-				
-				wayNode = wayNodeList.get(i);
+			// Ignore ways with a single node because they can't be loaded into postgis.
+			if (way.getWayNodeList().size() > 1) {
+				prmIndex = populateEntityParameters(insertWayStatement, way);
 				try {
-					prmIndex = 1;
-					
-					insertWayNodeStatement.setLong(prmIndex++, way.getId());
-					insertWayNodeStatement.setLong(prmIndex++, wayNode.getNodeId());
-					insertWayNodeStatement.setInt(prmIndex++, i);
-					
-					insertWayNodeStatement.executeUpdate();
-					
+					insertWayStatement.executeUpdate();
 				} catch (SQLException e) {
-					throw new OsmosisRuntimeException("Unable to insert a new way node.", e);
+					throw new OsmosisRuntimeException("Unable to insert way " + way.getId() + ".", e);
 				}
-			}
-			
-			prmIndex = 1;
-			try {
-				updateWayBboxStatement.setLong(prmIndex++, way.getId());
-				updateWayBboxStatement.executeUpdate();
-			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to update bbox for way " + way.getId() + ".", e);
+				
+				writeEntityTags(insertWayTagStatement, way);
+				
+				wayNodeList = way.getWayNodeList();
+				for (int i = 0; i < wayNodeList.size(); i++) {
+					WayNode wayNode;
+					
+					wayNode = wayNodeList.get(i);
+					try {
+						prmIndex = 1;
+						
+						insertWayNodeStatement.setLong(prmIndex++, way.getId());
+						insertWayNodeStatement.setLong(prmIndex++, wayNode.getNodeId());
+						insertWayNodeStatement.setInt(prmIndex++, i);
+						
+						insertWayNodeStatement.executeUpdate();
+						
+					} catch (SQLException e) {
+						throw new OsmosisRuntimeException("Unable to insert a new way node.", e);
+					}
+				}
+				
+				prmIndex = 1;
+				try {
+					updateWayBboxStatement.setLong(prmIndex++, way.getId());
+					updateWayBboxStatement.executeUpdate();
+				} catch (SQLException e) {
+					throw new OsmosisRuntimeException("Unable to update bbox for way " + way.getId() + ".", e);
+				}
 			}
 		}
 	}
