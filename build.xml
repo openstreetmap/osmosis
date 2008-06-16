@@ -141,6 +141,14 @@
 		<zip destfile="dist/${project.name}-${project.version}.zip">
 			<zipfileset prefix="${project.name}-${project.version}" dir="build/dist"/>
 		</zip>
+		<tar destfile="dist/${project.name}-${project.version}.tar.gz" compression="gzip">
+			<tarfileset prefix="${project.name}-${project.version}" dir="build/dist" mode="755">
+				<include name="bin/*"/>
+			</tarfileset>
+			<tarfileset prefix="${project.name}-${project.version}" dir="build/dist">
+				<exclude name="bin/*"/>
+			</tarfileset>
+		</tar>
 	</target>
 	
 	<!-- Runs all of the unit tests in the application.  Uses the AllTests suite to achieve this. -->

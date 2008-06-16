@@ -1,6 +1,7 @@
 0.29
 Fixed the --write-pgsql-simple-dump task to properly escape '\' characters.
-Updated the pgsql simple tasks to use an SRID of 4326. 
+Updated the pgsql simple tasks to use an SRID of 4326.
+Updated build script to include a tar file distribution preserving launch script execute permissions.
 
 0.28
 Added a maximum file download count feature to the change downloader to limit processing overhead when synchronising long time intervals. 
