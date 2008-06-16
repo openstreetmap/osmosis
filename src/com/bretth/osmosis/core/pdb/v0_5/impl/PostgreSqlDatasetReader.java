@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.postgis.LinearRing;
 import org.postgis.PGgeometry;
 import org.postgis.Point;
 import org.postgis.Polygon;
@@ -27,6 +26,7 @@ import com.bretth.osmosis.core.domain.v0_5.EntityType;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Way;
+import com.bretth.osmosis.core.pdb.common.PolygonBuilder;
 import com.bretth.osmosis.core.pdb.v0_5.PostgreSqlVersionConstants;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
@@ -55,6 +55,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	private NodeDao nodeDao;
 	private WayDao wayDao;
 	private RelationDao relationDao;
+	private PolygonBuilder polygonBuilder;
 	
 	
 	/**
@@ -68,6 +69,8 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	public PostgreSqlDatasetReader(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
 		this.loginCredentials = loginCredentials;
 		this.preferences = preferences;
+		
+		polygonBuilder = new PolygonBuilder();
 		
 		initialized = false;
 	}
@@ -191,7 +194,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			bboxPoints[2] = new Point(right, top);
 			bboxPoints[3] = new Point(right, bottom);
 			bboxPoints[4] = new Point(left, bottom);
-			bboxPolygon = new Polygon(new LinearRing[] {new LinearRing(bboxPoints)});
+			bboxPolygon = polygonBuilder.createPolygon(bboxPoints);
 			
 			// Instantiate the mapper for converting between entity types and
 			// member type values.

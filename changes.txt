@@ -1,5 +1,6 @@
 0.29
-Fixed the --write-pgsql-simple-dump task to properly escape '\' characters. 
+Fixed the --write-pgsql-simple-dump task to properly escape '\' characters.
+Updated the pgsql simple tasks to use an SRID of 4326. 
 
 0.28
 Added a maximum file download count feature to the change downloader to limit processing overhead when synchronising long time intervals. 
