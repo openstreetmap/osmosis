@@ -3,3 +3,4 @@ Marcus Wolschon - XmlDownloader (--read-api) task.
 Karl Newman - Area filtering task (--bounding-box, --bounding-polygon) improvements.  Pipeline bound support.
 Stefan Baebler - "-" alias for stdin/stdout to file reading/writing tasks.
 Christoph Sommer - Way tag and used node filtering tasks.
+Jochen Topf - Pgsql simple schema fixes to use correct SRID.  Launch script fixes.  Build script fixes to preserve executable launch script permissions.  Pgsql simple schema refactoring to align with production MySQL schema names.
