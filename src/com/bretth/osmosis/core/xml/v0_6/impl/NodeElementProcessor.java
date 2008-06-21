@@ -1,11 +1,10 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.xml.v0_6.impl;
 
-import java.util.Date;
-
 import org.xml.sax.Attributes;
 
 import com.bretth.osmosis.core.container.v0_6.NodeContainer;
+import com.bretth.osmosis.core.domain.common.TimestampContainer;
 import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.task.v0_6.Sink;
@@ -53,13 +52,13 @@ public class NodeElementProcessor extends SourceElementProcessor implements TagL
 	 */
 	public void begin(Attributes attributes) {
 		long id;
-		Date timestamp;
+		TimestampContainer timestampContainer;
 		double latitude;
 		double longitude;
 		String user;
 		
 		id = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_ID));
-		timestamp = parseTimestamp(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
+		timestampContainer = createTimestampContainer(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
 		latitude = Double.parseDouble(attributes.getValue(ATTRIBUTE_NAME_LATITUDE));
 		longitude = Double.parseDouble(attributes.getValue(ATTRIBUTE_NAME_LONGITUDE));
 		user = attributes.getValue(ATTRIBUTE_NAME_USER);
@@ -67,7 +66,7 @@ public class NodeElementProcessor extends SourceElementProcessor implements TagL
 			user = "";
 		}
 		
-		node = new Node(id, timestamp, user, latitude, longitude);
+		node = new Node(id, timestampContainer, user, latitude, longitude);
 	}
 	
 	

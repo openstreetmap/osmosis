@@ -3,11 +3,11 @@ package com.bretth.osmosis.core.xml.common;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.domain.common.TimestampFormat;
 
 
 /**
@@ -48,7 +48,7 @@ public class ElementWriter {
 	protected BufferedWriter writer;
 	private String elementName;
 	private int indentLevel;
-	private DateFormatter dateFormatter;
+	private TimestampFormat timestampFormat;
 	
 	
 	/**
@@ -63,7 +63,7 @@ public class ElementWriter {
 		this.elementName = elementName;
 		this.indentLevel = indentLevel;
 		
-		dateFormatter = new DateFormatter();
+		timestampFormat = new XmlTimestampFormat();
 	}
 	
 	
@@ -130,20 +130,12 @@ public class ElementWriter {
 	
 	
 	/**
-	 * A utility method for encoding a data in the correct OSM format.
+	 * Returns a timestamp format suitable for xml files.
 	 * 
-	 * @param date
-	 *            The date to be formatted.
-	 * 
-	 * @return The string representing the date.
+	 * @return The timestamp format.
 	 */
-	protected String formatDate(Date date) {
-		if (date != null) {
-			return dateFormatter.format(date);
-			
-		} else {
-			return "";
-		}
+	protected TimestampFormat getTimestampFormat() {
+		return timestampFormat;
 	}
 	
 	

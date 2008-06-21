@@ -48,7 +48,7 @@ public class WayWriter extends ElementWriter {
 		
 		beginOpenElement();
 		addAttribute("id", Long.toString(way.getId()));
-		addAttribute("timestamp", formatDate(way.getTimestamp()));
+		addAttribute("timestamp", way.getFormattedTimestamp(getTimestampFormat()));
 		if (way.getUser() != null && way.getUser().length() > 0) {
 			addAttribute("user", way.getUser());
 		}

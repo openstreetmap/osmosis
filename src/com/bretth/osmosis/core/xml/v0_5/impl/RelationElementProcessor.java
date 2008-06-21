@@ -1,11 +1,10 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.xml.v0_5.impl;
 
-import java.util.Date;
-
 import org.xml.sax.Attributes;
 
 import com.bretth.osmosis.core.container.v0_5.RelationContainer;
+import com.bretth.osmosis.core.domain.common.TimestampContainer;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.RelationMember;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
@@ -55,17 +54,17 @@ public class RelationElementProcessor extends SourceElementProcessor implements 
 	 */
 	public void begin(Attributes attributes) {
 		long id;
-		Date timestamp;
+		TimestampContainer timestampContainer;
 		String user;
 		
 		id = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_ID));
-		timestamp = parseTimestamp(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
+		timestampContainer = createTimestampContainer(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
 		user = attributes.getValue(ATTRIBUTE_NAME_USER);
 		if (user == null) {
 			user = "";
 		}
 		
-		relation = new Relation(id, timestamp, user);
+		relation = new Relation(id, timestampContainer, user);
 	}
 	
 	

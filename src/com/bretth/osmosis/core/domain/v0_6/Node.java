@@ -3,6 +3,7 @@ package com.bretth.osmosis.core.domain.v0_6;
 
 import java.util.Date;
 
+import com.bretth.osmosis.core.domain.common.TimestampContainer;
 import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
@@ -36,6 +37,29 @@ public class Node extends Entity implements Comparable<Node> {
 	 */
 	public Node(long id, Date timestamp, String user, double latitude, double longitude) {
 		super(id, timestamp, user);
+		
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param id
+	 *            The unique identifier.
+	 * @param timestampContainer
+	 *            The container holding the timestamp in an alternative
+	 *            timestamp representation.
+	 * @param user
+	 *            The name of the user that last modified this entity.
+	 * @param latitude
+	 *            The geographic latitude.
+	 * @param longitude
+	 *            The geographic longitude.
+	 */
+	public Node(long id, TimestampContainer timestampContainer, String user, double latitude, double longitude) {
+		super(id, timestampContainer, user);
 		
 		this.latitude = latitude;
 		this.longitude = longitude;

@@ -2,8 +2,11 @@
 package com.bretth.osmosis.core.xml.common;
 
 import java.util.Calendar;
-import java.util.Date;
 
+import com.bretth.osmosis.core.domain.common.SimpleTimestampContainer;
+import com.bretth.osmosis.core.domain.common.TimestampContainer;
+import com.bretth.osmosis.core.domain.common.TimestampFormat;
+import com.bretth.osmosis.core.domain.common.UnparsedTimestampContainer;
 
 
 /**
@@ -14,8 +17,8 @@ import java.util.Date;
 public abstract class BaseElementProcessor implements ElementProcessor {
 	private BaseElementProcessor parentProcessor;
 	private ElementProcessor dummyChildProcessor;
-	private DateParser dateParser;
-	private Date timestamp;
+	private TimestampFormat timestampFormat;
+	private TimestampContainer dummyTimestampContainer;
 	private boolean enableDateParsing;
 	
 	
@@ -33,13 +36,13 @@ public abstract class BaseElementProcessor implements ElementProcessor {
 		this.enableDateParsing = enableDateParsing;
 		
 		if (enableDateParsing) {
-			dateParser = new DateParser();
+			timestampFormat = new XmlTimestampFormat();
 		} else {
 			Calendar calendar;
 			
 			calendar = Calendar.getInstance();
 			calendar.set(Calendar.MILLISECOND, 0);
-			timestamp = calendar.getTime();
+			dummyTimestampContainer = new SimpleTimestampContainer(calendar.getTime());
 		}
 	}
 	
@@ -82,15 +85,11 @@ public abstract class BaseElementProcessor implements ElementProcessor {
 	 *            The date string to be parsed.
 	 * @return The parsed date (if dateparsing is enabled).
 	 */
-	protected Date parseTimestamp(String data) {
+	protected TimestampContainer createTimestampContainer(String data) {
 		if (enableDateParsing) {
-			if (data != null && data.length() > 0) {
-				return dateParser.parse(data);
-			} else {
-				return null;
-			}
+			return new UnparsedTimestampContainer(timestampFormat, data);
 		} else {
-			return timestamp;
+			return dummyTimestampContainer;
 		}
 	}
 }

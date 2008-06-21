@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.bretth.osmosis.core.domain.common.TimestampContainer;
 import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
@@ -36,6 +37,24 @@ public class Way extends Entity implements Comparable<Way>, Storeable {
 	 */
 	public Way(long id, Date timestamp, String user) {
 		super(id, timestamp, user);
+		
+		wayNodeList = new ArrayList<WayNode>();
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param id
+	 *            The unique identifier.
+	 * @param timestampContainer
+	 *            The container holding the timestamp in an alternative
+	 *            timestamp representation.
+	 * @param user
+	 *            The name of the user that last modified this entity.
+	 */
+	public Way(long id, TimestampContainer timestampContainer, String user) {
+		super(id, timestampContainer, user);
 		
 		wayNodeList = new ArrayList<WayNode>();
 	}

@@ -7,6 +7,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.bretth.osmosis.core.domain.common.SimpleTimestampContainer;
+import com.bretth.osmosis.core.domain.common.TimestampContainer;
+import com.bretth.osmosis.core.domain.common.TimestampFormat;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
@@ -24,7 +27,7 @@ import com.bretth.osmosis.core.util.LongAsInt;
  */
 public abstract class Entity implements Storeable {
 	private int id;
-	private Date timestamp;
+	private TimestampContainer timestampContainer;
 	private List<Tag> tagList;
 	private String user;
 	
@@ -41,7 +44,29 @@ public abstract class Entity implements Storeable {
 	 */
 	public Entity(long id, Date timestamp, String user) {
 		this.id = LongAsInt.longToInt(id);
-		this.timestamp = timestamp;
+		this.timestampContainer = new SimpleTimestampContainer(timestamp);
+		this.user = user;
+		
+		tagList = new ArrayList<Tag>();
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param id
+	 *            The unique identifier.
+	 * @param timestampContainer
+	 *            The container holding the timestamp in an alternative
+	 *            timestamp representation.
+	 * @param timestampString
+	 *            The timestamp in unparsed string form.
+	 * @param user
+	 *            The name of the user that last modified this entity.
+	 */
+	public Entity(long id, TimestampContainer timestampContainer, String user) {
+		this.id = LongAsInt.longToInt(id);
+		this.timestampContainer = timestampContainer;
 		this.user = user;
 		
 		tagList = new ArrayList<Tag>();
@@ -62,7 +87,7 @@ public abstract class Entity implements Storeable {
 		
 		id = sr.readInteger();
 		if (sr.readBoolean()) {
-			timestamp = new Date(sr.readLong());
+			timestampContainer = new SimpleTimestampContainer(new Date(sr.readLong()));
 		}
 		if (sr.readBoolean()) {
 			user = sr.readString();
@@ -83,9 +108,9 @@ public abstract class Entity implements Storeable {
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		sw.writeInteger(id);
-		if (timestamp != null) {
+		if (getTimestamp() != null) {
 			sw.writeBoolean(true);
-			sw.writeLong(timestamp.getTime());
+			sw.writeLong(timestampContainer.getTimestamp().getTime());
 		} else {
 			sw.writeBoolean(false);
 		}
@@ -161,7 +186,22 @@ public abstract class Entity implements Storeable {
 	 * @return The timestamp. 
 	 */
 	public Date getTimestamp() {
-		return timestamp;
+		return timestampContainer.getTimestamp();
+	}
+	
+	
+	/**
+	 * Gets the timestamp in a string format. If the entity already contains a
+	 * string in string format it will return the original unparsed string
+	 * instead of formatting a date object.
+	 * 
+	 * @param timestampFormat
+	 *            The formatter to use for formatting the timestamp into a
+	 *            string.
+	 * @return The timestamp string.
+	 */
+	public String getFormattedTimestamp(TimestampFormat timestampFormat) {
+		return timestampContainer.getFormattedTimestamp(timestampFormat);
 	}
 	
 	

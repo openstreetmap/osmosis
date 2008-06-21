@@ -1,14 +1,13 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.xml.v0_5.impl;
 
-import java.util.Date;
-
 import org.xml.sax.Attributes;
 
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
-import com.bretth.osmosis.core.domain.v0_5.WayNode;
+import com.bretth.osmosis.core.domain.common.TimestampContainer;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
+import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 import com.bretth.osmosis.core.xml.common.BaseElementProcessor;
 import com.bretth.osmosis.core.xml.common.ElementProcessor;
@@ -55,17 +54,17 @@ public class WayElementProcessor extends SourceElementProcessor implements TagLi
 	 */
 	public void begin(Attributes attributes) {
 		long id;
-		Date timestamp;
+		TimestampContainer timestampContainer;
 		String user;
 		
 		id = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_ID));
-		timestamp = parseTimestamp(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
+		timestampContainer = createTimestampContainer(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
 		user = attributes.getValue(ATTRIBUTE_NAME_USER);
 		if (user == null) {
 			user = "";
 		}
 		
-		way = new Way(id, timestamp, user);
+		way = new Way(id, timestampContainer, user);
 	}
 	
 	
