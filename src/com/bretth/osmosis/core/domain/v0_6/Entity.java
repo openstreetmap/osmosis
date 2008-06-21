@@ -59,8 +59,6 @@ public abstract class Entity implements Storeable {
 	 * @param timestampContainer
 	 *            The container holding the timestamp in an alternative
 	 *            timestamp representation.
-	 * @param timestampString
-	 *            The timestamp in unparsed string form.
 	 * @param user
 	 *            The name of the user that last modified this entity.
 	 */
