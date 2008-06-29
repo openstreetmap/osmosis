@@ -32,7 +32,7 @@ public class RelationTableReader extends BaseTableReader<Relation> {
 		
 		sql =
 			"SELECT r.id, r.user_name, r.tstamp" +
-			" FROM relation r" +
+			" FROM relations r" +
 			" ORDER BY r.id";
 	}
 	
@@ -51,7 +51,7 @@ public class RelationTableReader extends BaseTableReader<Relation> {
 		
 		sql =
 			"SELECT r.id, r.user_name, r.tstamp" +
-			" FROM relation r" +
+			" FROM relations r" +
 			" INNER JOIN " + constraintTable + " c ON r.id = c.id" +
 			" ORDER BY r.id";
 	}

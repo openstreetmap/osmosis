@@ -29,53 +29,53 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
  */
 public class ChangeWriter {
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO node (id, user_name, tstamp, coordinate) VALUES (?, ?, ?, ?)";
+		"INSERT INTO nodes (id, user_name, tstamp, geom) VALUES (?, ?, ?, ?)";
 	private static final String DELETE_SQL_NODE =
-		"DELETE FROM node WHERE id = ?";
+		"DELETE FROM nodes WHERE id = ?";
 	private static final String INSERT_SQL_NODE_TAG =
-		"INSERT INTO node_tag (node_id, name, value) VALUES (?, ?, ?)";
+		"INSERT INTO node_tags (node_id, k, v) VALUES (?, ?, ?)";
 	private static final String DELETE_SQL_NODE_TAG =
-		"DELETE FROM node_tag WHERE node_id = ?";
+		"DELETE FROM node_tags WHERE node_id = ?";
 	private static final String UPDATE_NODE_WAY_BBOX =
-		"UPDATE way w SET bbox = (" +
-		" SELECT Envelope(Collect(n.coordinate))" +
-		" FROM node n INNER JOIN way_node wn ON wn.node_id = n.id" +
+		"UPDATE ways w SET bbox = (" +
+		" SELECT Envelope(Collect(n.geom))" +
+		" FROM nodes n INNER JOIN way_nodes wn ON wn.node_id = n.id" +
 		" WHERE wn.way_id = w.id" +
 		" )" +
 		" WHERE w.id IN (" +
-		" SELECT w.id FROM way w INNER JOIN way_node wn ON w.id = wn.way_id WHERE wn.node_id = ? GROUP BY w.id" +
+		" SELECT w.id FROM ways w INNER JOIN way_nodes wn ON w.id = wn.way_id WHERE wn.node_id = ? GROUP BY w.id" +
 		" )";
 	private static final String INSERT_SQL_WAY =
-		"INSERT INTO way (id, user_name, tstamp) VALUES (?, ?, ?)";
+		"INSERT INTO ways (id, user_name, tstamp) VALUES (?, ?, ?)";
 	private static final String DELETE_SQL_WAY =
-		"DELETE FROM way WHERE id = ?";
+		"DELETE FROM ways WHERE id = ?";
 	private static final String INSERT_SQL_WAY_TAG =
-		"INSERT INTO way_tag (way_id, name, value) VALUES (?, ?, ?)";
+		"INSERT INTO way_tags (way_id, k, v) VALUES (?, ?, ?)";
 	private static final String DELETE_SQL_WAY_TAG =
-		"DELETE FROM way_tag WHERE way_id = ?";
+		"DELETE FROM way_tags WHERE way_id = ?";
 	private static final String INSERT_SQL_WAY_NODE =
-		"INSERT INTO way_node (way_id, node_id, sequence_id) VALUES (?, ?, ?)";
+		"INSERT INTO way_nodes (way_id, node_id, sequence_id) VALUES (?, ?, ?)";
 	private static final String DELETE_SQL_WAY_NODE =
-		"DELETE FROM way_node WHERE way_id = ?";
+		"DELETE FROM way_nodes WHERE way_id = ?";
 	private static final String UPDATE_WAY_BBOX =
-		"UPDATE way SET bbox = (" +
-		" SELECT Envelope(Collect(coordinate))" +
-		" FROM node JOIN way_node ON way_node.node_id = node.id" +
-		" WHERE way_node.way_id = way.id" +
+		"UPDATE ways SET bbox = (" +
+		" SELECT Envelope(Collect(geom))" +
+		" FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id" +
+		" WHERE way_nodes.way_id = ways.id" +
 		" )" +
-		" WHERE way.id = ?";
+		" WHERE ways.id = ?";
 	private static final String INSERT_SQL_RELATION =
-		"INSERT INTO relation (id, user_name, tstamp) VALUES (?, ?, ?)";
+		"INSERT INTO relations (id, user_name, tstamp) VALUES (?, ?, ?)";
 	private static final String DELETE_SQL_RELATION =
-		"DELETE FROM relation WHERE id = ?";
+		"DELETE FROM relations WHERE id = ?";
 	private static final String INSERT_SQL_RELATION_TAG =
-		"INSERT INTO relation_tag (relation_id, name, value) VALUES (?, ?, ?)";
+		"INSERT INTO relation_tags (relation_id, k, v) VALUES (?, ?, ?)";
 	private static final String DELETE_SQL_RELATION_TAG =
-		"DELETE FROM relation_tag WHERE relation_id = ?";
+		"DELETE FROM relation_tags WHERE relation_id = ?";
 	private static final String INSERT_SQL_RELATION_MEMBER =
-		"INSERT INTO relation_member (relation_id, member_id, member_type, member_role) VALUES (?, ?, ?, ?)";
+		"INSERT INTO relation_members (relation_id, member_id, member_type, member_role) VALUES (?, ?, ?, ?)";
 	private static final String DELETE_SQL_RELATION_MEMBER =
-		"DELETE FROM relation_member WHERE relation_id = ?";
+		"DELETE FROM relation_members WHERE relation_id = ?";
 	
 	
 	private DatabaseContext dbCtx;
@@ -230,7 +230,7 @@ public class ChangeWriter {
 			}
 			
 			writeEntityTags(insertNodeTagStatement, node);
-			
+
 			prmIndex = 1;
 			try {
 				updateNodeWayPreparedStatement.setLong(prmIndex++, node.getId());

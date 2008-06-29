@@ -20,7 +20,7 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
  */
 public class EntityTagTableReader extends BaseTableReader<DBEntityTag> {
 	private static final String SELECT_SQL_1 = "SELECT t.";
-	private static final String SELECT_SQL_2 = " as entity_id, t.name, t.value FROM ";
+	private static final String SELECT_SQL_2 = " AS entity_id, t.k, t.v FROM ";
 	private static final String SELECT_SQL_3 = " t ";
 	private static final String SELECT_SQL_4 = " ORDER BY t.";
 	
@@ -90,8 +90,8 @@ public class EntityTagTableReader extends BaseTableReader<DBEntityTag> {
 		
 		try {
 			entityId = resultSet.getLong("entity_id");
-			key = resultSet.getString("name");
-			value = resultSet.getString("value");
+			key = resultSet.getString("k");
+			value = resultSet.getString("v");
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read entity tag fields from table " + tableName + ".", e);

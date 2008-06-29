@@ -23,8 +23,8 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
  * @author Brett Henderson
  */
 public class NodeDao implements Releasable {
-	private static final String SQL_SELECT_SINGLE_NODE = "SELECT id, tstamp, user_name, coordinate FROM node where id=?";
-	private static final String SQL_SELECT_SINGLE_NODE_TAG = "SELECT node_id AS entity_id, name, value FROM node_tag where node_id=?";
+	private static final String SQL_SELECT_SINGLE_NODE = "SELECT id, tstamp, user_name, geom FROM nodes WHERE id=?";
+	private static final String SQL_SELECT_SINGLE_NODE_TAG = "SELECT node_id AS entity_id, k, v FROM node_tags WHERE node_id=?";
 	
 	private DatabaseContext dbCtx;
 	private PreparedStatement singleNodeStatement;
@@ -54,8 +54,8 @@ public class NodeDao implements Releasable {
 			return new DBEntityTag(
 				resultSet.getLong("entity_id"),
 				new Tag(
-					resultSet.getString("name"),
-					resultSet.getString("value")
+					resultSet.getString("k"),
+					resultSet.getString("v")
 				)
 			);
 			

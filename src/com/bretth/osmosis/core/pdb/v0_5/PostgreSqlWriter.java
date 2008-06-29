@@ -48,56 +48,56 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	
 	
 	private static final String PRE_LOAD_SQL[] = {
-		"ALTER TABLE node DROP CONSTRAINT pk_node",
-		"ALTER TABLE way DROP CONSTRAINT pk_way",
-		"ALTER TABLE way_node DROP CONSTRAINT pk_way_node",
-		"ALTER TABLE relation DROP CONSTRAINT pk_relation",
-		"DROP INDEX idx_node_tag_node_id",
-		"DROP INDEX idx_node_location",
-		"DROP INDEX idx_way_tag_way_id",
-		"DROP INDEX idx_relation_tag_relation_id",
-		"DROP INDEX idx_way_bbox"
+		"ALTER TABLE nodes DROP CONSTRAINT pk_nodes",
+		"ALTER TABLE ways DROP CONSTRAINT pk_ways",
+		"ALTER TABLE way_nodes DROP CONSTRAINT pk_way_nodes",
+		"ALTER TABLE relations DROP CONSTRAINT pk_relations",
+		"DROP INDEX idx_node_tags_node_id",
+		"DROP INDEX idx_nodes_geom",
+		"DROP INDEX idx_way_tags_way_id",
+		"DROP INDEX idx_relation_tags_relation_id",
+		"DROP INDEX idx_ways_bbox"
 	};
 	
 	private static final String POST_LOAD_SQL[] = {
-		"ALTER TABLE ONLY node ADD CONSTRAINT pk_node PRIMARY KEY (id)",
-		"ALTER TABLE ONLY way ADD CONSTRAINT pk_way PRIMARY KEY (id)",
-		"ALTER TABLE ONLY way_node ADD CONSTRAINT pk_way_node PRIMARY KEY (way_id, sequence_id)",
-		"ALTER TABLE ONLY relation ADD CONSTRAINT pk_relation PRIMARY KEY (id)",
-		"CREATE INDEX idx_node_tag_node_id ON node_tag USING btree (node_id)",
-		"CREATE INDEX idx_node_location ON node USING gist (coordinate)",
-		"CREATE INDEX idx_way_tag_way_id ON way_tag USING btree (way_id)",
-		"CREATE INDEX idx_relation_tag_relation_id ON relation_tag USING btree (relation_id)",
-		"UPDATE way SET bbox = (SELECT Envelope(Collect(coordinate)) FROM node JOIN way_node ON way_node.node_id = node.id WHERE way_node.way_id = way.id)",
-		"CREATE INDEX idx_way_bbox ON way USING gist (bbox)"
+		"ALTER TABLE ONLY nodes ADD CONSTRAINT pk_nodes PRIMARY KEY (id)",
+		"ALTER TABLE ONLY ways ADD CONSTRAINT pk_ways PRIMARY KEY (id)",
+		"ALTER TABLE ONLY way_nodes ADD CONSTRAINT pk_way_nodes PRIMARY KEY (way_id, sequence_id)",
+		"ALTER TABLE ONLY relations ADD CONSTRAINT pk_relations PRIMARY KEY (id)",
+		"CREATE INDEX idx_node_tags_node_id ON node_tags USING btree (node_id)",
+		"CREATE INDEX idx_nodes_geom ON nodes USING gist (geom)",
+		"CREATE INDEX idx_way_tags_way_id ON way_tags USING btree (way_id)",
+		"CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id)",
+		"UPDATE ways SET bbox = (SELECT Envelope(Collect(geom)) FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id WHERE way_nodes.way_id = ways.id)",
+		"CREATE INDEX idx_ways_bbox ON ways USING gist (bbox)"
 	};
 	
 	
 	// These SQL strings are the prefix to statements that will be built based
 	// on how many rows of data are to be inserted at a time.
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO node(id, tstamp, user_name, coordinate)";
+		"INSERT INTO nodes(id, tstamp, user_name, geom)";
 	private static final int INSERT_PRM_COUNT_NODE = 4;
 	private static final String INSERT_SQL_NODE_TAG =
-		"INSERT INTO node_tag(node_id, name, value)";
+		"INSERT INTO node_tags(node_id, k, v)";
 	private static final int INSERT_PRM_COUNT_NODE_TAG = 3;
 	private static final String INSERT_SQL_WAY =
-		"INSERT INTO way(id, tstamp, user_name)";
+		"INSERT INTO ways(id, tstamp, user_name)";
 	private static final int INSERT_PRM_COUNT_WAY = 3;
 	private static final String INSERT_SQL_WAY_TAG =
-		"INSERT INTO way_tag(way_id, name, value)";
+		"INSERT INTO way_tags(way_id, k, v)";
 	private static final int INSERT_PRM_COUNT_WAY_TAG = 3;
 	private static final String INSERT_SQL_WAY_NODE =
-		"INSERT INTO way_node(way_id, node_id, sequence_id)";
+		"INSERT INTO way_nodes(way_id, node_id, sequence_id)";
 	private static final int INSERT_PRM_COUNT_WAY_NODE = 3;
 	private static final String INSERT_SQL_RELATION =
-		"INSERT INTO relation(id, tstamp, user_name)";
+		"INSERT INTO relations(id, tstamp, user_name)";
 	private static final int INSERT_PRM_COUNT_RELATION = 3;
 	private static final String INSERT_SQL_RELATION_TAG =
-		"INSERT INTO relation_tag(relation_id, name, value)";
+		"INSERT INTO relation_tags(relation_id, k, v)";
 	private static final int INSERT_PRM_COUNT_RELATION_TAG = 3;
 	private static final String INSERT_SQL_RELATION_MEMBER =
-		"INSERT INTO relation_member(relation_id, member_id, member_type, member_role)";
+		"INSERT INTO relation_members(relation_id, member_id, member_type, member_role)";
 	private static final int INSERT_PRM_COUNT_RELATION_MEMBER = 4;
 	
 	// These constants define how many rows of each data type will be inserted

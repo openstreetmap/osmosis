@@ -30,14 +30,14 @@ import com.bretth.osmosis.core.task.v0_6.Sink;
  */
 public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 	
-	private static final String NODE_SUFFIX = "node.txt";
-	private static final String NODE_TAG_SUFFIX = "node_tag.txt";
-	private static final String WAY_SUFFIX = "way.txt";
-	private static final String WAY_TAG_SUFFIX = "way_tag.txt";
-	private static final String WAY_NODE_SUFFIX = "way_node.txt";
-	private static final String RELATION_SUFFIX = "relation.txt";
-	private static final String RELATION_TAG_SUFFIX = "relation_tag.txt";
-	private static final String RELATION_MEMBER_SUFFIX = "relation_member.txt";
+	private static final String NODE_SUFFIX = "nodes.txt";
+	private static final String NODE_TAG_SUFFIX = "node_tags.txt";
+	private static final String WAY_SUFFIX = "ways.txt";
+	private static final String WAY_TAG_SUFFIX = "way_tags.txt";
+	private static final String WAY_NODE_SUFFIX = "way_nodes.txt";
+	private static final String RELATION_SUFFIX = "relations.txt";
+	private static final String RELATION_TAG_SUFFIX = "relation_tags.txt";
+	private static final String RELATION_MEMBER_SUFFIX = "relation_members.txt";
 	
 	
 	private CompletableContainer writerContainer;

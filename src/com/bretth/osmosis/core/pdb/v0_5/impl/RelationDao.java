@@ -24,9 +24,9 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
  * @author Brett Henderson
  */
 public class RelationDao implements Releasable {
-	private static final String SQL_SELECT_SINGLE_RELATION = "SELECT id, tstamp, user_name FROM relation where id=?";
-	private static final String SQL_SELECT_SINGLE_RELATION_TAG = "SELECT relation_id AS entity_id, name, value FROM relation_tag where relation_id=?";
-	private static final String SQL_SELECT_SINGLE_RELATION_MEMBER = "SELECT relation_id, member_id, member_role, member_type FROM relation_member where relation_id=?";
+	private static final String SQL_SELECT_SINGLE_RELATION = "SELECT id, tstamp, user_name FROM relations WHERE id=?";
+	private static final String SQL_SELECT_SINGLE_RELATION_TAG = "SELECT relation_id AS entity_id, k, v FROM relation_tags WHERE relation_id=?";
+	private static final String SQL_SELECT_SINGLE_RELATION_MEMBER = "SELECT relation_id, member_id, member_role, member_type FROM relation_members WHERE relation_id=?";
 	
 	private DatabaseContext dbCtx;
 	private PreparedStatement singleRelationStatement;
@@ -57,8 +57,8 @@ public class RelationDao implements Releasable {
 			return new DBEntityTag(
 				resultSet.getLong("entity_id"),
 				new Tag(
-					resultSet.getString("name"),
-					resultSet.getString("value")
+					resultSet.getString("k"),
+					resultSet.getString("v")
 				)
 			);
 			

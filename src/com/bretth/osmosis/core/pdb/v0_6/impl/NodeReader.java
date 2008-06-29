@@ -43,7 +43,7 @@ public class NodeReader implements ReleasableIterator<Node> {
 			true
 		);
 		nodeTagReader = new PeekableIterator<DBEntityTag>(
-			new EntityTagTableReader(dbCtx, "node_tag", "node_id")
+			new EntityTagTableReader(dbCtx, "node_tags", "node_id")
 		);
 	}
 	
@@ -68,7 +68,7 @@ public class NodeReader implements ReleasableIterator<Node> {
 			true
 		);
 		nodeTagReader = new PeekableIterator<DBEntityTag>(
-			new EntityTagTableReader(dbCtx, "node_tag", "node_id", constraintTable)
+			new EntityTagTableReader(dbCtx, "node_tags", "node_id", constraintTable)
 		);
 	}
 	

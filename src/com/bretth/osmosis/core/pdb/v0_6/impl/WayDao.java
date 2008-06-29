@@ -23,9 +23,9 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
  * @author Brett Henderson
  */
 public class WayDao implements Releasable {
-	private static final String SQL_SELECT_SINGLE_WAY = "SELECT id, tstamp, user_name FROM way where id=?";
-	private static final String SQL_SELECT_SINGLE_WAY_TAG = "SELECT way_id AS entity_id, name, value FROM way_tag where way_id=?";
-	private static final String SQL_SELECT_SINGLE_WAY_NODE = "SELECT way_id, node_id, sequence_id FROM way_node where way_id=? ORDER BY sequence_id";
+	private static final String SQL_SELECT_SINGLE_WAY = "SELECT id, tstamp, user_name FROM ways WHERE id=?";
+	private static final String SQL_SELECT_SINGLE_WAY_TAG = "SELECT way_id AS entity_id, k, v FROM way_tags WHERE way_id=?";
+	private static final String SQL_SELECT_SINGLE_WAY_NODE = "SELECT way_id, node_id, sequence_id FROM way_nodes WHERE way_id=? ORDER BY sequence_id";
 	
 	private DatabaseContext dbCtx;
 	private PreparedStatement singleWayStatement;
@@ -56,8 +56,8 @@ public class WayDao implements Releasable {
 			return new DBEntityTag(
 				resultSet.getLong("entity_id"),
 				new Tag(
-					resultSet.getString("name"),
-					resultSet.getString("value")
+					resultSet.getString("k"),
+					resultSet.getString("v")
 				)
 			);
 			

@@ -32,7 +32,7 @@ public class WayTableReader extends BaseTableReader<Way> {
 		
 		sql =
 			"SELECT w.id, w.user_name, w.tstamp" +
-			" FROM way w" +
+			" FROM ways w" +
 			" ORDER BY w.id";
 	}
 	
@@ -51,7 +51,7 @@ public class WayTableReader extends BaseTableReader<Way> {
 		
 		sql =
 			"SELECT w.id, w.user_name, w.tstamp" +
-			" FROM way w" +
+			" FROM ways w" +
 			" INNER JOIN " + constraintTable + " c ON w.id = c.id" +
 			" ORDER BY w.id";
 	}

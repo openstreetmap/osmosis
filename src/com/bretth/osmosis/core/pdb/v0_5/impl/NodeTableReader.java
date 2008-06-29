@@ -34,8 +34,8 @@ public class NodeTableReader extends BaseTableReader<Node> {
 		super(dbCtx);
 		
 		sql =
-			"SELECT n.id, n.user_name, n.tstamp, n.coordinate" +
-			" FROM node n" +
+			"SELECT n.id, n.user_name, n.tstamp, n.geom" +
+			" FROM nodes n" +
 			" ORDER BY n.id";
 	}
 	
@@ -53,8 +53,8 @@ public class NodeTableReader extends BaseTableReader<Node> {
 		super(dbCtx);
 		
 		sql =
-			"SELECT n.id, n.user_name, n.tstamp, n.coordinate" +
-			" FROM node n" +
+			"SELECT n.id, n.user_name, n.tstamp, n.geom" +
+			" FROM nodes n" +
 			" INNER JOIN " + constraintTable + " c ON n.id = c.id" +
 			" ORDER BY n.id";
 	}
@@ -86,7 +86,7 @@ public class NodeTableReader extends BaseTableReader<Node> {
 			id = resultSet.getLong("id");
 			userName = resultSet.getString("user_name");
 			timestamp = new Date(resultSet.getTimestamp("tstamp").getTime());
-			coordinate = (PGgeometry) resultSet.getObject("coordinate");
+			coordinate = (PGgeometry) resultSet.getObject("geom");
 			coordinatePoint = (Point) coordinate.getGeometry();
 			latitude = coordinatePoint.y;
 			longitude = coordinatePoint.x;

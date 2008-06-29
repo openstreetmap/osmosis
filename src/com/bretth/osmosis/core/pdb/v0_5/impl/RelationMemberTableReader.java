@@ -33,7 +33,7 @@ public class RelationMemberTableReader extends BaseTableReader<DBRelationMember>
 		
 		sql =
 			"SELECT rm.relation_id, rm.member_id, rm.member_role, rm.member_type"
-			+ " FROM relation_member rm"
+			+ " FROM relation_members rm"
 			+ " ORDER BY rm.relation_id";
 	}
 	
@@ -52,7 +52,7 @@ public class RelationMemberTableReader extends BaseTableReader<DBRelationMember>
 		
 		sql =
 			"SELECT rm.relation_id, rm.member_id, rm.member_role, rm.member_type" +
-			" FROM relation_member rm" +
+			" FROM relation_members rm" +
 			" INNER JOIN " + constraintTable + " c ON rm.relation_id = c.id" +
 			" ORDER BY rm.relation_id";
 	}

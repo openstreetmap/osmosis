@@ -51,7 +51,7 @@ public class WayReader implements ReleasableIterator<Way> {
 		wayTagReader = new PeekableIterator<DBEntityTag>(
 			new PersistentIterator<DBEntityTag>(
 				new SingleClassObjectSerializationFactory(DBEntityTag.class),
-				new EntityTagTableReader(dbCtx, "way_tag", "way_id"),
+				new EntityTagTableReader(dbCtx, "way_tags", "way_id"),
 				"waytag",
 				true
 			)
@@ -84,7 +84,7 @@ public class WayReader implements ReleasableIterator<Way> {
 		wayTagReader = new PeekableIterator<DBEntityTag>(
 			new PersistentIterator<DBEntityTag>(
 				new SingleClassObjectSerializationFactory(DBEntityTag.class),
-				new EntityTagTableReader(dbCtx, "way_tag", "way_id", constraintTable),
+				new EntityTagTableReader(dbCtx, "way_tags", "way_id", constraintTable),
 				"waytag",
 				true
 			)

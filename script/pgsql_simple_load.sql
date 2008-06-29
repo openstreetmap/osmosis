@@ -1,46 +1,62 @@
 -- Drop all primary keys and indexes to improve load speed.
-ALTER TABLE node DROP CONSTRAINT pk_node;
-ALTER TABLE way DROP CONSTRAINT pk_way;
-ALTER TABLE way_node DROP CONSTRAINT pk_way_node;
-ALTER TABLE relation DROP CONSTRAINT pk_relation;
-DROP INDEX idx_node_tag_node_id;
-DROP INDEX idx_node_location;
-DROP INDEX idx_way_tag_way_id;
-DROP INDEX idx_way_node_node_id;
-DROP INDEX idx_relation_tag_relation_id;
-DROP INDEX idx_way_bbox;
+ALTER TABLE nodes DROP CONSTRAINT pk_nodes;
+ALTER TABLE ways DROP CONSTRAINT pk_ways;
+ALTER TABLE way_nodes DROP CONSTRAINT pk_way_nodes;
+ALTER TABLE relations DROP CONSTRAINT pk_relations;
+DROP INDEX idx_node_tags_node_id;
+DROP INDEX idx_nodes_geom;
+DROP INDEX idx_way_tags_way_id;
+DROP INDEX idx_way_nodes_node_id;
+DROP INDEX idx_relation_tags_relation_id;
+DROP INDEX idx_ways_bbox;
+
+SELECT DropGeometryColumn('ways', 'bbox');
 
 -- Import the table data from the data files using the fast COPY method.
-COPY node FROM E'C:\\tmp\\pgimport\\node.txt';
-COPY node_tag FROM E'C:\\tmp\\pgimport\\node_tag.txt';
-COPY way FROM E'C:\\tmp\\pgimport\\way.txt';
-COPY way_tag FROM E'C:\\tmp\\pgimport\\way_tag.txt';
-COPY way_node FROM E'C:\\tmp\\pgimport\\way_node.txt';
-COPY relation FROM E'C:\\tmp\\pgimport\\relation.txt';
-COPY relation_tag FROM E'C:\\tmp\\pgimport\\relation_tag.txt';
-COPY relation_member FROM E'C:\\tmp\\pgimport\\relation_member.txt';
+-- COPY nodes FROM E'C:\\tmp\\pgimport\\nodes.txt';
+-- COPY node_tags FROM E'C:\\tmp\\pgimport\\node_tags.txt';
+-- COPY ways FROM E'C:\\tmp\\pgimport\\ways.txt';
+-- COPY way_tags FROM E'C:\\tmp\\pgimport\\way_tags.txt';
+-- COPY way_nodes FROM E'C:\\tmp\\pgimport\\way_nodes.txt';
+-- COPY relations FROM E'C:\\tmp\\pgimport\\relations.txt';
+-- COPY relation_tags FROM E'C:\\tmp\\pgimport\\relation_tags.txt';
+-- COPY relation_members FROM E'C:\\tmp\\pgimport\\relation_members.txt';
+
+-- or do it this way
+\copy nodes FROM 'nodes.txt'
+\copy node_tags FROM 'node_tags.txt'
+\copy ways FROM 'ways.txt'
+\copy way_tags FROM 'way_tags.txt'
+\copy way_nodes FROM 'way_nodes.txt'
+\copy relations FROM 'relations.txt'
+\copy relation_tags FROM 'relation_tags.txt'
+\copy relation_members FROM 'relation_members.txt'
 
 -- Add the primary keys and indexes back again (except the way bbox index).
-ALTER TABLE ONLY node ADD CONSTRAINT pk_node PRIMARY KEY (id);
-ALTER TABLE ONLY way ADD CONSTRAINT pk_way PRIMARY KEY (id);
-ALTER TABLE ONLY way_node ADD CONSTRAINT pk_way_node PRIMARY KEY (way_id, sequence_id);
-ALTER TABLE ONLY relation ADD CONSTRAINT pk_relation PRIMARY KEY (id);
-CREATE INDEX idx_node_tag_node_id ON node_tag USING btree (node_id);
-CREATE INDEX idx_node_location ON node USING gist (coordinate);
-CREATE INDEX idx_way_tag_way_id ON way_tag USING btree (way_id);
-CREATE INDEX idx_way_node_node_id ON way_node USING btree (node_id);
-CREATE INDEX idx_relation_tag_relation_id ON relation_tag USING btree (relation_id);
+ALTER TABLE ONLY nodes ADD CONSTRAINT pk_nodes PRIMARY KEY (id);
+ALTER TABLE ONLY ways ADD CONSTRAINT pk_ways PRIMARY KEY (id);
+ALTER TABLE ONLY way_nodes ADD CONSTRAINT pk_way_nodes PRIMARY KEY (way_id, sequence_id);
+ALTER TABLE ONLY relations ADD CONSTRAINT pk_relations PRIMARY KEY (id);
+CREATE INDEX idx_node_tags_node_id ON node_tags USING btree (node_id);
+CREATE INDEX idx_nodes_geom ON nodes USING gist (geom);
+CREATE INDEX idx_way_tags_way_id ON way_tags USING btree (way_id);
+CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id);
+CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id);
+
+-- Add a postgis bounding box column used for indexing the location of the way.
+-- This will contain a bounding box surrounding the extremities of the way.
+SELECT AddGeometryColumn('ways', 'bbox', 4326, 'GEOMETRY', 2);
 
 -- Update the bbox column of the way table.
-UPDATE way SET bbox = (
-	SELECT Envelope(Collect(coordinate))
-	FROM node JOIN way_node ON way_node.node_id = node.id
-	WHERE way_node.way_id = way.id
+UPDATE ways SET bbox = (
+	SELECT Envelope(Collect(geom))
+	FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id
+	WHERE way_nodes.way_id = ways.id
 );
 
 -- Index the way bounding box column.
-CREATE INDEX idx_way_bbox ON way USING gist (bbox);
+CREATE INDEX idx_ways_bbox ON ways USING gist (bbox);
 
 -- Perform database maintenance due to large database changes.
-VACUUM;
-ANALYZE;
+VACUUM ANALYZE;
+

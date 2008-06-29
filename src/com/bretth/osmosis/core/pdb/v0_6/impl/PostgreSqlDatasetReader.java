@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.postgis.LinearRing;
 import org.postgis.PGgeometry;
 import org.postgis.Point;
 import org.postgis.Polygon;
@@ -27,6 +26,7 @@ import com.bretth.osmosis.core.domain.v0_6.EntityType;
 import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.pdb.common.PolygonBuilder;
 import com.bretth.osmosis.core.pdb.v0_6.PostgreSqlVersionConstants;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
@@ -55,6 +55,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	private NodeDao nodeDao;
 	private WayDao wayDao;
 	private RelationDao relationDao;
+	private PolygonBuilder polygonBuilder;
 	
 	
 	/**
@@ -68,6 +69,8 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	public PostgreSqlDatasetReader(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
 		this.loginCredentials = loginCredentials;
 		this.preferences = preferences;
+		
+		polygonBuilder = new PolygonBuilder();
 		
 		initialized = false;
 	}
@@ -191,7 +194,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			bboxPoints[2] = new Point(right, top);
 			bboxPoints[3] = new Point(right, bottom);
 			bboxPoints[4] = new Point(left, bottom);
-			bboxPolygon = new Polygon(new LinearRing[] {new LinearRing(bboxPoints)});
+			bboxPolygon = polygonBuilder.createPolygon(bboxPoints);
 			
 			// Instantiate the mapper for converting between entity types and
 			// member type values.
@@ -199,7 +202,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			
 			// Select all nodes inside the box into the node temp table.
 			log.finer("Selecting all node ids inside bounding box.");
-			preparedStatement = dbCtx.prepareStatement("INSERT INTO box_node_list SELECT id FROM node WHERE (coordinate && ?)");
+			preparedStatement = dbCtx.prepareStatement("INSERT INTO box_node_list SELECT id FROM nodes WHERE (geom && ?)");
 			prmIndex = 1;
 			preparedStatement.setObject(prmIndex++, new PGgeometry(bboxPolygon));
 			rowCount = preparedStatement.executeUpdate();
@@ -216,8 +219,8 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			preparedStatement = dbCtx.prepareStatement(
 				"INSERT INTO box_way_list " +
 				"SELECT way_id FROM (" +
-				"SELECT c.way_id AS way_id, MakeLine(c.coordinate) AS way_line FROM (" +
-				"SELECT w.id AS way_id, n.coordinate AS coordinate FROM node n INNER JOIN way_node wn ON n.id = wn.node_id INNER JOIN way w ON wn.way_id = w.id WHERE (w.bbox && ?) ORDER BY wn.way_id, wn.sequence_id" +
+				"SELECT c.way_id AS way_id, MakeLine(c.geom) AS way_line FROM (" +
+				"SELECT w.id AS way_id, n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id INNER JOIN ways w ON wn.way_id = w.id WHERE (w.bbox && ?) ORDER BY wn.way_id, wn.sequence_id" +
 				") c " +
 				"GROUP BY c.way_id" +
 				") w " +
@@ -235,9 +238,9 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			log.finer("Selecting all relation ids containing selected nodes or ways.");
 			preparedStatement = dbCtx.prepareStatement(
 				"INSERT INTO box_relation_list (" +
-				"SELECT rm.relation_id AS relation_id FROM relation_member rm INNER JOIN box_node_list n ON rm.member_id = n.id WHERE rm.member_type = ? " +
+				"SELECT rm.relation_id AS relation_id FROM relation_members rm INNER JOIN box_node_list n ON rm.member_id = n.id WHERE rm.member_type = ? " +
 				"UNION " +
-				"SELECT rm.relation_id AS relation_id FROM relation_member rm INNER JOIN box_way_list w ON rm.member_id = w.id WHERE rm.member_type = ?" +
+				"SELECT rm.relation_id AS relation_id FROM relation_members rm INNER JOIN box_way_list w ON rm.member_id = w.id WHERE rm.member_type = ?" +
 				")"
 			);
 			prmIndex = 1;
@@ -254,7 +257,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 				log.finer("Selecting parent relations of selected relations.");
 				preparedStatement = dbCtx.prepareStatement(
 					"INSERT INTO box_relation_list " +
-					"SELECT rm.relation_id AS relation_id FROM relation_member rm INNER JOIN box_relation_list r ON rm.member_id = r.id WHERE rm.member_type = ? " +
+					"SELECT rm.relation_id AS relation_id FROM relation_members rm INNER JOIN box_relation_list r ON rm.member_id = r.id WHERE rm.member_type = ? " +
 					"EXCEPT " +
 					"SELECT id AS relation_id FROM box_relation_list"
 				);
@@ -271,7 +274,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 				log.finer("Selecting all node ids for selected ways.");
 				preparedStatement = dbCtx.prepareStatement(
 					"INSERT INTO box_node_list " +
-					"SELECT wn.node_id AS id FROM way_node wn INNER JOIN box_way_list bw ON wn.way_id = bw.id " +
+					"SELECT wn.node_id AS id FROM way_nodes wn INNER JOIN box_way_list bw ON wn.way_id = bw.id " +
 					"EXCEPT " +
 					"SELECT id AS node_id FROM box_node_list"
 				);

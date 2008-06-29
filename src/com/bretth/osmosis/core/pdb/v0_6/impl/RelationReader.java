@@ -44,7 +44,7 @@ public class RelationReader implements ReleasableIterator<Relation> {
 		relationTagReader = new PeekableIterator<DBEntityTag>(
 			new PersistentIterator<DBEntityTag>(
 				new SingleClassObjectSerializationFactory(DBEntityTag.class),
-				new EntityTagTableReader(dbCtx, "relation_tag", "relation_id"),
+				new EntityTagTableReader(dbCtx, "relation_tags", "relation_id"),
 				"reltag",
 				true
 			)
@@ -74,7 +74,7 @@ public class RelationReader implements ReleasableIterator<Relation> {
 		relationTagReader = new PeekableIterator<DBEntityTag>(
 			new PersistentIterator<DBEntityTag>(
 				new SingleClassObjectSerializationFactory(DBEntityTag.class),
-				new EntityTagTableReader(dbCtx, "relation_tag", "relation_id", constraintTable),
+				new EntityTagTableReader(dbCtx, "relation_tags", "relation_id", constraintTable),
 				"reltag",
 				true
 			)
