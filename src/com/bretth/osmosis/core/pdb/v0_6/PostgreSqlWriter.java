@@ -1041,7 +1041,9 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	public void process(WayContainer wayContainer) {
 		// Ignore ways with a single node because they can't be loaded into postgis.
-		wayBuffer.add(wayContainer.getEntity());
+		if (wayContainer.getEntity().getWayNodeList().size() > 1) {
+			wayBuffer.add(wayContainer.getEntity());
+		}
 		
 		flushWays(false);
 	}
