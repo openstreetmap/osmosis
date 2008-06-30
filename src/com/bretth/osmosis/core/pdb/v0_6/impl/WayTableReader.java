@@ -7,8 +7,8 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Way;
-import com.bretth.osmosis.core.pgsql.common.BaseTableReader;
-import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
+import com.bretth.osmosis.core.pdb.common.BaseTableReader;
+import com.bretth.osmosis.core.pdb.common.DatabaseContext;
 
 
 /**

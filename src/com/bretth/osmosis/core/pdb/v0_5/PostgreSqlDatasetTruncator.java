@@ -3,8 +3,8 @@ package com.bretth.osmosis.core.pdb.v0_5;
 
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
-import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
-import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
+import com.bretth.osmosis.core.pdb.common.DatabaseContext;
+import com.bretth.osmosis.core.pdb.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.task.common.RunnableTask;
 
 

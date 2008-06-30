@@ -16,8 +16,8 @@ import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
+import com.bretth.osmosis.core.pdb.common.CopyFileWriter;
 import com.bretth.osmosis.core.pdb.common.PointBuilder;
-import com.bretth.osmosis.core.pgsql.common.CopyFileWriter;
 import com.bretth.osmosis.core.store.CompletableContainer;
 import com.bretth.osmosis.core.task.v0_6.Sink;
 

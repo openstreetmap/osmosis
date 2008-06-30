@@ -8,9 +8,9 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.container.v0_6.ChangeContainer;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
+import com.bretth.osmosis.core.pdb.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.pdb.v0_6.impl.ActionChangeWriter;
 import com.bretth.osmosis.core.pdb.v0_6.impl.ChangeWriter;
-import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.task.common.ChangeAction;
 import com.bretth.osmosis.core.task.v0_6.ChangeSink;
 

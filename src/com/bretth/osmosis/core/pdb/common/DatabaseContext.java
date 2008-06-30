@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.pgsql.common;
+package com.bretth.osmosis.core.pdb.common;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

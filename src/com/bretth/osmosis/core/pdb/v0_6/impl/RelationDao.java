@@ -13,7 +13,7 @@ import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityTag;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBRelationMember;
-import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
+import com.bretth.osmosis.core.pdb.common.DatabaseContext;
 import com.bretth.osmosis.core.store.Releasable;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 

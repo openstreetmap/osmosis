@@ -29,10 +29,10 @@ import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityTag;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBRelationMember;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBWayNode;
+import com.bretth.osmosis.core.pdb.common.DatabaseContext;
 import com.bretth.osmosis.core.pdb.common.PointBuilder;
+import com.bretth.osmosis.core.pdb.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.pdb.v0_6.impl.MemberTypeValueMapper;
-import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
-import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.task.v0_6.Sink;
 
 

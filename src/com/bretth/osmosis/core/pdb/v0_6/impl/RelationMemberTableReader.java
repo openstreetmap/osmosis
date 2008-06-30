@@ -8,8 +8,8 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.EntityType;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBRelationMember;
-import com.bretth.osmosis.core.pgsql.common.BaseTableReader;
-import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
+import com.bretth.osmosis.core.pdb.common.BaseTableReader;
+import com.bretth.osmosis.core.pdb.common.DatabaseContext;
 
 
 /**
