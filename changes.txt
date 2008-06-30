@@ -4,6 +4,8 @@ Updated the pgsql simple tasks to use an SRID of 4326.
 Updated build script to include a tar file distribution preserving launch script execute permissions.
 Enhanced the Entity class to allow dates to be represented as strings to avoid parsing overhead.  Updated xml tasks to utilise this feature.
 Updated the pgsql simple tasks to use the new database schema which is more similar to the one used in the central MySQL
+Removed the old postgresql tasks.
+Removed "simple" from the names of the simple pgsql tasks.
 
 0.28
 Added a maximum file download count feature to the change downloader to limit processing overhead when synchronising long time intervals. 
