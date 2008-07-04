@@ -1,6 +1,10 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.bretth.osmosis.core.buffer.v0_6.ChangeBufferFactory;
 import com.bretth.osmosis.core.buffer.v0_6.EntityBufferFactory;
@@ -32,6 +36,7 @@ import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetReaderFactory;
 import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetTruncatorFactory;
 import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetWriterFactory;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
+import com.bretth.osmosis.core.plugin.PluginLoader;
 import com.bretth.osmosis.core.progress.v0_6.ChangeProgressLoggerFactory;
 import com.bretth.osmosis.core.progress.v0_6.EntityProgressLoggerFactory;
 import com.bretth.osmosis.core.report.v0_6.EntityReporterFactory;
@@ -56,10 +61,25 @@ import com.bretth.osmosis.core.xml.v0_6.XmlWriterFactory;
  * @author Brett Henderson
  */
 public class TaskRegistrar {
+	
+	
 	/**
-	 * Initialises factories for all tasks.
+	 * Initialises factories for all tasks. No plugins are loaded by this
+	 * method.
 	 */
 	public static void initialize() {
+		initialize(new ArrayList<String>());
+	}
+	
+	
+	/**
+	 * Initialises factories for all tasks. Loads additionally specified plugins
+	 * as well as default tasks.
+	 * 
+	 * @param plugins
+	 *            The class names of all plugins to be loaded.
+	 */
+	public static void initialize(List<String> plugins) {
 		com.bretth.osmosis.core.sort.v0_5.EntitySorterFactory entitySorterFactory05;
 		com.bretth.osmosis.core.sort.v0_5.ChangeSorterFactory changeSorterFactory05;
 		EntitySorterFactory entitySorterFactory06;
@@ -248,5 +268,61 @@ public class TaskRegistrar {
 		TaskManagerFactory.register("way-key-value-0.6", new WayKeyValueFilterFactory());
 		TaskManagerFactory.register("read-change-interval-0.6", new ChangeDownloaderFactory());
 		TaskManagerFactory.register("read-change-interval-init-0.6", new ChangeDownloadInitializerFactory());
+		
+		// Register the plugins.
+		for (String plugin : plugins) {
+			loadPlugin(plugin);
+		}
+	}
+	
+	
+	/**
+	 * Loads the tasks associated with a plugin.
+	 * 
+	 * @param plugin
+	 *            The plugin loader class name.
+	 */
+	@SuppressWarnings("unchecked")
+	private static void loadPlugin(String plugin) {
+		ClassLoader classLoader;
+		Class<?> untypedPluginClass;
+		Class<PluginLoader> pluginClass;
+		PluginLoader pluginLoader;
+		Map<String, TaskManagerFactory> pluginTasks;
+		
+		// Obtain the thread context class loader. This becomes important if run
+		// within an application server environment where plugins might be
+		// inaccessible to this class's classloader.
+		classLoader = Thread.currentThread().getContextClassLoader();
+		
+		// Load the plugin class.
+		try {
+			untypedPluginClass = classLoader.loadClass(plugin);
+		} catch (ClassNotFoundException e) {
+			throw new OsmosisRuntimeException("Unable to load plugin class (" + plugin + ").", e);
+		}
+		
+		// Verify that the plugin implements the plugin loader interface.
+		if (!PluginLoader.class.isAssignableFrom(untypedPluginClass)) {
+			throw new OsmosisRuntimeException("The class (" + plugin + ") does not implement interface (" + PluginLoader.class.getName() + ").");
+		}
+		pluginClass = (Class<PluginLoader>) untypedPluginClass;
+		
+		// Instantiate the plugin loader.
+		try {
+			pluginLoader = pluginClass.newInstance();
+		} catch (InstantiationException e) {
+			throw new OsmosisRuntimeException("Unable to instantiate class (" + plugin + ")", e);
+		} catch (IllegalAccessException e) {
+			throw new OsmosisRuntimeException("Unable to instantiate class (" + plugin + ")", e);
+		}
+		
+		// Obtain the plugin task factories with their names.
+		pluginTasks = pluginLoader.loadTaskFactories();
+		
+		// Register the plugin tasks.
+		for (Entry<String, TaskManagerFactory> taskEntry : pluginTasks.entrySet()) {
+			TaskManagerFactory.register(taskEntry.getKey(), taskEntry.getValue());
+		}
 	}
 }

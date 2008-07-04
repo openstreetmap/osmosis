@@ -41,7 +41,7 @@ public class Osmosis {
 			configureLoggingLevel(commandLineParser.getLogLevel());
 			
 			log.info("Osmosis Version " + OsmosisConstants.VERSION);
-			TaskRegistrar.initialize();
+			TaskRegistrar.initialize(commandLineParser.getPlugins());
 			
 			pipeline = new Pipeline();
 			

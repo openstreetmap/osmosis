@@ -6,6 +6,7 @@ Enhanced the Entity class to allow dates to be represented as strings to avoid p
 Updated the pgsql simple tasks to use the new database schema which is more similar to the one used in the central MySQL
 Removed the old postgresql tasks.
 Removed "simple" from the names of the simple pgsql tasks.
+Added plugin support allowing new tasks in external jar files to be registered with osmosis.
 
 0.28
 Added a maximum file download count feature to the change downloader to limit processing overhead when synchronising long time intervals. 

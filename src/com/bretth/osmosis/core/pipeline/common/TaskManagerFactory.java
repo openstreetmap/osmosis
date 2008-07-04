@@ -39,6 +39,18 @@ public abstract class TaskManagerFactory {
 	
 	
 	/**
+	 * Unregisters all currently registered task manager factories. This is
+	 * required for testing and shouldn't be used.
+	 * 
+	 * @deprecated Only used for testing.
+	 */
+	@Deprecated
+	public static void clearAll() {
+		factoryMap.clear();
+	}
+	
+	
+	/**
 	 * Registers a new factory.
 	 * 
 	 * @param taskType

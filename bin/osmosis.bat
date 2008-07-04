@@ -2,6 +2,11 @@
 REM This is an equivalent Windows batch file to complement the unix shell script
 REM Corresponding lines from the shell script are printed before the matching batch file commands
 
+REM # Config files can define several variables used throughout this script.
+REM # JAVACMD - The java command to launch osmosis.
+REM # JAVACMD_OPTIONS - The options to append to the java command, typically used to modify jvm settings such as max memory.
+REM # OSMOSIS_OPTIONS - The options to apply to all osmosis invocations, typically used to add plugins or make quiet operation the default.
+
 REM if [ -f /etc/osmosis ] ; then
 REM   . /etc/osmosis
 REM fi
@@ -58,6 +63,6 @@ REM #echo $EXEC
 REM exec $EXEC
 set MAINCLASS=com.bretth.osmosis.core.Osmosis
 
-SET EXEC=%JAVACMD% -cp %MYAPP_HOME%\osmosis.jar;%MYAPP_HOME%\lib\mysql-connector-java-5.0.7-bin.jar;%MYAPP_HOME%\lib\postgresql-8.3-603.jdbc4.jar;%MYAPP_HOME%\lib\postgis_1.3.2.jar %MAINCLASS% %*
+SET EXEC=%JAVACMD% %JAVACMD_OPTIONS% -cp %MYAPP_HOME%\osmosis.jar;%MYAPP_HOME%\lib\mysql-connector-java-5.0.7-bin.jar;%MYAPP_HOME%\lib\postgresql-8.3-603.jdbc4.jar;%MYAPP_HOME%\lib\postgis_1.3.2.jar %MAINCLASS% %OSMOSIS_OPTIONS% %*
 
 %EXEC%

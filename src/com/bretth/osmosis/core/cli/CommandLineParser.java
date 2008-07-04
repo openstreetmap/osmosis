@@ -19,10 +19,14 @@ import com.bretth.osmosis.core.pipeline.common.PipelineConstants;
  */
 public class CommandLineParser {
 	
-	private final String GLOBAL_ARGUMENT_PREFIX = "-";
-	private final String TASK_ARGUMENT_PREFIX = "--";
-	private final String OPTION_QUIET = "q";
-	private final String OPTION_VERBOSE = "v";
+	private static final String GLOBAL_ARGUMENT_PREFIX = "-";
+	private static final String TASK_ARGUMENT_PREFIX = "--";
+	private static final String OPTION_QUIET_SHORT = "q";
+	private static final String OPTION_QUIET_LONG = "quiet";
+	private static final String OPTION_VERBOSE_SHORT = "v";
+	private static final String OPTION_VERBOSE_LONG = "verbose";
+	private static final String OPTION_PLUGIN_SHORT = "p";
+	private static final String OPTION_PLUGIN_LONG = "plugin";
 	
 	
 	/**
@@ -48,6 +52,7 @@ public class CommandLineParser {
 	private List<TaskConfiguration> taskConfigList;
 	private int quietValue;
 	private int verboseValue;
+	private List<String> plugins;
 	
 	
 	/**
@@ -58,6 +63,7 @@ public class CommandLineParser {
 		
 		quietValue = 0;
 		verboseValue = 0;
+		plugins = new ArrayList<String>();
 	}
 	
 	
@@ -68,6 +74,11 @@ public class CommandLineParser {
 	 *            The arguments.
 	 */
 	public void parse(String [] programArgs) {
+		List<GlobalOptionConfiguration> globalOptions;
+		
+		// Create the global options list.
+		globalOptions = new ArrayList<GlobalOptionConfiguration>();
+		
 		// Process the command line arguments to build all nodes in the pipeline.
 		for (int i = 0; i < programArgs.length; ) {
 			String arg;
@@ -77,9 +88,20 @@ public class CommandLineParser {
 			if (arg.indexOf(TASK_ARGUMENT_PREFIX) == 0) {
 				i = parseTask(programArgs, i);
 			} else if (arg.indexOf(GLOBAL_ARGUMENT_PREFIX) == 0) {
-				i = parseGlobalOption(programArgs, i);
+				i = parseGlobalOption(globalOptions, programArgs, i);
 			} else {
 				throw new OsmosisRuntimeException("Expected argument " + (i + 1) + " to be an option or task name.");
+			}
+		}
+		
+		// Process the global options.
+		for (GlobalOptionConfiguration globalOption : globalOptions) {
+			if (isArgumentForOption(OPTION_QUIET_SHORT, OPTION_QUIET_LONG, globalOption.name)) {
+				quietValue = parseOptionIntegerWithDefault(globalOption, 0) + 1;
+			} else if (isArgumentForOption(OPTION_VERBOSE_SHORT, OPTION_VERBOSE_LONG, globalOption.name)) {
+				verboseValue = parseOptionIntegerWithDefault(globalOption, 0) + 1;
+			} else if (isArgumentForOption(OPTION_PLUGIN_SHORT, OPTION_PLUGIN_LONG, globalOption.name)) {
+				plugins.add(parseOptionString(globalOption));
 			}
 		}
 	}
@@ -88,69 +110,134 @@ public class CommandLineParser {
 	/**
 	 * Checks if the current command line argument is for the specified option.
 	 * 
-	 * @param optionName
-	 *            The name of the option to check for.
-	 * @param rawArgument
+	 * @param shortOptionName
+	 *            The short name of the option to check for.
+	 * @param longOptionName
+	 *            The long name of the option to check for.
+	 * @param argument
 	 *            The command line argument without the option prefix.
 	 * @return True if the argument is for the specified option.
 	 */
-	private boolean isArgumentForOption(String optionName, String rawArgument) {
-		return rawArgument.substring(0, optionName.length()).equals(optionName);
+	private boolean isArgumentForOption(String shortOptionName, String longOptionName, String argument) {
+		return shortOptionName.equals(argument) || longOptionName.equals(argument);
 	}
 	
 	
 	/**
-	 * Parses a command line argument into an integer. If none is specified,
-	 * zero will be returned.
+	 * Determines if an argument is a parameter to the current option/task or
+	 * the start of another option/task.
 	 * 
-	 * @param optionName
-	 *            The name of the command line option.
-	 * @param rawArgument
-	 *            The command line argument, this must include optionName as a
-	 *            prefix which will be stripped off.
+	 * @param argument
+	 *            The argument.
+	 * @return True if this is an option parameter.
+	 */
+	private boolean isOptionParameter(String argument) {
+		if (argument.length() >= GLOBAL_ARGUMENT_PREFIX.length()) {
+			if (argument.substring(0, GLOBAL_ARGUMENT_PREFIX.length()).equals(GLOBAL_ARGUMENT_PREFIX)) {
+				return false;
+			}
+		}
+		
+		if (argument.length() >= TASK_ARGUMENT_PREFIX.length()) {
+			if (argument.substring(0, TASK_ARGUMENT_PREFIX.length()).equals(TASK_ARGUMENT_PREFIX)) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	
+	/**
+	 * Parses a command line option into an integer. If none is specified, zero
+	 * will be returned.
+	 * 
+	 * @param globalOption
+	 *            The global option to be parsed.
 	 * @return The integer value.
 	 */
-	private int parseOptionInteger(String optionName, String rawArgument, int offset) {
-		String optionValue;
+	private int parseOptionIntegerWithDefault(GlobalOptionConfiguration globalOption, int defaultValue) {
+		int result;
 		
-		optionValue = rawArgument.substring(optionName.length());
-		if (optionValue.length() <= 0) {
-			return 0;
+		// If no parameters are available, we use the default value.
+		if (globalOption.parameters.size() <= 0) {
+			return defaultValue;
 		}
 		
+		// An integer option may only have one parameter.
+		if (globalOption.parameters.size() > 1) {
+			throw new OsmosisRuntimeException("Expected argument " + (globalOption.offset + 1) + " to have no more than one parameter.");
+		}
+		
+		// Parse the option.
 		try {
-			return Integer.parseInt(optionValue);
+			result = Integer.parseInt(globalOption.parameters.get(0));
 			
 		} catch (NumberFormatException e) {
-			throw new OsmosisRuntimeException("Expected argument " + (offset + 1) + " to contain an integer value.");
+			throw new OsmosisRuntimeException("Expected argument " + (globalOption.offset + 2) + " to contain an integer value.");
 		}
+		
+		return result;
+	}
+	
+	
+	/**
+	 * Parses a command line option into an string.
+	 * 
+	 * @param globalOption
+	 *            The global option to be parsed.
+	 */
+	private String parseOptionString(GlobalOptionConfiguration globalOption) {
+		// A string option must have one parameter.
+		if (globalOption.parameters.size() != 1) {
+			throw new OsmosisRuntimeException("Expected argument " + (globalOption.offset + 1) + " to have one parameter.");
+		}
+		
+		return globalOption.parameters.get(0);
 	}
 	
 	
 	/**
 	 * Parses the details of a single option.
 	 * 
+	 * @param globalOptions
+	 *            The list of global options being parsed, the new option will
+	 *            be stored into this object.
 	 * @param programArgs
 	 *            The command line arguments passed to this application.
 	 * @param offset
 	 *            The current offset through the command line arguments.
 	 * @return The new offset through the command line arguments.
 	 */
-	private int parseGlobalOption(String [] programArgs, int offset) {
+	private int parseGlobalOption(List<GlobalOptionConfiguration> globalOptions, String [] programArgs, int offset) {
 		int i;
 		String argument;
+		GlobalOptionConfiguration globalOption;
 		
 		i = offset;
 		argument = programArgs[i++].substring(1);
 		
-		if (isArgumentForOption(OPTION_QUIET, argument)) {
-			quietValue = parseOptionInteger(OPTION_QUIET, argument, i - 1) + 1;
-		}
-		if (isArgumentForOption(OPTION_VERBOSE, argument)) {
-			verboseValue = parseOptionInteger(OPTION_VERBOSE, argument, i - 1) + 1;
+		globalOption = new GlobalOptionConfiguration();
+		globalOption.name = argument;
+		globalOption.offset = offset;
+		
+		// Loop until the next option or task is reached and add the arguments as parameters to the option.
+		while ((i < programArgs.length) && isOptionParameter(programArgs[i])) {
+			globalOption.parameters.add(programArgs[i++]);
 		}
 		
+		// Add the fully populated global option object to the list.
+		globalOptions.add(globalOption);
+		
 		return i;
+		
+		/*if (isArgumentForOption(OPTION_QUIET_SHORT, OPTION_QUIET_LONG, argument)) {
+			quietValue = parseOptionInteger(OPTION_QUIET, argument, i - 1) + 1;
+		} else if (isArgumentForOption(OPTION_VERBOSE_SHORT, OPTION_VERBOSE_LONG, argument)) {
+			verboseValue = parseOptionInteger(OPTION_VERBOSE, argument, i - 1) + 1;
+		} else if (isArgumentForOption(OPTION_PLUGIN_SHORT, OPTION_PLUGIN_LONG, argument)) {
+			
+		}*/
 	}
 	
 	
@@ -272,5 +359,43 @@ public class CommandLineParser {
 		}
 		
 		return logLevels[logLevelIndex];
+	}
+	
+	
+	/**
+	 * Returns the plugins to be loaded.
+	 * 
+	 * @return The list of plugin class names.
+	 */
+	public List<String> getPlugins() {
+		return plugins;
+	}
+	
+	
+	/**
+	 * A data storage class holding information relating to a global option
+	 * during parsing.
+	 */
+	private class GlobalOptionConfiguration {
+		/**
+		 * The name of the option.
+		 */
+		public String name;
+		/**
+		 * The parameters for the option.
+		 */
+		public List<String> parameters;
+		/**
+		 * The command line argument offset of this global option.
+		 */
+		public int offset;
+		
+		
+		/**
+		 * Creates a new instance.
+		 */
+		public GlobalOptionConfiguration() {
+			parameters = new ArrayList<String>();
+		}
 	}
 }
