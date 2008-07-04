@@ -1,20 +1,18 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.bretth.osmosis.core.cli.TaskConfiguration;
-import com.bretth.osmosis.core.misc.v0_5.NullChangeWriterFactory;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.v0_5.ChangeSinkManager;
 import com.bretth.osmosis.core.pipeline.v0_5.SinkManager;
-import com.bretth.osmosis.core.plugin.PluginLoader;
 
 
 /**
@@ -52,35 +50,11 @@ public class TaskRegistrarTest {
 		
 		// Initialse the task registrar with no plugins.
 		TaskManagerFactory.clearAll();
-		TaskRegistrar.initialize(Arrays.asList("com.bretth.osmosis.core.TaskRegistrarTest$TestPluginLoader"));
+		TaskRegistrar.initialize(Arrays.asList("com.bretth.osmosis.core.MyPluginLoader"));
 		
 		// Create a task from the plugin registered task list.
 		taskManager = TaskManagerFactory.createTaskManager(new TaskConfiguration("myId", "my-plugin-task", new HashMap<String, String>(), new HashMap<String, String>(), null));
 		
 		Assert.assertEquals("Incorrect task manager created.", ChangeSinkManager.class, taskManager.getClass());
-	}
-	
-	
-	/**
-	 * A simple plugin loader to validate plugin functionality.
-	 * 
-	 * @author Brett Henderson
-	 */
-	public static class TestPluginLoader implements PluginLoader {
-		
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public Map<String, TaskManagerFactory> loadTaskFactories() {
-			Map<String, TaskManagerFactory> taskFactories;
-			
-			taskFactories = new HashMap<String, TaskManagerFactory>();
-			
-			// Register a task under a new name.  We can use an existing task implementation for simplicity.
-			taskFactories.put("my-plugin-task", new NullChangeWriterFactory());
-			
-			return taskFactories;
-		}
 	}
 }
