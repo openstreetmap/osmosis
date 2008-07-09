@@ -28,6 +28,7 @@ public class Osmosis {
 	public static void main(String[] args) {
 		try {
 			CommandLineParser commandLineParser;
+			TaskRegistrar taskRegistrar;
 			Pipeline pipeline;
 			
 			configureLoggingConsole();
@@ -41,9 +42,10 @@ public class Osmosis {
 			configureLoggingLevel(commandLineParser.getLogLevel());
 			
 			log.info("Osmosis Version " + OsmosisConstants.VERSION);
-			TaskRegistrar.initialize(commandLineParser.getPlugins());
+			taskRegistrar = new TaskRegistrar();
+			taskRegistrar.initialize(commandLineParser.getPlugins());
 			
-			pipeline = new Pipeline();
+			pipeline = new Pipeline(taskRegistrar.getFactoryRegister());
 			
 			log.info("Preparing pipeline.");
 			pipeline.prepare(commandLineParser.getTaskInfoList());

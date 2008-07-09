@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.cli.TaskConfiguration;
 
 
 /**
@@ -20,13 +19,19 @@ import com.bretth.osmosis.core.cli.TaskConfiguration;
 public class Pipeline {
 	private static final Logger log = Logger.getLogger(Pipeline.class.getName());
 	
+	private TaskManagerFactoryRegister factoryRegister;
 	private List<TaskManager> taskManagers;
 	
 	
 	/**
 	 * Creates a new instance.
+	 * 
+	 * @param factoryRegister
+	 *            The register containing all known task manager factories.
 	 */
-	public Pipeline() {
+	public Pipeline(TaskManagerFactoryRegister factoryRegister) {
+		this.factoryRegister = factoryRegister;
+		
 		taskManagers = new ArrayList<TaskManager>();
 	}
 	
@@ -43,7 +48,7 @@ public class Pipeline {
 		for (TaskConfiguration taskConfig : taskInfoList) {
 			// Create the new task manager and add to the pipeline.
 			taskManagers.add(
-				TaskManagerFactory.createTaskManager(taskConfig)
+				factoryRegister.getInstance(taskConfig.getType()).createTaskManager(taskConfig)
 			);
 			
 			if (log.isLoggable(Level.FINE)) {

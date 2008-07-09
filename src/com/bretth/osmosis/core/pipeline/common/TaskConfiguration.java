@@ -1,12 +1,12 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.cli;
+package com.bretth.osmosis.core.pipeline.common;
 
 import java.util.Collections;
 import java.util.Map;
 
 
 /**
- * Contains all command line information relating to a single task.
+ * Contains all information relating to the configuration of a single task.
  * 
  * @author Brett Henderson
  */
@@ -30,8 +30,8 @@ public class TaskConfiguration {
 	public TaskConfiguration(String id, String type, Map<String, String> pipeArgs, Map<String, String> configArgs, String defaultArg) {
 		this.id = id;
 		this.type = type;
-		this.pipeArgs = pipeArgs;
-		this.configArgs = configArgs;
+		this.pipeArgs = Collections.unmodifiableMap(pipeArgs);
+		this.configArgs = Collections.unmodifiableMap(configArgs);
 		this.defaultArg = defaultArg;
 	}
 	
@@ -62,7 +62,7 @@ public class TaskConfiguration {
 	 * @return The pipeArgs.
 	 */
 	public Map<String, String> getPipeArgs() {
-		return Collections.unmodifiableMap(pipeArgs);
+		return pipeArgs;
 	}
 	
 	
@@ -72,7 +72,7 @@ public class TaskConfiguration {
 	 * @return The configArgs.
 	 */
 	public Map<String, String> getConfigArgs() {
-		return Collections.unmodifiableMap(configArgs);
+		return configArgs;
 	}
 	
 	

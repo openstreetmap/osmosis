@@ -5,9 +5,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.container.v0_5.ChangeContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.pipeline.common.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.v0_5.ChangeSinkChangeSourceManager;

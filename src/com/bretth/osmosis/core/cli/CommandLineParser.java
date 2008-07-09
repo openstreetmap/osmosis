@@ -9,6 +9,7 @@ import java.util.logging.Level;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.pipeline.common.PipelineConstants;
+import com.bretth.osmosis.core.pipeline.common.TaskConfiguration;
 
 
 /**
@@ -102,6 +103,8 @@ public class CommandLineParser {
 				verboseValue = parseOptionIntegerWithDefault(globalOption, 0) + 1;
 			} else if (isArgumentForOption(OPTION_PLUGIN_SHORT, OPTION_PLUGIN_LONG, globalOption.name)) {
 				plugins.add(parseOptionString(globalOption));
+			} else {
+				throw new OsmosisRuntimeException("Argument " + (globalOption.offset + 1) + " specifies an unrecognised option.");
 			}
 		}
 	}
@@ -230,14 +233,6 @@ public class CommandLineParser {
 		globalOptions.add(globalOption);
 		
 		return i;
-		
-		/*if (isArgumentForOption(OPTION_QUIET_SHORT, OPTION_QUIET_LONG, argument)) {
-			quietValue = parseOptionInteger(OPTION_QUIET, argument, i - 1) + 1;
-		} else if (isArgumentForOption(OPTION_VERBOSE_SHORT, OPTION_VERBOSE_LONG, argument)) {
-			verboseValue = parseOptionInteger(OPTION_VERBOSE, argument, i - 1) + 1;
-		} else if (isArgumentForOption(OPTION_PLUGIN_SHORT, OPTION_PLUGIN_LONG, argument)) {
-			
-		}*/
 	}
 	
 	

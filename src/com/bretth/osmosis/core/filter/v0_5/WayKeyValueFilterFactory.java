@@ -1,6 +1,6 @@
 package com.bretth.osmosis.core.filter.v0_5;
 
-import com.bretth.osmosis.core.cli.TaskConfiguration;
+import com.bretth.osmosis.core.pipeline.common.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.v0_5.SinkSourceManager;

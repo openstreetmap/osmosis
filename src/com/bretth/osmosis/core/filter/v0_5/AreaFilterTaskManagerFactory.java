@@ -2,8 +2,8 @@
 package com.bretth.osmosis.core.filter.v0_5;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.filter.common.IdTrackerType;
+import com.bretth.osmosis.core.pipeline.common.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 
 

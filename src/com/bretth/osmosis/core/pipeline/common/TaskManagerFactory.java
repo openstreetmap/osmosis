@@ -4,13 +4,13 @@ package com.bretth.osmosis.core.pipeline.common;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.cli.TaskConfiguration;
 
 
 /**
@@ -26,63 +26,23 @@ public abstract class TaskManagerFactory {
 	private static final String DATE_FORMAT = "yyyy-MM-dd_HH:mm:ss";
 	private static final Locale DATE_LOCALE = Locale.US;
 	
-	
 	/**
-	 * The global register of task manager factories, keyed by a unique
-	 * identifier.
+	 * This stores the task options that have been accessed during task
+	 * configuration. Any unused options are typically misspelt options that
+	 * should raise an error. Minor overkill but this is stored as a thread
+	 * local to ensure multiple threads can access a factory safely.
 	 */
-	private static Map<String, TaskManagerFactory> factoryMap;
-
-	static {
-		factoryMap = new HashMap<String, TaskManagerFactory>();
-	}
+	private ThreadLocal<Set<String>> accessedTaskOptions;
 	
 	
 	/**
-	 * Unregisters all currently registered task manager factories. This is
-	 * required for testing and shouldn't be used.
-	 * 
-	 * @deprecated Only used for testing.
+	 * Creates a new instance.
 	 */
-	@Deprecated
-	public static void clearAll() {
-		factoryMap.clear();
+	protected TaskManagerFactory() {
+		accessedTaskOptions = new ThreadLocal<Set<String>>();
 	}
 	
 	
-	/**
-	 * Registers a new factory.
-	 * 
-	 * @param taskType
-	 *            The name the factory is identified by.
-	 * @param factory
-	 *            The factory to be registered.
-	 */
-	public static void register(String taskType, TaskManagerFactory factory) {
-		if (factoryMap.containsKey(taskType)) {
-			throw new OsmosisRuntimeException("Task type \"" + taskType + "\" already exists.");
-		}
-		
-		factoryMap.put(taskType, factory);
-	}
-	
-
-	/**
-	 * Get a task manager factory from the register.
-	 * 
-	 * @param taskType
-	 *            The type of task requiring a factory.
-	 * @return The factory instance.
-	 */
-	private static TaskManagerFactory getInstance(String taskType) {
-		if (!factoryMap.containsKey(taskType)) {
-			throw new OsmosisRuntimeException("Task type " + taskType
-					+ " doesn't exist.");
-		}
-
-		return factoryMap.get(taskType);
-	}
-
 	/**
 	 * Create a new task manager containing a task instance.
 	 * 
@@ -91,8 +51,25 @@ public abstract class TaskManagerFactory {
 	 *            the task.
 	 * @return The newly created task manager.
 	 */
-	public static TaskManager createTaskManager(TaskConfiguration taskConfig) {
-		return getInstance(taskConfig.getType()).createTaskManagerImpl(taskConfig);
+	public TaskManager createTaskManager(TaskConfiguration taskConfig) {
+		TaskManager taskManager;
+		
+		// Create a new accessed task options store.
+		accessedTaskOptions.set(new HashSet<String>());
+		
+		taskManager = createTaskManagerImpl(taskConfig);
+		
+		for (String argName : taskConfig.getConfigArgs().keySet()) {
+			if (!accessedTaskOptions.get().contains(argName)) {
+				throw new OsmosisRuntimeException(
+					"Argument " + argName + " for task " + taskConfig.getId() + " was not recognised.");
+			}
+		}
+		
+		// Clear the accessed task options.
+		accessedTaskOptions.set(null);
+		
+		return taskManager;
 	}
 	
 	
@@ -155,6 +132,8 @@ public abstract class TaskManagerFactory {
 	protected String getStringArgument(TaskConfiguration taskConfig, String argName) {
 		Map<String, String> configArgs;
 		
+		accessedTaskOptions.get().add(argName);
+		
 		configArgs = taskConfig.getConfigArgs();
 		
 		if (configArgs.containsKey(argName)) {
@@ -182,6 +161,8 @@ public abstract class TaskManagerFactory {
 	 */
 	protected String getStringArgument(TaskConfiguration taskConfig, String argName, String defaultValue) {
 		Map<String, String> configArgs;
+		
+		accessedTaskOptions.get().add(argName);
 		
 		configArgs = taskConfig.getConfigArgs();
 		
@@ -238,6 +219,8 @@ public abstract class TaskManagerFactory {
 	protected int getIntegerArgument(TaskConfiguration taskConfig, String argName, int defaultValue) {
 		Map<String, String> configArgs;
 		
+		accessedTaskOptions.get().add(argName);
+		
 		configArgs = taskConfig.getConfigArgs();
 		
 		if (configArgs.containsKey(argName)) {
@@ -271,6 +254,8 @@ public abstract class TaskManagerFactory {
 			String argName, double defaultValue) {
 		Map<String, String> configArgs;
 		
+		accessedTaskOptions.get().add(argName);
+		
 		configArgs = taskConfig.getConfigArgs();
 		
 		if (configArgs.containsKey(argName)) {
@@ -303,6 +288,8 @@ public abstract class TaskManagerFactory {
 	protected Date getDateArgument(TaskConfiguration taskConfig, 
 			String argName, Date defaultValue) {
 		Map<String, String> configArgs;
+		
+		accessedTaskOptions.get().add(argName);
 		
 		configArgs = taskConfig.getConfigArgs();
 		
@@ -341,6 +328,8 @@ public abstract class TaskManagerFactory {
 	protected Date getDateArgument(TaskConfiguration taskConfig, 
 			String argName, TimeZone timeZone) {
 		Map<String, String> configArgs;
+		
+		accessedTaskOptions.get().add(argName);
 		
 		configArgs = taskConfig.getConfigArgs();
 		
@@ -381,6 +370,8 @@ public abstract class TaskManagerFactory {
 	protected boolean getBooleanArgument(TaskConfiguration taskConfig, 
 			String argName, boolean defaultValue) {
 		Map<String, String> configArgs;
+		
+		accessedTaskOptions.get().add(argName);
 		
 		configArgs = taskConfig.getConfigArgs();
 		

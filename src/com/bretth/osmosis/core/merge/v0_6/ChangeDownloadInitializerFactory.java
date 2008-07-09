@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.Date;
 import java.util.TimeZone;
 
-import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.RunnableTaskManager;
+import com.bretth.osmosis.core.pipeline.common.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 

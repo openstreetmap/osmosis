@@ -1,7 +1,7 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.xml.v0_6;
 
-import com.bretth.osmosis.core.cli.TaskConfiguration;
+import com.bretth.osmosis.core.pipeline.common.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.v0_6.RunnableSourceManager;
@@ -31,7 +31,7 @@ public class XmlDownloaderFactory extends TaskManagerFactory {
      * {@inheritDoc}
      */
     @Override
-    protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
+	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		double left;
 		double right;
 		double top;

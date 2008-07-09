@@ -36,6 +36,7 @@ import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetReaderFactory;
 import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetTruncatorFactory;
 import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetWriterFactory;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
+import com.bretth.osmosis.core.pipeline.common.TaskManagerFactoryRegister;
 import com.bretth.osmosis.core.plugin.PluginLoader;
 import com.bretth.osmosis.core.progress.v0_6.ChangeProgressLoggerFactory;
 import com.bretth.osmosis.core.progress.v0_6.EntityProgressLoggerFactory;
@@ -62,12 +63,36 @@ import com.bretth.osmosis.core.xml.v0_6.XmlWriterFactory;
  */
 public class TaskRegistrar {
 	
+
+	 /**
+	  * The register containing all known task manager factories.
+	  */
+	 private TaskManagerFactoryRegister factoryRegister;
+	
+	
+	/**
+	 * Creates a new instance.
+	 */
+	public TaskRegistrar() {
+		factoryRegister = new TaskManagerFactoryRegister();
+	}
+	
+	
+	/**
+	 * Returns the configured task manager factory register configured.
+	 * 
+	 * @return The task manager factory register.
+	 */
+	public TaskManagerFactoryRegister getFactoryRegister() {
+		return factoryRegister;
+	}
+	
 	
 	/**
 	 * Initialises factories for all tasks. No plugins are loaded by this
 	 * method.
 	 */
-	public static void initialize() {
+	public void initialize() {
 		initialize(new ArrayList<String>());
 	}
 	
@@ -79,7 +104,7 @@ public class TaskRegistrar {
 	 * @param plugins
 	 *            The class names of all plugins to be loaded.
 	 */
-	public static void initialize(List<String> plugins) {
+	public void initialize(List<String> plugins) {
 		com.bretth.osmosis.core.sort.v0_5.EntitySorterFactory entitySorterFactory05;
 		com.bretth.osmosis.core.sort.v0_5.ChangeSorterFactory changeSorterFactory05;
 		EntitySorterFactory entitySorterFactory06;
@@ -98,176 +123,176 @@ public class TaskRegistrar {
 		changeSorterFactory06.registerComparator("seekable", new ChangeForSeekableApplierComparator(), false);
 		
 		// Register factories.
-		TaskManagerFactory.register("apply-change", new com.bretth.osmosis.core.change.v0_5.ChangeApplierFactory());
-		TaskManagerFactory.register("ac", new com.bretth.osmosis.core.change.v0_5.ChangeApplierFactory());
-		TaskManagerFactory.register("bounding-box", new com.bretth.osmosis.core.filter.v0_5.BoundingBoxFilterFactory());
-		TaskManagerFactory.register("bb", new com.bretth.osmosis.core.filter.v0_5.BoundingBoxFilterFactory());
-		TaskManagerFactory.register("derive-change", new com.bretth.osmosis.core.change.v0_5.ChangeDeriverFactory());
-		TaskManagerFactory.register("dc", new com.bretth.osmosis.core.change.v0_5.ChangeDeriverFactory());
-		TaskManagerFactory.register("read-mysql", new com.bretth.osmosis.core.mysql.v0_5.MysqlReaderFactory());
-		TaskManagerFactory.register("rm", new com.bretth.osmosis.core.mysql.v0_5.MysqlReaderFactory());
-		TaskManagerFactory.register("read-mysql-change", new com.bretth.osmosis.core.mysql.v0_5.MysqlChangeReaderFactory());
-		TaskManagerFactory.register("rmc", new com.bretth.osmosis.core.mysql.v0_5.MysqlChangeReaderFactory());
-		TaskManagerFactory.register("read-mysql-current", new com.bretth.osmosis.core.mysql.v0_5.MySqlCurrentReaderFactory());
-		TaskManagerFactory.register("rmcur", new com.bretth.osmosis.core.mysql.v0_5.MySqlCurrentReaderFactory());
-		TaskManagerFactory.register("read-xml", new com.bretth.osmosis.core.xml.v0_5.XmlReaderFactory());
-		TaskManagerFactory.register("rx", new com.bretth.osmosis.core.xml.v0_5.XmlReaderFactory());
-		TaskManagerFactory.register("read-xml-change", new com.bretth.osmosis.core.xml.v0_5.XmlChangeReaderFactory());
-		TaskManagerFactory.register("rxc", new com.bretth.osmosis.core.xml.v0_5.XmlChangeReaderFactory());
-		TaskManagerFactory.register("sort", entitySorterFactory05);
-		TaskManagerFactory.register("s", entitySorterFactory05);
-		TaskManagerFactory.register("sort-change", changeSorterFactory05);
-		TaskManagerFactory.register("sc", changeSorterFactory05);
-		TaskManagerFactory.register("write-mysql", new com.bretth.osmosis.core.mysql.v0_5.MysqlWriterFactory());
-		TaskManagerFactory.register("wm", new com.bretth.osmosis.core.mysql.v0_5.MysqlWriterFactory());
-		TaskManagerFactory.register("write-mysql-change", new com.bretth.osmosis.core.mysql.v0_5.MysqlChangeWriterFactory());
-		TaskManagerFactory.register("wmc", new com.bretth.osmosis.core.mysql.v0_5.MysqlChangeWriterFactory());
-		TaskManagerFactory.register("truncate-mysql", new com.bretth.osmosis.core.mysql.v0_5.MysqlTruncatorFactory());
-		TaskManagerFactory.register("tm", new com.bretth.osmosis.core.mysql.v0_5.MysqlTruncatorFactory());
-		TaskManagerFactory.register("write-xml", new com.bretth.osmosis.core.xml.v0_5.XmlWriterFactory());
-		TaskManagerFactory.register("wx", new com.bretth.osmosis.core.xml.v0_5.XmlWriterFactory());
-		TaskManagerFactory.register("write-xml-change", new com.bretth.osmosis.core.xml.v0_5.XmlChangeWriterFactory());
-		TaskManagerFactory.register("wxc", new com.bretth.osmosis.core.xml.v0_5.XmlChangeWriterFactory());
-		TaskManagerFactory.register("write-null", new com.bretth.osmosis.core.misc.v0_5.NullWriterFactory());
-		TaskManagerFactory.register("wn", new com.bretth.osmosis.core.misc.v0_5.NullWriterFactory());
-		TaskManagerFactory.register("write-null-change", new com.bretth.osmosis.core.misc.v0_5.NullChangeWriterFactory());
-		TaskManagerFactory.register("wnc", new com.bretth.osmosis.core.misc.v0_5.NullChangeWriterFactory());
-		TaskManagerFactory.register("buffer", new com.bretth.osmosis.core.buffer.v0_5.EntityBufferFactory());
-		TaskManagerFactory.register("b", new com.bretth.osmosis.core.buffer.v0_5.EntityBufferFactory());
-		TaskManagerFactory.register("buffer-change", new com.bretth.osmosis.core.buffer.v0_5.ChangeBufferFactory());
-		TaskManagerFactory.register("bc", new com.bretth.osmosis.core.buffer.v0_5.ChangeBufferFactory());
-		TaskManagerFactory.register("merge", new com.bretth.osmosis.core.merge.v0_5.EntityMergerFactory());
-		TaskManagerFactory.register("m", new com.bretth.osmosis.core.merge.v0_5.EntityMergerFactory());
-		TaskManagerFactory.register("merge-change", new com.bretth.osmosis.core.merge.v0_5.ChangeMergerFactory());
-		TaskManagerFactory.register("mc", new com.bretth.osmosis.core.merge.v0_5.ChangeMergerFactory());
-		TaskManagerFactory.register("read-api", new com.bretth.osmosis.core.xml.v0_5.XmlDownloaderFactory());
-		TaskManagerFactory.register("ra", new com.bretth.osmosis.core.xml.v0_5.XmlDownloaderFactory());
-		TaskManagerFactory.register("bounding-polygon", new com.bretth.osmosis.core.filter.v0_5.PolygonFilterFactory());
-		TaskManagerFactory.register("bp", new com.bretth.osmosis.core.filter.v0_5.PolygonFilterFactory());
-		TaskManagerFactory.register("report-entity", new com.bretth.osmosis.core.report.v0_5.EntityReporterFactory());
-		TaskManagerFactory.register("re", new com.bretth.osmosis.core.report.v0_5.EntityReporterFactory());
-		TaskManagerFactory.register("report-integrity", new com.bretth.osmosis.core.report.v0_5.IntegrityReporterFactory());
-		TaskManagerFactory.register("ri", new com.bretth.osmosis.core.report.v0_5.IntegrityReporterFactory());
-		TaskManagerFactory.register("log-progress", new com.bretth.osmosis.core.progress.v0_5.EntityProgressLoggerFactory());
-		TaskManagerFactory.register("lp", new com.bretth.osmosis.core.progress.v0_5.EntityProgressLoggerFactory());
-		TaskManagerFactory.register("log-progress-change", new com.bretth.osmosis.core.progress.v0_5.ChangeProgressLoggerFactory());
-		TaskManagerFactory.register("lpc", new com.bretth.osmosis.core.progress.v0_5.ChangeProgressLoggerFactory());
-		TaskManagerFactory.register("tee", new com.bretth.osmosis.core.tee.v0_5.EntityTeeFactory());
-		TaskManagerFactory.register("t", new com.bretth.osmosis.core.tee.v0_5.EntityTeeFactory());
-		TaskManagerFactory.register("tee-change", new com.bretth.osmosis.core.tee.v0_5.ChangeTeeFactory());
-		TaskManagerFactory.register("tc", new com.bretth.osmosis.core.tee.v0_5.ChangeTeeFactory());
-		TaskManagerFactory.register("write-customdb", new com.bretth.osmosis.core.customdb.v0_5.WriteDatasetFactory());
-		TaskManagerFactory.register("wc", new com.bretth.osmosis.core.customdb.v0_5.WriteDatasetFactory());
-		TaskManagerFactory.register("dataset-bounding-box", new com.bretth.osmosis.core.filter.v0_5.DatasetBoundingBoxFilterFactory());
-		TaskManagerFactory.register("dbb", new com.bretth.osmosis.core.filter.v0_5.DatasetBoundingBoxFilterFactory());
-		TaskManagerFactory.register("dataset-dump", new com.bretth.osmosis.core.customdb.v0_5.DumpDatasetFactory());
-		TaskManagerFactory.register("dd", new com.bretth.osmosis.core.customdb.v0_5.DumpDatasetFactory());
-		TaskManagerFactory.register("read-customdb", new com.bretth.osmosis.core.customdb.v0_5.ReadDatasetFactory());
-		TaskManagerFactory.register("rc", new com.bretth.osmosis.core.customdb.v0_5.ReadDatasetFactory());
-		TaskManagerFactory.register("write-pgsql", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetWriterFactory());
-		TaskManagerFactory.register("wp", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetWriterFactory());
-		TaskManagerFactory.register("truncate-pgsql", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetTruncatorFactory());
-		TaskManagerFactory.register("tp", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetTruncatorFactory());
-		TaskManagerFactory.register("write-pgsql-dump", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetDumpWriterFactory());
-		TaskManagerFactory.register("wpd", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetDumpWriterFactory());
-		TaskManagerFactory.register("read-pgsql", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetReaderFactory());
-		TaskManagerFactory.register("rp", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetReaderFactory());
-		TaskManagerFactory.register("write-pgsql-change", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlChangeWriterFactory());
-		TaskManagerFactory.register("wpc", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlChangeWriterFactory());
-		TaskManagerFactory.register("used-node", new com.bretth.osmosis.core.filter.v0_5.UsedNodeFilterFactory());
-		TaskManagerFactory.register("un", new com.bretth.osmosis.core.filter.v0_5.UsedNodeFilterFactory());
-		TaskManagerFactory.register("way-key-value", new com.bretth.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
-		TaskManagerFactory.register("wkv", new com.bretth.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
-		TaskManagerFactory.register("read-change-interval", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloaderFactory());
-		TaskManagerFactory.register("rci", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloaderFactory());
-		TaskManagerFactory.register("read-change-interval-init", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloadInitializerFactory());
-		TaskManagerFactory.register("rcii", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloadInitializerFactory());
+		factoryRegister.register("apply-change", new com.bretth.osmosis.core.change.v0_5.ChangeApplierFactory());
+		factoryRegister.register("ac", new com.bretth.osmosis.core.change.v0_5.ChangeApplierFactory());
+		factoryRegister.register("bounding-box", new com.bretth.osmosis.core.filter.v0_5.BoundingBoxFilterFactory());
+		factoryRegister.register("bb", new com.bretth.osmosis.core.filter.v0_5.BoundingBoxFilterFactory());
+		factoryRegister.register("derive-change", new com.bretth.osmosis.core.change.v0_5.ChangeDeriverFactory());
+		factoryRegister.register("dc", new com.bretth.osmosis.core.change.v0_5.ChangeDeriverFactory());
+		factoryRegister.register("read-mysql", new com.bretth.osmosis.core.mysql.v0_5.MysqlReaderFactory());
+		factoryRegister.register("rm", new com.bretth.osmosis.core.mysql.v0_5.MysqlReaderFactory());
+		factoryRegister.register("read-mysql-change", new com.bretth.osmosis.core.mysql.v0_5.MysqlChangeReaderFactory());
+		factoryRegister.register("rmc", new com.bretth.osmosis.core.mysql.v0_5.MysqlChangeReaderFactory());
+		factoryRegister.register("read-mysql-current", new com.bretth.osmosis.core.mysql.v0_5.MySqlCurrentReaderFactory());
+		factoryRegister.register("rmcur", new com.bretth.osmosis.core.mysql.v0_5.MySqlCurrentReaderFactory());
+		factoryRegister.register("read-xml", new com.bretth.osmosis.core.xml.v0_5.XmlReaderFactory());
+		factoryRegister.register("rx", new com.bretth.osmosis.core.xml.v0_5.XmlReaderFactory());
+		factoryRegister.register("read-xml-change", new com.bretth.osmosis.core.xml.v0_5.XmlChangeReaderFactory());
+		factoryRegister.register("rxc", new com.bretth.osmosis.core.xml.v0_5.XmlChangeReaderFactory());
+		factoryRegister.register("sort", entitySorterFactory05);
+		factoryRegister.register("s", entitySorterFactory05);
+		factoryRegister.register("sort-change", changeSorterFactory05);
+		factoryRegister.register("sc", changeSorterFactory05);
+		factoryRegister.register("write-mysql", new com.bretth.osmosis.core.mysql.v0_5.MysqlWriterFactory());
+		factoryRegister.register("wm", new com.bretth.osmosis.core.mysql.v0_5.MysqlWriterFactory());
+		factoryRegister.register("write-mysql-change", new com.bretth.osmosis.core.mysql.v0_5.MysqlChangeWriterFactory());
+		factoryRegister.register("wmc", new com.bretth.osmosis.core.mysql.v0_5.MysqlChangeWriterFactory());
+		factoryRegister.register("truncate-mysql", new com.bretth.osmosis.core.mysql.v0_5.MysqlTruncatorFactory());
+		factoryRegister.register("tm", new com.bretth.osmosis.core.mysql.v0_5.MysqlTruncatorFactory());
+		factoryRegister.register("write-xml", new com.bretth.osmosis.core.xml.v0_5.XmlWriterFactory());
+		factoryRegister.register("wx", new com.bretth.osmosis.core.xml.v0_5.XmlWriterFactory());
+		factoryRegister.register("write-xml-change", new com.bretth.osmosis.core.xml.v0_5.XmlChangeWriterFactory());
+		factoryRegister.register("wxc", new com.bretth.osmosis.core.xml.v0_5.XmlChangeWriterFactory());
+		factoryRegister.register("write-null", new com.bretth.osmosis.core.misc.v0_5.NullWriterFactory());
+		factoryRegister.register("wn", new com.bretth.osmosis.core.misc.v0_5.NullWriterFactory());
+		factoryRegister.register("write-null-change", new com.bretth.osmosis.core.misc.v0_5.NullChangeWriterFactory());
+		factoryRegister.register("wnc", new com.bretth.osmosis.core.misc.v0_5.NullChangeWriterFactory());
+		factoryRegister.register("buffer", new com.bretth.osmosis.core.buffer.v0_5.EntityBufferFactory());
+		factoryRegister.register("b", new com.bretth.osmosis.core.buffer.v0_5.EntityBufferFactory());
+		factoryRegister.register("buffer-change", new com.bretth.osmosis.core.buffer.v0_5.ChangeBufferFactory());
+		factoryRegister.register("bc", new com.bretth.osmosis.core.buffer.v0_5.ChangeBufferFactory());
+		factoryRegister.register("merge", new com.bretth.osmosis.core.merge.v0_5.EntityMergerFactory());
+		factoryRegister.register("m", new com.bretth.osmosis.core.merge.v0_5.EntityMergerFactory());
+		factoryRegister.register("merge-change", new com.bretth.osmosis.core.merge.v0_5.ChangeMergerFactory());
+		factoryRegister.register("mc", new com.bretth.osmosis.core.merge.v0_5.ChangeMergerFactory());
+		factoryRegister.register("read-api", new com.bretth.osmosis.core.xml.v0_5.XmlDownloaderFactory());
+		factoryRegister.register("ra", new com.bretth.osmosis.core.xml.v0_5.XmlDownloaderFactory());
+		factoryRegister.register("bounding-polygon", new com.bretth.osmosis.core.filter.v0_5.PolygonFilterFactory());
+		factoryRegister.register("bp", new com.bretth.osmosis.core.filter.v0_5.PolygonFilterFactory());
+		factoryRegister.register("report-entity", new com.bretth.osmosis.core.report.v0_5.EntityReporterFactory());
+		factoryRegister.register("re", new com.bretth.osmosis.core.report.v0_5.EntityReporterFactory());
+		factoryRegister.register("report-integrity", new com.bretth.osmosis.core.report.v0_5.IntegrityReporterFactory());
+		factoryRegister.register("ri", new com.bretth.osmosis.core.report.v0_5.IntegrityReporterFactory());
+		factoryRegister.register("log-progress", new com.bretth.osmosis.core.progress.v0_5.EntityProgressLoggerFactory());
+		factoryRegister.register("lp", new com.bretth.osmosis.core.progress.v0_5.EntityProgressLoggerFactory());
+		factoryRegister.register("log-progress-change", new com.bretth.osmosis.core.progress.v0_5.ChangeProgressLoggerFactory());
+		factoryRegister.register("lpc", new com.bretth.osmosis.core.progress.v0_5.ChangeProgressLoggerFactory());
+		factoryRegister.register("tee", new com.bretth.osmosis.core.tee.v0_5.EntityTeeFactory());
+		factoryRegister.register("t", new com.bretth.osmosis.core.tee.v0_5.EntityTeeFactory());
+		factoryRegister.register("tee-change", new com.bretth.osmosis.core.tee.v0_5.ChangeTeeFactory());
+		factoryRegister.register("tc", new com.bretth.osmosis.core.tee.v0_5.ChangeTeeFactory());
+		factoryRegister.register("write-customdb", new com.bretth.osmosis.core.customdb.v0_5.WriteDatasetFactory());
+		factoryRegister.register("wc", new com.bretth.osmosis.core.customdb.v0_5.WriteDatasetFactory());
+		factoryRegister.register("dataset-bounding-box", new com.bretth.osmosis.core.filter.v0_5.DatasetBoundingBoxFilterFactory());
+		factoryRegister.register("dbb", new com.bretth.osmosis.core.filter.v0_5.DatasetBoundingBoxFilterFactory());
+		factoryRegister.register("dataset-dump", new com.bretth.osmosis.core.customdb.v0_5.DumpDatasetFactory());
+		factoryRegister.register("dd", new com.bretth.osmosis.core.customdb.v0_5.DumpDatasetFactory());
+		factoryRegister.register("read-customdb", new com.bretth.osmosis.core.customdb.v0_5.ReadDatasetFactory());
+		factoryRegister.register("rc", new com.bretth.osmosis.core.customdb.v0_5.ReadDatasetFactory());
+		factoryRegister.register("write-pgsql", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetWriterFactory());
+		factoryRegister.register("wp", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetWriterFactory());
+		factoryRegister.register("truncate-pgsql", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetTruncatorFactory());
+		factoryRegister.register("tp", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetTruncatorFactory());
+		factoryRegister.register("write-pgsql-dump", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetDumpWriterFactory());
+		factoryRegister.register("wpd", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetDumpWriterFactory());
+		factoryRegister.register("read-pgsql", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetReaderFactory());
+		factoryRegister.register("rp", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetReaderFactory());
+		factoryRegister.register("write-pgsql-change", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlChangeWriterFactory());
+		factoryRegister.register("wpc", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlChangeWriterFactory());
+		factoryRegister.register("used-node", new com.bretth.osmosis.core.filter.v0_5.UsedNodeFilterFactory());
+		factoryRegister.register("un", new com.bretth.osmosis.core.filter.v0_5.UsedNodeFilterFactory());
+		factoryRegister.register("way-key-value", new com.bretth.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
+		factoryRegister.register("wkv", new com.bretth.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
+		factoryRegister.register("read-change-interval", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloaderFactory());
+		factoryRegister.register("rci", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloaderFactory());
+		factoryRegister.register("read-change-interval-init", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloadInitializerFactory());
+		factoryRegister.register("rcii", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloadInitializerFactory());
 		
-		TaskManagerFactory.register("apply-change-0.5", new com.bretth.osmosis.core.change.v0_5.ChangeApplierFactory());
-		TaskManagerFactory.register("bounding-box-0.5", new com.bretth.osmosis.core.filter.v0_5.BoundingBoxFilterFactory());
-		TaskManagerFactory.register("derive-change-0.5", new com.bretth.osmosis.core.change.v0_5.ChangeDeriverFactory());
-		TaskManagerFactory.register("read-mysql-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlReaderFactory());
-		TaskManagerFactory.register("read-mysql-change-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlChangeReaderFactory());
-		TaskManagerFactory.register("read-mysql-current-0.5", new com.bretth.osmosis.core.mysql.v0_5.MySqlCurrentReaderFactory());
-		TaskManagerFactory.register("read-xml-0.5", new com.bretth.osmosis.core.xml.v0_5.XmlReaderFactory());
-		TaskManagerFactory.register("read-xml-change-0.5", new com.bretth.osmosis.core.xml.v0_5.XmlChangeReaderFactory());
-		TaskManagerFactory.register("sort-0.5", entitySorterFactory05);
-		TaskManagerFactory.register("sort-change-0.5", changeSorterFactory05);
-		TaskManagerFactory.register("write-mysql-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlWriterFactory());
-		TaskManagerFactory.register("write-mysql-change-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlChangeWriterFactory());
-		TaskManagerFactory.register("truncate-mysql-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlTruncatorFactory());
-		TaskManagerFactory.register("write-xml-0.5", new com.bretth.osmosis.core.xml.v0_5.XmlWriterFactory());
-		TaskManagerFactory.register("write-xml-change-0.5", new com.bretth.osmosis.core.xml.v0_5.XmlChangeWriterFactory());
-		TaskManagerFactory.register("write-null-0.5", new com.bretth.osmosis.core.misc.v0_5.NullWriterFactory());
-		TaskManagerFactory.register("write-null-change-0.5", new com.bretth.osmosis.core.misc.v0_5.NullChangeWriterFactory());
-		TaskManagerFactory.register("buffer-0.5", new com.bretth.osmosis.core.buffer.v0_5.EntityBufferFactory());
-		TaskManagerFactory.register("buffer-change-0.5", new com.bretth.osmosis.core.buffer.v0_5.ChangeBufferFactory());
-		TaskManagerFactory.register("merge-0.5", new com.bretth.osmosis.core.merge.v0_5.EntityMergerFactory());
-		TaskManagerFactory.register("merge-change-0.5", new com.bretth.osmosis.core.merge.v0_5.ChangeMergerFactory());
-		TaskManagerFactory.register("read-api-0.5", new com.bretth.osmosis.core.xml.v0_5.XmlDownloaderFactory());
-		TaskManagerFactory.register("bounding-polygon-0.5", new com.bretth.osmosis.core.filter.v0_5.PolygonFilterFactory());
-		TaskManagerFactory.register("report-entity-0.5", new com.bretth.osmosis.core.report.v0_5.EntityReporterFactory());
-		TaskManagerFactory.register("report-integrity-0.5", new com.bretth.osmosis.core.report.v0_5.IntegrityReporterFactory());
-		TaskManagerFactory.register("log-progress-0.5", new com.bretth.osmosis.core.progress.v0_5.EntityProgressLoggerFactory());
-		TaskManagerFactory.register("log-change-progress-0.5", new com.bretth.osmosis.core.progress.v0_5.ChangeProgressLoggerFactory());
-		TaskManagerFactory.register("tee-0.5", new com.bretth.osmosis.core.tee.v0_5.EntityTeeFactory());
-		TaskManagerFactory.register("tee-change-0.5", new com.bretth.osmosis.core.tee.v0_5.ChangeTeeFactory());
-		TaskManagerFactory.register("write-customdb-0.5", new com.bretth.osmosis.core.customdb.v0_5.WriteDatasetFactory());
-		TaskManagerFactory.register("dataset-bounding-box-0.5", new com.bretth.osmosis.core.filter.v0_5.DatasetBoundingBoxFilterFactory());
-		TaskManagerFactory.register("dataset-dump-0.5", new com.bretth.osmosis.core.customdb.v0_5.DumpDatasetFactory());
-		TaskManagerFactory.register("read-customdb-0.5", new com.bretth.osmosis.core.customdb.v0_5.ReadDatasetFactory());
-		TaskManagerFactory.register("write-pgsql-0.5", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetWriterFactory());
-		TaskManagerFactory.register("truncate-pgsql-0.5", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetTruncatorFactory());
-		TaskManagerFactory.register("write-pgsql-dump-0.5", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetDumpWriterFactory());
-		TaskManagerFactory.register("read-pgsql-0.5", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetReaderFactory());
-		TaskManagerFactory.register("write-pgsql-change-0.5", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlChangeWriterFactory());
-		TaskManagerFactory.register("used-node-0.5", new com.bretth.osmosis.core.filter.v0_5.UsedNodeFilterFactory());
-		TaskManagerFactory.register("way-key-value-0.5", new com.bretth.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
-		TaskManagerFactory.register("read-change-interval-0.5", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloaderFactory());
-		TaskManagerFactory.register("read-change-interval-init-0.5", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloadInitializerFactory());
+		factoryRegister.register("apply-change-0.5", new com.bretth.osmosis.core.change.v0_5.ChangeApplierFactory());
+		factoryRegister.register("bounding-box-0.5", new com.bretth.osmosis.core.filter.v0_5.BoundingBoxFilterFactory());
+		factoryRegister.register("derive-change-0.5", new com.bretth.osmosis.core.change.v0_5.ChangeDeriverFactory());
+		factoryRegister.register("read-mysql-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlReaderFactory());
+		factoryRegister.register("read-mysql-change-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlChangeReaderFactory());
+		factoryRegister.register("read-mysql-current-0.5", new com.bretth.osmosis.core.mysql.v0_5.MySqlCurrentReaderFactory());
+		factoryRegister.register("read-xml-0.5", new com.bretth.osmosis.core.xml.v0_5.XmlReaderFactory());
+		factoryRegister.register("read-xml-change-0.5", new com.bretth.osmosis.core.xml.v0_5.XmlChangeReaderFactory());
+		factoryRegister.register("sort-0.5", entitySorterFactory05);
+		factoryRegister.register("sort-change-0.5", changeSorterFactory05);
+		factoryRegister.register("write-mysql-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlWriterFactory());
+		factoryRegister.register("write-mysql-change-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlChangeWriterFactory());
+		factoryRegister.register("truncate-mysql-0.5", new com.bretth.osmosis.core.mysql.v0_5.MysqlTruncatorFactory());
+		factoryRegister.register("write-xml-0.5", new com.bretth.osmosis.core.xml.v0_5.XmlWriterFactory());
+		factoryRegister.register("write-xml-change-0.5", new com.bretth.osmosis.core.xml.v0_5.XmlChangeWriterFactory());
+		factoryRegister.register("write-null-0.5", new com.bretth.osmosis.core.misc.v0_5.NullWriterFactory());
+		factoryRegister.register("write-null-change-0.5", new com.bretth.osmosis.core.misc.v0_5.NullChangeWriterFactory());
+		factoryRegister.register("buffer-0.5", new com.bretth.osmosis.core.buffer.v0_5.EntityBufferFactory());
+		factoryRegister.register("buffer-change-0.5", new com.bretth.osmosis.core.buffer.v0_5.ChangeBufferFactory());
+		factoryRegister.register("merge-0.5", new com.bretth.osmosis.core.merge.v0_5.EntityMergerFactory());
+		factoryRegister.register("merge-change-0.5", new com.bretth.osmosis.core.merge.v0_5.ChangeMergerFactory());
+		factoryRegister.register("read-api-0.5", new com.bretth.osmosis.core.xml.v0_5.XmlDownloaderFactory());
+		factoryRegister.register("bounding-polygon-0.5", new com.bretth.osmosis.core.filter.v0_5.PolygonFilterFactory());
+		factoryRegister.register("report-entity-0.5", new com.bretth.osmosis.core.report.v0_5.EntityReporterFactory());
+		factoryRegister.register("report-integrity-0.5", new com.bretth.osmosis.core.report.v0_5.IntegrityReporterFactory());
+		factoryRegister.register("log-progress-0.5", new com.bretth.osmosis.core.progress.v0_5.EntityProgressLoggerFactory());
+		factoryRegister.register("log-change-progress-0.5", new com.bretth.osmosis.core.progress.v0_5.ChangeProgressLoggerFactory());
+		factoryRegister.register("tee-0.5", new com.bretth.osmosis.core.tee.v0_5.EntityTeeFactory());
+		factoryRegister.register("tee-change-0.5", new com.bretth.osmosis.core.tee.v0_5.ChangeTeeFactory());
+		factoryRegister.register("write-customdb-0.5", new com.bretth.osmosis.core.customdb.v0_5.WriteDatasetFactory());
+		factoryRegister.register("dataset-bounding-box-0.5", new com.bretth.osmosis.core.filter.v0_5.DatasetBoundingBoxFilterFactory());
+		factoryRegister.register("dataset-dump-0.5", new com.bretth.osmosis.core.customdb.v0_5.DumpDatasetFactory());
+		factoryRegister.register("read-customdb-0.5", new com.bretth.osmosis.core.customdb.v0_5.ReadDatasetFactory());
+		factoryRegister.register("write-pgsql-0.5", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetWriterFactory());
+		factoryRegister.register("truncate-pgsql-0.5", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetTruncatorFactory());
+		factoryRegister.register("write-pgsql-dump-0.5", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetDumpWriterFactory());
+		factoryRegister.register("read-pgsql-0.5", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetReaderFactory());
+		factoryRegister.register("write-pgsql-change-0.5", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlChangeWriterFactory());
+		factoryRegister.register("used-node-0.5", new com.bretth.osmosis.core.filter.v0_5.UsedNodeFilterFactory());
+		factoryRegister.register("way-key-value-0.5", new com.bretth.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
+		factoryRegister.register("read-change-interval-0.5", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloaderFactory());
+		factoryRegister.register("read-change-interval-init-0.5", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloadInitializerFactory());
 		
-		TaskManagerFactory.register("apply-change-0.6", new ChangeApplierFactory());
-		TaskManagerFactory.register("bounding-box-0.6", new BoundingBoxFilterFactory());
-		TaskManagerFactory.register("derive-change-0.6", new ChangeDeriverFactory());
-		TaskManagerFactory.register("read-mysql-0.6", new MysqlReaderFactory());
-		TaskManagerFactory.register("read-mysql-change-0.6", new MysqlChangeReaderFactory());
-		TaskManagerFactory.register("read-mysql-current-0.6", new MySqlCurrentReaderFactory());
-		TaskManagerFactory.register("read-xml-0.6", new XmlReaderFactory());
-		TaskManagerFactory.register("read-xml-change-0.6", new XmlChangeReaderFactory());
-		TaskManagerFactory.register("sort-0.6", entitySorterFactory06);
-		TaskManagerFactory.register("sort-change-0.6", changeSorterFactory06);
-		TaskManagerFactory.register("write-mysql-0.6", new MysqlWriterFactory());
-		TaskManagerFactory.register("write-mysql-change-0.6", new MysqlChangeWriterFactory());
-		TaskManagerFactory.register("truncate-mysql-0.6", new MysqlTruncatorFactory());
-		TaskManagerFactory.register("write-xml-0.6", new XmlWriterFactory());
-		TaskManagerFactory.register("write-xml-change-0.6", new XmlChangeWriterFactory());
-		TaskManagerFactory.register("write-null-0.6", new NullWriterFactory());
-		TaskManagerFactory.register("write-null-change-0.6", new NullChangeWriterFactory());
-		TaskManagerFactory.register("buffer-0.6", new EntityBufferFactory());
-		TaskManagerFactory.register("buffer-change-0.6", new ChangeBufferFactory());
-		TaskManagerFactory.register("merge-0.6", new EntityMergerFactory());
-		TaskManagerFactory.register("merge-change-0.6", new ChangeMergerFactory());
-		TaskManagerFactory.register("read-api-0.6", new XmlDownloaderFactory());
-		TaskManagerFactory.register("bounding-polygon-0.6", new PolygonFilterFactory());
-		TaskManagerFactory.register("report-entity-0.6", new EntityReporterFactory());
-		TaskManagerFactory.register("report-integrity-0.6", new IntegrityReporterFactory());
-		TaskManagerFactory.register("log-progress-0.6", new EntityProgressLoggerFactory());
-		TaskManagerFactory.register("log-change-progress-0.6", new ChangeProgressLoggerFactory());
-		TaskManagerFactory.register("tee-0.6", new EntityTeeFactory());
-		TaskManagerFactory.register("tee-change-0.6", new ChangeTeeFactory());
-		TaskManagerFactory.register("write-customdb-0.6", new WriteDatasetFactory());
-		TaskManagerFactory.register("dataset-bounding-box-0.6", new DatasetBoundingBoxFilterFactory());
-		TaskManagerFactory.register("dataset-dump-0.6", new DumpDatasetFactory());
-		TaskManagerFactory.register("read-customdb-0.6", new ReadDatasetFactory());
-		TaskManagerFactory.register("write-pgsql-0.6", new PostgreSqlDatasetWriterFactory());
-		TaskManagerFactory.register("truncate-pgsql-0.6", new PostgreSqlDatasetTruncatorFactory());
-		TaskManagerFactory.register("write-pgsql-dump-0.6", new PostgreSqlDatasetDumpWriterFactory());
-		TaskManagerFactory.register("read-pgsql-0.6", new PostgreSqlDatasetReaderFactory());
-		TaskManagerFactory.register("write-pgsql-change-0.6", new PostgreSqlChangeWriterFactory());
-		TaskManagerFactory.register("used-node-0.6", new UsedNodeFilterFactory());
-		TaskManagerFactory.register("way-key-value-0.6", new WayKeyValueFilterFactory());
-		TaskManagerFactory.register("read-change-interval-0.6", new ChangeDownloaderFactory());
-		TaskManagerFactory.register("read-change-interval-init-0.6", new ChangeDownloadInitializerFactory());
+		factoryRegister.register("apply-change-0.6", new ChangeApplierFactory());
+		factoryRegister.register("bounding-box-0.6", new BoundingBoxFilterFactory());
+		factoryRegister.register("derive-change-0.6", new ChangeDeriverFactory());
+		factoryRegister.register("read-mysql-0.6", new MysqlReaderFactory());
+		factoryRegister.register("read-mysql-change-0.6", new MysqlChangeReaderFactory());
+		factoryRegister.register("read-mysql-current-0.6", new MySqlCurrentReaderFactory());
+		factoryRegister.register("read-xml-0.6", new XmlReaderFactory());
+		factoryRegister.register("read-xml-change-0.6", new XmlChangeReaderFactory());
+		factoryRegister.register("sort-0.6", entitySorterFactory06);
+		factoryRegister.register("sort-change-0.6", changeSorterFactory06);
+		factoryRegister.register("write-mysql-0.6", new MysqlWriterFactory());
+		factoryRegister.register("write-mysql-change-0.6", new MysqlChangeWriterFactory());
+		factoryRegister.register("truncate-mysql-0.6", new MysqlTruncatorFactory());
+		factoryRegister.register("write-xml-0.6", new XmlWriterFactory());
+		factoryRegister.register("write-xml-change-0.6", new XmlChangeWriterFactory());
+		factoryRegister.register("write-null-0.6", new NullWriterFactory());
+		factoryRegister.register("write-null-change-0.6", new NullChangeWriterFactory());
+		factoryRegister.register("buffer-0.6", new EntityBufferFactory());
+		factoryRegister.register("buffer-change-0.6", new ChangeBufferFactory());
+		factoryRegister.register("merge-0.6", new EntityMergerFactory());
+		factoryRegister.register("merge-change-0.6", new ChangeMergerFactory());
+		factoryRegister.register("read-api-0.6", new XmlDownloaderFactory());
+		factoryRegister.register("bounding-polygon-0.6", new PolygonFilterFactory());
+		factoryRegister.register("report-entity-0.6", new EntityReporterFactory());
+		factoryRegister.register("report-integrity-0.6", new IntegrityReporterFactory());
+		factoryRegister.register("log-progress-0.6", new EntityProgressLoggerFactory());
+		factoryRegister.register("log-change-progress-0.6", new ChangeProgressLoggerFactory());
+		factoryRegister.register("tee-0.6", new EntityTeeFactory());
+		factoryRegister.register("tee-change-0.6", new ChangeTeeFactory());
+		factoryRegister.register("write-customdb-0.6", new WriteDatasetFactory());
+		factoryRegister.register("dataset-bounding-box-0.6", new DatasetBoundingBoxFilterFactory());
+		factoryRegister.register("dataset-dump-0.6", new DumpDatasetFactory());
+		factoryRegister.register("read-customdb-0.6", new ReadDatasetFactory());
+		factoryRegister.register("write-pgsql-0.6", new PostgreSqlDatasetWriterFactory());
+		factoryRegister.register("truncate-pgsql-0.6", new PostgreSqlDatasetTruncatorFactory());
+		factoryRegister.register("write-pgsql-dump-0.6", new PostgreSqlDatasetDumpWriterFactory());
+		factoryRegister.register("read-pgsql-0.6", new PostgreSqlDatasetReaderFactory());
+		factoryRegister.register("write-pgsql-change-0.6", new PostgreSqlChangeWriterFactory());
+		factoryRegister.register("used-node-0.6", new UsedNodeFilterFactory());
+		factoryRegister.register("way-key-value-0.6", new WayKeyValueFilterFactory());
+		factoryRegister.register("read-change-interval-0.6", new ChangeDownloaderFactory());
+		factoryRegister.register("read-change-interval-init-0.6", new ChangeDownloadInitializerFactory());
 		
 		// Register the plugins.
 		for (String plugin : plugins) {
@@ -283,7 +308,7 @@ public class TaskRegistrar {
 	 *            The plugin loader class name.
 	 */
 	@SuppressWarnings("unchecked")
-	private static void loadPlugin(String plugin) {
+	private void loadPlugin(String plugin) {
 		ClassLoader classLoader;
 		Class<?> untypedPluginClass;
 		Class<PluginLoader> pluginClass;
@@ -322,7 +347,7 @@ public class TaskRegistrar {
 		
 		// Register the plugin tasks.
 		for (Entry<String, TaskManagerFactory> taskEntry : pluginTasks.entrySet()) {
-			TaskManagerFactory.register(taskEntry.getKey(), taskEntry.getValue());
+			factoryRegister.register(taskEntry.getKey(), taskEntry.getValue());
 		}
 	}
 }

@@ -2,7 +2,7 @@
 package com.bretth.osmosis.core.xml.common;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.cli.TaskConfiguration;
+import com.bretth.osmosis.core.pipeline.common.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 
 

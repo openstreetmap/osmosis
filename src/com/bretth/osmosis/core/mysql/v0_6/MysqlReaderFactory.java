@@ -3,10 +3,10 @@ package com.bretth.osmosis.core.mysql.v0_6;
 
 import java.util.Date;
 
-import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.database.DatabaseTaskManagerFactory;
+import com.bretth.osmosis.core.pipeline.common.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.v0_6.RunnableSourceManager;
 

@@ -2,7 +2,7 @@ package com.bretth.osmosis.core.merge.v0_5;
 
 import java.io.File;
 
-import com.bretth.osmosis.core.cli.TaskConfiguration;
+import com.bretth.osmosis.core.pipeline.common.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.v0_5.RunnableChangeSourceManager;

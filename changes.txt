@@ -7,6 +7,8 @@ Updated the pgsql simple tasks to use the new database schema which is more simi
 Removed the old postgresql tasks.
 Removed "simple" from the names of the simple pgsql tasks.
 Added plugin support allowing new tasks in external jar files to be registered with osmosis.
+Added command line checks to ensure all task and option arguments are recognised, any misspelt arguments will now raise an error.
+Removed all static methods from the task registrar and task manager factory classes to avoid global data and simplify testing. 
 
 0.28
 Added a maximum file download count feature to the change downloader to limit processing overhead when synchronising long time intervals. 

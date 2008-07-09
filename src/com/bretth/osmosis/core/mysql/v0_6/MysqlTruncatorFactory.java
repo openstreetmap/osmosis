@@ -1,9 +1,9 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.mysql.v0_6;
 
-import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.database.DatabaseTaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.common.RunnableTaskManager;
+import com.bretth.osmosis.core.pipeline.common.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 
 

@@ -2,8 +2,8 @@
 package com.bretth.osmosis.core.filter.v0_6;
 
 import java.io.File;
-import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.filter.common.IdTrackerType;
+import com.bretth.osmosis.core.pipeline.common.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.v0_6.SinkSourceManager;
 

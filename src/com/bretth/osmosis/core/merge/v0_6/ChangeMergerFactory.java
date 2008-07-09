@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.cli.TaskConfiguration;
 import com.bretth.osmosis.core.merge.common.ConflictResolutionMethod;
+import com.bretth.osmosis.core.pipeline.common.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.v0_6.MultiChangeSinkRunnableChangeSourceManager;

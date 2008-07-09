@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.bretth.osmosis.core.OsmosisRuntimeException;
+
 
 /**
  * Tests the CommandLineParser class.
@@ -102,5 +104,17 @@ public class CommandLineParserTest {
 		commandLineParser = new CommandLineParser();
 		commandLineParser.parse(new String [] {"-p", "plugin1", "-p", "plugin2"});
 		Assert.assertEquals("Incorrect plugin list.", Arrays.asList("plugin1", "plugin2"), commandLineParser.getPlugins());
+	}
+	
+	
+	/**
+	 * Validates failure when an unknown option is specified.
+	 */
+	@Test (expected=OsmosisRuntimeException.class)
+	public void testUnknownOption() {
+		CommandLineParser commandLineParser;
+		
+		commandLineParser = new CommandLineParser();
+		commandLineParser.parse(new String [] {"-a"});
 	}
 }

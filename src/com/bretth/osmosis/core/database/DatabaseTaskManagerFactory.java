@@ -3,7 +3,7 @@ package com.bretth.osmosis.core.database;
 
 import java.io.File;
 
-import com.bretth.osmosis.core.cli.TaskConfiguration;
+import com.bretth.osmosis.core.pipeline.common.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 
 

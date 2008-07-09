@@ -3,7 +3,7 @@ package com.bretth.osmosis.core.xml.v0_5;
 
 import java.io.File;
 
-import com.bretth.osmosis.core.cli.TaskConfiguration;
+import com.bretth.osmosis.core.pipeline.common.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.v0_5.RunnableSourceManager;
 import com.bretth.osmosis.core.xml.common.CompressionMethod;
