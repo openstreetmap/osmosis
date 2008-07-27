@@ -61,6 +61,8 @@ public class CurrentNodeReader extends BaseEntityReader<Node> {
 		long id;
 		Date timestamp;
 		String userName;
+		int userId;
+		int version;
 		double latitude;
 		double longitude;
 		String tags;

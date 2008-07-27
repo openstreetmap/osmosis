@@ -163,6 +163,18 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 						
 					} else if (conflictResolutionMethod.equals(ConflictResolutionMethod.LatestSource)) {
 						changeSink.process(changeContainer1);
+					} else if (conflictResolutionMethod.equals(ConflictResolutionMethod.Version)) {
+						int version0 = changeContainer0.getEntityContainer().getEntity().getVersion();
+						int version1 = changeContainer1.getEntityContainer().getEntity().getVersion();
+						if (version0 < version1) {
+							changeSink.process(changeContainer1);
+						} else if (version0 > version1) {
+							changeSink.process(changeContainer0);
+						} else {
+							// If both have identical versions, use the second source.
+							changeSink.process(changeContainer1);
+						}
+
 					} else {
 						throw new OsmosisRuntimeException(
 								"Conflict resolution method " + conflictResolutionMethod + " is not recognized.");

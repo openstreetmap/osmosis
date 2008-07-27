@@ -357,7 +357,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			// node(id, timestamp, user, location)
 			statement.setLong(prmIndex++, entity.getId());
 			statement.setTimestamp(prmIndex++, new Timestamp(entity.getTimestamp().getTime()));
-			statement.setString(prmIndex++, entity.getUser());
+			statement.setString(prmIndex++, entity.getUserName());
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(

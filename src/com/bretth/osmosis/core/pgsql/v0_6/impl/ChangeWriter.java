@@ -137,7 +137,7 @@ public class ChangeWriter {
 			prmIndex = 1;
 			
 			statement.setLong(prmIndex++, entity.getId());
-			statement.setString(prmIndex++, entity.getUser());
+			statement.setString(prmIndex++, entity.getUserName());
 			statement.setTimestamp(prmIndex++, new Timestamp(entity.getTimestamp().getTime()));
 			
 		} catch (SQLException e) {

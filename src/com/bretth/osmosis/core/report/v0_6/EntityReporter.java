@@ -67,7 +67,7 @@ public class EntityReporter implements Sink {
 		final UserStatistics user;
 		
 		// Obtain the user statistics object.
-		userName = entityContainer.getEntity().getUser();
+		userName = entityContainer.getEntity().getUserName();
 		if (userName != null && userName.length() > 0) {
 			if (userMap.containsKey(userName)) {
 				user = userMap.get(userName);

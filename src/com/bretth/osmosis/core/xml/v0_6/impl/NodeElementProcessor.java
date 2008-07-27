@@ -22,6 +22,8 @@ public class NodeElementProcessor extends SourceElementProcessor implements TagL
 	private static final String ATTRIBUTE_NAME_ID = "id";
 	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
 	private static final String ATTRIBUTE_NAME_USER = "user";
+	private static final String ATTRIBUTE_NAME_USERID = "uid";
+	private static final String ATTRIBUTE_NAME_VERSION = "version";
 	private static final String ATTRIBUTE_NAME_LATITUDE = "lat";
 	private static final String ATTRIBUTE_NAME_LONGITUDE = "lon";
 	
@@ -65,8 +67,16 @@ public class NodeElementProcessor extends SourceElementProcessor implements TagL
 		if (user == null) {
 			user = "";
 		}
+		int userId;
+		try {
+			userId = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_USERID));
+		}
+		catch (NumberFormatException nfe) {
+			userId = 0;
+		}
+		int version = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_VERSION));
 		
-		node = new Node(id, timestampContainer, user, latitude, longitude);
+		node = new Node(id, timestampContainer, user, userId, version, latitude, longitude);
 	}
 	
 	

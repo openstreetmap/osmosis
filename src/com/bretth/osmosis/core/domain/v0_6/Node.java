@@ -3,6 +3,7 @@ package com.bretth.osmosis.core.domain.v0_6;
 
 import java.util.Date;
 
+import com.bretth.osmosis.core.domain.common.SimpleTimestampContainer;
 import com.bretth.osmosis.core.domain.common.TimestampContainer;
 import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
@@ -30,16 +31,18 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The name of the user that last modified this entity.
+	 * @param userId
+	 *            The userId associated with the user name.
+	 * @param version
+	 *            The version of the entity.
 	 * @param latitude
 	 *            The geographic latitude.
 	 * @param longitude
 	 *            The geographic longitude.
 	 */
-	public Node(long id, Date timestamp, String user, double latitude, double longitude) {
-		super(id, timestamp, user);
-		
-		this.latitude = latitude;
-		this.longitude = longitude;
+	public Node(long id, Date timestamp, String user, int userId, int version, double latitude, double longitude) {
+		// Chain to the more-specific constructor
+		this(id, new SimpleTimestampContainer(timestamp), user, userId, version, latitude, longitude);
 	}
 	
 	
@@ -53,13 +56,17 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            timestamp representation.
 	 * @param user
 	 *            The name of the user that last modified this entity.
+	 * @param userId
+	 *            The userId associated with the user name.
+	 * @param version
+	 *            The version of the entity.
 	 * @param latitude
 	 *            The geographic latitude.
 	 * @param longitude
 	 *            The geographic longitude.
 	 */
-	public Node(long id, TimestampContainer timestampContainer, String user, double latitude, double longitude) {
-		super(id, timestampContainer, user);
+	public Node(long id, TimestampContainer timestampContainer, String user, int userId, int version, double latitude, double longitude) {
+		super(id, timestampContainer, user, userId, version);
 		
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -119,7 +126,7 @@ public class Node extends Entity implements Comparable<Node> {
 
 	/**
 	 * Compares this node to the specified node. The node comparison is based on
-	 * a comparison of id, latitude, longitude, timestamp and tags in that
+	 * a comparison of id, version, latitude, longitude, timestamp and tags in that
 	 * order.
 	 * 
 	 * @param comparisonNode
@@ -133,6 +140,14 @@ public class Node extends Entity implements Comparable<Node> {
 		}
 		
 		if (this.getId() > comparisonNode.getId()) {
+			return 1;
+		}
+		
+		if (this.getVersion() < comparisonNode.getVersion()) {
+			return -1;
+		}
+		
+		if (this.getVersion() > comparisonNode.getVersion()) {
 			return 1;
 		}
 		

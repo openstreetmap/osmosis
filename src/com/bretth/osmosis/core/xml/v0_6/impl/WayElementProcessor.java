@@ -24,6 +24,8 @@ public class WayElementProcessor extends SourceElementProcessor implements TagLi
 	private static final String ATTRIBUTE_NAME_ID = "id";
 	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
 	private static final String ATTRIBUTE_NAME_USER = "user";
+	private static final String ATTRIBUTE_NAME_USERID = "uid";
+	private static final String ATTRIBUTE_NAME_VERSION = "version";
 	
 	private TagElementProcessor tagElementProcessor;
 	private WayNodeElementProcessor wayNodeElementProcessor;
@@ -63,8 +65,16 @@ public class WayElementProcessor extends SourceElementProcessor implements TagLi
 		if (user == null) {
 			user = "";
 		}
+		int userId;
+		try {
+			userId = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_USERID));
+		}
+		catch (NumberFormatException nfe) {
+			userId = 0;
+		}
+		int version = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_VERSION));
 		
-		way = new Way(id, timestampContainer, user);
+		way = new Way(id, timestampContainer, user, userId, version);
 	}
 	
 	

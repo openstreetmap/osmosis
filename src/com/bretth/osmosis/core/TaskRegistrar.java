@@ -24,6 +24,7 @@ import com.bretth.osmosis.core.merge.v0_6.ChangeMergerFactory;
 import com.bretth.osmosis.core.merge.v0_6.EntityMergerFactory;
 import com.bretth.osmosis.core.misc.v0_6.NullChangeWriterFactory;
 import com.bretth.osmosis.core.misc.v0_6.NullWriterFactory;
+/*
 import com.bretth.osmosis.core.mysql.v0_6.MySqlCurrentReaderFactory;
 import com.bretth.osmosis.core.mysql.v0_6.MysqlChangeReaderFactory;
 import com.bretth.osmosis.core.mysql.v0_6.MysqlChangeWriterFactory;
@@ -35,6 +36,7 @@ import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetDumpWriterFactory;
 import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetReaderFactory;
 import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetTruncatorFactory;
 import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetWriterFactory;
+*/
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactoryRegister;
 import com.bretth.osmosis.core.plugin.PluginLoader;
@@ -250,21 +252,21 @@ public class TaskRegistrar {
 		factoryRegister.register("way-key-value-0.5", new com.bretth.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
 		factoryRegister.register("read-change-interval-0.5", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloaderFactory());
 		factoryRegister.register("read-change-interval-init-0.5", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloadInitializerFactory());
-		
+
 		factoryRegister.register("apply-change-0.6", new ChangeApplierFactory());
 		factoryRegister.register("bounding-box-0.6", new BoundingBoxFilterFactory());
 		factoryRegister.register("derive-change-0.6", new ChangeDeriverFactory());
-		factoryRegister.register("read-mysql-0.6", new MysqlReaderFactory());
+/*		factoryRegister.register("read-mysql-0.6", new MysqlReaderFactory());
 		factoryRegister.register("read-mysql-change-0.6", new MysqlChangeReaderFactory());
 		factoryRegister.register("read-mysql-current-0.6", new MySqlCurrentReaderFactory());
-		factoryRegister.register("read-xml-0.6", new XmlReaderFactory());
+*/		factoryRegister.register("read-xml-0.6", new XmlReaderFactory());
 		factoryRegister.register("read-xml-change-0.6", new XmlChangeReaderFactory());
 		factoryRegister.register("sort-0.6", entitySorterFactory06);
 		factoryRegister.register("sort-change-0.6", changeSorterFactory06);
-		factoryRegister.register("write-mysql-0.6", new MysqlWriterFactory());
+/*		factoryRegister.register("write-mysql-0.6", new MysqlWriterFactory());
 		factoryRegister.register("write-mysql-change-0.6", new MysqlChangeWriterFactory());
 		factoryRegister.register("truncate-mysql-0.6", new MysqlTruncatorFactory());
-		factoryRegister.register("write-xml-0.6", new XmlWriterFactory());
+*/		factoryRegister.register("write-xml-0.6", new XmlWriterFactory());
 		factoryRegister.register("write-xml-change-0.6", new XmlChangeWriterFactory());
 		factoryRegister.register("write-null-0.6", new NullWriterFactory());
 		factoryRegister.register("write-null-change-0.6", new NullChangeWriterFactory());
@@ -284,12 +286,12 @@ public class TaskRegistrar {
 		factoryRegister.register("dataset-bounding-box-0.6", new DatasetBoundingBoxFilterFactory());
 		factoryRegister.register("dataset-dump-0.6", new DumpDatasetFactory());
 		factoryRegister.register("read-customdb-0.6", new ReadDatasetFactory());
-		factoryRegister.register("write-pgsql-0.6", new PostgreSqlDatasetWriterFactory());
+/*		factoryRegister.register("write-pgsql-0.6", new PostgreSqlDatasetWriterFactory());
 		factoryRegister.register("truncate-pgsql-0.6", new PostgreSqlDatasetTruncatorFactory());
 		factoryRegister.register("write-pgsql-dump-0.6", new PostgreSqlDatasetDumpWriterFactory());
 		factoryRegister.register("read-pgsql-0.6", new PostgreSqlDatasetReaderFactory());
 		factoryRegister.register("write-pgsql-change-0.6", new PostgreSqlChangeWriterFactory());
-		factoryRegister.register("used-node-0.6", new UsedNodeFilterFactory());
+*/		factoryRegister.register("used-node-0.6", new UsedNodeFilterFactory());
 		factoryRegister.register("way-key-value-0.6", new WayKeyValueFilterFactory());
 		factoryRegister.register("read-change-interval-0.6", new ChangeDownloaderFactory());
 		factoryRegister.register("read-change-interval-init-0.6", new ChangeDownloadInitializerFactory());

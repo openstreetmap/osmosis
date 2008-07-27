@@ -29,7 +29,8 @@ public abstract class Entity implements Storeable {
 	private int id;
 	private TimestampContainer timestampContainer;
 	private List<Tag> tagList;
-	private String user;
+	private OsmUser user;
+	private int version;
 	
 	
 	/**
@@ -41,13 +42,14 @@ public abstract class Entity implements Storeable {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The name of the user that last modified this entity.
+	 * @param userId
+	 *            The userId associated with the user name.
+	 * @param version
+	 *            The version of the entity.
 	 */
-	public Entity(long id, Date timestamp, String user) {
-		this.id = LongAsInt.longToInt(id);
-		this.timestampContainer = new SimpleTimestampContainer(timestamp);
-		this.user = user;
-		
-		tagList = new ArrayList<Tag>();
+	public Entity(long id, Date timestamp, String user, int userId, int version) {
+		// Chain to the more specific constructor
+		this(id, new SimpleTimestampContainer(timestamp), user, userId, version);
 	}
 	
 	
@@ -61,11 +63,16 @@ public abstract class Entity implements Storeable {
 	 *            timestamp representation.
 	 * @param user
 	 *            The name of the user that last modified this entity.
+	 * @param userId
+	 *            The userId associated with the user name.
+	 * @param version
+	 *            The version of the entity.
 	 */
-	public Entity(long id, TimestampContainer timestampContainer, String user) {
+	public Entity(long id, TimestampContainer timestampContainer, String user, int userId, int version) {
 		this.id = LongAsInt.longToInt(id);
 		this.timestampContainer = timestampContainer;
-		this.user = user;
+		this.user = OsmUser.getInstance(user, userId);
+		this.version = version;
 		
 		tagList = new ArrayList<Tag>();
 	}
@@ -87,10 +94,11 @@ public abstract class Entity implements Storeable {
 		if (sr.readBoolean()) {
 			timestampContainer = new SimpleTimestampContainer(new Date(sr.readLong()));
 		}
-		if (sr.readBoolean()) {
-			user = sr.readString();
-		}
 		
+		user = OsmUser.getInstance(sr, scr);
+		
+		version = sr.readCharacter(); // store as a character for now, may need to be an int later
+
 		tagList = new ArrayList<Tag>();
 		
 		tagCount = sr.readCharacter();
@@ -112,12 +120,9 @@ public abstract class Entity implements Storeable {
 		} else {
 			sw.writeBoolean(false);
 		}
-		if (user != null) {
-			sw.writeBoolean(true);
-			sw.writeString(user);
-		} else {
-			sw.writeBoolean(false);
-		}
+		user.store(sw, scr);
+
+		sw.writeCharacter(IntAsChar.intToChar(version));
 		
 		sw.writeCharacter(IntAsChar.intToChar(tagList.size()));
 		for (Tag tag : tagList) {
@@ -204,13 +209,29 @@ public abstract class Entity implements Storeable {
 	
 	
 	/**
-	 * @return The user. 
+	 * @return The userName. 
 	 */
-	public String getUser() {
-		return user;
+	public String getUserName() {
+		return user.getUserName();
 	}
 	
 	
+	/**
+	 * @return The userId.
+	 */
+	public int getUserId() {
+		return user.getUserId();
+	}
+
+
+	/**
+	 * @return The version.
+	 */
+	public int getVersion() {
+		return version;
+	}
+
+
 	/**
 	 * Returns the attached list of tags. The returned list is read-only.
 	 * 

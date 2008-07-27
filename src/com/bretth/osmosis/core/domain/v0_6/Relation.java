@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.bretth.osmosis.core.domain.common.SimpleTimestampContainer;
 import com.bretth.osmosis.core.domain.common.TimestampContainer;
 import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
@@ -36,11 +37,14 @@ public class Relation extends Entity implements Comparable<Relation>, Storeable 
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The name of the user that last modified this entity.
+	 * @param userId
+	 *            The userId associated with the user name.
+	 * @param version
+	 *            The version of the entity.
 	 */
-	public Relation(long id, Date timestamp, String user) {
-		super(id, timestamp, user);
-		
-		memberList = new ArrayList<RelationMember>();
+	public Relation(long id, Date timestamp, String user, int userId, int version) {
+		// Chain to the more-specific constructor
+		this(id, new SimpleTimestampContainer(timestamp), user, userId, version);
 	}
 	
 	
@@ -55,8 +59,8 @@ public class Relation extends Entity implements Comparable<Relation>, Storeable 
 	 * @param user
 	 *            The name of the user that last modified this entity.
 	 */
-	public Relation(long id, TimestampContainer timestampContainer, String user) {
-		super(id, timestampContainer, user);
+	public Relation(long id, TimestampContainer timestampContainer, String user, int userId, int version) {
+		super(id, timestampContainer, user, userId, version);
 		
 		memberList = new ArrayList<RelationMember>();
 	}
@@ -153,7 +157,7 @@ public class Relation extends Entity implements Comparable<Relation>, Storeable 
 
 	/**
 	 * Compares this relation to the specified relation. The relation comparison
-	 * is based on a comparison of id, timestamp, and tags in that order.
+	 * is based on a comparison of id, version, timestamp, and tags in that order.
 	 * 
 	 * @param comparisonRelation
 	 *            The relation to compare to.
@@ -169,7 +173,14 @@ public class Relation extends Entity implements Comparable<Relation>, Storeable 
 		if (this.getId() > comparisonRelation.getId()) {
 			return 1;
 		}
-		
+
+		if (this.getVersion() < comparisonRelation.getVersion()) {
+			return -1;
+		}
+		if (this.getVersion() > comparisonRelation.getVersion()) {
+			return 1;
+		}
+
 		if (this.getTimestamp() == null && comparisonRelation.getTimestamp() != null) {
 			return -1;
 		}

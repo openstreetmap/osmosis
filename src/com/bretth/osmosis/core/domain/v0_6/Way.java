@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import com.bretth.osmosis.core.domain.common.SimpleTimestampContainer;
 import com.bretth.osmosis.core.domain.common.TimestampContainer;
 import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
@@ -34,11 +35,14 @@ public class Way extends Entity implements Comparable<Way>, Storeable {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The name of the user that last modified this entity.
+	 * @param userId
+	 *            The userId associated with the user name.
+	 * @param version
+	 *            The version of the entity.
 	 */
-	public Way(long id, Date timestamp, String user) {
-		super(id, timestamp, user);
-		
-		wayNodeList = new ArrayList<WayNode>();
+	public Way(long id, Date timestamp, String user, int userId, int version) {
+		// Chain to the more specific constructor
+		this(id, new SimpleTimestampContainer(timestamp), user, userId, version);
 	}
 	
 	
@@ -52,9 +56,13 @@ public class Way extends Entity implements Comparable<Way>, Storeable {
 	 *            timestamp representation.
 	 * @param user
 	 *            The name of the user that last modified this entity.
+	 * @param userId
+	 *            The userId associated with the user name.
+	 * @param version
+	 *            The version of the entity.
 	 */
-	public Way(long id, TimestampContainer timestampContainer, String user) {
-		super(id, timestampContainer, user);
+	public Way(long id, TimestampContainer timestampContainer, String user, int userId, int version) {
+		super(id, timestampContainer, user, userId, version);
 		
 		wayNodeList = new ArrayList<WayNode>();
 	}
@@ -150,7 +158,7 @@ public class Way extends Entity implements Comparable<Way>, Storeable {
 
 	/**
 	 * Compares this way to the specified way. The way comparison is based on a
-	 * comparison of id, timestamp, wayNodeList and tags in that order.
+	 * comparison of id, version, timestamp, wayNodeList and tags in that order.
 	 * 
 	 * @param comparisonWay
 	 *            The way to compare to.
@@ -164,6 +172,13 @@ public class Way extends Entity implements Comparable<Way>, Storeable {
 			return -1;
 		}
 		if (this.getId() > comparisonWay.getId()) {
+			return 1;
+		}
+		
+		if (this.getVersion() < comparisonWay.getVersion()) {
+			return -1;
+		}
+		if (this.getVersion() > comparisonWay.getVersion()) {
 			return 1;
 		}
 		

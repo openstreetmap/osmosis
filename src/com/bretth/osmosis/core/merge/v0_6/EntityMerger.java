@@ -163,6 +163,18 @@ public class EntityMerger implements MultiSinkRunnableSource {
 						
 					} else if (conflictResolutionMethod.equals(ConflictResolutionMethod.LatestSource)) {
 						sink.process(entityContainer1);
+					} else if (conflictResolutionMethod.equals(ConflictResolutionMethod.Version)) {
+						int version0 = entityContainer0.getEntity().getVersion();
+						int version1 = entityContainer1.getEntity().getVersion();
+						if (version0 < version1) {
+							sink.process(entityContainer1);
+						} else if (version0 > version1) {
+							sink.process(entityContainer0);
+						} else {
+							// If both have identical versions, use the second source.
+							sink.process(entityContainer1);
+						}
+
 					} else {
 						throw new OsmosisRuntimeException(
 								"Conflict resolution method " + conflictResolutionMethod + " is not recognized.");

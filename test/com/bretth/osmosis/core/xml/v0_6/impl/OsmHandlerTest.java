@@ -187,8 +187,8 @@ public class OsmHandlerTest {
 	@Test(expected = OsmosisRuntimeException.class)
 	public final void testBoundElement8() {
 		parseString(OSM_PREFIX
-		        + "<node id=\"12345\" user=\"OsmosisTest\" timestamp=\"2008-01-01T15:32:01\""
-		        + " lat=\"-12.34567\" lon=\"-23.45678\"/>"
+		        + "<node id=\"12345\" user=\"OsmosisTest\" uid=\"12\" version=\"0\""
+		        + "timestamp=\"2008-01-01T15:32:01\" lat=\"-12.34567\" lon=\"-23.45678\"/>"
 		        + "<bound box=\"-12.34567,-23.45678,34.56789,45.67891\""
 		        + " origin=\"someorigin\"/>"
 		        + OSM_SUFFIX);
@@ -202,7 +202,8 @@ public class OsmHandlerTest {
 	@Test(expected = OsmosisRuntimeException.class)
 	public final void testBoundElement9() {
 		parseString(OSM_PREFIX
-		        + "<way id=\"12346\" user=\"OsmosisTest\" timestamp=\"2008-01-01T15:32:01\">"
+		        + "<way id=\"12346\" user=\"OsmosisTest\" uid=\"12\" version=\"0\""
+		        + "timestamp=\"2008-01-01T15:32:01\">"
 		        + "<nd ref=\"12345\"/>"
 		        + "<nd ref=\"12347\"/>"
 		        + "</way>"
@@ -219,7 +220,8 @@ public class OsmHandlerTest {
 	@Test(expected = OsmosisRuntimeException.class)
 	public final void testBoundElement10() {
 		parseString(OSM_PREFIX
-		        + "<relation id=\"12348\" user=\"OsmosisTest\" timestamp=\"2008-01-01T15:32:01\">"
+		        + "<relation id=\"12348\" user=\"OsmosisTest\" uid=\"12\" version=\"0\""
+		        + "timestamp=\"2008-01-01T15:32:01\">"
 		        + "<member ref=\"12345\" type=\"node\" role=\"node1\"/>"
 		        + "<member ref=\"12346\" type=\"way\" role=\"way1\"/>"
 		        + "</relation>"

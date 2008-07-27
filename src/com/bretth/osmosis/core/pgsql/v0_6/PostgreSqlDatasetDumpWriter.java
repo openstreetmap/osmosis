@@ -99,7 +99,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		node = nodeContainer.getEntity();
 		
 		nodeWriter.writeField(node.getId());
-		nodeWriter.writeField(node.getUser());
+		nodeWriter.writeField(node.getUserName());
 		nodeWriter.writeField(node.getTimestamp());
 		nodeWriter.writeField(pointBuilder.createPoint(node.getLatitude(), node.getLongitude()));
 		nodeWriter.endRecord();
@@ -125,7 +125,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		// Ignore ways with a single node because they can't be loaded into postgis.
 		if (way.getWayNodeList().size() > 1) {
 			wayWriter.writeField(way.getId());
-			wayWriter.writeField(way.getUser());
+			wayWriter.writeField(way.getUserName());
 			wayWriter.writeField(way.getTimestamp());
 			wayWriter.endRecord();
 			
@@ -159,7 +159,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		relation = relationContainer.getEntity();
 		
 		relationWriter.writeField(relation.getId());
-		relationWriter.writeField(relation.getUser());
+		relationWriter.writeField(relation.getUserName());
 		relationWriter.writeField(relation.getTimestamp());
 		relationWriter.endRecord();
 		

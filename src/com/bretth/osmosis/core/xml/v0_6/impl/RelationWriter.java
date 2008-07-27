@@ -49,9 +49,13 @@ public class RelationWriter extends ElementWriter {
 		beginOpenElement();
 		addAttribute("id", Long.toString(relation.getId()));
 		addAttribute("timestamp", relation.getFormattedTimestamp(getTimestampFormat()));
-		if (relation.getUser() != null && relation.getUser().length() > 0) {
-			addAttribute("user", relation.getUser());
+		if (relation.getUserName() != null && relation.getUserName().length() > 0) {
+			addAttribute("user", relation.getUserName());
 		}
+		if (relation.getUserId() != 0) {
+			addAttribute("uid", Integer.toString(relation.getUserId()));
+		}
+		addAttribute("version", Integer.toString(relation.getVersion()));
 		
 		relationMembers = relation.getMemberList();
 		tags = relation.getTagList();

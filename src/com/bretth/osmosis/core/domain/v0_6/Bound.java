@@ -55,7 +55,7 @@ public class Bound extends Entity implements Comparable<Bound> {
 	 *            The origin (source) of the data, typically a URI
 	 */
 	public Bound(double right, double left, double top, double bottom, String origin) {
-		super(0, new Date(), ""); // minimal underlying entity
+		super(0, new Date(), "", 0, 0); // minimal underlying entity
 		// Check if any coordinates are out of bounds
 		if (Double.compare(right, MAX_LONGITUDE) > 0
 		        || Double.compare(right, MIN_LONGITUDE) < 0

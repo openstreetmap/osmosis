@@ -19,6 +19,7 @@ import com.bretth.osmosis.test.task.v0_6.SinkEntityInspector;
 public class AreaFilterTest {
 
 	private static final String TEST_USER = "OsmosisTest";
+	private static final int TEST_USER_ID = 32;
 	private SinkEntityInspector entityInspector;
 	private AreaFilter simpleAreaFilter;
 	private AreaFilter simpleCompleteWayFilter;
@@ -101,37 +102,37 @@ public class AreaFilterTest {
 
 
 	private void setUpNodes() {
-		inAreaNode = new Node(1234, new Date(), TEST_USER, 10, 10);
+		inAreaNode = new Node(1234, new Date(), TEST_USER, TEST_USER_ID, 0, 10, 10);
 		inAreaNode.addTag(new Tag("test_key1", "test_value1"));
-		outOfAreaNode = new Node(1235, new Date(), TEST_USER, 30, 30);
-		inAreaWayNode1 = new Node(2345, new Date(), TEST_USER, 10, 10);
-		inAreaWayNode2 = new Node(2346, new Date(), TEST_USER, -10, -10);
-		outOfAreaWayNode1 = new Node(2347, new Date(), TEST_USER, -30, -30);
-		outOfAreaWayNode2 = new Node(2348, new Date(), TEST_USER, -40, -40);
+		outOfAreaNode = new Node(1235, new Date(), TEST_USER, TEST_USER_ID, 0, 30, 30);
+		inAreaWayNode1 = new Node(2345, new Date(), TEST_USER, TEST_USER_ID, 0, 10, 10);
+		inAreaWayNode2 = new Node(2346, new Date(), TEST_USER, TEST_USER_ID, 0, -10, -10);
+		outOfAreaWayNode1 = new Node(2347, new Date(), TEST_USER, TEST_USER_ID, 0, -30, -30);
+		outOfAreaWayNode2 = new Node(2348, new Date(), TEST_USER, TEST_USER_ID, 0, -40, -40);
 	}
 
 
 	private void setUpWays() {
-		inAreaWay = new Way(3456, new Date(), TEST_USER);
+		inAreaWay = new Way(3456, new Date(), TEST_USER, TEST_USER_ID, 0);
 		inAreaWay.addWayNode(new WayNode(inAreaWayNode1.getId()));
 		inAreaWay.addWayNode(new WayNode(inAreaWayNode2.getId()));
 		inAreaWay.addTag(new Tag("test_key2", "test_value2"));
-		outOfAreaWay = new Way(3457, new Date(), TEST_USER);
+		outOfAreaWay = new Way(3457, new Date(), TEST_USER, TEST_USER_ID, 0);
 		outOfAreaWay.addWayNode(new WayNode(outOfAreaWayNode1.getId()));
 		outOfAreaWay.addWayNode(new WayNode(outOfAreaWayNode2.getId()));
-		inOutWay = new Way(3458, new Date(), TEST_USER);
+		inOutWay = new Way(3458, new Date(), TEST_USER, TEST_USER_ID, 0);
 		inOutWay.addWayNode(new WayNode(inAreaWayNode1.getId()));
 		inOutWay.addWayNode(new WayNode(outOfAreaWayNode1.getId()));
 		inOutWay.addWayNode(new WayNode(inAreaWayNode2.getId()));
 		inOutWay.addWayNode(new WayNode(outOfAreaWayNode2.getId()));
 		inOutWay.addTag(new Tag("test_key3", "test_value3"));
 		// mangledInOutWay1 is mangled by completeWays=false
-		mangledInOutWay1 = new Way(inOutWay.getId(), inOutWay.getTimestamp(), inOutWay.getUser());
+		mangledInOutWay1 = new Way(inOutWay.getId(), inOutWay.getTimestamp(), inOutWay.getUserName(), TEST_USER_ID, 0);
 		mangledInOutWay1.addWayNode(new WayNode(inAreaWayNode1.getId()));
 		mangledInOutWay1.addWayNode(new WayNode(inAreaWayNode2.getId()));
 		mangledInOutWay1.addTags(inOutWay.getTagList());
 		// mangledInOutWay2 is mangled by completeRelations=false
-		mangledInOutWay2 = new Way(inOutWay.getId(), inOutWay.getTimestamp(), inOutWay.getUser());
+		mangledInOutWay2 = new Way(inOutWay.getId(), inOutWay.getTimestamp(), inOutWay.getUserName(), TEST_USER_ID, 0);
 		mangledInOutWay2.addWayNode(new WayNode(inAreaWayNode1.getId()));
 		mangledInOutWay2.addWayNode(new WayNode(inAreaWayNode2.getId()));
 		mangledInOutWay2.addWayNode(new WayNode(outOfAreaWayNode2.getId()));
@@ -139,7 +140,7 @@ public class AreaFilterTest {
 
 
 	private void setUpRelations() {
-		inAreaRelation = new Relation(4567, new Date(), TEST_USER);
+		inAreaRelation = new Relation(4567, new Date(), TEST_USER, TEST_USER_ID, 0);
 		inAreaRelation.addMember(new RelationMember(
 		        inAreaWayNode1.getId(),
 		        EntityType.Node,
@@ -150,7 +151,7 @@ public class AreaFilterTest {
 		        "node2"));
 		inAreaRelation.addMember(new RelationMember(inAreaWay.getId(), EntityType.Way, "way1"));
 		inAreaRelation.addTag(new Tag("test_key4", "test_value4"));
-		outOfAreaRelation1 = new Relation(4568, new Date(), TEST_USER);
+		outOfAreaRelation1 = new Relation(4568, new Date(), TEST_USER, TEST_USER_ID, 0);
 		outOfAreaRelation1.addMember(new RelationMember(
 		        outOfAreaWayNode1.getId(),
 		        EntityType.Node,
@@ -163,7 +164,7 @@ public class AreaFilterTest {
 		        outOfAreaWay.getId(),
 		        EntityType.Way,
 		        "way1"));
-		inOutRelation2 = new Relation(4570, new Date(), TEST_USER);
+		inOutRelation2 = new Relation(4570, new Date(), TEST_USER, TEST_USER_ID, 0);
 		inOutRelation2.addMember(new RelationMember(
 		        inAreaWayNode2.getId(),
 		        EntityType.Node,
@@ -174,7 +175,7 @@ public class AreaFilterTest {
 		        "node2"));
 		inOutRelation2.addMember(new RelationMember(inOutWay.getId(), EntityType.Way, "way1"));
 		inOutRelation2.addTag(new Tag("test_key5", "test_value5"));
-		inOutRelation1 = new Relation(4569, new Date(), TEST_USER);
+		inOutRelation1 = new Relation(4569, new Date(), TEST_USER, TEST_USER_ID, 0);
 		inOutRelation1.addMember(new RelationMember(
 		        inAreaWayNode1.getId(),
 		        EntityType.Node,
@@ -192,7 +193,9 @@ public class AreaFilterTest {
 		mangledInOutRelation1 = new Relation(
 		        inOutRelation1.getId(),
 		        inOutRelation1.getTimestamp(),
-		        inOutRelation1.getUser());
+		        inOutRelation1.getUserName(),
+		        inOutRelation1.getUserId(),
+		        inOutRelation1.getVersion());
 		mangledInOutRelation1.addMember(new RelationMember(
 		        inAreaWayNode1.getId(),
 		        EntityType.Node,
@@ -202,7 +205,9 @@ public class AreaFilterTest {
 		mangledInOutRelation2 = new Relation(
 		        inOutRelation2.getId(),
 		        inOutRelation2.getTimestamp(),
-		        inOutRelation2.getUser());
+		        inOutRelation2.getUserName(),
+		        inOutRelation2.getUserId(),
+		        inOutRelation2.getVersion());
 		mangledInOutRelation2.addMember(new RelationMember(
 		        inAreaWayNode2.getId(),
 		        EntityType.Node,
@@ -212,7 +217,9 @@ public class AreaFilterTest {
 		mangledCompleteInOutRelation1 = new Relation(
 		        inOutRelation1.getId(),
 		        inOutRelation1.getTimestamp(),
-		        inOutRelation1.getUser());
+		        inOutRelation1.getUserName(),
+		        inOutRelation1.getUserId(),
+		        inOutRelation1.getVersion());
 		mangledCompleteInOutRelation1.addMember(new RelationMember(
 		        inAreaWayNode1.getId(),
 		        EntityType.Node,

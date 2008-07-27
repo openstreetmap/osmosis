@@ -166,7 +166,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		Way filteredWay;
 		
 		// Create a new way object to contain only available nodes.
-		filteredWay = new Way(way.getId(), way.getTimestamp(), way.getUser());
+		filteredWay = new Way(way.getId(), way.getTimestamp(), way.getUserName(), way.getUserId(), way.getVersion());
 		
 		// Only add node references for nodes that are available.
 		for (WayNode nodeReference : way.getWayNodeList()) {
@@ -243,7 +243,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
     private void emitFilteredRelation(Relation relation) {
 	    Relation filteredRelation;
 	    // Create a new relation object to contain only items within the bounding box.
-		filteredRelation = new Relation(relation.getId(), relation.getTimestamp(), relation.getUser());
+		filteredRelation = new Relation(relation.getId(), relation.getTimestamp(), relation.getUserName(), relation.getUserId(), relation.getVersion());
 		
 		// Only add members for entities that are available.
 		for (RelationMember member : relation.getMemberList()) {

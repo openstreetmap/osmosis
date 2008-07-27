@@ -15,5 +15,10 @@ public enum ConflictResolutionMethod {
 	/**
 	 * Select the entity from the latest input source.
 	 */
-	LatestSource
+	LatestSource,
+	
+	/**
+	 * Select the entity with the highest version number.
+	 */
+	Version
 }

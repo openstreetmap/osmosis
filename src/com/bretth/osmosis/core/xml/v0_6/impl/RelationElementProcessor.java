@@ -24,6 +24,8 @@ public class RelationElementProcessor extends SourceElementProcessor implements 
 	private static final String ATTRIBUTE_NAME_ID = "id";
 	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
 	private static final String ATTRIBUTE_NAME_USER = "user";
+	private static final String ATTRIBUTE_NAME_USERID = "uid";
+	private static final String ATTRIBUTE_NAME_VERSION = "version";
 	
 	private TagElementProcessor tagElementProcessor;
 	private RelationMemberElementProcessor relationMemberElementProcessor;
@@ -63,8 +65,16 @@ public class RelationElementProcessor extends SourceElementProcessor implements 
 		if (user == null) {
 			user = "";
 		}
+		int userId;
+		try {
+			userId = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_USERID));
+		}
+		catch (NumberFormatException nfe) {
+			userId = 0;
+		}
+		int version = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_VERSION));
 		
-		relation = new Relation(id, timestampContainer, user);
+		relation = new Relation(id, timestampContainer, user, userId, version);
 	}
 	
 	
