@@ -2,7 +2,20 @@
 package com.bretth.osmosis.core.domain.v0_6;
 
 import static org.junit.Assert.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.OutputStream;
+
 import org.junit.Test;
+
+import com.bretth.osmosis.core.store.DataInputStoreReader;
+import com.bretth.osmosis.core.store.DataOutputStoreWriter;
+import com.bretth.osmosis.core.store.StoreClassRegister;
+import com.bretth.osmosis.core.store.StoreReader;
+import com.bretth.osmosis.core.store.StoreWriter;
 
 public class OsmUserTest {
 
@@ -41,6 +54,17 @@ public class OsmUserTest {
 	 */
 	@Test
 	public final void testGetInstance3() {
-		fail("Not yet implemented");
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		StoreWriter sw = new DataOutputStoreWriter(new DataOutputStream(out));
+		StoreClassRegister scr = new StoreClassRegister();
+		OsmUser user1 = OsmUser.getInstance("aUser", 12);
+		OsmUser user2 = OsmUser.getInstance("aUser2", 13);
+		user1.store(sw, scr);
+		user2.store(sw, scr);
+		StoreReader sr = new DataInputStoreReader(new DataInputStream(new ByteArrayInputStream(out.toByteArray())));
+		OsmUser user3 = OsmUser.getInstance(sr, scr);
+		OsmUser user4 = OsmUser.getInstance(sr, scr);
+		assertEquals("Object not equal after retrieval from store", user1, user3);
+		assertEquals("Object not equal after retrieval from store", user2, user4);
 	}
 }
