@@ -132,7 +132,7 @@ public class OsmUser {
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		sw.writeString(userName);
-		sw.writeLong(userId);
+		sw.writeInteger(userId);
 	}
 	
 	

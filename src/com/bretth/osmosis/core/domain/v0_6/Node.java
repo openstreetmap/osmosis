@@ -29,10 +29,10 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            The unique identifier.
 	 * @param timestamp
 	 *            The last updated timestamp.
-	 * @param userId
-	 *            The unique identifier of the last user to modify this entry.
 	 * @param user
 	 *            The name of the user that last modified this entity.
+	 * @param userId
+	 *            The unique identifier of the last user to modify this entry.
 	 * @param version
 	 *            The version of the entity.
 	 * @param latitude
@@ -54,12 +54,10 @@ public class Node extends Entity implements Comparable<Node> {
 	 * @param timestampContainer
 	 *            The container holding the timestamp in an alternative
 	 *            timestamp representation.
-	 * @param userId
-	 *            The unique identifier of the last user to modify this entry.
 	 * @param user
 	 *            The name of the user that last modified this entity.
 	 * @param userId
-	 *            The userId associated with the user name.
+	 *            The unique identifier of the last user to modify this entry.
 	 * @param version
 	 *            The version of the entity.
 	 * @param latitude
