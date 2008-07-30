@@ -40,10 +40,10 @@ public abstract class Entity implements Storeable {
 	 *            The unique identifier.
 	 * @param timestamp
 	 *            The last updated timestamp.
+	 * @param userId
+	 *            The unique identifier of the last user to modify this entry.
 	 * @param user
 	 *            The name of the user that last modified this entity.
-	 * @param userId
-	 *            The userId associated with the user name.
 	 * @param version
 	 *            The version of the entity.
 	 */
@@ -61,6 +61,8 @@ public abstract class Entity implements Storeable {
 	 * @param timestampContainer
 	 *            The container holding the timestamp in an alternative
 	 *            timestamp representation.
+	 * @param userId
+	 *            The unique identifier of the last user to modify this entry.
 	 * @param user
 	 *            The name of the user that last modified this entity.
 	 * @param userId
@@ -95,17 +97,16 @@ public abstract class Entity implements Storeable {
 			timestampContainer = new SimpleTimestampContainer(new Date(sr.readLong()));
 		}
 		
-		user = OsmUser.getInstance(sr, scr);
-		
-		version = sr.readCharacter(); // store as a character for now, may need to be an int later
-
-		tagList = new ArrayList<Tag>();
-		
 		tagCount = sr.readCharacter();
+		tagList = new ArrayList<Tag>(tagCount);
 		
 		for (int i = 0; i < tagCount; i++) {
 			addTag(new Tag(sr, scr));
 		}
+		
+		user = OsmUser.getInstance(sr, scr);
+		
+		version = sr.readCharacter(); // store as a character for now, may need to be an int later
 	}
 	
 	
@@ -114,20 +115,22 @@ public abstract class Entity implements Storeable {
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		sw.writeInteger(id);
+		
 		if (getTimestamp() != null) {
 			sw.writeBoolean(true);
 			sw.writeLong(timestampContainer.getTimestamp().getTime());
 		} else {
 			sw.writeBoolean(false);
 		}
-		user.store(sw, scr);
-
-		sw.writeCharacter(IntAsChar.intToChar(version));
 		
 		sw.writeCharacter(IntAsChar.intToChar(tagList.size()));
 		for (Tag tag : tagList) {
 			tag.store(sw, scr);
 		}
+		
+		user.store(sw, scr);
+		
+		sw.writeCharacter(IntAsChar.intToChar(version));
 	}
 	
 	
@@ -209,30 +212,6 @@ public abstract class Entity implements Storeable {
 	
 	
 	/**
-	 * @return The userName. 
-	 */
-	public String getUserName() {
-		return user.getUserName();
-	}
-	
-	
-	/**
-	 * @return The userId.
-	 */
-	public int getUserId() {
-		return user.getUserId();
-	}
-
-
-	/**
-	 * @return The version.
-	 */
-	public int getVersion() {
-		return version;
-	}
-
-
-	/**
 	 * Returns the attached list of tags. The returned list is read-only.
 	 * 
 	 * @return The tagList.
@@ -261,5 +240,29 @@ public abstract class Entity implements Storeable {
 	 */
 	public void addTags(Collection<Tag> tags) {
 		tagList.addAll(tags);
+	}
+	
+	
+	/**
+	 * @return The userName. 
+	 */
+	public String getUserName() {
+		return user.getUserName();
+	}
+	
+	
+	/**
+	 * @return The userId.
+	 */
+	public int getUserId() {
+		return user.getUserId();
+	}
+
+
+	/**
+	 * @return The version.
+	 */
+	public int getVersion() {
+		return version;
 	}
 }

@@ -35,6 +35,8 @@ public class Relation extends Entity implements Comparable<Relation>, Storeable 
 	 *            The unique identifier.
 	 * @param timestamp
 	 *            The last updated timestamp.
+	 * @param userId
+	 *            The unique identifier of the last user to modify this entry.
 	 * @param user
 	 *            The name of the user that last modified this entity.
 	 * @param userId
@@ -56,8 +58,12 @@ public class Relation extends Entity implements Comparable<Relation>, Storeable 
 	 * @param timestampContainer
 	 *            The container holding the timestamp in an alternative
 	 *            timestamp representation.
+	 * @param userId
+	 *            The unique identifier of the last user to modify this entry.
 	 * @param user
 	 *            The name of the user that last modified this entity.
+	 * @param version
+	 *            The version of the entity.
 	 */
 	public Relation(long id, TimestampContainer timestampContainer, String user, int userId, int version) {
 		super(id, timestampContainer, user, userId, version);

@@ -33,6 +33,8 @@ public class Way extends Entity implements Comparable<Way>, Storeable {
 	 *            The unique identifier.
 	 * @param timestamp
 	 *            The last updated timestamp.
+	 * @param userId
+	 *            The unique identifier of the last user to modify this entry.
 	 * @param user
 	 *            The name of the user that last modified this entity.
 	 * @param userId
@@ -54,10 +56,10 @@ public class Way extends Entity implements Comparable<Way>, Storeable {
 	 * @param timestampContainer
 	 *            The container holding the timestamp in an alternative
 	 *            timestamp representation.
+	 * @param userId
+	 *            The unique identifier of the last user to modify this entry.
 	 * @param user
 	 *            The name of the user that last modified this entity.
-	 * @param userId
-	 *            The userId associated with the user name.
 	 * @param version
 	 *            The version of the entity.
 	 */
