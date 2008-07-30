@@ -1,7 +1,8 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.domain.v0_6;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,13 +17,57 @@ import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
 
-public class OsmUserTest {
 
+/**
+ * Tests the OsmUser class.
+ * 
+ * @author Karl Newman
+ * @author Brett Henderson
+ */
+public class OsmUserTest {
+	
+	/**
+	 * Ensure that the object is created with the correct values.
+	 */
+	@Test
+	public final void testGetInstanceValues() {
+		OsmUser user;
+		
+		user = OsmUser.getInstance("myUserName", 1);
+		
+		assertEquals("The user name is incorrect.", "myUserName", user.getUserName());
+		assertEquals("The user id is incorrect.", 1, user.getUserId());
+	}
+	
+	
+	/**
+	 * Ensure that the object details are correct when the user name is missing.
+	 */
+	@Test
+	public final void testGetInstanceEmptyUser() {
+		OsmUser user;
+		
+		user = OsmUser.getInstance("", 1);
+		
+		assertEquals("The user name is incorrect.", "", user.getUserName());
+		assertEquals("The user id is incorrect.", 1, user.getUserId());
+	}
+	
+	
+	/**
+	 * Ensure that the object doesn't allow a null user name.
+	 */
+	@Test(expected=NullPointerException.class)
+	public final void testGetInstancePreventsNullUser() {
+		OsmUser.getInstance(null, 1);
+	}
+	
+	
 	/**
 	 * Ensure the equal instances are returned for the same input values.
 	 */
 	@Test
-	public final void testGetInstance1() {
+	public final void testGetInstanceSingleObjectReuse() {
 		OsmUser user1 = OsmUser.getInstance("aUser", 12);
 		// create another one to make it actually do some work
 		OsmUser.getInstance("bUser", 14);
@@ -36,7 +81,7 @@ public class OsmUserTest {
 	 * Ensure different instances are returned for different input values.
 	 */
 	@Test
-	public final void testGetInstance2() {
+	public final void testGetInstanceObjectUniqueness() {
 		OsmUser user1 = OsmUser.getInstance("aUser", 12);
 		OsmUser user2 = OsmUser.getInstance("aUser", 13);
 		OsmUser user3 = OsmUser.getInstance("aUser1", 12);
@@ -52,18 +97,22 @@ public class OsmUserTest {
 	 * Ensure the instance is correctly written to and read from the store.
 	 */
 	@Test
-	public final void testGetInstance3() {
+	public final void testGetInstanceFromStore() {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		StoreWriter sw = new DataOutputStoreWriter(new DataOutputStream(out));
 		StoreClassRegister scr = new StoreClassRegister();
 		OsmUser user1 = OsmUser.getInstance("aUser", 12);
-		OsmUser user2 = OsmUser.getInstance("aUser2", 13);
+		OsmUser user3 = OsmUser.getInstance("aUser2", 13);
+		OsmUser user5 = OsmUser.getInstance("", 14);
 		user1.store(sw, scr);
-		user2.store(sw, scr);
+		user3.store(sw, scr);
+		user5.store(sw, scr);
 		StoreReader sr = new DataInputStoreReader(new DataInputStream(new ByteArrayInputStream(out.toByteArray())));
-		OsmUser user3 = OsmUser.getInstance(sr, scr);
+		OsmUser user2 = OsmUser.getInstance(sr, scr);
 		OsmUser user4 = OsmUser.getInstance(sr, scr);
-		assertEquals("Object not equal after retrieval from store", user1, user3);
-		assertEquals("Object not equal after retrieval from store", user2, user4);
+		OsmUser user6 = OsmUser.getInstance(sr, scr);
+		assertEquals("Object not equal after retrieval from store", user1, user2);
+		assertEquals("Object not equal after retrieval from store", user3, user4);
+		assertEquals("Object not equal after retrieval from store", user5, user6);
 	}
 }

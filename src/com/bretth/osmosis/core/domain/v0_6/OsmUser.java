@@ -8,18 +8,21 @@ import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
 
+
 /**
  * A value class representing a single OSM user, comprised of user name and id.
  * 
  * This class is immutable, and the static factories are thread-safe.
  * 
  * @author Karl Newman
+ * @author Brett Henderson
  */
 public class OsmUser {
 	private String userName;
 	private int userId;
-	public static final OsmUser NO_USER = new OsmUser("", 0);
-	/*
+	
+	
+	/**
 	 *  Canonicalization of OsmUser instances. This may not be optimal, because Osmosis' pipeline
 	 *  approach helps to ensure that objects won't hang around very long, so by keeping a single
 	 *  instance of each unique OsmUser, this Map may actually cause more memory consumption than
@@ -27,6 +30,7 @@ public class OsmUser {
 	 *  of the static factory. 
 	 */
 	private static ConcurrentMap<OsmUser, OsmUser> userMap = new ConcurrentHashMap<OsmUser, OsmUser>();
+	
 	
 	/**
 	 * Creates a new instance.
@@ -37,6 +41,10 @@ public class OsmUser {
 	 *            The userId associated with the user name.
 	 */
 	private OsmUser(String userName, int userId) {
+		if (userName == null) {
+			throw new NullPointerException("The user name cannot be null.");
+		}
+		
 		this.userName = userName;
 		this.userId = userId;
 	}
@@ -47,12 +55,15 @@ public class OsmUser {
 	 */
 	@Override
 	public boolean equals(Object o) {
+		OsmUser ou;
+		
 		if (!(o instanceof OsmUser)) {
 			return false;
 		}
-		OsmUser ou = (OsmUser) o;
-		return (userName == null ? ou.getUserName() == null : userName.equals(ou.getUserName()))
-			&& (userId == ou.getUserId());
+		
+		ou = (OsmUser) o;
+		
+		return userName.equals(ou.userName) && userId == ou.userId;
 	}
 
 	
@@ -61,35 +72,37 @@ public class OsmUser {
 	 */
 	@Override
 	public int hashCode() {
-		int result = -17;
-		result = 31 * result + (userName == null ? 0 : userName.hashCode());
+		int result;
+		
+		result = -17;
+		result = 31 * result + userName.hashCode();
 		result = 31 * result + userId;
+		
 		return result;
 	}
 	
 	
 	/**
-	 * Factory method to retrieve an OSM User instance from a given user name and user id.
+	 * Factory method to retrieve an OSM User instance from a given user name
+	 * and user id.
 	 * 
 	 * @param userName
 	 *            The name of the user.
 	 * @param userId
 	 *            The userId associated with the user name.
+	 * @return The instance matching the request parameters.
 	 */
 	public static OsmUser getInstance(String userName, int userId) {
-		if (userName == null || userName == "") {
-			return NO_USER;
-		} else {
-			OsmUser newUser = new OsmUser(userName, userId);
-			OsmUser result = userMap.get(newUser);
+		OsmUser newUser = new OsmUser(userName, userId);
+		OsmUser result = userMap.get(newUser);
+		if (result == null) {
+			result = userMap.putIfAbsent(newUser, newUser);
 			if (result == null) {
-				result = userMap.putIfAbsent(newUser, newUser);
-				if (result == null) {
-					result = newUser;
-				}
+				result = newUser;
 			}
-			return result;
 		}
+		
+		return result;
 	}
 	
 	
@@ -101,13 +114,10 @@ public class OsmUser {
 	 * @param scr
 	 *            Maintains the mapping between classes and their identifiers
 	 *            within the store.
+	 * @return The instance loaded from the store.
 	 */
 	public static OsmUser getInstance(StoreReader sr, StoreClassRegister scr) {
-		if (sr.readBoolean()) {
-			return getInstance(sr.readString(), sr.readInteger());
-		} else {
-			return NO_USER;
-		}
+		return getInstance(sr.readString(), sr.readInteger());
 	}
 	
 
@@ -121,13 +131,8 @@ public class OsmUser {
 	 *            within the store.
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
-		if (userName != null) {
-			sw.writeBoolean(true);
-			sw.writeString(userName);
-			sw.writeInteger(userId);
-		} else {
-			sw.writeBoolean(false);
-		}
+		sw.writeString(userName);
+		sw.writeLong(userId);
 	}
 	
 	
