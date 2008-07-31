@@ -33,7 +33,7 @@ public class OsmHandlerTest {
 
 	private SAXParser parser;
 	private SinkEntityInspector entityInspector;
-	private static final String OSM_PREFIX = "<osm version=\"0.5\">\n";
+	private static final String OSM_PREFIX = "<osm version=\"0.6\">\n";
 	private static final String OSM_SUFFIX = "</osm>";
 
 

@@ -5,6 +5,7 @@ import org.xml.sax.Attributes;
 
 import com.bretth.osmosis.core.container.v0_6.RelationContainer;
 import com.bretth.osmosis.core.domain.common.TimestampContainer;
+import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
@@ -70,7 +71,7 @@ public class RelationElementProcessor extends SourceElementProcessor implements 
 			userId = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_USERID));
 		}
 		catch (NumberFormatException nfe) {
-			userId = 0;
+			userId = OsmUser.USER_ID_NONE;
 		}
 		int version = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_VERSION));
 		

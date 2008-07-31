@@ -20,7 +20,9 @@ import com.bretth.osmosis.core.store.StoreWriter;
 public class OsmUser {
 	private String userName;
 	private int userId;
-	
+	/** User ID value to designate no id available */
+	public static final int USER_ID_NONE = 0;
+	public static final OsmUser NO_USER;
 	
 	/**
 	 *  Canonicalization of OsmUser instances. This may not be optimal, because Osmosis' pipeline
@@ -29,8 +31,14 @@ public class OsmUser {
 	 *  otherwise. If that turns out to be the case, it's easy enough to change the implementation
 	 *  of the static factory. 
 	 */
-	private static ConcurrentMap<OsmUser, OsmUser> userMap = new ConcurrentHashMap<OsmUser, OsmUser>();
-	
+	private static ConcurrentMap<OsmUser, OsmUser> userMap;
+
+	static {
+		/* make sure the Map is initialized before attempting a getInstance */
+		userMap = new ConcurrentHashMap<OsmUser, OsmUser>();
+		NO_USER = OsmUser.getInstance("", USER_ID_NONE);
+	}
+
 	
 	/**
 	 * Creates a new instance.

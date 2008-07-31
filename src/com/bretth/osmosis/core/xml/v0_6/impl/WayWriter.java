@@ -4,6 +4,7 @@ package com.bretth.osmosis.core.xml.v0_6.impl;
 import java.io.BufferedWriter;
 import java.util.List;
 
+import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
@@ -52,7 +53,7 @@ public class WayWriter extends ElementWriter {
 		if (way.getUserName() != null && way.getUserName().length() > 0) {
 			addAttribute("user", way.getUserName());
 		}
-		if (way.getUserId() != 0) {
+		if (way.getUserId() != OsmUser.USER_ID_NONE) {
 			addAttribute("uid", Integer.toString(way.getUserId()));
 		}
 		addAttribute("version", Integer.toString(way.getVersion()));

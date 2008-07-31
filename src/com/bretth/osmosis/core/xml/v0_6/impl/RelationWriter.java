@@ -4,6 +4,7 @@ package com.bretth.osmosis.core.xml.v0_6.impl;
 import java.io.BufferedWriter;
 import java.util.List;
 
+import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
@@ -52,7 +53,7 @@ public class RelationWriter extends ElementWriter {
 		if (relation.getUserName() != null && relation.getUserName().length() > 0) {
 			addAttribute("user", relation.getUserName());
 		}
-		if (relation.getUserId() != 0) {
+		if (relation.getUserId() != OsmUser.USER_ID_NONE) {
 			addAttribute("uid", Integer.toString(relation.getUserId()));
 		}
 		addAttribute("version", Integer.toString(relation.getVersion()));

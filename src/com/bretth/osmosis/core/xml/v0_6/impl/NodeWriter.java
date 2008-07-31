@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 
 import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.xml.common.ElementWriter;
 
@@ -60,7 +61,7 @@ public class NodeWriter extends ElementWriter {
 		if (node.getUserName() != null && node.getUserName().length() > 0) {
 			addAttribute("user", node.getUserName());
 		}
-		if (node.getUserId() != 0) {
+		if (node.getUserId() != OsmUser.USER_ID_NONE) {
 			addAttribute("uid", Integer.toString(node.getUserId()));
 		}
 		addAttribute("version", Integer.toString(node.getVersion()));

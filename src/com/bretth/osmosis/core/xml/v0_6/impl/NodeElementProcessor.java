@@ -6,6 +6,7 @@ import org.xml.sax.Attributes;
 import com.bretth.osmosis.core.container.v0_6.NodeContainer;
 import com.bretth.osmosis.core.domain.common.TimestampContainer;
 import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.task.v0_6.Sink;
 import com.bretth.osmosis.core.xml.common.BaseElementProcessor;
@@ -72,7 +73,7 @@ public class NodeElementProcessor extends SourceElementProcessor implements TagL
 			userId = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_USERID));
 		}
 		catch (NumberFormatException nfe) {
-			userId = 0;
+			userId = OsmUser.USER_ID_NONE;
 		}
 		int version = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_VERSION));
 		

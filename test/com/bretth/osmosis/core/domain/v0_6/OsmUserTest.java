@@ -55,6 +55,17 @@ public class OsmUserTest {
 	
 	
 	/**
+	 * Ensure the special value NO_USER is returned for equivalent input values.
+	 */
+	@Test
+	public final void testGetInstanceNoUser() {
+		OsmUser user1 = OsmUser.getInstance("", OsmUser.USER_ID_NONE);
+		assertEquals("Objects are not equal", user1, OsmUser.NO_USER);
+		assertEquals("Hash codes are not equal", user1.hashCode(), OsmUser.NO_USER.hashCode());
+	}
+	
+	
+	/**
 	 * Ensure that the object doesn't allow a null user name.
 	 */
 	@Test(expected=NullPointerException.class)
@@ -64,7 +75,7 @@ public class OsmUserTest {
 	
 	
 	/**
-	 * Ensure the equal instances are returned for the same input values.
+	 * Ensure equal instances are returned for the same input values.
 	 */
 	@Test
 	public final void testGetInstanceSingleObjectReuse() {
