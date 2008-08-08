@@ -22,6 +22,11 @@ public class OsmUser {
 	private int userId;
 	/** User ID value to designate no id available */
 	public static final int USER_ID_NONE = 0;
+	
+	
+	/**
+	 * The user instance representing no user available.
+	 */
 	public static final OsmUser NO_USER;
 	
 	/**

@@ -17,6 +17,8 @@ import com.bretth.osmosis.core.filter.v0_6.BoundingBoxFilterFactory;
 import com.bretth.osmosis.core.filter.v0_6.DatasetBoundingBoxFilterFactory;
 import com.bretth.osmosis.core.filter.v0_6.PolygonFilterFactory;
 import com.bretth.osmosis.core.filter.v0_6.UsedNodeFilterFactory;
+import com.bretth.osmosis.core.filter.v0_6.NodeKeyFilterFactory;
+import com.bretth.osmosis.core.filter.v0_6.NodeKeyValueFilterFactory;
 import com.bretth.osmosis.core.filter.v0_6.WayKeyValueFilterFactory;
 import com.bretth.osmosis.core.merge.v0_6.ChangeDownloadInitializerFactory;
 import com.bretth.osmosis.core.merge.v0_6.ChangeDownloaderFactory;
@@ -203,6 +205,10 @@ public class TaskRegistrar {
 		factoryRegister.register("wpc", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlChangeWriterFactory());
 		factoryRegister.register("used-node", new com.bretth.osmosis.core.filter.v0_5.UsedNodeFilterFactory());
 		factoryRegister.register("un", new com.bretth.osmosis.core.filter.v0_5.UsedNodeFilterFactory());
+		factoryRegister.register("node-key", new com.bretth.osmosis.core.filter.v0_5.NodeKeyFilterFactory());
+		factoryRegister.register("nk", new com.bretth.osmosis.core.filter.v0_5.NodeKeyFilterFactory());
+		factoryRegister.register("node-key-value", new com.bretth.osmosis.core.filter.v0_5.NodeKeyValueFilterFactory());
+		factoryRegister.register("nkv", new com.bretth.osmosis.core.filter.v0_5.NodeKeyValueFilterFactory());
 		factoryRegister.register("way-key-value", new com.bretth.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
 		factoryRegister.register("wkv", new com.bretth.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
 		factoryRegister.register("read-change-interval", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloaderFactory());
@@ -249,6 +255,8 @@ public class TaskRegistrar {
 		factoryRegister.register("read-pgsql-0.5", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlDatasetReaderFactory());
 		factoryRegister.register("write-pgsql-change-0.5", new com.bretth.osmosis.core.pgsql.v0_5.PostgreSqlChangeWriterFactory());
 		factoryRegister.register("used-node-0.5", new com.bretth.osmosis.core.filter.v0_5.UsedNodeFilterFactory());
+		factoryRegister.register("node-key-0.5", new com.bretth.osmosis.core.filter.v0_5.NodeKeyFilterFactory());
+		factoryRegister.register("node-key-value-0.5", new com.bretth.osmosis.core.filter.v0_5.NodeKeyValueFilterFactory());
 		factoryRegister.register("way-key-value-0.5", new com.bretth.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
 		factoryRegister.register("read-change-interval-0.5", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloaderFactory());
 		factoryRegister.register("read-change-interval-init-0.5", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloadInitializerFactory());
@@ -292,6 +300,8 @@ public class TaskRegistrar {
 		factoryRegister.register("read-pgsql-0.6", new PostgreSqlDatasetReaderFactory());
 		factoryRegister.register("write-pgsql-change-0.6", new PostgreSqlChangeWriterFactory());
 */		factoryRegister.register("used-node-0.6", new UsedNodeFilterFactory());
+		factoryRegister.register("node-key-0.6", new NodeKeyFilterFactory());
+		factoryRegister.register("node-key-value-0.6", new NodeKeyValueFilterFactory());
 		factoryRegister.register("way-key-value-0.6", new WayKeyValueFilterFactory());
 		factoryRegister.register("read-change-interval-0.6", new ChangeDownloaderFactory());
 		factoryRegister.register("read-change-interval-init-0.6", new ChangeDownloadInitializerFactory());

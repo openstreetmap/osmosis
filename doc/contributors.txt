@@ -14,3 +14,5 @@ Jochen Topf
 - Launch script fixes.
 - Build script fixes to preserve executable launch script permissions.
 - Pgsql simple schema refactoring to align with production MySQL schema names.
+Aurelien Jacobs
+- Node key and node value filtering tasks.
