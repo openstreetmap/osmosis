@@ -28,87 +28,87 @@ import com.bretth.osmosis.core.xml.v0_6.impl.XmlConstants;
 
 
 /**
- *  * An OSM data source reading from an osm-xml file from the
- *   * OpenStreetMap-server.
- *    *
- *     * @author <a href="mailto:Marcus@Wolschon.biz">Marcus Wolschon</a>
- *      */
+ * An OSM data source reading from an osm-xml file from the
+ * OpenStreetMap-server.
+ *
+ * @author <a href="mailto:Marcus@Wolschon.biz">Marcus Wolschon</a>
+ */
 public class XmlDownloader implements RunnableSource {
 
     /**
- *      * The http-response-code for OK.
- *           */
+     * The http-response-code for OK.
+     */
     private static final int RESPONSECODE_OK = 200;
 
 
     /**
- *      * My logger for debug- and error-output.
- *           */
+     * My logger for debug- and error-output.
+     */
     private static Logger log = Logger.getLogger(XmlDownloader.class.getName());
 
 
     /**
- *      * The timeout we use for the  HttpURLConnection.
- *           */
+     * The timeout we use for the  HttpURLConnection.
+     */
     private static final int TIMEOUT = 15000;
 
 
     /**
- *      * Where to deliver the loaded data.
- *           */
+     * Where to deliver the loaded data.
+     */
     private Sink mySink;
 
     /**
- *      * Left longitude of the bounding box.
- *           */
+     * Left longitude of the bounding box.
+     */
     private double myLeft;
 
     /**
- *      * Right longitude of the bounding box.
- *           */
+     * Right longitude of the bounding box.
+     */
     private double myRight;
 
     /**
- *      * Top latitude of the bounding box.
- *           */
+     * Top latitude of the bounding box.
+     */
     private double myTop;
 
     /**
- *      * Bottom latitude of the bounding box.
- *           */
+     * Bottom latitude of the bounding box.
+     */
     private double myBottom;
 
     /**
- *      * The base url of the server.
- *           * Defaults to. "http://www.openstreetmap.org/api/0.5".
- *                */
+     * The base url of the server.
+     * Defaults to. "http://www.openstreetmap.org/api/0.5".
+     */
     private String myBaseUrl = XmlConstants.DEFAULT_URL;
 
     /**
- *      * The http connection used to retrieve data.
- *           */
+     * The http connection used to retrieve data.
+     */
     private HttpURLConnection myActiveConnection;
 
     /**
- *      * The stream providing response data.
- *           */
+     * The stream providing response data.
+     */
     private InputStream responseStream;
 
     /**
- *      * Creates a new instance with the specified geographical coordinates.
- *           *
- *                * @param left
- *                     *            The longitude marking the left edge of the bounding box.
- *                          * @param right
- *                               *            The longitude marking the right edge of the bounding box.
- *                                    * @param top
- *                                         *            The latitude marking the top edge of the bounding box.
- *                                              * @param bottom
- *                                                   *            The latitude marking the bottom edge of the bounding box.
- *                                                        * @param baseUrl
- *                                                             *            (optional) The base url of the server (eg.
- *                                                                  *            http://www.openstreetmap.org/api/0.5).
- *                                                                       */
+     * Creates a new instance with the specified geographical coordinates.
+     *
+     * @param left
+     *            The longitude marking the left edge of the bounding box.
+     * @param right
+     *            The longitude marking the right edge of the bounding box.
+     * @param top
+     *            The latitude marking the top edge of the bounding box.
+     * @param bottom
+     *            The latitude marking the bottom edge of the bounding box.
+     * @param baseUrl
+     *            (optional) The base url of the server (eg.
+     *            http://www.openstreetmap.org/api/0.5).
+     */
     public XmlDownloader(final double left,
                          final double right,
                          final double top,
@@ -124,15 +124,15 @@ public class XmlDownloader implements RunnableSource {
 
 
     /**
- *      * {@inheritDoc}
- *           */
+     * {@inheritDoc}
+     */
     public void setSink(final Sink aSink) {
         this.mySink = aSink;
     }
 
     /**
- *      * Cleans up any resources remaining after completion.
- *           */
+     * Cleans up any resources remaining after completion.
+     */
     private void cleanup() {
         if (myActiveConnection != null) {
             try {
@@ -156,10 +156,10 @@ public class XmlDownloader implements RunnableSource {
 
 
     /**
- *      * Creates a new SAX parser.
- *           *
- *                * @return The newly created SAX parser.
- *                     */
+     * Creates a new SAX parser.
+     *
+     * @return The newly created SAX parser.
+     */
     private SAXParser createParser() {
         try {
             return SAXParserFactory.newInstance().newSAXParser();
@@ -173,8 +173,8 @@ public class XmlDownloader implements RunnableSource {
 
 
     /**
- *      * Reads all data from the server and send it to the {@link Sink}.
- *           */
+     * Reads all data from the server and send it to the {@link Sink}.
+     */
     public void run() {
         try {
             SAXParser    parser = createParser();
@@ -212,16 +212,16 @@ public class XmlDownloader implements RunnableSource {
     }
 
     /**
- *      * Open a connection to the given url and return a reader on the input
- *           * stream from that connection.
- *                *
- *                     * @param pUrlStr
- *                          *            The exact url to connect to.
- *                               * @return An reader reading the input stream (servers answer) or
- *                                    *         <code>null</code>.
- *                                         * @throws IOException
- *                                              *             on io-errors
- *                                                   */
+     * Open a connection to the given url and return a reader on the input
+     * stream from that connection.
+     *
+     * @param pUrlStr
+     *            The exact url to connect to.
+     * @return An reader reading the input stream (servers answer) or
+     *         <code>null</code>.
+     * @throws IOException
+     *             on io-errors
+     */
     private InputStream getInputStream(final String pUrlStr) throws IOException {
         URL url;
         int responseCode;
@@ -266,4 +266,3 @@ public class XmlDownloader implements RunnableSource {
         return responseStream;
     }
 }
-
