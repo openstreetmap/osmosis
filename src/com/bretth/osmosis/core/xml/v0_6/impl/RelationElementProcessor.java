@@ -19,7 +19,7 @@ import com.bretth.osmosis.core.xml.common.ElementProcessor;
  * 
  * @author Brett Henderson
  */
-public class RelationElementProcessor extends SourceElementProcessor implements TagListener, RelationMemberListener {
+public class RelationElementProcessor extends EntityElementProcessor implements TagListener, RelationMemberListener {
 	private static final String ELEMENT_NAME_TAG = "tag";
 	private static final String ELEMENT_NAME_MEMBER = "member";
 	private static final String ATTRIBUTE_NAME_ID = "id";
@@ -57,25 +57,21 @@ public class RelationElementProcessor extends SourceElementProcessor implements 
 	 */
 	public void begin(Attributes attributes) {
 		long id;
+		int version;
 		TimestampContainer timestampContainer;
-		String user;
+		String rawUserId;
+		String rawUserName;
+		OsmUser user;
 		
 		id = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_ID));
+		version = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_VERSION));
 		timestampContainer = createTimestampContainer(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
-		user = attributes.getValue(ATTRIBUTE_NAME_USER);
-		if (user == null) {
-			user = "";
-		}
-		int userId;
-		try {
-			userId = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_USERID));
-		}
-		catch (NumberFormatException nfe) {
-			userId = OsmUser.USER_ID_NONE;
-		}
-		int version = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_VERSION));
+		rawUserId = attributes.getValue(ATTRIBUTE_NAME_USERID);
+		rawUserName = attributes.getValue(ATTRIBUTE_NAME_USER);
 		
-		relation = new Relation(id, timestampContainer, user, userId, version);
+		user = buildUser(rawUserId, rawUserName);
+		
+		relation = new Relation(id, timestampContainer, user, version);
 	}
 	
 	

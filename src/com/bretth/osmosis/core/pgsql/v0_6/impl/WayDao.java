@@ -22,12 +22,11 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
  * 
  * @author Brett Henderson
  */
-public class WayDao implements Releasable {
+public class WayDao extends EntityDao {
 	private static final String SQL_SELECT_SINGLE_WAY = "SELECT id, tstamp, user_name FROM ways WHERE id=?";
 	private static final String SQL_SELECT_SINGLE_WAY_TAG = "SELECT way_id AS entity_id, k, v FROM way_tags WHERE way_id=?";
 	private static final String SQL_SELECT_SINGLE_WAY_NODE = "SELECT way_id, node_id, sequence_id FROM way_nodes WHERE way_id=? ORDER BY sequence_id";
 	
-	private DatabaseContext dbCtx;
 	private PreparedStatement singleWayStatement;
 	private PreparedStatement singleWayTagStatement;
 	private PreparedStatement singleWayNodeStatement;
@@ -40,30 +39,7 @@ public class WayDao implements Releasable {
 	 *            The database context to use for accessing the database.
 	 */
 	public WayDao(DatabaseContext dbCtx) {
-		this.dbCtx = dbCtx;
-	}
-	
-	
-	/**
-	 * Builds a tag from the current result set row.
-	 * 
-	 * @param resultSet
-	 *            The result set.
-	 * @return The newly loaded tag.
-	 */
-	private DBEntityTag buildTag(ResultSet resultSet) {
-		try {
-			return new DBEntityTag(
-				resultSet.getLong("entity_id"),
-				new Tag(
-					resultSet.getString("k"),
-					resultSet.getString("v")
-				)
-			);
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to build a tag from the current recordset row.", e);
-		} 
+		super(dbCtx);
 	}
 	
 	
@@ -118,8 +94,11 @@ public class WayDao implements Releasable {
 	 * @return The loaded way.
 	 */
 	public Way getWay(long wayId) {
+		DatabaseContext dbCtx;
 		ResultSet resultSet = null;
 		Way way;
+		
+		dbCtx = getDatabaseContext();
 		
 		if (singleWayStatement == null) {
 			singleWayStatement = dbCtx.prepareStatement(SQL_SELECT_SINGLE_WAY);
@@ -139,7 +118,7 @@ public class WayDao implements Releasable {
 			resultSet = singleWayStatement.executeQuery();
 			
 			if (!resultSet.next()) {
-				throw new OsmosisRuntimeException("Way " + wayId + " doesn't exist.");
+				throw new NoSuchRecordException("Way " + wayId + " doesn't exist.");
 			}
 			way = buildWay(resultSet);
 			
@@ -184,7 +163,7 @@ public class WayDao implements Releasable {
 	 * @return The way iterator.
 	 */
 	public ReleasableIterator<Way> iterate() {
-		return new WayReader(dbCtx);
+		return new WayReader(getDatabaseContext());
 	}
 	
 	

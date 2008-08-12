@@ -12,6 +12,7 @@ import org.junit.Test;
 import com.bretth.osmosis.core.container.v0_6.BoundContainer;
 import com.bretth.osmosis.core.domain.v0_6.Bound;
 import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.filter.common.IdTrackerType;
 import com.bretth.osmosis.test.task.v0_6.SinkEntityInspector;
 
@@ -51,12 +52,12 @@ public class BoundingBoxFilterTest {
 		simpleAreaFilter.setSink(entityInspector);
 		intersectingBound = new Bound(30, 10, 30, 10, "intersecting");
 		nonIntersectingBound = new Bound(-30, -50, 10, -10, "nonintersecting");
-		inAreaNode = new Node(1234, new Date(), "OsmosisTest", 12, 0, 10, 10);
-		outOfAreaNode = new Node(1235, new Date(), "OsmosisTest", 12, 0, 30, 30);
-		edgeNodeEast = new Node(1236, new Date(), "OsmosisTest", 12, 0, 10, 20);
-		edgeNodeWest = new Node(1237, new Date(), "OsmosisTest", 12, 0, 10, -20);
-		edgeNodeNorth = new Node(1238, new Date(), "OsmosisTest", 12, 0, 20, 10);
-		edgeNodeSouth = new Node(1239, new Date(), "OsmosisTest", 12, 0, -20, 10);
+		inAreaNode = new Node(1234, new Date(), new OsmUser("OsmosisTest", 12), 0, 10, 10);
+		outOfAreaNode = new Node(1235, new Date(), new OsmUser("OsmosisTest", 12), 0, 30, 30);
+		edgeNodeEast = new Node(1236, new Date(), new OsmUser("OsmosisTest", 12), 0, 10, 20);
+		edgeNodeWest = new Node(1237, new Date(), new OsmUser("OsmosisTest", 12), 0, 10, -20);
+		edgeNodeNorth = new Node(1238, new Date(), new OsmUser("OsmosisTest", 12), 0, 20, 10);
+		edgeNodeSouth = new Node(1239, new Date(), new OsmUser("OsmosisTest", 12), 0, -20, 10);
 	}
 
 

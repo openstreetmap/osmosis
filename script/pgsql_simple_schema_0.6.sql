@@ -29,9 +29,9 @@ CREATE TABLE users (
 -- Create a table for nodes.
 CREATE TABLE nodes (
     id bigint NOT NULL,
+    version int NOT NULL,
     user_id int NOT NULL,
-    tstamp timestamp without time zone NOT NULL,
-    version int NOT NULL
+    tstamp timestamp without time zone NOT NULL
 );
 -- Add a postgis point column holding the location of the node.
 SELECT AddGeometryColumn('nodes', 'geom', 4326, 'POINT', 2);
@@ -47,9 +47,9 @@ CREATE TABLE node_tags (
 -- Create a table for ways.
 CREATE TABLE ways (
     id bigint NOT NULL,
+    version int NOT NULL,
     user_id int NOT NULL,
-    tstamp timestamp without time zone NOT NULL,
-    version int NOT NULL
+    tstamp timestamp without time zone NOT NULL
 );
 -- Add a postgis bounding box column used for indexing the location of the way.
 -- This will contain a bounding box surrounding the extremities of the way.
@@ -75,9 +75,9 @@ CREATE TABLE way_tags (
 -- Create a table for relations.
 CREATE TABLE relations (
     id bigint NOT NULL,
+    version int NOT NULL,
     user_id int NOT NULL,
-    tstamp timestamp without time zone NOT NULL,
-    version int NOT NULL
+    tstamp timestamp without time zone NOT NULL
 );
 
 -- Create a table for representing relation member relationships.

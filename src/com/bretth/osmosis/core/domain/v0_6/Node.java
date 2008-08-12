@@ -30,9 +30,7 @@ public class Node extends Entity implements Comparable<Node> {
 	 * @param timestamp
 	 *            The last updated timestamp.
 	 * @param user
-	 *            The name of the user that last modified this entity.
-	 * @param userId
-	 *            The unique identifier of the last user to modify this entry.
+	 *            The user that last modified this entity.
 	 * @param version
 	 *            The version of the entity.
 	 * @param latitude
@@ -40,9 +38,9 @@ public class Node extends Entity implements Comparable<Node> {
 	 * @param longitude
 	 *            The geographic longitude.
 	 */
-	public Node(long id, Date timestamp, String user, int userId, int version, double latitude, double longitude) {
+	public Node(long id, Date timestamp, OsmUser user, int version, double latitude, double longitude) {
 		// Chain to the more-specific constructor
-		this(id, new SimpleTimestampContainer(timestamp), user, userId, version, latitude, longitude);
+		this(id, new SimpleTimestampContainer(timestamp), user, version, latitude, longitude);
 	}
 	
 	
@@ -56,8 +54,6 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            timestamp representation.
 	 * @param user
 	 *            The name of the user that last modified this entity.
-	 * @param userId
-	 *            The unique identifier of the last user to modify this entry.
 	 * @param version
 	 *            The version of the entity.
 	 * @param latitude
@@ -65,8 +61,8 @@ public class Node extends Entity implements Comparable<Node> {
 	 * @param longitude
 	 *            The geographic longitude.
 	 */
-	public Node(long id, TimestampContainer timestampContainer, String user, int userId, int version, double latitude, double longitude) {
-		super(id, timestampContainer, user, userId, version);
+	public Node(long id, TimestampContainer timestampContainer, OsmUser user, int version, double latitude, double longitude) {
+		super(id, timestampContainer, user, version);
 		
 		this.latitude = latitude;
 		this.longitude = longitude;

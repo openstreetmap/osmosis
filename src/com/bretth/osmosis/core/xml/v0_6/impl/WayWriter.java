@@ -44,19 +44,21 @@ public class WayWriter extends ElementWriter {
 	 *            The way to be processed.
 	 */
 	public void process(Way way) {
+		OsmUser user;
 		List<WayNode> wayNodes;
 		List<Tag> tags;
 		
+		user = way.getUser();
+		
 		beginOpenElement();
 		addAttribute("id", Long.toString(way.getId()));
-		addAttribute("timestamp", way.getFormattedTimestamp(getTimestampFormat()));
-		if (way.getUserName() != null && way.getUserName().length() > 0) {
-			addAttribute("user", way.getUserName());
-		}
-		if (way.getUserId() != OsmUser.USER_ID_NONE) {
-			addAttribute("uid", Integer.toString(way.getUserId()));
-		}
 		addAttribute("version", Integer.toString(way.getVersion()));
+		addAttribute("timestamp", way.getFormattedTimestamp(getTimestampFormat()));
+		
+		if (user == OsmUser.NONE) {
+			addAttribute("uid", Integer.toString(user.getUserId()));
+			addAttribute("user", user.getUserName());
+		}
 		
 		wayNodes = way.getWayNodeList();
 		tags = way.getTagList();

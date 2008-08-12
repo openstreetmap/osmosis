@@ -53,18 +53,21 @@ public class NodeWriter extends ElementWriter {
 	 *            The node to be processed.
 	 */
 	public void process(Node node) {
+		OsmUser user;
 		List<Tag> tags;
+		
+		user = node.getUser();
 		
 		beginOpenElement();
 		addAttribute("id", Long.toString(node.getId()));
-		addAttribute("timestamp", node.getFormattedTimestamp(getTimestampFormat()));
-		if (node.getUserName() != null && node.getUserName().length() > 0) {
-			addAttribute("user", node.getUserName());
-		}
-		if (node.getUserId() != OsmUser.USER_ID_NONE) {
-			addAttribute("uid", Integer.toString(node.getUserId()));
-		}
 		addAttribute("version", Integer.toString(node.getVersion()));
+		addAttribute("timestamp", node.getFormattedTimestamp(getTimestampFormat()));
+		
+		if (user == OsmUser.NONE) {
+			addAttribute("uid", Integer.toString(user.getUserId()));
+			addAttribute("user", user.getUserName());
+		}
+		
 		addAttribute("lat", numberFormat.format(node.getLatitude()));
 		addAttribute("lon", numberFormat.format(node.getLongitude()));
 		

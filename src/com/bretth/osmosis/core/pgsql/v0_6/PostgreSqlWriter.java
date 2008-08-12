@@ -72,18 +72,17 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"CREATE INDEX idx_ways_bbox ON ways USING gist (bbox)"
 	};
 	
-	
 	// These SQL strings are the prefix to statements that will be built based
 	// on how many rows of data are to be inserted at a time.
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO nodes(id, tstamp, user_name, geom)";
-	private static final int INSERT_PRM_COUNT_NODE = 4;
+		"INSERT INTO nodes(id, version, tstamp, user_id, geom)";
+	private static final int INSERT_PRM_COUNT_NODE = 5;
 	private static final String INSERT_SQL_NODE_TAG =
 		"INSERT INTO node_tags(node_id, k, v)";
 	private static final int INSERT_PRM_COUNT_NODE_TAG = 3;
 	private static final String INSERT_SQL_WAY =
-		"INSERT INTO ways(id, tstamp, user_name)";
-	private static final int INSERT_PRM_COUNT_WAY = 3;
+		"INSERT INTO ways(id, version, tstamp, user_id)";
+	private static final int INSERT_PRM_COUNT_WAY = 4;
 	private static final String INSERT_SQL_WAY_TAG =
 		"INSERT INTO way_tags(way_id, k, v)";
 	private static final int INSERT_PRM_COUNT_WAY_TAG = 3;
@@ -91,8 +90,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"INSERT INTO way_nodes(way_id, node_id, sequence_id)";
 	private static final int INSERT_PRM_COUNT_WAY_NODE = 3;
 	private static final String INSERT_SQL_RELATION =
-		"INSERT INTO relations(id, tstamp, user_name)";
-	private static final int INSERT_PRM_COUNT_RELATION = 3;
+		"INSERT INTO relations(id, version, tstamp, user_id)";
+	private static final int INSERT_PRM_COUNT_RELATION = 4;
 	private static final String INSERT_SQL_RELATION_TAG =
 		"INSERT INTO relation_tags(relation_id, k, v)";
 	private static final int INSERT_PRM_COUNT_RELATION_TAG = 3;
@@ -354,10 +353,10 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		}
 		
 		try {
-			// node(id, timestamp, user, location)
 			statement.setLong(prmIndex++, entity.getId());
+			statement.setInt(prmIndex++, entity.getVersion());
 			statement.setTimestamp(prmIndex++, new Timestamp(entity.getTimestamp().getTime()));
-			statement.setString(prmIndex++, entity.getUserName());
+			statement.setInt(prmIndex++, entity.getUser().getUserId());
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(

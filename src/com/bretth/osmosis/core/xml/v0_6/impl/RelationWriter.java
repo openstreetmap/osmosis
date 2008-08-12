@@ -44,19 +44,21 @@ public class RelationWriter extends ElementWriter {
 	 *            The relation to be processed.
 	 */
 	public void process(Relation relation) {
+		OsmUser user;
 		List<RelationMember> relationMembers;
 		List<Tag> tags;
 		
+		user = relation.getUser();
+		
 		beginOpenElement();
 		addAttribute("id", Long.toString(relation.getId()));
-		addAttribute("timestamp", relation.getFormattedTimestamp(getTimestampFormat()));
-		if (relation.getUserName() != null && relation.getUserName().length() > 0) {
-			addAttribute("user", relation.getUserName());
-		}
-		if (relation.getUserId() != OsmUser.USER_ID_NONE) {
-			addAttribute("uid", Integer.toString(relation.getUserId()));
-		}
 		addAttribute("version", Integer.toString(relation.getVersion()));
+		addAttribute("timestamp", relation.getFormattedTimestamp(getTimestampFormat()));
+		
+		if (user == OsmUser.NONE) {
+			addAttribute("uid", Integer.toString(user.getUserId()));
+			addAttribute("user", user.getUserName());
+		}
 		
 		relationMembers = relation.getMemberList();
 		tags = relation.getTagList();

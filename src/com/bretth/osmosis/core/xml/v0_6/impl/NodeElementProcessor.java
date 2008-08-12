@@ -18,7 +18,7 @@ import com.bretth.osmosis.core.xml.common.ElementProcessor;
  * 
  * @author Brett Henderson
  */
-public class NodeElementProcessor extends SourceElementProcessor implements TagListener {
+public class NodeElementProcessor extends EntityElementProcessor implements TagListener {
 	private static final String ELEMENT_NAME_TAG = "tag";
 	private static final String ATTRIBUTE_NAME_ID = "id";
 	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
@@ -55,29 +55,25 @@ public class NodeElementProcessor extends SourceElementProcessor implements TagL
 	 */
 	public void begin(Attributes attributes) {
 		long id;
+		int version;
 		TimestampContainer timestampContainer;
+		String rawUserId;
+		String rawUserName;
+		OsmUser user;
 		double latitude;
 		double longitude;
-		String user;
 		
 		id = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_ID));
+		version = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_VERSION));
 		timestampContainer = createTimestampContainer(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
+		rawUserId = attributes.getValue(ATTRIBUTE_NAME_USERID);
+		rawUserName = attributes.getValue(ATTRIBUTE_NAME_USER);
 		latitude = Double.parseDouble(attributes.getValue(ATTRIBUTE_NAME_LATITUDE));
 		longitude = Double.parseDouble(attributes.getValue(ATTRIBUTE_NAME_LONGITUDE));
-		user = attributes.getValue(ATTRIBUTE_NAME_USER);
-		if (user == null) {
-			user = "";
-		}
-		int userId;
-		try {
-			userId = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_USERID));
-		}
-		catch (NumberFormatException nfe) {
-			userId = OsmUser.USER_ID_NONE;
-		}
-		int version = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_VERSION));
 		
-		node = new Node(id, timestampContainer, user, userId, version, latitude, longitude);
+		user = buildUser(rawUserId, rawUserName);
+		
+		node = new Node(id, timestampContainer, user, version, latitude, longitude);
 	}
 	
 	

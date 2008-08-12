@@ -23,12 +23,11 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
  * 
  * @author Brett Henderson
  */
-public class RelationDao implements Releasable {
+public class RelationDao extends EntityDao {
 	private static final String SQL_SELECT_SINGLE_RELATION = "SELECT id, tstamp, user_name FROM relations WHERE id=?";
 	private static final String SQL_SELECT_SINGLE_RELATION_TAG = "SELECT relation_id AS entity_id, k, v FROM relation_tags WHERE relation_id=?";
 	private static final String SQL_SELECT_SINGLE_RELATION_MEMBER = "SELECT relation_id, member_id, member_role, member_type FROM relation_members WHERE relation_id=?";
 	
-	private DatabaseContext dbCtx;
 	private PreparedStatement singleRelationStatement;
 	private PreparedStatement singleRelationTagStatement;
 	private PreparedStatement singleRelationMemberStatement;
@@ -41,30 +40,7 @@ public class RelationDao implements Releasable {
 	 *            The database context to use for accessing the database.
 	 */
 	public RelationDao(DatabaseContext dbCtx) {
-		this.dbCtx = dbCtx;
-	}
-	
-	
-	/**
-	 * Builds a tag from the current result set row.
-	 * 
-	 * @param resultSet
-	 *            The result set.
-	 * @return The newly loaded tag.
-	 */
-	private DBEntityTag buildTag(ResultSet resultSet) {
-		try {
-			return new DBEntityTag(
-				resultSet.getLong("entity_id"),
-				new Tag(
-					resultSet.getString("k"),
-					resultSet.getString("v")
-				)
-			);
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to build a tag from the current recordset row.", e);
-		} 
+		super(dbCtx);
 	}
 	
 	
@@ -126,8 +102,11 @@ public class RelationDao implements Releasable {
 	 * @return The loaded relation.
 	 */
 	public Relation getRelation(long relationId) {
+		DatabaseContext dbCtx;
 		ResultSet resultSet = null;
 		Relation relation;
+		
+		dbCtx = getDatabaseContext();
 		
 		if (singleRelationStatement == null) {
 			singleRelationStatement = dbCtx.prepareStatement(SQL_SELECT_SINGLE_RELATION);
@@ -147,7 +126,7 @@ public class RelationDao implements Releasable {
 			resultSet = singleRelationStatement.executeQuery();
 			
 			if (!resultSet.next()) {
-				throw new OsmosisRuntimeException("Relation " + relationId + " doesn't exist.");
+				throw new NoSuchRecordException("Relation " + relationId + " doesn't exist.");
 			}
 			relation = buildRelation(resultSet);
 			
@@ -192,7 +171,7 @@ public class RelationDao implements Releasable {
 	 * @return The node iterator.
 	 */
 	public ReleasableIterator<Relation> iterate() {
-		return new RelationReader(dbCtx);
+		return new RelationReader(getDatabaseContext());
 	}
 	
 	

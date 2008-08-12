@@ -69,8 +69,7 @@ public class TimestampChangeSetter implements EntityProcessor {
 					new Node(
 						inputEntity.getId(),
 						timestamp,
-						inputEntity.getUserName(),
-						inputEntity.getUserId(),
+						inputEntity.getUser(),
 						inputEntity.getVersion(),
 						inputEntity.getLatitude(),
 						inputEntity.getLongitude()
@@ -91,8 +90,7 @@ public class TimestampChangeSetter implements EntityProcessor {
 		
 		outputEntity = new Way(inputEntity.getId(),
 							timestamp,
-							inputEntity.getUserName(),
-							inputEntity.getUserId(),
+							inputEntity.getUser(),
 							inputEntity.getVersion());
 		
 		outputEntity.addTags(inputEntity.getTagList());
@@ -115,8 +113,7 @@ public class TimestampChangeSetter implements EntityProcessor {
 		
 		outputEntity = new Relation(inputEntity.getId(),
 							timestamp,
-							inputEntity.getUserName(),
-							inputEntity.getUserId(),
+							inputEntity.getUser(),
 							inputEntity.getVersion());
 		
 		outputEntity.addTags(inputEntity.getTagList());

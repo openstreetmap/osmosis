@@ -27,10 +27,10 @@ import com.bretth.osmosis.core.util.LongAsInt;
  */
 public abstract class Entity implements Storeable {
 	private int id;
-	private TimestampContainer timestampContainer;
-	private List<Tag> tagList;
-	private OsmUser user;
 	private int version;
+	private TimestampContainer timestampContainer;
+	private OsmUser user;
+	private List<Tag> tagList;
 	
 	
 	/**
@@ -41,15 +41,13 @@ public abstract class Entity implements Storeable {
 	 * @param timestamp
 	 *            The last updated timestamp.
 	 * @param user
-	 *            The name of the user that last modified this entity.
-	 * @param userId
-	 *            The unique identifier of the last user to modify this entry.
+	 *            The user that last modified this entity.
 	 * @param version
 	 *            The version of the entity.
 	 */
-	public Entity(long id, Date timestamp, String user, int userId, int version) {
+	public Entity(long id, Date timestamp, OsmUser user, int version) {
 		// Chain to the more specific constructor
-		this(id, new SimpleTimestampContainer(timestamp), user, userId, version);
+		this(id, new SimpleTimestampContainer(timestamp), user, version);
 	}
 	
 	
@@ -62,16 +60,14 @@ public abstract class Entity implements Storeable {
 	 *            The container holding the timestamp in an alternative
 	 *            timestamp representation.
 	 * @param user
-	 *            The name of the user that last modified this entity.
-	 * @param userId
-	 *            The unique identifier of the last user to modify this entry.
+	 *            The user that last modified this entity.
 	 * @param version
 	 *            The version of the entity.
 	 */
-	public Entity(long id, TimestampContainer timestampContainer, String user, int userId, int version) {
+	public Entity(long id, TimestampContainer timestampContainer, OsmUser user, int version) {
 		this.id = LongAsInt.longToInt(id);
 		this.timestampContainer = timestampContainer;
-		this.user = OsmUser.getInstance(user, userId);
+		this.user = user;
 		this.version = version;
 		
 		tagList = new ArrayList<Tag>();
@@ -91,9 +87,14 @@ public abstract class Entity implements Storeable {
 		int tagCount;
 		
 		id = sr.readInteger();
+		
+		version = sr.readCharacter(); // store as a character for now, may need to be an int later
+		
 		if (sr.readBoolean()) {
 			timestampContainer = new SimpleTimestampContainer(new Date(sr.readLong()));
 		}
+		
+		user = new OsmUser(sr, scr);
 		
 		tagCount = sr.readCharacter();
 		tagList = new ArrayList<Tag>(tagCount);
@@ -101,10 +102,6 @@ public abstract class Entity implements Storeable {
 		for (int i = 0; i < tagCount; i++) {
 			addTag(new Tag(sr, scr));
 		}
-		
-		user = OsmUser.getInstance(sr, scr);
-		
-		version = sr.readCharacter(); // store as a character for now, may need to be an int later
 	}
 	
 	
@@ -114,6 +111,8 @@ public abstract class Entity implements Storeable {
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		sw.writeInteger(id);
 		
+		sw.writeCharacter(IntAsChar.intToChar(version));
+		
 		if (getTimestamp() != null) {
 			sw.writeBoolean(true);
 			sw.writeLong(timestampContainer.getTimestamp().getTime());
@@ -121,14 +120,12 @@ public abstract class Entity implements Storeable {
 			sw.writeBoolean(false);
 		}
 		
+		user.store(sw, scr);
+		
 		sw.writeCharacter(IntAsChar.intToChar(tagList.size()));
 		for (Tag tag : tagList) {
 			tag.store(sw, scr);
 		}
-		
-		user.store(sw, scr);
-		
-		sw.writeCharacter(IntAsChar.intToChar(version));
 	}
 	
 	
@@ -187,6 +184,14 @@ public abstract class Entity implements Storeable {
 	
 	
 	/**
+	 * @return The version.
+	 */
+	public int getVersion() {
+		return version;
+	}
+	
+	
+	/**
 	 * @return The timestamp. 
 	 */
 	public Date getTimestamp() {
@@ -206,6 +211,16 @@ public abstract class Entity implements Storeable {
 	 */
 	public String getFormattedTimestamp(TimestampFormat timestampFormat) {
 		return timestampContainer.getFormattedTimestamp(timestampFormat);
+	}
+	
+	
+	/**
+	 * Returns the user who last edited the entity.
+	 * 
+	 * @return The user.
+	 */
+	public OsmUser getUser() {
+		return user;
 	}
 	
 	
@@ -238,29 +253,5 @@ public abstract class Entity implements Storeable {
 	 */
 	public void addTags(Collection<Tag> tags) {
 		tagList.addAll(tags);
-	}
-	
-	
-	/**
-	 * @return The userName. 
-	 */
-	public String getUserName() {
-		return user.getUserName();
-	}
-	
-	
-	/**
-	 * @return The userId.
-	 */
-	public int getUserId() {
-		return user.getUserId();
-	}
-
-
-	/**
-	 * @return The version.
-	 */
-	public int getVersion() {
-		return version;
 	}
 }

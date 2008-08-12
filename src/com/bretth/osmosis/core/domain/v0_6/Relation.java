@@ -36,17 +36,13 @@ public class Relation extends Entity implements Comparable<Relation>, Storeable 
 	 * @param timestamp
 	 *            The last updated timestamp.
 	 * @param user
-	 *            The name of the user that last modified this entity.
-	 * @param userId
-	 *            The unique identifier of the last user to modify this entry.
-	 * @param userId
-	 *            The userId associated with the user name.
+	 *            The user that last modified this entity.
 	 * @param version
 	 *            The version of the entity.
 	 */
-	public Relation(long id, Date timestamp, String user, int userId, int version) {
+	public Relation(long id, Date timestamp, OsmUser user, int version) {
 		// Chain to the more-specific constructor
-		this(id, new SimpleTimestampContainer(timestamp), user, userId, version);
+		this(id, new SimpleTimestampContainer(timestamp), user, version);
 	}
 	
 	
@@ -59,14 +55,12 @@ public class Relation extends Entity implements Comparable<Relation>, Storeable 
 	 *            The container holding the timestamp in an alternative
 	 *            timestamp representation.
 	 * @param user
-	 *            The name of the user that last modified this entity.
-	 * @param userId
-	 *            The unique identifier of the last user to modify this entry.
+	 *            The user that last modified this entity.
 	 * @param version
 	 *            The version of the entity.
 	 */
-	public Relation(long id, TimestampContainer timestampContainer, String user, int userId, int version) {
-		super(id, timestampContainer, user, userId, version);
+	public Relation(long id, TimestampContainer timestampContainer, OsmUser user, int version) {
+		super(id, timestampContainer, user, version);
 		
 		memberList = new ArrayList<RelationMember>();
 	}
