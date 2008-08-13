@@ -55,7 +55,7 @@ public class RelationWriter extends ElementWriter {
 		addAttribute("version", Integer.toString(relation.getVersion()));
 		addAttribute("timestamp", relation.getFormattedTimestamp(getTimestampFormat()));
 		
-		if (user == OsmUser.NONE) {
+		if (!user.equals(OsmUser.NONE)) {
 			addAttribute("uid", Integer.toString(user.getUserId()));
 			addAttribute("user", user.getUserName());
 		}

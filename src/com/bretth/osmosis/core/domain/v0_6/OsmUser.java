@@ -5,6 +5,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
+import com.bretth.osmosis.core.store.Storeable;
 
 
 /**
@@ -15,7 +16,7 @@ import com.bretth.osmosis.core.store.StoreWriter;
  * @author Karl Newman
  * @author Brett Henderson
  */
-public class OsmUser {
+public class OsmUser implements Storeable {
 	private String userName;
 	private int userId;
 	
