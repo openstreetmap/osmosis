@@ -14,7 +14,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 
 
 /**
- * Reads the contents of a polygon file into
+ * Reads the contents of a polygon file into an Area instance.
  * <p>
  * The file format is defined at http://www.maproom.psu.edu/dcw/. An example is
  * provided here. The first line contains the name of the file, the second line
@@ -229,7 +229,7 @@ public class PolygonFileReader {
 	
 	
 	/**
-	 * Parses a coordinate line into its consistuent double precision
+	 * Parses a coordinate line into its constituent double precision
 	 * coordinates.
 	 * 
 	 * @param coordinateLine

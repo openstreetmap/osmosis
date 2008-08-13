@@ -16,7 +16,7 @@ import com.bretth.osmosis.core.task.v0_6.SinkSource;
 
 
 /**
- * A base class for all tasks filter entities within an area.
+ * A simple class to filter way entities by their tags.
  * 
  * @author Brett Henderson
  * @author Karl Newman
