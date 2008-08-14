@@ -44,7 +44,13 @@
 	<target name="build_test" depends="build_src" description="Compile test source code into class files.">
 		<!-- Create the build directory structure. -->
 		<mkdir dir="build/test"/>
-		<mkdir dir="build/test/input"/>
+		
+		<!-- Copy the test data into the test data input directory -->
+		<copy todir="test/data/input">
+			<fileset dir="test/data/template"/>
+		</copy>
+		<!-- Replace the version tag in all test data. -->
+		<replace token="%VERSION%" value="${project.version}" dir="test/data/input"/>
 		
 		<!-- Compile the java test code with the main project classes as a dependency. -->
 		<javac srcdir="test" destdir="build/test" debug="on" debuglevel="lines,vars,source">
@@ -53,13 +59,12 @@
 				<path location="build/src"/>
 			</classpath>
 		</javac>
-			
-		<!-- Copy the test data into the test data input directory -->
-		<copy todir="build/test/data">
-			<fileset dir="test/data"/>
+		<!-- Copy all resource files from the test directory into the build test directory. -->
+		<copy todir="build/test">
+			<fileset dir="test">
+				<exclude name="**/*.java"/>
+			</fileset>
 		</copy>
-		<!-- Replace the version tag in all test data. -->
-		<replace token="%VERSION%" value="${project.version}" dir="build/test/data"/>
 	</target>
 	
 	<target name="build_binary" depends="build_src" description="Generates the binaries for the distribution.">
