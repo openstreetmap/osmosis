@@ -44,12 +44,10 @@
 	<target name="build_test" depends="build_src" description="Compile test source code into class files.">
 		<!-- Create the build directory structure. -->
 		<mkdir dir="build/test"/>
-		<mkdir dir="build/test/java"/>
-		<mkdir dir="build/test/data/input"/>
-		<mkdir dir="build/test/data/output"/>
+		<mkdir dir="build/test/input"/>
 		
 		<!-- Compile the java test code with the main project classes as a dependency. -->
-		<javac srcdir="test" destdir="build/test/java" debug="on" debuglevel="lines,vars,source">
+		<javac srcdir="test" destdir="build/test" debug="on" debuglevel="lines,vars,source">
 			<classpath>
 				<path refid="libclasspath"/>
 				<path location="build/src"/>
@@ -57,9 +55,11 @@
 		</javac>
 			
 		<!-- Copy the test data into the test data input directory -->
-		<copy todir="build/test/data/input">
-			<fileset dir="test/data/template"/>
+		<copy todir="build/test/data">
+			<fileset dir="test/data"/>
 		</copy>
+		<!-- Replace the version tag in all test data. -->
+		<replace token="%VERSION%" value="${project.version}" dir="build/test/data"/>
 	</target>
 	
 	<target name="build_binary" depends="build_src" description="Generates the binaries for the distribution.">
@@ -158,10 +158,10 @@
 			<classpath>
 				<path refid="libclasspath"/>
 				<path location="build/src"/>
-				<path location="build/test/java"/>
+				<path location="build/test"/>
 			</classpath>
 			<batchtest todir="build/test">
-				<fileset dir="build/test/java">
+				<fileset dir="build/test">
 					<include name="**/*Test*.class"/>
 					<exclude name="**/*TestSuite*.class"/>
 				</fileset>
