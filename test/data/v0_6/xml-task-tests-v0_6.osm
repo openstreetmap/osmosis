@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <osm version="0.5" generator="Osmosis %VERSION%">
-  <node id="1" timestamp="2008-01-02T03:04:05Z" lat="-1" lon="-2">
+  <node id="1" timestamp="2008-01-02T03:04:05Z" lat="-1" lon="-2" uid="10" username="user10">
     <tag k="created_by" v="Me1"/>
   </node>
-  <node id="2" timestamp="2008-01-02T03:04:05Z" lat="-3" lon="-4">
+  <node id="2" timestamp="2008-01-02T03:04:05Z" lat="-3" lon="-4" uid="20" username="user20">
     <tag k="created_by" v="Me2"/>
   </node>
-  <node id="3" timestamp="2008-01-02T06:07:08Z" lat="-5" lon="-6">
+  <node id="3" timestamp="2008-01-02T06:07:08Z" lat="-5" lon="-6" uid="30" username="user30">
     <tag k="created_by" v="Me3"/>
   </node>
-  <node id="4" timestamp="2008-01-02T09:10:11Z" lat="-7" lon="-8">
+  <node id="4" timestamp="2008-01-02T09:10:11Z" lat="-7" lon="-8" uid="40" username="">
     <tag k="created_by" v="Me4"/>
   </node>
   <node id="5" timestamp="2008-01-02T12:13:14Z" lat="-9" lon="-10">
@@ -18,13 +18,13 @@
   <node id="6" timestamp="2008-01-02T15:16:17Z" lat="-11" lon="-12">
     <tag k="created_by" v="Me6"/>
   </node>
-  <way id="1" timestamp="2008-01-02T03:04:05Z">
+  <way id="1" timestamp="2008-01-02T03:04:05Z" uid="10" username="user10">
     <nd ref="1"/>
     <nd ref="2"/>
     <nd ref="3"/>
     <tag k="created_by" v="Me1"/>
   </way>
-  <way id="2" timestamp="2008-01-02T03:04:05Z">
+  <way id="2" timestamp="2008-01-02T03:04:05Z" uid="20" username="user20">
     <nd ref="2"/>
     <nd ref="3"/>
     <nd ref="4"/>
@@ -36,7 +36,7 @@
     <nd ref="5"/>
     <tag k="created_by" v="Me1"/>
   </way>
-  <relation id="1" timestamp="2008-01-02T03:04:05Z">
+  <relation id="1" timestamp="2008-01-02T03:04:05Z" uid="10" username="user10">
     <member type="way" ref="1" role="wayrole1"/>
     <member type="way" ref="2" role="wayrole2"/>
     <member type="node" ref="6" role="noderole"/>
