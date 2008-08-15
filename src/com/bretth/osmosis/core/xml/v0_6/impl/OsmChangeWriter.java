@@ -35,9 +35,9 @@ public class OsmChangeWriter extends ElementWriter {
 	public OsmChangeWriter(String elementName, int indentLevel) {
 		super(elementName, indentLevel);
 		
-		osmCreateWriter = new OsmWriter("create", indentLevel + 1);
-		osmModifyWriter = new OsmWriter("modify", indentLevel + 1);
-		osmDeleteWriter = new OsmWriter("delete", indentLevel + 1);
+		osmCreateWriter = new OsmWriter("create", indentLevel + 1, false);
+		osmModifyWriter = new OsmWriter("modify", indentLevel + 1, false);
+		osmDeleteWriter = new OsmWriter("delete", indentLevel + 1, false);
 		activeOsmWriter = null;
 		lastAction = null;
 	}

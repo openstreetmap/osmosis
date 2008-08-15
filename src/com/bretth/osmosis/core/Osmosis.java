@@ -27,36 +27,7 @@ public class Osmosis {
 	 */
 	public static void main(String[] args) {
 		try {
-			CommandLineParser commandLineParser;
-			TaskRegistrar taskRegistrar;
-			Pipeline pipeline;
-			
-			configureLoggingConsole();
-			
-			commandLineParser = new CommandLineParser();
-			
-			// Parse the command line arguments into a consumable form.
-			commandLineParser.parse(args);
-			
-			// Configure the new logging level.
-			configureLoggingLevel(commandLineParser.getLogLevel());
-			
-			log.info("Osmosis Version " + OsmosisConstants.VERSION);
-			taskRegistrar = new TaskRegistrar();
-			taskRegistrar.initialize(commandLineParser.getPlugins());
-			
-			pipeline = new Pipeline(taskRegistrar.getFactoryRegister());
-			
-			log.info("Preparing pipeline.");
-			pipeline.prepare(commandLineParser.getTaskInfoList());
-			
-			log.info("Launching pipeline execution.");
-			pipeline.execute();
-			
-			log.info("Pipeline executing, waiting for completion.");
-			pipeline.waitForCompletion();
-			
-			log.info("Pipeline complete.");
+			run(args);
 			
 			System.exit(0);
 			
@@ -65,6 +36,51 @@ public class Osmosis {
 		}
 		
 		System.exit(1);
+	}
+	
+	
+	/**
+	 * This contains the real functionality of the main method. It is kept
+	 * separate to allow the application to be invoked within other applications
+	 * without a System.exit being called.
+	 * <p>
+	 * Typically an application shouldn't directly invoke this method, it should
+	 * instantiate its own pipeline.
+	 * 
+	 * @param args
+	 *            The command line arguments.
+	 */
+	public static void run(String[] args) {
+		CommandLineParser commandLineParser;
+		TaskRegistrar taskRegistrar;
+		Pipeline pipeline;
+		
+		configureLoggingConsole();
+		
+		commandLineParser = new CommandLineParser();
+		
+		// Parse the command line arguments into a consumable form.
+		commandLineParser.parse(args);
+		
+		// Configure the new logging level.
+		configureLoggingLevel(commandLineParser.getLogLevel());
+		
+		log.info("Osmosis Version " + OsmosisConstants.VERSION);
+		taskRegistrar = new TaskRegistrar();
+		taskRegistrar.initialize(commandLineParser.getPlugins());
+		
+		pipeline = new Pipeline(taskRegistrar.getFactoryRegister());
+		
+		log.info("Preparing pipeline.");
+		pipeline.prepare(commandLineParser.getTaskInfoList());
+		
+		log.info("Launching pipeline execution.");
+		pipeline.execute();
+		
+		log.info("Pipeline executing, waiting for completion.");
+		pipeline.waitForCompletion();
+		
+		log.info("Pipeline complete.");
 	}
 	
 	

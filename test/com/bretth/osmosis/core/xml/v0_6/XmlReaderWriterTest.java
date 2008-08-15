@@ -1,14 +1,18 @@
 package com.bretth.osmosis.core.xml.v0_6;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.zip.GZIPOutputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.bretth.osmosis.core.Osmosis;
 import com.bretth.osmosis.core.xml.common.CompressionMethod;
 
 /**
@@ -19,7 +23,7 @@ import com.bretth.osmosis.core.xml.common.CompressionMethod;
 public class XmlReaderWriterTest {
 	
 	/**
-	 * Obtains the file name for the specified resource.
+	 * Obtains the file for the specified resource.
 	 * 
 	 * @param resourceName
 	 *            The resource to be loaded.
@@ -69,6 +73,35 @@ public class XmlReaderWriterTest {
 	
 	
 	/**
+	 * Compresses the contents of a file into a new compressed file.
+	 * 
+	 * @param inputFile The uncompressed input file.
+	 * @param file2 The compressed output file to generate.
+	 */
+	private void compressFile(File inputFile, File outputFile) throws IOException {
+		BufferedInputStream inStream;
+		BufferedOutputStream outStream;
+		byte buffer[];
+		int bytesRead;
+		
+		inStream = new BufferedInputStream(new FileInputStream(inputFile));
+		outStream = new BufferedOutputStream(new GZIPOutputStream(new FileOutputStream(outputFile)));
+		
+		buffer = new byte[4096];
+		
+		do {
+			bytesRead = inStream.read(buffer);
+			if (bytesRead > 0) {
+				outStream.write(buffer, 0, bytesRead);
+			}
+		} while (bytesRead >= 0);
+		
+		outStream.close();
+		inStream.close();
+	}
+	
+	
+	/**
 	 * A basic test reading and writing an osm file testing both reader and
 	 * writer tasks.
 	 * 
@@ -98,5 +131,43 @@ public class XmlReaderWriterTest {
 		
 		// Success so delete the output file.
 		outputFile.delete();
+	}
+	
+	
+	/**
+	 * A basic test reading and writing an osm file testing both reader and
+	 * writer tasks.
+	 * 
+	 * @throws IOException
+	 *             if any file operations fail.
+	 */
+	@Test
+	public void testSimpleCompressed() throws IOException {
+		File uncompressedFile;
+		File inputFile;
+		File outputFile;
+		
+		uncompressedFile = getFileForResource("/data/input/v0_6/xml-task-tests-v0_6.osm");
+		inputFile = File.createTempFile("test", ".osm.gz");
+		outputFile = File.createTempFile("test", ".osm.gz");
+		
+		compressFile(uncompressedFile, inputFile);
+		
+		Osmosis.run(
+			new String [] {
+				"-q",
+				"--read-xml-0.6",
+				inputFile.getPath(),
+				"--write-xml-0.6",
+				outputFile.getPath()
+			}
+		);
+		
+		// Validate that the output file matches the input file.
+		compareFiles(inputFile, outputFile);
+		
+		// Success so delete the temp files.
+		outputFile.delete();
+		inputFile.delete();
 	}
 }

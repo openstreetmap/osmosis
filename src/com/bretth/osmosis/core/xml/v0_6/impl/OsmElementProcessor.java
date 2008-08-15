@@ -34,6 +34,7 @@ public class OsmElementProcessor extends SourceElementProcessor {
 	
 	private boolean foundBound = false;
 	private boolean foundEntities = false;
+	private boolean validateVersion;
 	
 	
 	/**
@@ -46,9 +47,12 @@ public class OsmElementProcessor extends SourceElementProcessor {
 	 * @param enableDateParsing
 	 *            If true, dates will be parsed from xml data, else the current
 	 *            date will be used thus saving parsing time.
+	 *            @param validateVersion If true, a version attribute will be checked and validated.
 	 */
-	public OsmElementProcessor(BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing) {
+	public OsmElementProcessor(BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing, boolean validateVersion) {
 		super(parentProcessor, sink, enableDateParsing);
+		
+		this.validateVersion = validateVersion;
 		
 		boundElementProcessor = new BoundElementProcessor(this, getSink(), enableDateParsing);
 		nodeElementProcessor = new NodeElementProcessor(this, getSink(), enableDateParsing);
@@ -61,15 +65,17 @@ public class OsmElementProcessor extends SourceElementProcessor {
 	 * {@inheritDoc}
 	 */
 	public void begin(Attributes attributes) {
-		String fileVersion;
-		
-		fileVersion = attributes.getValue(ATTRIBUTE_NAME_VERSION);
-		
-		if (!XmlConstants.OSM_VERSION.equals(fileVersion)) {
-			log.warning(
-				"Expected version " + XmlConstants.OSM_VERSION
-				+ " but received " + fileVersion + "."
-			);
+		if (validateVersion) {
+			String fileVersion;
+			
+			fileVersion = attributes.getValue(ATTRIBUTE_NAME_VERSION);
+			
+			if (!XmlConstants.OSM_VERSION.equals(fileVersion)) {
+				log.warning(
+					"Expected version " + XmlConstants.OSM_VERSION
+					+ " but received " + fileVersion + "."
+				);
+			}
 		}
 	}
 	

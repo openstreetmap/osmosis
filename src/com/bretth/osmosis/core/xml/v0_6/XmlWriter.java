@@ -36,7 +36,7 @@ public class XmlWriter extends BaseXmlWriter implements Sink {
 	public XmlWriter(File file, CompressionMethod compressionMethod, boolean enableProdEncodingHack) {
 		super(file, compressionMethod, enableProdEncodingHack);
 		
-		osmWriter = new OsmWriter("osm", 0);
+		osmWriter = new OsmWriter("osm", 0, true);
 	}
 	
 	

@@ -22,6 +22,7 @@ import com.bretth.osmosis.core.xml.common.ElementWriter;
 public class OsmWriter extends ElementWriter {
 	
 	private SubElementWriter subElementWriter;
+	private boolean renderAttributes;
 	
 	
 	/**
@@ -31,9 +32,16 @@ public class OsmWriter extends ElementWriter {
 	 *            The name of the element to be written.
 	 * @param indentLevel
 	 *            The indent level of the element.
+	 * @param renderAttributes
+	 *            Specifies whether attributes of the top level element should
+	 *            be rendered. This would typically be set to false if this
+	 *            element is embedded within a higher level element (eg.
+	 *            changesets)
 	 */
-	public OsmWriter(String elementName, int indentLevel) {
+	public OsmWriter(String elementName, int indentLevel, boolean renderAttributes) {
 		super(elementName, indentLevel);
+		
+		this.renderAttributes = renderAttributes;
 		
 		// Create the sub-element writer which calls the appropriate element
 		// writer based on data type.
@@ -46,8 +54,12 @@ public class OsmWriter extends ElementWriter {
 	 */
 	public void begin() {
 		beginOpenElement();
-		addAttribute("version", XmlConstants.OSM_VERSION);
-		addAttribute("generator", "Osmosis " + OsmosisConstants.VERSION);
+		
+		if (renderAttributes) {
+			addAttribute("version", XmlConstants.OSM_VERSION);
+			addAttribute("generator", "Osmosis " + OsmosisConstants.VERSION);
+		}
+		
 		endOpenElement(false);
 	}
 	

@@ -53,7 +53,7 @@ public class OsmHandler extends DefaultHandler {
 	 *            date will be used thus saving parsing time.
 	 */
 	public OsmHandler(Sink osmSink, boolean enableDateParsing) {
-		osmElementProcessor = new OsmElementProcessor(null, osmSink, enableDateParsing);
+		osmElementProcessor = new OsmElementProcessor(null, osmSink, enableDateParsing, true);
 	}
 	
 	
