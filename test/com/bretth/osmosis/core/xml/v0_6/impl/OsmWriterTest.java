@@ -36,7 +36,7 @@ public class OsmWriterTest {
 	public void setUp() throws Exception {
 		testWriter = new StringWriter();
 		testBufferedWriter = new BufferedWriter(testWriter);
-		testOsmWriter = new OsmWriter("osm", 0);
+		testOsmWriter = new OsmWriter("osm", 0, true);
 		testOsmWriter.setWriter(testBufferedWriter);
 	}
 
