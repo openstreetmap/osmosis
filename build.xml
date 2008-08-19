@@ -183,5 +183,11 @@
 		<delete dir="dist"/>
 		<!-- Delete the doc/api directory tree. -->
 		<delete dir="doc/api"/>
+		<!-- Delete the generated test data files. -->
+		<delete>
+			<fileset dir="test/data/input">
+				<include name="**/*"/>
+			</fileset>
+		</delete>
 	</target>
 </project>
