@@ -91,10 +91,12 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		
 		// Write a user entry if the user doesn't already exist.
 		user = entityContainer.getEntity().getUser();
-		if (!userSet.contains(user.getUserId())) {
-			userWriter.writeField(user.getUserId());
-			userWriter.writeField(user.getUserName());
-			userWriter.endRecord();
+		if (user != OsmUser.NONE) {
+			if (!userSet.contains(user.getId())) {
+				userWriter.writeField(user.getId());
+				userWriter.writeField(user.getName());
+				userWriter.endRecord();
+			}
 		}
 		
 		// Process the entity itself.
@@ -120,7 +122,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		
 		nodeWriter.writeField(node.getId());
 		nodeWriter.writeField(node.getVersion());
-		nodeWriter.writeField(node.getUser().getUserId());
+		nodeWriter.writeField(node.getUser().getId());
 		nodeWriter.writeField(node.getTimestamp());
 		nodeWriter.writeField(pointBuilder.createPoint(node.getLatitude(), node.getLongitude()));
 		nodeWriter.endRecord();
@@ -147,7 +149,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		if (way.getWayNodeList().size() > 1) {
 			wayWriter.writeField(way.getId());
 			wayWriter.writeField(way.getVersion());
-			wayWriter.writeField(way.getUser().getUserId());
+			wayWriter.writeField(way.getUser().getId());
 			wayWriter.writeField(way.getTimestamp());
 			wayWriter.endRecord();
 			
@@ -182,7 +184,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		
 		relationWriter.writeField(relation.getId());
 		relationWriter.writeField(relation.getVersion());
-		relationWriter.writeField(relation.getUser().getUserId());
+		relationWriter.writeField(relation.getUser().getId());
 		relationWriter.writeField(relation.getTimestamp());
 		relationWriter.endRecord();
 		

@@ -71,7 +71,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 		
 		user = buildUser(rawUserId, rawUserName);
 		
-		way = new Way(id, timestampContainer, user, version);
+		way = new Way(id, version, timestampContainer, user);
 	}
 	
 	

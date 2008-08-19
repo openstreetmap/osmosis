@@ -74,7 +74,7 @@ public class NodeWriterTest {
 	 */
 	@Test
 	public final void testProcessNormalNode() {
-		Node node = new Node(1234, timestamp, new OsmUser("someuser", 23), 2, 20.12345678, -21.98765432);
+		Node node = new Node(1234, 2, timestamp, new OsmUser(23, "someuser"), 20.12345678, -21.98765432);
 		node.addTag(new Tag("nodekey", "nodevalue"));
 		testNodeWriter.process(node);
 		try {
@@ -95,7 +95,7 @@ public class NodeWriterTest {
 	 */
 	@Test
 	public final void testProcessNodeNoTags() {
-		testNodeWriter.process(new Node(1234, timestamp, new OsmUser("someuser", 23), 2, 20.12345678, -21.98765432));
+		testNodeWriter.process(new Node(1234, 2, timestamp, new OsmUser(23, "someuser"), 20.12345678, -21.98765432));
 		try {
 			testBufferedWriter.flush();
 		} catch (IOException e) {
@@ -120,7 +120,7 @@ public class NodeWriterTest {
 	 */
 	@Test
 	public final void testProcessNodeWithNoUser() {
-		Node node = new Node(1234, timestamp, OsmUser.NONE, 2, 20.12345678, -21.98765432);
+		Node node = new Node(1234, 2, timestamp, OsmUser.NONE, 20.12345678, -21.98765432);
 		node.addTag(new Tag("nodekey", "nodevalue"));
 		testNodeWriter.process(node);
 		try {

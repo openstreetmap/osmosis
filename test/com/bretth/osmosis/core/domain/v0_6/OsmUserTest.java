@@ -32,8 +32,8 @@ public class OsmUserTest {
 	 */
 	@Test
 	public final void testGetInstanceNoUser() {
-		assertEquals("None user id is incorrect.", 0, OsmUser.NONE.getUserId());
-		assertEquals("None user name is incorrect.", "", OsmUser.NONE.getUserName());
+		assertEquals("None user id is incorrect.", 0, OsmUser.NONE.getId());
+		assertEquals("None user name is incorrect.", "", OsmUser.NONE.getName());
 	}
 	
 	
@@ -42,7 +42,7 @@ public class OsmUserTest {
 	 */
 	@Test(expected=NullPointerException.class)
 	public final void testGetInstancePreventsNullUser() {
-		new OsmUser(null, 1);
+		new OsmUser(1, null);
 	}
 	
 	
@@ -51,7 +51,7 @@ public class OsmUserTest {
 	 */
 	@Test(expected=OsmosisRuntimeException.class)
 	public final void testGetInstancePreventsNoneUser() {
-		new OsmUser("MyNoneUser", 0);
+		new OsmUser(0, "MyNoneUser");
 	}
 	
 	
@@ -63,9 +63,9 @@ public class OsmUserTest {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		StoreWriter sw = new DataOutputStoreWriter(new DataOutputStream(out));
 		StoreClassRegister scr = new StoreClassRegister();
-		OsmUser user1 = new OsmUser("aUser", 12);
-		OsmUser user3 = new OsmUser("aUser2", 13);
-		OsmUser user5 = new OsmUser("", 14);
+		OsmUser user1 = new OsmUser(12, "aUser");
+		OsmUser user3 = new OsmUser(13, "aUser2");
+		OsmUser user5 = new OsmUser(14, "");
 		user1.store(sw, scr);
 		user3.store(sw, scr);
 		user5.store(sw, scr);

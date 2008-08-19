@@ -38,14 +38,14 @@ public abstract class Entity implements Storeable {
 	 * 
 	 * @param id
 	 *            The unique identifier.
+	 * @param version
+	 *            The version of the entity.
 	 * @param timestamp
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
-	 * @param version
-	 *            The version of the entity.
 	 */
-	public Entity(long id, Date timestamp, OsmUser user, int version) {
+	public Entity(long id, int version, Date timestamp, OsmUser user) {
 		// Chain to the more specific constructor
 		this(id, new SimpleTimestampContainer(timestamp), user, version);
 	}

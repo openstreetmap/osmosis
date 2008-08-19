@@ -86,7 +86,7 @@ public class RelationWriterTest {
 	 */
 	@Test
 	public final void testProcessNormalRelation() {
-		Relation relation = new Relation(1234, timestamp, new OsmUser("someuser", 23), 2);
+		Relation relation = new Relation(1234, 2, timestamp, new OsmUser(23, "someuser"));
 		relation.addTag(new Tag("relationkey", "relationvalue"));
 		relation.addMember(new RelationMember(2345, EntityType.Node, "noderole"));
 		relation.addMember(new RelationMember(3456, EntityType.Way, "wayrole"));
@@ -113,7 +113,7 @@ public class RelationWriterTest {
 	 */
 	@Test
 	public final void testProcessRelationWithNoUser() {
-		Relation relation = new Relation(1234, timestamp, OsmUser.NONE, 2);
+		Relation relation = new Relation(1234, 2, timestamp, OsmUser.NONE);
 		relation.addTag(new Tag("relationkey", "relationvalue"));
 		relation.addMember(new RelationMember(2345, EntityType.Node, "noderole"));
 		relation.addMember(new RelationMember(3456, EntityType.Way, "wayrole"));
@@ -145,7 +145,7 @@ public class RelationWriterTest {
 	 */
 	@Test
 	public final void testProcessRelationNoTags() {
-		Relation relation = new Relation(1234, timestamp, new OsmUser("someuser", 23), 2);
+		Relation relation = new Relation(1234, 2, timestamp, new OsmUser(23, "someuser"));
 		relation.addMember(new RelationMember(2345, EntityType.Node, "noderole"));
 		relation.addMember(new RelationMember(3456, EntityType.Way, "wayrole"));
 		relation.addMember(new RelationMember(4567, EntityType.Relation, "relationrole"));

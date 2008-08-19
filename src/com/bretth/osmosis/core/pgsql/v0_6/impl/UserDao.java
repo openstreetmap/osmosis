@@ -59,9 +59,9 @@ public class UserDao implements Releasable {
 	 */
 	private OsmUser buildUser(ResultSet resultSet) {
 		try {
-			return OsmUser.getInstance(
-				resultSet.getString("user_name"),
-				resultSet.getInt("id")
+			return new OsmUser(
+				resultSet.getInt("id"),
+				resultSet.getString("user_name")
 			);
 			
 		} catch (SQLException e) {

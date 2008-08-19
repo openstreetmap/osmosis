@@ -38,7 +38,7 @@ public class NodeReader implements ReleasableIterator<Node> {
 		// streamed. The rest of the result sets must be persisted first.
 		nodeReader = new PersistentIterator<Node>(
 			new SingleClassObjectSerializationFactory(Node.class),
-			new NodeTableReader(dbCtx),
+			new EntityTableReader<Node>(dbCtx, new NodeBuilder()),
 			"nod",
 			true
 		);
@@ -63,7 +63,7 @@ public class NodeReader implements ReleasableIterator<Node> {
 		// streamed. The rest of the result sets must be persisted first.
 		nodeReader = new PersistentIterator<Node>(
 			new SingleClassObjectSerializationFactory(Node.class),
-			new NodeTableReader(dbCtx, constraintTable),
+			new EntityTableReader<Node>(dbCtx, new NodeBuilder(), constraintTable),
 			"nod",
 			true
 		);

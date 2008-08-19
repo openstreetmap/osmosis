@@ -37,7 +37,7 @@ public class RelationReader implements ReleasableIterator<Relation> {
 	public RelationReader(DatabaseContext dbCtx) {
 		relationReader = new PersistentIterator<Relation>(
 			new SingleClassObjectSerializationFactory(Relation.class),
-			new RelationTableReader(dbCtx),
+			new EntityTableReader<Relation>(dbCtx, new RelationBuilder()),
 			"rel",
 			true
 		);
@@ -67,7 +67,7 @@ public class RelationReader implements ReleasableIterator<Relation> {
 	public RelationReader(DatabaseContext dbCtx, String constraintTable) {
 		relationReader = new PersistentIterator<Relation>(
 			new SingleClassObjectSerializationFactory(Relation.class),
-			new RelationTableReader(dbCtx, constraintTable),
+			new EntityTableReader<Relation>(dbCtx, new RelationBuilder(), constraintTable),
 			"rel",
 			true
 		);

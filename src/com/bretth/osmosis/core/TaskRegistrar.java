@@ -39,6 +39,11 @@ import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetReaderFactory;
 import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetTruncatorFactory;
 import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetWriterFactory;
 */
+import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlChangeWriterFactory;
+import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetDumpWriterFactory;
+import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetReaderFactory;
+import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetTruncatorFactory;
+import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlDatasetWriterFactory;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 import com.bretth.osmosis.core.pipeline.common.TaskManagerFactoryRegister;
 import com.bretth.osmosis.core.plugin.PluginLoader;
@@ -294,12 +299,12 @@ public class TaskRegistrar {
 		factoryRegister.register("dataset-bounding-box-0.6", new DatasetBoundingBoxFilterFactory());
 		factoryRegister.register("dataset-dump-0.6", new DumpDatasetFactory());
 		factoryRegister.register("read-customdb-0.6", new ReadDatasetFactory());
-/*		factoryRegister.register("write-pgsql-0.6", new PostgreSqlDatasetWriterFactory());
+		factoryRegister.register("write-pgsql-0.6", new PostgreSqlDatasetWriterFactory());
 		factoryRegister.register("truncate-pgsql-0.6", new PostgreSqlDatasetTruncatorFactory());
 		factoryRegister.register("write-pgsql-dump-0.6", new PostgreSqlDatasetDumpWriterFactory());
 		factoryRegister.register("read-pgsql-0.6", new PostgreSqlDatasetReaderFactory());
 		factoryRegister.register("write-pgsql-change-0.6", new PostgreSqlChangeWriterFactory());
-*/		factoryRegister.register("used-node-0.6", new UsedNodeFilterFactory());
+		factoryRegister.register("used-node-0.6", new UsedNodeFilterFactory());
 		factoryRegister.register("node-key-0.6", new NodeKeyFilterFactory());
 		factoryRegister.register("node-key-value-0.6", new NodeKeyValueFilterFactory());
 		factoryRegister.register("way-key-value-0.6", new WayKeyValueFilterFactory());

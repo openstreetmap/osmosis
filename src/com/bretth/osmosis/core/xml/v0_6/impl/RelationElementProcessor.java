@@ -71,7 +71,7 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 		
 		user = buildUser(rawUserId, rawUserName);
 		
-		relation = new Relation(id, timestampContainer, user, version);
+		relation = new Relation(id, version, timestampContainer, user);
 	}
 	
 	

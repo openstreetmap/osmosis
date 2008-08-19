@@ -180,7 +180,7 @@ public class DatabaseContext {
 			return resultSet;
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to create streaming resultset.", e);
+			throw new OsmosisRuntimeException("Unable to create resultset.", e);
 		}
 	}
 	

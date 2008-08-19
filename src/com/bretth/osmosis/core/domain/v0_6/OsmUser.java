@@ -17,8 +17,8 @@ import com.bretth.osmosis.core.store.Storeable;
  * @author Brett Henderson
  */
 public class OsmUser implements Storeable {
-	private String userName;
-	private int userId;
+	private String name;
+	private int id;
 	
 	
 	/**
@@ -30,29 +30,29 @@ public class OsmUser implements Storeable {
 	/**
 	 * The user instance representing no user available or no user applicable.
 	 */
-	public static final OsmUser NONE = new OsmUser("", USER_ID_NONE);
+	public static final OsmUser NONE = new OsmUser(USER_ID_NONE, "");
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param id
+	 *            The userId associated with the user name.
 	 * @param userName
 	 *            The name of the user that this object represents.
-	 * @param userId
-	 *            The userId associated with the user name.
 	 */
-	public OsmUser(String userName, int userId) {
+	public OsmUser(int id, String userName) {
 		if (userName == null) {
 			throw new NullPointerException("The user name cannot be null.");
 		}
 		
 		// Disallow a user to be created with the "NONE" id.
-		if (NONE != null && userId == USER_ID_NONE) {
+		if (NONE != null && id == USER_ID_NONE) {
 			throw new OsmosisRuntimeException("A user id of " + USER_ID_NONE + " is not permitted.");
 		}
 		
-		this.userName = userName;
-		this.userId = userId;
+		this.name = userName;
+		this.id = id;
 	}
 	
 	
@@ -66,8 +66,8 @@ public class OsmUser implements Storeable {
 	 *            within the store.
 	 */
 	public OsmUser(StoreReader sr, StoreClassRegister scr) {
-		userName = sr.readString();
-		userId = sr.readInteger();
+		name = sr.readString();
+		id = sr.readInteger();
 	}
 	
 	
@@ -81,8 +81,8 @@ public class OsmUser implements Storeable {
 	 *            within the store.
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
-		sw.writeString(userName);
-		sw.writeInteger(userId);
+		sw.writeString(name);
+		sw.writeInteger(id);
 	}
 	
 	
@@ -99,7 +99,7 @@ public class OsmUser implements Storeable {
 		
 		ou = (OsmUser) o;
 		
-		return userName.equals(ou.userName) && userId == ou.userId;
+		return name.equals(ou.name) && id == ou.id;
 	}
 
 	
@@ -111,25 +111,25 @@ public class OsmUser implements Storeable {
 		int result;
 		
 		result = -17;
-		result = 31 * result + userName.hashCode();
-		result = 31 * result + userId;
+		result = 31 * result + name.hashCode();
+		result = 31 * result + id;
 		
 		return result;
 	}
 	
 	
 	/**
-	 * @return The userName.
+	 * @return The userId.
 	 */
-	public String getUserName() {
-		return userName;
+	public int getId() {
+		return id;
 	}
 	
 	
 	/**
-	 * @return The userId.
+	 * @return The name of the user.
 	 */
-	public int getUserId() {
-		return userId;
+	public String getName() {
+		return name;
 	}
 }

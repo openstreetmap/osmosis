@@ -73,7 +73,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 		
 		user = buildUser(rawUserId, rawUserName);
 		
-		node = new Node(id, timestampContainer, user, version, latitude, longitude);
+		node = new Node(id, version, timestampContainer, user, latitude, longitude);
 	}
 	
 	

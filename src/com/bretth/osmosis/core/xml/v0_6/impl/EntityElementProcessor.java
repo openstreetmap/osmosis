@@ -51,7 +51,7 @@ public abstract class EntityElementProcessor extends SourceElementProcessor {
 				userName = rawUserName;
 			}
 			
-			return new OsmUser(userName, userId);
+			return new OsmUser(userId, userName);
 			
 		} else {
 			return OsmUser.NONE;

@@ -4,17 +4,11 @@ package com.bretth.osmosis.core.pgsql.v0_6.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
-
-import org.postgresql.geometric.PGpoint;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Node;
-import com.bretth.osmosis.core.domain.v0_6.Tag;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityTag;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.NoSuchRecordException;
-import com.bretth.osmosis.core.store.Releasable;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
@@ -24,11 +18,12 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
  * @author Brett Henderson
  */
 public class NodeDao extends EntityDao {
-	private static final String SQL_SELECT_SINGLE_NODE = "SELECT id, tstamp, user_name, geom FROM nodes WHERE id=?";
+	private static final String SQL_SELECT_SINGLE_NODE = NodeBuilder.SQL_SELECT + " WHERE id=?";
 	private static final String SQL_SELECT_SINGLE_NODE_TAG = "SELECT node_id AS entity_id, k, v FROM node_tags WHERE node_id=?";
 	
 	private PreparedStatement singleNodeStatement;
 	private PreparedStatement singleNodeTagStatement;
+	private NodeBuilder nodeBuilder;
 	
 	
 	/**
@@ -39,32 +34,8 @@ public class NodeDao extends EntityDao {
 	 */
 	public NodeDao(DatabaseContext dbCtx) {
 		super(dbCtx);
-	}
-	
-	
-	/**
-	 * Builds a node from the current result set row.
-	 * 
-	 * @param resultSet
-	 *            The result set.
-	 * @return The newly loaded node.
-	 */
-	private Node buildNode(ResultSet resultSet) {
-		PGpoint coordinate;
 		
-		try {
-			coordinate = (PGpoint) resultSet.getObject("coordinate");
-			
-			return new Node(
-				resultSet.getLong("id"),
-				new Date(resultSet.getTimestamp("tstamp").getTime()),
-				resultSet.getString("user_name"),
-				coordinate.y,
-				coordinate.x
-			);
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to build a node from the current recordset row.", e);
-		}
+		nodeBuilder = new NodeBuilder();
 	}
 	
 	
@@ -98,7 +69,7 @@ public class NodeDao extends EntityDao {
 			if (!resultSet.next()) {
 				throw new NoSuchRecordException("Node " + nodeId + " doesn't exist.");
 			}
-			node = buildNode(resultSet);
+			node = nodeBuilder.buildEntity(resultSet);
 			
 			resultSet.close();
 			resultSet = null;

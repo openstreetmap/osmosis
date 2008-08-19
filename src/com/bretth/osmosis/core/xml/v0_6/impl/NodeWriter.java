@@ -64,8 +64,8 @@ public class NodeWriter extends ElementWriter {
 		addAttribute("timestamp", node.getFormattedTimestamp(getTimestampFormat()));
 		
 		if (!user.equals(OsmUser.NONE)) {
-			addAttribute("uid", Integer.toString(user.getUserId()));
-			addAttribute("user", user.getUserName());
+			addAttribute("uid", Integer.toString(user.getId()));
+			addAttribute("user", user.getName());
 		}
 		
 		addAttribute("lat", numberFormat.format(node.getLatitude()));

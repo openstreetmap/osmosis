@@ -56,8 +56,8 @@ public class WayWriter extends ElementWriter {
 		addAttribute("timestamp", way.getFormattedTimestamp(getTimestampFormat()));
 		
 		if (!user.equals(OsmUser.NONE)) {
-			addAttribute("uid", Integer.toString(user.getUserId()));
-			addAttribute("user", user.getUserName());
+			addAttribute("uid", Integer.toString(user.getId()));
+			addAttribute("user", user.getName());
 		}
 		
 		wayNodes = way.getWayNodeList();

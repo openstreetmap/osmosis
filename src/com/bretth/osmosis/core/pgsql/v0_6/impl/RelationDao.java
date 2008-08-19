@@ -4,17 +4,14 @@ package com.bretth.osmosis.core.pgsql.v0_6.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.EntityType;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
-import com.bretth.osmosis.core.domain.v0_6.Tag;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityTag;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBRelationMember;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
-import com.bretth.osmosis.core.store.Releasable;
+import com.bretth.osmosis.core.pgsql.common.NoSuchRecordException;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
@@ -24,13 +21,14 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
  * @author Brett Henderson
  */
 public class RelationDao extends EntityDao {
-	private static final String SQL_SELECT_SINGLE_RELATION = "SELECT id, tstamp, user_name FROM relations WHERE id=?";
+	private static final String SQL_SELECT_SINGLE_RELATION = RelationBuilder.SQL_SELECT + " WHERE e.id=?";
 	private static final String SQL_SELECT_SINGLE_RELATION_TAG = "SELECT relation_id AS entity_id, k, v FROM relation_tags WHERE relation_id=?";
 	private static final String SQL_SELECT_SINGLE_RELATION_MEMBER = "SELECT relation_id, member_id, member_role, member_type FROM relation_members WHERE relation_id=?";
 	
 	private PreparedStatement singleRelationStatement;
 	private PreparedStatement singleRelationTagStatement;
 	private PreparedStatement singleRelationMemberStatement;
+	private RelationBuilder relationBuilder;
 	
 	
 	/**
@@ -41,6 +39,8 @@ public class RelationDao extends EntityDao {
 	 */
 	public RelationDao(DatabaseContext dbCtx) {
 		super(dbCtx);
+		
+		relationBuilder = new RelationBuilder();
 	}
 	
 	
@@ -71,26 +71,6 @@ public class RelationDao extends EntityDao {
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to build a relation member from the current recordset row.", e);
 		} 
-	}
-	
-	
-	/**
-	 * Builds a relation from the current result set row.
-	 * 
-	 * @param resultSet
-	 *            The result set.
-	 * @return The newly loaded relation.
-	 */
-	private Relation buildRelation(ResultSet resultSet) {
-		try {
-			return new Relation(
-				resultSet.getLong("id"),
-				new Date(resultSet.getTimestamp("tstamp").getTime()),
-				resultSet.getString("user_name")
-			);
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to build a relation from the current recordset row.", e);
-		}
 	}
 	
 	
@@ -128,7 +108,7 @@ public class RelationDao extends EntityDao {
 			if (!resultSet.next()) {
 				throw new NoSuchRecordException("Relation " + relationId + " doesn't exist.");
 			}
-			relation = buildRelation(resultSet);
+			relation = relationBuilder.buildEntity(resultSet);
 			
 			resultSet.close();
 			resultSet = null;

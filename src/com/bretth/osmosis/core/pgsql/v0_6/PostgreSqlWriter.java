@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -21,6 +22,7 @@ import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.domain.v0_6.Entity;
 import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
@@ -48,6 +50,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	
 	
 	private static final String PRE_LOAD_SQL[] = {
+		"ALTER TABLE users DROP CONSTRAINT pk_users",
 		"ALTER TABLE nodes DROP CONSTRAINT pk_nodes",
 		"ALTER TABLE ways DROP CONSTRAINT pk_ways",
 		"ALTER TABLE way_nodes DROP CONSTRAINT pk_way_nodes",
@@ -60,6 +63,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	};
 	
 	private static final String POST_LOAD_SQL[] = {
+		"ALTER TABLE ONLY users ADD CONSTRAINT pk_users PRIMARY KEY (id)",
 		"ALTER TABLE ONLY nodes ADD CONSTRAINT pk_nodes PRIMARY KEY (id)",
 		"ALTER TABLE ONLY ways ADD CONSTRAINT pk_ways PRIMARY KEY (id)",
 		"ALTER TABLE ONLY way_nodes ADD CONSTRAINT pk_way_nodes PRIMARY KEY (way_id, sequence_id)",
@@ -74,6 +78,9 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	
 	// These SQL strings are the prefix to statements that will be built based
 	// on how many rows of data are to be inserted at a time.
+	private static final String INSERT_SQL_USER =
+		"INSERT INTO users(id, name)";
+	private static final int INSERT_PRM_COUNT_USER = 2;
 	private static final String INSERT_SQL_NODE =
 		"INSERT INTO nodes(id, version, tstamp, user_id, geom)";
 	private static final int INSERT_PRM_COUNT_NODE = 5;
@@ -111,6 +118,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private static final int INSERT_BULK_ROW_COUNT_RELATION_MEMBER = 1000;
 	
 	// These constants will be configured by a static code block.
+	private static final String INSERT_SQL_SINGLE_USER;
 	private static final String INSERT_SQL_SINGLE_NODE;
 	private static final String INSERT_SQL_SINGLE_NODE_TAG;
 	private static final String INSERT_SQL_SINGLE_WAY;
@@ -174,6 +182,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	
 	
 	static {
+		INSERT_SQL_SINGLE_USER =
+			buildSqlInsertStatement(INSERT_SQL_USER, INSERT_PRM_COUNT_USER, 1);
 		INSERT_SQL_SINGLE_NODE =
 			buildSqlInsertStatement(INSERT_SQL_NODE, INSERT_PRM_COUNT_NODE, 1);
 		INSERT_SQL_SINGLE_NODE_TAG =
@@ -221,6 +231,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private List<DBEntityTag> relationTagBuffer;
 	private List<DBRelationMember> relationMemberBuffer;
 	private boolean initialized;
+	private HashSet<Long> userSet;
+	private PreparedStatement singleUserStatement;
 	private PreparedStatement singleNodeStatement;
 	private PreparedStatement bulkNodeStatement;
 	private PreparedStatement singleNodeTagStatement;
@@ -266,6 +278,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		relationTagBuffer = new ArrayList<DBEntityTag>();
 		relationMemberBuffer = new ArrayList<DBRelationMember>();
 		
+		userSet = new HashSet<Long>();
+		
 		memberTypeValueMapper = new MemberTypeValueMapper();
 		pointBuilder = new PointBuilder();
 		
@@ -285,6 +299,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				schemaVersionValidator.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
 			}
 			
+			singleUserStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_USER);
 			bulkNodeStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_NODE);
 			singleNodeStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_NODE);
 			bulkNodeTagStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_NODE_TAG);
@@ -319,7 +334,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	/**
 	 * Commits outstanding changes to the database if a threshold of uncommitted
 	 * data has been reached. This regular interval commit is intended to
-	 * provide maximum performance.
+	 * improve performance on databases where large transactions hinder
+	 * performance.
 	 */
 	private void performIntervalCommit() {
 		if (COMMIT_ENTITY_COUNT >= 0 && uncommittedEntityCount >= COMMIT_ENTITY_COUNT) {
@@ -327,6 +343,35 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			dbCtx.commit();
 			
 			uncommittedEntityCount = 0;
+		}
+	}
+	
+	
+	/**
+	 * Writes the specified user to the database if it hasn't already been.
+	 * 
+	 * @param user
+	 *            The user to add.
+	 */
+	private void writeUser(OsmUser user) {
+		// Write the user to the database if it hasn't already been.
+		if (user != OsmUser.NONE) {
+			if (!userSet.contains(user.getId())) {
+				int prmIndex;
+				
+				prmIndex = 0;
+				
+				try {
+					singleUserStatement.setInt(prmIndex++, user.getId());
+					singleUserStatement.setString(prmIndex++, user.getName());
+					
+					singleUserStatement.executeUpdate();
+					
+				} catch (SQLException e) {
+					throw new OsmosisRuntimeException(
+						"Unable to insert user " + user.getId() + ".", e);
+				}
+			}
 		}
 	}
 	
@@ -356,7 +401,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			statement.setLong(prmIndex++, entity.getId());
 			statement.setInt(prmIndex++, entity.getVersion());
 			statement.setTimestamp(prmIndex++, new Timestamp(entity.getTimestamp().getTime()));
-			statement.setInt(prmIndex++, entity.getUser().getUserId());
+			statement.setInt(prmIndex++, entity.getUser().getId());
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
@@ -1011,6 +1056,9 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	public void process(EntityContainer entityContainer) {
 		initialize();
+		
+		// Write the user to the database if required.
+		writeUser(entityContainer.getEntity().getUser());
 		
 		entityContainer.process(this);
 	}

@@ -44,7 +44,7 @@ public class WayReader implements ReleasableIterator<Way> {
 		// streamed. The rest of the result sets must be persisted first.
 		wayReader = new PersistentIterator<Way>(
 			new SingleClassObjectSerializationFactory(Way.class),
-			new WayTableReader(dbCtx),
+			new EntityTableReader<Way>(dbCtx, new WayBuilder()),
 			"way",
 			true
 		);
@@ -77,7 +77,7 @@ public class WayReader implements ReleasableIterator<Way> {
 		// streamed. The rest of the result sets must be persisted first.
 		wayReader = new PersistentIterator<Way>(
 			new SingleClassObjectSerializationFactory(Way.class),
-			new WayTableReader(dbCtx, constraintTable),
+			new EntityTableReader<Way>(dbCtx, new WayBuilder(), constraintTable),
 			"way",
 			true
 		);

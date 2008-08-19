@@ -4,16 +4,13 @@ package com.bretth.osmosis.core.pgsql.v0_6.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityTag;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBWayNode;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
-import com.bretth.osmosis.core.store.Releasable;
+import com.bretth.osmosis.core.pgsql.common.NoSuchRecordException;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
@@ -23,13 +20,14 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
  * @author Brett Henderson
  */
 public class WayDao extends EntityDao {
-	private static final String SQL_SELECT_SINGLE_WAY = "SELECT id, tstamp, user_name FROM ways WHERE id=?";
+	private static final String SQL_SELECT_SINGLE_WAY = WayBuilder.SQL_SELECT + " WHERE e.id=?";
 	private static final String SQL_SELECT_SINGLE_WAY_TAG = "SELECT way_id AS entity_id, k, v FROM way_tags WHERE way_id=?";
 	private static final String SQL_SELECT_SINGLE_WAY_NODE = "SELECT way_id, node_id, sequence_id FROM way_nodes WHERE way_id=? ORDER BY sequence_id";
 	
 	private PreparedStatement singleWayStatement;
 	private PreparedStatement singleWayTagStatement;
 	private PreparedStatement singleWayNodeStatement;
+	private WayBuilder wayBuilder;
 	
 	
 	/**
@@ -40,6 +38,8 @@ public class WayDao extends EntityDao {
 	 */
 	public WayDao(DatabaseContext dbCtx) {
 		super(dbCtx);
+		
+		wayBuilder = new WayBuilder();
 	}
 	
 	
@@ -63,26 +63,6 @@ public class WayDao extends EntityDao {
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to build a way node from the current recordset row.", e);
 		} 
-	}
-	
-	
-	/**
-	 * Builds a way from the current result set row.
-	 * 
-	 * @param resultSet
-	 *            The result set.
-	 * @return The newly loaded way.
-	 */
-	private Way buildWay(ResultSet resultSet) {
-		try {
-			return new Way(
-				resultSet.getLong("id"),
-				new Date(resultSet.getTimestamp("tstamp").getTime()),
-				resultSet.getString("user_name")
-			);
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to build a way from the current recordset row.", e);
-		}
 	}
 	
 	
@@ -120,7 +100,7 @@ public class WayDao extends EntityDao {
 			if (!resultSet.next()) {
 				throw new NoSuchRecordException("Way " + wayId + " doesn't exist.");
 			}
-			way = buildWay(resultSet);
+			way = wayBuilder.buildEntity(resultSet);
 			
 			resultSet.close();
 			resultSet = null;
