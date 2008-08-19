@@ -22,7 +22,7 @@ CREATE TABLE schema_info (
 -- Create a table for users.
 CREATE TABLE users (
 	id int NOT NULL,
-	user_name text NOT NULL
+	name text NOT NULL
 );
 
 
@@ -98,12 +98,15 @@ CREATE TABLE relation_tags (
 
 
 -- Configure the schema version.
-INSERT INTO schema_info (version) VALUES (1);
+INSERT INTO schema_info (version) VALUES (2);
 
 
 -- Add primary keys to tables.
 
 ALTER TABLE ONLY schema_info ADD CONSTRAINT pk_schema_info PRIMARY KEY (version);
+
+
+ALTER TABLE ONLY users ADD CONSTRAINT pk_users PRIMARY KEY (id);
 
 
 ALTER TABLE ONLY nodes ADD CONSTRAINT pk_nodes PRIMARY KEY (id);
