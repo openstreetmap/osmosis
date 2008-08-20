@@ -231,7 +231,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private List<DBEntityTag> relationTagBuffer;
 	private List<DBRelationMember> relationMemberBuffer;
 	private boolean initialized;
-	private HashSet<Long> userSet;
+	private HashSet<Integer> userSet;
 	private PreparedStatement singleUserStatement;
 	private PreparedStatement singleNodeStatement;
 	private PreparedStatement bulkNodeStatement;
@@ -278,7 +278,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		relationTagBuffer = new ArrayList<DBEntityTag>();
 		relationMemberBuffer = new ArrayList<DBRelationMember>();
 		
-		userSet = new HashSet<Long>();
+		userSet = new HashSet<Integer>();
 		
 		memberTypeValueMapper = new MemberTypeValueMapper();
 		pointBuilder = new PointBuilder();
@@ -359,7 +359,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			if (!userSet.contains(user.getId())) {
 				int prmIndex;
 				
-				prmIndex = 0;
+				prmIndex = 1;
 				
 				try {
 					singleUserStatement.setInt(prmIndex++, user.getId());
@@ -371,6 +371,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 					throw new OsmosisRuntimeException(
 						"Unable to insert user " + user.getId() + ".", e);
 				}
+				
+				userSet.add(user.getId());
 			}
 		}
 	}

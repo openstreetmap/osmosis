@@ -20,7 +20,7 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	public static final String SQL_SELECT =
 		"SELECT e.id, e.version, e.user_id, u.name AS user_name, e.tstamp" +
 		" FROM relations e" +
-		" INNER JOIN users u ON e.user_id = u.id";
+		" LEFT OUTER JOIN users u ON e.user_id = u.id";
 	
 	/**
 	 * The resultset id field.

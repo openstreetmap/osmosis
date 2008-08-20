@@ -18,12 +18,14 @@ import com.bretth.osmosis.core.store.Releasable;
  * @author Brett Henderson
  */
 public class UserDao implements Releasable {
-	private static final String SELECT_USER = "SELECT id, user_name FROM users WHERE id = ?";
-	private static final String INSERT_USER = "INSERT INTO users(id, user_name) VALUES(?, ?)";
+	private static final String SELECT_USER = "SELECT id, name FROM users WHERE id = ?";
+	private static final String INSERT_USER = "INSERT INTO users(id, name) VALUES(?, ?)";
+	private static final String UPDATE_USER = "UPDATE users SET name = ? WHERE id = ?";
 	
 	private DatabaseContext dbCtx;
 	private PreparedStatement selectUserStatement;
 	private PreparedStatement insertUserStatement;
+	private PreparedStatement updateUserStatement;
 	private boolean initialized;
 	
 	
@@ -44,6 +46,7 @@ public class UserDao implements Releasable {
 		if (!initialized) {
 			selectUserStatement = dbCtx.prepareStatement(SELECT_USER);
 			insertUserStatement = dbCtx.prepareStatement(INSERT_USER);
+			updateUserStatement = dbCtx.prepareStatement(UPDATE_USER);
 			
 			initialized = true;
 		}
@@ -113,6 +116,54 @@ public class UserDao implements Releasable {
 	
 	
 	/**
+	 * Adds the specified user to the database.
+	 * 
+	 * @param user
+	 *            The user to add.
+	 */
+	public void addUser(OsmUser user) {
+		int prmIndex;
+		
+		prmIndex = 0;
+		
+		try {
+			insertUserStatement.setInt(prmIndex++, user.getId());
+			insertUserStatement.setString(prmIndex++, user.getName());
+			
+			insertUserStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException(
+				"Unable to insert user " + user.getId() + ".", e);
+		}
+	}
+	
+	
+	/**
+	 * Updates the specified user record in the database.
+	 * 
+	 * @param user
+	 *            The user to update.
+	 */
+	public void updateUser(OsmUser user) {
+		int prmIndex;
+		
+		prmIndex = 0;
+		
+		try {
+			updateUserStatement.setString(prmIndex++, user.getName());
+			updateUserStatement.setInt(prmIndex++, user.getId());
+			
+			updateUserStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException(
+				"Unable to update user " + user.getId() + ".", e);
+		}
+	}
+	
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -127,6 +178,13 @@ public class UserDao implements Releasable {
 		if (insertUserStatement != null) {
 			try {
 				insertUserStatement.close();
+			} catch (SQLException e) {
+				// Do nothing.
+			}
+		}
+		if (updateUserStatement != null) {
+			try {
+				updateUserStatement.close();
 			} catch (SQLException e) {
 				// Do nothing.
 			}

@@ -35,7 +35,7 @@ public class EntityTableReader<T extends Entity> extends BaseTableReader<T> {
 		this.entityBuilder = entityBuilder;
 		
 		sql =
-			NodeBuilder.SQL_SELECT +
+			entityBuilder.getBaseSql() +
 			" ORDER BY e.id";
 	}
 	

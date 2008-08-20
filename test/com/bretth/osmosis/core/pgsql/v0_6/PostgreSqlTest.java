@@ -64,7 +64,7 @@ public class PostgreSqlTest {
 				"authFile=" + authFile.getPath(),
 				"--dataset-dump-0.6",
 				"--write-xml-0.6",
-				inputFile.getPath()
+				outputFile.getPath()
 			}
 		);
 		

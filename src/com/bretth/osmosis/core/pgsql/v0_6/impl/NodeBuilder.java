@@ -4,7 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-import org.postgresql.geometric.PGpoint;
+import org.postgis.PGgeometry;
+import org.postgis.Point;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Node;
@@ -22,7 +23,7 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	public static final String SQL_SELECT =
 		"SELECT e.id, e.version, e.user_id, u.name AS user_name, e.tstamp, e.geom" +
 		" FROM nodes e" +
-		" INNER JOIN users u ON e.user_id = u.id";
+		" LEFT OUTER JOIN users u ON e.user_id = u.id";
 	
 	/**
 	 * The resultset id field.
@@ -57,17 +58,19 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	@Override
 	public Node buildEntity(ResultSet resultSet) {
 		try {
-			PGpoint geom;
+			PGgeometry geom;
+			Point point;
 			
-			geom = (PGpoint) resultSet.getObject(FIELD_GEOMETRY);
+			geom = (PGgeometry) resultSet.getObject(FIELD_GEOMETRY);
+			point = (Point) geom.getGeometry();
 			
 			return new Node(
 				resultSet.getLong(FIELD_ID),
 				resultSet.getInt(FIELD_VERSION),
 				new Date(resultSet.getTimestamp(FIELD_TIMESTAMP).getTime()),
 				buildUser(resultSet),
-				geom.y,
-				geom.x
+				point.y,
+				point.x
 			);
 			
 		} catch (SQLException e) {

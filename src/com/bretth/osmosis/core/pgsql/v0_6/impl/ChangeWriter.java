@@ -4,7 +4,9 @@ package com.bretth.osmosis.core.pgsql.v0_6.impl;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.postgis.PGgeometry;
 
@@ -12,12 +14,14 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Entity;
 import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
+import com.bretth.osmosis.core.pgsql.common.NoSuchRecordException;
 import com.bretth.osmosis.core.pgsql.common.PointBuilder;
 import com.bretth.osmosis.core.task.common.ChangeAction;
 
@@ -29,7 +33,7 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
  */
 public class ChangeWriter {
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO nodes (id, user_name, tstamp, geom) VALUES (?, ?, ?, ?)";
+		"INSERT INTO nodes (id, tstamp, geom) VALUES (?, ?, ?, ?)";
 	private static final String DELETE_SQL_NODE =
 		"DELETE FROM nodes WHERE id = ?";
 	private static final String INSERT_SQL_NODE_TAG =
@@ -46,7 +50,7 @@ public class ChangeWriter {
 		" SELECT w.id FROM ways w INNER JOIN way_nodes wn ON w.id = wn.way_id WHERE wn.node_id = ? GROUP BY w.id" +
 		" )";
 	private static final String INSERT_SQL_WAY =
-		"INSERT INTO ways (id, user_name, tstamp) VALUES (?, ?, ?)";
+		"INSERT INTO ways (id, tstamp) VALUES (?, ?, ?)";
 	private static final String DELETE_SQL_WAY =
 		"DELETE FROM ways WHERE id = ?";
 	private static final String INSERT_SQL_WAY_TAG =
@@ -65,7 +69,7 @@ public class ChangeWriter {
 		" )" +
 		" WHERE ways.id = ?";
 	private static final String INSERT_SQL_RELATION =
-		"INSERT INTO relations (id, user_name, tstamp) VALUES (?, ?, ?)";
+		"INSERT INTO relations (id, tstamp) VALUES (?, ?, ?)";
 	private static final String DELETE_SQL_RELATION =
 		"DELETE FROM relations WHERE id = ?";
 	private static final String INSERT_SQL_RELATION_TAG =
@@ -80,6 +84,7 @@ public class ChangeWriter {
 	
 	private DatabaseContext dbCtx;
 	
+	private UserDao userDao;
 	private PreparedStatement insertNodeStatement;
 	private PreparedStatement deleteNodeStatement;
 	private PreparedStatement insertNodeTagStatement;
@@ -100,6 +105,7 @@ public class ChangeWriter {
 	private PreparedStatement deleteRelationMemberStatement;
 	private MemberTypeValueMapper memberTypeValueMapper;
 	private PointBuilder pointBuilder;
+	private Set<Integer> userSet;
 	
 	
 	/**
@@ -111,8 +117,44 @@ public class ChangeWriter {
 	public ChangeWriter(DatabaseLoginCredentials loginCredentials) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		
+		userDao = new UserDao(dbCtx);
+		
 		memberTypeValueMapper = new MemberTypeValueMapper();
 		pointBuilder = new PointBuilder();
+		userSet = new HashSet<Integer>();
+	}
+	
+	
+	/**
+	 * Writes the specified user to the database.
+	 * 
+	 * @param user
+	 *            The user to write.
+	 */
+	private void writeUser(OsmUser user) {
+		// Entities without a user assigned should not be written.
+		if (OsmUser.NONE != user) {
+			// Users will only be updated in the database once per changeset run.
+			if (userSet.contains(user.getId())) {
+				int userId;
+				OsmUser existingUser;
+				
+				userId = user.getId();
+				
+				try {
+					existingUser = userDao.getUser(userId);
+					
+					if (!user.equals(existingUser)) {
+						userDao.updateUser(user);
+					}
+					
+				} catch (NoSuchRecordException e) {
+					userDao.addUser(user);
+				}
+				
+				userSet.add(user.getId());
+			}
+		}
 	}
 	
 	
@@ -137,7 +179,6 @@ public class ChangeWriter {
 			prmIndex = 1;
 			
 			statement.setLong(prmIndex++, entity.getId());
-			statement.setString(prmIndex++, entity.getName());
 			statement.setTimestamp(prmIndex++, new Timestamp(entity.getTimestamp().getTime()));
 			
 		} catch (SQLException e) {
@@ -193,6 +234,9 @@ public class ChangeWriter {
 		if (node.getTimestamp() == null) {
 			throw new OsmosisRuntimeException("Node " + node.getId() + " does not have a timestamp set.");
 		}
+		
+		// Process the user data.
+		writeUser(node.getUser());
 		
 		// Create the prepared statements for node creation if necessary.
 		if (insertNodeStatement == null) {
@@ -258,6 +302,9 @@ public class ChangeWriter {
 		if (way.getTimestamp() == null) {
 			throw new OsmosisRuntimeException("Way " + way.getId() + " does not have a timestamp set.");
 		}
+		
+		// Process the user data.
+		writeUser(way.getUser());
 		
 		// Create the prepared statements for way creation if necessary.
 		if (insertWayStatement == null) {
@@ -353,6 +400,9 @@ public class ChangeWriter {
 		if (relation.getTimestamp() == null) {
 			throw new OsmosisRuntimeException("Way " + relation.getId() + " does not have a timestamp set.");
 		}
+		
+		// Process the user data.
+		writeUser(relation.getUser());
 		
 		// Create the prepared statements for way creation if necessary.
 		if (insertRelationStatement == null) {
