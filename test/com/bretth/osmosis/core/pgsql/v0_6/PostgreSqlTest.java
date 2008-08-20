@@ -26,14 +26,14 @@ public class PostgreSqlTest {
 	 *             if any file operations fail.
 	 */
 	@Test
-	public void testSimple() throws IOException {
+	public void testLoadAndDump() throws IOException {
 		File authFile;
 		File inputFile;
 		File outputFile;
 		
 		// Generate input files.
 		authFile = fileUtils.getDataFile("v0_6/pgsql-authfile.txt");
-		inputFile = fileUtils.getDataFile("v0_6/pgsql-task-tests-v0_6.osm");
+		inputFile = fileUtils.getDataFile("v0_6/pgsql-snapshot.osm");
 		outputFile = File.createTempFile("test", ".osm");
 		
 		// Remove all existing data from the database.
@@ -73,5 +73,78 @@ public class PostgreSqlTest {
 		
 		// Success so delete the output file.
 		outputFile.delete();
+	}
+	
+	
+	/**
+	 * A test loading an osm file into a pgsql database, then applying a
+	 * changeset, then dumping it again and verifying the output is as expected.
+	 * 
+	 * @throws IOException
+	 *             if any file operations fail.
+	 */
+	@Test
+	public void testChangeset() throws IOException {
+		File authFile;
+		File snapshotFile;
+		File changesetFile;
+		File expectedResultFile;
+		File actualResultFile;
+		
+		// Generate input files.
+		authFile = fileUtils.getDataFile("v0_6/pgsql-authfile.txt");
+		snapshotFile = fileUtils.getDataFile("v0_6/pgsql-snapshot.osm");
+		changesetFile = fileUtils.getDataFile("v0_6/pgsql-changeset.osc");
+		expectedResultFile = fileUtils.getDataFile("v0_6/pgsql-expected.osm");
+		actualResultFile = File.createTempFile("test", ".osm");
+		
+		// Remove all existing data from the database.
+		Osmosis.run(
+			new String [] {
+				"-q",
+				"--truncate-pgsql-0.6",
+				"authFile=" + authFile.getPath()
+			}
+		);
+		
+		// Load the database with the snapshot file.
+		Osmosis.run(
+			new String [] {
+				"-q",
+				"--read-xml-0.6",
+				snapshotFile.getPath(),
+				"--write-pgsql-0.6",
+				"authFile=" + authFile.getPath()
+			}
+		);
+		
+		// Apply the changeset file to the database.
+		Osmosis.run(
+			new String [] {
+				"-q",
+				"--read-xml-change-0.6",
+				changesetFile.getPath(),
+				"--write-pgsql-change-0.6",
+				"authFile=" + authFile.getPath()
+			}
+		);
+		
+		// Dump the database to an osm file.
+		Osmosis.run(
+			new String [] {
+				"-q",
+				"--read-pgsql-0.6",
+				"authFile=" + authFile.getPath(),
+				"--dataset-dump-0.6",
+				"--write-xml-0.6",
+				actualResultFile.getPath()
+			}
+		);
+		
+		// Validate that the dumped file matches the expected result.
+		fileUtils.compareFiles(expectedResultFile, actualResultFile);
+		
+		// Success so delete the output file.
+		actualResultFile.delete();
 	}
 }

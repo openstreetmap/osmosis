@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osmChange version="0.6" generator="Osmosis %VERSION%">
+  <modify>
+    <node id="1" version="11" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" lat="-1" lon="-2">
+      <tag k="created_by" v="Me1-revised"/>
+    </node>
+  </modify>
+  <delete>
+    <way id="3" version="12" timestamp="2008-01-02T09:10:11Z"/>
+  </delete>
+  <create>
+    <node id="7" version="16" timestamp="2008-01-02T18:19:20Z" lat="-13" lon="-14">
+      <tag k="created_by" v="Me6"/>
+    </node>
+  </create>
+</osmChange>
