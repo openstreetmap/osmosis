@@ -1,11 +1,14 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.pgsql.v0_6.impl;
 
+import java.sql.CallableStatement;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.database.ReleasableStatementContainer;
 import com.bretth.osmosis.core.domain.v0_6.Entity;
 import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
@@ -192,6 +195,20 @@ public class ChangeWriter {
 	 * Flushes all changes to the database.
 	 */
 	public void complete() {
+		ReleasableStatementContainer statementContainer;
+		CallableStatement updateStatement;
+		
+		statementContainer = new ReleasableStatementContainer();
+		try {
+			updateStatement = statementContainer.add(dbCtx.prepareCall("{call osmosisUpdate()}"));
+			updateStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to invoke the osmosis update stored function.", e);
+		} finally {
+			statementContainer.release();
+		}
+		
 		nodeDao.purgeAndResetAction();
 		wayDao.purgeAndResetAction();
 		relationDao.purgeAndResetAction();

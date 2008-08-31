@@ -1,6 +1,7 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.pgsql.common;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -130,6 +131,27 @@ public class DatabaseContext {
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to create database prepared statement.", e);
+		}
+	}
+	
+	
+	/**
+	 * Creates a new database callable statement.
+	 * 
+	 * @param sql
+	 *            The statement to be created.
+	 * @return The newly created statement.
+	 */
+	public CallableStatement prepareCall(String sql) {
+		try {
+			CallableStatement callableStatement;
+			
+			callableStatement = getConnection().prepareCall(sql);
+			
+			return callableStatement;
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to create database callable statement.", e);
 		}
 	}
 	
