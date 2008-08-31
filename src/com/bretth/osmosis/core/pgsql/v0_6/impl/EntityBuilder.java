@@ -120,7 +120,7 @@ public abstract class EntityBuilder<T extends Entity> {
 		for (String fieldName : Arrays.asList(typeSpecificFieldNames)) {
 			resultSql.append(", ").append(fieldName);
 		}
-		resultSql.append(") VALUES (?, ?, ?, ?, ?");
+		resultSql.append(") VALUES (?, ?, ?, ?, '").append(ChangesetAction.ADD.getDatabaseValue()).append("'");
 		for (int i = 0; i < typeSpecificFieldNames.length; i++) {
 			resultSql.append(", ?");
 		}
@@ -142,7 +142,7 @@ public abstract class EntityBuilder<T extends Entity> {
 		StringBuilder resultSql;
 		
 		resultSql = new StringBuilder();
-		resultSql.append("UPDATE ").append(getEntityName()).append("s SET id = ?, version = ?, user_id = ?, tstamp = ?, action = ?");
+		resultSql.append("UPDATE ").append(getEntityName()).append("s SET id = ?, version = ?, user_id = ?, tstamp = ?, action = '").append(ChangesetAction.MODIFY.getDatabaseValue()).append("'");
 		for (String fieldName : Arrays.asList(getTypeSpecificFieldNames())) {
 			resultSql.append(", ").append(fieldName).append(" = ?");
 		}
@@ -155,7 +155,7 @@ public abstract class EntityBuilder<T extends Entity> {
 	
 	
 	/**
-	 * The SQL DELETE statement for deleting entities.
+	 * The SQL UPDATE statement for logically deleting entities.
 	 * 
 	 * @param filterByEntityId
 	 *            If true, a WHERE clause will be added filtering by the entity
@@ -166,10 +166,41 @@ public abstract class EntityBuilder<T extends Entity> {
 		StringBuilder resultSql;
 		
 		resultSql = new StringBuilder();
-		resultSql.append("DELETE FROM ").append(getEntityName()).append("s");
+		resultSql.append("UPDATE ").append(getEntityName()).append("s SET action = '").append(ChangesetAction.DELETE.getDatabaseValue()).append("'");
 		if (filterByEntityId) {
 			resultSql.append(" WHERE id = ?");
 		}
+		
+		return resultSql.toString();
+	}
+	
+	
+	/**
+	 * The SQL DELETE statement for purging entities.
+	 * 
+	 * @return The SQL String.
+	 */
+	public String getSqlPurge() {
+		StringBuilder resultSql;
+		
+		resultSql = new StringBuilder();
+		resultSql.append("DELETE FROM ").append(getEntityName()).append("s");
+		resultSql.append(" WHERE action = '").append(ChangesetAction.DELETE.getDatabaseValue()).append("'");
+		
+		return resultSql.toString();
+	}
+	
+	
+	/**
+	 * The SQL UPDATE statement for resetting the action column to unchanged.
+	 * 
+	 * @return The SQL String.
+	 */
+	public String getSqlResetAction() {
+		StringBuilder resultSql;
+		
+		resultSql = new StringBuilder();
+		resultSql.append("UPDATE ").append(getEntityName()).append("s SET action = '").append(ChangesetAction.NONE.getDatabaseValue()).append("'");
 		
 		return resultSql.toString();
 	}
@@ -225,11 +256,9 @@ public abstract class EntityBuilder<T extends Entity> {
 	 *            The offset index of the first variable to set.
 	 * @param entity
 	 *            The entity containing the data to be inserted.
-	 * @param action
-	 *            The action being performed.
 	 * @return The current parameter offset.
 	 */
-	protected int populateCommonEntityParameters(PreparedStatement statement, int initialIndex, Entity entity, ChangesetAction action) {
+	protected int populateCommonEntityParameters(PreparedStatement statement, int initialIndex, Entity entity) {
 		int prmIndex;
 		
 		prmIndex = initialIndex;
@@ -244,7 +273,6 @@ public abstract class EntityBuilder<T extends Entity> {
 			statement.setInt(prmIndex++, entity.getVersion());
 			statement.setInt(prmIndex++, entity.getUser().getId());
 			statement.setTimestamp(prmIndex++, new Timestamp(entity.getTimestamp().getTime()));
-			statement.setString(prmIndex++, ChangesetAction.ADD.getDatabaseValue());
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
@@ -265,9 +293,7 @@ public abstract class EntityBuilder<T extends Entity> {
 	 *            The offset index of the first variable to set.
 	 * @param entity
 	 *            The entity containing the data to be inserted.
-	 * @param action
-	 *            The action being performed.
 	 * @return The current parameter offset.
 	 */
-	public abstract int populateEntityParameters(PreparedStatement statement, int initialIndex, T entity, ChangesetAction action);
+	public abstract int populateEntityParameters(PreparedStatement statement, int initialIndex, T entity);
 }

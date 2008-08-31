@@ -33,6 +33,8 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	private PreparedStatement insertStatement;
 	private PreparedStatement updateStatement;
 	private PreparedStatement deleteStatement;
+	private PreparedStatement purgeStatement;
+	private PreparedStatement resetStatement;
 	
 	
 	/**
@@ -188,13 +190,15 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 		}
 		
 		try {
-			entityBuilder.populateEntityParameters(insertStatement, 1, entity, ChangesetAction.ADD);
+			entityBuilder.populateEntityParameters(insertStatement, 1, entity);
 			insertStatement.executeUpdate();
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Insert failed for "
-					+ entityBuilder.getEntityName() + " " + entity.getId()
-					+ ".");
+			throw new OsmosisRuntimeException(
+				"Insert failed for " + entityBuilder.getEntityName() +
+				" " + entity.getId() + ".",
+				e
+			);
 		}
 		
 		addTagList(entity.getId(), entity.getTagList());
@@ -217,7 +221,7 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 			
 			prmIndex = 1;
 			
-			prmIndex = entityBuilder.populateEntityParameters(updateStatement, prmIndex, entity, ChangesetAction.MODIFY);
+			prmIndex = entityBuilder.populateEntityParameters(updateStatement, prmIndex, entity);
 			updateStatement.setLong(prmIndex++, entity.getId());
 			updateStatement.executeUpdate();
 			
@@ -260,6 +264,43 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 				"Delete failed for " +
 				entityBuilder.getEntityName() + " "
 				+ entityId + ".",
+				e
+			);
+		}
+	}
+	
+	
+	/**
+	 * Purges all deleted records from the database and marks all remaining
+	 * records as unchanged.
+	 */
+	public void purgeAndResetAction() {
+		if (purgeStatement == null) {
+			purgeStatement = prepareStatement(entityBuilder.getSqlPurge());
+		}
+		
+		try {
+			purgeStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException(
+				"Purge failed for " +
+				entityBuilder.getEntityName() + ".",
+				e
+			);
+		}
+		
+		if (resetStatement == null) {
+			resetStatement = prepareStatement(entityBuilder.getSqlResetAction());
+		}
+		
+		try {
+			resetStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException(
+				"Reset action failed for " +
+				entityBuilder.getEntityName() + ".",
 				e
 			);
 		}

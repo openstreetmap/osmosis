@@ -90,11 +90,11 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int populateEntityParameters(PreparedStatement statement, int initialIndex, Node node, ChangesetAction action) {
+	public int populateEntityParameters(PreparedStatement statement, int initialIndex, Node node) {
 		int prmIndex;
 		
 		// Populate the entity level parameters.
-		prmIndex = populateCommonEntityParameters(statement, initialIndex, node, action);
+		prmIndex = populateCommonEntityParameters(statement, initialIndex, node);
 		
 		try {
 			// Set the node level parameters.

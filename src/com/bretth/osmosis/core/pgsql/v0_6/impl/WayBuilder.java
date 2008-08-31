@@ -67,8 +67,8 @@ public class WayBuilder extends EntityBuilder<Way> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int populateEntityParameters(PreparedStatement statement, int initialIndex, Way way, ChangesetAction action) {
+	public int populateEntityParameters(PreparedStatement statement, int initialIndex, Way way) {
 		// Populate the entity level parameters.
-		return populateCommonEntityParameters(statement, initialIndex, way, action);
+		return populateCommonEntityParameters(statement, initialIndex, way);
 	}
 }

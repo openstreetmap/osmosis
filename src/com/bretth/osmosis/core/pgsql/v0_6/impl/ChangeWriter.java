@@ -29,8 +29,8 @@ public class ChangeWriter {
 	private WayDao wayDao;
 	private RelationDao relationDao;
 	private Set<Integer> userSet;
-
-
+	
+	
 	/**
 	 * Creates a new instance.
 	 * 
@@ -192,6 +192,10 @@ public class ChangeWriter {
 	 * Flushes all changes to the database.
 	 */
 	public void complete() {
+		nodeDao.purgeAndResetAction();
+		wayDao.purgeAndResetAction();
+		relationDao.purgeAndResetAction();
+		
 		dbCtx.commit();
 	}
 

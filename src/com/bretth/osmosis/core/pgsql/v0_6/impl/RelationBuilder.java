@@ -67,8 +67,8 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int populateEntityParameters(PreparedStatement statement, int initialIndex, Relation relation, ChangesetAction action) {
+	public int populateEntityParameters(PreparedStatement statement, int initialIndex, Relation relation) {
 		// Populate the entity level parameters.
-		return populateCommonEntityParameters(statement, initialIndex, relation, action);
+		return populateCommonEntityParameters(statement, initialIndex, relation);
 	}
 }
