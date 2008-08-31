@@ -29,6 +29,7 @@ import com.bretth.osmosis.core.store.LongLongIndexElement;
 import com.bretth.osmosis.core.store.NoSuchIndexElementException;
 import com.bretth.osmosis.core.store.RandomAccessObjectStore;
 import com.bretth.osmosis.core.store.RandomAccessObjectStoreReader;
+import com.bretth.osmosis.core.store.ReleasableContainer;
 import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 import com.bretth.osmosis.core.store.IntegerLongIndexElement;
 import com.bretth.osmosis.core.store.UnsignedIntegerComparator;

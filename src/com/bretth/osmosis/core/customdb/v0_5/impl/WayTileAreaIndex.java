@@ -9,6 +9,7 @@ import com.bretth.osmosis.core.store.IndexStore;
 import com.bretth.osmosis.core.store.IndexStoreReader;
 import com.bretth.osmosis.core.store.IntegerLongIndexElement;
 import com.bretth.osmosis.core.store.Releasable;
+import com.bretth.osmosis.core.store.ReleasableContainer;
 import com.bretth.osmosis.core.store.UnsignedIntegerComparator;
 
 

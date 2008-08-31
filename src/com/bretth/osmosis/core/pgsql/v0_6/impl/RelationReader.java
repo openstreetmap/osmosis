@@ -1,16 +1,14 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.pgsql.v0_6.impl;
 
-import java.util.NoSuchElementException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.bretth.osmosis.core.domain.v0_6.Relation;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityTag;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBRelationMember;
+import com.bretth.osmosis.core.domain.v0_6.RelationMember;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.store.PeekableIterator;
-import com.bretth.osmosis.core.store.PersistentIterator;
-import com.bretth.osmosis.core.store.ReleasableIterator;
-import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 
 
 /**
@@ -19,13 +17,9 @@ import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
  * 
  * @author Brett Henderson
  */
-public class RelationReader implements ReleasableIterator<Relation> {
+public class RelationReader  extends EntityReader<Relation> {
 	
-	private ReleasableIterator<Relation> relationReader;
-	private PeekableIterator<DBEntityTag> relationTagReader;
-	private PeekableIterator<DBRelationMember> relationMemberReader;
-	private Relation nextValue;
-	private boolean nextValueLoaded;
+	private PeekableIterator<DBEntityFeature<RelationMember>> relationMemberReader;
 	
 	
 	/**
@@ -35,22 +29,10 @@ public class RelationReader implements ReleasableIterator<Relation> {
 	 *            The database context to use for accessing the database.
 	 */
 	public RelationReader(DatabaseContext dbCtx) {
-		relationReader = new PersistentIterator<Relation>(
-			new SingleClassObjectSerializationFactory(Relation.class),
-			new EntityTableReader<Relation>(dbCtx, new RelationBuilder()),
-			"rel",
-			true
-		);
-		relationTagReader = new PeekableIterator<DBEntityTag>(
-			new PersistentIterator<DBEntityTag>(
-				new SingleClassObjectSerializationFactory(DBEntityTag.class),
-				new EntityTagTableReader(dbCtx, "relation_tags", "relation_id"),
-				"reltag",
-				true
-			)
-		);
-		relationMemberReader = new PeekableIterator<DBRelationMember>(
-			new RelationMemberTableReader(dbCtx)
+		super(dbCtx, new RelationBuilder());
+		
+		relationMemberReader = new PeekableIterator<DBEntityFeature<RelationMember>>(
+			new EntityFeatureTableReader<RelationMember, DBEntityFeature<RelationMember>>(dbCtx, new RelationMemberBuilder())
 		);
 	}
 	
@@ -65,22 +47,10 @@ public class RelationReader implements ReleasableIterator<Relation> {
 	 *            entities to be returned.
 	 */
 	public RelationReader(DatabaseContext dbCtx, String constraintTable) {
-		relationReader = new PersistentIterator<Relation>(
-			new SingleClassObjectSerializationFactory(Relation.class),
-			new EntityTableReader<Relation>(dbCtx, new RelationBuilder(), constraintTable),
-			"rel",
-			true
-		);
-		relationTagReader = new PeekableIterator<DBEntityTag>(
-			new PersistentIterator<DBEntityTag>(
-				new SingleClassObjectSerializationFactory(DBEntityTag.class),
-				new EntityTagTableReader(dbCtx, "relation_tags", "relation_id", constraintTable),
-				"reltag",
-				true
-			)
-		);
-		relationMemberReader = new PeekableIterator<DBRelationMember>(
-			new RelationMemberTableReader(dbCtx, constraintTable)
+		super(dbCtx, new RelationBuilder(), constraintTable);
+		
+		relationMemberReader = new PeekableIterator<DBEntityFeature<RelationMember>>(
+			new EntityFeatureTableReader<RelationMember, DBEntityFeature<RelationMember>>(dbCtx, new RelationMemberBuilder(), constraintTable)
 		);
 	}
 	
@@ -88,89 +58,44 @@ public class RelationReader implements ReleasableIterator<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean hasNext() {
-		if (!nextValueLoaded && relationReader.hasNext()) {
-			long relationId;
-			Relation relation;
+	@Override
+	protected void populateEntityFeatures(Relation entity) {
+		long relationId;
+		List<DBEntityFeature<RelationMember>> relationMembers;
+		
+		super.populateEntityFeatures(entity);
+		
+		relationId = entity.getId();
+		
+		// Skip all relation members that are from a lower relation.
+		while (relationMemberReader.hasNext()) {
+			DBEntityFeature<RelationMember> wayNode;
 			
-			relation = relationReader.next();
-			relationId = relation.getId();
+			wayNode = relationMemberReader.peekNext();
 			
-			// Skip all relation tags that are from a lower relation.
-			while (relationTagReader.hasNext()) {
-				DBEntityTag relationTag;
-				
-				relationTag = relationTagReader.peekNext();
-				
-				if (relationTag.getEntityId() < relationId) {
-					relationTagReader.next();
-				} else {
-					break;
-				}
+			if (wayNode.getEntityId() < relationId) {
+				relationMemberReader.next();
+			} else {
+				break;
 			}
-			
-			// Load all tags matching this version of the relation.
-			while (relationTagReader.hasNext() && relationTagReader.peekNext().getEntityId() == relationId) {
-				relation.addTag(relationTagReader.next().getTag());
-			}
-			
-			// Skip all relation nodes that are from a lower relation.
-			while (relationMemberReader.hasNext()) {
-				DBRelationMember relationNode;
-				
-				relationNode = relationMemberReader.peekNext();
-				
-				if (relationNode.getRelationId() < relationId) {
-					relationMemberReader.next();
-				} else {
-					break;
-				}
-			}
-			
-			// Load all members matching this version of the relation.
-			while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getRelationId() == relationId) {
-				relation.addMember(relationMemberReader.next().getRelationMember());
-			}
-			
-			nextValue = relation;
-			nextValueLoaded = true;
 		}
 		
-		return nextValueLoaded;
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Relation next() {
-		Relation result;
-		
-		if (!hasNext()) {
-			throw new NoSuchElementException();
+		// Load all nodes matching this version of the way.
+		relationMembers = new ArrayList<DBEntityFeature<RelationMember>>();
+		while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getEntityId() == relationId) {
+			relationMembers.add(relationMemberReader.next());
 		}
-		
-		result = nextValue;
-		nextValueLoaded = false;
-		
-		return result;
+		for (DBEntityFeature<RelationMember> dbRelationMember : relationMembers) {
+			entity.addMember(dbRelationMember.getEntityFeature());
+		}
 	}
 	
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void remove() {
-		throw new UnsupportedOperationException();
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
+	@Override
 	public void release() {
-		relationReader.release();
-		relationTagReader.release();
 		relationMemberReader.release();
 	}
 }

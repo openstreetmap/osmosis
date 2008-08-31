@@ -7,6 +7,7 @@ import java.util.Map;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.EntityType;
 
+
 /**
  * This is a utility class for mapping between relation member type columns and
  * the corresponding entity type.
@@ -15,25 +16,32 @@ import com.bretth.osmosis.core.domain.v0_6.EntityType;
  */
 public class MemberTypeValueMapper {
 	
-	private static Map<EntityType, Byte> entityToMemberMap;
-	private static Map<Byte, EntityType> memberToEntityMap;
+	private static Map<EntityType, String> entityToMemberMap;
+	private static Map<String, EntityType> memberToEntityMap;
+	
+	
+	private static void addEntityTypeMapping(EntityType entityType, String memberType) {
+		if (entityToMemberMap.containsKey(entityType)) {
+			throw new OsmosisRuntimeException("Entity type (" + entityType + ") already has a mapping.");
+		}
+		
+		entityToMemberMap.put(entityType, memberType);
+		memberToEntityMap.put(memberType, entityType);
+	}
+	
 	
 	static {
 		EntityType[] entityTypes;
 		
 		entityTypes = EntityType.values();
 		
-		entityToMemberMap = new HashMap<EntityType, Byte>(entityTypes.length);
-		memberToEntityMap = new HashMap<Byte, EntityType>(entityTypes.length);
+		entityToMemberMap = new HashMap<EntityType, String>(entityTypes.length);
+		memberToEntityMap = new HashMap<String, EntityType>(entityTypes.length);
 		
-		for (byte memberType = 0; memberType < entityTypes.length; memberType++) {
-			EntityType entityType;
-			
-			entityType = entityTypes[memberType];
-			
-			entityToMemberMap.put(entityType, memberType);
-			memberToEntityMap.put(memberType, entityType);
-		}
+		addEntityTypeMapping(EntityType.Bound, "B");
+		addEntityTypeMapping(EntityType.Node, "N");
+		addEntityTypeMapping(EntityType.Way, "W");
+		addEntityTypeMapping(EntityType.Relation, "R");
 	}
 	
 	
@@ -44,7 +52,7 @@ public class MemberTypeValueMapper {
 	 *            The entity type.
 	 * @return The corresponding member type value.
 	 */
-	public byte getMemberType(EntityType entityType) {
+	public String getMemberType(EntityType entityType) {
 		if (entityToMemberMap.containsKey(entityType)) {
 			return entityToMemberMap.get(entityType);
 		} else {
@@ -60,11 +68,11 @@ public class MemberTypeValueMapper {
 	 *            The member type.
 	 * @return The corresponding entity type value.
 	 */
-	public EntityType getEntityType(byte memberType) {
+	public EntityType getEntityType(String memberType) {
 		if (memberToEntityMap.containsKey(memberType)) {
 			return memberToEntityMap.get(memberType);
 		} else {
-			throw new OsmosisRuntimeException("The member type " + (int) memberType + " is not recognised.");
+			throw new OsmosisRuntimeException("The member type " + memberType + " is not recognised.");
 		}
 	}
 }

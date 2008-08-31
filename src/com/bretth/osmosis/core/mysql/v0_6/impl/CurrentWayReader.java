@@ -101,7 +101,7 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 				
 				wayNode = wayNodeReader.peekNext();
 				
-				if (wayNode.getWayId() < wayId) {
+				if (wayNode.getEntityId() < wayId) {
 					wayNodeReader.next();
 				} else {
 					break;
@@ -110,14 +110,14 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 			
 			// Load all nodes matching this way.
 			wayNodes = new ArrayList<DBWayNode>();
-			while (wayNodeReader.hasNext() && wayNodeReader.peekNext().getWayId() == wayId) {
+			while (wayNodeReader.hasNext() && wayNodeReader.peekNext().getEntityId() == wayId) {
 				wayNodes.add(wayNodeReader.next());
 			}
 			// The underlying query sorts node references by way id but not
 			// by their sequence number.
 			Collections.sort(wayNodes, new WayNodeComparator());
 			for (DBWayNode dbWayNode : wayNodes) {
-				way.addWayNode(dbWayNode.getWayNode());
+				way.addWayNode(dbWayNode.getEntityFeature());
 			}
 			
 			nextValue = way;

@@ -95,7 +95,7 @@ public class WayChangeReader {
 		// Add all applicable node references to the way.
 		wayNodes = new ArrayList<DBWayNode>();
 		while (wayNodeHistoryReader.hasNext() &&
-				wayNodeHistoryReader.peekNext().getEntity().getWayId() == way.getId() &&
+				wayNodeHistoryReader.peekNext().getEntity().getEntityId() == way.getId() &&
 				wayNodeHistoryReader.peekNext().getVersion() == wayHistory.getVersion()) {
 			wayNodes.add(wayNodeHistoryReader.next().getEntity());
 		}
@@ -103,7 +103,7 @@ public class WayChangeReader {
 		// by their sequence number.
 		Collections.sort(wayNodes, new WayNodeComparator());
 		for (DBWayNode dbWayNode : wayNodes) {
-			way.addWayNode(dbWayNode.getWayNode());
+			way.addWayNode(dbWayNode.getEntityFeature());
 		}
 		
 		// Add all applicable tags to the way.

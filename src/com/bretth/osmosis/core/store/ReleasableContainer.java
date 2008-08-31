@@ -1,10 +1,9 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.customdb.v0_6.impl;
+package com.bretth.osmosis.core.store;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bretth.osmosis.core.store.Releasable;
 
 
 /**

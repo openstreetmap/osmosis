@@ -19,8 +19,8 @@ import com.bretth.osmosis.core.store.Releasable;
  */
 public class UserDao implements Releasable {
 	private static final String SELECT_USER = "SELECT id, name FROM users WHERE id = ?";
-	private static final String INSERT_USER = "INSERT INTO users(id, name) VALUES(?, ?)";
-	private static final String UPDATE_USER = "UPDATE users SET name = ? WHERE id = ?";
+	private static final String INSERT_USER = "INSERT INTO users(id, name, action) VALUES(?, ?, ?)";
+	private static final String UPDATE_USER = "UPDATE users SET name = ?, action = ? WHERE id = ?";
 	
 	private DatabaseContext dbCtx;
 	private PreparedStatement selectUserStatement;
@@ -129,6 +129,7 @@ public class UserDao implements Releasable {
 		try {
 			insertUserStatement.setInt(prmIndex++, user.getId());
 			insertUserStatement.setString(prmIndex++, user.getName());
+			insertUserStatement.setString(prmIndex++, ChangesetAction.ADD.getDatabaseValue());
 			
 			insertUserStatement.executeUpdate();
 			
@@ -153,6 +154,7 @@ public class UserDao implements Releasable {
 		try {
 			updateUserStatement.setString(prmIndex++, user.getName());
 			updateUserStatement.setInt(prmIndex++, user.getId());
+			updateUserStatement.setString(prmIndex++, ChangesetAction.MODIFY.getDatabaseValue());
 			
 			updateUserStatement.executeUpdate();
 			

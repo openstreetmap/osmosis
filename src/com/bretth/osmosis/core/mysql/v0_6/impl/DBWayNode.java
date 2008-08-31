@@ -5,7 +5,6 @@ import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
-import com.bretth.osmosis.core.store.Storeable;
 
 
 /**
@@ -14,10 +13,8 @@ import com.bretth.osmosis.core.store.Storeable;
  * 
  * @author Brett Henderson
  */
-public class DBWayNode implements Storeable {
+public class DBWayNode extends DBEntityFeature<WayNode> {
 	
-	private long wayId;
-	private WayNode wayNode;
 	private int sequenceId;
 	
 	
@@ -32,8 +29,8 @@ public class DBWayNode implements Storeable {
 	 *            The order of this node within the way.
 	 */
 	public DBWayNode(long wayId, WayNode wayNode, int sequenceId) {
-		this.wayId = wayId;
-		this.wayNode = wayNode;
+		super(wayId, wayNode);
+		
 		this.sequenceId = sequenceId;
 	}
 	
@@ -48,37 +45,18 @@ public class DBWayNode implements Storeable {
 	 *            within the store.
 	 */
 	public DBWayNode(StoreReader sr, StoreClassRegister scr) {
-		this(
-			sr.readLong(),
-			new WayNode(sr, scr),
-			sr.readInteger()
-		);
+		super(sr, scr);
+		this.sequenceId = sr.readInteger();
 	}
 	
 	
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void store(StoreWriter sw, StoreClassRegister scr) {
-		sw.writeLong(wayId);
-		wayNode.store(sw, scr);
+		super.store(sw, scr);
 		sw.writeInteger(sequenceId);
-	}
-	
-	
-	/**
-	 * @return The way id.
-	 */
-	public long getWayId() {
-		return wayId;
-	}
-	
-	
-	/**
-	 * @return The way node.
-	 */
-	public WayNode getWayNode() {
-		return wayNode;
 	}
 	
 	

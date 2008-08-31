@@ -1,5 +1,7 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.pgsql.v0_6.impl;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -9,46 +11,51 @@ import org.postgis.Point;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.pgsql.common.PointBuilder;
 
 
 /**
- * Creates nodes from result set rows.
+ * Reads and writes node attributes to jdbc classes.
  * 
  * @author Brett Henderson
  */
 public class NodeBuilder extends EntityBuilder<Node> {
-	/**
-	 * The base SQL SELECT statement for retrieving node details.
-	 */
-	public static final String SQL_SELECT =
-		"SELECT e.id, e.version, e.user_id, u.name AS user_name, e.tstamp, e.geom" +
-		" FROM nodes e" +
-		" LEFT OUTER JOIN users u ON e.user_id = u.id";
+	
+	private PointBuilder pointBuilder;
+	
 	
 	/**
-	 * The resultset id field.
+	 * Creates a new instance.
 	 */
-	private static final String FIELD_ID = "id";
-	/**
-	 * The resultset version field.
-	 */
-	private static final String FIELD_VERSION = "version";
-	/**
-	 * The resultset timestamp field.
-	 */
-	private static final String FIELD_TIMESTAMP = "tstamp";
-	/**
-	 * The resultset geometry field.
-	 */
-	private static final String FIELD_GEOMETRY = "geom";
+	public NodeBuilder() {
+		pointBuilder = new PointBuilder();
+	}
 	
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getBaseSql() {
-		return SQL_SELECT;
+	public String getEntityName() {
+		return "node";
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Class<Node> getEntityClass() {
+		return Node.class;
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected String[] getTypeSpecificFieldNames() {
+		return new String[] {"geom"};
 	}
 	
 	
@@ -61,13 +68,13 @@ public class NodeBuilder extends EntityBuilder<Node> {
 			PGgeometry geom;
 			Point point;
 			
-			geom = (PGgeometry) resultSet.getObject(FIELD_GEOMETRY);
+			geom = (PGgeometry) resultSet.getObject("geom");
 			point = (Point) geom.getGeometry();
 			
 			return new Node(
-				resultSet.getLong(FIELD_ID),
-				resultSet.getInt(FIELD_VERSION),
-				new Date(resultSet.getTimestamp(FIELD_TIMESTAMP).getTime()),
+				resultSet.getLong("id"),
+				resultSet.getInt("version"),
+				new Date(resultSet.getTimestamp("tstamp").getTime()),
 				buildUser(resultSet),
 				point.y,
 				point.x
@@ -76,5 +83,27 @@ public class NodeBuilder extends EntityBuilder<Node> {
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to build a node from the current recordset row.", e);
 		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int populateEntityParameters(PreparedStatement statement, int initialIndex, Node node, ChangesetAction action) {
+		int prmIndex;
+		
+		// Populate the entity level parameters.
+		prmIndex = populateCommonEntityParameters(statement, initialIndex, node, action);
+		
+		try {
+			// Set the node level parameters.
+			statement.setObject(prmIndex++, new PGgeometry(pointBuilder.createPoint(node.getLatitude(), node.getLongitude())));
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for node " + node.getId() + ".", e);
+		}
+		
+		return prmIndex;
 	}
 }

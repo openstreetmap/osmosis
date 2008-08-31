@@ -105,7 +105,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			initialize();
 		}
 		
-		return nodeDao.getNode(id);
+		return nodeDao.getEntity(id);
 	}
 	
 	
@@ -118,7 +118,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			initialize();
 		}
 		
-		return wayDao.getWay(id);
+		return wayDao.getEntity(id);
 	}
 	
 	
@@ -131,7 +131,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			initialize();
 		}
 		
-		return relationDao.getRelation(id);
+		return relationDao.getEntity(id);
 	}
 	
 	
@@ -244,8 +244,8 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 				")"
 			);
 			prmIndex = 1;
-			preparedStatement.setInt(prmIndex++, memberTypeValueMapper.getMemberType(EntityType.Node));
-			preparedStatement.setInt(prmIndex++, memberTypeValueMapper.getMemberType(EntityType.Way));
+			preparedStatement.setString(prmIndex++, memberTypeValueMapper.getMemberType(EntityType.Node));
+			preparedStatement.setString(prmIndex++, memberTypeValueMapper.getMemberType(EntityType.Way));
 			rowCount = preparedStatement.executeUpdate();
 			preparedStatement.close();
 			preparedStatement = null;
@@ -262,7 +262,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 					"SELECT id AS relation_id FROM box_relation_list"
 				);
 				prmIndex = 1;
-				preparedStatement.setInt(prmIndex++, memberTypeValueMapper.getMemberType(EntityType.Relation));
+				preparedStatement.setString(prmIndex++, memberTypeValueMapper.getMemberType(EntityType.Relation));
 				rowCount = preparedStatement.executeUpdate();
 				preparedStatement.close();
 				preparedStatement = null;

@@ -469,8 +469,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		prmIndex = initialIndex;
 		
 		try {
-			statement.setLong(prmIndex++, dbWayNode.getWayId());
-			statement.setLong(prmIndex++, dbWayNode.getWayNode().getNodeId());
+			statement.setLong(prmIndex++, dbWayNode.getEntityId());
+			statement.setLong(prmIndex++, dbWayNode.getEntityFeature().getNodeId());
 			statement.setInt(prmIndex++, dbWayNode.getSequenceId());
 			statement.setInt(prmIndex++, 1);
 			

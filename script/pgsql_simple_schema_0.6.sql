@@ -21,8 +21,9 @@ CREATE TABLE schema_info (
 
 -- Create a table for users.
 CREATE TABLE users (
-	id int NOT NULL,
-	name text NOT NULL
+    id int NOT NULL,
+    name text NOT NULL,
+    action character(1) NOT NULL
 );
 
 
@@ -31,7 +32,8 @@ CREATE TABLE nodes (
     id bigint NOT NULL,
     version int NOT NULL,
     user_id int NOT NULL,
-    tstamp timestamp without time zone NOT NULL
+    tstamp timestamp without time zone NOT NULL,
+    action character(1) NOT NULL
 );
 -- Add a postgis point column holding the location of the node.
 SELECT AddGeometryColumn('nodes', 'geom', 4326, 'POINT', 2);
@@ -49,7 +51,8 @@ CREATE TABLE ways (
     id bigint NOT NULL,
     version int NOT NULL,
     user_id int NOT NULL,
-    tstamp timestamp without time zone NOT NULL
+    tstamp timestamp without time zone NOT NULL,
+    action character(1) NOT NULL
 );
 -- Add a postgis bounding box column used for indexing the location of the way.
 -- This will contain a bounding box surrounding the extremities of the way.
@@ -77,7 +80,8 @@ CREATE TABLE relations (
     id bigint NOT NULL,
     version int NOT NULL,
     user_id int NOT NULL,
-    tstamp timestamp without time zone NOT NULL
+    tstamp timestamp without time zone NOT NULL,
+    action character(1) NOT NULL
 );
 
 -- Create a table for representing relation member relationships.
@@ -85,7 +89,7 @@ CREATE TABLE relation_members (
     relation_id bigint NOT NULL,
     member_id bigint NOT NULL,
     member_role text NOT NULL,
-    member_type smallint NOT NULL
+    member_type character(1) NOT NULL
 );
 
 
@@ -123,13 +127,16 @@ ALTER TABLE ONLY relations ADD CONSTRAINT pk_relations PRIMARY KEY (id);
 
 -- Add indexes to tables.
 
+CREATE INDEX idx_nodes_action ON nodes USING btree (action);
 CREATE INDEX idx_node_tags_node_id ON node_tags USING btree (node_id);
 CREATE INDEX idx_nodes_geom ON nodes USING gist (geom);
 
 
+CREATE INDEX idx_ways_action ON ways USING btree (action);
 CREATE INDEX idx_way_tags_way_id ON way_tags USING btree (way_id);
 CREATE INDEX idx_ways_bbox ON ways USING gist (bbox);
 CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id);
 
 
+CREATE INDEX idx_relations_action ON relations USING btree (action);
 CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id);

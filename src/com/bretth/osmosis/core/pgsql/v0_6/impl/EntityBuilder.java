@@ -1,7 +1,11 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.pgsql.v0_6.impl;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Arrays;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Entity;
@@ -17,24 +21,158 @@ import com.bretth.osmosis.core.domain.v0_6.OsmUser;
  */
 public abstract class EntityBuilder<T extends Entity> {
 	
-
 	/**
-	 * The resultset user id field.
-	 */
-	private static final String FIELD_USER_ID = "user_id";
-	
-	/**
-	 * The resultset user name field.
-	 */
-	private static final String FIELD_USER_NAME = "user_name";
-	
-	
-	/**
-	 * Provides the base SQL query to return rows from the entity table.
+	 * Returns the name of the entity to substitute into SQL statements. This is
+	 * a low-tech way of making the queries type independent.
 	 * 
-	 * @return The base SQL query.
+	 * @return The entity name as defined in the database schema.
 	 */
-	public abstract String getBaseSql();
+	public abstract String getEntityName();
+	
+	
+	/**
+	 * Returns the class for the entity type being supported.
+	 * 
+	 * @return The entity type class.
+	 */
+	public abstract Class<T> getEntityClass();
+	
+	
+	/**
+	 * The SQL SELECT statement for counting entities. It will return a count of
+	 * matching records.
+	 * 
+	 * @param filterByEntityId
+	 *            If true, a WHERE clause will be added filtering by the entity
+	 *            id column.
+	 * @return The SQL string.
+	 */
+	public String getSqlSelectCount(boolean filterByEntityId) {
+		StringBuilder resultSql;
+		
+		resultSql = new StringBuilder();
+		resultSql.append("SELECT Count(e.*) AS count FROM " + getEntityName() + "s e");
+		if (filterByEntityId) {
+			resultSql.append(" WHERE e.id = ?");
+		}
+		
+		return resultSql.toString();
+	}
+	
+	
+	/**
+	 * Produces an array of additional column names specific to this entity type
+	 * to be returned by entity queries.
+	 * 
+	 * @return The column names.
+	 */
+	protected abstract String[] getTypeSpecificFieldNames();
+	
+	
+	/**
+	 * The SQL SELECT statement for retrieving entity details.
+	 * 
+	 * @param filterByEntityId
+	 *            If true, a WHERE clause will be added filtering by the entity
+	 *            id column.
+	 * @param orderByEntityId
+	 *            If true, an ORDER BY clause will be added ordering by the
+	 *            entity id column.
+	 * @return The SQL string.
+	 */
+	public String getSqlSelect(boolean filterByEntityId, boolean orderByEntityId) {
+		StringBuilder resultSql;
+		
+		resultSql = new StringBuilder();
+		resultSql.append("SELECT e.id, e.version, e.user_id, u.name AS user_name, e.tstamp");
+		for (String fieldName : Arrays.asList(getTypeSpecificFieldNames())) {
+			resultSql.append(", ").append(fieldName);
+		}
+		resultSql.append(" FROM ");
+		resultSql.append(getEntityName());
+		resultSql.append("s e");
+		resultSql.append(" LEFT OUTER JOIN users u ON e.user_id = u.id");
+		if (filterByEntityId) {
+			resultSql.append(" WHERE e.id = ?");
+		}
+		if (orderByEntityId) {
+			resultSql.append(" ORDER BY e.id");
+		}
+		
+		return resultSql.toString();
+	}
+	
+	
+	/**
+	 * The SQL INSERT statement for adding entities.
+	 * 
+	 * @return The SQL string.
+	 */
+	public String getSqlInsert() {
+		String typeSpecificFieldNames[];
+		StringBuilder resultSql;
+		
+		typeSpecificFieldNames = getTypeSpecificFieldNames();
+		
+		resultSql = new StringBuilder();
+		resultSql.append("INSERT INTO ").append(getEntityName()).append("s");
+		resultSql.append("(id, version, user_id, tstamp, action");
+		for (String fieldName : Arrays.asList(typeSpecificFieldNames)) {
+			resultSql.append(", ").append(fieldName);
+		}
+		resultSql.append(") VALUES (?, ?, ?, ?, ?");
+		for (int i = 0; i < typeSpecificFieldNames.length; i++) {
+			resultSql.append(", ?");
+		}
+		resultSql.append(")");
+		
+		return resultSql.toString();
+	}
+	
+	
+	/**
+	 * The SQL UPDATE statement for updating entity details.
+	 * 
+	 * @param filterByEntityId
+	 *            If true, a WHERE clause will be added filtering by the entity
+	 *            id column.
+	 * @return The SQL String.
+	 */
+	public String getSqlUpdate(boolean filterByEntityId) {
+		StringBuilder resultSql;
+		
+		resultSql = new StringBuilder();
+		resultSql.append("UPDATE ").append(getEntityName()).append("s SET id = ?, version = ?, user_id = ?, tstamp = ?, action = ?");
+		for (String fieldName : Arrays.asList(getTypeSpecificFieldNames())) {
+			resultSql.append(", ").append(fieldName).append(" = ?");
+		}
+		if (filterByEntityId) {
+			resultSql.append(" WHERE id = ?");
+		}
+		
+		return resultSql.toString();
+	}
+	
+	
+	/**
+	 * The SQL DELETE statement for deleting entities.
+	 * 
+	 * @param filterByEntityId
+	 *            If true, a WHERE clause will be added filtering by the entity
+	 *            id column.
+	 * @return The SQL String.
+	 */
+	public String getSqlDelete(boolean filterByEntityId) {
+		StringBuilder resultSql;
+		
+		resultSql = new StringBuilder();
+		resultSql.append("DELETE FROM ").append(getEntityName()).append("s");
+		if (filterByEntityId) {
+			resultSql.append(" WHERE id = ?");
+		}
+		
+		return resultSql.toString();
+	}
 	
 	
 	/**
@@ -59,13 +197,13 @@ public abstract class EntityBuilder<T extends Entity> {
 			int userId;
 			OsmUser user;
 			
-			userId = resultSet.getInt(FIELD_USER_ID);
+			userId = resultSet.getInt("user_id");
 			if (userId == OsmUser.NONE.getId()) {
 				user = OsmUser.NONE;
 			} else {
 				user = new OsmUser(
 					userId,
-					resultSet.getString(FIELD_USER_NAME)
+					resultSet.getString("user_name")
 				);
 			}
 			
@@ -75,4 +213,61 @@ public abstract class EntityBuilder<T extends Entity> {
 			throw new OsmosisRuntimeException("Unable to build a user from the current recordset row.", e);
 		}
 	}
+	
+	
+	/**
+	 * Sets common entity values as bind variable parameters to an entity insert
+	 * query.
+	 * 
+	 * @param statement
+	 *            The prepared statement to add the values to.
+	 * @param initialIndex
+	 *            The offset index of the first variable to set.
+	 * @param entity
+	 *            The entity containing the data to be inserted.
+	 * @param action
+	 *            The action being performed.
+	 * @return The current parameter offset.
+	 */
+	protected int populateCommonEntityParameters(PreparedStatement statement, int initialIndex, Entity entity, ChangesetAction action) {
+		int prmIndex;
+		
+		prmIndex = initialIndex;
+		
+		// We can't write an entity with a null timestamp.
+		if (entity.getTimestamp() == null) {
+			throw new OsmosisRuntimeException("Entity(" + entity.getType() + ") " + entity.getId() + " does not have a timestamp set.");
+		}
+		
+		try {
+			statement.setLong(prmIndex++, entity.getId());
+			statement.setInt(prmIndex++, entity.getVersion());
+			statement.setInt(prmIndex++, entity.getUser().getId());
+			statement.setTimestamp(prmIndex++, new Timestamp(entity.getTimestamp().getTime()));
+			statement.setString(prmIndex++, ChangesetAction.ADD.getDatabaseValue());
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException(
+				"Unable to set a prepared statement parameter for entity("
+					+ entity.getType() + ") " + entity.getId() + ".", e);
+		}
+		
+		return prmIndex;
+	}
+	
+	
+	/**
+	 * Sets entity values as bind variable parameters to an entity insert query.
+	 * 
+	 * @param statement
+	 *            The prepared statement to add the values to.
+	 * @param initialIndex
+	 *            The offset index of the first variable to set.
+	 * @param entity
+	 *            The entity containing the data to be inserted.
+	 * @param action
+	 *            The action being performed.
+	 * @return The current parameter offset.
+	 */
+	public abstract int populateEntityParameters(PreparedStatement statement, int initialIndex, T entity, ChangesetAction action);
 }

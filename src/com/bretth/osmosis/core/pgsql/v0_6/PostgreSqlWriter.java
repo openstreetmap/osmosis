@@ -28,13 +28,13 @@ import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityTag;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBRelationMember;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBWayNode;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.PointBuilder;
 import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.MemberTypeValueMapper;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.ChangesetAction;
 import com.bretth.osmosis.core.task.v0_6.Sink;
 
 
@@ -55,9 +55,12 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"ALTER TABLE ways DROP CONSTRAINT pk_ways",
 		"ALTER TABLE way_nodes DROP CONSTRAINT pk_way_nodes",
 		"ALTER TABLE relations DROP CONSTRAINT pk_relations",
+		"DROP INDEX idx_nodes_action",
 		"DROP INDEX idx_node_tags_node_id",
 		"DROP INDEX idx_nodes_geom",
+		"DROP INDEX idx_ways_action",
 		"DROP INDEX idx_way_tags_way_id",
+		"DROP INDEX idx_relations_action",
 		"DROP INDEX idx_relation_tags_relation_id",
 		"DROP INDEX idx_ways_bbox"
 	};
@@ -68,9 +71,12 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"ALTER TABLE ONLY ways ADD CONSTRAINT pk_ways PRIMARY KEY (id)",
 		"ALTER TABLE ONLY way_nodes ADD CONSTRAINT pk_way_nodes PRIMARY KEY (way_id, sequence_id)",
 		"ALTER TABLE ONLY relations ADD CONSTRAINT pk_relations PRIMARY KEY (id)",
+		"CREATE INDEX idx_nodes_action ON nodes USING btree (action)",
 		"CREATE INDEX idx_node_tags_node_id ON node_tags USING btree (node_id)",
 		"CREATE INDEX idx_nodes_geom ON nodes USING gist (geom)",
+		"CREATE INDEX idx_ways_action ON ways USING btree (action)",
 		"CREATE INDEX idx_way_tags_way_id ON way_tags USING btree (way_id)",
+		"CREATE INDEX idx_relations_action ON relations USING btree (action)",
 		"CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id)",
 		"UPDATE ways SET bbox = (SELECT Envelope(Collect(geom)) FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id WHERE way_nodes.way_id = ways.id)",
 		"CREATE INDEX idx_ways_bbox ON ways USING gist (bbox)"
@@ -79,17 +85,17 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	// These SQL strings are the prefix to statements that will be built based
 	// on how many rows of data are to be inserted at a time.
 	private static final String INSERT_SQL_USER =
-		"INSERT INTO users(id, name)";
-	private static final int INSERT_PRM_COUNT_USER = 2;
+		"INSERT INTO users(id, name, action)";
+	private static final int INSERT_PRM_COUNT_USER = 3;
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO nodes(id, version, tstamp, user_id, geom)";
-	private static final int INSERT_PRM_COUNT_NODE = 5;
+		"INSERT INTO nodes(id, version, tstamp, user_id, action, geom)";
+	private static final int INSERT_PRM_COUNT_NODE = 6;
 	private static final String INSERT_SQL_NODE_TAG =
 		"INSERT INTO node_tags(node_id, k, v)";
 	private static final int INSERT_PRM_COUNT_NODE_TAG = 3;
 	private static final String INSERT_SQL_WAY =
-		"INSERT INTO ways(id, version, tstamp, user_id)";
-	private static final int INSERT_PRM_COUNT_WAY = 4;
+		"INSERT INTO ways(id, version, tstamp, user_id, action)";
+	private static final int INSERT_PRM_COUNT_WAY = 5;
 	private static final String INSERT_SQL_WAY_TAG =
 		"INSERT INTO way_tags(way_id, k, v)";
 	private static final int INSERT_PRM_COUNT_WAY_TAG = 3;
@@ -97,8 +103,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"INSERT INTO way_nodes(way_id, node_id, sequence_id)";
 	private static final int INSERT_PRM_COUNT_WAY_NODE = 3;
 	private static final String INSERT_SQL_RELATION =
-		"INSERT INTO relations(id, version, tstamp, user_id)";
-	private static final int INSERT_PRM_COUNT_RELATION = 4;
+		"INSERT INTO relations(id, version, tstamp, user_id, action)";
+	private static final int INSERT_PRM_COUNT_RELATION = 5;
 	private static final String INSERT_SQL_RELATION_TAG =
 		"INSERT INTO relation_tags(relation_id, k, v)";
 	private static final int INSERT_PRM_COUNT_RELATION_TAG = 3;
@@ -223,13 +229,13 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private DatabaseContext dbCtx;
 	private SchemaVersionValidator schemaVersionValidator;
 	private List<Node> nodeBuffer;
-	private List<DBEntityTag> nodeTagBuffer;
+	private List<DBEntityFeature<Tag>> nodeTagBuffer;
 	private List<Way> wayBuffer;
-	private List<DBEntityTag> wayTagBuffer;
+	private List<DBEntityFeature<Tag>> wayTagBuffer;
 	private List<DBWayNode> wayNodeBuffer;
 	private List<Relation> relationBuffer;
-	private List<DBEntityTag> relationTagBuffer;
-	private List<DBRelationMember> relationMemberBuffer;
+	private List<DBEntityFeature<Tag>> relationTagBuffer;
+	private List<DBEntityFeature<RelationMember>> relationMemberBuffer;
 	private boolean initialized;
 	private HashSet<Integer> userSet;
 	private PreparedStatement singleUserStatement;
@@ -270,13 +276,13 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		schemaVersionValidator = new SchemaVersionValidator(loginCredentials);
 		
 		nodeBuffer = new ArrayList<Node>();
-		nodeTagBuffer = new ArrayList<DBEntityTag>();
+		nodeTagBuffer = new ArrayList<DBEntityFeature<Tag>>();
 		wayBuffer = new ArrayList<Way>();
-		wayTagBuffer = new ArrayList<DBEntityTag>();
+		wayTagBuffer = new ArrayList<DBEntityFeature<Tag>>();
 		wayNodeBuffer = new ArrayList<DBWayNode>();
 		relationBuffer = new ArrayList<Relation>();
-		relationTagBuffer = new ArrayList<DBEntityTag>();
-		relationMemberBuffer = new ArrayList<DBRelationMember>();
+		relationTagBuffer = new ArrayList<DBEntityFeature<Tag>>();
+		relationMemberBuffer = new ArrayList<DBEntityFeature<RelationMember>>();
 		
 		userSet = new HashSet<Integer>();
 		
@@ -364,6 +370,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				try {
 					singleUserStatement.setInt(prmIndex++, user.getId());
 					singleUserStatement.setString(prmIndex++, user.getName());
+					singleUserStatement.setString(prmIndex++, ChangesetAction.ADD.getDatabaseValue());
 					
 					singleUserStatement.executeUpdate();
 					
@@ -404,6 +411,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			statement.setInt(prmIndex++, entity.getVersion());
 			statement.setTimestamp(prmIndex++, new Timestamp(entity.getTimestamp().getTime()));
 			statement.setInt(prmIndex++, entity.getUser().getId());
+			statement.setString(prmIndex++, ChangesetAction.ADD.getDatabaseValue());
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
@@ -426,13 +434,13 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 *            The entity tag containing the data to be inserted.
 	 * @return The current parameter offset.
 	 */
-	private int populateEntityTagParameters(PreparedStatement statement, int initialIndex, DBEntityTag dbEntityTag) {
+	private int populateEntityTagParameters(PreparedStatement statement, int initialIndex, DBEntityFeature<Tag> dbEntityTag) {
 		int prmIndex;
 		Tag tag;
 		
 		prmIndex = initialIndex;
 		
-		tag = dbEntityTag.getTag();
+		tag = dbEntityTag.getEntityFeature();
 		
 		try {
 			statement.setLong(prmIndex++, dbEntityTag.getEntityId());
@@ -494,12 +502,12 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		
 		try {
 			// statement parameters.
-			statement.setLong(prmIndex++, dbWayNode.getWayId());
-			statement.setLong(prmIndex++, dbWayNode.getWayNode().getNodeId());
+			statement.setLong(prmIndex++, dbWayNode.getEntityId());
+			statement.setLong(prmIndex++, dbWayNode.getEntityFeature().getNodeId());
 			statement.setInt(prmIndex++, dbWayNode.getSequenceId());
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for way node with wayId=" + dbWayNode.getWayId() + " and nodeId=" + dbWayNode.getWayNode().getNodeId() + ".", e);
+			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for way node with wayId=" + dbWayNode.getEntityId() + " and nodeId=" + dbWayNode.getEntityFeature().getNodeId() + ".", e);
 		}
 		
 		return prmIndex;
@@ -517,20 +525,20 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 *            The database relation member containing the data to be inserted.
 	 * @return The current parameter offset.
 	 */
-	private int populateRelationMemberParameters(PreparedStatement statement, int initialIndex, DBRelationMember dbRelationMember) {
+	private int populateRelationMemberParameters(PreparedStatement statement, int initialIndex, DBEntityFeature<RelationMember> dbRelationMember) {
 		int prmIndex;
 		
 		prmIndex = initialIndex;
 		
 		try {
 			// statement parameters.
-			statement.setLong(prmIndex++, dbRelationMember.getRelationId());
-			statement.setLong(prmIndex++, dbRelationMember.getRelationMember().getMemberId());
-			statement.setByte(prmIndex++, memberTypeValueMapper.getMemberType(dbRelationMember.getRelationMember().getMemberType()));
-			statement.setString(prmIndex++, dbRelationMember.getRelationMember().getMemberRole());
+			statement.setLong(prmIndex++, dbRelationMember.getEntityId());
+			statement.setLong(prmIndex++, dbRelationMember.getEntityFeature().getMemberId());
+			statement.setString(prmIndex++, memberTypeValueMapper.getMemberType(dbRelationMember.getEntityFeature().getMemberType()));
+			statement.setString(prmIndex++, dbRelationMember.getEntityFeature().getMemberRole());
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for relation member with relationId=" + dbRelationMember.getRelationId() + " and memberId=" + dbRelationMember.getRelationMember().getMemberId() + ".", e);
+			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for relation member with relationId=" + dbRelationMember.getEntityId() + " and memberId=" + dbRelationMember.getEntityFeature().getMemberId() + ".", e);
 		}
 		
 		return prmIndex;
@@ -610,7 +618,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addNodeTags(Node node) {
 		for (Tag tag : node.getTagList()) {
-			nodeTagBuffer.add(new DBEntityTag(node.getId(), tag));
+			nodeTagBuffer.add(new DBEntityFeature<Tag>(node.getId(), tag));
 		}
 		
 		flushNodeTags(false);
@@ -731,7 +739,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addWayTags(Way way) {
 		for (Tag tag : way.getTagList()) {
-			wayTagBuffer.add(new DBEntityTag(way.getId(), tag));
+			wayTagBuffer.add(new DBEntityFeature<Tag>(way.getId(), tag));
 		}
 		
 		flushWayTags(false);
@@ -910,7 +918,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addRelationTags(Relation relation) {
 		for (Tag tag : relation.getTagList()) {
-			relationTagBuffer.add(new DBEntityTag(relation.getId(), tag));
+			relationTagBuffer.add(new DBEntityFeature<Tag>(relation.getId(), tag));
 		}
 		
 		flushRelationTags(false);
@@ -925,7 +933,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addRelationMembers(Relation relation) {
 		for (RelationMember relationMember : relation.getMemberList()) {
-			relationMemberBuffer.add(new DBRelationMember(relation.getId(), relationMember));
+			relationMemberBuffer.add(new DBEntityFeature<RelationMember>(relation.getId(), relationMember));
 		}
 		
 		flushRelationMembers(false);

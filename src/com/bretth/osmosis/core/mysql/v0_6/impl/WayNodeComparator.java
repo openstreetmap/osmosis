@@ -19,8 +19,8 @@ public class WayNodeComparator implements Comparator<DBWayNode> {
 		long way1Id;
 		long way2Id;
 		
-		way1Id = o1.getWayId();
-		way2Id = o2.getWayId();
+		way1Id = o1.getEntityId();
+		way2Id = o2.getEntityId();
 		if (way1Id != way2Id) {
 			if (way1Id < way2Id) {
 				return -1;
