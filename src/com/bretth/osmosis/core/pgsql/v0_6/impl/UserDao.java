@@ -6,10 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.database.BaseDao;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.NoSuchRecordException;
-import com.bretth.osmosis.core.store.Releasable;
 
 
 /**
@@ -17,16 +17,16 @@ import com.bretth.osmosis.core.store.Releasable;
  * 
  * @author Brett Henderson
  */
-public class UserDao implements Releasable {
+public class UserDao extends BaseDao {
 	private static final String SELECT_USER = "SELECT id, name FROM users WHERE id = ?";
 	private static final String INSERT_USER = "INSERT INTO users(id, name, action) VALUES(?, ?, ?)";
 	private static final String UPDATE_USER = "UPDATE users SET name = ?, action = ? WHERE id = ?";
+	private static final String RESET_USER = "UPDATE users SET action = '" + ChangesetAction.NONE.getDatabaseValue() + "'";
 	
-	private DatabaseContext dbCtx;
 	private PreparedStatement selectUserStatement;
 	private PreparedStatement insertUserStatement;
 	private PreparedStatement updateUserStatement;
-	private boolean initialized;
+	private PreparedStatement resetStatement;
 	
 	
 	/**
@@ -36,20 +36,7 @@ public class UserDao implements Releasable {
 	 *            The database context to use for accessing the database.
 	 */
 	public UserDao(DatabaseContext dbCtx) {
-		this.dbCtx = dbCtx;
-		
-		initialized = false;
-	}
-	
-	
-	private void initialize() {
-		if (!initialized) {
-			selectUserStatement = dbCtx.prepareStatement(SELECT_USER);
-			insertUserStatement = dbCtx.prepareStatement(INSERT_USER);
-			updateUserStatement = dbCtx.prepareStatement(UPDATE_USER);
-			
-			initialized = true;
-		}
+		super(dbCtx);
 	}
 	
 	
@@ -84,7 +71,9 @@ public class UserDao implements Releasable {
 		ResultSet resultSet = null;
 		OsmUser user;
 		
-		initialize();
+		if (selectUserStatement == null) {
+			selectUserStatement = prepareStatement(SELECT_USER);
+		}
 		
 		try {
 			selectUserStatement.setLong(1, userId);
@@ -124,6 +113,10 @@ public class UserDao implements Releasable {
 	public void addUser(OsmUser user) {
 		int prmIndex;
 		
+		if (insertUserStatement == null) {
+			insertUserStatement = prepareStatement(INSERT_USER);
+		}
+		
 		prmIndex = 0;
 		
 		try {
@@ -149,6 +142,10 @@ public class UserDao implements Releasable {
 	public void updateUser(OsmUser user) {
 		int prmIndex;
 		
+		if (updateUserStatement == null) {
+			updateUserStatement = prepareStatement(UPDATE_USER);
+		}
+		
 		prmIndex = 0;
 		
 		try {
@@ -166,30 +163,21 @@ public class UserDao implements Releasable {
 	
 	
 	/**
-	 * {@inheritDoc}
+	 * Marks all records as unchanged.
 	 */
-	@Override
-	public void release() {
-		if (selectUserStatement != null) {
-			try {
-				selectUserStatement.close();
-			} catch (SQLException e) {
-				// Do nothing.
-			}
+	public void resetAction() {
+		if (resetStatement == null) {
+			resetStatement = prepareStatement(RESET_USER);
 		}
-		if (insertUserStatement != null) {
-			try {
-				insertUserStatement.close();
-			} catch (SQLException e) {
-				// Do nothing.
-			}
-		}
-		if (updateUserStatement != null) {
-			try {
-				updateUserStatement.close();
-			} catch (SQLException e) {
-				// Do nothing.
-			}
+		
+		try {
+			resetStatement.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException(
+				"Reset action failed for users.",
+				e
+			);
 		}
 	}
 }

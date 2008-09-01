@@ -212,6 +212,7 @@ public class ChangeWriter {
 		nodeDao.purgeAndResetAction();
 		wayDao.purgeAndResetAction();
 		relationDao.purgeAndResetAction();
+		userDao.resetAction();
 		
 		dbCtx.commit();
 	}
