@@ -117,7 +117,7 @@ public class UserDao extends BaseDao {
 			insertUserStatement = prepareStatement(INSERT_USER);
 		}
 		
-		prmIndex = 0;
+		prmIndex = 1;
 		
 		try {
 			insertUserStatement.setInt(prmIndex++, user.getId());

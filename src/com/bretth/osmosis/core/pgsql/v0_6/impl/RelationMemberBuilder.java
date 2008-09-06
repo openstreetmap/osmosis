@@ -45,7 +45,7 @@ public class RelationMemberBuilder extends EntityFeatureBuilder<DBEntityFeature<
 		StringBuilder resultSql;
 		
 		resultSql = new StringBuilder();
-		resultSql.append("SELECT relation_id AS entity_id, member_id, member_role, member_type FROM ");
+		resultSql.append("SELECT relation_id AS entity_id, member_id, member_type, member_role FROM ");
 		resultSql.append("relation_members f");
 		if (filterByEntityId) {
 			resultSql.append(" WHERE entity_id = ?");
@@ -62,12 +62,18 @@ public class RelationMemberBuilder extends EntityFeatureBuilder<DBEntityFeature<
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getSqlInsert() {
+	public String getSqlInsert(int rowCount) {
 		StringBuilder resultSql;
 		
 		resultSql = new StringBuilder();
 		resultSql.append("INSERT INTO relation_members (");
-		resultSql.append("relation_id, member_id, member_role, member_type) VALUES (?, ?, ?, ?)");
+		resultSql.append("relation_id, member_id, member_type, member_role) VALUES ");
+		for (int row = 0; row < rowCount; row++) {
+			if (row > 0) {
+				resultSql.append(", ");
+			}
+			resultSql.append("(?, ?, ?, ?)");
+		}
 		
 		return resultSql.toString();
 	}

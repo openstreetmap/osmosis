@@ -242,7 +242,6 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 	 * @throws IOException
 	 *             if an error occurs during the position operation.
 	 */
-	@SuppressWarnings("unused")
 	public long position() throws IOException {
 		return filePosition - currentBufferByteCount + currentBufferOffset;
 	}

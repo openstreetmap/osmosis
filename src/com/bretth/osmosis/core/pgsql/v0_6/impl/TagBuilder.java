@@ -65,12 +65,18 @@ public class TagBuilder extends EntityFeatureBuilder<DBEntityFeature<Tag>> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getSqlInsert() {
+	public String getSqlInsert(int rowCount) {
 		StringBuilder resultSql;
 		
 		resultSql = new StringBuilder();
 		resultSql.append("INSERT INTO ").append(parentEntityName).append("_tags (");
-		resultSql.append(parentEntityName).append("_id, k, v) VALUES (?, ?, ?)");
+		resultSql.append(parentEntityName).append("_id, k, v) VALUES ");
+		for (int row = 0; row < rowCount; row++) {
+			if (row > 0) {
+				resultSql.append(", ");
+			}
+			resultSql.append("(?, ?, ?)");
+		}
 		
 		return resultSql.toString();
 	}

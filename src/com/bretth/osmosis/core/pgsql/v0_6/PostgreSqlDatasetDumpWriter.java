@@ -55,7 +55,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 	private CopyFileWriter relationTagWriter;
 	private CopyFileWriter relationMemberWriter;
 	private PointBuilder pointBuilder;
-	private Set<Long> userSet;
+	private Set<Integer> userSet;
 	
 	
 	/**
@@ -79,7 +79,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		
 		pointBuilder = new PointBuilder();
 		
-		userSet = new HashSet<Long>();
+		userSet = new HashSet<Integer>();
 	}
 	
 	
@@ -96,6 +96,8 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 				userWriter.writeField(user.getId());
 				userWriter.writeField(user.getName());
 				userWriter.endRecord();
+				
+				userSet.add(user.getId());
 			}
 		}
 		

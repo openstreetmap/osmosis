@@ -324,6 +324,8 @@ public class CopyFileWriter implements Completable {
 	 * Flushes all changes to file.
 	 */
 	public void complete() {
+		initialize();
+		
 		try {
 			if (midRecord) {
 				throw new OsmosisRuntimeException("The current record has not been ended.");

@@ -51,12 +51,18 @@ public class WayNodeBuilder extends EntityFeatureBuilder<DBWayNode> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getSqlInsert() {
+	public String getSqlInsert(int rowCount) {
 		StringBuilder resultSql;
 		
 		resultSql = new StringBuilder();
 		resultSql.append("INSERT INTO way_nodes (");
-		resultSql.append("way_id, node_id, sequence_id) VALUES (?, ?, ?)");
+		resultSql.append("way_id, node_id, sequence_id) VALUES ");
+		for (int row = 0; row < rowCount; row++) {
+			if (row > 0) {
+				resultSql.append(", ");
+			}
+			resultSql.append("(?, ?, ?)");
+		}
 		
 		return resultSql.toString();
 	}

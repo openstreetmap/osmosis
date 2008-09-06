@@ -186,7 +186,7 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	 */
 	public void addEntity(T entity) {
 		if (insertStatement == null) {
-			insertStatement = prepareStatement(entityBuilder.getSqlInsert());
+			insertStatement = prepareStatement(entityBuilder.getSqlInsert(1));
 		}
 		
 		try {

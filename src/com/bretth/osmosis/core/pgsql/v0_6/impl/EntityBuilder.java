@@ -101,14 +101,16 @@ public abstract class EntityBuilder<T extends Entity> {
 		
 		return resultSql.toString();
 	}
-	
-	
+
+
 	/**
 	 * The SQL INSERT statement for adding entities.
 	 * 
+	 * @param rowCount
+	 *            The number of rows to insert in a single statement.
 	 * @return The SQL string.
 	 */
-	public String getSqlInsert() {
+	public String getSqlInsert(int rowCount) {
 		String typeSpecificFieldNames[];
 		StringBuilder resultSql;
 		
@@ -120,11 +122,17 @@ public abstract class EntityBuilder<T extends Entity> {
 		for (String fieldName : Arrays.asList(typeSpecificFieldNames)) {
 			resultSql.append(", ").append(fieldName);
 		}
-		resultSql.append(") VALUES (?, ?, ?, ?, '").append(ChangesetAction.ADD.getDatabaseValue()).append("'");
-		for (int i = 0; i < typeSpecificFieldNames.length; i++) {
-			resultSql.append(", ?");
+		resultSql.append(") VALUES ");
+		for (int row = 0; row < rowCount; row++) {
+			if (row > 0) {
+				resultSql.append(", ");
+			}
+			resultSql.append("(?, ?, ?, ?, '").append(ChangesetAction.ADD.getDatabaseValue()).append("'");
+			for (int i = 0; i < typeSpecificFieldNames.length; i++) {
+				resultSql.append(", ?");
+			}
+			resultSql.append(")");
 		}
-		resultSql.append(")");
 		
 		return resultSql.toString();
 	}

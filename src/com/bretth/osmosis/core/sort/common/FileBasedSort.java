@@ -134,7 +134,6 @@ public class FileBasedSort<T extends Storeable> implements Releasable {
 	 *            The number of chunks to sort.
 	 * @return An iterator providing access to the sort result.
 	 */
-	@SuppressWarnings("null")
 	private ReleasableIterator<T> iteratePersisted(int nestLevel, long beginChunkIndex, long chunkCount) {
 		ReleasableIterator<T> persistentIterator;
 		

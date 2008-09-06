@@ -44,14 +44,16 @@ public abstract class EntityFeatureBuilder<T> {
 	 * @return The SQL string.
 	 */
 	public abstract String getSqlSelect(boolean filterByEntityId, boolean orderBy);
-	
-	
+
+
 	/**
 	 * The SQL INSERT statement for adding features.
 	 * 
+	 * @param rowCount
+	 *            The number of rows to insert in a single statement.
 	 * @return The SQL string.
 	 */
-	public abstract String getSqlInsert();
+	public abstract String getSqlInsert(int rowCount);
 	
 	
 	/**

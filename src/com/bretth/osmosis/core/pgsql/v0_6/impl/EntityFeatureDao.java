@@ -124,7 +124,7 @@ public class EntityFeatureDao<Tef extends Storeable, Tdb extends DBEntityFeature
 	 */
 	public void addList(List<Tdb> featureList) {
 		if (insertStatement == null) {
-			insertStatement = prepareStatement(entityFeatureBuilder.getSqlInsert());
+			insertStatement = prepareStatement(entityFeatureBuilder.getSqlInsert(1));
 		}
 		
 		for (Tdb feature : featureList) {

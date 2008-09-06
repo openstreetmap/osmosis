@@ -53,7 +53,6 @@ public abstract class BaseObjectReader implements ObjectReader {
 	 * 
 	 * @return The re-instantiated object.
 	 */
-	@SuppressWarnings("unchecked")
 	public Storeable readObject() {
 		Class<?> clazz;
 		Constructor<?> constructor;
