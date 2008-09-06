@@ -17,7 +17,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class CurrentRelationMemberTableReader extends BaseTableReader<DBRelationMember> {
+public class CurrentRelationMemberTableReader extends BaseTableReader<DBEntityFeature<RelationMember>> {
 	private static final String SELECT_SQL =
 		"SELECT id as relation_id, member_type, member_id, member_role"
 		+ " FROM current_relation_members"
@@ -52,7 +52,7 @@ public class CurrentRelationMemberTableReader extends BaseTableReader<DBRelation
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<DBRelationMember> createNextValue(ResultSet resultSet) {
+	protected ReadResult<DBEntityFeature<RelationMember>> createNextValue(ResultSet resultSet) {
 		long relationId;
 		EntityType memberType;
 		long memberId;
@@ -68,9 +68,9 @@ public class CurrentRelationMemberTableReader extends BaseTableReader<DBRelation
 			throw new OsmosisRuntimeException("Unable to read relation member fields.", e);
 		}
 		
-		return new ReadResult<DBRelationMember>(
+		return new ReadResult<DBEntityFeature<RelationMember>>(
 			true,
-			new DBRelationMember(
+			new DBEntityFeature<RelationMember>(
 				relationId,
 				new RelationMember(
 					memberId,

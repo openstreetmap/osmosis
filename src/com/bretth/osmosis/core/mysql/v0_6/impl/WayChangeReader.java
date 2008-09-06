@@ -10,6 +10,7 @@ import com.bretth.osmosis.core.container.v0_6.ChangeContainer;
 import com.bretth.osmosis.core.container.v0_6.WayContainer;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.mysql.common.EntityHistory;
 import com.bretth.osmosis.core.store.PeekableIterator;
@@ -28,7 +29,7 @@ public class WayChangeReader {
 	
 	private PeekableIterator<EntityHistory<Way>> wayHistoryReader;
 	private PeekableIterator<EntityHistory<DBWayNode>> wayNodeHistoryReader;
-	private PeekableIterator<EntityHistory<DBEntityTag>> wayTagHistoryReader;
+	private PeekableIterator<EntityHistory<DBEntityFeature<Tag>>> wayTagHistoryReader;
 	private ChangeContainer nextValue;
 	
 	
@@ -66,8 +67,8 @@ public class WayChangeReader {
 				)
 			);
 		wayTagHistoryReader =
-			new PeekableIterator<EntityHistory<DBEntityTag>>(
-				new PersistentIterator<EntityHistory<DBEntityTag>>(
+			new PeekableIterator<EntityHistory<DBEntityFeature<Tag>>>(
+				new PersistentIterator<EntityHistory<DBEntityFeature<Tag>>>(
 					new SingleClassObjectSerializationFactory(EntityHistory.class),
 					new EntityTagHistoryReader(loginCredentials, "ways", "way_tags", intervalBegin, intervalEnd),
 					"waytag",
@@ -110,7 +111,7 @@ public class WayChangeReader {
 		while (wayTagHistoryReader.hasNext() &&
 				wayTagHistoryReader.peekNext().getEntity().getEntityId() == way.getId() &&
 				wayTagHistoryReader.peekNext().getVersion() == wayHistory.getVersion()) {
-			way.addTag(wayTagHistoryReader.next().getEntity().getTag());
+			way.addTag(wayTagHistoryReader.next().getEntity().getEntityFeature());
 		}
 		
 		return wayHistory;

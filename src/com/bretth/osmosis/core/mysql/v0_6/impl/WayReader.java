@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.mysql.common.EntityHistory;
 import com.bretth.osmosis.core.store.PeekableIterator;
@@ -24,7 +25,7 @@ import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 	
 	private ReleasableIterator<EntityHistory<Way>> wayReader;
-	private PeekableIterator<EntityHistory<DBEntityTag>> wayTagReader;
+	private PeekableIterator<EntityHistory<DBEntityFeature<Tag>>> wayTagReader;
 	private PeekableIterator<EntityHistory<DBWayNode>> wayNodeReader;
 	private EntityHistory<Way> nextValue;
 	private boolean nextValueLoaded;
@@ -46,8 +47,8 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 			"way",
 			true
 		);
-		wayTagReader = new PeekableIterator<EntityHistory<DBEntityTag>>(
-			new PersistentIterator<EntityHistory<DBEntityTag>>(
+		wayTagReader = new PeekableIterator<EntityHistory<DBEntityFeature<Tag>>>(
+			new PersistentIterator<EntityHistory<DBEntityFeature<Tag>>>(
 				new SingleClassObjectSerializationFactory(EntityHistory.class),
 				new EntityTagTableReader(loginCredentials, "way_tags"),
 				"waytag",
@@ -84,8 +85,8 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 			
 			// Skip all way tags that are from lower id or lower version of the same id.
 			while (wayTagReader.hasNext()) {
-				EntityHistory<DBEntityTag> wayTagHistory;
-				DBEntityTag wayTag;
+				EntityHistory<DBEntityFeature<Tag>> wayTagHistory;
+				DBEntityFeature<Tag> wayTag;
 				
 				wayTagHistory = wayTagReader.peekNext();
 				wayTag = wayTagHistory.getEntity();
@@ -105,7 +106,7 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 			
 			// Load all tags matching this version of the way.
 			while (wayTagReader.hasNext() && wayTagReader.peekNext().getEntity().getEntityId() == wayId && wayTagReader.peekNext().getVersion() == wayVersion) {
-				way.addTag(wayTagReader.next().getEntity().getTag());
+				way.addTag(wayTagReader.next().getEntity().getEntityFeature());
 			}
 			
 			// Skip all way nodes that are from lower id or lower version of the same id.

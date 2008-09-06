@@ -5,6 +5,8 @@ import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.RelationMember;
+import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
@@ -21,8 +23,8 @@ import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 public class CurrentRelationReader implements ReleasableIterator<Relation> {
 	
 	private ReleasableIterator<Relation> relationReader;
-	private PeekableIterator<DBEntityTag> relationTagReader;
-	private PeekableIterator<DBRelationMember> relationMemberReader;
+	private PeekableIterator<DBEntityFeature<Tag>> relationTagReader;
+	private PeekableIterator<DBEntityFeature<RelationMember>> relationMemberReader;
 	private Relation nextValue;
 	private boolean nextValueLoaded;
 	
@@ -43,17 +45,17 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 			"rel",
 			true
 		);
-		relationTagReader = new PeekableIterator<DBEntityTag>(
-			new PersistentIterator<DBEntityTag>(
-				new SingleClassObjectSerializationFactory(DBEntityTag.class),
+		relationTagReader = new PeekableIterator<DBEntityFeature<Tag>>(
+			new PersistentIterator<DBEntityFeature<Tag>>(
+				new SingleClassObjectSerializationFactory(DBEntityFeature.class),
 				new CurrentEntityTagTableReader(loginCredentials, "current_relation_tags"),
 				"reltag",
 				true
 			)
 		);
-		relationMemberReader = new PeekableIterator<DBRelationMember>(
-			new PersistentIterator<DBRelationMember>(
-				new SingleClassObjectSerializationFactory(DBRelationMember.class),
+		relationMemberReader = new PeekableIterator<DBEntityFeature<RelationMember>>(
+			new PersistentIterator<DBEntityFeature<RelationMember>>(
+				new SingleClassObjectSerializationFactory(DBEntityFeature.class),
 				new CurrentRelationMemberTableReader(loginCredentials),
 				"relmbr",
 				true
@@ -76,7 +78,7 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 			
 			// Skip all relation tags that are from lower id relation.
 			while (relationTagReader.hasNext()) {
-				DBEntityTag relationTag;
+				DBEntityFeature<Tag> relationTag;
 				
 				relationTag = relationTagReader.peekNext();
 				
@@ -89,16 +91,16 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 			
 			// Load all tags for this relation.
 			while (relationTagReader.hasNext() && relationTagReader.peekNext().getEntityId() == relationId) {
-				relation.addTag(relationTagReader.next().getTag());
+				relation.addTag(relationTagReader.next().getEntityFeature());
 			}
 			
 			// Skip all relation members that are from lower id or lower version of the same id.
 			while (relationMemberReader.hasNext()) {
-				DBRelationMember relationMember;
+				DBEntityFeature<RelationMember> relationMember;
 				
 				relationMember = relationMemberReader.peekNext();
 				
-				if (relationMember.getRelationId() < relationId) {
+				if (relationMember.getEntityId() < relationId) {
 					relationMemberReader.next();
 				} else {
 					break;
@@ -106,8 +108,8 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 			}
 			
 			// Load all members matching this relation.
-			while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getRelationId() == relationId) {
-				relation.addMember(relationMemberReader.next().getRelationMember());
+			while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getEntityId() == relationId) {
+				relation.addMember(relationMemberReader.next().getEntityFeature());
 			}
 			
 			nextValue = relation;

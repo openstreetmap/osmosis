@@ -26,8 +26,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
 import com.bretth.osmosis.core.mysql.common.UserIdManager;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityTag;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBRelationMember;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBWayNode;
 import com.bretth.osmosis.core.mysql.v0_6.impl.EmbeddedTagProcessor;
 import com.bretth.osmosis.core.mysql.v0_6.impl.MemberTypeRenderer;
@@ -226,11 +225,11 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private boolean populateCurrentTables;
 	private List<Node> nodeBuffer;
 	private List<Way> wayBuffer;
-	private List<DBEntityTag> wayTagBuffer;
+	private List<DBEntityFeature<Tag>> wayTagBuffer;
 	private List<DBWayNode> wayNodeBuffer;
 	private List<Relation> relationBuffer;
-	private List<DBEntityTag> relationTagBuffer;
-	private List<DBRelationMember> relationMemberBuffer;
+	private List<DBEntityFeature<Tag>> relationTagBuffer;
+	private List<DBEntityFeature<RelationMember>> relationMemberBuffer;
 	private long maxNodeId;
 	private long maxWayId;
 	private long maxRelationId;
@@ -288,11 +287,11 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		
 		nodeBuffer = new ArrayList<Node>();
 		wayBuffer = new ArrayList<Way>();
-		wayTagBuffer = new ArrayList<DBEntityTag>();
+		wayTagBuffer = new ArrayList<DBEntityFeature<Tag>>();
 		wayNodeBuffer = new ArrayList<DBWayNode>();
 		relationBuffer = new ArrayList<Relation>();
-		relationTagBuffer = new ArrayList<DBEntityTag>();
-		relationMemberBuffer = new ArrayList<DBRelationMember>();
+		relationTagBuffer = new ArrayList<DBEntityFeature<Tag>>();
+		relationMemberBuffer = new ArrayList<DBEntityFeature<RelationMember>>();
 		
 		maxNodeId = 0;
 		maxWayId = 0;
@@ -433,13 +432,13 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * @param dbEntityTag
 	 *            The entity tag containing the data to be inserted.
 	 */
-	private void populateEntityTagParameters(PreparedStatement statement, int initialIndex, DBEntityTag dbEntityTag) {
+	private void populateEntityTagParameters(PreparedStatement statement, int initialIndex, DBEntityFeature<Tag> dbEntityTag) {
 		int prmIndex;
 		Tag tag;
 		
 		prmIndex = initialIndex;
 		
-		tag = dbEntityTag.getTag();
+		tag = dbEntityTag.getEntityFeature();
 		
 		try {
 			statement.setLong(prmIndex++, dbEntityTag.getEntityId());
@@ -524,16 +523,16 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * @param dbRelationMember
 	 *            The relation member containing the data to be inserted.
 	 */
-	private void populateRelationMemberParameters(PreparedStatement statement, int initialIndex, DBRelationMember dbRelationMember) {
+	private void populateRelationMemberParameters(PreparedStatement statement, int initialIndex, DBEntityFeature<RelationMember> dbRelationMember) {
 		int prmIndex;
 		RelationMember relationMember;
 		
 		prmIndex = initialIndex;
 		
-		relationMember = dbRelationMember.getRelationMember();
+		relationMember = dbRelationMember.getEntityFeature();
 		
 		try {
-			statement.setLong(prmIndex++, dbRelationMember.getRelationId());
+			statement.setLong(prmIndex++, dbRelationMember.getEntityId());
 			statement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
 			statement.setLong(prmIndex++, relationMember.getMemberId());
 			statement.setString(prmIndex++, relationMember.getMemberRole());
@@ -1065,7 +1064,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addWayTags(Way way) {
 		for (Tag tag: way.getTagList()) {
-			wayTagBuffer.add(new DBEntityTag(way.getId(), tag));
+			wayTagBuffer.add(new DBEntityFeature<Tag>(way.getId(), tag));
 		}
 		
 		flushWayTags(false);
@@ -1125,7 +1124,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addRelationTags(Relation relation) {
 		for (Tag tag: relation.getTagList()) {
-			relationTagBuffer.add(new DBEntityTag(relation.getId(), tag));
+			relationTagBuffer.add(new DBEntityFeature<Tag>(relation.getId(), tag));
 		}
 		
 		flushRelationTags(false);
@@ -1148,7 +1147,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			
 			member = memberReferenceList.get(i);
 			
-			relationMemberBuffer.add(new DBRelationMember(
+			relationMemberBuffer.add(new DBEntityFeature<RelationMember>(
 				relation.getId(),
 				new RelationMember(
 					member.getMemberId(),

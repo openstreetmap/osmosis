@@ -5,6 +5,8 @@ import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.RelationMember;
+import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.mysql.common.EntityHistory;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
@@ -21,8 +23,8 @@ import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 public class RelationReader implements ReleasableIterator<EntityHistory<Relation>> {
 	
 	private ReleasableIterator<EntityHistory<Relation>> relationReader;
-	private PeekableIterator<EntityHistory<DBEntityTag>> relationTagReader;
-	private PeekableIterator<EntityHistory<DBRelationMember>> relationMemberReader;
+	private PeekableIterator<EntityHistory<DBEntityFeature<Tag>>> relationTagReader;
+	private PeekableIterator<EntityHistory<DBEntityFeature<RelationMember>>> relationMemberReader;
 	private EntityHistory<Relation> nextValue;
 	private boolean nextValueLoaded;
 	
@@ -43,16 +45,16 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 			"rel",
 			true
 		);
-		relationTagReader = new PeekableIterator<EntityHistory<DBEntityTag>>(
-			new PersistentIterator<EntityHistory<DBEntityTag>>(
+		relationTagReader = new PeekableIterator<EntityHistory<DBEntityFeature<Tag>>>(
+			new PersistentIterator<EntityHistory<DBEntityFeature<Tag>>>(
 				new SingleClassObjectSerializationFactory(EntityHistory.class),
 				new EntityTagTableReader(loginCredentials, "relation_tags"),
 				"reltag",
 				true
 			)
 		);
-		relationMemberReader = new PeekableIterator<EntityHistory<DBRelationMember>>(
-			new PersistentIterator<EntityHistory<DBRelationMember>>(
+		relationMemberReader = new PeekableIterator<EntityHistory<DBEntityFeature<RelationMember>>>(
+			new PersistentIterator<EntityHistory<DBEntityFeature<RelationMember>>>(
 				new SingleClassObjectSerializationFactory(EntityHistory.class),
 				new RelationMemberTableReader(loginCredentials),
 				"relmbr",
@@ -80,8 +82,8 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 			
 			// Skip all relation tags that are from lower id or lower version of the same id.
 			while (relationTagReader.hasNext()) {
-				EntityHistory<DBEntityTag> relationTagHistory;
-				DBEntityTag relationTag;
+				EntityHistory<DBEntityFeature<Tag>> relationTagHistory;
+				DBEntityFeature<Tag> relationTag;
 				
 				relationTagHistory = relationTagReader.peekNext();
 				relationTag = relationTagHistory.getEntity();
@@ -101,20 +103,20 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 			
 			// Load all tags matching this version of the relation.
 			while (relationTagReader.hasNext() && relationTagReader.peekNext().getEntity().getEntityId() == relationId && relationTagReader.peekNext().getVersion() == relationVersion) {
-				relation.addTag(relationTagReader.next().getEntity().getTag());
+				relation.addTag(relationTagReader.next().getEntity().getEntityFeature());
 			}
 			
 			// Skip all relation members that are from lower id or lower version of the same id.
 			while (relationMemberReader.hasNext()) {
-				EntityHistory<DBRelationMember> relationMemberHistory;
-				DBRelationMember relationMember;
+				EntityHistory<DBEntityFeature<RelationMember>> relationMemberHistory;
+				DBEntityFeature<RelationMember> relationMember;
 				
 				relationMemberHistory = relationMemberReader.peekNext();
 				relationMember = relationMemberHistory.getEntity();
 				
-				if (relationMember.getRelationId() < relationId) {
+				if (relationMember.getEntityId() < relationId) {
 					relationMemberReader.next();
-				} else if (relationMember.getRelationId() == relationId) {
+				} else if (relationMember.getEntityId() == relationId) {
 					if (relationMemberHistory.getVersion() < relationVersion) {
 						relationMemberReader.next();
 					} else {
@@ -126,8 +128,8 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 			}
 			
 			// Load all members matching this version of the relation.
-			while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getEntity().getRelationId() == relationId && relationMemberReader.peekNext().getVersion() == relationVersion) {
-				relation.addMember(relationMemberReader.next().getEntity().getRelationMember());
+			while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getEntity().getEntityId() == relationId && relationMemberReader.peekNext().getVersion() == relationVersion) {
+				relation.addMember(relationMemberReader.next().getEntity().getEntityFeature());
 			}
 			
 			nextValue = relationHistory;

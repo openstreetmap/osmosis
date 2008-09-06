@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
@@ -23,7 +24,7 @@ import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 public class CurrentWayReader implements ReleasableIterator<Way> {
 	
 	private ReleasableIterator<Way> wayReader;
-	private PeekableIterator<DBEntityTag> wayTagReader;
+	private PeekableIterator<DBEntityFeature<Tag>> wayTagReader;
 	private PeekableIterator<DBWayNode> wayNodeReader;
 	private Way nextValue;
 	private boolean nextValueLoaded;
@@ -45,9 +46,9 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 			"way",
 			true
 		);
-		wayTagReader = new PeekableIterator<DBEntityTag>(
-			new PersistentIterator<DBEntityTag>(
-				new SingleClassObjectSerializationFactory(DBEntityTag.class),
+		wayTagReader = new PeekableIterator<DBEntityFeature<Tag>>(
+			new PersistentIterator<DBEntityFeature<Tag>>(
+				new SingleClassObjectSerializationFactory(DBEntityFeature.class),
 				new CurrentEntityTagTableReader(loginCredentials, "current_way_tags"),
 				"waytag",
 				true
@@ -79,7 +80,7 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 			
 			// Skip all way tags that are from lower id way.
 			while (wayTagReader.hasNext()) {
-				DBEntityTag wayTag;
+				DBEntityFeature<Tag> wayTag;
 				
 				wayTag = wayTagReader.peekNext();
 				
@@ -92,7 +93,7 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 			
 			// Load all tags for this way.
 			while (wayTagReader.hasNext() && wayTagReader.peekNext().getEntityId() == wayId) {
-				way.addTag(wayTagReader.next().getTag());
+				way.addTag(wayTagReader.next().getEntityFeature());
 			}
 			
 			// Skip all way nodes that are from lower id or lower version of the same id.

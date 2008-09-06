@@ -18,7 +18,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class CurrentEntityTagTableReader extends BaseTableReader<DBEntityTag> {
+public class CurrentEntityTagTableReader extends BaseTableReader<DBEntityFeature<Tag>> {
 	private static final String SELECT_SQL_1 = "SELECT id as entity_id, k, v FROM ";
 	private static final String SELECT_SQL_2 = " ORDER BY id";
 	
@@ -54,7 +54,7 @@ public class CurrentEntityTagTableReader extends BaseTableReader<DBEntityTag> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<DBEntityTag> createNextValue(ResultSet resultSet) {
+	protected ReadResult<DBEntityFeature<Tag>> createNextValue(ResultSet resultSet) {
 		long entityId;
 		String key;
 		String value;
@@ -68,9 +68,9 @@ public class CurrentEntityTagTableReader extends BaseTableReader<DBEntityTag> {
 			throw new OsmosisRuntimeException("Unable to read entity tag fields from table " + tableName + ".", e);
 		}
 		
-		return new ReadResult<DBEntityTag>(
+		return new ReadResult<DBEntityFeature<Tag>>(
 			true,
-			new DBEntityTag(entityId, new Tag(key, value))
+			new DBEntityFeature<Tag>(entityId, new Tag(key, value))
 		);
 	}
 }

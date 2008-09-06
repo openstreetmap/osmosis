@@ -8,6 +8,8 @@ import com.bretth.osmosis.core.container.v0_6.ChangeContainer;
 import com.bretth.osmosis.core.container.v0_6.RelationContainer;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.RelationMember;
+import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.mysql.common.EntityHistory;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
@@ -24,8 +26,8 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
 public class RelationChangeReader {
 	
 	private PeekableIterator<EntityHistory<Relation>> relationHistoryReader;
-	private PeekableIterator<EntityHistory<DBRelationMember>> relationMemberHistoryReader;
-	private PeekableIterator<EntityHistory<DBEntityTag>> relationTagHistoryReader;
+	private PeekableIterator<EntityHistory<DBEntityFeature<RelationMember>>> relationMemberHistoryReader;
+	private PeekableIterator<EntityHistory<DBEntityFeature<Tag>>> relationTagHistoryReader;
 	private ChangeContainer nextValue;
 	
 	
@@ -54,8 +56,8 @@ public class RelationChangeReader {
 				)
 			);
 		relationMemberHistoryReader =
-			new PeekableIterator<EntityHistory<DBRelationMember>>(
-				new PersistentIterator<EntityHistory<DBRelationMember>>(
+			new PeekableIterator<EntityHistory<DBEntityFeature<RelationMember>>>(
+				new PersistentIterator<EntityHistory<DBEntityFeature<RelationMember>>>(
 					new SingleClassObjectSerializationFactory(EntityHistory.class),
 					new RelationMemberHistoryReader(loginCredentials, intervalBegin, intervalEnd),
 					"relmbr",
@@ -63,8 +65,8 @@ public class RelationChangeReader {
 				)
 			);
 		relationTagHistoryReader =
-			new PeekableIterator<EntityHistory<DBEntityTag>>(
-				new PersistentIterator<EntityHistory<DBEntityTag>>(
+			new PeekableIterator<EntityHistory<DBEntityFeature<Tag>>>(
+				new PersistentIterator<EntityHistory<DBEntityFeature<Tag>>>(
 					new SingleClassObjectSerializationFactory(EntityHistory.class),
 					new EntityTagHistoryReader(loginCredentials, "relations", "relation_tags", intervalBegin, intervalEnd),
 					"reltag",
@@ -90,16 +92,16 @@ public class RelationChangeReader {
 
 		// Add all applicable member references to the relation.
 		while (relationMemberHistoryReader.hasNext() &&
-				relationMemberHistoryReader.peekNext().getEntity().getRelationId() == relation.getId() &&
+				relationMemberHistoryReader.peekNext().getEntity().getEntityId() == relation.getId() &&
 				relationMemberHistoryReader.peekNext().getVersion() == relationHistory.getVersion()) {
-			relation.addMember(relationMemberHistoryReader.next().getEntity().getRelationMember());
+			relation.addMember(relationMemberHistoryReader.next().getEntity().getEntityFeature());
 		}
 		
 		// Add all applicable tags to the relation.
 		while (relationTagHistoryReader.hasNext() &&
 				relationTagHistoryReader.peekNext().getEntity().getEntityId() == relation.getId() &&
 				relationTagHistoryReader.peekNext().getVersion() == relationHistory.getVersion()) {
-			relation.addTag(relationTagHistoryReader.next().getEntity().getTag());
+			relation.addTag(relationTagHistoryReader.next().getEntity().getEntityFeature());
 		}
 		
 		return relationHistory;

@@ -31,8 +31,6 @@ public class DBEntityFeature<T extends Storeable> implements Storeable {
 	 *            The owning entity id.
 	 * @param entityFeature
 	 *            The way node being referenced.
-	 * @param sequenceId
-	 *            The order of this node within the way.
 	 */
 	public DBEntityFeature(long entityId, T entityFeature) {
 		this.entityId = entityId;

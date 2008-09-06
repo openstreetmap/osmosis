@@ -21,7 +21,7 @@ import com.bretth.osmosis.core.mysql.common.EntityHistory;
  * 
  * @author Brett Henderson
  */
-public class EntityTagHistoryReader extends BaseTableReader<EntityHistory<DBEntityTag>> {
+public class EntityTagHistoryReader extends BaseTableReader<EntityHistory<DBEntityFeature<Tag>>> {
 	private static final String SELECT_SQL_1 =
 		"SELECT et.id AS entity_id, et.k, et.v, et.version" +
 		" FROM ";
@@ -92,7 +92,7 @@ public class EntityTagHistoryReader extends BaseTableReader<EntityHistory<DBEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<EntityHistory<DBEntityTag>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<DBEntityFeature<Tag>>> createNextValue(ResultSet resultSet) {
 		long entityId;
 		String key;
 		String value;
@@ -108,10 +108,10 @@ public class EntityTagHistoryReader extends BaseTableReader<EntityHistory<DBEnti
 			throw new OsmosisRuntimeException("Unable to read entity tag fields.", e);
 		}
 		
-		return new ReadResult<EntityHistory<DBEntityTag>>(
+		return new ReadResult<EntityHistory<DBEntityFeature<Tag>>>(
 			true,
-			new EntityHistory<DBEntityTag>(
-				new DBEntityTag(entityId, new Tag(key, value)), version, true)
+			new EntityHistory<DBEntityFeature<Tag>>(
+				new DBEntityFeature<Tag>(entityId, new Tag(key, value)), version, true)
 		);
 	}
 }

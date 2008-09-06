@@ -22,7 +22,7 @@ import com.bretth.osmosis.core.mysql.common.EntityHistory;
  * 
  * @author Brett Henderson
  */
-public class RelationMemberHistoryReader extends BaseTableReader<EntityHistory<DBRelationMember>> {
+public class RelationMemberHistoryReader extends BaseTableReader<EntityHistory<DBEntityFeature<RelationMember>>> {
 	private static final String SELECT_SQL =
 		"SELECT rm.id AS relation_id, rm.member_type, rm.member_id, rm.member_role, rm.version" +
 		" FROM relation_members rm" +
@@ -85,7 +85,7 @@ public class RelationMemberHistoryReader extends BaseTableReader<EntityHistory<D
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<EntityHistory<DBRelationMember>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<DBEntityFeature<RelationMember>>> createNextValue(ResultSet resultSet) {
 		long relationId;
 		EntityType memberType;
 		long memberId;
@@ -103,10 +103,10 @@ public class RelationMemberHistoryReader extends BaseTableReader<EntityHistory<D
 			throw new OsmosisRuntimeException("Unable to read relation member fields.", e);
 		}
 		
-		return new ReadResult<EntityHistory<DBRelationMember>>(
+		return new ReadResult<EntityHistory<DBEntityFeature<RelationMember>>>(
 			true,
-			new EntityHistory<DBRelationMember>(
-				new DBRelationMember(
+			new EntityHistory<DBEntityFeature<RelationMember>>(
+				new DBEntityFeature<RelationMember>(
 					relationId,
 					new RelationMember(
 						memberId,
