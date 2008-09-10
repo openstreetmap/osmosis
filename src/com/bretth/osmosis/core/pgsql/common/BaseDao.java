@@ -1,8 +1,8 @@
-package com.bretth.osmosis.core.database;
+package com.bretth.osmosis.core.pgsql.common;
 
 import java.sql.PreparedStatement;
 
-import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
+import com.bretth.osmosis.core.database.ReleasableStatementContainer;
 import com.bretth.osmosis.core.store.Releasable;
 
 

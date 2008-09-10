@@ -208,6 +208,42 @@ public class DatabaseContext {
 	
 	
 	/**
+	 * Indicates if the specified column exists in the database.
+	 * 
+	 * @param tableName The table to check for.
+	 * @param columnName The column to check for.
+	 * @return True if the column exists, false otherwise.
+	 */
+	public boolean doesColumnExist(String tableName, String columnName) {
+		ResultSet resultSet = null;
+		boolean result;
+		
+		try {
+			resultSet = getConnection().getMetaData().getColumns(null, null, tableName, columnName);
+			result = resultSet.next();
+			resultSet.close();
+			resultSet = null;
+			
+			return result;
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException(
+				"Unable to check for the existence of column " + tableName + "." + columnName + ".",
+				e
+			);
+		} finally {
+			if (resultSet != null) {
+				try {
+					resultSet.close();
+				} catch (SQLException e) {
+					// Do nothing.
+				}
+			}
+		}
+	}
+	
+	
+	/**
 	 * Commits any outstanding transaction.
 	 */
 	public void commit() {

@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.database.BaseDao;
 import com.bretth.osmosis.core.domain.v0_6.Entity;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
+import com.bretth.osmosis.core.pgsql.common.BaseDao;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.NoSuchRecordException;
 import com.bretth.osmosis.core.store.ReleasableIterator;

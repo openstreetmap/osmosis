@@ -6,8 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.database.BaseDao;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
+import com.bretth.osmosis.core.pgsql.common.BaseDao;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.NoSuchRecordException;
 

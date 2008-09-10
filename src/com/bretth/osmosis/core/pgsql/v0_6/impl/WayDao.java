@@ -30,6 +30,7 @@ public class WayDao extends EntityDao<Way> {
 		" WHERE ways.id = ?";
 	
 	
+	private DatabaseCapabilityChecker capabilityChecker;
 	private EntityFeatureDao<WayNode, DBWayNode> wayNodeDao;
 	private PreparedStatement updateWayBboxStatement;
 	
@@ -43,6 +44,7 @@ public class WayDao extends EntityDao<Way> {
 	public WayDao(DatabaseContext dbCtx) {
 		super(dbCtx, new WayBuilder());
 		
+		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 		wayNodeDao = new EntityFeatureDao<WayNode, DBWayNode>(dbCtx, new WayNodeBuilder());
 	}
 	
@@ -90,19 +92,21 @@ public class WayDao extends EntityDao<Way> {
 	 *            The way bounding box.
 	 */
 	private void updateWayBBox(long wayId) {
-		if (updateWayBboxStatement == null) {
-			updateWayBboxStatement = prepareStatement(SQL_UPDATE_WAY_BBOX);
-		}
-		
-		try {
-			int prmIndex;
+		if (capabilityChecker.isWayBboxSupported()) {
+			if (updateWayBboxStatement == null) {
+				updateWayBboxStatement = prepareStatement(SQL_UPDATE_WAY_BBOX);
+			}
 			
-			prmIndex = 1;
-			updateWayBboxStatement.setLong(prmIndex++, wayId);
-			updateWayBboxStatement.executeUpdate();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Update bbox failed for way " + wayId + ".");
+			try {
+				int prmIndex;
+				
+				prmIndex = 1;
+				updateWayBboxStatement.setLong(prmIndex++, wayId);
+				updateWayBboxStatement.executeUpdate();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Update bbox failed for way " + wayId + ".");
+			}
 		}
 	}
 	

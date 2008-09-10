@@ -27,6 +27,7 @@ public class NodeDao extends EntityDao<Node> {
 		" )";
 	
 	
+	private DatabaseCapabilityChecker capabilityChecker;
 	private PreparedStatement updateWayBboxStatement;
 	
 	
@@ -38,6 +39,8 @@ public class NodeDao extends EntityDao<Node> {
 	 */
 	public NodeDao(DatabaseContext dbCtx) {
 		super(dbCtx, new NodeBuilder());
+		
+		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 	}
 	
 	
@@ -46,21 +49,23 @@ public class NodeDao extends EntityDao<Node> {
 	 */
 	@Override
 	public void modifyEntity(Node entity) {
-		if (updateWayBboxStatement == null) {
-			updateWayBboxStatement = prepareStatement(SQL_UPDATE_WAY_BBOX);
-		}
-		
 		super.modifyEntity(entity);
 		
-		try {
-			int prmIndex;
+		if (capabilityChecker.isWayBboxSupported()) {
+			if (updateWayBboxStatement == null) {
+				updateWayBboxStatement = prepareStatement(SQL_UPDATE_WAY_BBOX);
+			}
 			
-			prmIndex = 1;
-			updateWayBboxStatement.setLong(prmIndex++, entity.getId());
-			updateWayBboxStatement.executeUpdate();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Update bbox failed for node " + entity.getId() + ".");
+			try {
+				int prmIndex;
+				
+				prmIndex = 1;
+				updateWayBboxStatement.setLong(prmIndex++, entity.getId());
+				updateWayBboxStatement.executeUpdate();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Update bbox failed for node " + entity.getId() + ".");
+			}
 		}
 	}
 	

@@ -1,0 +1,8 @@
+The pgsql simple schema is a PostgreSQL schema utilising postgis extensions that is capable of storing a snapshot of OSM data.
+No history is maintained.
+It can be populated by osmosis and kept up to date with osmosis daily, hourly and minute changesets.
+
+The following scripts are available:
+pgsql_simple_schema_0.x.sql - The schema creation script.
+pgsql_simple_schema_0.x_bbox.sql - A script for adding way bbox column support.  This is required for some osmosis tasks.
+pgsql_simple_load_0.x.sql - A script for importing PostgreSQL "COPY" files as produced by the osmosis --write-pgsql-dump task.

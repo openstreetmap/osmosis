@@ -29,6 +29,7 @@ import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBWayNode;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.DatabaseCapabilityChecker;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.NodeBuilder;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.RelationBuilder;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.RelationMemberBuilder;
@@ -62,7 +63,9 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"DROP INDEX idx_ways_action",
 		"DROP INDEX idx_way_tags_way_id",
 		"DROP INDEX idx_relations_action",
-		"DROP INDEX idx_relation_tags_relation_id",
+		"DROP INDEX idx_relation_tags_relation_id"
+	};
+	private static final String PRE_LOAD_SQL_WAY_BBOX[] = {
 		"DROP INDEX idx_ways_bbox"
 	};
 	
@@ -78,7 +81,9 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"CREATE INDEX idx_ways_action ON ways USING btree (action)",
 		"CREATE INDEX idx_way_tags_way_id ON way_tags USING btree (way_id)",
 		"CREATE INDEX idx_relations_action ON relations USING btree (action)",
-		"CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id)",
+		"CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id)"
+	};
+	private static final String POST_LOAD_SQL_WAY_BBOX[] = {
 		"UPDATE ways SET bbox = (SELECT Envelope(Collect(geom)) FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id WHERE way_nodes.way_id = ways.id)",
 		"CREATE INDEX idx_ways_bbox ON ways USING gist (bbox)"
 	};
@@ -103,6 +108,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private DatabaseContext dbCtx;
 	private DatabasePreferences preferences;
 	private SchemaVersionValidator schemaVersionValidator;
+	private DatabaseCapabilityChecker capabilityChecker;
 	private List<Node> nodeBuffer;
 	private List<DBEntityFeature<Tag>> nodeTagBuffer;
 	private List<Way> wayBuffer;
@@ -156,6 +162,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		this.preferences = preferences;
 		
 		schemaVersionValidator = new SchemaVersionValidator(loginCredentials);
+		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 		
 		nodeBuffer = new ArrayList<Node>();
 		nodeTagBuffer = new ArrayList<DBEntityFeature<Tag>>();
@@ -220,6 +227,13 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				dbCtx.executeStatement(PRE_LOAD_SQL[i]);
 			}
 			log.fine("Pre-load SQL statements complete.");
+			if (capabilityChecker.isWayBboxSupported()) {
+				log.fine("Running pre-load bbox SQL statements.");
+				for (int i = 0; i < PRE_LOAD_SQL_WAY_BBOX.length; i++) {
+					log.finer("SQL: " + PRE_LOAD_SQL_WAY_BBOX[i]);
+					dbCtx.executeStatement(PRE_LOAD_SQL_WAY_BBOX[i]);
+				}
+			}
 			log.fine("Loading data.");
 			
 			initialized = true;
@@ -759,6 +773,13 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		for (int i = 0; i < POST_LOAD_SQL.length; i++) {
 			log.finer("SQL: " + POST_LOAD_SQL[i]);
 			dbCtx.executeStatement(POST_LOAD_SQL[i]);
+		}
+		if (capabilityChecker.isWayBboxSupported()) {
+			log.fine("Running post-load bbox SQL statements.");
+			for (int i = 0; i < POST_LOAD_SQL_WAY_BBOX.length; i++) {
+				log.finer("SQL: " + POST_LOAD_SQL_WAY_BBOX[i]);
+				dbCtx.executeStatement(POST_LOAD_SQL_WAY_BBOX[i]);
+			}
 		}
 		log.fine("Post-load SQL complete.");
 		

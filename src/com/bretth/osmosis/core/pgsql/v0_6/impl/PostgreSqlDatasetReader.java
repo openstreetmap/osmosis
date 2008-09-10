@@ -50,6 +50,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	
 	private DatabaseLoginCredentials loginCredentials;
 	private DatabasePreferences preferences;
+	private DatabaseCapabilityChecker capabilityChecker;
 	private boolean initialized;
 	private DatabaseContext dbCtx;
 	private NodeDao nodeDao;
@@ -87,6 +88,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 				new SchemaVersionValidator(loginCredentials).validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
 			}
 			
+			capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 			nodeDao = new NodeDao(dbCtx);
 			wayDao = new WayDao(dbCtx);
 			relationDao = new RelationDao(dbCtx);
@@ -172,6 +174,11 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 		
 		if (!initialized) {
 			initialize();
+		}
+		
+		// Ensure that the way bbox column is available.
+		if (!capabilityChecker.isWayBboxSupported()) {
+			throw new OsmosisRuntimeException("Way table bbox column support is unavailable.");
 		}
 		
 		try {

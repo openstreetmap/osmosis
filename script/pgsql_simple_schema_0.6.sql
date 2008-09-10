@@ -57,9 +57,6 @@ CREATE TABLE ways (
     tstamp timestamp without time zone NOT NULL,
     action character(1) NOT NULL
 );
--- Add a postgis bounding box column used for indexing the location of the way.
--- This will contain a bounding box surrounding the extremities of the way.
-SELECT AddGeometryColumn('ways', 'bbox', 4326, 'GEOMETRY', 2);
 
 
 -- Create a table for representing way to node relationships.
@@ -137,7 +134,6 @@ CREATE INDEX idx_nodes_geom ON nodes USING gist (geom);
 
 CREATE INDEX idx_ways_action ON ways USING btree (action);
 CREATE INDEX idx_way_tags_way_id ON way_tags USING btree (way_id);
-CREATE INDEX idx_ways_bbox ON ways USING gist (bbox);
 CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id);
 
 
