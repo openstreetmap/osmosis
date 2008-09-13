@@ -1,3 +1,7 @@
+0.30
+Added 0.6 support.
+Enhanced the pgsql tasks and schema to support "action" columns and introduced a stored procedure called during every changeset application.
+
 0.29
 Fixed the --write-pgsql-simple-dump task to properly escape '\' characters.
 Updated the pgsql simple tasks to use an SRID of 4326.
