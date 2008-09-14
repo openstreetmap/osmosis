@@ -16,3 +16,5 @@ Jochen Topf
 - Pgsql simple schema refactoring to align with production MySQL schema names.
 Aurelien Jacobs
 - Node key and node value filtering tasks.
+Jiri Klement
+- Bounding box filter slippy map coordinate arguments.
