@@ -24,6 +24,7 @@ import com.bretth.osmosis.core.merge.v0_6.ChangeDownloadInitializerFactory;
 import com.bretth.osmosis.core.merge.v0_6.ChangeDownloaderFactory;
 import com.bretth.osmosis.core.merge.v0_6.ChangeMergerFactory;
 import com.bretth.osmosis.core.merge.v0_6.EntityMergerFactory;
+import com.bretth.osmosis.core.migrate.MigrateV05ToV06Factory;
 import com.bretth.osmosis.core.misc.v0_6.NullChangeWriterFactory;
 import com.bretth.osmosis.core.misc.v0_6.NullWriterFactory;
 /*
@@ -220,6 +221,8 @@ public class TaskRegistrar {
 		factoryRegister.register("rci", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloaderFactory());
 		factoryRegister.register("read-change-interval-init", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloadInitializerFactory());
 		factoryRegister.register("rcii", new com.bretth.osmosis.core.merge.v0_5.ChangeDownloadInitializerFactory());
+		factoryRegister.register("migrate", new MigrateV05ToV06Factory());
+		factoryRegister.register("mig", new MigrateV05ToV06Factory());
 		
 		factoryRegister.register("apply-change-0.5", new com.bretth.osmosis.core.change.v0_5.ChangeApplierFactory());
 		factoryRegister.register("bounding-box-0.5", new com.bretth.osmosis.core.filter.v0_5.BoundingBoxFilterFactory());
@@ -310,6 +313,8 @@ public class TaskRegistrar {
 		factoryRegister.register("way-key-value-0.6", new WayKeyValueFilterFactory());
 		factoryRegister.register("read-change-interval-0.6", new ChangeDownloaderFactory());
 		factoryRegister.register("read-change-interval-init-0.6", new ChangeDownloadInitializerFactory());
+		factoryRegister.register("migrate-0.6", new MigrateV05ToV06Factory());
+		factoryRegister.register("mig-0.6", new MigrateV05ToV06Factory());
 		
 		// Register the plugins.
 		for (String plugin : plugins) {
