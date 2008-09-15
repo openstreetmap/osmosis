@@ -3,6 +3,7 @@ Added 0.6 support.
 Enhanced the pgsql tasks and schema to support "action" columns and introduced a stored procedure called during every changeset application.
 Added ability to specify slipping map zoom and coordinates as arguments to the bounding box filter.
 Added an "inMemoryBbox" to the pgsql writer task allowing it to calculate bounding boxes using a memory mapped file.
+Added an automatic VACUUM ANALYZE of the database for pgsql writer and truncation tasks.
 
 0.29
 Fixed the --write-pgsql-simple-dump task to properly escape '\' characters.

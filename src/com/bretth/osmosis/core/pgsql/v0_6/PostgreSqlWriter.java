@@ -803,11 +803,15 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				dbCtx.executeStatement(POST_LOAD_SQL_WAY_BBOX[i]);
 			}
 		}
-		log.fine("Post-load SQL complete.");
 		
+		log.fine("Committing changes.");
 		dbCtx.commit();
 		
-		log.fine("Commit complete");
+		log.fine("Vacuuming database.");
+		dbCtx.setAutoCommit(true);
+		dbCtx.executeStatement("VACUUM ANALYZE");
+		
+		log.fine("Complete.");
 	}
 	
 	

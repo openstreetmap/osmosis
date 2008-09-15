@@ -24,7 +24,8 @@ public class DatabaseContext {
 	
 	private DatabaseLoginCredentials loginCredentials;
 	private Connection connection;
-	Statement statement;
+	private boolean autoCommit;
+	private Statement statement;
 	
 	
 	/**
@@ -35,6 +36,8 @@ public class DatabaseContext {
 	 */
 	public DatabaseContext(DatabaseLoginCredentials loginCredentials) {
 		this.loginCredentials = loginCredentials;
+		
+		autoCommit = false;
 	}
 	
 	
@@ -81,7 +84,7 @@ public class DatabaseContext {
 			    	+ "&password=" + loginCredentials.getPassword()// + "&logLevel=2"
 			    );
 				
-				connection.setAutoCommit(false);
+				connection.setAutoCommit(autoCommit);
 				
 			} catch (SQLException e) {
 				throw new OsmosisRuntimeException("Unable to establish a database connection.", e);
@@ -240,6 +243,24 @@ public class DatabaseContext {
 				}
 			}
 		}
+	}
+
+
+	/**
+	 * Sets the auto-commit property on the underlying connection.
+	 * 
+	 * @param autoCommit
+	 *            The new auto commit value.
+	 */
+	public void setAutoCommit(boolean autoCommit) {
+		if (connection != null) {
+			try {
+				connection.setAutoCommit(autoCommit);
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to commit changes.", e);
+			}
+		}
+		this.autoCommit = autoCommit;
 	}
 	
 	
