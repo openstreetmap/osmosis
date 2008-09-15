@@ -216,6 +216,42 @@ public abstract class TaskManagerFactory {
 	 *            The default value of the argument if not value is available.
 	 * @return The value of the argument.
 	 */
+	protected int getIntegerArgument(TaskConfiguration taskConfig, String argName) {
+		Map<String, String> configArgs;
+		
+		accessedTaskOptions.get().add(argName);
+		
+		configArgs = taskConfig.getConfigArgs();
+		
+		if (configArgs.containsKey(argName)) {
+			try {
+				return Integer.parseInt(configArgs.get(argName));
+			} catch (NumberFormatException e) {
+				throw new OsmosisRuntimeException(
+					"Argument " + argName + " for task " + taskConfig.getId()
+					+ " must be an integer number.", e);
+			}
+		} else {
+			throw new OsmosisRuntimeException(
+				"Argument " + argName + " for task " + taskConfig.getId() + " does not exist."
+			);
+		}
+	}
+	
+	
+	/**
+	 * Utility method for retrieving an integer argument value from a Map of
+	 * task arguments.
+	 * 
+	 * @param taskConfig
+	 *            Contains all information required to instantiate and configure
+	 *            the task.
+	 * @param argName
+	 *            The name of the argument.
+	 * @param defaultValue
+	 *            The default value of the argument if not value is available.
+	 * @return The value of the argument.
+	 */
 	protected int getIntegerArgument(TaskConfiguration taskConfig, String argName, int defaultValue) {
 		Map<String, String> configArgs;
 		
