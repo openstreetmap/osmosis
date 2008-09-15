@@ -1,16 +1,24 @@
 package com.bretth.osmosis.core.migrate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.bretth.osmosis.core.container.v0_5.BoundContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
 import com.bretth.osmosis.core.container.v0_5.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
 import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.container.v0_5.WayContainer;
+import com.bretth.osmosis.core.domain.v0_5.Entity;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.domain.v0_6.Bound;
+import com.bretth.osmosis.core.domain.v0_6.EntityType;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
+import com.bretth.osmosis.core.domain.v0_6.RelationMember;
+import com.bretth.osmosis.core.domain.v0_6.Tag;
+import com.bretth.osmosis.core.domain.v0_6.WayNode;
 
 
 /**
@@ -41,25 +49,77 @@ public class MigrateV05ToV06 implements Sink05Source06, EntityProcessor {
 	}
 	
 	
+	private List<Tag> migrateTags(Entity entity) {
+		List<com.bretth.osmosis.core.domain.v0_5.Tag> oldTags;
+		List<Tag> newTags;
+		
+		oldTags = entity.getTagList();
+		newTags = new ArrayList<Tag>(oldTags.size());
+		
+		for (com.bretth.osmosis.core.domain.v0_5.Tag oldTag : oldTags) {
+			newTags.add(new Tag(oldTag.getKey(), oldTag.getValue()));
+		}
+		
+		return newTags;
+	}
+	
+	
+	private List<WayNode> migrateWayNodes(Way way) {
+		List<com.bretth.osmosis.core.domain.v0_5.WayNode> oldWayNodes;
+		List<WayNode> newWayNodes;
+		
+		oldWayNodes = way.getWayNodeList();
+		newWayNodes = new ArrayList<WayNode>(oldWayNodes.size());
+		
+		for (com.bretth.osmosis.core.domain.v0_5.WayNode oldWayNode : oldWayNodes) {
+			newWayNodes.add(new WayNode(oldWayNode.getNodeId()));
+		}
+		
+		return newWayNodes;
+	}
+	
+	
+	private List<RelationMember> migrateRelationMembers(Relation relation) {
+		List<com.bretth.osmosis.core.domain.v0_5.RelationMember> oldRelationMembers;
+		List<RelationMember> newRelationMembers;
+		
+		oldRelationMembers = relation.getMemberList();
+		newRelationMembers = new ArrayList<RelationMember>(oldRelationMembers.size());
+		
+		for (com.bretth.osmosis.core.domain.v0_5.RelationMember oldRelationMember : oldRelationMembers) {
+			newRelationMembers.add(
+				new RelationMember(
+					oldRelationMember.getMemberId(),
+					EntityType.valueOf(oldRelationMember.getMemberType().name()),
+					oldRelationMember.getMemberRole()
+				)
+			);
+		}
+		
+		return newRelationMembers;
+	}
+	
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void process(NodeContainer node) {
-		Node oldNode;
-		com.bretth.osmosis.core.domain.v0_6.Node newNode;
+		Node oldEntity;
+		com.bretth.osmosis.core.domain.v0_6.Node newEntity;
 		
-		oldNode = node.getEntity();
-		newNode = new com.bretth.osmosis.core.domain.v0_6.Node(
-			oldNode.getId(),
+		oldEntity = node.getEntity();
+		newEntity = new com.bretth.osmosis.core.domain.v0_6.Node(
+			oldEntity.getId(),
 			1,
-			oldNode.getTimestamp(),
+			oldEntity.getTimestamp(),
 			OsmUser.NONE,
-			oldNode.getLatitude(),
-			oldNode.getLongitude()
+			oldEntity.getLatitude(),
+			oldEntity.getLongitude()
 		);
+		newEntity.addTags(migrateTags(oldEntity));
 		
-		sink.process(new com.bretth.osmosis.core.container.v0_6.NodeContainer(newNode));
+		sink.process(new com.bretth.osmosis.core.container.v0_6.NodeContainer(newEntity));
 	}
 	
 	
@@ -68,18 +128,20 @@ public class MigrateV05ToV06 implements Sink05Source06, EntityProcessor {
 	 */
 	@Override
 	public void process(WayContainer way) {
-		Way oldWay;
-		com.bretth.osmosis.core.domain.v0_6.Way newWay;
+		Way oldEntity;
+		com.bretth.osmosis.core.domain.v0_6.Way newEntity;
 		
-		oldWay = way.getEntity();
-		newWay = new com.bretth.osmosis.core.domain.v0_6.Way(
-			oldWay.getId(),
+		oldEntity = way.getEntity();
+		newEntity = new com.bretth.osmosis.core.domain.v0_6.Way(
+			oldEntity.getId(),
 			1,
-			oldWay.getTimestamp(),
+			oldEntity.getTimestamp(),
 			OsmUser.NONE
 		);
+		newEntity.addTags(migrateTags(oldEntity));
+		newEntity.addWayNodes(migrateWayNodes(oldEntity));
 		
-		sink.process(new com.bretth.osmosis.core.container.v0_6.WayContainer(newWay));
+		sink.process(new com.bretth.osmosis.core.container.v0_6.WayContainer(newEntity));
 	}
 	
 	
@@ -88,18 +150,20 @@ public class MigrateV05ToV06 implements Sink05Source06, EntityProcessor {
 	 */
 	@Override
 	public void process(RelationContainer relation) {
-		Relation oldRelation;
-		com.bretth.osmosis.core.domain.v0_6.Relation newRelation;
+		Relation oldEntity;
+		com.bretth.osmosis.core.domain.v0_6.Relation newEntity;
 		
-		oldRelation = relation.getEntity();
-		newRelation = new com.bretth.osmosis.core.domain.v0_6.Relation(
-			oldRelation.getId(),
+		oldEntity = relation.getEntity();
+		newEntity = new com.bretth.osmosis.core.domain.v0_6.Relation(
+			oldEntity.getId(),
 			1,
-			oldRelation.getTimestamp(),
+			oldEntity.getTimestamp(),
 			OsmUser.NONE
 		);
+		newEntity.addTags(migrateTags(oldEntity));
+		newEntity.addMembers(migrateRelationMembers(oldEntity));
 		
-		sink.process(new com.bretth.osmosis.core.container.v0_6.RelationContainer(newRelation));
+		sink.process(new com.bretth.osmosis.core.container.v0_6.RelationContainer(newEntity));
 	}
 	
 	
