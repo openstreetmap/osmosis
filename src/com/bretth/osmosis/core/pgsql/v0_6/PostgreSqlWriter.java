@@ -35,6 +35,7 @@ import com.bretth.osmosis.core.pgsql.v0_6.impl.RelationBuilder;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.RelationMemberBuilder;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.TagBuilder;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.UserDao;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.WayBBoxCalculator;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.WayBuilder;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.WayNodeBuilder;
 import com.bretth.osmosis.core.task.v0_6.Sink;
@@ -84,9 +85,10 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id)"
 	};
 	private static final String POST_LOAD_SQL_WAY_BBOX[] = {
-		"UPDATE ways SET bbox = (SELECT Envelope(Collect(geom)) FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id WHERE way_nodes.way_id = ways.id)",
 		"CREATE INDEX idx_ways_bbox ON ways USING gist (bbox)"
 	};
+	private static final String POST_LOAD_SQL_POPULATE_WAY_BBOX = 
+		"UPDATE ways SET bbox = (SELECT Envelope(Collect(geom)) FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id WHERE way_nodes.way_id = ways.id)";
 	
 	// These constants define how many rows of each data type will be inserted
 	// with single insert statements.
@@ -107,6 +109,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	
 	private DatabaseContext dbCtx;
 	private DatabasePreferences preferences;
+	private boolean enableInMemoryBBox;
 	private SchemaVersionValidator schemaVersionValidator;
 	private DatabaseCapabilityChecker capabilityChecker;
 	private List<Node> nodeBuffer;
@@ -146,6 +149,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private TagBuilder relationTagBuilder;
 	private WayNodeBuilder wayNodeBuilder;
 	private RelationMemberBuilder relationMemberBuilder;
+	private WayBBoxCalculator wayBboxCalculator;
 	
 	
 	/**
@@ -155,11 +159,16 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 *            Contains all information required to connect to the database.
 	 * @param preferences
 	 *            Contains preferences configuring database behaviour.
+	 * @param enableInMemoryBBox
+	 *            If true, an in-memory bounding box calculator is enabled for
+	 *            way creation. This requires caching the lat and lon values for
+	 *            all nodes.
 	 */
-	public PostgreSqlWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
+	public PostgreSqlWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean enableInMemoryBBox) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		
 		this.preferences = preferences;
+		this.enableInMemoryBBox = enableInMemoryBBox;
 		
 		schemaVersionValidator = new SchemaVersionValidator(loginCredentials);
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
@@ -177,13 +186,14 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		userDao = new UserDao(dbCtx);
 		
 		nodeBuilder = new NodeBuilder();
-		wayBuilder = new WayBuilder();
+		wayBuilder = new WayBuilder(enableInMemoryBBox);
 		relationBuilder = new RelationBuilder();
 		nodeTagBuilder = new TagBuilder(nodeBuilder.getEntityName());
 		wayTagBuilder = new TagBuilder(wayBuilder.getEntityName());
 		relationTagBuilder = new TagBuilder(relationBuilder.getEntityName());
 		wayNodeBuilder = new WayNodeBuilder();
 		relationMemberBuilder = new RelationMemberBuilder();
+		wayBboxCalculator = new WayBBoxCalculator();
 		
 		uncommittedEntityCount = 0;
 		
@@ -418,7 +428,11 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				way = wayBuffer.remove(0);
 				processedWays.add(way);
 				
-				prmIndex = wayBuilder.populateEntityParameters(bulkWayStatement, prmIndex, way);
+				if (enableInMemoryBBox) {
+					prmIndex = wayBuilder.populateEntityParameters(bulkWayStatement, prmIndex, way, wayBboxCalculator.createWayBbox(way));
+				} else {
+					prmIndex = wayBuilder.populateEntityParameters(bulkWayStatement, prmIndex, way);
+				}
 				
 				uncommittedEntityCount++;
 			}
@@ -441,7 +455,11 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				
 				way = wayBuffer.remove(0);
 				
-				wayBuilder.populateEntityParameters(singleWayStatement, 1, way);
+				if (enableInMemoryBBox) {
+					wayBuilder.populateEntityParameters(singleWayStatement, 1, way, wayBboxCalculator.createWayBbox(way));
+				} else {
+					wayBuilder.populateEntityParameters(singleWayStatement, 1, way);
+				}
 				
 				uncommittedEntityCount++;
 				
@@ -776,6 +794,10 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		}
 		if (capabilityChecker.isWayBboxSupported()) {
 			log.fine("Running post-load bbox SQL statements.");
+			if (!enableInMemoryBBox) {
+				log.finer("SQL: " + POST_LOAD_SQL_POPULATE_WAY_BBOX);
+				dbCtx.executeStatement(POST_LOAD_SQL_POPULATE_WAY_BBOX);
+			}
 			for (int i = 0; i < POST_LOAD_SQL_WAY_BBOX.length; i++) {
 				log.finer("SQL: " + POST_LOAD_SQL_WAY_BBOX[i]);
 				dbCtx.executeStatement(POST_LOAD_SQL_WAY_BBOX[i]);
@@ -815,6 +837,10 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(NodeContainer nodeContainer) {
+		if (enableInMemoryBBox) {
+			wayBboxCalculator.addNodeLocation(nodeContainer.getEntity());
+		}
+		
 		nodeBuffer.add(nodeContainer.getEntity());
 		
 		flushNodes(false);
@@ -850,6 +876,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	@Override
 	public void release() {
 		statementContainer.release();
+		wayBboxCalculator.release();
 		
 		dbCtx.release();
 	}
