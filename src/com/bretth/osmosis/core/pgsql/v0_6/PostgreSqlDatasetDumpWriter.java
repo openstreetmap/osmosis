@@ -21,6 +21,8 @@ import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.pgsql.common.CopyFileWriter;
 import com.bretth.osmosis.core.pgsql.common.PointBuilder;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.ChangesetAction;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.WayBBoxCalculator;
 import com.bretth.osmosis.core.store.CompletableContainer;
 import com.bretth.osmosis.core.task.v0_6.Sink;
 
@@ -44,6 +46,8 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 	private static final String RELATION_MEMBER_SUFFIX = "relation_members.txt";
 	
 	
+	private boolean enableInMemoryBbox;
+	private WayBBoxCalculator wayBboxCalculator;
 	private CompletableContainer writerContainer;
 	private CopyFileWriter userWriter;
 	private CopyFileWriter nodeWriter;
@@ -63,8 +67,14 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 	 * 
 	 * @param filePrefix
 	 *            The prefix to prepend to all generated file names.
+	 * @param enableInMemoryBBox
+	 *            If true, an in-memory bounding box calculator is enabled for
+	 *            way creation. This requires caching the lat and lon values for
+	 *            all nodes.
 	 */
-	public PostgreSqlDatasetDumpWriter(File filePrefix) {
+	public PostgreSqlDatasetDumpWriter(File filePrefix, boolean enableInMemoryBBox) {
+		this.enableInMemoryBbox = enableInMemoryBBox;
+		
 		writerContainer = new CompletableContainer();
 		
 		userWriter = writerContainer.add(new CopyFileWriter(new File(filePrefix, USER_SUFFIX)));
@@ -78,6 +88,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		relationMemberWriter = writerContainer.add(new CopyFileWriter(new File(filePrefix, RELATION_MEMBER_SUFFIX)));
 		
 		pointBuilder = new PointBuilder();
+		wayBboxCalculator = new WayBBoxCalculator();
 		
 		userSet = new HashSet<Integer>();
 	}
@@ -126,6 +137,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		nodeWriter.writeField(node.getVersion());
 		nodeWriter.writeField(node.getUser().getId());
 		nodeWriter.writeField(node.getTimestamp());
+		nodeWriter.writeField(ChangesetAction.ADD.getDatabaseValue());
 		nodeWriter.writeField(pointBuilder.createPoint(node.getLatitude(), node.getLongitude()));
 		nodeWriter.endRecord();
 		
@@ -134,6 +146,10 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 			nodeTagWriter.writeField(tag.getKey());
 			nodeTagWriter.writeField(tag.getValue());
 			nodeTagWriter.endRecord();
+		}
+		
+		if (enableInMemoryBbox) {
+			wayBboxCalculator.addNodeLocation(node);
 		}
 	}
 	
@@ -153,6 +169,10 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 			wayWriter.writeField(way.getVersion());
 			wayWriter.writeField(way.getUser().getId());
 			wayWriter.writeField(way.getTimestamp());
+			wayWriter.writeField(ChangesetAction.ADD.getDatabaseValue());
+			if (enableInMemoryBbox) {
+				wayWriter.writeField(wayBboxCalculator.createWayBbox(way));
+			}
 			wayWriter.endRecord();
 			
 			for (Tag tag : way.getTagList()) {
@@ -188,6 +208,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		relationWriter.writeField(relation.getVersion());
 		relationWriter.writeField(relation.getUser().getId());
 		relationWriter.writeField(relation.getTimestamp());
+		relationWriter.writeField(ChangesetAction.ADD.getDatabaseValue());
 		relationWriter.endRecord();
 		
 		for (Tag tag : relation.getTagList()) {
@@ -224,5 +245,6 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 	 */
 	public void release() {
 		writerContainer.release();
+		wayBboxCalculator.release();
 	}
 }
