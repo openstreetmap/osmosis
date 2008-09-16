@@ -3,13 +3,9 @@ package com.bretth.osmosis.core.pgsql.v0_6.impl;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileChannel.MapMode;
+import java.io.RandomAccessFile;
 import java.util.Arrays;
 
 import org.postgis.Geometry;
@@ -24,7 +20,6 @@ import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.store.Releasable;
 import com.bretth.osmosis.core.store.StorageStage;
 import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
-import com.bretth.osmosis.core.util.LongAsInt;
 
 
 /**
@@ -43,9 +38,9 @@ public class WayBBoxCalculator implements Releasable {
 	private long lastNodeId;
 	private FileOutputStream fileOutStream;
 	private DataOutputStream dataOutStream;
+	private RandomAccessFile randomInFile;
 	private long currentFileOffset;
 	private byte[] zeroBuffer;
-	private ByteBuffer mappedFile;
 	
 	
 	/**
@@ -86,9 +81,6 @@ public class WayBBoxCalculator implements Releasable {
 	
 	
 	private void initializeReadingStage() {
-		FileInputStream nodeInputStream = null;
-		FileChannel nodeChannel = null;
-		
 		// If we've been released, we can't iterate.
 		if (stage.compareTo(StorageStage.Released) >= 0) {
 			throw new OsmosisRuntimeException("Cannot read from node storage in stage " + stage + ".");
@@ -112,35 +104,14 @@ public class WayBBoxCalculator implements Releasable {
 				fileOutStream = null;
 			}
 			
-			stage = StorageStage.Reading;
-		}
-		
-		try {
-			nodeInputStream = new FileInputStream(nodeStorageFile);
-			nodeChannel = nodeInputStream.getChannel();
-			mappedFile = nodeChannel.map(MapMode.READ_ONLY, 0, nodeChannel.size());
-			nodeChannel.close();
-			nodeInputStream.close();
+			try {
+				randomInFile = new RandomAccessFile(nodeStorageFile, "r");
+				
+			} catch (IOException e) {
+				throw new OsmosisRuntimeException("Unable to open the node data file " + nodeStorageFile + ".", e);
+			}
 			
-		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to map the node data " + nodeStorageFile + " into memory.", e);
-		} finally {
-			if (nodeChannel != null) {
-				try {
-					nodeChannel.close();
-				} catch (IOException e) {
-					// Do nothing
-				}
-				nodeChannel = null;
-			}
-			if (nodeInputStream != null) {
-				try {
-					nodeInputStream.close();
-				} catch (IOException e) {
-					// Do nothing
-				}
-				nodeInputStream = null;
-			}
+			stage = StorageStage.Reading;
 		}
 	}
 	
@@ -248,48 +219,51 @@ public class WayBBoxCalculator implements Releasable {
 		top = 0;
 		for (WayNode wayNode : way.getWayNodeList()) {
 			long nodeId;
-			int offset;
+			long offset;
 			
 			nodeId = wayNode.getNodeId();
 			
-			offset = LongAsInt.longToInt(nodeId * NODE_DATA_SIZE);
+			offset = nodeId * NODE_DATA_SIZE;
 			
-			if (offset < mappedFile.capacity()) {
-				byte validFlag;
-				
-				validFlag = mappedFile.get(offset);
-				
-				if (validFlag != 0) {
-					IntBuffer intBuffer;
-					double longitude;
-					double latitude;
+			if (offset < currentFileOffset) {
+				try {
+					byte validFlag;
 					
-					mappedFile.position(offset + 1);
-					intBuffer = mappedFile.asIntBuffer();
-					longitude = FixedPrecisionCoordinateConvertor.convertToDouble(intBuffer.get());
-					latitude = FixedPrecisionCoordinateConvertor.convertToDouble(intBuffer.get());
+					randomInFile.seek(offset);
+					validFlag = randomInFile.readByte();
 					
-					if (nodesFound) {
-						if (longitude < left) {
-							left = longitude;
-						}
-						if (longitude > right) {
-							right = longitude;
-						}
-						if (latitude < bottom) {
-							bottom = latitude;
-						}
-						if (latitude > top) {
-							top = latitude;
-						}
-					} else {
-						left = longitude;
-						right = longitude;
-						bottom = latitude;
-						top = latitude;
+					if (validFlag != 0) {
+						double longitude;
+						double latitude;
 						
-						nodesFound = true;
+						longitude = FixedPrecisionCoordinateConvertor.convertToDouble(randomInFile.readInt());
+						latitude = FixedPrecisionCoordinateConvertor.convertToDouble(randomInFile.readInt());
+						
+						if (nodesFound) {
+							if (longitude < left) {
+								left = longitude;
+							}
+							if (longitude > right) {
+								right = longitude;
+							}
+							if (latitude < bottom) {
+								bottom = latitude;
+							}
+							if (latitude > top) {
+								top = latitude;
+							}
+						} else {
+							left = longitude;
+							right = longitude;
+							bottom = latitude;
+							top = latitude;
+							
+							nodesFound = true;
+						}
 					}
+					
+				} catch (IOException e) {
+					throw new OsmosisRuntimeException("Unable to read node information from the node storage file.", e);
 				}
 			}
 		}
@@ -310,6 +284,15 @@ public class WayBBoxCalculator implements Releasable {
 				// Do nothing.
 			}
 			fileOutStream = null;
+		}
+		
+		if (randomInFile != null) {
+			try {
+				randomInFile.close();
+			} catch (Exception e) {
+				// Do nothing.
+			}
+			randomInFile = null;
 		}
 		
 		if (nodeStorageFile != null) {
