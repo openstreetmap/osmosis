@@ -262,7 +262,6 @@ public class CopyFileWriter implements Completable {
 		try {
 			separateField();
 			
-			//writer.write(new PGgeometry(data).toString());
 			writer.write(postgisBinaryWriter.writeHexed(data));
 			
 		} catch (IOException e) {
