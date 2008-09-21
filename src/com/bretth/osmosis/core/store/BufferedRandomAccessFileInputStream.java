@@ -18,7 +18,7 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 	
 	private static final int DEFAULT_INITIAL_BUFFER_SIZE = 16;
 	private static final int DEFAULT_MAXIMUM_BUFFER_SIZE = 4096;
-	private static final float DEFAULT_BUFFER_INCREASE_FACTOR = 256;
+	private static final float DEFAULT_BUFFER_INCREASE_FACTOR = 2;
 	
 	
 	private RandomAccessFile randomFile;
@@ -101,7 +101,7 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 			
 			if (currentBufferSize == 0) {
 				currentBufferSize = initialBufferSize;
-			} else {
+			} else if (currentBufferSize < maxBufferSize) {
 				currentBufferSize = (int) (currentBufferSize * bufferIncreaseFactor);
 				if (currentBufferSize > maxBufferSize) {
 					currentBufferSize = maxBufferSize;

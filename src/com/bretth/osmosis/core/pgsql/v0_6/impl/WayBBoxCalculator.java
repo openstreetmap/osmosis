@@ -1,11 +1,11 @@
 package com.bretth.osmosis.core.pgsql.v0_6.impl;
 
 import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.Arrays;
 
 import org.postgis.Geometry;
@@ -17,6 +17,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
+import com.bretth.osmosis.core.store.BufferedRandomAccessFileInputStream;
 import com.bretth.osmosis.core.store.Releasable;
 import com.bretth.osmosis.core.store.StorageStage;
 import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
@@ -38,7 +39,8 @@ public class WayBBoxCalculator implements Releasable {
 	private long lastNodeId;
 	private FileOutputStream fileOutStream;
 	private DataOutputStream dataOutStream;
-	private RandomAccessFile randomInFile;
+	private BufferedRandomAccessFileInputStream fileInStream;
+	private DataInputStream dataInStream;
 	private long currentFileOffset;
 	private byte[] zeroBuffer;
 	
@@ -105,7 +107,8 @@ public class WayBBoxCalculator implements Releasable {
 			}
 			
 			try {
-				randomInFile = new RandomAccessFile(nodeStorageFile, "r");
+				fileInStream = new BufferedRandomAccessFileInputStream(nodeStorageFile);
+				dataInStream = new DataInputStream(fileInStream);
 				
 			} catch (IOException e) {
 				throw new OsmosisRuntimeException("Unable to open the node data file " + nodeStorageFile + ".", e);
@@ -229,15 +232,15 @@ public class WayBBoxCalculator implements Releasable {
 				try {
 					byte validFlag;
 					
-					randomInFile.seek(offset);
-					validFlag = randomInFile.readByte();
+					fileInStream.seek(offset);
+					validFlag = dataInStream.readByte();
 					
 					if (validFlag != 0) {
 						double longitude;
 						double latitude;
 						
-						longitude = FixedPrecisionCoordinateConvertor.convertToDouble(randomInFile.readInt());
-						latitude = FixedPrecisionCoordinateConvertor.convertToDouble(randomInFile.readInt());
+						longitude = FixedPrecisionCoordinateConvertor.convertToDouble(dataInStream.readInt());
+						latitude = FixedPrecisionCoordinateConvertor.convertToDouble(dataInStream.readInt());
 						
 						if (nodesFound) {
 							if (longitude < left) {
@@ -286,13 +289,13 @@ public class WayBBoxCalculator implements Releasable {
 			fileOutStream = null;
 		}
 		
-		if (randomInFile != null) {
+		if (fileInStream != null) {
 			try {
-				randomInFile.close();
+				fileInStream.close();
 			} catch (Exception e) {
 				// Do nothing.
 			}
-			randomInFile = null;
+			fileInStream = null;
 		}
 		
 		if (nodeStorageFile != null) {
