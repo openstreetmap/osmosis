@@ -221,12 +221,12 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		for (RelationMember member : relation.getMemberList()) {
 			relationMemberWriter.writeField(relation.getId());
 			relationMemberWriter.writeField(member.getMemberId());
-			relationMemberWriter.writeField(member.getMemberRole());
 			for (byte i = 0; i < entityTypes.length; i++) {
 				if (entityTypes[i].equals(member.getMemberType())) {
 					relationMemberWriter.writeField(i);
 				}
 			}
+			relationMemberWriter.writeField(member.getMemberRole());
 			relationMemberWriter.endRecord();
 		}
 	}
