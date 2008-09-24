@@ -12,8 +12,10 @@ public class DatabaseLoginCredentials {
 	private String database;
 	private String user;
 	private String password;
-	
-	
+	private boolean forceUtf8;
+	private boolean profileSql;
+
+
 	/**
 	 * Creates a new instance.
 	 * 
@@ -25,12 +27,20 @@ public class DatabaseLoginCredentials {
 	 *            The user name for authentication.
 	 * @param password
 	 *            The password for authentication.
+	 * @param forceUtf8
+	 *            If true, the database connection will be forced to use utf-8
+	 *            instead of the database default.
+	 * @param profileSql
+	 *            If true, profile logging will be enabled on the database
+	 *            connection causing all queries to be logged to stderr.
 	 */
-	public DatabaseLoginCredentials(String host, String database, String user, String password) {
+	public DatabaseLoginCredentials(String host, String database, String user, String password, boolean forceUtf8, boolean profileSql) {
 		this.host = host;
 		this.database = database;
 		this.user = user;
 		this.password = password;
+		this.forceUtf8 = forceUtf8;
+		this.profileSql = profileSql;
 	}
 	
 	
@@ -115,5 +125,47 @@ public class DatabaseLoginCredentials {
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	
+	/**
+	 * Returns the force utf-8 flag.
+	 * 
+	 * @return The force utf-8 flag.
+	 */
+	public boolean getForceUtf8() {
+		return forceUtf8;
+	}
+	
+	
+	/**
+	 * Updates the force utf-8 flag.
+	 * 
+	 * @param forceUtf8
+	 *            The new force utf-8 flag.
+	 */
+	public void setForceUtf8(boolean forceUtf8) {
+		this.forceUtf8 = forceUtf8;
+	}
+	
+	
+	/**
+	 * Returns the profile SQL flag.
+	 * 
+	 * @return The profile SQL flag.
+	 */
+	public boolean getProfileSql() {
+		return profileSql;
+	}
+	
+	
+	/**
+	 * Updates the profile SQL flag.
+	 * 
+	 * @param profileSql
+	 *            The new profile SQL flag.
+	 */
+	public void setProfileSql(boolean profileSql) {
+		this.profileSql = profileSql;
 	}
 }

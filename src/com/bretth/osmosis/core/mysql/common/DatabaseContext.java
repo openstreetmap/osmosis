@@ -78,13 +78,22 @@ public class DatabaseContext {
 			loadDatabaseDriver();
 			
 			try {
-				connection = DriverManager.getConnection(
+				String url;
+				
+				url =
 					"jdbc:mysql://" + loginCredentials.getHost() + "/"
 					+ loginCredentials.getDatabase()
-			    	+ "?user=" + loginCredentials.getUser()
-			    	+ "&password=" + loginCredentials.getPassword()
-			    	//+ "&useUnicode=true&characterEncoding=UTF-8"// + "&profileSql=true"
-			    );
+					+ "?user=" + loginCredentials.getUser()
+					+ "&password=" + loginCredentials.getPassword();
+				
+				if (loginCredentials.getForceUtf8()) {
+					url += "&useUnicode=true&characterEncoding=UTF-8";
+				}
+				if (loginCredentials.getProfileSql()) {
+					url += "&profileSql=true";
+				}
+				
+				connection = DriverManager.getConnection(url);
 				
 				connection.setAutoCommit(false);
 				

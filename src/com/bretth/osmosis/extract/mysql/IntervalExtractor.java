@@ -86,7 +86,9 @@ public class IntervalExtractor {
 				config.getHost(),
 				config.getDatabase(),
 				config.getUser(),
-				config.getPassword()
+				config.getPassword(),
+				false,
+				false
 			),
 			new DatabasePreferences(true),
 			false,

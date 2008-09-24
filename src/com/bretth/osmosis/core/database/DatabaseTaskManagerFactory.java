@@ -32,7 +32,9 @@ public abstract class DatabaseTaskManagerFactory extends TaskManagerFactory {
 			DatabaseConstants.TASK_DEFAULT_HOST,
 			DatabaseConstants.TASK_DEFAULT_DATABASE,
 			DatabaseConstants.TASK_DEFAULT_USER,
-			DatabaseConstants.TASK_DEFAULT_PASSWORD
+			DatabaseConstants.TASK_DEFAULT_PASSWORD,
+			DatabaseConstants.TASK_DEFAULT_FORCE_UTF8,
+			DatabaseConstants.TASK_DEFAULT_PROFILE_SQL
 		);
 		
 		// If an authentication properties file has been supplied, load override
@@ -77,6 +79,20 @@ public abstract class DatabaseTaskManagerFactory extends TaskManagerFactory {
 				taskConfig,
 				DatabaseConstants.TASK_ARG_PASSWORD,
 				loginCredentials.getPassword()
+			)
+		);
+		loginCredentials.setForceUtf8(
+			getBooleanArgument(
+				taskConfig,
+				DatabaseConstants.TASK_ARG_FORCE_UTF8,
+				loginCredentials.getForceUtf8()
+			)
+		);
+		loginCredentials.setProfileSql(
+			getBooleanArgument(
+				taskConfig,
+				DatabaseConstants.TASK_ARG_PROFILE_SQL,
+				loginCredentials.getProfileSql()
 			)
 		);
 		

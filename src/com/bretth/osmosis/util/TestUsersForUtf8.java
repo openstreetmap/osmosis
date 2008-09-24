@@ -60,7 +60,7 @@ public class TestUsersForUtf8 {
 		argIndex = 0;
 		
 		// Initialise database credentials.
-		credentials = new DatabaseLoginCredentials(args[argIndex++], args[argIndex++], args[argIndex++], args[argIndex++]);
+		credentials = new DatabaseLoginCredentials(args[argIndex++], args[argIndex++], args[argIndex++], args[argIndex++], false, false);
 		
 		// Determine which file to write the results to.
 		resultFile = new File(args[argIndex++]);
