@@ -83,6 +83,11 @@ public class WayBBoxCalculator implements Releasable {
 	
 	
 	private void initializeReadingStage() {
+		// If we're already in the reading stage, do nothing.
+		if (stage.compareTo(StorageStage.Reading) == 0) {
+			return;
+		}
+		
 		// If we've been released, we can't iterate.
 		if (stage.compareTo(StorageStage.Released) >= 0) {
 			throw new OsmosisRuntimeException("Cannot read from node storage in stage " + stage + ".");
