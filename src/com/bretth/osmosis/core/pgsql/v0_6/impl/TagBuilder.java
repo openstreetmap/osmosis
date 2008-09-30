@@ -35,6 +35,15 @@ public class TagBuilder extends EntityFeatureBuilder<DBEntityFeature<Tag>> {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public String getParentEntityName() {
+		return parentEntityName;
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String getEntityName() {
 		return parentEntityName + "_tags";
 	}

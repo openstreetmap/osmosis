@@ -13,6 +13,14 @@ import java.sql.ResultSet;
  *            The type of feature to be built.
  */
 public abstract class EntityFeatureBuilder<T> {
+
+	/**
+	 * Returns the name of the entity features entity type.
+	 * 
+	 * @return The parent entity name.
+	 */
+	public abstract String getParentEntityName();
+	
 	
 	/**
 	 * Returns the name of the entity feature. This is used for error messages.

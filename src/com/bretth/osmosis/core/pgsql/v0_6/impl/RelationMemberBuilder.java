@@ -32,6 +32,15 @@ public class RelationMemberBuilder extends EntityFeatureBuilder<DBEntityFeature<
 	 * {@inheritDoc}
 	 */
 	@Override
+	public String getParentEntityName() {
+		return "relation";
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String getEntityName() {
 		return "relation_members";
 	}

@@ -21,6 +21,15 @@ public class WayNodeBuilder extends EntityFeatureBuilder<DBWayNode> {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public String getParentEntityName() {
+		return "way";
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String getEntityName() {
 		return "way_nodes";
 	}
