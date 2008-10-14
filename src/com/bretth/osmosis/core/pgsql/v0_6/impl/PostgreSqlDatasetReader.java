@@ -176,12 +176,8 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			initialize();
 		}
 		
-		// Ensure that the way bbox column is available.
-		if (!capabilityChecker.isWayBboxSupported()) {
-			throw new OsmosisRuntimeException("Way table bbox column support is unavailable.");
-		}
-		
 		try {
+			dbCtx.executeStatement("SET enable_hashjoin = false");
 			// Create a temporary table capable of holding node ids.
 			log.finer("Creating node id temp table.");
 			dbCtx.executeStatement("CREATE TEMPORARY TABLE box_node_list (id bigint PRIMARY KEY) ON COMMIT DROP");
@@ -218,24 +214,50 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			log.finer(rowCount + " rows affected.");
 			
 			// Select all ways inside the bounding box into the way temp table.
-			// The inner query selects the way id and node coordinates for all ways constrained by the way bounding box which is indexed.
-			// The middle query converts the way node coordinates into linestrings.
-			// The outer query constrains the query to the linestrings inside the bounding box.  These aren't indexed but the inner query
-			// way bbox constraint will minimise the unnecessary data.
-			log.finer("Selecting all way ids inside bounding box.");
-			preparedStatement = dbCtx.prepareStatement(
-				"INSERT INTO box_way_list " +
-				"SELECT way_id FROM (" +
-				"SELECT c.way_id AS way_id, MakeLine(c.geom) AS way_line FROM (" +
-				"SELECT w.id AS way_id, n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id INNER JOIN ways w ON wn.way_id = w.id WHERE (w.bbox && ?) ORDER BY wn.way_id, wn.sequence_id" +
-				") c " +
-				"GROUP BY c.way_id" +
-				") w " +
-				"WHERE (w.way_line && ?)"
-			);
-			prmIndex = 1;
-			preparedStatement.setObject(prmIndex++, new PGgeometry(bboxPolygon));
-			preparedStatement.setObject(prmIndex++, new PGgeometry(bboxPolygon));
+			if (capabilityChecker.isWayLinestringSupported()) {
+				log.finer("Selecting all way ids inside bounding box using way linestring geometry.");
+				// We have full way geometry available so select ways
+				// overlapping the requested bounding box.
+				preparedStatement = dbCtx.prepareStatement(
+					"INSERT INTO box_way_list " +
+					"SELECT id FROM ways w where w.linestring && ?"
+				);
+				prmIndex = 1;
+				preparedStatement.setObject(prmIndex++, new PGgeometry(bboxPolygon));
+				
+			} else if (capabilityChecker.isWayBboxSupported()) {
+				log.finer("Selecting all way ids inside bounding box using dynamically built way linestring with way bbox indexing.");
+				// The inner query selects the way id and node coordinates for
+				// all ways constrained by the way bounding box which is
+				// indexed.
+				// The middle query converts the way node coordinates into
+				// linestrings.
+				// The outer query constrains the query to the linestrings
+				// inside the bounding box. These aren't indexed but the inner
+				// query way bbox constraint will minimise the unnecessary data.
+				preparedStatement = dbCtx.prepareStatement(
+					"INSERT INTO box_way_list " +
+					"SELECT way_id FROM (" +
+					"SELECT c.way_id AS way_id, MakeLine(c.geom) AS way_line FROM (" +
+					"SELECT w.id AS way_id, n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id INNER JOIN ways w ON wn.way_id = w.id WHERE (w.bbox && ?) ORDER BY wn.way_id, wn.sequence_id" +
+					") c " +
+					"GROUP BY c.way_id" +
+					") w " +
+					"WHERE (w.way_line && ?)"
+				);
+				prmIndex = 1;
+				preparedStatement.setObject(prmIndex++, new PGgeometry(bboxPolygon));
+				preparedStatement.setObject(prmIndex++, new PGgeometry(bboxPolygon));
+				
+			} else {
+				log.finer("Selecting all way ids inside bounding box using already selected nodes.");
+				// No way bbox support is available so select ways containing
+				// the selected nodes.
+				preparedStatement = dbCtx.prepareStatement(
+					"INSERT INTO box_way_list " +
+					"SELECT wn.way_id FROM way_nodes wn INNER JOIN box_node_list n ON wn.node_id = n.id GROUP BY wn.way_id"
+				);
+			}
 			rowCount = preparedStatement.executeUpdate();
 			preparedStatement.close();
 			preparedStatement = null;

@@ -16,8 +16,10 @@ import com.bretth.osmosis.core.pipeline.v0_6.SinkManager;
  */
 public class PostgreSqlDatasetDumpWriterFactory extends TaskManagerFactory {
 	private static final String ARG_IN_MEMORY_BBOX = "inMemoryBbox";
+	private static final String ARG_IN_MEMORY_LINESTRING = "inMemoryLinestring";
 	private static final String ARG_FILE_NAME = "directory";
 	private static final boolean DEFAULT_IN_MEMORY_BBOX = false;
+	private static final boolean DEFAULT_IN_MEMORY_LINESTRING = false;
 	private static final String DEFAULT_FILE_PREFIX = "pgimport";
 	
 	
@@ -29,17 +31,19 @@ public class PostgreSqlDatasetDumpWriterFactory extends TaskManagerFactory {
 		String filePrefixString;
 		File filePrefix;
 		boolean inMemoryBbox;
+		boolean inMemoryLinestring;
 		
 		// Get the task arguments.
 		filePrefixString = getStringArgument(taskConfig, ARG_FILE_NAME, DEFAULT_FILE_PREFIX);
 		inMemoryBbox = getBooleanArgument(taskConfig, ARG_IN_MEMORY_BBOX, DEFAULT_IN_MEMORY_BBOX);
+		inMemoryLinestring = getBooleanArgument(taskConfig, ARG_IN_MEMORY_LINESTRING, DEFAULT_IN_MEMORY_LINESTRING);
 		
 		// Create a file object representing the directory from the file name provided.
 		filePrefix = new File(filePrefixString);
 		
 		return new SinkManager(
 			taskConfig.getId(),
-			new PostgreSqlDatasetDumpWriter(filePrefix, inMemoryBbox),
+			new PostgreSqlDatasetDumpWriter(filePrefix, inMemoryBbox, inMemoryLinestring),
 			taskConfig.getPipeArgs()
 		);
 	}

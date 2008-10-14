@@ -25,10 +25,20 @@ public class NodeDao extends EntityDao<Node> {
 		" WHERE w.id IN (" +
 		" SELECT w.id FROM ways w INNER JOIN way_nodes wn ON w.id = wn.way_id WHERE wn.node_id = ? GROUP BY w.id" +
 		" )";
+	private static final String SQL_UPDATE_WAY_LINESTRING =
+		"UPDATE ways w SET linestring = (" +
+		" SELECT MakeLine(c.geom) AS way_line FROM (" +
+		" SELECT n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id" +
+		" ) c" +
+		" )" +
+		" WHERE w.id IN (" +
+		" SELECT w.id FROM ways w INNER JOIN way_nodes wn ON w.id = wn.way_id WHERE wn.node_id = ? GROUP BY w.id" +
+		" )";
 	
 	
 	private DatabaseCapabilityChecker capabilityChecker;
 	private PreparedStatement updateWayBboxStatement;
+	private PreparedStatement updateWayLinestringStatement;
 	
 	
 	/**
@@ -65,6 +75,23 @@ public class NodeDao extends EntityDao<Node> {
 				
 			} catch (SQLException e) {
 				throw new OsmosisRuntimeException("Update bbox failed for node " + entity.getId() + ".");
+			}
+		}
+		
+		if (capabilityChecker.isWayLinestringSupported()) {
+			if (updateWayLinestringStatement == null) {
+				updateWayLinestringStatement = prepareStatement(SQL_UPDATE_WAY_LINESTRING);
+			}
+			
+			try {
+				int prmIndex;
+				
+				prmIndex = 1;
+				updateWayLinestringStatement.setLong(prmIndex++, entity.getId());
+				updateWayLinestringStatement.executeUpdate();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Update linestring failed for node " + entity.getId() + ".");
 			}
 		}
 	}

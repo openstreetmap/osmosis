@@ -16,7 +16,9 @@ import com.bretth.osmosis.core.pipeline.v0_6.SinkManager;
  */
 public class PostgreSqlDatasetWriterFactory extends DatabaseTaskManagerFactory {
 	private static final String ARG_IN_MEMORY_BBOX = "inMemoryBbox";
+	private static final String ARG_IN_MEMORY_LINESTRING = "inMemoryLinestring";
 	private static final boolean DEFAULT_IN_MEMORY_BBOX = false;
+	private static final boolean DEFAULT_IN_MEMORY_LINESTRING = false;
 	
 	/**
 	 * {@inheritDoc}
@@ -26,15 +28,17 @@ public class PostgreSqlDatasetWriterFactory extends DatabaseTaskManagerFactory {
 		DatabaseLoginCredentials loginCredentials;
 		DatabasePreferences preferences;
 		boolean inMemoryBbox;
+		boolean inMemoryLinestring;
 		
 		// Get the task arguments.
 		loginCredentials = getDatabaseLoginCredentials(taskConfig);
 		preferences = getDatabasePreferences(taskConfig);
 		inMemoryBbox = getBooleanArgument(taskConfig, ARG_IN_MEMORY_BBOX, DEFAULT_IN_MEMORY_BBOX);
+		inMemoryLinestring = getBooleanArgument(taskConfig, ARG_IN_MEMORY_LINESTRING, DEFAULT_IN_MEMORY_LINESTRING);
 		
 		return new SinkManager(
 			taskConfig.getId(),
-			new PostgreSqlWriter(loginCredentials, preferences, inMemoryBbox),
+			new PostgreSqlWriter(loginCredentials, preferences, inMemoryBbox, inMemoryLinestring),
 			taskConfig.getPipeArgs()
 		);
 	}

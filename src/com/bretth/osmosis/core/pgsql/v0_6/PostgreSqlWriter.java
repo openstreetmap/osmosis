@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.postgis.Geometry;
+
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.container.v0_6.BoundContainer;
 import com.bretth.osmosis.core.container.v0_6.EntityContainer;
@@ -35,7 +37,7 @@ import com.bretth.osmosis.core.pgsql.v0_6.impl.RelationBuilder;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.RelationMemberBuilder;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.TagBuilder;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.UserDao;
-import com.bretth.osmosis.core.pgsql.v0_6.impl.WayBBoxCalculator;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.WayGeometryBuilder;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.WayBuilder;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.WayNodeBuilder;
 import com.bretth.osmosis.core.task.v0_6.Sink;
@@ -69,6 +71,9 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private static final String PRE_LOAD_SQL_WAY_BBOX[] = {
 		"DROP INDEX idx_ways_bbox"
 	};
+	private static final String PRE_LOAD_SQL_WAY_LINESTRING[] = {
+		"DROP INDEX idx_ways_linestring"
+	};
 	
 	private static final String POST_LOAD_SQL[] = {
 		"ALTER TABLE ONLY users ADD CONSTRAINT pk_users PRIMARY KEY (id)",
@@ -87,8 +92,19 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private static final String POST_LOAD_SQL_WAY_BBOX[] = {
 		"CREATE INDEX idx_ways_bbox ON ways USING gist (bbox)"
 	};
-	private static final String POST_LOAD_SQL_POPULATE_WAY_BBOX = 
-		"UPDATE ways SET bbox = (SELECT Envelope(Collect(geom)) FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id WHERE way_nodes.way_id = ways.id)";
+	private static final String POST_LOAD_SQL_WAY_LINESTRING[] = {
+		"CREATE INDEX idx_ways_linestring ON ways USING gist (linestring)"
+	};
+	private static final String POST_LOAD_SQL_POPULATE_WAY_BBOX =
+		"UPDATE ways SET bbox = (" +
+		"SELECT Envelope(Collect(geom)) FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id WHERE way_nodes.way_id = ways.id" +
+		")";
+	private static final String POST_LOAD_SQL_POPULATE_WAY_LINESTRING =
+		"UPDATE ways w SET linestring = (" +
+		"SELECT MakeLine(c.geom) AS way_line FROM (" +
+		"SELECT n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id" +
+		") c" +
+		")";
 	
 	// These constants define how many rows of each data type will be inserted
 	// with single insert statements.
@@ -110,6 +126,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private DatabaseContext dbCtx;
 	private DatabasePreferences preferences;
 	private boolean enableInMemoryBbox;
+	private boolean enableInMemoryLinestring;
 	private SchemaVersionValidator schemaVersionValidator;
 	private DatabaseCapabilityChecker capabilityChecker;
 	private List<Node> nodeBuffer;
@@ -149,9 +166,9 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private TagBuilder relationTagBuilder;
 	private WayNodeBuilder wayNodeBuilder;
 	private RelationMemberBuilder relationMemberBuilder;
-	private WayBBoxCalculator wayBboxCalculator;
-	
-	
+	private WayGeometryBuilder wayGeometryBuilder;
+
+
 	/**
 	 * Creates a new instance.
 	 * 
@@ -163,12 +180,17 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 *            If true, an in-memory bounding box calculator is enabled for
 	 *            way creation. This requires caching the lat and lon values for
 	 *            all nodes.
+	 * @param enableInMemoryLinestring
+	 *            If true, an in-memory linestring calculator is enabled for way
+	 *            creation. This requires caching the lat and lon values for all
+	 *            nodes.
 	 */
-	public PostgreSqlWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean enableInMemoryBbox) {
+	public PostgreSqlWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean enableInMemoryBbox, boolean enableInMemoryLinestring) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		
 		this.preferences = preferences;
 		this.enableInMemoryBbox = enableInMemoryBbox;
+		this.enableInMemoryLinestring = enableInMemoryLinestring;
 		
 		schemaVersionValidator = new SchemaVersionValidator(loginCredentials);
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
@@ -186,14 +208,14 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		userDao = new UserDao(dbCtx);
 		
 		nodeBuilder = new NodeBuilder();
-		wayBuilder = new WayBuilder(enableInMemoryBbox);
+		wayBuilder = new WayBuilder(enableInMemoryBbox, enableInMemoryLinestring);
 		relationBuilder = new RelationBuilder();
 		nodeTagBuilder = new TagBuilder(nodeBuilder.getEntityName());
 		wayTagBuilder = new TagBuilder(wayBuilder.getEntityName());
 		relationTagBuilder = new TagBuilder(relationBuilder.getEntityName());
 		wayNodeBuilder = new WayNodeBuilder();
 		relationMemberBuilder = new RelationMemberBuilder();
-		wayBboxCalculator = new WayBBoxCalculator();
+		wayGeometryBuilder = new WayGeometryBuilder();
 		
 		uncommittedEntityCount = 0;
 		
@@ -236,7 +258,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				log.finer("SQL: " + PRE_LOAD_SQL[i]);
 				dbCtx.executeStatement(PRE_LOAD_SQL[i]);
 			}
-			log.fine("Pre-load SQL statements complete.");
 			if (capabilityChecker.isWayBboxSupported()) {
 				log.fine("Running pre-load bbox SQL statements.");
 				for (int i = 0; i < PRE_LOAD_SQL_WAY_BBOX.length; i++) {
@@ -244,6 +265,14 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 					dbCtx.executeStatement(PRE_LOAD_SQL_WAY_BBOX[i]);
 				}
 			}
+			if (capabilityChecker.isWayLinestringSupported()) {
+				log.fine("Running pre-load linestring SQL statements.");
+				for (int i = 0; i < PRE_LOAD_SQL_WAY_LINESTRING.length; i++) {
+					log.finer("SQL: " + PRE_LOAD_SQL_WAY_LINESTRING[i]);
+					dbCtx.executeStatement(PRE_LOAD_SQL_WAY_LINESTRING[i]);
+				}
+			}
+			log.fine("Pre-load SQL statements complete.");
 			log.fine("Loading data.");
 			
 			initialized = true;
@@ -424,15 +453,19 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			prmIndex = 1;
 			for (int i = 0; i < INSERT_BULK_ROW_COUNT_WAY; i++) {
 				Way way;
+				List<Geometry> geometries;
 				
 				way = wayBuffer.remove(0);
 				processedWays.add(way);
 				
+				geometries = new ArrayList<Geometry>();
 				if (enableInMemoryBbox) {
-					prmIndex = wayBuilder.populateEntityParameters(bulkWayStatement, prmIndex, way, wayBboxCalculator.createWayBbox(way));
-				} else {
-					prmIndex = wayBuilder.populateEntityParameters(bulkWayStatement, prmIndex, way);
+					geometries.add(wayGeometryBuilder.createWayBbox(way));
 				}
+				if (enableInMemoryLinestring) {
+					geometries.add(wayGeometryBuilder.createWayLinestring(way));
+				}
+				prmIndex = wayBuilder.populateEntityParameters(bulkWayStatement, prmIndex, way, geometries);
 				
 				uncommittedEntityCount++;
 			}
@@ -452,14 +485,18 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		if (complete) {
 			while (wayBuffer.size() > 0) {
 				Way way;
+				List<Geometry> geometries;
 				
 				way = wayBuffer.remove(0);
 				
+				geometries = new ArrayList<Geometry>();
 				if (enableInMemoryBbox) {
-					wayBuilder.populateEntityParameters(singleWayStatement, 1, way, wayBboxCalculator.createWayBbox(way));
-				} else {
-					wayBuilder.populateEntityParameters(singleWayStatement, 1, way);
+					geometries.add(wayGeometryBuilder.createWayBbox(way));
 				}
+				if (enableInMemoryLinestring) {
+					geometries.add(wayGeometryBuilder.createWayLinestring(way));
+				}
+				wayBuilder.populateEntityParameters(singleWayStatement, 1, way, geometries);
 				
 				uncommittedEntityCount++;
 				
@@ -803,6 +840,17 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				dbCtx.executeStatement(POST_LOAD_SQL_WAY_BBOX[i]);
 			}
 		}
+		if (capabilityChecker.isWayLinestringSupported()) {
+			log.fine("Running post-load linestring SQL statements.");
+			if (!enableInMemoryLinestring) {
+				log.finer("SQL: " + POST_LOAD_SQL_POPULATE_WAY_LINESTRING);
+				dbCtx.executeStatement(POST_LOAD_SQL_POPULATE_WAY_LINESTRING);
+			}
+			for (int i = 0; i < POST_LOAD_SQL_WAY_LINESTRING.length; i++) {
+				log.finer("SQL: " + POST_LOAD_SQL_WAY_LINESTRING[i]);
+				dbCtx.executeStatement(POST_LOAD_SQL_WAY_LINESTRING[i]);
+			}
+		}
 		
 		log.fine("Committing changes.");
 		dbCtx.commit();
@@ -841,8 +889,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(NodeContainer nodeContainer) {
-		if (enableInMemoryBbox) {
-			wayBboxCalculator.addNodeLocation(nodeContainer.getEntity());
+		if (enableInMemoryBbox || enableInMemoryLinestring) {
+			wayGeometryBuilder.addNodeLocation(nodeContainer.getEntity());
 		}
 		
 		nodeBuffer.add(nodeContainer.getEntity());
@@ -880,7 +928,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	@Override
 	public void release() {
 		statementContainer.release();
-		wayBboxCalculator.release();
+		wayGeometryBuilder.release();
 		
 		dbCtx.release();
 	}

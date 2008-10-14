@@ -12,8 +12,11 @@ DROP INDEX idx_way_nodes_node_id;
 DROP INDEX idx_relations_action;
 DROP INDEX idx_relation_tags_relation_id;
 DROP INDEX idx_ways_bbox;
+DROP INDEX idx_ways_linestring;
 
+-- Comment these out if the COPY files include bbox or linestring column values.
 SELECT DropGeometryColumn('ways', 'bbox');
+SELECT DropGeometryColumn('ways', 'linestring');
 
 -- Import the table data from the data files using the fast COPY method.
 -- COPY nodes FROM E'C:\\tmp\\pgimport\\nodes.txt';
@@ -49,20 +52,29 @@ CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id);
 CREATE INDEX idx_relations_action ON relations USING btree (action);
 CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id);
 
--- Add a postgis bounding box column used for indexing the location of the way.
--- This will contain a bounding box surrounding the extremities of the way.
+-- Comment these out if the COPY files include bbox or linestring column values.
 SELECT AddGeometryColumn('ways', 'bbox', 4326, 'GEOMETRY', 2);
+SELECT AddGeometryColumn('ways', 'linestring', 4326, 'GEOMETRY', 2);
 
+-- Comment these out if the COPY files include bbox or linestring column values.
 -- Update the bbox column of the way table.
 UPDATE ways SET bbox = (
 	SELECT Envelope(Collect(geom))
 	FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id
 	WHERE way_nodes.way_id = ways.id
 );
+-- Update the linestring column of the way table.
+UPDATE ways w SET linestring = (
+	SELECT MakeLine(c.geom) AS way_line FROM (
+		SELECT n.geom AS geom
+		FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id
+		WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id
+	) c
+)
 
 -- Index the way bounding box column.
 CREATE INDEX idx_ways_bbox ON ways USING gist (bbox);
+CREATE INDEX idx_ways_linestring ON ways USING gist (bbox);
 
 -- Perform database maintenance due to large database changes.
 VACUUM ANALYZE;
-

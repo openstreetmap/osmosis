@@ -6,9 +6,12 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.postgis.Geometry;
+import org.postgis.LineString;
 import org.postgis.LinearRing;
 import org.postgis.Point;
 import org.postgis.Polygon;
@@ -25,11 +28,11 @@ import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
 /**
  * Caches a set of node latitudes and longitudes and uses these to calculate the
- * bounding box for ways.
+ * geometries for ways.
  * 
  * @author Brett Henderson
  */
-public class WayBBoxCalculator implements Releasable {
+public class WayGeometryBuilder implements Releasable {
 	
 	private static final int ZERO_BUFFER_SIZE = 1024 * 1024;
 	private static final int NODE_DATA_SIZE = 9;
@@ -48,7 +51,7 @@ public class WayBBoxCalculator implements Releasable {
 	/**
 	 * Creates a new instance.
 	 */
-	public WayBBoxCalculator() {
+	public WayGeometryBuilder() {
 		stage = StorageStage.NotStarted;
 		
 		lastNodeId = Long.MIN_VALUE;
@@ -203,6 +206,53 @@ public class WayBBoxCalculator implements Releasable {
 	}
 	
 	
+	private Geometry createLinestring(List<Point> points) {
+		LineString lineString;
+		
+		lineString = new LineString(points.toArray(new Point[]{}));
+		lineString.srid = 4326;
+		
+		return lineString;
+	}
+
+
+	/**
+	 * Retrieves node location information from the temporary data file.
+	 * 
+	 * @param nodeId
+	 *            The id of the node to retrieve.
+	 * @return The node location details.
+	 */
+	private NodeLocation getNodeLocation(long nodeId) {
+		NodeLocation nodeLocation;
+		long offset;
+		
+		offset = nodeId * NODE_DATA_SIZE;
+		
+		nodeLocation = new NodeLocation();
+		
+		if (offset < currentFileOffset) {
+			try {
+				byte validFlag;
+				
+				fileInStream.seek(offset);
+				validFlag = dataInStream.readByte();
+				
+				if (validFlag != 0) {
+					nodeLocation.validFlag = true;
+					nodeLocation.longitude = FixedPrecisionCoordinateConvertor.convertToDouble(dataInStream.readInt());
+					nodeLocation.latitude = FixedPrecisionCoordinateConvertor.convertToDouble(dataInStream.readInt());
+				}
+				
+			} catch (IOException e) {
+				throw new OsmosisRuntimeException("Unable to read node information from the node storage file.", e);
+			}
+		}
+		
+		return nodeLocation;
+	}
+	
+	
 	/**
 	 * Builds a bounding box geometry object from the node references in the
 	 * specified way. Unknown nodes will be ignored.
@@ -226,57 +276,64 @@ public class WayBBoxCalculator implements Releasable {
 		bottom = 0;
 		top = 0;
 		for (WayNode wayNode : way.getWayNodeList()) {
-			long nodeId;
-			long offset;
+			NodeLocation nodeLocation;
 			
-			nodeId = wayNode.getNodeId();
+			nodeLocation = getNodeLocation(wayNode.getNodeId());
 			
-			offset = nodeId * NODE_DATA_SIZE;
-			
-			if (offset < currentFileOffset) {
-				try {
-					byte validFlag;
-					
-					fileInStream.seek(offset);
-					validFlag = dataInStream.readByte();
-					
-					if (validFlag != 0) {
-						double longitude;
-						double latitude;
-						
-						longitude = FixedPrecisionCoordinateConvertor.convertToDouble(dataInStream.readInt());
-						latitude = FixedPrecisionCoordinateConvertor.convertToDouble(dataInStream.readInt());
-						
-						if (nodesFound) {
-							if (longitude < left) {
-								left = longitude;
-							}
-							if (longitude > right) {
-								right = longitude;
-							}
-							if (latitude < bottom) {
-								bottom = latitude;
-							}
-							if (latitude > top) {
-								top = latitude;
-							}
-						} else {
-							left = longitude;
-							right = longitude;
-							bottom = latitude;
-							top = latitude;
-							
-							nodesFound = true;
-						}
+			if (nodeLocation.validFlag) {
+				if (nodesFound) {
+					if (nodeLocation.longitude < left) {
+						left = nodeLocation.longitude;
 					}
+					if (nodeLocation.longitude > right) {
+						right = nodeLocation.longitude;
+					}
+					if (nodeLocation.latitude < bottom) {
+						bottom = nodeLocation.latitude;
+					}
+					if (nodeLocation.latitude > top) {
+						top = nodeLocation.latitude;
+					}
+				} else {
+					left = nodeLocation.longitude;
+					right = nodeLocation.longitude;
+					bottom = nodeLocation.latitude;
+					top = nodeLocation.latitude;
 					
-				} catch (IOException e) {
-					throw new OsmosisRuntimeException("Unable to read node information from the node storage file.", e);
+					nodesFound = true;
 				}
 			}
 		}
 		
 		return createWayBbox(left, right, bottom, top);
+	}
+	
+	
+	/**
+	 * Builds a linestring geometry object from the node references in the
+	 * specified way. Unknown nodes will be ignored.
+	 * 
+	 * @param way
+	 *            The way to create the linestring for.
+	 * @return The linestring representing the way.
+	 */
+	public Geometry createWayLinestring(Way way) {
+		List<Point> linePoints;
+		
+		initializeReadingStage();
+		
+		linePoints = new ArrayList<Point>();
+		for (WayNode wayNode : way.getWayNodeList()) {
+			NodeLocation nodeLocation;
+			
+			nodeLocation = getNodeLocation(wayNode.getNodeId());
+			
+			if (nodeLocation.validFlag) {
+				linePoints.add(new Point(nodeLocation.longitude, nodeLocation.latitude));
+			}
+		}
+		
+		return createLinestring(linePoints);
 	}
 	
 	
@@ -307,5 +364,24 @@ public class WayBBoxCalculator implements Releasable {
 			nodeStorageFile.delete();
 			nodeStorageFile = null;
 		}
+	}
+	
+	
+	/**
+	 * Data structure containing node location information.
+	 * 
+	 * @author Brett Henderson
+	 */
+	private static class NodeLocation {
+		/**
+		 * Creates a new instance.
+		 */
+		public NodeLocation() {
+			validFlag = false;
+		}
+		
+		public boolean validFlag;
+		public double latitude;
+		public double longitude;
 	}
 }

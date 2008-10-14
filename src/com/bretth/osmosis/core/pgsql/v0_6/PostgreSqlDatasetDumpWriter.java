@@ -22,7 +22,7 @@ import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.pgsql.common.CopyFileWriter;
 import com.bretth.osmosis.core.pgsql.common.PointBuilder;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.ChangesetAction;
-import com.bretth.osmosis.core.pgsql.v0_6.impl.WayBBoxCalculator;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.WayGeometryBuilder;
 import com.bretth.osmosis.core.store.CompletableContainer;
 import com.bretth.osmosis.core.task.v0_6.Sink;
 
@@ -47,7 +47,8 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 	
 	
 	private boolean enableInMemoryBbox;
-	private WayBBoxCalculator wayBboxCalculator;
+	private boolean enableInMemoryLinestring;
+	private WayGeometryBuilder wayGeometryBuilder;
 	private CompletableContainer writerContainer;
 	private CopyFileWriter userWriter;
 	private CopyFileWriter nodeWriter;
@@ -60,8 +61,8 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 	private CopyFileWriter relationMemberWriter;
 	private PointBuilder pointBuilder;
 	private Set<Integer> userSet;
-	
-	
+
+
 	/**
 	 * Creates a new instance.
 	 * 
@@ -71,9 +72,14 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 	 *            If true, an in-memory bounding box calculator is enabled for
 	 *            way creation. This requires caching the lat and lon values for
 	 *            all nodes.
+	 * @param enableInMemoryLinestring
+	 *            If true, an in-memory linestring calculator is enabled for way
+	 *            creation. This requires caching the lat and lon values for all
+	 *            nodes.
 	 */
-	public PostgreSqlDatasetDumpWriter(File filePrefix, boolean enableInMemoryBBox) {
+	public PostgreSqlDatasetDumpWriter(File filePrefix, boolean enableInMemoryBBox, boolean enableInMemoryLinestring) {
 		this.enableInMemoryBbox = enableInMemoryBBox;
+		this.enableInMemoryLinestring = enableInMemoryLinestring;
 		
 		writerContainer = new CompletableContainer();
 		
@@ -88,7 +94,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		relationMemberWriter = writerContainer.add(new CopyFileWriter(new File(filePrefix, RELATION_MEMBER_SUFFIX)));
 		
 		pointBuilder = new PointBuilder();
-		wayBboxCalculator = new WayBBoxCalculator();
+		wayGeometryBuilder = new WayGeometryBuilder();
 		
 		userSet = new HashSet<Integer>();
 	}
@@ -148,8 +154,8 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 			nodeTagWriter.endRecord();
 		}
 		
-		if (enableInMemoryBbox) {
-			wayBboxCalculator.addNodeLocation(node);
+		if (enableInMemoryBbox || enableInMemoryLinestring) {
+			wayGeometryBuilder.addNodeLocation(node);
 		}
 	}
 	
@@ -171,7 +177,10 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 			wayWriter.writeField(way.getTimestamp());
 			wayWriter.writeField(ChangesetAction.ADD.getDatabaseValue());
 			if (enableInMemoryBbox) {
-				wayWriter.writeField(wayBboxCalculator.createWayBbox(way));
+				wayWriter.writeField(wayGeometryBuilder.createWayBbox(way));
+			}
+			if (enableInMemoryLinestring) {
+				wayWriter.writeField(wayGeometryBuilder.createWayLinestring(way));
 			}
 			wayWriter.endRecord();
 			
@@ -245,6 +254,6 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 	 */
 	public void release() {
 		writerContainer.release();
-		wayBboxCalculator.release();
+		wayGeometryBuilder.release();
 	}
 }

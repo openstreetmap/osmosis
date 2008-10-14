@@ -28,11 +28,18 @@ public class WayDao extends EntityDao<Way> {
 		" WHERE way_nodes.way_id = ways.id" +
 		" )" +
 		" WHERE ways.id = ?";
-	
+	private static final String SQL_UPDATE_WAY_LINESTRING =
+		"UPDATE ways w SET linestring = (" +
+		" SELECT MakeLine(c.geom) AS way_line FROM (" +
+		" SELECT n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id" +
+		" ) c" +
+		" )" +
+		" WHERE w.id  = ?";
 	
 	private DatabaseCapabilityChecker capabilityChecker;
 	private EntityFeatureDao<WayNode, DBWayNode> wayNodeDao;
 	private PreparedStatement updateWayBboxStatement;
+	private PreparedStatement updateWayLinestringStatement;
 	
 	
 	/**
@@ -91,7 +98,7 @@ public class WayDao extends EntityDao<Way> {
 	 * @param wayId
 	 *            The way bounding box.
 	 */
-	private void updateWayBBox(long wayId) {
+	private void updateWayGeometries(long wayId) {
 		if (capabilityChecker.isWayBboxSupported()) {
 			if (updateWayBboxStatement == null) {
 				updateWayBboxStatement = prepareStatement(SQL_UPDATE_WAY_BBOX);
@@ -108,6 +115,22 @@ public class WayDao extends EntityDao<Way> {
 				throw new OsmosisRuntimeException("Update bbox failed for way " + wayId + ".");
 			}
 		}
+		if (capabilityChecker.isWayLinestringSupported()) {
+			if (updateWayLinestringStatement == null) {
+				updateWayLinestringStatement = prepareStatement(SQL_UPDATE_WAY_LINESTRING);
+			}
+			
+			try {
+				int prmIndex;
+				
+				prmIndex = 1;
+				updateWayLinestringStatement.setLong(prmIndex++, wayId);
+				updateWayLinestringStatement.executeUpdate();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Update linestring failed for way " + wayId + ".");
+			}
+		}
 	}
 	
 	
@@ -120,7 +143,7 @@ public class WayDao extends EntityDao<Way> {
 		
 		addWayNodeList(entity.getId(), entity.getWayNodeList());
 		
-		updateWayBBox(entity.getId());
+		updateWayGeometries(entity.getId());
 	}
 	
 	
@@ -137,7 +160,7 @@ public class WayDao extends EntityDao<Way> {
 		wayNodeDao.removeList(wayId);
 		addWayNodeList(entity.getId(), entity.getWayNodeList());
 		
-		updateWayBBox(entity.getId());
+		updateWayGeometries(entity.getId());
 	}
 	
 	

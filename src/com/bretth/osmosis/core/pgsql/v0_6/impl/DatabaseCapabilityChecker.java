@@ -30,4 +30,14 @@ public class DatabaseCapabilityChecker {
 	public boolean isWayBboxSupported() {
 		return dbCtx.doesColumnExist("ways", "bbox");
 	}
+	
+	
+	/**
+	 * Indicates if way linestring support is available.
+	 * 
+	 * @return True if supported, otherwise false.
+	 */
+	public boolean isWayLinestringSupported() {
+		return dbCtx.doesColumnExist("ways", "linestring");
+	}
 }
