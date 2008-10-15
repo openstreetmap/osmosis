@@ -74,7 +74,7 @@ UPDATE ways w SET linestring = (
 
 -- Index the way bounding box column.
 CREATE INDEX idx_ways_bbox ON ways USING gist (bbox);
-CREATE INDEX idx_ways_linestring ON ways USING gist (bbox);
+CREATE INDEX idx_ways_linestring ON ways USING gist (linestring);
 
 -- Perform database maintenance due to large database changes.
 VACUUM ANALYZE;
