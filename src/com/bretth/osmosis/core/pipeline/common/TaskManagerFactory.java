@@ -212,8 +212,6 @@ public abstract class TaskManagerFactory {
 	 *            the task.
 	 * @param argName
 	 *            The name of the argument.
-	 * @param defaultValue
-	 *            The default value of the argument if not value is available.
 	 * @return The value of the argument.
 	 */
 	protected int getIntegerArgument(TaskConfiguration taskConfig, String argName) {
