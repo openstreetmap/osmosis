@@ -101,6 +101,8 @@ public class WayReader extends EntityReader<Way> {
 	 */
 	@Override
 	public void release() {
+		super.release();
+		
 		wayNodeReader.release();
 	}
 }

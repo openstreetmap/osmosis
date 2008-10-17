@@ -27,6 +27,8 @@ public class ObjectStreamIterator<T> extends ObjectDataInputIterator<T> implemen
 	 */
 	public ObjectStreamIterator(DataInputStream inStream, ObjectReader objectReader) {
 		super(objectReader);
+		
+		this.inStream = inStream;
 	}
 
 	

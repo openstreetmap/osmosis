@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 
@@ -21,6 +22,9 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class RandomAccessObjectStore<T extends Storeable> implements Completable {
+	
+	private static final Logger log = Logger.getLogger(RandomAccessObjectStore.class.getName());
+	
 	private ObjectSerializationFactory serializationFactory;
 	private StorageStage stage;
 	private String tempFilePrefix;
@@ -226,7 +230,9 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 		}
 		
 		if (tempFile != null) {
-			tempFile.delete();
+			if (!tempFile.delete()) {
+				log.warning("Unable to delete file " + tempFile);
+			}
 			tempFile = null;
 		}
 		

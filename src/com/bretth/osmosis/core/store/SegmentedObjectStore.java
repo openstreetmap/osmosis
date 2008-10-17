@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -31,6 +32,9 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class SegmentedObjectStore<T extends Storeable> implements Completable {
+	
+	private static final Logger log = Logger.getLogger(SegmentedObjectStore.class.getName());
+	
 	private ObjectSerializationFactory serializationFactory;
 	private StorageStage stage;
 	private String storageFilePrefix;
@@ -317,7 +321,9 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 		}
 		
 		if (file != null) {
-			file.delete();
+			if (!file.delete()) {
+				log.warning("Unable to delete file " + file);
+			}
 			file = null;
 		}
 		

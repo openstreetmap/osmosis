@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 
@@ -17,6 +18,9 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager {
+	
+	private static Logger log = Logger.getLogger(TempFileDatasetStoreFileManager.class.getName());
+	
 	
 	private List<File> allFiles;
 	private File nodeObjectFile;
@@ -227,7 +231,9 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	@Override
 	public void release() {
 		for (File file : allFiles) {
-			file.delete();
+			if (!file.delete()) {
+				log.warning("Unable to delete file " + file);
+			}
 		}
 	}
 }

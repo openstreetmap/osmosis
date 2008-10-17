@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.postgis.Geometry;
 import org.postgis.LineString;
@@ -34,6 +35,7 @@ import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  */
 public class WayGeometryBuilder implements Releasable {
 	
+	private static final Logger log = Logger.getLogger(WayGeometryBuilder.class.getName());
 	private static final int ZERO_BUFFER_SIZE = 1024 * 1024;
 	private static final int NODE_DATA_SIZE = 9;
 	
@@ -361,7 +363,9 @@ public class WayGeometryBuilder implements Releasable {
 		}
 		
 		if (nodeStorageFile != null) {
-			nodeStorageFile.delete();
+			if (!nodeStorageFile.delete()) {
+				log.warning("Unable to delete file " + nodeStorageFile);
+			}
 			nodeStorageFile = null;
 		}
 	}

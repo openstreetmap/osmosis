@@ -96,6 +96,8 @@ public class RelationReader  extends EntityReader<Relation> {
 	 */
 	@Override
 	public void release() {
+		super.release();
+		
 		relationMemberReader.release();
 	}
 }
