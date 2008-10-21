@@ -66,7 +66,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"DROP INDEX idx_ways_action",
 		"DROP INDEX idx_way_tags_way_id",
 		"DROP INDEX idx_relations_action",
-		"DROP INDEX idx_relation_tags_relation_id"
+		"DROP INDEX idx_relation_tags_relation_id",
+		"DROP INDEX idx_way_nodes_node_id"
 	};
 	private static final String PRE_LOAD_SQL_WAY_BBOX[] = {
 		"DROP INDEX idx_ways_bbox"
@@ -87,7 +88,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"CREATE INDEX idx_ways_action ON ways USING btree (action)",
 		"CREATE INDEX idx_way_tags_way_id ON way_tags USING btree (way_id)",
 		"CREATE INDEX idx_relations_action ON relations USING btree (action)",
-		"CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id)"
+		"CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id)",
+		"CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id)"
 	};
 	private static final String POST_LOAD_SQL_WAY_BBOX[] = {
 		"CREATE INDEX idx_ways_bbox ON ways USING gist (bbox)"
