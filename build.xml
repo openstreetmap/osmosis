@@ -30,7 +30,7 @@
 		<mkdir dir="build"/>
 		<mkdir dir="build/src"/>
 		<!-- Compile the java code from src into build/src -->
-		<javac srcdir="src" destdir="build/src" debug="on" debuglevel="lines,vars,source" classpathref="libclasspath" excludes="**/v0_6/**"/>
+		<javac srcdir="src" destdir="build/src" debug="on" debuglevel="lines,vars,source" classpathref="libclasspath"/>
 		<!-- Copy all resource files from src into build/src -->
 		<copy todir="build/src">
 			<fileset dir="src">

@@ -1,10 +1,13 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.mysql.common;
+package com.bretth.osmosis.core.mysql.v0_5.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.mysql.common.DatabaseContext;
+import com.bretth.osmosis.core.mysql.common.IdentityColumnValueLoader;
+import com.bretth.osmosis.core.store.Releasable;
 
 
 /**
@@ -12,7 +15,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * 
  * @author Brett Henderson
  */
-public class UserIdManager {
+public class UserIdManager implements Releasable {
 	private static final String INSERT_SQL_USER =
 		"INSERT INTO users (" +
 		"email, active, pass_crypt," +
@@ -28,13 +31,11 @@ public class UserIdManager {
 	private static final String SELECT_SQL_USER =
 		"SELECT id FROM users WHERE email='osmosis@bretth.com'";
 	
-	private static final String SELECT_LAST_INSERT_ID =
-		"SELECT LAST_INSERT_ID() AS lastInsertId FROM DUAL";
-	
 	
 	private DatabaseContext dbCtx;
 	private boolean idLoaded;
 	private long loadedUserId;
+	private IdentityColumnValueLoader identityLoader;
 	
 	
 	/**
@@ -46,36 +47,8 @@ public class UserIdManager {
 	public UserIdManager(DatabaseContext dbCtx) {
 		this.dbCtx = dbCtx;
 		idLoaded = false;
-	}
-	
-	
-	/**
-	 * Returns the id of the most recently inserted row on the current
-	 * connection.
-	 * 
-	 * @return The newly inserted id.
-	 */
-	private long getLastInsertId() {
-		try {
-			ResultSet lastInsertQuery;
-			long lastInsertId;
-			
-			lastInsertQuery = dbCtx.executeStreamingQuery(SELECT_LAST_INSERT_ID);
-			
-			lastInsertQuery.next();
-			
-			lastInsertId = lastInsertQuery.getLong("lastInsertId");
-			
-			lastInsertQuery.close();
-			
-			return lastInsertId;
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException(
-				"Unable to retrieve the id of the newly inserted user record.",
-				e
-			);
-		}
+		
+		identityLoader = new IdentityColumnValueLoader(dbCtx);
 	}
 	
 	
@@ -87,7 +60,7 @@ public class UserIdManager {
 	private long createNewUser() {
 		dbCtx.executeStatement(INSERT_SQL_USER);
 		
-		return getLastInsertId();
+		return identityLoader.getLastInsertId();
 	}
 	
 	
@@ -145,5 +118,14 @@ public class UserIdManager {
 		}
 		
 		return loadedUserId;
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void release() {
+		identityLoader.release();
 	}
 }

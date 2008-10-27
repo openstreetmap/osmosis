@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 
@@ -18,7 +18,7 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
  */
 public class RelationDao extends EntityDao<Relation> {
 	
-	private EntityFeatureDao<RelationMember, DBEntityFeature<RelationMember>> relationMemberDao;
+	private EntityFeatureDao<RelationMember, DbFeature<RelationMember>> relationMemberDao;
 	
 	
 	/**
@@ -30,7 +30,7 @@ public class RelationDao extends EntityDao<Relation> {
 	public RelationDao(DatabaseContext dbCtx) {
 		super(dbCtx, new RelationBuilder());
 		
-		relationMemberDao = new EntityFeatureDao<RelationMember, DBEntityFeature<RelationMember>>(dbCtx, new RelationMemberBuilder());
+		relationMemberDao = new EntityFeatureDao<RelationMember, DbFeature<RelationMember>>(dbCtx, new RelationMemberBuilder());
 	}
 	
 	
@@ -58,12 +58,12 @@ public class RelationDao extends EntityDao<Relation> {
 	 *            The list of features to add.
 	 */
 	private void addMemberList(long entityId, List<RelationMember> memberList) {
-		List<DBEntityFeature<RelationMember>> dbList;
+		List<DbFeature<RelationMember>> dbList;
 		
-		dbList = new ArrayList<DBEntityFeature<RelationMember>>(memberList.size());
+		dbList = new ArrayList<DbFeature<RelationMember>>(memberList.size());
 		
 		for (RelationMember member : memberList) {
-			dbList.add(new DBEntityFeature<RelationMember>(entityId, member));
+			dbList.add(new DbFeature<RelationMember>(entityId, member));
 		}
 		
 		relationMemberDao.addList(dbList);

@@ -18,10 +18,10 @@ import com.bretth.osmosis.core.store.Storeable;
  * @param <T>
  *            The feature type to be encapsulated.
  */
-public class DBEntityFeature<T extends Storeable> implements Storeable {
+public class DbFeature<T extends Storeable> implements Storeable {
 	
 	private long entityId;
-	private T entityFeature;
+	private T feature;
 	
 	
 	/**
@@ -29,12 +29,12 @@ public class DBEntityFeature<T extends Storeable> implements Storeable {
 	 * 
 	 * @param entityId
 	 *            The owning entity id.
-	 * @param entityFeature
-	 *            The way node being referenced.
+	 * @param feature
+	 *            The feature being referenced.
 	 */
-	public DBEntityFeature(long entityId, T entityFeature) {
+	public DbFeature(long entityId, T feature) {
 		this.entityId = entityId;
-		this.entityFeature = entityFeature;
+		this.feature = feature;
 	}
 	
 	
@@ -48,7 +48,7 @@ public class DBEntityFeature<T extends Storeable> implements Storeable {
 	 *            within the store.
 	 */
 	@SuppressWarnings("unchecked")
-	public DBEntityFeature(StoreReader sr, StoreClassRegister scr) {
+	public DbFeature(StoreReader sr, StoreClassRegister scr) {
 		this(
 			sr.readLong(),
 			(T) new GenericObjectReader(sr, scr).readObject()
@@ -61,7 +61,7 @@ public class DBEntityFeature<T extends Storeable> implements Storeable {
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		sw.writeLong(entityId);
-		new GenericObjectWriter(sw, scr).writeObject(entityFeature);
+		new GenericObjectWriter(sw, scr).writeObject(feature);
 	}
 	
 	
@@ -76,7 +76,7 @@ public class DBEntityFeature<T extends Storeable> implements Storeable {
 	/**
 	 * @return The entity feature.
 	 */
-	public T getEntityFeature() {
-		return entityFeature;
+	public T getFeature() {
+		return feature;
 	}
 }

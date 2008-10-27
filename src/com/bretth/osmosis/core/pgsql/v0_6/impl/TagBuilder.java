@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
 
 
 /**
@@ -15,7 +15,7 @@ import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
  * 
  * @author Brett Henderson
  */
-public class TagBuilder extends EntityFeatureBuilder<DBEntityFeature<Tag>> {
+public class TagBuilder extends EntityFeatureBuilder<DbFeature<Tag>> {
 	private String parentEntityName;
 	
 	
@@ -112,9 +112,9 @@ public class TagBuilder extends EntityFeatureBuilder<DBEntityFeature<Tag>> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DBEntityFeature<Tag> buildEntity(ResultSet resultSet) {
+	public DbFeature<Tag> buildEntity(ResultSet resultSet) {
 		try {
-			return new DBEntityFeature<Tag>(
+			return new DbFeature<Tag>(
 				resultSet.getLong("entity_id"),
 				new Tag(
 					resultSet.getString("k"),
@@ -132,12 +132,12 @@ public class TagBuilder extends EntityFeatureBuilder<DBEntityFeature<Tag>> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int populateEntityParameters(PreparedStatement statement, int initialIndex, DBEntityFeature<Tag> entityFeature) {
+	public int populateEntityParameters(PreparedStatement statement, int initialIndex, DbFeature<Tag> entityFeature) {
 		try {
 			int prmIndex;
 			Tag tag;
 			
-			tag = entityFeature.getEntityFeature();
+			tag = entityFeature.getFeature();
 			
 			prmIndex = initialIndex;
 			

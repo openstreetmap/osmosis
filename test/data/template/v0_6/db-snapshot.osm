@@ -9,7 +9,7 @@
   <node id="3" version="12" timestamp="2008-01-02T06:07:08Z" uid="30" user="user30" lat="-5" lon="-6">
     <tag k="created_by" v="Me3"/>
   </node>
-  <node id="4" version="13" timestamp="2008-01-02T09:10:11Z" uid="40" user="" lat="-7" lon="-8">
+  <node id="4" version="13" timestamp="2008-01-02T09:10:11Z" uid="40" user="user40" lat="-7" lon="-8">
     <tag k="created_by" v="Me4"/>
   </node>
   <node id="5" version="14" timestamp="2008-01-02T12:13:14Z" lat="-9" lon="-10">

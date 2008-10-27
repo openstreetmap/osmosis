@@ -10,41 +10,26 @@ import java.util.Date;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Node;
-import com.bretth.osmosis.core.mysql.common.BaseEntityReader;
+import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
-import com.bretth.osmosis.core.mysql.common.EntityHistory;
 import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
 
 /**
- * Reads node history records for nodes that have been modified within a time
- * interval. All history items will be returned for the node from node creation
- * up to the end of the time interval. We need the complete history instead of
- * just the history within the interval so we can determine if the node was
- * created during the interval or prior to the interval, a version attribute
- * would eliminate the need for full history.
+ * Reads the set of node changes from a database that have occurred within a
+ * time interval.
  * 
  * @author Brett Henderson
  */
 public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
-	// The sub-select identifies the nodes that have been modified within the
-	// time interval. The outer query then queries all node history items up to
-	// the end of the time interval.
 	private static final String SELECT_SQL =
-		"SELECT n.id, n.timestamp, u.data_public, u.display_name, n.latitude, n.longitude, n.tags, n.visible" +
-		" FROM nodes n" +
-		" INNER JOIN (" +
-		"   SELECT id" +
-		"   FROM nodes" +
-		"   WHERE timestamp > ? AND timestamp <= ?" +
-		"   GROUP BY id" +
-		" ) idList ON n.id = idList.id" +
-		" LEFT OUTER JOIN users u ON n.user_id = u.id" +
-		" WHERE n.timestamp <= ?" +
-		" ORDER BY n.id, n.timestamp";
+		"SELECT e.id, e.version, e.timestamp, e.visible, u.data_public, u.id AS user_id, u.display_name, e.latitude, e.longitude" +
+		" FROM nodes e" +
+		" LEFT OUTER JOIN changesets c ON e.changeset_id = c.id" +
+		" LEFT OUTER JOIN users u ON c.user_id = u.id" +
+		" WHERE e.timestamp > ? AND e.timestamp <= ?" +
+		" ORDER BY e.id, e.version";
 	
-	
-	private EmbeddedTagProcessor tagParser;
 	private Date intervalBegin;
 	private Date intervalEnd;
 	
@@ -68,8 +53,6 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 		
 		this.intervalBegin = intervalBegin;
 		this.intervalEnd = intervalEnd;
-		
-		tagParser = new EmbeddedTagProcessor();
 	}
 	
 	
@@ -82,10 +65,8 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 			PreparedStatement statement;
 			
 			statement = queryDbCtx.prepareStatementForStreaming(SELECT_SQL);
-			
 			statement.setTimestamp(1, new Timestamp(intervalBegin.getTime()));
 			statement.setTimestamp(2, new Timestamp(intervalEnd.getTime()));
-			statement.setTimestamp(3, new Timestamp(intervalEnd.getTime()));
 			
 			return statement.executeQuery();
 			
@@ -101,36 +82,34 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 	@Override
 	protected ReadResult<EntityHistory<Node>> createNextValue(ResultSet resultSet) {
 		long id;
+		int version;
 		Date timestamp;
-		String userName;
+		boolean visible;
+		OsmUser user;
 		double latitude;
 		double longitude;
-		String tags;
-		boolean visible;
-		Node node;
-		EntityHistory<Node> nodeHistory;
 		
 		try {
 			id = resultSet.getLong("id");
+			version = resultSet.getInt("version");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
-			userName = readUserField(
+			visible = resultSet.getBoolean("visible");
+			user = readUserField(
 				resultSet.getBoolean("data_public"),
+				resultSet.getInt("user_id"),
 				resultSet.getString("display_name")
 			);
 			latitude = FixedPrecisionCoordinateConvertor.convertToDouble(resultSet.getInt("latitude"));
 			longitude = FixedPrecisionCoordinateConvertor.convertToDouble(resultSet.getInt("longitude"));
-			tags = resultSet.getString("tags");
-			visible = resultSet.getBoolean("visible");
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read node fields.", e);
 		}
 		
-		node = new Node(id, timestamp, userName, latitude, longitude);
-		node.addTags(tagParser.parseTags(tags));
-		
-		nodeHistory = new EntityHistory<Node>(node, 0, visible);
-		
-		return new ReadResult<EntityHistory<Node>>(true, nodeHistory);
+		return new ReadResult<EntityHistory<Node>>(
+			true,
+			new EntityHistory<Node>(
+				new Node(id, version, timestamp, user, latitude, longitude), visible)
+		);
 	}
 }

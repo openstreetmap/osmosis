@@ -12,7 +12,6 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
-import com.bretth.osmosis.core.mysql.common.EntityHistory;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
@@ -28,8 +27,8 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
 public class WayChangeReader {
 	
 	private PeekableIterator<EntityHistory<Way>> wayHistoryReader;
-	private PeekableIterator<EntityHistory<DBWayNode>> wayNodeHistoryReader;
-	private PeekableIterator<EntityHistory<DBEntityFeature<Tag>>> wayTagHistoryReader;
+	private PeekableIterator<DbFeatureHistory<DBWayNode>> wayNodeHistoryReader;
+	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> wayTagHistoryReader;
 	private ChangeContainer nextValue;
 	
 	
@@ -58,18 +57,18 @@ public class WayChangeReader {
 				)
 			);
 		wayNodeHistoryReader =
-			new PeekableIterator<EntityHistory<DBWayNode>>(
-				new PersistentIterator<EntityHistory<DBWayNode>>(
-					new SingleClassObjectSerializationFactory(EntityHistory.class),
+			new PeekableIterator<DbFeatureHistory<DBWayNode>>(
+				new PersistentIterator<DbFeatureHistory<DBWayNode>>(
+					new SingleClassObjectSerializationFactory(DbFeatureHistory.class),
 					new WayNodeHistoryReader(loginCredentials, intervalBegin, intervalEnd),
 					"waynod",
 					true
 				)
 			);
 		wayTagHistoryReader =
-			new PeekableIterator<EntityHistory<DBEntityFeature<Tag>>>(
-				new PersistentIterator<EntityHistory<DBEntityFeature<Tag>>>(
-					new SingleClassObjectSerializationFactory(EntityHistory.class),
+			new PeekableIterator<DbFeatureHistory<DbFeature<Tag>>>(
+				new PersistentIterator<DbFeatureHistory<DbFeature<Tag>>>(
+					new SingleClassObjectSerializationFactory(DbFeatureHistory.class),
 					new EntityTagHistoryReader(loginCredentials, "ways", "way_tags", intervalBegin, intervalEnd),
 					"waytag",
 					true
@@ -92,26 +91,26 @@ public class WayChangeReader {
 		
 		wayHistory = wayHistoryReader.next();
 		way = wayHistory.getEntity();
-
+		
 		// Add all applicable node references to the way.
 		wayNodes = new ArrayList<DBWayNode>();
 		while (wayNodeHistoryReader.hasNext() &&
-				wayNodeHistoryReader.peekNext().getEntity().getEntityId() == way.getId() &&
-				wayNodeHistoryReader.peekNext().getVersion() == wayHistory.getVersion()) {
-			wayNodes.add(wayNodeHistoryReader.next().getEntity());
+				wayNodeHistoryReader.peekNext().getDbFeature().getEntityId() == way.getId() &&
+				wayNodeHistoryReader.peekNext().getVersion() == way.getVersion()) {
+			wayNodes.add(wayNodeHistoryReader.next().getDbFeature());
 		}
 		// The underlying query sorts node references by way id but not
 		// by their sequence number.
 		Collections.sort(wayNodes, new WayNodeComparator());
 		for (DBWayNode dbWayNode : wayNodes) {
-			way.addWayNode(dbWayNode.getEntityFeature());
+			way.addWayNode(dbWayNode.getFeature());
 		}
 		
 		// Add all applicable tags to the way.
 		while (wayTagHistoryReader.hasNext() &&
-				wayTagHistoryReader.peekNext().getEntity().getEntityId() == way.getId() &&
-				wayTagHistoryReader.peekNext().getVersion() == wayHistory.getVersion()) {
-			way.addTag(wayTagHistoryReader.next().getEntity().getEntityFeature());
+				wayTagHistoryReader.peekNext().getDbFeature().getEntityId() == way.getId() &&
+				wayTagHistoryReader.peekNext().getVersion() == way.getVersion()) {
+			way.addTag(wayTagHistoryReader.next().getDbFeature().getFeature());
 		}
 		
 		return wayHistory;
@@ -124,21 +123,23 @@ public class WayChangeReader {
 	private ChangeContainer readChange() {
 		boolean createdPreviously;
 		EntityHistory<Way> mostRecentHistory;
+		Way way;
 		WayContainer wayContainer;
 		
 		// Check the first way, if it has a version greater than 1 the way
 		// existed prior to the interval beginning and therefore cannot be a
 		// create.
 		mostRecentHistory = readNextWayHistory();
-		createdPreviously = (mostRecentHistory.getVersion() > 1);
+		way = mostRecentHistory.getEntity();
+		createdPreviously = (way.getVersion() > 1);
 		
 		while (wayHistoryReader.hasNext() &&
-				(wayHistoryReader.peekNext().getEntity().getId() == mostRecentHistory.getEntity().getId())) {
+				(wayHistoryReader.peekNext().getEntity().getId() == way.getId())) {
 			mostRecentHistory = readNextWayHistory();
 		}
 		
 		// The way in the result must be wrapped in a container.
-		wayContainer = new WayContainer(mostRecentHistory.getEntity());
+		wayContainer = new WayContainer(way);
 		
 		// The entity has been modified if it is visible and was created previously.
 		// It is a create if it is visible and was NOT created previously.

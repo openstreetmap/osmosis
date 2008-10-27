@@ -19,7 +19,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  */
 public class CurrentWayNodeTableReader extends BaseTableReader<DBWayNode> {
 	private static final String SELECT_SQL =
-		"SELECT id as way_id, node_id, sequence_id"
+		"SELECT id AS way_id, version AS way_version, node_id, sequence_id"
 		+ " FROM current_way_nodes"
 		+ " ORDER BY id";
 	

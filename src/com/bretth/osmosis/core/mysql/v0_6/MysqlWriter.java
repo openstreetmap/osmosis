@@ -25,11 +25,12 @@ import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
-import com.bretth.osmosis.core.mysql.common.UserIdManager;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
+import com.bretth.osmosis.core.mysql.v0_6.impl.ChangesetManager;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBWayNode;
-import com.bretth.osmosis.core.mysql.v0_6.impl.EmbeddedTagProcessor;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeatureHistory;
 import com.bretth.osmosis.core.mysql.v0_6.impl.MemberTypeRenderer;
+import com.bretth.osmosis.core.mysql.v0_6.impl.UserManager;
 import com.bretth.osmosis.core.task.v0_6.Sink;
 import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
@@ -44,10 +45,13 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	// These SQL strings are the prefix to statements that will be built based
 	// on how many rows of data are to be inserted at a time.
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO nodes(id, timestamp, latitude, longitude, tile, tags, visible, user_id)";
+		"INSERT INTO nodes(id, timestamp, version, visible, changeset_id, latitude, longitude, tile)";
 	private static final int INSERT_PRM_COUNT_NODE = 8;
+	private static final String INSERT_SQL_NODE_TAG =
+		"INSERT INTO node_tags (id, k, v, version)";
+	private static final int INSERT_PRM_COUNT_NODE_TAG = 4;
 	private static final String INSERT_SQL_WAY =
-		"INSERT INTO ways (id, timestamp, version, visible, user_id)";
+		"INSERT INTO ways (id, timestamp, version, visible, changeset_id)";
 	private static final int INSERT_PRM_COUNT_WAY = 5;
 	private static final String INSERT_SQL_WAY_TAG =
 		"INSERT INTO way_tags (id, k, v, version)";
@@ -56,7 +60,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		"INSERT INTO way_nodes (id, node_id, sequence_id, version)";
 	private static final int INSERT_PRM_COUNT_WAY_NODE = 4;
 	private static final String INSERT_SQL_RELATION =
-		"INSERT INTO relations (id, timestamp, version, visible, user_id)";
+		"INSERT INTO relations (id, timestamp, version, visible, changeset_id)";
 	private static final int INSERT_PRM_COUNT_RELATION = 5;
 	private static final String INSERT_SQL_RELATION_TAG =
 		"INSERT INTO relation_tags (id, k, v, version)";
@@ -69,6 +73,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	// indexes.
 	private static final String[] INVOKE_DISABLE_KEYS = {
 		"ALTER TABLE nodes DISABLE KEYS",
+		"ALTER TABLE node_tags DISABLE KEYS",
 		"ALTER TABLE ways DISABLE KEYS",
 		"ALTER TABLE way_tags DISABLE KEYS",
 		"ALTER TABLE way_nodes DISABLE KEYS",
@@ -81,6 +86,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	// indexes.
 	private static final String[] INVOKE_ENABLE_KEYS = {
 		"ALTER TABLE nodes ENABLE KEYS",
+		"ALTER TABLE node_tags ENABLE KEYS",
 		"ALTER TABLE ways ENABLE KEYS",
 		"ALTER TABLE way_tags ENABLE KEYS",
 		"ALTER TABLE way_nodes ENABLE KEYS",
@@ -96,6 +102,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private static final int LOAD_CURRENT_RELATION_ROW_COUNT = 100000; // There are many member and tag records per relation.
 	private static final String LOAD_CURRENT_NODES =
 		"INSERT INTO current_nodes SELECT * FROM nodes WHERE id >= ? AND id < ?";
+	private static final String LOAD_CURRENT_NODE_TAGS =
+		"INSERT INTO current_node_tags SELECT id, k, v FROM node_tags WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_WAYS =
 		"INSERT INTO current_ways SELECT id, user_id, timestamp, visible FROM ways WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_WAY_TAGS =
@@ -112,16 +120,18 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	// These SQL statements will be invoked to lock and unlock tables.
 	private static final String INVOKE_LOCK_TABLES =
 		"LOCK TABLES"
-		+ " nodes WRITE, ways WRITE, way_tags WRITE, way_nodes WRITE,"
+		+ " nodes WRITE, node_tags WRITE,"
+		+ " ways WRITE, way_tags WRITE, way_nodes WRITE,"
 		+ " relations WRITE, relation_tags WRITE, relation_members WRITE,"
 		+ " current_nodes WRITE, current_ways WRITE, current_way_tags WRITE, current_way_nodes WRITE,"
 		+ " current_relations WRITE, current_relation_tags WRITE, current_relation_members WRITE,"
-		+ " users WRITE";
+		+ " users WRITE, changesets WRITE";
 	private static final String INVOKE_UNLOCK_TABLES = "UNLOCK TABLES";
 	
 	// These constants define how many rows of each data type will be inserted
 	// with single insert statements.
 	private static final int INSERT_BULK_ROW_COUNT_NODE = 100;
+	private static final int INSERT_BULK_ROW_COUNT_NODE_TAG = 100;
 	private static final int INSERT_BULK_ROW_COUNT_WAY = 100;
 	private static final int INSERT_BULK_ROW_COUNT_WAY_TAG = 100;
 	private static final int INSERT_BULK_ROW_COUNT_WAY_NODE = 100;
@@ -132,6 +142,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	// These constants will be configured by a static code block.
 	private static final String INSERT_SQL_SINGLE_NODE;
 	private static final String INSERT_SQL_BULK_NODE;
+	private static final String INSERT_SQL_SINGLE_NODE_TAG;
+	private static final String INSERT_SQL_BULK_NODE_TAG;
 	private static final String INSERT_SQL_SINGLE_WAY;
 	private static final String INSERT_SQL_BULK_WAY;
 	private static final String INSERT_SQL_SINGLE_WAY_TAG;
@@ -190,6 +202,10 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			buildSqlInsertStatement(INSERT_SQL_NODE, INSERT_PRM_COUNT_NODE, 1);
 		INSERT_SQL_BULK_NODE =
 			buildSqlInsertStatement(INSERT_SQL_NODE, INSERT_PRM_COUNT_NODE, INSERT_BULK_ROW_COUNT_NODE);
+		INSERT_SQL_SINGLE_NODE_TAG =
+			buildSqlInsertStatement(INSERT_SQL_NODE_TAG, INSERT_PRM_COUNT_NODE_TAG, 1);
+		INSERT_SQL_BULK_NODE_TAG =
+			buildSqlInsertStatement(INSERT_SQL_NODE_TAG, INSERT_PRM_COUNT_NODE_TAG, INSERT_BULK_ROW_COUNT_NODE_TAG);
 		INSERT_SQL_SINGLE_WAY =
 			buildSqlInsertStatement(INSERT_SQL_WAY, INSERT_PRM_COUNT_WAY, 1);
 		INSERT_SQL_BULK_WAY =
@@ -219,26 +235,29 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	
 	private DatabasePreferences preferences;
 	private DatabaseContext dbCtx;
-	private UserIdManager userIdManager;
+	private UserManager userManager;
+	private ChangesetManager changesetManager;
 	private SchemaVersionValidator schemaVersionValidator;
 	private boolean lockTables;
 	private boolean populateCurrentTables;
 	private List<Node> nodeBuffer;
+	private List<DbFeatureHistory<DbFeature<Tag>>> nodeTagBuffer;
 	private List<Way> wayBuffer;
-	private List<DBEntityFeature<Tag>> wayTagBuffer;
-	private List<DBWayNode> wayNodeBuffer;
+	private List<DbFeatureHistory<DbFeature<Tag>>> wayTagBuffer;
+	private List<DbFeatureHistory<DBWayNode>> wayNodeBuffer;
 	private List<Relation> relationBuffer;
-	private List<DBEntityFeature<Tag>> relationTagBuffer;
-	private List<DBEntityFeature<RelationMember>> relationMemberBuffer;
+	private List<DbFeatureHistory<DbFeature<Tag>>> relationTagBuffer;
+	private List<DbFeatureHistory<DbFeature<RelationMember>>> relationMemberBuffer;
 	private long maxNodeId;
 	private long maxWayId;
 	private long maxRelationId;
-	private EmbeddedTagProcessor tagProcessor;
 	private TileCalculator tileCalculator;
 	private MemberTypeRenderer memberTypeRenderer;
 	private boolean initialized;
 	private PreparedStatement singleNodeStatement;
 	private PreparedStatement bulkNodeStatement;
+	private PreparedStatement singleNodeTagStatement;
+	private PreparedStatement bulkNodeTagStatement;
 	private PreparedStatement singleWayStatement;
 	private PreparedStatement bulkWayStatement;
 	private PreparedStatement singleWayTagStatement;
@@ -252,6 +271,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private PreparedStatement singleRelationMemberStatement;
 	private PreparedStatement bulkRelationMemberStatement;
 	private PreparedStatement loadCurrentNodesStatement;
+	private PreparedStatement loadCurrentNodeTagsStatement;
 	private PreparedStatement loadCurrentWaysStatement;
 	private PreparedStatement loadCurrentWayTagsStatement;
 	private PreparedStatement loadCurrentWayNodesStatement;
@@ -278,7 +298,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		
 		dbCtx = new DatabaseContext(loginCredentials);
 		
-		userIdManager = new UserIdManager(dbCtx);
+		userManager = new UserManager(dbCtx);
+		changesetManager = new ChangesetManager(dbCtx);
 		
 		schemaVersionValidator = new SchemaVersionValidator(loginCredentials);
 		
@@ -286,18 +307,18 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		this.populateCurrentTables = populateCurrentTables;
 		
 		nodeBuffer = new ArrayList<Node>();
+		nodeTagBuffer = new ArrayList<DbFeatureHistory<DbFeature<Tag>>>();
 		wayBuffer = new ArrayList<Way>();
-		wayTagBuffer = new ArrayList<DBEntityFeature<Tag>>();
-		wayNodeBuffer = new ArrayList<DBWayNode>();
+		wayTagBuffer = new ArrayList<DbFeatureHistory<DbFeature<Tag>>>();
+		wayNodeBuffer = new ArrayList<DbFeatureHistory<DBWayNode>>();
 		relationBuffer = new ArrayList<Relation>();
-		relationTagBuffer = new ArrayList<DBEntityFeature<Tag>>();
-		relationMemberBuffer = new ArrayList<DBEntityFeature<RelationMember>>();
+		relationTagBuffer = new ArrayList<DbFeatureHistory<DbFeature<Tag>>>();
+		relationMemberBuffer = new ArrayList<DbFeatureHistory<DbFeature<RelationMember>>>();
 		
 		maxNodeId = 0;
 		maxWayId = 0;
 		maxRelationId = 0;
 		
-		tagProcessor = new EmbeddedTagProcessor();
 		tileCalculator = new TileCalculator();
 		memberTypeRenderer = new MemberTypeRenderer();
 		
@@ -317,6 +338,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			
 			bulkNodeStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_NODE);
 			singleNodeStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_NODE);
+			bulkNodeTagStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_NODE_TAG);
+			singleNodeTagStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_NODE_TAG);
 			bulkWayStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_WAY);
 			singleWayStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_WAY);
 			bulkWayTagStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_WAY_TAG);
@@ -331,6 +354,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			singleRelationMemberStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_RELATION_MEMBER);
 			
 			loadCurrentNodesStatement = dbCtx.prepareStatement(LOAD_CURRENT_NODES);
+			loadCurrentNodeTagsStatement = dbCtx.prepareStatement(LOAD_CURRENT_NODE_TAGS);
 			loadCurrentWaysStatement = dbCtx.prepareStatement(LOAD_CURRENT_WAYS);
 			loadCurrentWayTagsStatement = dbCtx.prepareStatement(LOAD_CURRENT_WAY_TAGS);
 			loadCurrentWayNodesStatement = dbCtx.prepareStatement(LOAD_CURRENT_WAY_NODES);
@@ -376,12 +400,12 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		try {
 			statement.setLong(prmIndex++, node.getId());
 			statement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
+			statement.setInt(prmIndex++, node.getVersion());
+			statement.setBoolean(prmIndex++, true);
+			statement.setLong(prmIndex++, changesetManager.obtainChangesetId(node.getUser()));
 			statement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
 			statement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
 			statement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));;
-			statement.setString(prmIndex++, tagProcessor.format(node.getTagList()));
-			statement.setBoolean(prmIndex++, true);
-			statement.setLong(prmIndex++, userIdManager.getUserId());
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a node.", e);
@@ -414,7 +438,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			statement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
 			statement.setInt(prmIndex++, 1);
 			statement.setBoolean(prmIndex++, true);
-			statement.setLong(prmIndex++, userIdManager.getUserId());
+			statement.setLong(prmIndex++, changesetManager.obtainChangesetId(way.getUser()));
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a way.", e);
@@ -432,19 +456,19 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * @param dbEntityTag
 	 *            The entity tag containing the data to be inserted.
 	 */
-	private void populateEntityTagParameters(PreparedStatement statement, int initialIndex, DBEntityFeature<Tag> dbEntityTag) {
+	private void populateEntityTagParameters(PreparedStatement statement, int initialIndex, DbFeatureHistory<DbFeature<Tag>> dbEntityTag) {
 		int prmIndex;
 		Tag tag;
 		
 		prmIndex = initialIndex;
 		
-		tag = dbEntityTag.getEntityFeature();
+		tag = dbEntityTag.getDbFeature().getFeature();
 		
 		try {
-			statement.setLong(prmIndex++, dbEntityTag.getEntityId());
+			statement.setLong(prmIndex++, dbEntityTag.getDbFeature().getEntityId());
 			statement.setString(prmIndex++, tag.getKey());
 			statement.setString(prmIndex++, tag.getValue());
-			statement.setInt(prmIndex++, 1);
+			statement.setInt(prmIndex++, dbEntityTag.getVersion());
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for an entity tag.", e);
@@ -462,16 +486,16 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * @param dbWayNode
 	 *            The way node containing the data to be inserted.
 	 */
-	private void populateWayNodeParameters(PreparedStatement statement, int initialIndex, DBWayNode dbWayNode) {
+	private void populateWayNodeParameters(PreparedStatement statement, int initialIndex, DbFeatureHistory<DBWayNode> dbWayNode) {
 		int prmIndex;
 		
 		prmIndex = initialIndex;
 		
 		try {
-			statement.setLong(prmIndex++, dbWayNode.getEntityId());
-			statement.setLong(prmIndex++, dbWayNode.getEntityFeature().getNodeId());
-			statement.setInt(prmIndex++, dbWayNode.getSequenceId());
-			statement.setInt(prmIndex++, 1);
+			statement.setLong(prmIndex++, dbWayNode.getDbFeature().getEntityId());
+			statement.setLong(prmIndex++, dbWayNode.getDbFeature().getFeature().getNodeId());
+			statement.setInt(prmIndex++, dbWayNode.getDbFeature().getSequenceId());
+			statement.setInt(prmIndex++, dbWayNode.getVersion());
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a way node.", e);
@@ -504,7 +528,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			statement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
 			statement.setInt(prmIndex++, 1);
 			statement.setBoolean(prmIndex++, true);
-			statement.setLong(prmIndex++, userIdManager.getUserId());
+			statement.setLong(prmIndex++, changesetManager.obtainChangesetId(relation.getUser()));
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a relation.", e);
@@ -523,20 +547,20 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * @param dbRelationMember
 	 *            The relation member containing the data to be inserted.
 	 */
-	private void populateRelationMemberParameters(PreparedStatement statement, int initialIndex, DBEntityFeature<RelationMember> dbRelationMember) {
+	private void populateRelationMemberParameters(PreparedStatement statement, int initialIndex, DbFeatureHistory<DbFeature<RelationMember>> dbRelationMember) {
 		int prmIndex;
 		RelationMember relationMember;
 		
 		prmIndex = initialIndex;
 		
-		relationMember = dbRelationMember.getEntityFeature();
+		relationMember = dbRelationMember.getDbFeature().getFeature();
 		
 		try {
-			statement.setLong(prmIndex++, dbRelationMember.getEntityId());
+			statement.setLong(prmIndex++, dbRelationMember.getDbFeature().getEntityId());
 			statement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
 			statement.setLong(prmIndex++, relationMember.getMemberId());
 			statement.setString(prmIndex++, relationMember.getMemberRole());
-			statement.setInt(prmIndex++, 1);
+			statement.setInt(prmIndex++, dbRelationMember.getVersion());
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a relation member.", e);
@@ -557,10 +581,18 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private void flushNodes(boolean complete) {
 		while (nodeBuffer.size() >= INSERT_BULK_ROW_COUNT_NODE) {
 			int prmIndex;
+			List<Node> processedNodes;
+			
+			processedNodes = new ArrayList<Node>(INSERT_BULK_ROW_COUNT_NODE);
 			
 			prmIndex = 1;
 			for (int i = 0; i < INSERT_BULK_ROW_COUNT_NODE; i++) {
-				populateNodeParameters(bulkNodeStatement, prmIndex, nodeBuffer.remove(0));
+				Node node;
+				
+				node = nodeBuffer.remove(0);
+				processedNodes.add(node);
+				
+				populateNodeParameters(bulkNodeStatement, prmIndex, node);
 				prmIndex += INSERT_PRM_COUNT_NODE;
 			}
 			
@@ -569,16 +601,67 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			} catch (SQLException e) {
 				throw new OsmosisRuntimeException("Unable to bulk insert nodes into the database.", e);
 			}
+			
+			for (Node node : processedNodes) {
+				addNodeTags(node);
+			}
 		}
 		
 		if (complete) {
 			while (nodeBuffer.size() > 0) {
-				populateNodeParameters(singleNodeStatement, 1, nodeBuffer.remove(0));
+				Node node;
+				
+				node = nodeBuffer.remove(0);
+				
+				populateNodeParameters(singleNodeStatement, 1, node);
 				
 				try {
 					singleNodeStatement.executeUpdate();
 				} catch (SQLException e) {
 					throw new OsmosisRuntimeException("Unable to insert a node into the database.", e);
+				}
+				
+				addNodeTags(node);
+			}
+		}
+	}
+	
+	
+	/**
+	 * Flushes node tags to the database. If complete is false, this will only
+	 * write node tags until the remaining node tag count is less than the
+	 * multi-row insert statement row count. If complete is true, all remaining
+	 * rows will be written using single row insert statements.
+	 * 
+	 * @param complete
+	 *            If true, all data will be written to the database. If false,
+	 *            some data may be left until more data is available.
+	 */
+	private void flushNodeTags(boolean complete) {
+		while (nodeTagBuffer.size() >= INSERT_BULK_ROW_COUNT_NODE_TAG) {
+			int prmIndex;
+			
+			prmIndex = 1;
+			for (int i = 0; i < INSERT_BULK_ROW_COUNT_NODE_TAG; i++) {
+				populateEntityTagParameters(bulkNodeTagStatement, prmIndex, nodeTagBuffer.remove(0));
+				prmIndex += INSERT_PRM_COUNT_NODE_TAG;
+			}
+			
+			try {
+				bulkNodeTagStatement.executeUpdate();
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to bulk insert node tags into the database.", e);
+			}
+		}
+		
+		if (complete) {
+			while (nodeTagBuffer.size() > 0) {
+				populateEntityTagParameters(singleNodeTagStatement, 1, nodeTagBuffer.remove(0));
+				
+				try {
+					singleNodeTagStatement.executeUpdate();
+				} catch (SQLException e) {
+					throw new OsmosisRuntimeException("Unable to insert a node tag into the database.", e);
 				}
 			}
 		}
@@ -878,6 +961,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		initialize();
 		
 		flushNodes(true);
+		flushNodeTags(true);
 		flushWays(true);
 		flushWayTags(true);
 		flushWayNodes(true);
@@ -893,6 +977,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		if (populateCurrentTables) {
 			// Copy data into the current node tables.
 			for (int i = 0; i < maxNodeId; i += LOAD_CURRENT_NODE_ROW_COUNT) {
+				// Node
 				try {
 					loadCurrentNodesStatement.setInt(1, i);
 					loadCurrentNodesStatement.setInt(2, i + LOAD_CURRENT_NODE_ROW_COUNT);
@@ -901,6 +986,17 @@ public class MysqlWriter implements Sink, EntityProcessor {
 					
 				} catch (SQLException e) {
 					throw new OsmosisRuntimeException("Unable to load current nodes.", e);
+				}
+				
+				// Node tags
+				try {
+					loadCurrentNodeTagsStatement.setInt(1, i);
+					loadCurrentNodeTagsStatement.setInt(2, i + LOAD_CURRENT_NODE_ROW_COUNT);
+					
+					loadCurrentNodeTagsStatement.execute();
+					
+				} catch (SQLException e) {
+					throw new OsmosisRuntimeException("Unable to load current node tags.", e);
 				}
 				
 				dbCtx.commit();
@@ -992,6 +1088,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * Releases all database resources.
 	 */
 	public void release() {
+		userManager.release();
+		
 		dbCtx.release();
 	}
 	
@@ -1001,6 +1099,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 */
 	public void process(EntityContainer entityContainer) {
 		initialize();
+		
+		userManager.addOrUpdateUser(entityContainer.getEntity().getUser());
 		
 		entityContainer.process(this);
 	}
@@ -1035,6 +1135,21 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	
 	
 	/**
+	 * Process the node tags.
+	 * 
+	 * @param node
+	 *            The node to be processed.
+	 */
+	private void addNodeTags(Node node) {
+		for (Tag tag: node.getTagList()) {
+			nodeTagBuffer.add(new DbFeatureHistory<DbFeature<Tag>>(new DbFeature<Tag>(node.getId(), tag), node.getVersion()));
+		}
+		
+		flushNodeTags(false);
+	}
+	
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	public void process(WayContainer wayContainer) {
@@ -1064,7 +1179,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addWayTags(Way way) {
 		for (Tag tag: way.getTagList()) {
-			wayTagBuffer.add(new DBEntityFeature<Tag>(way.getId(), tag));
+			wayTagBuffer.add(new DbFeatureHistory<DbFeature<Tag>>(new DbFeature<Tag>(way.getId(), tag), way.getVersion()));
 		}
 		
 		flushWayTags(false);
@@ -1083,11 +1198,16 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		nodeReferenceList = way.getWayNodeList();
 		
 		for (int i = 0; i < nodeReferenceList.size(); i++) {
-			wayNodeBuffer.add(new DBWayNode(
-				way.getId(),
-				nodeReferenceList.get(i),
-				i + 1
-			));
+			wayNodeBuffer.add(
+				new DbFeatureHistory<DBWayNode>(
+					new DBWayNode(
+						way.getId(),
+						nodeReferenceList.get(i),
+						i + 1
+					),
+					way.getVersion()
+				)
+			);
 		}
 		
 		flushWayNodes(false);
@@ -1124,7 +1244,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addRelationTags(Relation relation) {
 		for (Tag tag: relation.getTagList()) {
-			relationTagBuffer.add(new DBEntityFeature<Tag>(relation.getId(), tag));
+			relationTagBuffer.add(new DbFeatureHistory<DbFeature<Tag>>(new DbFeature<Tag>(relation.getId(), tag), relation.getVersion()));
 		}
 		
 		flushRelationTags(false);
@@ -1147,14 +1267,19 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			
 			member = memberReferenceList.get(i);
 			
-			relationMemberBuffer.add(new DBEntityFeature<RelationMember>(
-				relation.getId(),
-				new RelationMember(
-					member.getMemberId(),
-					member.getMemberType(),
-					member.getMemberRole()
+			relationMemberBuffer.add(
+				new DbFeatureHistory<DbFeature<RelationMember>>(
+					new DbFeature<RelationMember>(
+						relation.getId(),
+						new RelationMember(
+							member.getMemberId(),
+							member.getMemberType(),
+							member.getMemberRole()
+						)
+					),
+					relation.getVersion()
 				)
-			));
+			);
 		}
 		
 		flushRelationMembers(false);

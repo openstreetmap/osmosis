@@ -123,7 +123,7 @@ public class WayNodeBuilder extends EntityFeatureBuilder<DBWayNode> {
 			int prmIndex;
 			WayNode wayNode;
 			
-			wayNode = entityFeature.getEntityFeature();
+			wayNode = entityFeature.getFeature();
 			
 			prmIndex = initialIndex;
 			

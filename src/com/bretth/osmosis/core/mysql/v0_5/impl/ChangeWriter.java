@@ -17,7 +17,6 @@ import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
-import com.bretth.osmosis.core.mysql.common.UserIdManager;
 import com.bretth.osmosis.core.task.common.ChangeAction;
 import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
@@ -662,6 +661,8 @@ public class ChangeWriter {
 	 * Releases all database resources.
 	 */
 	public void release() {
+		userIdManager.release();
+		
 		dbCtx.release();
 	}
 }

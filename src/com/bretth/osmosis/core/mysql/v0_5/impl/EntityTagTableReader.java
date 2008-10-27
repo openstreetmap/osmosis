@@ -9,7 +9,6 @@ import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.mysql.common.BaseTableReader;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
-import com.bretth.osmosis.core.mysql.common.EntityHistory;
 
 
 /**

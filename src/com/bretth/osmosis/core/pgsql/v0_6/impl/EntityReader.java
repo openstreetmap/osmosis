@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.domain.v0_6.Entity;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
@@ -25,7 +25,7 @@ import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 public class EntityReader<T extends Entity> implements ReleasableIterator<T> {
 	
 	private ReleasableIterator<T> entityReader;
-	private PeekableIterator<DBEntityFeature<Tag>> entityTagReader;
+	private PeekableIterator<DbFeature<Tag>> entityTagReader;
 	private T nextValue;
 	private boolean nextValueLoaded;
 	
@@ -48,10 +48,10 @@ public class EntityReader<T extends Entity> implements ReleasableIterator<T> {
 			"ent",
 			true
 		);
-		entityTagReader = new PeekableIterator<DBEntityFeature<Tag>>(
-			new PersistentIterator<DBEntityFeature<Tag>>(
-				new SingleClassObjectSerializationFactory(DBEntityFeature.class),
-				new EntityFeatureTableReader<Tag, DBEntityFeature<Tag>>(dbCtx, new TagBuilder(entityBuilder.getEntityName())),
+		entityTagReader = new PeekableIterator<DbFeature<Tag>>(
+			new PersistentIterator<DbFeature<Tag>>(
+				new SingleClassObjectSerializationFactory(DbFeature.class),
+				new EntityFeatureTableReader<Tag, DbFeature<Tag>>(dbCtx, new TagBuilder(entityBuilder.getEntityName())),
 				"enttag",
 				true
 			)
@@ -80,10 +80,10 @@ public class EntityReader<T extends Entity> implements ReleasableIterator<T> {
 			"nod",
 			true
 		);
-		entityTagReader = new PeekableIterator<DBEntityFeature<Tag>>(
-			new PersistentIterator<DBEntityFeature<Tag>>(
-				new SingleClassObjectSerializationFactory(DBEntityFeature.class),
-				new EntityFeatureTableReader<Tag, DBEntityFeature<Tag>>(dbCtx, new TagBuilder(entityBuilder.getEntityName()), constraintTable),
+		entityTagReader = new PeekableIterator<DbFeature<Tag>>(
+			new PersistentIterator<DbFeature<Tag>>(
+				new SingleClassObjectSerializationFactory(DbFeature.class),
+				new EntityFeatureTableReader<Tag, DbFeature<Tag>>(dbCtx, new TagBuilder(entityBuilder.getEntityName()), constraintTable),
 				"enttag",
 				true
 			)
@@ -105,7 +105,7 @@ public class EntityReader<T extends Entity> implements ReleasableIterator<T> {
 		
 		// Skip all tags that are from a lower entity.
 		while (entityTagReader.hasNext()) {
-			DBEntityFeature<Tag> dbTag;
+			DbFeature<Tag> dbTag;
 			
 			dbTag = entityTagReader.peekNext();
 			
@@ -118,7 +118,7 @@ public class EntityReader<T extends Entity> implements ReleasableIterator<T> {
 		
 		// Load all tags matching this version of the node.
 		while (entityTagReader.hasNext() && entityTagReader.peekNext().getEntityId() == entityId) {
-			entity.addTag(entityTagReader.next().getEntityFeature());
+			entity.addTag(entityTagReader.next().getFeature());
 		}
 	}
 	

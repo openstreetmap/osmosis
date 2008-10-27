@@ -10,7 +10,6 @@ import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
-import com.bretth.osmosis.core.mysql.common.EntityHistory;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
@@ -26,8 +25,8 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
 public class RelationChangeReader {
 	
 	private PeekableIterator<EntityHistory<Relation>> relationHistoryReader;
-	private PeekableIterator<EntityHistory<DBEntityFeature<RelationMember>>> relationMemberHistoryReader;
-	private PeekableIterator<EntityHistory<DBEntityFeature<Tag>>> relationTagHistoryReader;
+	private PeekableIterator<DbFeatureHistory<DbFeature<RelationMember>>> relationMemberHistoryReader;
+	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> relationTagHistoryReader;
 	private ChangeContainer nextValue;
 	
 	
@@ -56,18 +55,18 @@ public class RelationChangeReader {
 				)
 			);
 		relationMemberHistoryReader =
-			new PeekableIterator<EntityHistory<DBEntityFeature<RelationMember>>>(
-				new PersistentIterator<EntityHistory<DBEntityFeature<RelationMember>>>(
-					new SingleClassObjectSerializationFactory(EntityHistory.class),
+			new PeekableIterator<DbFeatureHistory<DbFeature<RelationMember>>>(
+				new PersistentIterator<DbFeatureHistory<DbFeature<RelationMember>>>(
+					new SingleClassObjectSerializationFactory(DbFeatureHistory.class),
 					new RelationMemberHistoryReader(loginCredentials, intervalBegin, intervalEnd),
 					"relmbr",
 					true
 				)
 			);
 		relationTagHistoryReader =
-			new PeekableIterator<EntityHistory<DBEntityFeature<Tag>>>(
-				new PersistentIterator<EntityHistory<DBEntityFeature<Tag>>>(
-					new SingleClassObjectSerializationFactory(EntityHistory.class),
+			new PeekableIterator<DbFeatureHistory<DbFeature<Tag>>>(
+				new PersistentIterator<DbFeatureHistory<DbFeature<Tag>>>(
+					new SingleClassObjectSerializationFactory(DbFeatureHistory.class),
 					new EntityTagHistoryReader(loginCredentials, "relations", "relation_tags", intervalBegin, intervalEnd),
 					"reltag",
 					true
@@ -92,16 +91,16 @@ public class RelationChangeReader {
 
 		// Add all applicable member references to the relation.
 		while (relationMemberHistoryReader.hasNext() &&
-				relationMemberHistoryReader.peekNext().getEntity().getEntityId() == relation.getId() &&
-				relationMemberHistoryReader.peekNext().getVersion() == relationHistory.getVersion()) {
-			relation.addMember(relationMemberHistoryReader.next().getEntity().getEntityFeature());
+				relationMemberHistoryReader.peekNext().getDbFeature().getEntityId() == relation.getId() &&
+				relationMemberHistoryReader.peekNext().getVersion() == relation.getVersion()) {
+			relation.addMember(relationMemberHistoryReader.next().getDbFeature().getFeature());
 		}
 		
 		// Add all applicable tags to the relation.
 		while (relationTagHistoryReader.hasNext() &&
-				relationTagHistoryReader.peekNext().getEntity().getEntityId() == relation.getId() &&
-				relationTagHistoryReader.peekNext().getVersion() == relationHistory.getVersion()) {
-			relation.addTag(relationTagHistoryReader.next().getEntity().getEntityFeature());
+				relationTagHistoryReader.peekNext().getDbFeature().getEntityId() == relation.getId() &&
+				relationTagHistoryReader.peekNext().getVersion() == relation.getVersion()) {
+			relation.addTag(relationTagHistoryReader.next().getDbFeature().getFeature());
 		}
 		
 		return relationHistory;
@@ -114,21 +113,23 @@ public class RelationChangeReader {
 	private ChangeContainer readChange() {
 		boolean createdPreviously;
 		EntityHistory<Relation> mostRecentHistory;
+		Relation relation;
 		RelationContainer relationContainer;
 		
 		// Check the first relation, if it has a version greater than 1 the
 		// relation existed prior to the interval beginning and therefore cannot
 		// be a create.
 		mostRecentHistory = readNextRelationHistory();
-		createdPreviously = (mostRecentHistory.getVersion() > 1);
+		relation = mostRecentHistory.getEntity();
+		createdPreviously = (relation.getVersion() > 1);
 		
 		while (relationHistoryReader.hasNext() &&
-				(relationHistoryReader.peekNext().getEntity().getId() == mostRecentHistory.getEntity().getId())) {
+				(relationHistoryReader.peekNext().getEntity().getId() == relation.getId())) {
 			mostRecentHistory = readNextRelationHistory();
 		}
 		
 		// The relation in the result must be wrapped in a container.
-		relationContainer = new RelationContainer(mostRecentHistory.getEntity());
+		relationContainer = new RelationContainer(relation);
 		
 		// The entity has been modified if it is visible and was created previously.
 		// It is a create if it is visible and was NOT created previously.

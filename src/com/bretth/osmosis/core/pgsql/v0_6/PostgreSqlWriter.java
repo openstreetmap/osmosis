@@ -27,7 +27,7 @@ import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBWayNode;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
@@ -132,13 +132,13 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private SchemaVersionValidator schemaVersionValidator;
 	private DatabaseCapabilityChecker capabilityChecker;
 	private List<Node> nodeBuffer;
-	private List<DBEntityFeature<Tag>> nodeTagBuffer;
+	private List<DbFeature<Tag>> nodeTagBuffer;
 	private List<Way> wayBuffer;
-	private List<DBEntityFeature<Tag>> wayTagBuffer;
+	private List<DbFeature<Tag>> wayTagBuffer;
 	private List<DBWayNode> wayNodeBuffer;
 	private List<Relation> relationBuffer;
-	private List<DBEntityFeature<Tag>> relationTagBuffer;
-	private List<DBEntityFeature<RelationMember>> relationMemberBuffer;
+	private List<DbFeature<Tag>> relationTagBuffer;
+	private List<DbFeature<RelationMember>> relationMemberBuffer;
 	private boolean initialized;
 	private HashSet<Integer> userSet;
 	private UserDao userDao;
@@ -198,13 +198,13 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 		
 		nodeBuffer = new ArrayList<Node>();
-		nodeTagBuffer = new ArrayList<DBEntityFeature<Tag>>();
+		nodeTagBuffer = new ArrayList<DbFeature<Tag>>();
 		wayBuffer = new ArrayList<Way>();
-		wayTagBuffer = new ArrayList<DBEntityFeature<Tag>>();
+		wayTagBuffer = new ArrayList<DbFeature<Tag>>();
 		wayNodeBuffer = new ArrayList<DBWayNode>();
 		relationBuffer = new ArrayList<Relation>();
-		relationTagBuffer = new ArrayList<DBEntityFeature<Tag>>();
-		relationMemberBuffer = new ArrayList<DBEntityFeature<RelationMember>>();
+		relationTagBuffer = new ArrayList<DbFeature<Tag>>();
+		relationMemberBuffer = new ArrayList<DbFeature<RelationMember>>();
 		
 		userSet = new HashSet<Integer>();
 		userDao = new UserDao(dbCtx);
@@ -388,7 +388,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addNodeTags(Node node) {
 		for (Tag tag : node.getTagList()) {
-			nodeTagBuffer.add(new DBEntityFeature<Tag>(node.getId(), tag));
+			nodeTagBuffer.add(new DbFeature<Tag>(node.getId(), tag));
 		}
 		
 		flushNodeTags(false);
@@ -525,7 +525,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addWayTags(Way way) {
 		for (Tag tag : way.getTagList()) {
-			wayTagBuffer.add(new DBEntityFeature<Tag>(way.getId(), tag));
+			wayTagBuffer.add(new DbFeature<Tag>(way.getId(), tag));
 		}
 		
 		flushWayTags(false);
@@ -704,7 +704,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addRelationTags(Relation relation) {
 		for (Tag tag : relation.getTagList()) {
-			relationTagBuffer.add(new DBEntityFeature<Tag>(relation.getId(), tag));
+			relationTagBuffer.add(new DbFeature<Tag>(relation.getId(), tag));
 		}
 		
 		flushRelationTags(false);
@@ -719,7 +719,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addRelationMembers(Relation relation) {
 		for (RelationMember relationMember : relation.getMemberList()) {
-			relationMemberBuffer.add(new DBEntityFeature<RelationMember>(relation.getId(), relationMember));
+			relationMemberBuffer.add(new DbFeature<RelationMember>(relation.getId(), relationMember));
 		}
 		
 		flushRelationMembers(false);

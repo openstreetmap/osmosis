@@ -1,4 +1,4 @@
-package com.bretth.osmosis.core.pgsql.v0_6;
+package com.bretth.osmosis.core.mysql.v0_6;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,15 +11,15 @@ import data.util.DataFileUtilities;
 
 
 /**
- * Tests for PostgreSQL tasks.
+ * Tests for MySQL tasks.
  * @author Brett Henderson
  */
-public class PostgreSqlTest {
+public class MySqlTest {
 	private DataFileUtilities fileUtils = new DataFileUtilities();
 	
 	
 	/**
-	 * A basic test loading an osm file into a pgsql database, then dumping it
+	 * A basic test loading an osm file into a mysql database, then dumping it
 	 * again and verifying that it is identical.
 	 * 
 	 * @throws IOException
@@ -32,7 +32,7 @@ public class PostgreSqlTest {
 		File outputFile;
 		
 		// Generate input files.
-		authFile = fileUtils.getDataFile("v0_6/pgsql-authfile.txt");
+		authFile = fileUtils.getDataFile("v0_6/mysql-authfile.txt");
 		inputFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
 		outputFile = File.createTempFile("test", ".osm");
 		
@@ -40,7 +40,7 @@ public class PostgreSqlTest {
 		Osmosis.run(
 			new String [] {
 				"-q",
-				"--truncate-pgsql-0.6",
+				"--truncate-mysql-0.6",
 				"authFile=" + authFile.getPath()
 			}
 		);
@@ -51,7 +51,7 @@ public class PostgreSqlTest {
 				"-q",
 				"--read-xml-0.6",
 				inputFile.getPath(),
-				"--write-pgsql-0.6",
+				"--write-mysql-0.6",
 				"authFile=" + authFile.getPath()
 			}
 		);
@@ -60,7 +60,7 @@ public class PostgreSqlTest {
 		Osmosis.run(
 			new String [] {
 				"-q",
-				"--read-pgsql-0.6",
+				"--read-mysql-0.6",
 				"authFile=" + authFile.getPath(),
 				"--dataset-dump-0.6",
 				"--write-xml-0.6",
@@ -77,7 +77,7 @@ public class PostgreSqlTest {
 	
 	
 	/**
-	 * A test loading an osm file into a pgsql database, then applying a
+	 * A test loading an osm file into a mysql database, then applying a
 	 * changeset, then dumping it again and verifying the output is as expected.
 	 * 
 	 * @throws IOException
@@ -92,7 +92,7 @@ public class PostgreSqlTest {
 		File actualResultFile;
 		
 		// Generate input files.
-		authFile = fileUtils.getDataFile("v0_6/pgsql-authfile.txt");
+		authFile = fileUtils.getDataFile("v0_6/mysql-authfile.txt");
 		snapshotFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
 		changesetFile = fileUtils.getDataFile("v0_6/db-changeset.osc");
 		expectedResultFile = fileUtils.getDataFile("v0_6/db-expected.osm");
@@ -102,7 +102,7 @@ public class PostgreSqlTest {
 		Osmosis.run(
 			new String [] {
 				"-q",
-				"--truncate-pgsql-0.6",
+				"--truncate-mysql-0.6",
 				"authFile=" + authFile.getPath()
 			}
 		);
@@ -113,7 +113,7 @@ public class PostgreSqlTest {
 				"-q",
 				"--read-xml-0.6",
 				snapshotFile.getPath(),
-				"--write-pgsql-0.6",
+				"--write-mysql-0.6",
 				"authFile=" + authFile.getPath()
 			}
 		);
@@ -124,7 +124,7 @@ public class PostgreSqlTest {
 				"-q",
 				"--read-xml-change-0.6",
 				changesetFile.getPath(),
-				"--write-pgsql-change-0.6",
+				"--write-mysql-change-0.6",
 				"authFile=" + authFile.getPath()
 			}
 		);
@@ -133,7 +133,7 @@ public class PostgreSqlTest {
 		Osmosis.run(
 			new String [] {
 				"-q",
-				"--read-pgsql-0.6",
+				"--read-mysql-0.6",
 				"authFile=" + authFile.getPath(),
 				"--dataset-dump-0.6",
 				"--write-xml-0.6",

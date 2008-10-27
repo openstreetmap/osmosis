@@ -23,8 +23,8 @@ import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 public class CurrentRelationReader implements ReleasableIterator<Relation> {
 	
 	private ReleasableIterator<Relation> relationReader;
-	private PeekableIterator<DBEntityFeature<Tag>> relationTagReader;
-	private PeekableIterator<DBEntityFeature<RelationMember>> relationMemberReader;
+	private PeekableIterator<DbFeature<Tag>> relationTagReader;
+	private PeekableIterator<DbFeature<RelationMember>> relationMemberReader;
 	private Relation nextValue;
 	private boolean nextValueLoaded;
 	
@@ -45,17 +45,17 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 			"rel",
 			true
 		);
-		relationTagReader = new PeekableIterator<DBEntityFeature<Tag>>(
-			new PersistentIterator<DBEntityFeature<Tag>>(
-				new SingleClassObjectSerializationFactory(DBEntityFeature.class),
+		relationTagReader = new PeekableIterator<DbFeature<Tag>>(
+			new PersistentIterator<DbFeature<Tag>>(
+				new SingleClassObjectSerializationFactory(DbFeature.class),
 				new CurrentEntityTagTableReader(loginCredentials, "current_relation_tags"),
 				"reltag",
 				true
 			)
 		);
-		relationMemberReader = new PeekableIterator<DBEntityFeature<RelationMember>>(
-			new PersistentIterator<DBEntityFeature<RelationMember>>(
-				new SingleClassObjectSerializationFactory(DBEntityFeature.class),
+		relationMemberReader = new PeekableIterator<DbFeature<RelationMember>>(
+			new PersistentIterator<DbFeature<RelationMember>>(
+				new SingleClassObjectSerializationFactory(DbFeature.class),
 				new CurrentRelationMemberTableReader(loginCredentials),
 				"relmbr",
 				true
@@ -78,7 +78,7 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 			
 			// Skip all relation tags that are from lower id relation.
 			while (relationTagReader.hasNext()) {
-				DBEntityFeature<Tag> relationTag;
+				DbFeature<Tag> relationTag;
 				
 				relationTag = relationTagReader.peekNext();
 				
@@ -91,12 +91,12 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 			
 			// Load all tags for this relation.
 			while (relationTagReader.hasNext() && relationTagReader.peekNext().getEntityId() == relationId) {
-				relation.addTag(relationTagReader.next().getEntityFeature());
+				relation.addTag(relationTagReader.next().getFeature());
 			}
 			
-			// Skip all relation members that are from lower id or lower version of the same id.
+			// Skip all relation members that are from lower id relation.
 			while (relationMemberReader.hasNext()) {
-				DBEntityFeature<RelationMember> relationMember;
+				DbFeature<RelationMember> relationMember;
 				
 				relationMember = relationMemberReader.peekNext();
 				
@@ -109,7 +109,7 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 			
 			// Load all members matching this relation.
 			while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getEntityId() == relationId) {
-				relation.addMember(relationMemberReader.next().getEntityFeature());
+				relation.addMember(relationMemberReader.next().getFeature());
 			}
 			
 			nextValue = relation;

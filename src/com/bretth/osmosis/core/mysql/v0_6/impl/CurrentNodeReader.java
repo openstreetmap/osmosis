@@ -1,31 +1,29 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.mysql.v0_6.impl;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Date;
+import java.util.NoSuchElementException;
 
-import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Node;
-import com.bretth.osmosis.core.mysql.common.BaseEntityReader;
-import com.bretth.osmosis.core.mysql.common.DatabaseContext;
-import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
+import com.bretth.osmosis.core.domain.v0_6.Tag;
+import com.bretth.osmosis.core.store.PeekableIterator;
+import com.bretth.osmosis.core.store.PersistentIterator;
+import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 
 
 /**
- * Reads current nodes from a database ordered by their identifier.
+ * Reads current node from a database ordered by their identifier. It combines the
+ * output of the node table readers to produce fully configured node objects.
  * 
  * @author Brett Henderson
  */
-public class CurrentNodeReader extends BaseEntityReader<Node> {
-	private static final String SELECT_SQL =
-		"SELECT n.id, n.timestamp, u.data_public, u.display_name, n.latitude, n.longitude, n.tags, n.visible"
-		+ " FROM current_nodes n"
-		+ " LEFT OUTER JOIN users u ON n.user_id = u.id"
-		+ " ORDER BY n.id";
+public class CurrentNodeReader implements ReleasableIterator<Node> {
 	
-	private EmbeddedTagProcessor tagParser;
+	private ReleasableIterator<Node> nodeReader;
+	private PeekableIterator<DbFeature<Tag>> nodeTagReader;
+	private Node nextValue;
+	private boolean nextValueLoaded;
 	
 	
 	/**
@@ -38,60 +36,91 @@ public class CurrentNodeReader extends BaseEntityReader<Node> {
 	 *            regardless of their public edits flag.
 	 */
 	public CurrentNodeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
-		super(loginCredentials, readAllUsers);
-		
-		tagParser = new EmbeddedTagProcessor();
+		nodeReader = new PersistentIterator<Node>(
+			new SingleClassObjectSerializationFactory(Node.class),
+			new CurrentNodeTableReader(loginCredentials, readAllUsers),
+			"nod",
+			true
+		);
+		nodeTagReader = new PeekableIterator<DbFeature<Tag>>(
+			new PersistentIterator<DbFeature<Tag>>(
+				new SingleClassObjectSerializationFactory(DbFeature.class),
+				new CurrentEntityTagTableReader(loginCredentials, "current_node_tags"),
+				"nodtag",
+				true
+			)
+		);
 	}
 	
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected ReadResult<Node> createNextValue(ResultSet resultSet) {
-		long id;
-		Date timestamp;
-		String userName;
-		int userId;
-		int version;
-		double latitude;
-		double longitude;
-		String tags;
-		boolean visible;
-		Node node;
-		
-		try {
-			id = resultSet.getLong("id");
-			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
-			userName = readUserField(
-				resultSet.getBoolean("data_public"),
-				resultSet.getString("display_name")
-			);
-			latitude = FixedPrecisionCoordinateConvertor.convertToDouble(resultSet.getInt("latitude"));
-			longitude = FixedPrecisionCoordinateConvertor.convertToDouble(resultSet.getInt("longitude"));
-			tags = resultSet.getString("tags");
-			visible = resultSet.getBoolean("visible");
+	public boolean hasNext() {
+		if (!nextValueLoaded && nodeReader.hasNext()) {
+			Node node;
+			long nodeId;
 			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to read node fields.", e);
+			node = nodeReader.next();
+			
+			nodeId = node.getId();
+			
+			// Skip all node tags that are from lower id node.
+			while (nodeTagReader.hasNext()) {
+				DbFeature<Tag> nodeTag;
+				
+				nodeTag = nodeTagReader.peekNext();
+				
+				if (nodeTag.getEntityId() < nodeId) {
+					nodeTagReader.next();
+				} else {
+					break;
+				}
+			}
+			
+			// Load all tags for this node.
+			while (nodeTagReader.hasNext() && nodeTagReader.peekNext().getEntityId() == nodeId) {
+				node.addTag(nodeTagReader.next().getFeature());
+			}
+			
+			nextValue = node;
+			nextValueLoaded = true;
 		}
 		
-		node = new Node(id, timestamp, userName, latitude, longitude);
-		node.addTags(tagParser.parseTags(tags));
+		return nextValueLoaded;
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Node next() {
+		Node result;
 		
-		// Non-visible records will be ignored by the caller.
-		return new ReadResult<Node>(
-			visible,
-			node
-		);
+		if (!hasNext()) {
+			throw new NoSuchElementException();
+		}
+		
+		result = nextValue;
+		nextValueLoaded = false;
+		
+		return result;
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void remove() {
+		throw new UnsupportedOperationException();
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void release() {
+		nodeReader.release();
+		nodeTagReader.release();
 	}
 }

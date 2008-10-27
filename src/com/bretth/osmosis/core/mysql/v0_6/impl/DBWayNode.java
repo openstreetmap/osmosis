@@ -13,11 +13,11 @@ import com.bretth.osmosis.core.store.StoreWriter;
  * 
  * @author Brett Henderson
  */
-public class DBWayNode extends DBEntityFeature<WayNode> {
+public class DBWayNode extends DbFeature<WayNode> {
 	
 	private int sequenceId;
-	
-	
+
+
 	/**
 	 * Creates a new instance.
 	 * 

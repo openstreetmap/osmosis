@@ -5,7 +5,6 @@ import java.util.Comparator;
 import java.util.Date;
 
 import com.bretth.osmosis.core.domain.v0_5.Entity;
-import com.bretth.osmosis.core.mysql.common.EntityHistory;
 
 
 /**

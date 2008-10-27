@@ -91,7 +91,7 @@ public class WayReader extends EntityReader<Way> {
 		// by their sequence number.
 		Collections.sort(wayNodes, new WayNodeComparator());
 		for (DBWayNode dbWayNode : wayNodes) {
-			entity.addWayNode(dbWayNode.getEntityFeature());
+			entity.addWayNode(dbWayNode.getFeature());
 		}
 	}
 	

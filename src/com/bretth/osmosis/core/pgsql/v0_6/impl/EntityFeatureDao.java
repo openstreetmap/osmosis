@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
 import com.bretth.osmosis.core.pgsql.common.BaseDao;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.store.ReleasableIterator;
@@ -24,7 +24,7 @@ import com.bretth.osmosis.core.store.Storeable;
  * @param <Tdb>
  *            The entity feature database wrapper type to be used.
  */
-public class EntityFeatureDao<Tef extends Storeable, Tdb extends DBEntityFeature<Tef>> extends BaseDao {
+public class EntityFeatureDao<Tef extends Storeable, Tdb extends DbFeature<Tef>> extends BaseDao {
 	
 	/**
 	 * Provides jdbc mapping functionality for this entity feature type.
@@ -109,7 +109,7 @@ public class EntityFeatureDao<Tef extends Storeable, Tdb extends DBEntityFeature
 		dbList = getList(entityId);
 		rawList = new ArrayList<Tef>(dbList.size());
 		for (Tdb dbFeature : dbList) {
-			rawList.add(dbFeature.getEntityFeature());
+			rawList.add(dbFeature.getFeature());
 		}
 		
 		return rawList;

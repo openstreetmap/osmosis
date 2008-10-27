@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.store.PeekableIterator;
 
@@ -19,7 +19,7 @@ import com.bretth.osmosis.core.store.PeekableIterator;
  */
 public class RelationReader  extends EntityReader<Relation> {
 	
-	private PeekableIterator<DBEntityFeature<RelationMember>> relationMemberReader;
+	private PeekableIterator<DbFeature<RelationMember>> relationMemberReader;
 	
 	
 	/**
@@ -31,8 +31,8 @@ public class RelationReader  extends EntityReader<Relation> {
 	public RelationReader(DatabaseContext dbCtx) {
 		super(dbCtx, new RelationBuilder());
 		
-		relationMemberReader = new PeekableIterator<DBEntityFeature<RelationMember>>(
-			new EntityFeatureTableReader<RelationMember, DBEntityFeature<RelationMember>>(dbCtx, new RelationMemberBuilder())
+		relationMemberReader = new PeekableIterator<DbFeature<RelationMember>>(
+			new EntityFeatureTableReader<RelationMember, DbFeature<RelationMember>>(dbCtx, new RelationMemberBuilder())
 		);
 	}
 	
@@ -49,8 +49,8 @@ public class RelationReader  extends EntityReader<Relation> {
 	public RelationReader(DatabaseContext dbCtx, String constraintTable) {
 		super(dbCtx, new RelationBuilder(), constraintTable);
 		
-		relationMemberReader = new PeekableIterator<DBEntityFeature<RelationMember>>(
-			new EntityFeatureTableReader<RelationMember, DBEntityFeature<RelationMember>>(dbCtx, new RelationMemberBuilder(), constraintTable)
+		relationMemberReader = new PeekableIterator<DbFeature<RelationMember>>(
+			new EntityFeatureTableReader<RelationMember, DbFeature<RelationMember>>(dbCtx, new RelationMemberBuilder(), constraintTable)
 		);
 	}
 	
@@ -61,7 +61,7 @@ public class RelationReader  extends EntityReader<Relation> {
 	@Override
 	protected void populateEntityFeatures(Relation entity) {
 		long relationId;
-		List<DBEntityFeature<RelationMember>> relationMembers;
+		List<DbFeature<RelationMember>> relationMembers;
 		
 		super.populateEntityFeatures(entity);
 		
@@ -69,7 +69,7 @@ public class RelationReader  extends EntityReader<Relation> {
 		
 		// Skip all relation members that are from a lower relation.
 		while (relationMemberReader.hasNext()) {
-			DBEntityFeature<RelationMember> wayNode;
+			DbFeature<RelationMember> wayNode;
 			
 			wayNode = relationMemberReader.peekNext();
 			
@@ -81,12 +81,12 @@ public class RelationReader  extends EntityReader<Relation> {
 		}
 		
 		// Load all nodes matching this version of the way.
-		relationMembers = new ArrayList<DBEntityFeature<RelationMember>>();
+		relationMembers = new ArrayList<DbFeature<RelationMember>>();
 		while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getEntityId() == relationId) {
 			relationMembers.add(relationMemberReader.next());
 		}
-		for (DBEntityFeature<RelationMember> dbRelationMember : relationMembers) {
-			entity.addMember(dbRelationMember.getEntityFeature());
+		for (DbFeature<RelationMember> dbRelationMember : relationMembers) {
+			entity.addMember(dbRelationMember.getFeature());
 		}
 	}
 	

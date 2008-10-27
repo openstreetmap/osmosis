@@ -8,23 +8,24 @@ import java.util.Date;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
-import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
+import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
 
 /**
- * Reads all relations from a database ordered by their identifier. These relations won't
+ * Reads all nodes from a database ordered by their identifier. These nodes won't
  * be populated with nodes and tags.
  * 
  * @author Brett Henderson
  */
-public class RelationTableReader extends BaseEntityReader<EntityHistory<Relation>> {
+public class NodeTableReader extends BaseEntityReader<EntityHistory<Node>> {
 	private static final String SELECT_SQL =
-		"SELECT r.id, r.version, r.timestamp, r.visible, u.data_public, u.id AS user_id, u.display_name"
-		+ " FROM relations r"
-		+ " LEFT OUTER JOIN changesets c ON r.changeset_id = c.id"
+		"SELECT n.id, n.version, n.timestamp, n.visible, u.data_public, u.id AS user_id, u.display_name, n.latitude, n.longitude"
+		+ " FROM nodes n"
+		+ " LEFT OUTER JOIN changesets c ON n.changeset_id = c.id"
 		+ " LEFT OUTER JOIN users u ON c.user_id = u.id"
-		+ " ORDER BY r.id, r.version";
+		+ " ORDER BY n.id, n.version";
 	
 	
 	/**
@@ -36,7 +37,7 @@ public class RelationTableReader extends BaseEntityReader<EntityHistory<Relation
 	 *            If this flag is true, all users will be read from the database
 	 *            regardless of their public edits flag.
 	 */
-	public RelationTableReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
+	public NodeTableReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
 		super(loginCredentials, readAllUsers);
 	}
 	
@@ -54,12 +55,14 @@ public class RelationTableReader extends BaseEntityReader<EntityHistory<Relation
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<EntityHistory<Relation>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<Node>> createNextValue(ResultSet resultSet) {
 		long id;
 		int version;
 		Date timestamp;
 		boolean visible;
 		OsmUser user;
+		double latitude;
+		double longitude;
 		
 		try {
 			id = resultSet.getLong("id");
@@ -71,14 +74,16 @@ public class RelationTableReader extends BaseEntityReader<EntityHistory<Relation
 				resultSet.getInt("user_id"),
 				resultSet.getString("display_name")
 			);
+			latitude = FixedPrecisionCoordinateConvertor.convertToDouble(resultSet.getInt("latitude"));
+			longitude = FixedPrecisionCoordinateConvertor.convertToDouble(resultSet.getInt("longitude"));
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to read relation fields.", e);
+			throw new OsmosisRuntimeException("Unable to read node fields.", e);
 		}
 		
-		return new ReadResult<EntityHistory<Relation>>(
+		return new ReadResult<EntityHistory<Node>>(
 			true,
-			new EntityHistory<Relation>(new Relation(id, version, timestamp, user), visible)
+			new EntityHistory<Node>(new Node(id, version, timestamp, user, latitude, longitude), visible)
 		);
 	}
 }

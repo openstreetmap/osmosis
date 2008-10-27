@@ -12,7 +12,6 @@ import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.mysql.common.BaseTableReader;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
-import com.bretth.osmosis.core.mysql.common.EntityHistory;
 
 
 /**
@@ -21,7 +20,7 @@ import com.bretth.osmosis.core.mysql.common.EntityHistory;
  * 
  * @author Brett Henderson
  */
-public class EntityTagHistoryReader extends BaseTableReader<EntityHistory<DBEntityFeature<Tag>>> {
+public class EntityTagHistoryReader extends BaseTableReader<DbFeatureHistory<DbFeature<Tag>>> {
 	private static final String SELECT_SQL_1 =
 		"SELECT et.id AS entity_id, et.k, et.v, et.version" +
 		" FROM ";
@@ -92,7 +91,7 @@ public class EntityTagHistoryReader extends BaseTableReader<EntityHistory<DBEnti
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<EntityHistory<DBEntityFeature<Tag>>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<DbFeatureHistory<DbFeature<Tag>>> createNextValue(ResultSet resultSet) {
 		long entityId;
 		String key;
 		String value;
@@ -108,10 +107,12 @@ public class EntityTagHistoryReader extends BaseTableReader<EntityHistory<DBEnti
 			throw new OsmosisRuntimeException("Unable to read entity tag fields.", e);
 		}
 		
-		return new ReadResult<EntityHistory<DBEntityFeature<Tag>>>(
+		return new ReadResult<DbFeatureHistory<DbFeature<Tag>>>(
 			true,
-			new EntityHistory<DBEntityFeature<Tag>>(
-				new DBEntityFeature<Tag>(entityId, new Tag(key, value)), version, true)
+			new DbFeatureHistory<DbFeature<Tag>>(
+				new DbFeature<Tag>(entityId, new Tag(key, value)),
+				version
+			)
 		);
 	}
 }

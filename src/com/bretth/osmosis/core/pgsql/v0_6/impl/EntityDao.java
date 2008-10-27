@@ -10,7 +10,7 @@ import java.util.List;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Entity;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
 import com.bretth.osmosis.core.pgsql.common.BaseDao;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.NoSuchRecordException;
@@ -26,7 +26,7 @@ import com.bretth.osmosis.core.store.ReleasableIterator;
  */
 public abstract class EntityDao<T extends Entity> extends BaseDao {
 	
-	private EntityFeatureDao<Tag, DBEntityFeature<Tag>> tagDao;
+	private EntityFeatureDao<Tag, DbFeature<Tag>> tagDao;
 	private EntityBuilder<T> entityBuilder;
 	private PreparedStatement countStatement;
 	private PreparedStatement getStatement;
@@ -50,7 +50,7 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 		
 		this.entityBuilder = entityBuilder;
 		
-		tagDao = new EntityFeatureDao<Tag, DBEntityFeature<Tag>>(dbCtx, new TagBuilder(entityBuilder.getEntityName()));
+		tagDao = new EntityFeatureDao<Tag, DbFeature<Tag>>(dbCtx, new TagBuilder(entityBuilder.getEntityName()));
 	}
 	
 	
@@ -133,8 +133,8 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 			resultSet.close();
 			resultSet = null;
 			
-			for (DBEntityFeature<Tag> dbTag : tagDao.getList(entityId)) {
-				entity.addTag(dbTag.getEntityFeature());
+			for (DbFeature<Tag> dbTag : tagDao.getList(entityId)) {
+				entity.addTag(dbTag.getFeature());
 			}
 			
 			return entity;
@@ -166,12 +166,12 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	 *            The list of features to add.
 	 */
 	private void addTagList(long entityId, List<Tag> tagList) {
-		List<DBEntityFeature<Tag>> dbList;
+		List<DbFeature<Tag>> dbList;
 		
-		dbList = new ArrayList<DBEntityFeature<Tag>>(tagList.size());
+		dbList = new ArrayList<DbFeature<Tag>>(tagList.size());
 		
 		for (Tag tag : tagList) {
-			dbList.add(new DBEntityFeature<Tag>(entityId, tag));
+			dbList.add(new DbFeature<Tag>(entityId, tag));
 		}
 		
 		tagDao.addList(dbList);

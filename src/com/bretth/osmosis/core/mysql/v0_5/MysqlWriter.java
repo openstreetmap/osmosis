@@ -25,12 +25,12 @@ import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
-import com.bretth.osmosis.core.mysql.common.UserIdManager;
 import com.bretth.osmosis.core.mysql.v0_5.impl.DBEntityTag;
 import com.bretth.osmosis.core.mysql.v0_5.impl.DBRelationMember;
 import com.bretth.osmosis.core.mysql.v0_5.impl.DBWayNode;
 import com.bretth.osmosis.core.mysql.v0_5.impl.EmbeddedTagProcessor;
 import com.bretth.osmosis.core.mysql.v0_5.impl.MemberTypeRenderer;
+import com.bretth.osmosis.core.mysql.v0_5.impl.UserIdManager;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
@@ -993,6 +993,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * Releases all database resources.
 	 */
 	public void release() {
+		userIdManager.release();
+		
 		dbCtx.release();
 	}
 	

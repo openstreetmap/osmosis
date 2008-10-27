@@ -9,7 +9,6 @@ import java.util.NoSuchElementException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
-import com.bretth.osmosis.core.mysql.common.EntityHistory;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
@@ -25,8 +24,8 @@ import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 	
 	private ReleasableIterator<EntityHistory<Way>> wayReader;
-	private PeekableIterator<EntityHistory<DBEntityFeature<Tag>>> wayTagReader;
-	private PeekableIterator<EntityHistory<DBWayNode>> wayNodeReader;
+	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> wayTagReader;
+	private PeekableIterator<DbFeatureHistory<DBWayNode>> wayNodeReader;
 	private EntityHistory<Way> nextValue;
 	private boolean nextValueLoaded;
 	
@@ -47,17 +46,17 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 			"way",
 			true
 		);
-		wayTagReader = new PeekableIterator<EntityHistory<DBEntityFeature<Tag>>>(
-			new PersistentIterator<EntityHistory<DBEntityFeature<Tag>>>(
-				new SingleClassObjectSerializationFactory(EntityHistory.class),
+		wayTagReader = new PeekableIterator<DbFeatureHistory<DbFeature<Tag>>>(
+			new PersistentIterator<DbFeatureHistory<DbFeature<Tag>>>(
+				new SingleClassObjectSerializationFactory(DbFeatureHistory.class),
 				new EntityTagTableReader(loginCredentials, "way_tags"),
 				"waytag",
 				true
 			)
 		);
-		wayNodeReader = new PeekableIterator<EntityHistory<DBWayNode>>(
-			new PersistentIterator<EntityHistory<DBWayNode>>(
-				new SingleClassObjectSerializationFactory(EntityHistory.class),
+		wayNodeReader = new PeekableIterator<DbFeatureHistory<DBWayNode>>(
+			new PersistentIterator<DbFeatureHistory<DBWayNode>>(
+				new SingleClassObjectSerializationFactory(DbFeatureHistory.class),
 				new WayNodeTableReader(loginCredentials),
 				"waynod",
 				true
@@ -81,15 +80,15 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 			
 			way = wayHistory.getEntity();
 			wayId = way.getId();
-			wayVersion = wayHistory.getVersion();
+			wayVersion = way.getVersion();
 			
 			// Skip all way tags that are from lower id or lower version of the same id.
 			while (wayTagReader.hasNext()) {
-				EntityHistory<DBEntityFeature<Tag>> wayTagHistory;
-				DBEntityFeature<Tag> wayTag;
+				DbFeatureHistory<DbFeature<Tag>> wayTagHistory;
+				DbFeature<Tag> wayTag;
 				
 				wayTagHistory = wayTagReader.peekNext();
-				wayTag = wayTagHistory.getEntity();
+				wayTag = wayTagHistory.getDbFeature();
 				
 				if (wayTag.getEntityId() < wayId) {
 					wayTagReader.next();
@@ -105,17 +104,17 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 			}
 			
 			// Load all tags matching this version of the way.
-			while (wayTagReader.hasNext() && wayTagReader.peekNext().getEntity().getEntityId() == wayId && wayTagReader.peekNext().getVersion() == wayVersion) {
-				way.addTag(wayTagReader.next().getEntity().getEntityFeature());
+			while (wayTagReader.hasNext() && wayTagReader.peekNext().getDbFeature().getEntityId() == wayId && wayTagReader.peekNext().getVersion() == wayVersion) {
+				way.addTag(wayTagReader.next().getDbFeature().getFeature());
 			}
 			
 			// Skip all way nodes that are from lower id or lower version of the same id.
 			while (wayNodeReader.hasNext()) {
-				EntityHistory<DBWayNode> wayNodeHistory;
+				DbFeatureHistory<DBWayNode> wayNodeHistory;
 				DBWayNode wayNode;
 				
 				wayNodeHistory = wayNodeReader.peekNext();
-				wayNode = wayNodeHistory.getEntity();
+				wayNode = wayNodeHistory.getDbFeature();
 				
 				if (wayNode.getEntityId() < wayId) {
 					wayNodeReader.next();
@@ -132,14 +131,14 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 			
 			// Load all nodes matching this version of the way.
 			wayNodes = new ArrayList<DBWayNode>();
-			while (wayNodeReader.hasNext() && wayNodeReader.peekNext().getEntity().getEntityId() == wayId && wayNodeReader.peekNext().getVersion() == wayVersion) {
-				wayNodes.add(wayNodeReader.next().getEntity());
+			while (wayNodeReader.hasNext() && wayNodeReader.peekNext().getDbFeature().getEntityId() == wayId && wayNodeReader.peekNext().getVersion() == wayVersion) {
+				wayNodes.add(wayNodeReader.next().getDbFeature());
 			}
 			// The underlying query sorts node references by way id but not
 			// by their sequence number.
 			Collections.sort(wayNodes, new WayNodeComparator());
 			for (DBWayNode dbWayNode : wayNodes) {
-				way.addWayNode(dbWayNode.getEntityFeature());
+				way.addWayNode(dbWayNode.getFeature());
 			}
 			
 			nextValue = wayHistory;

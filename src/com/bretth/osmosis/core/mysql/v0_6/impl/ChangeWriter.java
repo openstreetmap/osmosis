@@ -2,7 +2,6 @@
 package com.bretth.osmosis.core.mysql.v0_6.impl;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
@@ -17,7 +16,6 @@ import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
-import com.bretth.osmosis.core.mysql.common.UserIdManager;
 import com.bretth.osmosis.core.task.common.ChangeAction;
 import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
@@ -29,15 +27,21 @@ import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  */
 public class ChangeWriter {
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO nodes (id, timestamp, latitude, longitude, tile, tags, visible, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		"INSERT INTO nodes (id, version, timestamp, visible, changeset_id, latitude, longitude, tile) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String INSERT_SQL_NODE_CURRENT =
-		"INSERT INTO current_nodes (id, timestamp, latitude, longitude, tile, tags, visible, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		"INSERT INTO current_nodes (id, version, timestamp, visible, changeset_id, latitude, longitude, tile) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String DELETE_SQL_NODE_CURRENT =
 		"DELETE FROM current_nodes WHERE id = ?";
+	private static final String INSERT_SQL_NODE_TAG =
+		"INSERT INTO node_tags (id, version, k, v) VALUES (?, ?, ?, ?)";
+	private static final String INSERT_SQL_NODE_TAG_CURRENT =
+		"INSERT INTO current_node_tags (id, k, v) VALUES (?, ?, ?)";
+	private static final String DELETE_SQL_NODE_TAG_CURRENT =
+		"DELETE FROM current_node_tags WHERE id = ?";
 	private static final String INSERT_SQL_WAY =
-		"INSERT INTO ways (id, version, timestamp, visible, user_id) VALUES (?, ?, ?, ?, ?)";
+		"INSERT INTO ways (id, version, timestamp, visible, changeset_id) VALUES (?, ?, ?, ?, ?)";
 	private static final String INSERT_SQL_WAY_CURRENT =
-		"INSERT INTO current_ways (id, timestamp, visible, user_id) VALUES (?, ?, ?, ?)";
+		"INSERT INTO current_ways (id, version, timestamp, visible, changeset_id) VALUES (?, ?, ?, ?, ?)";
 	private static final String DELETE_SQL_WAY_CURRENT =
 		"DELETE FROM current_ways WHERE id = ?";
 	private static final String INSERT_SQL_WAY_TAG =
@@ -52,12 +56,10 @@ public class ChangeWriter {
 		"INSERT INTO current_way_nodes (id, node_id, sequence_id) VALUES (?, ?, ?)";
 	private static final String DELETE_SQL_WAY_NODE_CURRENT =
 		"DELETE FROM current_way_nodes WHERE id = ?";
-	private static final String SELECT_SQL_WAY_CURRENT_VERSION =
-		"SELECT MAX(version) AS version FROM ways WHERE id = ?";
 	private static final String INSERT_SQL_RELATION =
-		"INSERT INTO relations (id, version, timestamp, visible, user_id) VALUES (?, ?, ?, ?, ?)";
+		"INSERT INTO relations (id, version, timestamp, visible, changeset_id) VALUES (?, ?, ?, ?, ?)";
 	private static final String INSERT_SQL_RELATION_CURRENT =
-		"INSERT INTO current_relations (id, timestamp, visible, user_id) VALUES (?, ?, ?, ?)";
+		"INSERT INTO current_relations (id, version, timestamp, visible, changeset_id) VALUES (?, ?, ?, ?, ?)";
 	private static final String DELETE_SQL_RELATION_CURRENT =
 		"DELETE FROM current_relations WHERE id = ?";
 	private static final String INSERT_SQL_RELATION_TAG =
@@ -72,18 +74,20 @@ public class ChangeWriter {
 		"INSERT INTO current_relation_members (id, member_type, member_id, member_role) VALUES (?, ?, ?, ?)";
 	private static final String DELETE_SQL_RELATION_MEMBER_CURRENT =
 		"DELETE FROM current_relation_members WHERE id = ?";
-	private static final String SELECT_SQL_RELATION_CURRENT_VERSION =
-		"SELECT MAX(version) AS version FROM relations WHERE id = ?";
 	
 	
 	private DatabaseContext dbCtx;
 	
-	private UserIdManager userIdManager;
+	private UserManager userManager;
+	private ChangesetManager changesetManager;
 	
 	private boolean populateCurrentTables;
 	private PreparedStatement insertNodeStatement;
 	private PreparedStatement insertNodeCurrentStatement;
 	private PreparedStatement deleteNodeCurrentStatement;
+	private PreparedStatement insertNodeTagStatement;
+	private PreparedStatement insertNodeTagCurrentStatement;
+	private PreparedStatement deleteNodeTagCurrentStatement;
 	private PreparedStatement insertWayStatement;
 	private PreparedStatement insertWayCurrentStatement;
 	private PreparedStatement deleteWayCurrentStatement;
@@ -93,7 +97,6 @@ public class ChangeWriter {
 	private PreparedStatement insertWayNodeStatement;
 	private PreparedStatement insertWayNodeCurrentStatement;
 	private PreparedStatement deleteWayNodeCurrentStatement;
-	private PreparedStatement queryWayCurrentVersion;
 	private PreparedStatement insertRelationStatement;
 	private PreparedStatement insertRelationCurrentStatement;
 	private PreparedStatement deleteRelationCurrentStatement;
@@ -103,8 +106,6 @@ public class ChangeWriter {
 	private PreparedStatement insertRelationMemberStatement;
 	private PreparedStatement insertRelationMemberCurrentStatement;
 	private PreparedStatement deleteRelationMemberCurrentStatement;
-	private PreparedStatement queryRelationCurrentVersion;
-	private EmbeddedTagProcessor tagFormatter;
 	private MemberTypeRenderer memberTypeRenderer;
 	private TileCalculator tileCalculator;
 	
@@ -121,91 +122,13 @@ public class ChangeWriter {
 	public ChangeWriter(DatabaseLoginCredentials loginCredentials, boolean populateCurrentTables) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		
-		userIdManager = new UserIdManager(dbCtx);
+		userManager = new UserManager(dbCtx);
+		changesetManager = new ChangesetManager(dbCtx);
 		
 		this.populateCurrentTables = populateCurrentTables;
 		
-		tagFormatter = new EmbeddedTagProcessor();
 		tileCalculator = new TileCalculator();
 		memberTypeRenderer = new MemberTypeRenderer();
-	}
-	
-	
-	/**
-	 * Loads the current version of a way from the database.
-	 * 
-	 * @param wayId
-	 *            The way to load.
-	 * @return The existing version of the way.
-	 */
-	private int getWayVersion(long wayId) {
-		ResultSet resultSet;
-		int result;
-		
-		if (queryWayCurrentVersion == null) {
-			queryWayCurrentVersion = dbCtx.prepareStatement(SELECT_SQL_WAY_CURRENT_VERSION);
-		}
-		
-		try {
-			// Query the current version of the specified way.
-			queryWayCurrentVersion.setLong(1, wayId);
-			resultSet = queryWayCurrentVersion.executeQuery();
-			
-			// Get the result from the first row in the recordset if it exists.
-			// If it doesn't exist, this is a create so we treat the existing
-			// version as 0.
-			if (resultSet.next()) {
-				result = resultSet.getInt("version");
-			} else {
-				result = 0;
-			}
-			
-			resultSet.close();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("The version of way with id=" + wayId + " could not be loaded.", e);
-		}
-		
-		return result;
-	}
-	
-	
-	/**
-	 * Loads the current version of a relation from the database.
-	 * 
-	 * @param relationId
-	 *            The relation to load.
-	 * @return The existing version of the relation.
-	 */
-	private int getRelationVersion(long relationId) {
-		ResultSet resultSet;
-		int result;
-		
-		if (queryRelationCurrentVersion == null) {
-			queryRelationCurrentVersion = dbCtx.prepareStatement(SELECT_SQL_RELATION_CURRENT_VERSION);
-		}
-		
-		try {
-			// Query the current version of the specified relation.
-			queryRelationCurrentVersion.setLong(1, relationId);
-			resultSet = queryRelationCurrentVersion.executeQuery();
-			
-			// Get the result from the first row in the recordset if it exists.
-			// If it doesn't exist, this is a create so we treat the existing
-			// version as 0.
-			if (resultSet.next()) {
-				result = resultSet.getInt("version");
-			} else {
-				result = 0;
-			}
-			
-			resultSet.close();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("The version of relation with id=" + relationId + " could not be loaded.", e);
-		}
-		
-		return result;
 	}
 	
 	
@@ -220,11 +143,14 @@ public class ChangeWriter {
 	public void write(Node node, ChangeAction action) {
 		boolean visible;
 		int prmIndex;
-
+		
 		// We can't write an entity with a null timestamp.
 		if (node.getTimestamp() == null) {
 			throw new OsmosisRuntimeException("Node " + node.getId() + " does not have a timestamp set.");
 		}
+		
+		// Add or update the user in the database.
+		userManager.addOrUpdateUser(node.getUser());
 		
 		// If this is a deletion, the entity is not visible.
 		visible = !action.equals(ChangeAction.Delete);
@@ -234,19 +160,22 @@ public class ChangeWriter {
 			insertNodeStatement = dbCtx.prepareStatement(INSERT_SQL_NODE);
 			insertNodeCurrentStatement = dbCtx.prepareStatement(INSERT_SQL_NODE_CURRENT);
 			deleteNodeCurrentStatement = dbCtx.prepareStatement(DELETE_SQL_NODE_CURRENT);
+			insertNodeTagStatement = dbCtx.prepareStatement(INSERT_SQL_NODE_TAG);
+			insertNodeTagCurrentStatement = dbCtx.prepareStatement(INSERT_SQL_NODE_TAG_CURRENT);
+			deleteNodeTagCurrentStatement = dbCtx.prepareStatement(DELETE_SQL_NODE_TAG_CURRENT);
 		}
 		
 		// Insert the new node into the history table.
 		try {
 			prmIndex = 1;
 			insertNodeStatement.setLong(prmIndex++, node.getId());
+			insertNodeStatement.setInt(prmIndex++, node.getVersion());
 			insertNodeStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
+			insertNodeStatement.setBoolean(prmIndex++, visible);
+			insertNodeStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(node.getUser()));
 			insertNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
 			insertNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
 			insertNodeStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
-			insertNodeStatement.setString(prmIndex++, tagFormatter.format(node.getTagList()));
-			insertNodeStatement.setBoolean(prmIndex++, visible);
-			insertNodeStatement.setLong(prmIndex++, userIdManager.getUserId());
 			
 			insertNodeStatement.execute();
 			
@@ -254,7 +183,34 @@ public class ChangeWriter {
 			throw new OsmosisRuntimeException("Unable to insert history node with id=" + node.getId() + ".", e);
 		}
 		
+		// Insert the tags of the new node into the history table.
+		for (Tag tag : node.getTagList()) {
+			try {
+				prmIndex = 1;
+				insertNodeTagStatement.setLong(prmIndex++, node.getId());
+				insertNodeTagStatement.setInt(prmIndex++, node.getVersion());
+				insertNodeTagStatement.setString(prmIndex++, tag.getKey());
+				insertNodeTagStatement.setString(prmIndex++, tag.getValue());
+				
+				insertNodeTagStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException(
+					"Unable to insert history node tag with id=" + node.getId()
+					+ " and key=(" + tag.getKey() + ").", e);
+			}
+		}
+		
 		if (populateCurrentTables) {
+			// Delete the existing node tags from the current table.
+			try {
+				deleteNodeTagCurrentStatement.setLong(1, node.getId());
+				
+				deleteNodeTagCurrentStatement.execute();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to delete current node tags with id=" + node.getId() + ".", e);
+			}
 			// Delete the existing node from the current table.
 			try {
 				deleteNodeCurrentStatement.setLong(1, node.getId());
@@ -269,18 +225,35 @@ public class ChangeWriter {
 			try {
 				prmIndex = 1;
 				insertNodeCurrentStatement.setLong(prmIndex++, node.getId());
+				insertNodeCurrentStatement.setInt(prmIndex++, node.getVersion());
 				insertNodeCurrentStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
+				insertNodeCurrentStatement.setBoolean(prmIndex++, visible);
+				insertNodeCurrentStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(node.getUser()));
 				insertNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
 				insertNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
 				insertNodeCurrentStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
-				insertNodeCurrentStatement.setString(prmIndex++, tagFormatter.format(node.getTagList()));
-				insertNodeCurrentStatement.setBoolean(prmIndex++, visible);
-				insertNodeCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
 				
 				insertNodeCurrentStatement.execute();
 				
 			} catch (SQLException e) {
 				throw new OsmosisRuntimeException("Unable to insert current node with id=" + node.getId() + ".", e);
+			}
+			
+			// Insert the tags of the new node into the current table.
+			for (Tag tag : node.getTagList()) {
+				try {
+					prmIndex = 1;
+					insertNodeTagCurrentStatement.setLong(prmIndex++, node.getId());
+					insertNodeTagCurrentStatement.setString(prmIndex++, tag.getKey());
+					insertNodeTagCurrentStatement.setString(prmIndex++, tag.getValue());
+					
+					insertNodeTagCurrentStatement.execute();
+					
+				} catch (SQLException e) {
+					throw new OsmosisRuntimeException(
+						"Unable to insert current node tag with id=" + node.getId()
+						+ " and key=(" + tag.getKey() + ").", e);
+				}
 			}
 		}
 	}
@@ -297,22 +270,20 @@ public class ChangeWriter {
 	public void write(Way way, ChangeAction action) {
 		boolean visible;
 		int prmIndex;
-		int version;
 		List<WayNode> nodeReferenceList;
-
+		
 		// We can't write an entity with a null timestamp.
 		if (way.getTimestamp() == null) {
 			throw new OsmosisRuntimeException("Way " + way.getId() + " does not have a timestamp set.");
 		}
 		
+		// Add or update the user in the database.
+		userManager.addOrUpdateUser(way.getUser());
+		
 		nodeReferenceList = way.getWayNodeList();
 		
 		// If this is a deletion, the entity is not visible.
 		visible = !action.equals(ChangeAction.Delete);
-		
-		// Retrieve the existing way version. If it doesn't exist, we will
-		// receive 0.
-		version = getWayVersion(way.getId()) + 1;
 		
 		// Create the prepared statements for way creation if necessary.
 		if (insertWayStatement == null) {
@@ -331,10 +302,10 @@ public class ChangeWriter {
 		try {
 			prmIndex = 1;
 			insertWayStatement.setLong(prmIndex++, way.getId());
-			insertWayStatement.setInt(prmIndex++, version);
+			insertWayStatement.setInt(prmIndex++, way.getVersion());
 			insertWayStatement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
 			insertWayStatement.setBoolean(prmIndex++, visible);
-			insertWayStatement.setLong(prmIndex++, userIdManager.getUserId());
+			insertWayStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(way.getUser()));
 			
 			insertWayStatement.execute();
 			
@@ -347,7 +318,7 @@ public class ChangeWriter {
 			try {
 				prmIndex = 1;
 				insertWayTagStatement.setLong(prmIndex++, way.getId());
-				insertWayTagStatement.setInt(prmIndex++, version);
+				insertWayTagStatement.setInt(prmIndex++, way.getVersion());
 				insertWayTagStatement.setString(prmIndex++, tag.getKey());
 				insertWayTagStatement.setString(prmIndex++, tag.getValue());
 				
@@ -369,7 +340,7 @@ public class ChangeWriter {
 			try {
 				prmIndex = 1;
 				insertWayNodeStatement.setLong(prmIndex++, way.getId());
-				insertWayNodeStatement.setInt(prmIndex++, version);
+				insertWayNodeStatement.setInt(prmIndex++, way.getVersion());
 				insertWayNodeStatement.setLong(prmIndex++, nodeReference.getNodeId());
 				insertWayNodeStatement.setLong(prmIndex++, i + 1);
 				
@@ -415,9 +386,10 @@ public class ChangeWriter {
 			try {
 				prmIndex = 1;
 				insertWayCurrentStatement.setLong(prmIndex++, way.getId());
+				insertWayCurrentStatement.setInt(prmIndex++, way.getVersion());
 				insertWayCurrentStatement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
 				insertWayCurrentStatement.setBoolean(prmIndex++, visible);
-				insertWayCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
+				insertWayCurrentStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(way.getUser()));
 				
 				insertWayCurrentStatement.execute();
 				
@@ -477,22 +449,20 @@ public class ChangeWriter {
 	public void write(Relation relation, ChangeAction action) {
 		boolean visible;
 		int prmIndex;
-		int version;
 		List<RelationMember> relationMemberList;
-
+		
 		// We can't write an entity with a null timestamp.
 		if (relation.getTimestamp() == null) {
 			throw new OsmosisRuntimeException("Relation " + relation.getId() + " does not have a timestamp set.");
 		}
 		
+		// Add or update the user in the database.
+		userManager.addOrUpdateUser(relation.getUser());
+		
 		relationMemberList = relation.getMemberList();
 		
 		// If this is a deletion, the entity is not visible.
 		visible = !action.equals(ChangeAction.Delete);
-		
-		// Retrieve the existing relation version. If it doesn't exist, we will
-		// receive 0.
-		version = getRelationVersion(relation.getId()) + 1;
 		
 		// Create the prepared statements for relation creation if necessary.
 		if (insertRelationStatement == null) {
@@ -511,10 +481,10 @@ public class ChangeWriter {
 		try {
 			prmIndex = 1;
 			insertRelationStatement.setLong(prmIndex++, relation.getId());
-			insertRelationStatement.setInt(prmIndex++, version);
+			insertRelationStatement.setInt(prmIndex++, relation.getVersion());
 			insertRelationStatement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
 			insertRelationStatement.setBoolean(prmIndex++, visible);
-			insertRelationStatement.setLong(prmIndex++, userIdManager.getUserId());
+			insertRelationStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(relation.getUser()));
 			
 			insertRelationStatement.execute();
 			
@@ -527,7 +497,7 @@ public class ChangeWriter {
 			try {
 				prmIndex = 1;
 				insertRelationTagStatement.setLong(prmIndex++, relation.getId());
-				insertRelationTagStatement.setInt(prmIndex++, version);
+				insertRelationTagStatement.setInt(prmIndex++, relation.getVersion());
 				insertRelationTagStatement.setString(prmIndex++, tag.getKey());
 				insertRelationTagStatement.setString(prmIndex++, tag.getValue());
 				
@@ -549,7 +519,7 @@ public class ChangeWriter {
 			try {
 				prmIndex = 1;
 				insertRelationMemberStatement.setLong(prmIndex++, relation.getId());
-				insertRelationMemberStatement.setInt(prmIndex++, version);
+				insertRelationMemberStatement.setInt(prmIndex++, relation.getVersion());
 				insertRelationMemberStatement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
 				insertRelationMemberStatement.setLong(prmIndex++, relationMember.getMemberId());
 				insertRelationMemberStatement.setString(prmIndex++, relationMember.getMemberRole());
@@ -597,9 +567,10 @@ public class ChangeWriter {
 			try {
 				prmIndex = 1;
 				insertRelationCurrentStatement.setLong(prmIndex++, relation.getId());
+				insertRelationCurrentStatement.setInt(prmIndex++, relation.getVersion());
 				insertRelationCurrentStatement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
 				insertRelationCurrentStatement.setBoolean(prmIndex++, visible);
-				insertRelationCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
+				insertRelationCurrentStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(relation.getUser()));
 				
 				insertRelationCurrentStatement.execute();
 				
@@ -662,6 +633,9 @@ public class ChangeWriter {
 	 * Releases all database resources.
 	 */
 	public void release() {
+		userManager.release();
+		changesetManager.release();
+		
 		dbCtx.release();
 	}
 }

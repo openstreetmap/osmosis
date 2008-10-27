@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
 
 
 /**
@@ -15,7 +15,7 @@ import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
  * 
  * @author Brett Henderson
  */
-public class RelationMemberBuilder extends EntityFeatureBuilder<DBEntityFeature<RelationMember>> {
+public class RelationMemberBuilder extends EntityFeatureBuilder<DbFeature<RelationMember>> {
 	
 	private MemberTypeValueMapper memberTypeValueMapper;
 	
@@ -109,9 +109,9 @@ public class RelationMemberBuilder extends EntityFeatureBuilder<DBEntityFeature<
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DBEntityFeature<RelationMember> buildEntity(ResultSet resultSet) {
+	public DbFeature<RelationMember> buildEntity(ResultSet resultSet) {
 		try {
-			return new DBEntityFeature<RelationMember>(
+			return new DbFeature<RelationMember>(
 				resultSet.getLong("entity_id"),
 				new RelationMember(
 					resultSet.getLong("member_id"),
@@ -130,12 +130,12 @@ public class RelationMemberBuilder extends EntityFeatureBuilder<DBEntityFeature<
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int populateEntityParameters(PreparedStatement statement, int initialIndex, DBEntityFeature<RelationMember> entityFeature) {
+	public int populateEntityParameters(PreparedStatement statement, int initialIndex, DbFeature<RelationMember> entityFeature) {
 		try {
 			int prmIndex;
 			RelationMember relationMember;
 			
-			relationMember = entityFeature.getEntityFeature();
+			relationMember = entityFeature.getFeature();
 			
 			prmIndex = initialIndex;
 			

@@ -7,7 +7,6 @@ import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
-import com.bretth.osmosis.core.mysql.common.EntityHistory;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
@@ -23,8 +22,8 @@ import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 public class RelationReader implements ReleasableIterator<EntityHistory<Relation>> {
 	
 	private ReleasableIterator<EntityHistory<Relation>> relationReader;
-	private PeekableIterator<EntityHistory<DBEntityFeature<Tag>>> relationTagReader;
-	private PeekableIterator<EntityHistory<DBEntityFeature<RelationMember>>> relationMemberReader;
+	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> relationTagReader;
+	private PeekableIterator<DbFeatureHistory<DbFeature<RelationMember>>> relationMemberReader;
 	private EntityHistory<Relation> nextValue;
 	private boolean nextValueLoaded;
 	
@@ -45,17 +44,17 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 			"rel",
 			true
 		);
-		relationTagReader = new PeekableIterator<EntityHistory<DBEntityFeature<Tag>>>(
-			new PersistentIterator<EntityHistory<DBEntityFeature<Tag>>>(
-				new SingleClassObjectSerializationFactory(EntityHistory.class),
+		relationTagReader = new PeekableIterator<DbFeatureHistory<DbFeature<Tag>>>(
+			new PersistentIterator<DbFeatureHistory<DbFeature<Tag>>>(
+				new SingleClassObjectSerializationFactory(DbFeatureHistory.class),
 				new EntityTagTableReader(loginCredentials, "relation_tags"),
 				"reltag",
 				true
 			)
 		);
-		relationMemberReader = new PeekableIterator<EntityHistory<DBEntityFeature<RelationMember>>>(
-			new PersistentIterator<EntityHistory<DBEntityFeature<RelationMember>>>(
-				new SingleClassObjectSerializationFactory(EntityHistory.class),
+		relationMemberReader = new PeekableIterator<DbFeatureHistory<DbFeature<RelationMember>>>(
+			new PersistentIterator<DbFeatureHistory<DbFeature<RelationMember>>>(
+				new SingleClassObjectSerializationFactory(DbFeatureHistory.class),
 				new RelationMemberTableReader(loginCredentials),
 				"relmbr",
 				true
@@ -78,15 +77,15 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 			
 			relation = relationHistory.getEntity();
 			relationId = relation.getId();
-			relationVersion = relationHistory.getVersion();
+			relationVersion = relation.getVersion();
 			
 			// Skip all relation tags that are from lower id or lower version of the same id.
 			while (relationTagReader.hasNext()) {
-				EntityHistory<DBEntityFeature<Tag>> relationTagHistory;
-				DBEntityFeature<Tag> relationTag;
+				DbFeatureHistory<DbFeature<Tag>> relationTagHistory;
+				DbFeature<Tag> relationTag;
 				
 				relationTagHistory = relationTagReader.peekNext();
-				relationTag = relationTagHistory.getEntity();
+				relationTag = relationTagHistory.getDbFeature();
 				
 				if (relationTag.getEntityId() < relationId) {
 					relationTagReader.next();
@@ -102,17 +101,17 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 			}
 			
 			// Load all tags matching this version of the relation.
-			while (relationTagReader.hasNext() && relationTagReader.peekNext().getEntity().getEntityId() == relationId && relationTagReader.peekNext().getVersion() == relationVersion) {
-				relation.addTag(relationTagReader.next().getEntity().getEntityFeature());
+			while (relationTagReader.hasNext() && relationTagReader.peekNext().getDbFeature().getEntityId() == relationId && relationTagReader.peekNext().getVersion() == relationVersion) {
+				relation.addTag(relationTagReader.next().getDbFeature().getFeature());
 			}
 			
 			// Skip all relation members that are from lower id or lower version of the same id.
 			while (relationMemberReader.hasNext()) {
-				EntityHistory<DBEntityFeature<RelationMember>> relationMemberHistory;
-				DBEntityFeature<RelationMember> relationMember;
+				DbFeatureHistory<DbFeature<RelationMember>> relationMemberHistory;
+				DbFeature<RelationMember> relationMember;
 				
 				relationMemberHistory = relationMemberReader.peekNext();
-				relationMember = relationMemberHistory.getEntity();
+				relationMember = relationMemberHistory.getDbFeature();
 				
 				if (relationMember.getEntityId() < relationId) {
 					relationMemberReader.next();
@@ -128,8 +127,8 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 			}
 			
 			// Load all members matching this version of the relation.
-			while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getEntity().getEntityId() == relationId && relationMemberReader.peekNext().getVersion() == relationVersion) {
-				relation.addMember(relationMemberReader.next().getEntity().getEntityFeature());
+			while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getDbFeature().getEntityId() == relationId && relationMemberReader.peekNext().getVersion() == relationVersion) {
+				relation.addMember(relationMemberReader.next().getDbFeature().getFeature());
 			}
 			
 			nextValue = relationHistory;

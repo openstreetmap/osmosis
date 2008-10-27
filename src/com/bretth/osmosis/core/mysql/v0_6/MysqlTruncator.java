@@ -31,7 +31,10 @@ public class MysqlTruncator implements RunnableTask {
 		"TRUNCATE way_nodes",
 		"TRUNCATE way_tags",
 		"TRUNCATE ways",
-		"TRUNCATE nodes"
+		"TRUNCATE nodes",
+		"TRUNCATE changeset_tags",
+		"TRUNCATE changesets",
+		"TRUNCATE users"
 	};
 	
 	

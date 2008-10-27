@@ -7,10 +7,9 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Way;
-import com.bretth.osmosis.core.mysql.common.BaseEntityReader;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
-import com.bretth.osmosis.core.mysql.common.EntityHistory;
 
 
 /**
@@ -21,9 +20,10 @@ import com.bretth.osmosis.core.mysql.common.EntityHistory;
  */
 public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
 	private static final String SELECT_SQL =
-		"SELECT w.id, w.version, w.timestamp, u.data_public, u.display_name, w.visible"
+		"SELECT w.id, w.version, w.timestamp, w.visible, u.data_public, u.id AS user_id, u.display_name"
 		+ " FROM ways w"
-		+ " LEFT OUTER JOIN users u ON w.user_id = u.id"
+		+ " LEFT OUTER JOIN changesets c ON w.changeset_id = c.id"
+		+ " LEFT OUTER JOIN users u ON c.user_id = u.id"
 		+ " ORDER BY w.id, w.version";
 	
 	
@@ -56,20 +56,21 @@ public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
 	@Override
 	protected ReadResult<EntityHistory<Way>> createNextValue(ResultSet resultSet) {
 		long id;
-		Date timestamp;
-		String userName;
 		int version;
+		Date timestamp;
 		boolean visible;
+		OsmUser user;
 		
 		try {
 			id = resultSet.getLong("id");
 			version = resultSet.getInt("version");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
-			userName = readUserField(
+			visible = resultSet.getBoolean("visible");
+			user = readUserField(
 				resultSet.getBoolean("data_public"),
+				resultSet.getInt("user_id"),
 				resultSet.getString("display_name")
 			);
-			visible = resultSet.getBoolean("visible");
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read way fields.", e);
@@ -77,7 +78,7 @@ public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
 		
 		return new ReadResult<EntityHistory<Way>>(
 			true,
-			new EntityHistory<Way>(new Way(id, timestamp, userName), version, visible)
+			new EntityHistory<Way>(new Way(id, version, timestamp, user), visible)
 		);
 	}
 }

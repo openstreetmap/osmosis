@@ -3,7 +3,7 @@ package com.bretth.osmosis.core.pgsql.v0_6.impl;
 
 import java.sql.ResultSet;
 
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBEntityFeature;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
 import com.bretth.osmosis.core.pgsql.common.BaseTableReader;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.store.Storeable;
@@ -19,7 +19,7 @@ import com.bretth.osmosis.core.store.Storeable;
  * @param <Tdb>
  *            The entity feature database wrapper type to be used.
  */
-public class EntityFeatureTableReader<Tef extends Storeable, Tdb extends DBEntityFeature<Tef>> extends BaseTableReader<Tdb> {
+public class EntityFeatureTableReader<Tef extends Storeable, Tdb extends DbFeature<Tef>> extends BaseTableReader<Tdb> {
 	
 	private EntityFeatureBuilder<Tdb> entityFeatureBuilder;
 	private String sql;

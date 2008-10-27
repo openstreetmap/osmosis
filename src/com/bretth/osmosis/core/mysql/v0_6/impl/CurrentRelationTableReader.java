@@ -7,8 +7,8 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
-import com.bretth.osmosis.core.mysql.common.BaseEntityReader;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 
 
@@ -20,9 +20,10 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  */
 public class CurrentRelationTableReader extends BaseEntityReader<Relation> {
 	private static final String SELECT_SQL =
-		"SELECT r.id, r.timestamp, u.data_public, u.display_name, r.visible"
+		"SELECT r.id, r.version, r.timestamp, r.visible, u.data_public, u.id AS user_id, u.display_name"
 		+ " FROM current_relations r"
-		+ " LEFT OUTER JOIN users u ON r.user_id = u.id"
+		+ " LEFT OUTER JOIN changesets c ON r.changeset_id = c.id"
+		+ " LEFT OUTER JOIN users u ON c.user_id = u.id"
 		+ " ORDER BY r.id";
 	
 	
@@ -55,27 +56,30 @@ public class CurrentRelationTableReader extends BaseEntityReader<Relation> {
 	@Override
 	protected ReadResult<Relation> createNextValue(ResultSet resultSet) {
 		long id;
+		int version;
 		Date timestamp;
-		String userName;
 		boolean visible;
+		OsmUser user;
 		
 		try {
 			id = resultSet.getLong("id");
+			version = resultSet.getInt("version");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
-			userName = readUserField(
+			visible = resultSet.getBoolean("visible");
+			user = readUserField(
 				resultSet.getBoolean("data_public"),
+				resultSet.getInt("user_id"),
 				resultSet.getString("display_name")
 			);
-			visible = resultSet.getBoolean("visible");
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to read way fields.", e);
+			throw new OsmosisRuntimeException("Unable to read relation fields.", e);
 		}
 		
 		// Non-visible records will be ignored by the caller.
 		return new ReadResult<Relation>(
 			visible,
-			new Relation(id, timestamp, userName)
+			new Relation(id, version, timestamp, user)
 		);
 	}
 }

@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.mysql.common;
+package com.bretth.osmosis.core.mysql.v0_6.impl;
 
 import com.bretth.osmosis.core.store.GenericObjectReader;
 import com.bretth.osmosis.core.store.GenericObjectWriter;
@@ -19,7 +19,6 @@ import com.bretth.osmosis.core.store.Storeable;
 public class EntityHistory<T extends Storeable> implements Storeable {
 	
 	private T entity;
-	private int version;
 	private boolean visible;
 	
 	
@@ -28,14 +27,11 @@ public class EntityHistory<T extends Storeable> implements Storeable {
 	 * 
 	 * @param entity
 	 *            The contained entity.
-	 * @param version
-	 *            The version of the history element.
 	 * @param visible
 	 *            The visible field.
 	 */
-	public EntityHistory(T entity, int version, boolean visible) {
+	public EntityHistory(T entity, boolean visible) {
 		this.entity = entity;
-		this.version = version;
 		this.visible = visible;
 	}
 	
@@ -53,7 +49,6 @@ public class EntityHistory<T extends Storeable> implements Storeable {
 	public EntityHistory(StoreReader sr, StoreClassRegister scr) {
 		entity = (T) new GenericObjectReader(sr, scr).readObject();
 		
-		version = sr.readInteger();
 		visible = sr.readBoolean();
 	}
 	
@@ -63,7 +58,6 @@ public class EntityHistory<T extends Storeable> implements Storeable {
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		new GenericObjectWriter(sw, scr).writeObject(entity);
-		sw.writeInteger(version);
 		sw.writeBoolean(visible);
 	}
 	
@@ -75,16 +69,6 @@ public class EntityHistory<T extends Storeable> implements Storeable {
 	 */
 	public T getEntity() {
 		return entity;
-	}
-	
-	
-	/**
-	 * Gets the version.
-	 * 
-	 * @return The version.
-	 */
-	public int getVersion() {
-		return version;
 	}
 	
 	
