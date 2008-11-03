@@ -50,7 +50,7 @@ SELECT AddGeometryColumn('ways', 'bbox', 4326, 'GEOMETRY', 2);
 CREATE TABLE way_nodes (
     way_id bigint NOT NULL,
     node_id bigint NOT NULL,
-    sequence_id smallint NOT NULL
+    sequence_id int NOT NULL
 );
 
 
