@@ -11,7 +11,10 @@ import org.postgis.PGgeometry;
 import org.postgis.Point;
 import org.postgis.Polygon;
 
+import com.bretth.osmosis.core.OsmosisConstants;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.container.v0_6.BoundContainer;
+import com.bretth.osmosis.core.container.v0_6.BoundContainerIterator;
 import com.bretth.osmosis.core.container.v0_6.DatasetReader;
 import com.bretth.osmosis.core.container.v0_6.EntityContainer;
 import com.bretth.osmosis.core.container.v0_6.NodeContainer;
@@ -22,6 +25,7 @@ import com.bretth.osmosis.core.container.v0_6.WayContainer;
 import com.bretth.osmosis.core.container.v0_6.WayContainerIterator;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
+import com.bretth.osmosis.core.domain.v0_6.Bound;
 import com.bretth.osmosis.core.domain.v0_6.EntityType;
 import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
@@ -30,6 +34,7 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.PolygonBuilder;
 import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlVersionConstants;
+import com.bretth.osmosis.core.store.IteratorReleasableIterator;
 import com.bretth.osmosis.core.store.MultipleSourceIterator;
 import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.store.UpcastIterator;
@@ -142,14 +147,20 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	 */
 	@Override
 	public ReleasableIterator<EntityContainer> iterate() {
+		List<Bound> bounds;
 		List<ReleasableIterator<EntityContainer>> sources;
 		
 		if (!initialized) {
 			initialize();
 		}
 		
+		// Build the bounds list.
+		bounds = new ArrayList<Bound>();
+		bounds.add(new Bound("Osmosis " + OsmosisConstants.VERSION));
+		
 		sources = new ArrayList<ReleasableIterator<EntityContainer>>();
 		
+		sources.add(new UpcastIterator<EntityContainer, BoundContainer>(new BoundContainerIterator(new IteratorReleasableIterator<Bound>(bounds.iterator()))));
 		sources.add(new UpcastIterator<EntityContainer, NodeContainer>(new NodeContainerIterator(nodeDao.iterate())));
 		sources.add(new UpcastIterator<EntityContainer, WayContainer>(new WayContainerIterator(wayDao.iterate())));
 		sources.add(new UpcastIterator<EntityContainer, RelationContainer>(new RelationContainerIterator(relationDao.iterate())));
@@ -164,6 +175,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	@Override
 	public ReleasableIterator<EntityContainer> iterateBoundingBox(
 			double left, double right, double top, double bottom, boolean completeWays) {
+		List<Bound> bounds;
 		PreparedStatement preparedStatement = null;
 		int prmIndex;
 		Point[] bboxPoints;
@@ -175,6 +187,10 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 		if (!initialized) {
 			initialize();
 		}
+		
+		// Build the bounds list.
+		bounds = new ArrayList<Bound>();
+		bounds.add(new Bound(right, left, top, bottom, "Osmosis " + OsmosisConstants.VERSION));
 		
 		try {
 			dbCtx.executeStatement("SET enable_hashjoin = false");
@@ -316,7 +332,8 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			
 			// Create iterators for the selected records for each of the entity types.
 			log.finer("Iterating over results.");
-			resultSets = new ArrayList<ReleasableIterator<EntityContainer>>(3);
+			resultSets = new ArrayList<ReleasableIterator<EntityContainer>>();
+			resultSets.add(new UpcastIterator<EntityContainer, BoundContainer>(new BoundContainerIterator(new IteratorReleasableIterator<Bound>(bounds.iterator()))));
 			resultSets.add(new UpcastIterator<EntityContainer, NodeContainer>(new NodeContainerIterator(new NodeReader(dbCtx, "box_node_list"))));
 			resultSets.add(new UpcastIterator<EntityContainer, WayContainer>(new WayContainerIterator(new WayReader(dbCtx, "box_way_list"))));
 			resultSets.add(new UpcastIterator<EntityContainer, RelationContainer>(new RelationContainerIterator(new RelationReader(dbCtx, "box_relation_list"))));

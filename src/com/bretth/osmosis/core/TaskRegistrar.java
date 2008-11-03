@@ -15,10 +15,10 @@ import com.bretth.osmosis.core.customdb.v0_6.ReadDatasetFactory;
 import com.bretth.osmosis.core.customdb.v0_6.WriteDatasetFactory;
 import com.bretth.osmosis.core.filter.v0_6.BoundingBoxFilterFactory;
 import com.bretth.osmosis.core.filter.v0_6.DatasetBoundingBoxFilterFactory;
-import com.bretth.osmosis.core.filter.v0_6.PolygonFilterFactory;
-import com.bretth.osmosis.core.filter.v0_6.UsedNodeFilterFactory;
 import com.bretth.osmosis.core.filter.v0_6.NodeKeyFilterFactory;
 import com.bretth.osmosis.core.filter.v0_6.NodeKeyValueFilterFactory;
+import com.bretth.osmosis.core.filter.v0_6.PolygonFilterFactory;
+import com.bretth.osmosis.core.filter.v0_6.UsedNodeFilterFactory;
 import com.bretth.osmosis.core.filter.v0_6.WayKeyValueFilterFactory;
 import com.bretth.osmosis.core.merge.v0_6.ChangeDownloadInitializerFactory;
 import com.bretth.osmosis.core.merge.v0_6.ChangeDownloaderFactory;
@@ -50,6 +50,8 @@ import com.bretth.osmosis.core.sort.v0_6.ChangeForStreamableApplierComparator;
 import com.bretth.osmosis.core.sort.v0_6.ChangeSorterFactory;
 import com.bretth.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
 import com.bretth.osmosis.core.sort.v0_6.EntitySorterFactory;
+import com.bretth.osmosis.core.sort.v0_6.MemberSorterFactory;
+import com.bretth.osmosis.core.sort.v0_6.TagSorterFactory;
 import com.bretth.osmosis.core.tee.v0_6.ChangeTeeFactory;
 import com.bretth.osmosis.core.tee.v0_6.EntityTeeFactory;
 import com.bretth.osmosis.core.xml.v0_6.XmlChangeReaderFactory;
@@ -308,6 +310,8 @@ public class TaskRegistrar {
 		factoryRegister.register("read-change-interval-init-0.6", new ChangeDownloadInitializerFactory());
 		factoryRegister.register("migrate-0.6", new MigrateV05ToV06Factory());
 		factoryRegister.register("mig-0.6", new MigrateV05ToV06Factory());
+		factoryRegister.register("tag-sort-0.6", new TagSorterFactory());
+		factoryRegister.register("member-sort-0.6", new MemberSorterFactory());
 		
 		// Register the plugins.
 		for (String plugin : plugins) {

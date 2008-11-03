@@ -1,11 +1,14 @@
 0.30
 Added 0.6 support.
-Enhanced the pgsql tasks and schema to support "action" columns and introduced a stored procedure called during every changeset application.
+Enhanced the pgsql tasks and schema to support "action" columns.
+Enhanced the pgsql schema to introduce a stored procedure called during every changeset application.
+Enhanced the pgsql schema to include optional bbox and linestring columns on the way table.
 Added ability to specify slipping map zoom and coordinates as arguments to the bounding box filter.
 Added an "inMemoryBbox" to the pgsql writer task allowing it to calculate bounding boxes using a memory mapped file.
 Added an automatic VACUUM ANALYZE of the database for pgsql writer and truncation tasks.
 Added a migration task --migrate allowing 0.5 data to be converted to 0.6 format.
 Added forceUtf8 and profileSql options to all MySQL tasks.
+Added a --tag-sort task allowing tags within entities to be sorted alphabetically.
 
 0.29
 Fixed the --write-pgsql-simple-dump task to properly escape '\' characters.

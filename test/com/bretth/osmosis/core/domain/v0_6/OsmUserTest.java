@@ -32,7 +32,7 @@ public class OsmUserTest {
 	 */
 	@Test
 	public final void testGetInstanceNoUser() {
-		assertEquals("None user id is incorrect.", 0, OsmUser.NONE.getId());
+		assertEquals("None user id is incorrect.", -1, OsmUser.NONE.getId());
 		assertEquals("None user name is incorrect.", "", OsmUser.NONE.getName());
 	}
 	
@@ -51,7 +51,7 @@ public class OsmUserTest {
 	 */
 	@Test(expected=OsmosisRuntimeException.class)
 	public final void testGetInstancePreventsNoneUser() {
-		new OsmUser(0, "MyNoneUser");
+		new OsmUser(OsmUser.NONE.getId(), "MyNoneUser");
 	}
 	
 	

@@ -101,17 +101,17 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private static final int LOAD_CURRENT_WAY_ROW_COUNT = 100000; // There are many node and tag records per way.
 	private static final int LOAD_CURRENT_RELATION_ROW_COUNT = 100000; // There are many member and tag records per relation.
 	private static final String LOAD_CURRENT_NODES =
-		"INSERT INTO current_nodes SELECT * FROM nodes WHERE id >= ? AND id < ?";
+		"INSERT INTO current_nodes SELECT id, latitude, longitude, changeset_id, visible, timestamp, tile, version FROM nodes WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_NODE_TAGS =
 		"INSERT INTO current_node_tags SELECT id, k, v FROM node_tags WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_WAYS =
-		"INSERT INTO current_ways SELECT id, user_id, timestamp, visible FROM ways WHERE id >= ? AND id < ?";
+		"INSERT INTO current_ways SELECT id, changeset_id, timestamp, visible, version FROM ways WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_WAY_TAGS =
 		"INSERT INTO current_way_tags SELECT id, k, v FROM way_tags WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_WAY_NODES =
 		"INSERT INTO current_way_nodes SELECT id, node_id, sequence_id FROM way_nodes WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_RELATIONS =
-		"INSERT INTO current_relations SELECT id, user_id, timestamp, visible FROM relations WHERE id >= ? AND id < ?";
+		"INSERT INTO current_relations SELECT id, changeset_id, timestamp, visible, version FROM relations WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_RELATION_TAGS =
 		"INSERT INTO current_relation_tags SELECT id, k, v FROM relation_tags WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_RELATION_MEMBERS =
@@ -123,7 +123,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		+ " nodes WRITE, node_tags WRITE,"
 		+ " ways WRITE, way_tags WRITE, way_nodes WRITE,"
 		+ " relations WRITE, relation_tags WRITE, relation_members WRITE,"
-		+ " current_nodes WRITE, current_ways WRITE, current_way_tags WRITE, current_way_nodes WRITE,"
+		+ " current_nodes WRITE, current_node_tags WRITE,"
+		+ " current_ways WRITE, current_way_tags WRITE, current_way_nodes WRITE,"
 		+ " current_relations WRITE, current_relation_tags WRITE, current_relation_members WRITE,"
 		+ " users WRITE, changesets WRITE";
 	private static final String INVOKE_UNLOCK_TABLES = "UNLOCK TABLES";
@@ -436,7 +437,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		try {
 			statement.setLong(prmIndex++, way.getId());
 			statement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
-			statement.setInt(prmIndex++, 1);
+			statement.setInt(prmIndex++, way.getVersion());
 			statement.setBoolean(prmIndex++, true);
 			statement.setLong(prmIndex++, changesetManager.obtainChangesetId(way.getUser()));
 			
@@ -526,7 +527,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		try {
 			statement.setLong(prmIndex++, relation.getId());
 			statement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
-			statement.setInt(prmIndex++, 1);
+			statement.setInt(prmIndex++, relation.getVersion());
 			statement.setBoolean(prmIndex++, true);
 			statement.setLong(prmIndex++, changesetManager.obtainChangesetId(relation.getUser()));
 			

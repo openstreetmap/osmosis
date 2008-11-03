@@ -24,12 +24,12 @@ public class UserManager implements Releasable {
 		"SELECT Count(id) AS userCount FROM users WHERE id = ?";
 	private static final String INSERT_SQL_USER =
 		"INSERT INTO users (" +
-		"email, active, pass_crypt," +
+		"id, email, active, pass_crypt," +
 		" creation_time, display_name, data_public," +
 		" description, home_lat, home_lon, home_zoom," +
 		" nearby, pass_salt" +
 		") VALUES (" +
-		"?, 1, '00000000000000000000000000000000'," +
+		"?, ?, 1, '00000000000000000000000000000000'," +
 		" NOW(), ?, ?," +
 		" ?, 0, 0, 3," +
 		" 50, '00000000')";
@@ -124,6 +124,7 @@ public class UserManager implements Releasable {
 		
 		try {
 			prmIndex = 1;
+			statementInsert.setInt(prmIndex++, user.getId());
 			statementInsert.setString(prmIndex++, "osmosis_user_" + user.getId() + "@bretth.com");
 			statementInsert.setString(prmIndex++, user.getName());
 			statementInsert.setInt(prmIndex++, OsmUser.NONE.equals(user) ? 0 : 1);

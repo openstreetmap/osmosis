@@ -60,10 +60,10 @@ public class ChangeWriter {
 	 */
 	private void writeUser(OsmUser user) {
 		// Entities without a user assigned should not be written.
-		if (OsmUser.NONE != user) {
+		if (!OsmUser.NONE.equals(user)) {
 			// Users will only be updated in the database once per changeset
 			// run.
-			if (userSet.contains(user.getId())) {
+			if (!userSet.contains(user.getId())) {
 				int userId;
 				OsmUser existingUser;
 

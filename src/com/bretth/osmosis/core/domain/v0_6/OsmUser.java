@@ -20,11 +20,13 @@ public class OsmUser implements Storeable {
 	private String name;
 	private int id;
 	
-	
 	/**
-	 * User ID value to designate no id available.
+	 * User ID value to designate no id available. If this is set to 0, some
+	 * databases (ie. MySQL) will default a non-zero value upon insert. To avoid
+	 * special case code for each database with this issue, this value is made
+	 * negative.
 	 */
-	private static final int USER_ID_NONE = 0;
+	private static final int USER_ID_NONE = -1;
 	
 	
 	/**

@@ -306,7 +306,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	private void writeUser(OsmUser user) {
 		// Write the user to the database if it hasn't already been.
-		if (user != OsmUser.NONE) {
+		if (!user.equals(OsmUser.NONE)) {
 			if (!userSet.contains(user.getId())) {
 				userDao.addUser(user);
 				

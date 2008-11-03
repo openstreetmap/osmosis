@@ -108,7 +108,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		
 		// Write a user entry if the user doesn't already exist.
 		user = entityContainer.getEntity().getUser();
-		if (user != OsmUser.NONE) {
+		if (!user.equals(OsmUser.NONE)) {
 			if (!userSet.contains(user.getId())) {
 				userWriter.writeField(user.getId());
 				userWriter.writeField(user.getName());

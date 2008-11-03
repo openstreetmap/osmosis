@@ -51,7 +51,7 @@ public class UserDao extends BaseDao {
 		try {
 			return new OsmUser(
 				resultSet.getInt("id"),
-				resultSet.getString("user_name")
+				resultSet.getString("name")
 			);
 			
 		} catch (SQLException e) {
@@ -146,12 +146,11 @@ public class UserDao extends BaseDao {
 			updateUserStatement = prepareStatement(UPDATE_USER);
 		}
 		
-		prmIndex = 0;
-		
+		prmIndex = 1;
 		try {
 			updateUserStatement.setString(prmIndex++, user.getName());
-			updateUserStatement.setInt(prmIndex++, user.getId());
 			updateUserStatement.setString(prmIndex++, ChangesetAction.MODIFY.getDatabaseValue());
+			updateUserStatement.setInt(prmIndex++, user.getId());
 			
 			updateUserStatement.executeUpdate();
 			
