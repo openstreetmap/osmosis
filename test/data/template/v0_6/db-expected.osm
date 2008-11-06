@@ -19,7 +19,7 @@
   <node id="6" version="15" timestamp="2008-01-02T15:16:17Z" lat="-11" lon="-12">
     <tag k="created_by" v="Me6"/>
   </node>
-  <node id="7" version="16" timestamp="2008-01-03T18:19:20Z" lat="-13" lon="-14">
+  <node id="7" version="1" timestamp="2008-01-03T18:19:20Z" lat="-13" lon="-14">
     <tag k="created_by" v="Me6"/>
   </node>
   <way id="1" version="11" timestamp="2008-01-03T03:04:05Z" uid="10" user="user10b">

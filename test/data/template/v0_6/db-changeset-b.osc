@@ -5,16 +5,12 @@
       <tag k="created_by" v="Me1-revised"/>
     </node>
   </modify>
-  <delete>
-    <way id="3" version="13" timestamp="2008-01-03T09:10:11Z"/>
-  </delete>
   <create>
     <node id="7" version="1" timestamp="2008-01-03T18:19:20Z" lat="-13" lon="-14">
       <tag k="created_by" v="Me6"/>
     </node>
   </create>
   <modify>
-    <!-- Add a new way node and change the user name. -->
     <way id="1" version="11" timestamp="2008-01-03T03:04:05Z" uid="10" user="user10b">
       <nd ref="1"/>
       <nd ref="2"/>
@@ -22,12 +18,8 @@
       <nd ref="4"/>
       <tag k="created_by" v="Me1"/>
     </way>
-    <!-- This modify uses the same version number which will test db ability to cope with changeset replay. -->
-    <way id="2" version="11" timestamp="2008-01-02T03:04:05Z" uid="20" user="user20">
-      <nd ref="2"/>
-      <nd ref="3"/>
-      <nd ref="4"/>
-      <tag k="created_by" v="Me1"/>
-    </way>
   </modify>
+  <delete>
+    <way id="3" version="13" timestamp="2008-01-03T09:10:11Z"/>
+  </delete>
 </osmChange>
