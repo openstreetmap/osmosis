@@ -4,12 +4,12 @@ package com.bretth.osmosis.core.pgsql.v0_5.impl;
 import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.domain.v0_5.Relation;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.mysql.v0_5.impl.DBEntityTag;
 import com.bretth.osmosis.core.mysql.v0_5.impl.DBRelationMember;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
-import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 
 

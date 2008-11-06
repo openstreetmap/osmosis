@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import com.bretth.osmosis.core.lifecycle.Releasable;
+
 
 /**
  * Provides read-only access to an index store. Each thread accessing the object

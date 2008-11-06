@@ -2,8 +2,8 @@ package com.bretth.osmosis.core.customdb.v0_6.impl;
 
 import java.util.Iterator;
 
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.store.LongLongIndexElement;
-import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**

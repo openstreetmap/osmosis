@@ -5,7 +5,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.container.v0_5.Dataset;
 import com.bretth.osmosis.core.container.v0_5.DatasetReader;
 import com.bretth.osmosis.core.container.v0_5.EntityContainer;
-import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.task.v0_5.DatasetSinkSource;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 

@@ -1,6 +1,9 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.store;
 
+import com.bretth.osmosis.core.lifecycle.Completable;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
+
 
 /**
  * Adds indexed chunking capabilities to a basic object store allowing groups of

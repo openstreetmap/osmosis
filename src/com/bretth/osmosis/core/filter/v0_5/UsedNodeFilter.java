@@ -12,7 +12,7 @@ import com.bretth.osmosis.core.domain.v0_5.WayNode;
 import com.bretth.osmosis.core.filter.common.IdTracker;
 import com.bretth.osmosis.core.filter.common.IdTrackerFactory;
 import com.bretth.osmosis.core.filter.common.IdTrackerType;
-import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.store.SimpleObjectStore;
 import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 import com.bretth.osmosis.core.task.v0_5.Sink;

@@ -9,7 +9,7 @@ import java.nio.channels.FileLock;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.store.Releasable;
+import com.bretth.osmosis.core.lifecycle.Releasable;
 
 
 /**

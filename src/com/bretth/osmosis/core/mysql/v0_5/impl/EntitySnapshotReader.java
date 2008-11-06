@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.domain.v0_5.Entity;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.store.PeekableIterator;
-import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**

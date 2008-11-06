@@ -6,9 +6,9 @@ import java.util.List;
 
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
-import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**

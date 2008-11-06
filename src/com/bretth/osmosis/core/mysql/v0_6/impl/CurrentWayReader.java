@@ -9,9 +9,9 @@ import java.util.NoSuchElementException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
-import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 
 

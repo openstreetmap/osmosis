@@ -6,11 +6,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.bretth.osmosis.core.lifecycle.Releasable;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.store.ChunkedObjectStore;
 import com.bretth.osmosis.core.store.ObjectSerializationFactory;
 import com.bretth.osmosis.core.store.PersistentIterator;
-import com.bretth.osmosis.core.store.Releasable;
-import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.store.Storeable;
 
 

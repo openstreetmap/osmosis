@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.lifecycle.Releasable;
 
 
 /**

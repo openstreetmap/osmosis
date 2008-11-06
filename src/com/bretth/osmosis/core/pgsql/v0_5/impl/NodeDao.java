@@ -11,10 +11,10 @@ import org.postgresql.geometric.PGpoint;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_5.Node;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
+import com.bretth.osmosis.core.lifecycle.Releasable;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.mysql.v0_5.impl.DBEntityTag;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
-import com.bretth.osmosis.core.store.Releasable;
-import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**

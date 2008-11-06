@@ -4,8 +4,8 @@ package com.bretth.osmosis.core.sort.v0_5;
 import java.util.Comparator;
 
 import com.bretth.osmosis.core.container.v0_5.ChangeContainer;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.sort.common.FileBasedSort;
-import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
 import com.bretth.osmosis.core.task.v0_5.ChangeSink;
 import com.bretth.osmosis.core.task.v0_5.ChangeSinkChangeSource;

@@ -10,8 +10,8 @@ import java.util.Set;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.ReleasableStatementContainer;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
+import com.bretth.osmosis.core.lifecycle.Releasable;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
-import com.bretth.osmosis.core.store.Releasable;
 
 
 /**

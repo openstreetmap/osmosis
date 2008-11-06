@@ -30,13 +30,13 @@ import com.bretth.osmosis.core.domain.v0_6.EntityType;
 import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.PolygonBuilder;
 import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.pgsql.v0_6.PostgreSqlVersionConstants;
 import com.bretth.osmosis.core.store.IteratorReleasableIterator;
 import com.bretth.osmosis.core.store.MultipleSourceIterator;
-import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.store.UpcastIterator;
 
 

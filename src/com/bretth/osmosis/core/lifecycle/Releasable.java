@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.store;
+package com.bretth.osmosis.core.lifecycle;
 
 
 /**
@@ -13,10 +13,11 @@ package com.bretth.osmosis.core.store;
  */
 public interface Releasable {
 	/**
-	 * Releases resources held by the object. The implementation must not throw
-	 * exceptions. The method may be called multiple times. This should be
-	 * called within a finally block whenever this object is not required any
-	 * more.
+	 * Performs resource cleanup tasks such as closing files, or database
+	 * connections. This must be called after all processing is complete and may
+	 * be called multiple times. Implementations must call release on any nested
+	 * Releasable objects. It should be called within a finally block to ensure
+	 * it is called in exception scenarios.
 	 */
 	public void release();
 }

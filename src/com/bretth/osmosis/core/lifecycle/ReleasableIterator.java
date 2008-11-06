@@ -1,7 +1,8 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.store;
+package com.bretth.osmosis.core.lifecycle;
 
 import java.util.Iterator;
+
 
 
 /**

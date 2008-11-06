@@ -21,8 +21,8 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
+import com.bretth.osmosis.core.lifecycle.Releasable;
 import com.bretth.osmosis.core.store.BufferedRandomAccessFileInputStream;
-import com.bretth.osmosis.core.store.Releasable;
 import com.bretth.osmosis.core.store.StorageStage;
 import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 

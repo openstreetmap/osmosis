@@ -6,9 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.bretth.osmosis.core.lifecycle.Releasable;
 import com.bretth.osmosis.core.store.IndexStoreReader;
 import com.bretth.osmosis.core.store.IntegerLongIndexElement;
-import com.bretth.osmosis.core.store.Releasable;
 
 /**
  * Provides read-only access to a way tile area index store. Each thread

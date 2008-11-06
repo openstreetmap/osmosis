@@ -1,25 +1,29 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.store;
+package com.bretth.osmosis.core.lifecycle;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
+
+
 /**
- * A container for completable objects that require complete and release calls
- * to be performed as a unit.
+ * A container for releasable objects that must be freed. This implementation
+ * simplifies the creation of many releasable objects that must succeed or fail
+ * as a group. As each is created they are added to this container, and after
+ * they're all created successfully they can be cleared from this container.
  * 
  * @author Brett Henderson
  */
-public class CompletableContainer implements Completable {
-	private List<Completable> objects;
+public class ReleasableContainer implements Releasable {
+	private List<Releasable> objects;
 	
 	
 	/**
 	 * Creates a new instance.
 	 */
-	public CompletableContainer() {
-		objects = new ArrayList<Completable>();
+	public ReleasableContainer() {
+		objects = new ArrayList<Releasable>();
 	}
 	
 	
@@ -33,7 +37,7 @@ public class CompletableContainer implements Completable {
 	 *            The object to be stored.
 	 * @return The object that was stored.
 	 */
-	public <T extends Completable> T add(T object) {
+	public <T extends Releasable> T add(T object) {
 		objects.add(object);
 		
 		return object;
@@ -41,13 +45,10 @@ public class CompletableContainer implements Completable {
 	
 	
 	/**
-	 * {@inheritDoc}
+	 * Removes all objects. They will no longer be released.
 	 */
-	@Override
-	public void complete() {
-		for (Completable object : objects) {
-			object.complete();
-		}
+	public void clear() {
+		objects.clear();
 	}
 	
 	

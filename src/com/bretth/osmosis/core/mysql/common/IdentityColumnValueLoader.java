@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.ReleasableStatementContainer;
-import com.bretth.osmosis.core.store.Releasable;
+import com.bretth.osmosis.core.lifecycle.Releasable;
 
 
 /**

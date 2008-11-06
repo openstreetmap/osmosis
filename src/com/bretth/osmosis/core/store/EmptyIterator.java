@@ -2,6 +2,7 @@
 package com.bretth.osmosis.core.store;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 
 
 /**

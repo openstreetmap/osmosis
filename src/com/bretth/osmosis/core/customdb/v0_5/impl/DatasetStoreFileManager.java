@@ -3,7 +3,7 @@ package com.bretth.osmosis.core.customdb.v0_5.impl;
 
 import java.io.File;
 
-import com.bretth.osmosis.core.store.Releasable;
+import com.bretth.osmosis.core.lifecycle.Releasable;
 
 
 /**

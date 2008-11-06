@@ -18,9 +18,9 @@ import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.filter.common.BitSetIdTracker;
 import com.bretth.osmosis.core.filter.common.IdTracker;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.store.EmptyIterator;
 import com.bretth.osmosis.core.store.NoSuchIndexElementException;
-import com.bretth.osmosis.core.store.ReleasableIterator;
 
 
 /**

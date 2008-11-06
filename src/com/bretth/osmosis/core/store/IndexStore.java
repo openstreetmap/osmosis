@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.lifecycle.Completable;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.sort.common.FileBasedSort;
 
 

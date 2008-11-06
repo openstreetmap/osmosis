@@ -3,7 +3,7 @@ package com.bretth.osmosis.core.pgsql.common;
 import java.sql.PreparedStatement;
 
 import com.bretth.osmosis.core.database.ReleasableStatementContainer;
-import com.bretth.osmosis.core.store.Releasable;
+import com.bretth.osmosis.core.lifecycle.Releasable;
 
 
 /**

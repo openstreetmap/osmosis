@@ -14,6 +14,7 @@ import com.bretth.osmosis.core.domain.v0_6.Bound;
 import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.v0_6.impl.EntityHistory;
 import com.bretth.osmosis.core.mysql.v0_6.impl.EntityHistoryComparator;
@@ -22,7 +23,6 @@ import com.bretth.osmosis.core.mysql.v0_6.impl.NodeReader;
 import com.bretth.osmosis.core.mysql.v0_6.impl.RelationReader;
 import com.bretth.osmosis.core.mysql.v0_6.impl.WayReader;
 import com.bretth.osmosis.core.store.PeekableIterator;
-import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.task.v0_6.RunnableSource;
 import com.bretth.osmosis.core.task.v0_6.Sink;
 

@@ -3,6 +3,8 @@ package com.bretth.osmosis.core.store;
 
 import java.io.File;
 
+import com.bretth.osmosis.core.lifecycle.Completable;
+
 
 /**
  * Provides a store for objects that can be located by a long identifier.

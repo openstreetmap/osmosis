@@ -18,7 +18,7 @@ import org.postgis.binary.BinaryWriter;
 import org.postgresql.geometric.PGpoint;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
-import com.bretth.osmosis.core.store.Completable;
+import com.bretth.osmosis.core.lifecycle.Completable;
 
 
 /**

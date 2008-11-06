@@ -2,6 +2,7 @@
 package com.bretth.osmosis.core.task.v0_6;
 
 import com.bretth.osmosis.core.container.v0_6.Dataset;
+import com.bretth.osmosis.core.lifecycle.Releasable;
 import com.bretth.osmosis.core.task.common.Task;
 
 
@@ -10,7 +11,7 @@ import com.bretth.osmosis.core.task.common.Task;
  * 
  * @author Brett Henderson
  */
-public interface DatasetSink extends Task {
+public interface DatasetSink extends Task, Releasable {
 	
 	/**
 	 * Process the dataset. This must only be called once. This will perform all
@@ -21,13 +22,4 @@ public interface DatasetSink extends Task {
 	 *            The dataset to be processed.
 	 */
 	public void process(Dataset dataset);
-	
-	/**
-	 * Performs resource cleanup tasks such as closing files, or database
-	 * connections. This must be called after all processing is complete. It
-	 * should be called within a finally block to ensure it is called in
-	 * exception scenarios. Chained implementations will call their output
-	 * sinks.
-	 */
-	public void release();
 }

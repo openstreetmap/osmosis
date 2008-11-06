@@ -4,8 +4,8 @@ package com.bretth.osmosis.core.container.v0_6;
 import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.Way;
-import com.bretth.osmosis.core.store.Releasable;
-import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.lifecycle.Releasable;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 
 
 /**

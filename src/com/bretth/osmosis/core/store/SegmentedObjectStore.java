@@ -15,6 +15,8 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.lifecycle.Completable;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 
 
 /**

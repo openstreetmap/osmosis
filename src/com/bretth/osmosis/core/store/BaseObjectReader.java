@@ -8,7 +8,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 
 
 /**
- * Provides functionality common to all object writer implementations.
+ * Provides functionality common to all object reader implementations.
  * 
  * @author Brett Henderson
  */

@@ -2,6 +2,8 @@ package com.bretth.osmosis.core.store;
 
 import java.util.Iterator;
 
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
+
 
 /**
  * Simple wrapper around a standard iterator to allow it to be used as a

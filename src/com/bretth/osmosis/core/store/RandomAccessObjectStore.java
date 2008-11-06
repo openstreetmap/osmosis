@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.lifecycle.Completable;
 
 
 /**

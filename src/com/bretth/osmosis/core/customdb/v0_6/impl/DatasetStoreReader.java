@@ -16,6 +16,7 @@ import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.filter.v0_6.impl.BaseDatasetReader;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
 import com.bretth.osmosis.core.store.IndexStoreReader;
 import com.bretth.osmosis.core.store.IntegerLongIndexElement;
@@ -23,7 +24,6 @@ import com.bretth.osmosis.core.store.LongLongIndexElement;
 import com.bretth.osmosis.core.store.MultipleSourceIterator;
 import com.bretth.osmosis.core.store.RandomAccessObjectStoreReader;
 import com.bretth.osmosis.core.store.ReleasableAdaptorForIterator;
-import com.bretth.osmosis.core.store.ReleasableIterator;
 import com.bretth.osmosis.core.store.UpcastIterator;
 
 

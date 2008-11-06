@@ -2,6 +2,8 @@ package com.bretth.osmosis.core.store;
 
 import java.util.Iterator;
 
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
+
 /**
  * A releasable iterator implementation for reading data from an underlying
  * non-releasable iterator. Note that the release method has nothing to do in this

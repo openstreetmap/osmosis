@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import com.bretth.osmosis.core.store.ReleasableIterator;
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 
 
 /**

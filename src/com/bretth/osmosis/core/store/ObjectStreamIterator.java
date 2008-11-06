@@ -3,6 +3,8 @@ package com.bretth.osmosis.core.store;
 
 import java.io.DataInputStream;
 
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
+
 
 /**
  * This class reads objects from an ObjectInputStream until the end of stream is

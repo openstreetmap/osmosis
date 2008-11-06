@@ -3,6 +3,8 @@ package com.bretth.osmosis.core.store;
 
 import java.util.NoSuchElementException;
 
+import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
+
 
 /**
  * Wraps an underlying iterator implementation so that all data is read from the

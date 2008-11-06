@@ -4,12 +4,12 @@ package com.bretth.osmosis.core.customdb.v0_6.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bretth.osmosis.core.store.Completable;
+import com.bretth.osmosis.core.lifecycle.Completable;
+import com.bretth.osmosis.core.lifecycle.Releasable;
+import com.bretth.osmosis.core.lifecycle.ReleasableContainer;
 import com.bretth.osmosis.core.store.IndexStore;
 import com.bretth.osmosis.core.store.IndexStoreReader;
 import com.bretth.osmosis.core.store.IntegerLongIndexElement;
-import com.bretth.osmosis.core.store.Releasable;
-import com.bretth.osmosis.core.store.ReleasableContainer;
 import com.bretth.osmosis.core.store.UnsignedIntegerComparator;
 
 
