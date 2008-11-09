@@ -13,7 +13,7 @@ import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
-import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
+import com.bretth.osmosis.core.mysql.v0_6.impl.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.v0_6.impl.CurrentNodeReader;
 import com.bretth.osmosis.core.mysql.v0_6.impl.CurrentRelationReader;
 import com.bretth.osmosis.core.mysql.v0_6.impl.CurrentWayReader;
@@ -123,7 +123,7 @@ public class MySqlCurrentReader implements RunnableSource {
 	public void run() {
 		try {
 			if (preferences.getValidateSchemaVersion()) {
-				new SchemaVersionValidator(loginCredentials).validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
+				new SchemaVersionValidator(loginCredentials).validateVersion(MySqlVersionConstants.SCHEMA_MIGRATIONS);
 			}
 			
 			sink.process(new BoundContainer(new Bound("Osmosis " + OsmosisConstants.VERSION)));

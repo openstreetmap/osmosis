@@ -4,7 +4,7 @@ package com.bretth.osmosis.core.mysql.v0_6;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
-import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
+import com.bretth.osmosis.core.mysql.v0_6.impl.SchemaVersionValidator;
 import com.bretth.osmosis.core.task.common.RunnableTask;
 
 
@@ -68,7 +68,7 @@ public class MysqlTruncator implements RunnableTask {
 	public void run() {
 		try {
 			if (preferences.getValidateSchemaVersion()) {
-				schemaVersionValidator.validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
+				schemaVersionValidator.validateVersion(MySqlVersionConstants.SCHEMA_MIGRATIONS);
 			}
 			
 			for (int i = 0; i < SQL_STATEMENTS.length; i++) {

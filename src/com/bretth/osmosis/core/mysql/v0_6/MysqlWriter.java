@@ -23,8 +23,8 @@ import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
-import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.common.TileCalculator;
+import com.bretth.osmosis.core.mysql.v0_6.impl.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.v0_6.impl.ChangesetManager;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DBWayNode;
@@ -334,7 +334,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private void initialize() {
 		if (!initialized) {
 			if (preferences.getValidateSchemaVersion()) {
-				schemaVersionValidator.validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
+				schemaVersionValidator.validateVersion(MySqlVersionConstants.SCHEMA_MIGRATIONS);
 			}
 			
 			bulkNodeStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_NODE);

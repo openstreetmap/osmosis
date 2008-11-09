@@ -1,11 +1,12 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.core.mysql.common;
+package com.bretth.osmosis.core.mysql.v0_5.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 
 
 /**

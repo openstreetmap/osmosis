@@ -8,7 +8,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.container.v0_6.ChangeContainer;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
-import com.bretth.osmosis.core.mysql.common.SchemaVersionValidator;
+import com.bretth.osmosis.core.mysql.v0_6.impl.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.v0_6.impl.ActionChangeWriter;
 import com.bretth.osmosis.core.mysql.v0_6.impl.ChangeWriter;
 import com.bretth.osmosis.core.task.common.ChangeAction;
@@ -62,7 +62,7 @@ public class MysqlChangeWriter implements ChangeSink {
 		
 		// Verify that the schema version is supported.
 		if (preferences.getValidateSchemaVersion()) {
-			schemaVersionValidator.validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
+			schemaVersionValidator.validateVersion(MySqlVersionConstants.SCHEMA_MIGRATIONS);
 		}
 		
 		action = change.getAction();

@@ -9,7 +9,11 @@ package com.bretth.osmosis.core.mysql.v0_6;
  */
 public interface MySqlVersionConstants {
 	/**
-	 * Defines the schema version number currently supported.
+	 * Defines the schema migrations expected to be in the database.
 	 */
-	public static final int SCHEMA_VERSION = 20;
+	public static final String SCHEMA_MIGRATIONS[] = {
+		"1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+		"11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+		"21"
+	};
 }
