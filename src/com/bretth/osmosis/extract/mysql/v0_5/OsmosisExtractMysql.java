@@ -31,7 +31,7 @@ public class OsmosisExtractMysql {
 	private static final File DATA_TSTAMP_FILE = new File("data/timestamp.txt");
 	private static final File DATA_TSTAMP_NEW_FILE = new File("data/timestampnew.txt");
 	
-	private static final String CONFIG_RESOURCE = "../common/osmosis-extract-mysql.conf";
+	private static final String CONFIG_RESOURCE = "osmosis-extract-mysql.conf";
 	
 	private static final String COMMAND_HELP = "help";
 	private static final String COMMAND_INITIALIZE = "initialize";
