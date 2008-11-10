@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.extract.mysql;
+package com.bretth.osmosis.extract.mysql.common;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -8,7 +8,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.task.common.RunnableTask;
 import com.bretth.osmosis.core.util.FileBasedLock;
 import com.bretth.osmosis.core.util.ResourceFileManager;
-import com.bretth.osmosis.extract.mysql.TimestampTracker;
+import com.bretth.osmosis.extract.mysql.common.TimestampTracker;
 
 
 /**

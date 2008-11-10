@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
-package com.bretth.osmosis.extract.mysql;
+package com.bretth.osmosis.extract.mysql.v0_5;
 
 import java.io.File;
 import java.util.Date;
@@ -11,6 +11,7 @@ import com.bretth.osmosis.core.merge.v0_5.impl.ChangesetFileNameFormatter;
 import com.bretth.osmosis.core.mysql.v0_5.MysqlChangeReader;
 import com.bretth.osmosis.core.xml.common.CompressionMethod;
 import com.bretth.osmosis.core.xml.v0_5.XmlChangeWriter;
+import com.bretth.osmosis.extract.mysql.common.Configuration;
 
 
 /**

@@ -28,7 +28,7 @@ import com.bretth.osmosis.core.util.FileBasedLock;
 import com.bretth.osmosis.core.xml.common.CompressionMethod;
 import com.bretth.osmosis.core.xml.common.DateParser;
 import com.bretth.osmosis.core.xml.v0_6.XmlChangeReader;
-import com.bretth.osmosis.extract.mysql.TimestampTracker;
+import com.bretth.osmosis.extract.mysql.common.TimestampTracker;
 
 
 /**
