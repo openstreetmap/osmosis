@@ -60,6 +60,15 @@ public class WayNodeBuilder extends EntityFeatureBuilder<DbOrderedFeature<WayNod
 	 * {@inheritDoc}
 	 */
 	@Override
+	public String getSqlDefaultOrderBy() {
+		return super.getSqlDefaultOrderBy() + ", sequence_id";
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String getSqlInsert(int rowCount) {
 		StringBuilder resultSql;
 		
@@ -136,7 +145,8 @@ public class WayNodeBuilder extends EntityFeatureBuilder<DbOrderedFeature<WayNod
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
 				"Unable to populate way node parameters for way " +
-				entityFeature.getEntityId() + "."
+				entityFeature.getEntityId() + ".",
+				e
 			);
 		}
 	}

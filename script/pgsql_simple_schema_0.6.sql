@@ -89,7 +89,8 @@ CREATE TABLE relation_members (
     relation_id bigint NOT NULL,
     member_id bigint NOT NULL,
     member_type character(1) NOT NULL,
-    member_role text NOT NULL
+    member_role text NOT NULL,
+    sequence_id smallint NOT NULL
 );
 
 

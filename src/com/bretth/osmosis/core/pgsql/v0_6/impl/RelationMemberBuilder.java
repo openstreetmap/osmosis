@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
 
 
 /**
@@ -15,7 +15,7 @@ import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
  * 
  * @author Brett Henderson
  */
-public class RelationMemberBuilder extends EntityFeatureBuilder<DbFeature<RelationMember>> {
+public class RelationMemberBuilder extends EntityFeatureBuilder<DbOrderedFeature<RelationMember>> {
 	
 	private MemberTypeValueMapper memberTypeValueMapper;
 	
@@ -54,7 +54,7 @@ public class RelationMemberBuilder extends EntityFeatureBuilder<DbFeature<Relati
 		StringBuilder resultSql;
 		
 		resultSql = new StringBuilder();
-		resultSql.append("SELECT relation_id AS entity_id, member_id, member_type, member_role FROM ");
+		resultSql.append("SELECT relation_id AS entity_id, member_id, member_type, member_role, sequence_id FROM ");
 		resultSql.append("relation_members f");
 		if (filterByEntityId) {
 			resultSql.append(" WHERE entity_id = ?");
@@ -71,17 +71,26 @@ public class RelationMemberBuilder extends EntityFeatureBuilder<DbFeature<Relati
 	 * {@inheritDoc}
 	 */
 	@Override
+	public String getSqlDefaultOrderBy() {
+		return super.getSqlDefaultOrderBy() + ", sequence_id";
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String getSqlInsert(int rowCount) {
 		StringBuilder resultSql;
 		
 		resultSql = new StringBuilder();
 		resultSql.append("INSERT INTO relation_members (");
-		resultSql.append("relation_id, member_id, member_type, member_role) VALUES ");
+		resultSql.append("relation_id, member_id, member_type, member_role, sequence_id) VALUES ");
 		for (int row = 0; row < rowCount; row++) {
 			if (row > 0) {
 				resultSql.append(", ");
 			}
-			resultSql.append("(?, ?, ?, ?)");
+			resultSql.append("(?, ?, ?, ?, ?)");
 		}
 		
 		return resultSql.toString();
@@ -109,15 +118,16 @@ public class RelationMemberBuilder extends EntityFeatureBuilder<DbFeature<Relati
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DbFeature<RelationMember> buildEntity(ResultSet resultSet) {
+	public DbOrderedFeature<RelationMember> buildEntity(ResultSet resultSet) {
 		try {
-			return new DbFeature<RelationMember>(
+			return new DbOrderedFeature<RelationMember>(
 				resultSet.getLong("entity_id"),
 				new RelationMember(
 					resultSet.getLong("member_id"),
 					memberTypeValueMapper.getEntityType(resultSet.getString("member_type")),
 					resultSet.getString("member_role")
-				)
+				),
+				resultSet.getInt("sequence_id")
 			);
 			
 		} catch (SQLException e) {
@@ -130,7 +140,7 @@ public class RelationMemberBuilder extends EntityFeatureBuilder<DbFeature<Relati
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int populateEntityParameters(PreparedStatement statement, int initialIndex, DbFeature<RelationMember> entityFeature) {
+	public int populateEntityParameters(PreparedStatement statement, int initialIndex, DbOrderedFeature<RelationMember> entityFeature) {
 		try {
 			int prmIndex;
 			RelationMember relationMember;
@@ -143,13 +153,15 @@ public class RelationMemberBuilder extends EntityFeatureBuilder<DbFeature<Relati
 			statement.setLong(prmIndex++, relationMember.getMemberId());
 			statement.setString(prmIndex++, memberTypeValueMapper.getMemberType(relationMember.getMemberType()));
 			statement.setString(prmIndex++, relationMember.getMemberRole());
+			statement.setInt(prmIndex++, entityFeature.getSequenceId());
 			
 			return prmIndex;
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
-				"Unable to populate way node parameters for way " +
-				entityFeature.getEntityId() + "."
+				"Unable to populate relation member parameters for relation " +
+				entityFeature.getEntityId() + ".",
+				e
 			);
 		}
 	}

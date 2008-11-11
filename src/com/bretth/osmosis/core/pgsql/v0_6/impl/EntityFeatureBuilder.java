@@ -39,6 +39,7 @@ public abstract class EntityFeatureBuilder<T> {
 		return " ORDER BY entity_id"; 
 	}
 	
+	
 	/**
 	 * The SQL SELECT statement for retrieving entity feature details.
 	 * 

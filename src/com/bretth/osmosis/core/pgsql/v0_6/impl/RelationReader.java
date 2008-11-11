@@ -7,6 +7,7 @@ import java.util.List;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.store.PeekableIterator;
 
@@ -19,7 +20,7 @@ import com.bretth.osmosis.core.store.PeekableIterator;
  */
 public class RelationReader  extends EntityReader<Relation> {
 	
-	private PeekableIterator<DbFeature<RelationMember>> relationMemberReader;
+	private PeekableIterator<DbOrderedFeature<RelationMember>> relationMemberReader;
 	
 	
 	/**
@@ -31,8 +32,8 @@ public class RelationReader  extends EntityReader<Relation> {
 	public RelationReader(DatabaseContext dbCtx) {
 		super(dbCtx, new RelationBuilder());
 		
-		relationMemberReader = new PeekableIterator<DbFeature<RelationMember>>(
-			new EntityFeatureTableReader<RelationMember, DbFeature<RelationMember>>(dbCtx, new RelationMemberBuilder())
+		relationMemberReader = new PeekableIterator<DbOrderedFeature<RelationMember>>(
+			new EntityFeatureTableReader<RelationMember, DbOrderedFeature<RelationMember>>(dbCtx, new RelationMemberBuilder())
 		);
 	}
 	
@@ -49,8 +50,8 @@ public class RelationReader  extends EntityReader<Relation> {
 	public RelationReader(DatabaseContext dbCtx, String constraintTable) {
 		super(dbCtx, new RelationBuilder(), constraintTable);
 		
-		relationMemberReader = new PeekableIterator<DbFeature<RelationMember>>(
-			new EntityFeatureTableReader<RelationMember, DbFeature<RelationMember>>(dbCtx, new RelationMemberBuilder(), constraintTable)
+		relationMemberReader = new PeekableIterator<DbOrderedFeature<RelationMember>>(
+			new EntityFeatureTableReader<RelationMember, DbOrderedFeature<RelationMember>>(dbCtx, new RelationMemberBuilder(), constraintTable)
 		);
 	}
 	

@@ -138,7 +138,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private List<DbOrderedFeature<WayNode>> wayNodeBuffer;
 	private List<Relation> relationBuffer;
 	private List<DbFeature<Tag>> relationTagBuffer;
-	private List<DbFeature<RelationMember>> relationMemberBuffer;
+	private List<DbOrderedFeature<RelationMember>> relationMemberBuffer;
 	private boolean initialized;
 	private HashSet<Integer> userSet;
 	private UserDao userDao;
@@ -204,7 +204,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		wayNodeBuffer = new ArrayList<DbOrderedFeature<WayNode>>();
 		relationBuffer = new ArrayList<Relation>();
 		relationTagBuffer = new ArrayList<DbFeature<Tag>>();
-		relationMemberBuffer = new ArrayList<DbFeature<RelationMember>>();
+		relationMemberBuffer = new ArrayList<DbOrderedFeature<RelationMember>>();
 		
 		userSet = new HashSet<Integer>();
 		userDao = new UserDao(dbCtx);
@@ -718,8 +718,11 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 *            The relation to be processed.
 	 */
 	private void addRelationMembers(Relation relation) {
+		int sequenceId;
+		
+		sequenceId = 0;
 		for (RelationMember relationMember : relation.getMemberList()) {
-			relationMemberBuffer.add(new DbFeature<RelationMember>(relation.getId(), relationMember));
+			relationMemberBuffer.add(new DbOrderedFeature<RelationMember>(relation.getId(), relationMember, sequenceId++));
 		}
 		
 		flushRelationMembers(false);
