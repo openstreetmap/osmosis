@@ -81,7 +81,7 @@ public class RelationReader  extends EntityReader<Relation> {
 			}
 		}
 		
-		// Load all nodes matching this version of the way.
+		// Load all members matching this version of the relation.
 		relationMembers = new ArrayList<DbFeature<RelationMember>>();
 		while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getEntityId() == relationId) {
 			relationMembers.add(relationMemberReader.next());
