@@ -17,9 +17,9 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class CurrentRelationMemberTableReader extends BaseTableReader<DbFeature<RelationMember>> {
+public class CurrentRelationMemberTableReader extends BaseTableReader<DbOrderedFeature<RelationMember>> {
 	private static final String SELECT_SQL =
-		"SELECT id AS relation_id, member_type, member_id, member_role"
+		"SELECT id AS relation_id, member_type, member_id, member_role, sequence_id"
 		+ " FROM current_relation_members"
 		+ " ORDER BY id";
 	
@@ -52,31 +52,34 @@ public class CurrentRelationMemberTableReader extends BaseTableReader<DbFeature<
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<DbFeature<RelationMember>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<DbOrderedFeature<RelationMember>> createNextValue(ResultSet resultSet) {
 		long relationId;
 		EntityType memberType;
 		long memberId;
 		String memberRole;
+		int sequenceId;
 		
 		try {
 			relationId = resultSet.getLong("relation_id");
 			memberType = memberTypeParser.parse(resultSet.getString("member_type"));
 			memberId = resultSet.getLong("member_id");
 			memberRole = resultSet.getString("member_role");
+			sequenceId = resultSet.getInt("sequence_id");
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read relation member fields.", e);
 		}
 		
-		return new ReadResult<DbFeature<RelationMember>>(
+		return new ReadResult<DbOrderedFeature<RelationMember>>(
 			true,
-			new DbFeature<RelationMember>(
+			new DbOrderedFeature<RelationMember>(
 				relationId,
 				new RelationMember(
 					memberId,
 					memberType,
 					memberRole
-				)
+				),
+				sequenceId
 			)
 		);
 	}

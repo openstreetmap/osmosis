@@ -21,9 +21,9 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class RelationMemberHistoryReader extends BaseTableReader<DbFeatureHistory<DbFeature<RelationMember>>> {
+public class RelationMemberHistoryReader extends BaseTableReader<DbFeatureHistory<DbOrderedFeature<RelationMember>>> {
 	private static final String SELECT_SQL =
-		"SELECT rm.id AS relation_id, rm.member_type, rm.member_id, rm.member_role, rm.version" +
+		"SELECT rm.id AS relation_id, rm.member_type, rm.member_id, rm.member_role, rm.sequence_id, rm.version" +
 		" FROM relation_members rm" +
 		" INNER JOIN (" +
 		"   SELECT id, MAX(version) as version" +
@@ -84,11 +84,12 @@ public class RelationMemberHistoryReader extends BaseTableReader<DbFeatureHistor
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<DbFeatureHistory<DbFeature<RelationMember>>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<DbFeatureHistory<DbOrderedFeature<RelationMember>>> createNextValue(ResultSet resultSet) {
 		long relationId;
 		EntityType memberType;
 		long memberId;
 		String memberRole;
+		int sequenceId;
 		int version;
 		
 		try {
@@ -96,22 +97,24 @@ public class RelationMemberHistoryReader extends BaseTableReader<DbFeatureHistor
 			memberType = memberTypeParser.parse(resultSet.getString("member_type"));
 			memberId = resultSet.getLong("member_id");
 			memberRole = resultSet.getString("member_role");
+			sequenceId = resultSet.getInt("sequence_id");
 			version = resultSet.getInt("version");
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read relation member fields.", e);
 		}
 		
-		return new ReadResult<DbFeatureHistory<DbFeature<RelationMember>>>(
+		return new ReadResult<DbFeatureHistory<DbOrderedFeature<RelationMember>>>(
 			true,
-			new DbFeatureHistory<DbFeature<RelationMember>>(
-				new DbFeature<RelationMember>(
+			new DbFeatureHistory<DbOrderedFeature<RelationMember>>(
+				new DbOrderedFeature<RelationMember>(
 					relationId,
 					new RelationMember(
 						memberId,
 						memberType,
 						memberRole
-					)
+					),
+					sequenceId
 				),
 				version
 			)

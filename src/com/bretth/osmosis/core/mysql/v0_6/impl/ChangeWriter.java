@@ -97,11 +97,11 @@ public class ChangeWriter {
 	private static final String DELETE_SQL_RELATION_TAG_CURRENT =
 		"DELETE FROM current_relation_tags WHERE id = ?";
 	private static final String INSERT_SQL_RELATION_MEMBER =
-		"INSERT INTO relation_members (id, version, member_type, member_id, member_role) VALUES (?, ?, ?, ?, ?)";
+		"INSERT INTO relation_members (id, version, member_type, member_id, member_role, sequence_id) VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String DELETE_SQL_RELATION_MEMBER =
 		"DELETE FROM relation_members WHERE id = ? AND version = ?";
 	private static final String INSERT_SQL_RELATION_MEMBER_CURRENT =
-		"INSERT INTO current_relation_members (id, member_type, member_id, member_role) VALUES (?, ?, ?, ?)";
+		"INSERT INTO current_relation_members (id, member_type, member_id, member_role, sequence_id) VALUES (?, ?, ?, ?, ?)";
 	private static final String DELETE_SQL_RELATION_MEMBER_CURRENT =
 		"DELETE FROM current_relation_members WHERE id = ?";
 	
@@ -851,6 +851,7 @@ public class ChangeWriter {
 				insertRelationMemberStatement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
 				insertRelationMemberStatement.setLong(prmIndex++, relationMember.getMemberId());
 				insertRelationMemberStatement.setString(prmIndex++, relationMember.getMemberRole());
+				insertRelationMemberStatement.setInt(prmIndex++, i + 1);
 				
 				insertRelationMemberStatement.execute();
 				
@@ -950,6 +951,7 @@ public class ChangeWriter {
 					insertRelationMemberCurrentStatement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
 					insertRelationMemberCurrentStatement.setLong(prmIndex++, relationMember.getMemberId());
 					insertRelationMemberCurrentStatement.setString(prmIndex++, relationMember.getMemberRole());
+					insertRelationMemberCurrentStatement.setInt(prmIndex++, i + 1);
 					
 					insertRelationMemberCurrentStatement.execute();
 					

@@ -1,7 +1,10 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.mysql.v0_6.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.container.v0_6.ChangeContainer;
@@ -25,7 +28,7 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
 public class RelationChangeReader {
 	
 	private PeekableIterator<EntityHistory<Relation>> relationHistoryReader;
-	private PeekableIterator<DbFeatureHistory<DbFeature<RelationMember>>> relationMemberHistoryReader;
+	private PeekableIterator<DbFeatureHistory<DbOrderedFeature<RelationMember>>> relationMemberHistoryReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> relationTagHistoryReader;
 	private ChangeContainer nextValue;
 	
@@ -55,8 +58,8 @@ public class RelationChangeReader {
 				)
 			);
 		relationMemberHistoryReader =
-			new PeekableIterator<DbFeatureHistory<DbFeature<RelationMember>>>(
-				new PersistentIterator<DbFeatureHistory<DbFeature<RelationMember>>>(
+			new PeekableIterator<DbFeatureHistory<DbOrderedFeature<RelationMember>>>(
+				new PersistentIterator<DbFeatureHistory<DbOrderedFeature<RelationMember>>>(
 					new SingleClassObjectSerializationFactory(DbFeatureHistory.class),
 					new RelationMemberHistoryReader(loginCredentials, intervalBegin, intervalEnd),
 					"relmbr",
@@ -85,15 +88,23 @@ public class RelationChangeReader {
 	private EntityHistory<Relation> readNextRelationHistory() {
 		EntityHistory<Relation> relationHistory;
 		Relation relation;
+		List<DbOrderedFeature<RelationMember>> relationMembers;
 		
 		relationHistory = relationHistoryReader.next();
 		relation = relationHistory.getEntity();
 
-		// Add all applicable member references to the relation.
+		// Add all applicable members to the relation.
+		relationMembers = new ArrayList<DbOrderedFeature<RelationMember>>();
 		while (relationMemberHistoryReader.hasNext() &&
 				relationMemberHistoryReader.peekNext().getDbFeature().getEntityId() == relation.getId() &&
 				relationMemberHistoryReader.peekNext().getVersion() == relation.getVersion()) {
-			relation.addMember(relationMemberHistoryReader.next().getDbFeature().getFeature());
+			relationMembers.add(relationMemberHistoryReader.next().getDbFeature());
+		}
+		// The underlying query sorts member references by relation id but not
+		// by their sequence number.
+		Collections.sort(relationMembers, new DbOrderedFeatureComparator<RelationMember>());
+		for (DbOrderedFeature<RelationMember> dbRelationMember : relationMembers) {
+			relation.addMember(dbRelationMember.getFeature());
 		}
 		
 		// Add all applicable tags to the relation.

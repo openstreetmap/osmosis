@@ -1,6 +1,9 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.mysql.v0_6.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
@@ -24,7 +27,7 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 	
 	private ReleasableIterator<Relation> relationReader;
 	private PeekableIterator<DbFeature<Tag>> relationTagReader;
-	private PeekableIterator<DbFeature<RelationMember>> relationMemberReader;
+	private PeekableIterator<DbOrderedFeature<RelationMember>> relationMemberReader;
 	private Relation nextValue;
 	private boolean nextValueLoaded;
 	
@@ -53,9 +56,9 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 				true
 			)
 		);
-		relationMemberReader = new PeekableIterator<DbFeature<RelationMember>>(
-			new PersistentIterator<DbFeature<RelationMember>>(
-				new SingleClassObjectSerializationFactory(DbFeature.class),
+		relationMemberReader = new PeekableIterator<DbOrderedFeature<RelationMember>>(
+			new PersistentIterator<DbOrderedFeature<RelationMember>>(
+				new SingleClassObjectSerializationFactory(DbOrderedFeature.class),
 				new CurrentRelationMemberTableReader(loginCredentials),
 				"relmbr",
 				true
@@ -71,6 +74,7 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 		if (!nextValueLoaded && relationReader.hasNext()) {
 			Relation relation;
 			long relationId;
+			List<DbOrderedFeature<RelationMember>> relationMembers;
 			
 			relation = relationReader.next();
 			
@@ -108,8 +112,15 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 			}
 			
 			// Load all members matching this relation.
+			relationMembers = new ArrayList<DbOrderedFeature<RelationMember>>();
 			while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getEntityId() == relationId) {
-				relation.addMember(relationMemberReader.next().getFeature());
+				relationMembers.add(relationMemberReader.next());
+			}
+			// The underlying query sorts member references by relation id but not
+			// by their sequence number.
+			Collections.sort(relationMembers, new DbOrderedFeatureComparator<RelationMember>());
+			for (DbOrderedFeature<RelationMember> dbRelationMember : relationMembers) {
+				relation.addMember(dbRelationMember.getFeature());
 			}
 			
 			nextValue = relation;

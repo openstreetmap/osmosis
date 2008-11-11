@@ -1,6 +1,9 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.mysql.v0_6.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
@@ -23,7 +26,7 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 	
 	private ReleasableIterator<EntityHistory<Relation>> relationReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> relationTagReader;
-	private PeekableIterator<DbFeatureHistory<DbFeature<RelationMember>>> relationMemberReader;
+	private PeekableIterator<DbFeatureHistory<DbOrderedFeature<RelationMember>>> relationMemberReader;
 	private EntityHistory<Relation> nextValue;
 	private boolean nextValueLoaded;
 	
@@ -52,8 +55,8 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 				true
 			)
 		);
-		relationMemberReader = new PeekableIterator<DbFeatureHistory<DbFeature<RelationMember>>>(
-			new PersistentIterator<DbFeatureHistory<DbFeature<RelationMember>>>(
+		relationMemberReader = new PeekableIterator<DbFeatureHistory<DbOrderedFeature<RelationMember>>>(
+			new PersistentIterator<DbFeatureHistory<DbOrderedFeature<RelationMember>>>(
 				new SingleClassObjectSerializationFactory(DbFeatureHistory.class),
 				new RelationMemberTableReader(loginCredentials),
 				"relmbr",
@@ -72,6 +75,7 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 			long relationId;
 			int relationVersion;
 			Relation relation;
+			List<DbOrderedFeature<RelationMember>> relationMembers;
 			
 			relationHistory = relationReader.next();
 			
@@ -107,7 +111,7 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 			
 			// Skip all relation members that are from lower id or lower version of the same id.
 			while (relationMemberReader.hasNext()) {
-				DbFeatureHistory<DbFeature<RelationMember>> relationMemberHistory;
+				DbFeatureHistory<DbOrderedFeature<RelationMember>> relationMemberHistory;
 				DbFeature<RelationMember> relationMember;
 				
 				relationMemberHistory = relationMemberReader.peekNext();
@@ -125,10 +129,17 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 					break;
 				}
 			}
-			
-			// Load all members matching this version of the relation.
+
+			// Load all nodes matching this version of the way.
+			relationMembers = new ArrayList<DbOrderedFeature<RelationMember>>();
 			while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getDbFeature().getEntityId() == relationId && relationMemberReader.peekNext().getVersion() == relationVersion) {
-				relation.addMember(relationMemberReader.next().getDbFeature().getFeature());
+				relationMembers.add(relationMemberReader.next().getDbFeature());
+			}
+			// The underlying query sorts node references by way id but not
+			// by their sequence number.
+			Collections.sort(relationMembers, new DbOrderedFeatureComparator<RelationMember>());
+			for (DbOrderedFeature<RelationMember> dbRelationMember : relationMembers) {
+				relation.addMember(dbRelationMember.getFeature());
 			}
 			
 			nextValue = relationHistory;

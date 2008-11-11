@@ -64,7 +64,6 @@ public class PostgreSqlTest {
 				"authFile=" + authFile.getPath(),
 				"--dataset-dump-0.6",
 				"--tag-sort-0.6",
-				"--member-sort-0.6",
 				"--write-xml-0.6",
 				outputFile.getPath()
 			}
@@ -139,7 +138,6 @@ public class PostgreSqlTest {
 				"authFile=" + authFile.getPath(),
 				"--dataset-dump-0.6",
 				"--tag-sort-0.6",
-				"--member-sort-0.6",
 				"--write-xml-0.6",
 				actualResultFile.getPath()
 			}

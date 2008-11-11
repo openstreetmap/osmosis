@@ -18,9 +18,9 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class RelationMemberTableReader extends BaseTableReader<DbFeatureHistory<DbFeature<RelationMember>>> {
+public class RelationMemberTableReader extends BaseTableReader<DbFeatureHistory<DbOrderedFeature<RelationMember>>> {
 	private static final String SELECT_SQL =
-		"SELECT id as relation_id, version, member_type, member_id, member_role"
+		"SELECT id as relation_id, version, member_type, member_id, member_role, sequence_id"
 		+ " FROM relation_members"
 		+ " ORDER BY id, version";
 	
@@ -53,11 +53,12 @@ public class RelationMemberTableReader extends BaseTableReader<DbFeatureHistory<
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<DbFeatureHistory<DbFeature<RelationMember>>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<DbFeatureHistory<DbOrderedFeature<RelationMember>>> createNextValue(ResultSet resultSet) {
 		long relationId;
 		EntityType memberType;
 		long memberId;
 		String memberRole;
+		int sequenceId;
 		int version;
 		
 		try {
@@ -65,22 +66,24 @@ public class RelationMemberTableReader extends BaseTableReader<DbFeatureHistory<
 			memberType = memberTypeParser.parse(resultSet.getString("member_type"));
 			memberId = resultSet.getLong("member_id");
 			memberRole = resultSet.getString("member_role");
+			sequenceId = resultSet.getInt("sequence_id");
 			version = resultSet.getInt("version");
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read relation member fields.", e);
 		}
 		
-		return new ReadResult<DbFeatureHistory<DbFeature<RelationMember>>>(
+		return new ReadResult<DbFeatureHistory<DbOrderedFeature<RelationMember>>>(
 			true,
-			new DbFeatureHistory<DbFeature<RelationMember>>(
-				new DbFeature<RelationMember>(
+			new DbFeatureHistory<DbOrderedFeature<RelationMember>>(
+				new DbOrderedFeature<RelationMember>(
 					relationId,
 					new RelationMember(
 						memberId,
 						memberType,
 						memberRole
-					)
+					),
+					sequenceId
 				),
 				version
 			)

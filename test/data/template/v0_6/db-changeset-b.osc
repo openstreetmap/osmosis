@@ -22,4 +22,12 @@
   <delete>
     <way id="3" version="13" timestamp="2008-01-03T09:10:11Z"/>
   </delete>
+  <modify>
+    <relation id="1" version="11" timestamp="2008-01-03T03:04:05Z" uid="10" user="user10b">
+      <member type="node" ref="7" role="noderole"/>
+      <member type="way" ref="1" role="wayrole1"/>
+      <member type="way" ref="2" role="wayrole2"/>
+      <tag k="type" v="myrelation"/>
+    </relation>
+  </modify>
 </osmChange>
