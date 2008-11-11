@@ -42,7 +42,6 @@ public class TaskRegistrarTest {
 	/**
 	 * Validates the standard class factory registration.
 	 */
-	@SuppressWarnings("deprecation")
 	@Test
 	public void testDefaultRegistration() {
 		TaskManager taskManager;
@@ -60,7 +59,6 @@ public class TaskRegistrarTest {
 	/**
 	 * Validates the plugin class factory registration.
 	 */
-	@SuppressWarnings("deprecation")
 	@Test
 	public void testPluginRegistration() {
 		TaskManager taskManager;
