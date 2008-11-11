@@ -12,6 +12,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
 import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
@@ -27,7 +28,7 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
 public class WayChangeReader {
 	
 	private PeekableIterator<EntityHistory<Way>> wayHistoryReader;
-	private PeekableIterator<DbFeatureHistory<DBWayNode>> wayNodeHistoryReader;
+	private PeekableIterator<DbFeatureHistory<DbOrderedFeature<WayNode>>> wayNodeHistoryReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> wayTagHistoryReader;
 	private ChangeContainer nextValue;
 	
@@ -57,8 +58,8 @@ public class WayChangeReader {
 				)
 			);
 		wayNodeHistoryReader =
-			new PeekableIterator<DbFeatureHistory<DBWayNode>>(
-				new PersistentIterator<DbFeatureHistory<DBWayNode>>(
+			new PeekableIterator<DbFeatureHistory<DbOrderedFeature<WayNode>>>(
+				new PersistentIterator<DbFeatureHistory<DbOrderedFeature<WayNode>>>(
 					new SingleClassObjectSerializationFactory(DbFeatureHistory.class),
 					new WayNodeHistoryReader(loginCredentials, intervalBegin, intervalEnd),
 					"waynod",
@@ -87,13 +88,13 @@ public class WayChangeReader {
 	private EntityHistory<Way> readNextWayHistory() {
 		EntityHistory<Way> wayHistory;
 		Way way;
-		List<DBWayNode> wayNodes;
+		List<DbOrderedFeature<WayNode>> wayNodes;
 		
 		wayHistory = wayHistoryReader.next();
 		way = wayHistory.getEntity();
 		
 		// Add all applicable node references to the way.
-		wayNodes = new ArrayList<DBWayNode>();
+		wayNodes = new ArrayList<DbOrderedFeature<WayNode>>();
 		while (wayNodeHistoryReader.hasNext() &&
 				wayNodeHistoryReader.peekNext().getDbFeature().getEntityId() == way.getId() &&
 				wayNodeHistoryReader.peekNext().getVersion() == way.getVersion()) {
@@ -101,8 +102,8 @@ public class WayChangeReader {
 		}
 		// The underlying query sorts node references by way id but not
 		// by their sequence number.
-		Collections.sort(wayNodes, new WayNodeComparator());
-		for (DBWayNode dbWayNode : wayNodes) {
+		Collections.sort(wayNodes, new DbOrderedFeatureComparator<WayNode>());
+		for (DbOrderedFeature<WayNode> dbWayNode : wayNodes) {
 			way.addWayNode(dbWayNode.getFeature());
 		}
 		

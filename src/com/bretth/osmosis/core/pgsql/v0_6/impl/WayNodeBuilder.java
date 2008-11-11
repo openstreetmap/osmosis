@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBWayNode;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
 
 
 /**
@@ -15,7 +15,7 @@ import com.bretth.osmosis.core.mysql.v0_6.impl.DBWayNode;
  * 
  * @author Brett Henderson
  */
-public class WayNodeBuilder extends EntityFeatureBuilder<DBWayNode> {
+public class WayNodeBuilder extends EntityFeatureBuilder<DbOrderedFeature<WayNode>> {
 	
 	/**
 	 * {@inheritDoc}
@@ -98,9 +98,9 @@ public class WayNodeBuilder extends EntityFeatureBuilder<DBWayNode> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DBWayNode buildEntity(ResultSet resultSet) {
+	public DbOrderedFeature<WayNode> buildEntity(ResultSet resultSet) {
 		try {
-			return new DBWayNode(
+			return new DbOrderedFeature<WayNode>(
 				resultSet.getLong("entity_id"),
 				new WayNode(
 					resultSet.getLong("node_id")
@@ -118,7 +118,7 @@ public class WayNodeBuilder extends EntityFeatureBuilder<DBWayNode> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int populateEntityParameters(PreparedStatement statement, int initialIndex, DBWayNode entityFeature) {
+	public int populateEntityParameters(PreparedStatement statement, int initialIndex, DbOrderedFeature<WayNode> entityFeature) {
 		try {
 			int prmIndex;
 			WayNode wayNode;

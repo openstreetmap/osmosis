@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
@@ -25,7 +26,7 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 	
 	private ReleasableIterator<Way> wayReader;
 	private PeekableIterator<DbFeature<Tag>> wayTagReader;
-	private PeekableIterator<DBWayNode> wayNodeReader;
+	private PeekableIterator<DbOrderedFeature<WayNode>> wayNodeReader;
 	private Way nextValue;
 	private boolean nextValueLoaded;
 	
@@ -54,9 +55,9 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 				true
 			)
 		);
-		wayNodeReader = new PeekableIterator<DBWayNode>(
-			new PersistentIterator<DBWayNode>(
-				new SingleClassObjectSerializationFactory(DBWayNode.class),
+		wayNodeReader = new PeekableIterator<DbOrderedFeature<WayNode>>(
+			new PersistentIterator<DbOrderedFeature<WayNode>>(
+				new SingleClassObjectSerializationFactory(DbOrderedFeature.class),
 				new CurrentWayNodeTableReader(loginCredentials),
 				"waynod",
 				true
@@ -72,7 +73,7 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 		if (!nextValueLoaded && wayReader.hasNext()) {
 			Way way;
 			long wayId;
-			List<DBWayNode> wayNodes;
+			List<DbOrderedFeature<WayNode>> wayNodes;
 			
 			way = wayReader.next();
 			
@@ -98,7 +99,7 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 			
 			// Skip all way nodes that are from lower id way.
 			while (wayNodeReader.hasNext()) {
-				DBWayNode wayNode;
+				DbOrderedFeature<WayNode> wayNode;
 				
 				wayNode = wayNodeReader.peekNext();
 				
@@ -110,14 +111,14 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 			}
 			
 			// Load all nodes matching this way.
-			wayNodes = new ArrayList<DBWayNode>();
+			wayNodes = new ArrayList<DbOrderedFeature<WayNode>>();
 			while (wayNodeReader.hasNext() && wayNodeReader.peekNext().getEntityId() == wayId) {
 				wayNodes.add(wayNodeReader.next());
 			}
 			// The underlying query sorts node references by way id but not
 			// by their sequence number.
-			Collections.sort(wayNodes, new WayNodeComparator());
-			for (DBWayNode dbWayNode : wayNodes) {
+			Collections.sort(wayNodes, new DbOrderedFeatureComparator<WayNode>());
+			for (DbOrderedFeature<WayNode> dbWayNode : wayNodes) {
 				way.addWayNode(dbWayNode.getFeature());
 			}
 			

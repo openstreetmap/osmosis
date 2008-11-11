@@ -28,7 +28,7 @@ import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBWayNode;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.DatabaseCapabilityChecker;
@@ -135,7 +135,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private List<DbFeature<Tag>> nodeTagBuffer;
 	private List<Way> wayBuffer;
 	private List<DbFeature<Tag>> wayTagBuffer;
-	private List<DBWayNode> wayNodeBuffer;
+	private List<DbOrderedFeature<WayNode>> wayNodeBuffer;
 	private List<Relation> relationBuffer;
 	private List<DbFeature<Tag>> relationTagBuffer;
 	private List<DbFeature<RelationMember>> relationMemberBuffer;
@@ -201,7 +201,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		nodeTagBuffer = new ArrayList<DbFeature<Tag>>();
 		wayBuffer = new ArrayList<Way>();
 		wayTagBuffer = new ArrayList<DbFeature<Tag>>();
-		wayNodeBuffer = new ArrayList<DBWayNode>();
+		wayNodeBuffer = new ArrayList<DbOrderedFeature<WayNode>>();
 		relationBuffer = new ArrayList<Relation>();
 		relationTagBuffer = new ArrayList<DbFeature<Tag>>();
 		relationMemberBuffer = new ArrayList<DbFeature<RelationMember>>();
@@ -543,7 +543,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		
 		sequenceId = 0;
 		for (WayNode wayNode : way.getWayNodeList()) {
-			wayNodeBuffer.add(new DBWayNode(way.getId(), wayNode, sequenceId++));
+			wayNodeBuffer.add(new DbOrderedFeature<WayNode>(way.getId(), wayNode, sequenceId++));
 		}
 		
 		flushWayNodes(false);

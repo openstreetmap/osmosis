@@ -10,7 +10,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBWayNode;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 
 
@@ -37,7 +37,7 @@ public class WayDao extends EntityDao<Way> {
 		" WHERE w.id  = ?";
 	
 	private DatabaseCapabilityChecker capabilityChecker;
-	private EntityFeatureDao<WayNode, DBWayNode> wayNodeDao;
+	private EntityFeatureDao<WayNode, DbOrderedFeature<WayNode>> wayNodeDao;
 	private PreparedStatement updateWayBboxStatement;
 	private PreparedStatement updateWayLinestringStatement;
 	
@@ -52,7 +52,7 @@ public class WayDao extends EntityDao<Way> {
 		super(dbCtx, new WayBuilder());
 		
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
-		wayNodeDao = new EntityFeatureDao<WayNode, DBWayNode>(dbCtx, new WayNodeBuilder());
+		wayNodeDao = new EntityFeatureDao<WayNode, DbOrderedFeature<WayNode>>(dbCtx, new WayNodeBuilder());
 	}
 	
 	
@@ -80,12 +80,12 @@ public class WayDao extends EntityDao<Way> {
 	 *            The list of features to add.
 	 */
 	private void addWayNodeList(long entityId, List<WayNode> wayNodeList) {
-		List<DBWayNode> dbList;
+		List<DbOrderedFeature<WayNode>> dbList;
 		
-		dbList = new ArrayList<DBWayNode>(wayNodeList.size());
+		dbList = new ArrayList<DbOrderedFeature<WayNode>>(wayNodeList.size());
 		
 		for (int i = 0; i < wayNodeList.size(); i++) {
-			dbList.add(new DBWayNode(entityId, wayNodeList.get(i), i));
+			dbList.add(new DbOrderedFeature<WayNode>(entityId, wayNodeList.get(i), i));
 		}
 		
 		wayNodeDao.addList(dbList);

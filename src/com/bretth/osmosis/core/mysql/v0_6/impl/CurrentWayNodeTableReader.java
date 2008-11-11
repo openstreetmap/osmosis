@@ -17,7 +17,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class CurrentWayNodeTableReader extends BaseTableReader<DBWayNode> {
+public class CurrentWayNodeTableReader extends BaseTableReader<DbOrderedFeature<WayNode>> {
 	private static final String SELECT_SQL =
 		"SELECT id AS way_id, node_id, sequence_id"
 		+ " FROM current_way_nodes"
@@ -48,7 +48,7 @@ public class CurrentWayNodeTableReader extends BaseTableReader<DBWayNode> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<DBWayNode> createNextValue(ResultSet resultSet) {
+	protected ReadResult<DbOrderedFeature<WayNode>> createNextValue(ResultSet resultSet) {
 		long wayId;
 		long nodeId;
 		int sequenceId;
@@ -62,9 +62,9 @@ public class CurrentWayNodeTableReader extends BaseTableReader<DBWayNode> {
 			throw new OsmosisRuntimeException("Unable to read way node fields.", e);
 		}
 		
-		return new ReadResult<DBWayNode>(
+		return new ReadResult<DbOrderedFeature<WayNode>>(
 			true,
-			new DBWayNode(wayId, new WayNode(nodeId), sequenceId)
+			new DbOrderedFeature<WayNode>(wayId, new WayNode(nodeId), sequenceId)
 		);
 	}
 }

@@ -20,7 +20,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class WayNodeHistoryReader extends BaseTableReader<DbFeatureHistory<DBWayNode>> {
+public class WayNodeHistoryReader extends BaseTableReader<DbFeatureHistory<DbOrderedFeature<WayNode>>> {
 	private static final String SELECT_SQL =
 		"SELECT wn.id AS way_id, wn.node_id, wn.sequence_id, wn.version" +
 		" FROM way_nodes wn" +
@@ -79,7 +79,7 @@ public class WayNodeHistoryReader extends BaseTableReader<DbFeatureHistory<DBWay
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<DbFeatureHistory<DBWayNode>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<DbFeatureHistory<DbOrderedFeature<WayNode>>> createNextValue(ResultSet resultSet) {
 		long wayId;
 		long nodeId;
 		int sequenceId;
@@ -95,10 +95,10 @@ public class WayNodeHistoryReader extends BaseTableReader<DbFeatureHistory<DBWay
 			throw new OsmosisRuntimeException("Unable to read way node fields.", e);
 		}
 		
-		return new ReadResult<DbFeatureHistory<DBWayNode>>(
+		return new ReadResult<DbFeatureHistory<DbOrderedFeature<WayNode>>>(
 			true,
-			new DbFeatureHistory<DBWayNode>(
-				new DBWayNode(wayId, new WayNode(nodeId), sequenceId),
+			new DbFeatureHistory<DbOrderedFeature<WayNode>>(
+				new DbOrderedFeature<WayNode>(wayId, new WayNode(nodeId), sequenceId),
 				version
 			)
 		);

@@ -7,8 +7,8 @@ import java.util.List;
 
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBWayNode;
-import com.bretth.osmosis.core.mysql.v0_6.impl.WayNodeComparator;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbOrderedFeatureComparator;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.store.PeekableIterator;
 
@@ -21,7 +21,7 @@ import com.bretth.osmosis.core.store.PeekableIterator;
  */
 public class WayReader extends EntityReader<Way> {
 	
-	private PeekableIterator<DBWayNode> wayNodeReader;
+	private PeekableIterator<DbOrderedFeature<WayNode>> wayNodeReader;
 	
 	
 	/**
@@ -33,8 +33,8 @@ public class WayReader extends EntityReader<Way> {
 	public WayReader(DatabaseContext dbCtx) {
 		super(dbCtx, new WayBuilder());
 		
-		wayNodeReader = new PeekableIterator<DBWayNode>(
-			new EntityFeatureTableReader<WayNode, DBWayNode>(dbCtx, new WayNodeBuilder())
+		wayNodeReader = new PeekableIterator<DbOrderedFeature<WayNode>>(
+			new EntityFeatureTableReader<WayNode, DbOrderedFeature<WayNode>>(dbCtx, new WayNodeBuilder())
 		);
 	}
 	
@@ -51,8 +51,8 @@ public class WayReader extends EntityReader<Way> {
 	public WayReader(DatabaseContext dbCtx, String constraintTable) {
 		super(dbCtx, new WayBuilder(), constraintTable);
 		
-		wayNodeReader = new PeekableIterator<DBWayNode>(
-			new EntityFeatureTableReader<WayNode, DBWayNode>(dbCtx, new WayNodeBuilder(), constraintTable)
+		wayNodeReader = new PeekableIterator<DbOrderedFeature<WayNode>>(
+			new EntityFeatureTableReader<WayNode, DbOrderedFeature<WayNode>>(dbCtx, new WayNodeBuilder(), constraintTable)
 		);
 	}
 	
@@ -63,7 +63,7 @@ public class WayReader extends EntityReader<Way> {
 	@Override
 	protected void populateEntityFeatures(Way entity) {
 		long wayId;
-		List<DBWayNode> wayNodes;
+		List<DbOrderedFeature<WayNode>> wayNodes;
 		
 		super.populateEntityFeatures(entity);
 		
@@ -71,7 +71,7 @@ public class WayReader extends EntityReader<Way> {
 		
 		// Skip all way nodes that are from a lower way.
 		while (wayNodeReader.hasNext()) {
-			DBWayNode wayNode;
+			DbOrderedFeature<WayNode> wayNode;
 			
 			wayNode = wayNodeReader.peekNext();
 			
@@ -83,14 +83,14 @@ public class WayReader extends EntityReader<Way> {
 		}
 		
 		// Load all nodes matching this version of the way.
-		wayNodes = new ArrayList<DBWayNode>();
+		wayNodes = new ArrayList<DbOrderedFeature<WayNode>>();
 		while (wayNodeReader.hasNext() && wayNodeReader.peekNext().getEntityId() == wayId) {
 			wayNodes.add(wayNodeReader.next());
 		}
 		// The underlying query sorts node references by way id but not
 		// by their sequence number.
-		Collections.sort(wayNodes, new WayNodeComparator());
-		for (DBWayNode dbWayNode : wayNodes) {
+		Collections.sort(wayNodes, new DbOrderedFeatureComparator<WayNode>());
+		for (DbOrderedFeature<WayNode> dbWayNode : wayNodes) {
 			entity.addWayNode(dbWayNode.getFeature());
 		}
 	}

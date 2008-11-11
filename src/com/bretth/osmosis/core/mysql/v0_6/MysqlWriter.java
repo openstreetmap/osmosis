@@ -27,7 +27,7 @@ import com.bretth.osmosis.core.mysql.common.TileCalculator;
 import com.bretth.osmosis.core.mysql.v0_6.impl.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.v0_6.impl.ChangesetManager;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
-import com.bretth.osmosis.core.mysql.v0_6.impl.DBWayNode;
+import com.bretth.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeatureHistory;
 import com.bretth.osmosis.core.mysql.v0_6.impl.MemberTypeRenderer;
 import com.bretth.osmosis.core.mysql.v0_6.impl.UserManager;
@@ -66,8 +66,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		"INSERT INTO relation_tags (id, k, v, version)";
 	private static final int INSERT_PRM_COUNT_RELATION_TAG = 4;
 	private static final String INSERT_SQL_RELATION_MEMBER =
-		"INSERT INTO relation_members (id, member_type, member_id, member_role, version)";
-	private static final int INSERT_PRM_COUNT_RELATION_MEMBER = 5;
+		"INSERT INTO relation_members (id, member_type, member_id, sequence_id, member_role, version)";
+	private static final int INSERT_PRM_COUNT_RELATION_MEMBER = 6;
 	
 	// These SQL statements will be invoked prior to loading data to disable
 	// indexes.
@@ -115,7 +115,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private static final String LOAD_CURRENT_RELATION_TAGS =
 		"INSERT INTO current_relation_tags SELECT id, k, v FROM relation_tags WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_RELATION_MEMBERS =
-		"INSERT INTO current_relation_members SELECT id, member_type, member_id, member_role FROM relation_members WHERE id >= ? AND id < ?";
+		"INSERT INTO current_relation_members SELECT id, member_type, member_id, member_role, sequence_id FROM relation_members WHERE id >= ? AND id < ?";
 	
 	// These SQL statements will be invoked to lock and unlock tables.
 	private static final String INVOKE_LOCK_TABLES =
@@ -245,10 +245,10 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private List<DbFeatureHistory<DbFeature<Tag>>> nodeTagBuffer;
 	private List<Way> wayBuffer;
 	private List<DbFeatureHistory<DbFeature<Tag>>> wayTagBuffer;
-	private List<DbFeatureHistory<DBWayNode>> wayNodeBuffer;
+	private List<DbFeatureHistory<DbOrderedFeature<WayNode>>> wayNodeBuffer;
 	private List<Relation> relationBuffer;
 	private List<DbFeatureHistory<DbFeature<Tag>>> relationTagBuffer;
-	private List<DbFeatureHistory<DbFeature<RelationMember>>> relationMemberBuffer;
+	private List<DbFeatureHistory<DbOrderedFeature<RelationMember>>> relationMemberBuffer;
 	private long maxNodeId;
 	private long maxWayId;
 	private long maxRelationId;
@@ -311,10 +311,10 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		nodeTagBuffer = new ArrayList<DbFeatureHistory<DbFeature<Tag>>>();
 		wayBuffer = new ArrayList<Way>();
 		wayTagBuffer = new ArrayList<DbFeatureHistory<DbFeature<Tag>>>();
-		wayNodeBuffer = new ArrayList<DbFeatureHistory<DBWayNode>>();
+		wayNodeBuffer = new ArrayList<DbFeatureHistory<DbOrderedFeature<WayNode>>>();
 		relationBuffer = new ArrayList<Relation>();
 		relationTagBuffer = new ArrayList<DbFeatureHistory<DbFeature<Tag>>>();
-		relationMemberBuffer = new ArrayList<DbFeatureHistory<DbFeature<RelationMember>>>();
+		relationMemberBuffer = new ArrayList<DbFeatureHistory<DbOrderedFeature<RelationMember>>>();
 		
 		maxNodeId = 0;
 		maxWayId = 0;
@@ -487,7 +487,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * @param dbWayNode
 	 *            The way node containing the data to be inserted.
 	 */
-	private void populateWayNodeParameters(PreparedStatement statement, int initialIndex, DbFeatureHistory<DBWayNode> dbWayNode) {
+	private void populateWayNodeParameters(PreparedStatement statement, int initialIndex, DbFeatureHistory<DbOrderedFeature<WayNode>> dbWayNode) {
 		int prmIndex;
 		
 		prmIndex = initialIndex;
@@ -548,7 +548,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * @param dbRelationMember
 	 *            The relation member containing the data to be inserted.
 	 */
-	private void populateRelationMemberParameters(PreparedStatement statement, int initialIndex, DbFeatureHistory<DbFeature<RelationMember>> dbRelationMember) {
+	private void populateRelationMemberParameters(PreparedStatement statement, int initialIndex, DbFeatureHistory<DbOrderedFeature<RelationMember>> dbRelationMember) {
 		int prmIndex;
 		RelationMember relationMember;
 		
@@ -560,6 +560,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 			statement.setLong(prmIndex++, dbRelationMember.getDbFeature().getEntityId());
 			statement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
 			statement.setLong(prmIndex++, relationMember.getMemberId());
+			statement.setInt(prmIndex++, dbRelationMember.getDbFeature().getSequenceId());
 			statement.setString(prmIndex++, relationMember.getMemberRole());
 			statement.setInt(prmIndex++, dbRelationMember.getVersion());
 			
@@ -1200,8 +1201,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		
 		for (int i = 0; i < nodeReferenceList.size(); i++) {
 			wayNodeBuffer.add(
-				new DbFeatureHistory<DBWayNode>(
-					new DBWayNode(
+				new DbFeatureHistory<DbOrderedFeature<WayNode>>(
+					new DbOrderedFeature<WayNode>(
 						way.getId(),
 						nodeReferenceList.get(i),
 						i + 1
@@ -1264,19 +1265,12 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		memberReferenceList = relation.getMemberList();
 		
 		for (int i = 0; i < memberReferenceList.size(); i++) {
-			RelationMember member;
-			
-			member = memberReferenceList.get(i);
-			
 			relationMemberBuffer.add(
-				new DbFeatureHistory<DbFeature<RelationMember>>(
-					new DbFeature<RelationMember>(
+				new DbFeatureHistory<DbOrderedFeature<RelationMember>>(
+					new DbOrderedFeature<RelationMember>(
 						relation.getId(),
-						new RelationMember(
-							member.getMemberId(),
-							member.getMemberType(),
-							member.getMemberRole()
-						)
+						memberReferenceList.get(i),
+						i + 1
 					),
 					relation.getVersion()
 				)

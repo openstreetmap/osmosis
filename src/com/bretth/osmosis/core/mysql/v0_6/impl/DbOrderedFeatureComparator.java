@@ -3,19 +3,23 @@ package com.bretth.osmosis.core.mysql.v0_6.impl;
 
 import java.util.Comparator;
 
+import com.bretth.osmosis.core.store.Storeable;
+
 
 /**
  * Compares way nodes to allow them to be sorted by way id then sequence
  * number.
  * 
  * @author Brett Henderson
+ * @param <T>
+ *            The encapsulated feature type.
  */
-public class WayNodeComparator implements Comparator<DBWayNode> {
+public class DbOrderedFeatureComparator<T extends Storeable> implements Comparator<DbOrderedFeature<T>> {
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public int compare(DBWayNode o1, DBWayNode o2) {
+	public int compare(DbOrderedFeature<T> o1, DbOrderedFeature<T> o2) {
 		long way1Id;
 		long way2Id;
 		

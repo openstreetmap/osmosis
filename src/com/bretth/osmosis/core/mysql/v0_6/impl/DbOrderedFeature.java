@@ -1,10 +1,10 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.mysql.v0_6.impl;
 
-import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
+import com.bretth.osmosis.core.store.Storeable;
 
 
 /**
@@ -12,8 +12,10 @@ import com.bretth.osmosis.core.store.StoreWriter;
  * node with fields relating it to the owning way.
  * 
  * @author Brett Henderson
+ * @param <T>
+ *            The feature type to be encapsulated.
  */
-public class DBWayNode extends DbFeature<WayNode> {
+public class DbOrderedFeature<T extends Storeable> extends DbFeature<T> {
 	
 	private int sequenceId;
 
@@ -21,15 +23,15 @@ public class DBWayNode extends DbFeature<WayNode> {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param wayId
-	 *            The owning way id.
-	 * @param wayNode
-	 *            The way node being referenced.
+	 * @param entityId
+	 *            The owning entity id.
+	 * @param feature
+	 *            The feature being referenced.
 	 * @param sequenceId
-	 *            The order of this node within the way.
+	 *            The order of this feature within the entity.
 	 */
-	public DBWayNode(long wayId, WayNode wayNode, int sequenceId) {
-		super(wayId, wayNode);
+	public DbOrderedFeature(long entityId, T feature, int sequenceId) {
+		super(entityId, feature);
 		
 		this.sequenceId = sequenceId;
 	}
@@ -44,7 +46,7 @@ public class DBWayNode extends DbFeature<WayNode> {
 	 *            Maintains the mapping between classes and their identifiers
 	 *            within the store.
 	 */
-	public DBWayNode(StoreReader sr, StoreClassRegister scr) {
+	public DbOrderedFeature(StoreReader sr, StoreClassRegister scr) {
 		super(sr, scr);
 		this.sequenceId = sr.readInteger();
 	}
