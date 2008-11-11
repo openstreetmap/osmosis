@@ -87,7 +87,6 @@ public class MySqlTest {
 				"--read-mysql-0.6",
 				"authFile=" + authFile.getPath(),
 				"--tag-sort-0.6",
-				"--member-sort-0.6",
 				"--write-xml-0.6",
 				outputFile.getPath()
 			}
@@ -146,7 +145,6 @@ public class MySqlTest {
 				"--read-mysql-current-0.6",
 				"authFile=" + authFile.getPath(),
 				"--tag-sort-0.6",
-				"--member-sort-0.6",
 				"--write-xml-0.6",
 				outputFile.getPath()
 			}
@@ -220,7 +218,6 @@ public class MySqlTest {
 				"--read-mysql-0.6",
 				"authFile=" + authFile.getPath(),
 				"--tag-sort-0.6",
-				"--member-sort-0.6",
 				"--write-xml-0.6",
 				actualResultFile.getPath()
 			}
@@ -298,7 +295,6 @@ public class MySqlTest {
 				"snapshotInstant=" + convertUTCTimeToLocalTime("2008-01-03_00:00:00"),
 				"authFile=" + authFile.getPath(),
 				"--tag-sort-0.6",
-				"--member-sort-0.6",
 				"--write-xml-0.6",
 				actualResultFile.getPath()
 			}

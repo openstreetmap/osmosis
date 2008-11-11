@@ -50,7 +50,6 @@ import com.bretth.osmosis.core.sort.v0_6.ChangeForStreamableApplierComparator;
 import com.bretth.osmosis.core.sort.v0_6.ChangeSorterFactory;
 import com.bretth.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
 import com.bretth.osmosis.core.sort.v0_6.EntitySorterFactory;
-import com.bretth.osmosis.core.sort.v0_6.MemberSorterFactory;
 import com.bretth.osmosis.core.sort.v0_6.TagSorterFactory;
 import com.bretth.osmosis.core.tee.v0_6.ChangeTeeFactory;
 import com.bretth.osmosis.core.tee.v0_6.EntityTeeFactory;
@@ -311,7 +310,6 @@ public class TaskRegistrar {
 		factoryRegister.register("migrate-0.6", new MigrateV05ToV06Factory());
 		factoryRegister.register("mig-0.6", new MigrateV05ToV06Factory());
 		factoryRegister.register("tag-sort-0.6", new TagSorterFactory());
-		factoryRegister.register("member-sort-0.6", new MemberSorterFactory());
 		
 		// Register the plugins.
 		for (String plugin : plugins) {
