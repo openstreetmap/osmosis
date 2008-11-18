@@ -18,7 +18,7 @@ import com.bretth.osmosis.test.task.v0_5.SinkEntityInspector;
 
 public class AreaFilterTest {
 
-	private static final String TEST_USER = "OsmosisTest";
+	private static final OsmUser TEST_USER = new OsmUser(10, "OsmosisTest");
 	private SinkEntityInspector entityInspector;
 	private AreaFilter simpleAreaFilter;
 	private AreaFilter simpleCompleteWayFilter;

@@ -18,6 +18,7 @@ import com.bretth.osmosis.core.container.v0_5.WayContainer;
 import com.bretth.osmosis.core.domain.v0_5.Bound;
 import com.bretth.osmosis.core.domain.v0_5.EntityType;
 import com.bretth.osmosis.core.domain.v0_5.Node;
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.RelationMember;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
@@ -26,6 +27,7 @@ import com.bretth.osmosis.core.domain.v0_5.WayNode;
 
 public class OsmWriterTest {
 
+	private static final OsmUser TEST_USER = new OsmUser(10, "OsmosisTest");
 	private StringWriter testWriter;
 	private BufferedWriter testBufferedWriter;
 	private OsmWriter testOsmWriter;
@@ -74,7 +76,7 @@ public class OsmWriterTest {
 	 */
 	@Test
 	public final void testProcess3() {
-		testOsmWriter.process(new NodeContainer(new Node(1234, new Date(), "OsmosisTest", 20, 20)));
+		testOsmWriter.process(new NodeContainer(new Node(1234, new Date(), TEST_USER, 20, 20)));
 		// Nothing to assert; just expect no exception
 	}
 
@@ -84,7 +86,7 @@ public class OsmWriterTest {
 	 */
 	@Test(expected=OsmosisRuntimeException.class)
 	public final void testProcess4() {
-		testOsmWriter.process(new NodeContainer(new Node(1234, new Date(), "OsmosisTest", 20, 20)));
+		testOsmWriter.process(new NodeContainer(new Node(1234, new Date(), TEST_USER, 20, 20)));
 		testOsmWriter.process(new BoundContainer(new Bound("source")));
 		fail("Expected to throw an exception.");
 	}
@@ -96,7 +98,7 @@ public class OsmWriterTest {
 	@Test
 	public final void testProcess6() {
 		Way testWay;
-		testWay = new Way(3456, new Date(), "OsmosisTest");
+		testWay = new Way(3456, new Date(), TEST_USER);
 		testWay.addWayNode(new WayNode(1234));
 		testWay.addWayNode(new WayNode(1235));
 		testWay.addTag(new Tag("test_key1", "test_value1"));
@@ -111,7 +113,7 @@ public class OsmWriterTest {
 	@Test(expected=OsmosisRuntimeException.class)
 	public final void testProcess7() {
 		Way testWay;
-		testWay = new Way(3456, new Date(), "OsmosisTest");
+		testWay = new Way(3456, new Date(), TEST_USER);
 		testWay.addWayNode(new WayNode(1234));
 		testWay.addWayNode(new WayNode(1235));
 		testWay.addTag(new Tag("test_key1", "test_value1"));
@@ -126,7 +128,7 @@ public class OsmWriterTest {
 	@Test
 	public final void testProcess8() {
 		Relation testRelation;
-		testRelation = new Relation(3456, new Date(), "OsmosisTest");
+		testRelation = new Relation(3456, new Date(), TEST_USER);
 		testRelation.addMember(new RelationMember(1234, EntityType.Node, "role1"));
 		testRelation.addTag(new Tag("test_key1", "test_value1"));
 		testOsmWriter.process(new RelationContainer(testRelation));
@@ -140,7 +142,7 @@ public class OsmWriterTest {
 	@Test(expected=OsmosisRuntimeException.class)
 	public final void testProcess9() {
 		Relation testRelation;
-		testRelation = new Relation(3456, new Date(), "OsmosisTest");
+		testRelation = new Relation(3456, new Date(), TEST_USER);
 		testRelation.addMember(new RelationMember(1234, EntityType.Node, "role1"));
 		testRelation.addTag(new Tag("test_key1", "test_value1"));
 		testOsmWriter.process(new RelationContainer(testRelation));

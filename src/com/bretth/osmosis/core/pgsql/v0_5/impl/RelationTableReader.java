@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.pgsql.common.BaseTableReader;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
@@ -73,11 +74,15 @@ public class RelationTableReader extends BaseTableReader<Relation> {
 	protected ReadResult<Relation> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
-		String userName;
+		OsmUser user;
 		
 		try {
 			id = resultSet.getLong("id");
-			userName = resultSet.getString("user_name");
+			if (resultSet.getInt("user_id") != OsmUser.NONE.getId()) {
+				user = new OsmUser(resultSet.getInt("user_id"), resultSet.getString("user_name"));
+			} else {
+				user = OsmUser.NONE;
+			}
 			timestamp = new Date(resultSet.getTimestamp("tstamp").getTime());
 			
 		} catch (SQLException e) {
@@ -86,7 +91,7 @@ public class RelationTableReader extends BaseTableReader<Relation> {
 		
 		return new ReadResult<Relation>(
 			true,
-			new Relation(id, timestamp, userName)
+			new Relation(id, timestamp, user)
 		);
 	}
 }

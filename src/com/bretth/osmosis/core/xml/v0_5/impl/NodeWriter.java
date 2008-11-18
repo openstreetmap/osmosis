@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 
 import com.bretth.osmosis.core.domain.v0_5.Node;
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.xml.common.ElementWriter;
 
@@ -52,14 +53,20 @@ public class NodeWriter extends ElementWriter {
 	 *            The node to be processed.
 	 */
 	public void process(Node node) {
+		OsmUser user;
 		List<Tag> tags;
+		
+		user = node.getUser();
 		
 		beginOpenElement();
 		addAttribute("id", Long.toString(node.getId()));
 		addAttribute("timestamp", node.getFormattedTimestamp(getTimestampFormat()));
-		if (node.getUser() != null && node.getUser().length() > 0) {
-			addAttribute("user", node.getUser());
+		
+		if (!user.equals(OsmUser.NONE)) {
+			addAttribute("uid", Integer.toString(user.getId()));
+			addAttribute("user", user.getName());
 		}
+		
 		addAttribute("lat", numberFormat.format(node.getLatitude()));
 		addAttribute("lon", numberFormat.format(node.getLongitude()));
 		

@@ -5,6 +5,7 @@ import org.xml.sax.Attributes;
 
 import com.bretth.osmosis.core.container.v0_5.RelationContainer;
 import com.bretth.osmosis.core.domain.common.TimestampContainer;
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.RelationMember;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
@@ -18,12 +19,13 @@ import com.bretth.osmosis.core.xml.common.ElementProcessor;
  * 
  * @author Brett Henderson
  */
-public class RelationElementProcessor extends SourceElementProcessor implements TagListener, RelationMemberListener {
+public class RelationElementProcessor extends EntityElementProcessor implements TagListener, RelationMemberListener {
 	private static final String ELEMENT_NAME_TAG = "tag";
 	private static final String ELEMENT_NAME_MEMBER = "member";
 	private static final String ATTRIBUTE_NAME_ID = "id";
 	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
 	private static final String ATTRIBUTE_NAME_USER = "user";
+	private static final String ATTRIBUTE_NAME_USERID = "uid";
 	
 	private TagElementProcessor tagElementProcessor;
 	private RelationMemberElementProcessor relationMemberElementProcessor;
@@ -55,14 +57,16 @@ public class RelationElementProcessor extends SourceElementProcessor implements 
 	public void begin(Attributes attributes) {
 		long id;
 		TimestampContainer timestampContainer;
-		String user;
+		String rawUserId;
+		String rawUserName;
+		OsmUser user;
 		
 		id = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_ID));
 		timestampContainer = createTimestampContainer(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
-		user = attributes.getValue(ATTRIBUTE_NAME_USER);
-		if (user == null) {
-			user = "";
-		}
+		rawUserId = attributes.getValue(ATTRIBUTE_NAME_USERID);
+		rawUserName = attributes.getValue(ATTRIBUTE_NAME_USER);
+		
+		user = buildUser(rawUserId, rawUserName);
 		
 		relation = new Relation(id, timestampContainer, user);
 	}

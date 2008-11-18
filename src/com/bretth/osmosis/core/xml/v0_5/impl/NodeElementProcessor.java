@@ -6,6 +6,7 @@ import org.xml.sax.Attributes;
 import com.bretth.osmosis.core.container.v0_5.NodeContainer;
 import com.bretth.osmosis.core.domain.common.TimestampContainer;
 import com.bretth.osmosis.core.domain.v0_5.Node;
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.task.v0_5.Sink;
 import com.bretth.osmosis.core.xml.common.BaseElementProcessor;
@@ -17,11 +18,12 @@ import com.bretth.osmosis.core.xml.common.ElementProcessor;
  * 
  * @author Brett Henderson
  */
-public class NodeElementProcessor extends SourceElementProcessor implements TagListener {
+public class NodeElementProcessor extends EntityElementProcessor implements TagListener {
 	private static final String ELEMENT_NAME_TAG = "tag";
 	private static final String ATTRIBUTE_NAME_ID = "id";
 	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
 	private static final String ATTRIBUTE_NAME_USER = "user";
+	private static final String ATTRIBUTE_NAME_USERID = "uid";
 	private static final String ATTRIBUTE_NAME_LATITUDE = "lat";
 	private static final String ATTRIBUTE_NAME_LONGITUDE = "lon";
 	
@@ -53,18 +55,20 @@ public class NodeElementProcessor extends SourceElementProcessor implements TagL
 	public void begin(Attributes attributes) {
 		long id;
 		TimestampContainer timestampContainer;
+		String rawUserId;
+		String rawUserName;
+		OsmUser user;
 		double latitude;
 		double longitude;
-		String user;
 		
 		id = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_ID));
 		timestampContainer = createTimestampContainer(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
+		rawUserId = attributes.getValue(ATTRIBUTE_NAME_USERID);
+		rawUserName = attributes.getValue(ATTRIBUTE_NAME_USER);
 		latitude = Double.parseDouble(attributes.getValue(ATTRIBUTE_NAME_LATITUDE));
 		longitude = Double.parseDouble(attributes.getValue(ATTRIBUTE_NAME_LONGITUDE));
-		user = attributes.getValue(ATTRIBUTE_NAME_USER);
-		if (user == null) {
-			user = "";
-		}
+		
+		user = buildUser(rawUserId, rawUserName);
 		
 		node = new Node(id, timestampContainer, user, latitude, longitude);
 	}

@@ -7,6 +7,7 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 
@@ -19,7 +20,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  */
 public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
 	private static final String SELECT_SQL =
-		"SELECT w.id, w.version, w.timestamp, u.data_public, u.display_name, w.visible"
+		"SELECT w.id, w.version, w.timestamp, u.data_public, u.id AS user_id, u.display_name, w.visible"
 		+ " FROM ways w"
 		+ " LEFT OUTER JOIN users u ON w.user_id = u.id"
 		+ " ORDER BY w.id, w.version";
@@ -55,7 +56,7 @@ public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
 	protected ReadResult<EntityHistory<Way>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
-		String userName;
+		OsmUser user;
 		int version;
 		boolean visible;
 		
@@ -63,8 +64,9 @@ public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
 			id = resultSet.getLong("id");
 			version = resultSet.getInt("version");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
-			userName = readUserField(
+			user = readUserField(
 				resultSet.getBoolean("data_public"),
+				resultSet.getInt("user_id"),
 				resultSet.getString("display_name")
 			);
 			visible = resultSet.getBoolean("visible");
@@ -75,7 +77,7 @@ public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
 		
 		return new ReadResult<EntityHistory<Way>>(
 			true,
-			new EntityHistory<Way>(new Way(id, timestamp, userName), version, visible)
+			new EntityHistory<Way>(new Way(id, timestamp, user), version, visible)
 		);
 	}
 }

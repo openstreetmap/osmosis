@@ -10,6 +10,7 @@ import java.util.Date;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_5.Node;
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
@@ -29,7 +30,7 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 	// time interval. The outer query then queries all node history items up to
 	// the end of the time interval.
 	private static final String SELECT_SQL =
-		"SELECT n.id, n.timestamp, u.data_public, u.display_name, n.latitude, n.longitude, n.tags, n.visible" +
+		"SELECT n.id, n.timestamp, u.data_public, u.id AS user_id, u.display_name, n.latitude, n.longitude, n.tags, n.visible" +
 		" FROM nodes n" +
 		" INNER JOIN (" +
 		"   SELECT id" +
@@ -100,7 +101,7 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 	protected ReadResult<EntityHistory<Node>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
-		String userName;
+		OsmUser user;
 		double latitude;
 		double longitude;
 		String tags;
@@ -111,8 +112,9 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 		try {
 			id = resultSet.getLong("id");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
-			userName = readUserField(
+			user = readUserField(
 				resultSet.getBoolean("data_public"),
+				resultSet.getInt("user_id"),
 				resultSet.getString("display_name")
 			);
 			latitude = FixedPrecisionCoordinateConvertor.convertToDouble(resultSet.getInt("latitude"));
@@ -124,7 +126,7 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 			throw new OsmosisRuntimeException("Unable to read node fields.", e);
 		}
 		
-		node = new Node(id, timestamp, userName, latitude, longitude);
+		node = new Node(id, timestamp, user, latitude, longitude);
 		node.addTags(tagParser.parseTags(tags));
 		
 		nodeHistory = new EntityHistory<Node>(node, 0, visible);

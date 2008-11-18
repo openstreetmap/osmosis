@@ -33,9 +33,9 @@ public class Way extends Entity implements Comparable<Way>, Storeable {
 	 * @param timestamp
 	 *            The last updated timestamp.
 	 * @param user
-	 *            The name of the user that last modified this entity.
+	 *            The user that last modified this entity.
 	 */
-	public Way(long id, Date timestamp, String user) {
+	public Way(long id, Date timestamp, OsmUser user) {
 		super(id, timestamp, user);
 		
 		wayNodeList = new ArrayList<WayNode>();
@@ -51,9 +51,9 @@ public class Way extends Entity implements Comparable<Way>, Storeable {
 	 *            The container holding the timestamp in an alternative
 	 *            timestamp representation.
 	 * @param user
-	 *            The name of the user that last modified this entity.
+	 *            The user that last modified this entity.
 	 */
-	public Way(long id, TimestampContainer timestampContainer, String user) {
+	public Way(long id, TimestampContainer timestampContainer, OsmUser user) {
 		super(id, timestampContainer, user);
 		
 		wayNodeList = new ArrayList<WayNode>();

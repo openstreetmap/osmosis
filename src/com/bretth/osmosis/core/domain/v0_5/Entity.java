@@ -28,8 +28,8 @@ import com.bretth.osmosis.core.util.LongAsInt;
 public abstract class Entity implements Storeable {
 	private int id;
 	private TimestampContainer timestampContainer;
+	private OsmUser user;
 	private List<Tag> tagList;
-	private String user;
 	
 	
 	/**
@@ -40,9 +40,9 @@ public abstract class Entity implements Storeable {
 	 * @param timestamp
 	 *            The last updated timestamp.
 	 * @param user
-	 *            The name of the user that last modified this entity.
+	 *            The user that last modified this entity.
 	 */
-	public Entity(long id, Date timestamp, String user) {
+	public Entity(long id, Date timestamp, OsmUser user) {
 		this.id = LongAsInt.longToInt(id);
 		this.timestampContainer = new SimpleTimestampContainer(timestamp);
 		this.user = user;
@@ -60,9 +60,9 @@ public abstract class Entity implements Storeable {
 	 *            The container holding the timestamp in an alternative
 	 *            timestamp representation.
 	 * @param user
-	 *            The name of the user that last modified this entity.
+	 *            The user that last modified this entity.
 	 */
-	public Entity(long id, TimestampContainer timestampContainer, String user) {
+	public Entity(long id, TimestampContainer timestampContainer, OsmUser user) {
 		this.id = LongAsInt.longToInt(id);
 		this.timestampContainer = timestampContainer;
 		this.user = user;
@@ -87,9 +87,8 @@ public abstract class Entity implements Storeable {
 		if (sr.readBoolean()) {
 			timestampContainer = new SimpleTimestampContainer(new Date(sr.readLong()));
 		}
-		if (sr.readBoolean()) {
-			user = sr.readString();
-		}
+		
+		user = new OsmUser(sr, scr);
 		
 		tagList = new ArrayList<Tag>();
 		
@@ -99,8 +98,8 @@ public abstract class Entity implements Storeable {
 			addTag(new Tag(sr, scr));
 		}
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -112,12 +111,8 @@ public abstract class Entity implements Storeable {
 		} else {
 			sw.writeBoolean(false);
 		}
-		if (user != null) {
-			sw.writeBoolean(true);
-			sw.writeString(user);
-		} else {
-			sw.writeBoolean(false);
-		}
+		
+		user.store(sw, scr);
 		
 		sw.writeCharacter(IntAsChar.intToChar(tagList.size()));
 		for (Tag tag : tagList) {
@@ -204,9 +199,11 @@ public abstract class Entity implements Storeable {
 	
 	
 	/**
-	 * @return The user. 
+	 * Returns the user who last edited the entity.
+	 * 
+	 * @return The user.
 	 */
-	public String getUser() {
+	public OsmUser getUser() {
 		return user;
 	}
 	

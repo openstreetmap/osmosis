@@ -103,7 +103,7 @@ CREATE TABLE relation_tags (
 
 
 -- Configure the schema version.
-INSERT INTO schema_info (version) VALUES (2);
+INSERT INTO schema_info (version) VALUES (3);
 
 
 -- Add primary keys to tables.

@@ -2,6 +2,7 @@
 package com.bretth.osmosis.core.mysql.v0_5.impl;
 
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.mysql.common.BaseTableReader;
 
 
@@ -34,25 +35,35 @@ public abstract class BaseEntityReader<T> extends BaseTableReader<T> {
 		
 		this.readAllUsers = readAllUsers;
 	}
-	
-	
+
+
 	/**
 	 * Determines the appropriate user name to add to an entity based upon the
 	 * user details provided.
 	 * 
 	 * @param dataPublic
 	 *            The value of the public edit flag for the user.
+	 * @param userId
+	 *            The unique id of the user.
 	 * @param userName
 	 *            The display name of the user.
-	 * @return The appropriate user name to add to the entity.
+	 * @return The appropriate user to add to the entity.
 	 */
-	protected String readUserField(boolean dataPublic, String userName) {
-		if (userName == null || userName.length() == 0) {
-			return "";
-		} else if (readAllUsers || dataPublic) {
-			return userName;
+	protected OsmUser readUserField(boolean dataPublic, int userId, String userName) {
+		if (userId == OsmUser.NONE.getId()) {
+			return OsmUser.NONE;
+		} else if (dataPublic || readAllUsers) {
+			String correctedUserName;
+			
+			if (userName == null) {
+				correctedUserName = "";
+			} else {
+				correctedUserName = userName;
+			}
+			
+			return new OsmUser(userId, correctedUserName);
 		} else {
-			return "";
+			return OsmUser.NONE;
 		}
 	}
 }

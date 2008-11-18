@@ -4,6 +4,7 @@ package com.bretth.osmosis.core.xml.v0_5.impl;
 import java.io.BufferedWriter;
 import java.util.List;
 
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.domain.v0_5.WayNode;
@@ -43,14 +44,19 @@ public class WayWriter extends ElementWriter {
 	 *            The way to be processed.
 	 */
 	public void process(Way way) {
+		OsmUser user;
 		List<WayNode> wayNodes;
 		List<Tag> tags;
+		
+		user = way.getUser();
 		
 		beginOpenElement();
 		addAttribute("id", Long.toString(way.getId()));
 		addAttribute("timestamp", way.getFormattedTimestamp(getTimestampFormat()));
-		if (way.getUser() != null && way.getUser().length() > 0) {
-			addAttribute("user", way.getUser());
+		
+		if (!user.equals(OsmUser.NONE)) {
+			addAttribute("uid", Integer.toString(user.getId()));
+			addAttribute("user", user.getName());
 		}
 		
 		wayNodes = way.getWayNodeList();

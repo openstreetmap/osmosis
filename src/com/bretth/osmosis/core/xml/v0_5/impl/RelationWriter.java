@@ -4,6 +4,7 @@ package com.bretth.osmosis.core.xml.v0_5.impl;
 import java.io.BufferedWriter;
 import java.util.List;
 
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.RelationMember;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
@@ -43,14 +44,19 @@ public class RelationWriter extends ElementWriter {
 	 *            The relation to be processed.
 	 */
 	public void process(Relation relation) {
+		OsmUser user;
 		List<RelationMember> relationMembers;
 		List<Tag> tags;
+		
+		user = relation.getUser();
 		
 		beginOpenElement();
 		addAttribute("id", Long.toString(relation.getId()));
 		addAttribute("timestamp", relation.getFormattedTimestamp(getTimestampFormat()));
-		if (relation.getUser() != null && relation.getUser().length() > 0) {
-			addAttribute("user", relation.getUser());
+
+		if (!user.equals(OsmUser.NONE)) {
+			addAttribute("uid", Integer.toString(user.getId()));
+			addAttribute("user", user.getName());
 		}
 		
 		relationMembers = relation.getMemberList();

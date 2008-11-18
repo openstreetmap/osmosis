@@ -10,6 +10,7 @@ import org.postgresql.geometric.PGpoint;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_5.Node;
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
 import com.bretth.osmosis.core.lifecycle.Releasable;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
@@ -23,7 +24,7 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
  * @author Brett Henderson
  */
 public class NodeDao implements Releasable {
-	private static final String SQL_SELECT_SINGLE_NODE = "SELECT id, tstamp, user_name, geom FROM nodes WHERE id=?";
+	private static final String SQL_SELECT_SINGLE_NODE = "SELECT id, tstamp, user_id, user_name, geom FROM nodes WHERE id=?";
 	private static final String SQL_SELECT_SINGLE_NODE_TAG = "SELECT node_id AS entity_id, k, v FROM node_tags WHERE node_id=?";
 	
 	private DatabaseContext dbCtx;
@@ -73,15 +74,22 @@ public class NodeDao implements Releasable {
 	 * @return The newly loaded node.
 	 */
 	private Node buildNode(ResultSet resultSet) {
-		PGpoint coordinate;
-		
 		try {
+			PGpoint coordinate;
+			OsmUser user;
+			
 			coordinate = (PGpoint) resultSet.getObject("coordinate");
+			
+			if (resultSet.getInt("user_id") != OsmUser.NONE.getId()) {
+				user = new OsmUser(resultSet.getInt("user_id"), resultSet.getString("user_name"));
+			} else {
+				user = OsmUser.NONE;
+			}
 			
 			return new Node(
 				resultSet.getLong("id"),
 				new Date(resultSet.getTimestamp("tstamp").getTime()),
-				resultSet.getString("user_name"),
+				user,
 				coordinate.y,
 				coordinate.x
 			);

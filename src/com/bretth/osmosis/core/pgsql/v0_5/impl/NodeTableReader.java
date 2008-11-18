@@ -10,6 +10,7 @@ import org.postgis.Point;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_5.Node;
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.pgsql.common.BaseTableReader;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 
@@ -34,7 +35,7 @@ public class NodeTableReader extends BaseTableReader<Node> {
 		super(dbCtx);
 		
 		sql =
-			"SELECT n.id, n.user_name, n.tstamp, n.geom" +
+			"SELECT n.id, n.user_id, n.user_name, n.tstamp, n.geom" +
 			" FROM nodes n" +
 			" ORDER BY n.id";
 	}
@@ -76,7 +77,7 @@ public class NodeTableReader extends BaseTableReader<Node> {
 	protected ReadResult<Node> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
-		String userName;
+		OsmUser user;
 		PGgeometry coordinate;
 		Point coordinatePoint;
 		double latitude;
@@ -84,7 +85,11 @@ public class NodeTableReader extends BaseTableReader<Node> {
 		
 		try {
 			id = resultSet.getLong("id");
-			userName = resultSet.getString("user_name");
+			if (resultSet.getInt("user_id") != OsmUser.NONE.getId()) {
+				user = new OsmUser(resultSet.getInt("user_id"), resultSet.getString("user_name"));
+			} else {
+				user = OsmUser.NONE;
+			}
 			timestamp = new Date(resultSet.getTimestamp("tstamp").getTime());
 			coordinate = (PGgeometry) resultSet.getObject("geom");
 			coordinatePoint = (Point) coordinate.getGeometry();
@@ -97,7 +102,7 @@ public class NodeTableReader extends BaseTableReader<Node> {
 		
 		return new ReadResult<Node>(
 			true,
-			new Node(id, timestamp, userName, latitude, longitude)
+			new Node(id, timestamp, user, latitude, longitude)
 		);
 	}
 }

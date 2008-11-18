@@ -7,6 +7,7 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.domain.v0_5.Way;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 
@@ -19,7 +20,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  */
 public class CurrentWayTableReader extends BaseEntityReader<Way> {
 	private static final String SELECT_SQL =
-		"SELECT w.id, w.timestamp, u.data_public, u.display_name, w.visible"
+		"SELECT w.id, w.timestamp, u.data_public, u.id AS user_id, u.display_name, w.visible"
 		+ " FROM current_ways w"
 		+ " LEFT OUTER JOIN users u ON w.user_id = u.id"
 		+ " ORDER BY w.id";
@@ -55,14 +56,15 @@ public class CurrentWayTableReader extends BaseEntityReader<Way> {
 	protected ReadResult<Way> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
-		String userName;
+		OsmUser user;
 		boolean visible;
 		
 		try {
 			id = resultSet.getLong("id");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
-			userName = readUserField(
+			user = readUserField(
 				resultSet.getBoolean("data_public"),
+				resultSet.getInt("user_id"),
 				resultSet.getString("display_name")
 			);
 			visible = resultSet.getBoolean("visible");
@@ -74,7 +76,7 @@ public class CurrentWayTableReader extends BaseEntityReader<Way> {
 		// Non-visible records will be ignored by the caller.
 		return new ReadResult<Way>(
 			visible,
-			new Way(id, timestamp, userName)
+			new Way(id, timestamp, user)
 		);
 	}
 }

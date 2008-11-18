@@ -8,6 +8,7 @@ import java.util.Date;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_5.Node;
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
@@ -19,7 +20,7 @@ import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  */
 public class CurrentNodeReader extends BaseEntityReader<Node> {
 	private static final String SELECT_SQL =
-		"SELECT n.id, n.timestamp, u.data_public, u.display_name, n.latitude, n.longitude, n.tags, n.visible"
+		"SELECT n.id, n.timestamp, u.data_public, u.id as user_id, u.display_name, n.latitude, n.longitude, n.tags, n.visible"
 		+ " FROM current_nodes n"
 		+ " LEFT OUTER JOIN users u ON n.user_id = u.id"
 		+ " ORDER BY n.id";
@@ -59,7 +60,7 @@ public class CurrentNodeReader extends BaseEntityReader<Node> {
 	protected ReadResult<Node> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
-		String userName;
+		OsmUser user;
 		double latitude;
 		double longitude;
 		String tags;
@@ -69,8 +70,9 @@ public class CurrentNodeReader extends BaseEntityReader<Node> {
 		try {
 			id = resultSet.getLong("id");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
-			userName = readUserField(
+			user = readUserField(
 				resultSet.getBoolean("data_public"),
+				resultSet.getInt("user_id"),
 				resultSet.getString("display_name")
 			);
 			latitude = FixedPrecisionCoordinateConvertor.convertToDouble(resultSet.getInt("latitude"));
@@ -82,7 +84,7 @@ public class CurrentNodeReader extends BaseEntityReader<Node> {
 			throw new OsmosisRuntimeException("Unable to read node fields.", e);
 		}
 		
-		node = new Node(id, timestamp, userName, latitude, longitude);
+		node = new Node(id, timestamp, user, latitude, longitude);
 		node.addTags(tagParser.parseTags(tags));
 		
 		// Non-visible records will be ignored by the caller.

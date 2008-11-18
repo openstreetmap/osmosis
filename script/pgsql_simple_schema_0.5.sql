@@ -21,6 +21,7 @@ CREATE TABLE schema_info (
 -- Create a table for nodes.
 CREATE TABLE nodes (
     id bigint NOT NULL,
+    user_id int NOT NULL,
     user_name text NOT NULL,
     tstamp timestamp without time zone NOT NULL
 );
@@ -38,6 +39,7 @@ CREATE TABLE node_tags (
 -- Create a table for ways.
 CREATE TABLE ways (
     id bigint NOT NULL,
+    user_id int NOT NULL,
     user_name text NOT NULL,
     tstamp timestamp without time zone NOT NULL
 );
@@ -65,6 +67,7 @@ CREATE TABLE way_tags (
 -- Create a table for relations.
 CREATE TABLE relations (
     id bigint NOT NULL,
+    user_id int NOT NULL,
     user_name text NOT NULL,
     tstamp timestamp without time zone NOT NULL
 );
@@ -87,7 +90,7 @@ CREATE TABLE relation_tags (
 
 
 -- Configure the schema version.
-INSERT INTO schema_info (version) VALUES (1);
+INSERT INTO schema_info (version) VALUES (2);
 
 
 -- Add primary keys to tables.

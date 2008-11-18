@@ -7,6 +7,7 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 
@@ -19,7 +20,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  */
 public class CurrentRelationTableReader extends BaseEntityReader<Relation> {
 	private static final String SELECT_SQL =
-		"SELECT r.id, r.timestamp, u.data_public, u.display_name, r.visible"
+		"SELECT r.id, r.timestamp, u.data_public, u.id AS user_id, u.display_name, r.visible"
 		+ " FROM current_relations r"
 		+ " LEFT OUTER JOIN users u ON r.user_id = u.id"
 		+ " ORDER BY r.id";
@@ -55,14 +56,15 @@ public class CurrentRelationTableReader extends BaseEntityReader<Relation> {
 	protected ReadResult<Relation> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
-		String userName;
+		OsmUser user;
 		boolean visible;
 		
 		try {
 			id = resultSet.getLong("id");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
-			userName = readUserField(
+			user = readUserField(
 				resultSet.getBoolean("data_public"),
+				resultSet.getInt("user_id"),
 				resultSet.getString("display_name")
 			);
 			visible = resultSet.getBoolean("visible");
@@ -74,7 +76,7 @@ public class CurrentRelationTableReader extends BaseEntityReader<Relation> {
 		// Non-visible records will be ignored by the caller.
 		return new ReadResult<Relation>(
 			visible,
-			new Relation(id, timestamp, userName)
+			new Relation(id, timestamp, user)
 		);
 	}
 }

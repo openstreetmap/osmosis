@@ -49,6 +49,15 @@ public class MigrateV05ToV06 implements Sink05Source06, EntityProcessor {
 	}
 	
 	
+	private OsmUser migrateUser(com.bretth.osmosis.core.domain.v0_5.OsmUser user) {
+		if (!user.equals(com.bretth.osmosis.core.domain.v0_5.OsmUser.NONE)) {
+			return new OsmUser(user.getId(), user.getName());
+		} else {
+			return OsmUser.NONE;
+		}
+	}
+	
+	
 	private List<Tag> migrateTags(Entity entity) {
 		List<com.bretth.osmosis.core.domain.v0_5.Tag> oldTags;
 		List<Tag> newTags;
@@ -113,7 +122,7 @@ public class MigrateV05ToV06 implements Sink05Source06, EntityProcessor {
 			oldEntity.getId(),
 			1,
 			oldEntity.getTimestamp(),
-			OsmUser.NONE,
+			migrateUser(oldEntity.getUser()),
 			oldEntity.getLatitude(),
 			oldEntity.getLongitude()
 		);
@@ -136,7 +145,7 @@ public class MigrateV05ToV06 implements Sink05Source06, EntityProcessor {
 			oldEntity.getId(),
 			1,
 			oldEntity.getTimestamp(),
-			OsmUser.NONE
+			migrateUser(oldEntity.getUser())
 		);
 		newEntity.addTags(migrateTags(oldEntity));
 		newEntity.addWayNodes(migrateWayNodes(oldEntity));
@@ -158,7 +167,7 @@ public class MigrateV05ToV06 implements Sink05Source06, EntityProcessor {
 			oldEntity.getId(),
 			1,
 			oldEntity.getTimestamp(),
-			OsmUser.NONE
+			migrateUser(oldEntity.getUser())
 		);
 		newEntity.addTags(migrateTags(oldEntity));
 		newEntity.addMembers(migrateRelationMembers(oldEntity));

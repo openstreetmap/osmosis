@@ -13,11 +13,13 @@ import org.junit.Test;
 import com.bretth.osmosis.core.container.v0_5.BoundContainer;
 import com.bretth.osmosis.core.domain.v0_5.Bound;
 import com.bretth.osmosis.core.domain.v0_5.Node;
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.filter.common.IdTrackerType;
 import com.bretth.osmosis.test.task.v0_5.SinkEntityInspector;
 
 public class PolygonFilterTest {
 
+	private static final OsmUser TEST_USER = new OsmUser(10, "OsmosisTest");
 	File polygonFile;
 	private SinkEntityInspector entityInspector;
 	private AreaFilter polyAreaFilter;
@@ -39,9 +41,9 @@ public class PolygonFilterTest {
 		intersectingBound = new Bound(30, 0, 30, 0, "intersecting");
 		crossingIntersectingBound = new Bound(-10, 10, 30, -30, "crossing intersecting");
 		nonIntersectingBound = new Bound(30, 15, 30, 15, "nonintersecting");
-		inAreaNode = new Node(1234, new Date(), "OsmosisTest", 5, 10);
-		outOfAreaNode = new Node(1235, new Date(), "OsmosisTest", 15, 15);
-		edgeNode = new Node(1236, new Date(), "OsmosisTest", 15, 10);
+		inAreaNode = new Node(1234, new Date(), TEST_USER, 5, 10);
+		outOfAreaNode = new Node(1235, new Date(), TEST_USER, 15, 15);
+		edgeNode = new Node(1236, new Date(), TEST_USER, 15, 10);
 	}
 
 

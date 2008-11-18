@@ -8,6 +8,7 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_5.EntityType;
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.domain.v0_5.RelationMember;
 import com.bretth.osmosis.core.domain.v0_5.Tag;
@@ -107,10 +108,18 @@ public class RelationDao implements Releasable {
 	 */
 	private Relation buildRelation(ResultSet resultSet) {
 		try {
+			OsmUser user;
+			
+			if (resultSet.getInt("user_id") != OsmUser.NONE.getId()) {
+				user = new OsmUser(resultSet.getInt("user_id"), resultSet.getString("user_name"));
+			} else {
+				user = OsmUser.NONE;
+			}
+			
 			return new Relation(
 				resultSet.getLong("id"),
 				new Date(resultSet.getTimestamp("tstamp").getTime()),
-				resultSet.getString("user_name")
+				user
 			);
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to build a relation from the current recordset row.", e);

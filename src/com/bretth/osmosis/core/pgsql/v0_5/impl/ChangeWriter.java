@@ -29,7 +29,7 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
  */
 public class ChangeWriter {
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO nodes (id, user_name, tstamp, geom) VALUES (?, ?, ?, ?)";
+		"INSERT INTO nodes (id, user_id, user_name, tstamp, geom) VALUES (?, ?, ?, ?, ?)";
 	private static final String DELETE_SQL_NODE =
 		"DELETE FROM nodes WHERE id = ?";
 	private static final String INSERT_SQL_NODE_TAG =
@@ -46,7 +46,7 @@ public class ChangeWriter {
 		" SELECT w.id FROM ways w INNER JOIN way_nodes wn ON w.id = wn.way_id WHERE wn.node_id = ? GROUP BY w.id" +
 		" )";
 	private static final String INSERT_SQL_WAY =
-		"INSERT INTO ways (id, user_name, tstamp) VALUES (?, ?, ?)";
+		"INSERT INTO ways (id, user_id, user_name, tstamp) VALUES (?, ?, ?, ?)";
 	private static final String DELETE_SQL_WAY =
 		"DELETE FROM ways WHERE id = ?";
 	private static final String INSERT_SQL_WAY_TAG =
@@ -65,7 +65,7 @@ public class ChangeWriter {
 		" )" +
 		" WHERE ways.id = ?";
 	private static final String INSERT_SQL_RELATION =
-		"INSERT INTO relations (id, user_name, tstamp) VALUES (?, ?, ?)";
+		"INSERT INTO relations (id, user_id, user_name, tstamp) VALUES (?, ?, ?, ?)";
 	private static final String DELETE_SQL_RELATION =
 		"DELETE FROM relations WHERE id = ?";
 	private static final String INSERT_SQL_RELATION_TAG =
@@ -137,7 +137,8 @@ public class ChangeWriter {
 			prmIndex = 1;
 			
 			statement.setLong(prmIndex++, entity.getId());
-			statement.setString(prmIndex++, entity.getUser());
+			statement.setInt(prmIndex++, entity.getUser().getId());
+			statement.setString(prmIndex++, entity.getUser().getName());
 			statement.setTimestamp(prmIndex++, new Timestamp(entity.getTimestamp().getTime()));
 			
 		} catch (SQLException e) {

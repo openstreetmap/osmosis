@@ -7,6 +7,7 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.domain.v0_5.OsmUser;
 import com.bretth.osmosis.core.domain.v0_5.Relation;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 
@@ -19,7 +20,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  */
 public class RelationTableReader extends BaseEntityReader<EntityHistory<Relation>> {
 	private static final String SELECT_SQL =
-		"SELECT r.id, r.version, r.timestamp, u.data_public, u.display_name, r.visible"
+		"SELECT r.id, r.version, r.timestamp, u.data_public, u.id AS user_id, u.display_name, r.visible"
 		+ " FROM relations r"
 		+ " LEFT OUTER JOIN users u ON r.user_id = u.id"
 		+ " ORDER BY r.id, r.version";
@@ -55,7 +56,7 @@ public class RelationTableReader extends BaseEntityReader<EntityHistory<Relation
 	protected ReadResult<EntityHistory<Relation>> createNextValue(ResultSet resultSet) {
 		long id;
 		Date timestamp;
-		String userName;
+		OsmUser user;
 		int version;
 		boolean visible;
 		
@@ -63,8 +64,9 @@ public class RelationTableReader extends BaseEntityReader<EntityHistory<Relation
 			id = resultSet.getLong("id");
 			version = resultSet.getInt("version");
 			timestamp = new Date(resultSet.getTimestamp("timestamp").getTime());
-			userName = readUserField(
+			user = readUserField(
 				resultSet.getBoolean("data_public"),
+				resultSet.getInt("user_id"),
 				resultSet.getString("display_name")
 			);
 			visible = resultSet.getBoolean("visible");
@@ -75,7 +77,7 @@ public class RelationTableReader extends BaseEntityReader<EntityHistory<Relation
 		
 		return new ReadResult<EntityHistory<Relation>>(
 			true,
-			new EntityHistory<Relation>(new Relation(id, timestamp, userName), version, visible)
+			new EntityHistory<Relation>(new Relation(id, timestamp, user), version, visible)
 		);
 	}
 }

@@ -29,13 +29,13 @@ public class Node extends Entity implements Comparable<Node> {
 	 * @param timestamp
 	 *            The last updated timestamp.
 	 * @param user
-	 *            The name of the user that last modified this entity.
+	 *            The user that last modified this entity.
 	 * @param latitude
 	 *            The geographic latitude.
 	 * @param longitude
 	 *            The geographic longitude.
 	 */
-	public Node(long id, Date timestamp, String user, double latitude, double longitude) {
+	public Node(long id, Date timestamp, OsmUser user, double latitude, double longitude) {
 		super(id, timestamp, user);
 		
 		this.latitude = latitude;
@@ -52,13 +52,13 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            The container holding the timestamp in an alternative
 	 *            timestamp representation.
 	 * @param user
-	 *            The name of the user that last modified this entity.
+	 *            The user that last modified this entity.
 	 * @param latitude
 	 *            The geographic latitude.
 	 * @param longitude
 	 *            The geographic longitude.
 	 */
-	public Node(long id, TimestampContainer timestampContainer, String user, double latitude, double longitude) {
+	public Node(long id, TimestampContainer timestampContainer, OsmUser user, double latitude, double longitude) {
 		super(id, timestampContainer, user);
 		
 		this.latitude = latitude;
