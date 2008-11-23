@@ -7,7 +7,8 @@ import com.bretth.osmosis.core.pipeline.common.TaskManagerFactory;
 
 
 /**
- * Defines the methods required by a plugin loading implementation.  The plugin loader is used to define the tasks provided by a plugin.
+ * Defines the methods required by a plugin loading implementation. The plugin
+ * loader is used to define the tasks provided by a plugin.
  * 
  * @author Brett Henderson
  */
