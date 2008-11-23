@@ -22,9 +22,9 @@ import com.bretth.osmosis.core.mysql.common.IdentityColumnValueLoader;
 public class ChangesetManager implements Releasable {
 	private static final String SQL_INSERT_CHANGESET =
 		"INSERT INTO changesets" +
-		" (user_id, created_at, open, min_lat, max_lat, min_lon, max_lon)" +
+		" (user_id, created_at, min_lat, max_lat, min_lon, max_lon, closed_at, num_changes)" +
 		" VALUES" +
-		" (?, NOW(), 0, -90, 90, -180, 180)";
+		" (?, NOW(), -90, 90, -180, 180, NOW(), 0)";
 	private DatabaseContext dbCtx;
 	private Map<Integer, Long> userToChangesetMap;
 	private ReleasableStatementContainer statementContainer;
