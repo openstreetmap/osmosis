@@ -4,13 +4,13 @@ package com.bretth.osmosis.core.xml.common;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.tools.bzip2.CBZip2InputStream;
 import org.apache.tools.bzip2.CBZip2OutputStream;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
+import com.bretth.osmosis.core.util.MultiMemberGZIPInputStream;
 
 
 /**
@@ -87,7 +87,7 @@ public class CompressionActivator {
 			}
 			
 			if (CompressionMethod.GZip.equals(compressionMethod)) {
-				return new GZIPInputStream(sourceStream);
+				return new MultiMemberGZIPInputStream(sourceStream);
 			}
 			
 			if (CompressionMethod.BZip2.equals(compressionMethod)) {

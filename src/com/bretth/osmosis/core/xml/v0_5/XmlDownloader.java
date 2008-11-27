@@ -7,7 +7,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
@@ -23,6 +22,7 @@ import com.bretth.osmosis.core.container.v0_5.BoundContainer;
 import com.bretth.osmosis.core.domain.v0_5.Bound;
 import com.bretth.osmosis.core.task.v0_5.RunnableSource;
 import com.bretth.osmosis.core.task.v0_5.Sink;
+import com.bretth.osmosis.core.util.MultiMemberGZIPInputStream;
 import com.bretth.osmosis.core.xml.v0_5.impl.OsmHandler;
 import com.bretth.osmosis.core.xml.v0_5.impl.XmlConstants;
 
@@ -258,7 +258,7 @@ public class XmlDownloader implements RunnableSource {
 
         responseStream = myActiveConnection.getInputStream();
         if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
-            responseStream = new GZIPInputStream(responseStream);
+            responseStream = new MultiMemberGZIPInputStream(responseStream);
         } else if (encoding != null && encoding.equalsIgnoreCase("deflate")) {
             responseStream = new InflaterInputStream(responseStream, new Inflater(true));
         }

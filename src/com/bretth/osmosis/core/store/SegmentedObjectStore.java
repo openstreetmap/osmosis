@@ -11,12 +11,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.logging.Logger;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.lifecycle.Completable;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
+import com.bretth.osmosis.core.util.MultiMemberGZIPInputStream;
 
 
 /**
@@ -267,7 +267,7 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 			// Create the object input stream.
 			try {
 				if (useCompression) {
-					dataInStream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(fileStream), 65536));
+					dataInStream = new DataInputStream(new BufferedInputStream(new MultiMemberGZIPInputStream(fileStream), 65536));
 				} else {
 					dataInStream = new DataInputStream(new BufferedInputStream(fileStream, 65536));
 				}
