@@ -122,7 +122,7 @@ public class UserDao extends BaseDao {
 		try {
 			insertUserStatement.setInt(prmIndex++, user.getId());
 			insertUserStatement.setString(prmIndex++, user.getName());
-			insertUserStatement.setString(prmIndex++, ChangesetAction.ADD.getDatabaseValue());
+			insertUserStatement.setString(prmIndex++, ChangesetAction.CREATE.getDatabaseValue());
 			
 			insertUserStatement.executeUpdate();
 			

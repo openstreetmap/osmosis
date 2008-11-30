@@ -16,7 +16,7 @@ public enum ChangesetAction {
 	/**
 	 * The entity has been added.
 	 */
-	ADD("A"),
+	CREATE("C"),
 	/**
 	 * The entity has been modified.
 	 */

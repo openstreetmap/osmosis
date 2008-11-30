@@ -127,7 +127,7 @@ public abstract class EntityBuilder<T extends Entity> {
 			if (row > 0) {
 				resultSql.append(", ");
 			}
-			resultSql.append("(?, ?, ?, ?, '").append(ChangesetAction.ADD.getDatabaseValue()).append("'");
+			resultSql.append("(?, ?, ?, ?, '").append(ChangesetAction.CREATE.getDatabaseValue()).append("'");
 			for (int i = 0; i < typeSpecificFieldNames.length; i++) {
 				resultSql.append(", ?");
 			}
