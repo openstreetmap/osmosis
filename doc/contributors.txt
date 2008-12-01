@@ -5,6 +5,7 @@ Marcus Wolschon
 Karl Newman
 - Area filtering task (--bounding-box, --bounding-polygon) improvements.  Pipeline bound support.
 - Windows launch batch file.
+- Significant portion of 0.6 enhancements.
 Stefan Baebler
 - "-" alias for stdin/stdout to file reading/writing tasks.
 Christoph Sommer
@@ -18,3 +19,4 @@ Aurelien Jacobs
 - Node key and node value filtering tasks.
 Jiri Klement
 - Bounding box filter slippy map coordinate arguments.
+- Fast Woodstock based xml reading. 

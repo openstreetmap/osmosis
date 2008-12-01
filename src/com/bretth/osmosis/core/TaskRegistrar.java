@@ -54,6 +54,7 @@ import com.bretth.osmosis.core.sort.v0_6.EntitySorterFactory;
 import com.bretth.osmosis.core.sort.v0_6.TagSorterFactory;
 import com.bretth.osmosis.core.tee.v0_6.ChangeTeeFactory;
 import com.bretth.osmosis.core.tee.v0_6.EntityTeeFactory;
+import com.bretth.osmosis.core.xml.v0_6.FastXmlReaderFactory;
 import com.bretth.osmosis.core.xml.v0_6.XmlChangeReaderFactory;
 import com.bretth.osmosis.core.xml.v0_6.XmlChangeWriterFactory;
 import com.bretth.osmosis.core.xml.v0_6.XmlDownloaderFactory;
@@ -273,6 +274,7 @@ public class TaskRegistrar {
 		factoryRegister.register("read-mysql-change-0.6", new MysqlChangeReaderFactory());
 		factoryRegister.register("read-mysql-current-0.6", new MySqlCurrentReaderFactory());
 		factoryRegister.register("read-xml-0.6", new XmlReaderFactory());
+		factoryRegister.register("fast-read-xml-0.6", new FastXmlReaderFactory());
 		factoryRegister.register("read-xml-change-0.6", new XmlChangeReaderFactory());
 		factoryRegister.register("sort-0.6", entitySorterFactory06);
 		factoryRegister.register("sort-change-0.6", changeSorterFactory06);
