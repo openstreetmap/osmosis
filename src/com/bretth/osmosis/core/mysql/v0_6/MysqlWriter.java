@@ -126,7 +126,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		+ " current_nodes WRITE, current_node_tags WRITE,"
 		+ " current_ways WRITE, current_way_tags WRITE, current_way_nodes WRITE,"
 		+ " current_relations WRITE, current_relation_tags WRITE, current_relation_members WRITE,"
-		+ " users WRITE, changesets WRITE";
+		+ " users WRITE, changesets WRITE, changeset_tags WRITE";
 	private static final String INVOKE_UNLOCK_TABLES = "UNLOCK TABLES";
 	
 	// These constants define how many rows of each data type will be inserted

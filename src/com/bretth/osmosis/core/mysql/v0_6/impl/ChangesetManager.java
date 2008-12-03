@@ -5,12 +5,15 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.bretth.osmosis.core.OsmosisConstants;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.ReleasableStatementContainer;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.lifecycle.Releasable;
+import com.bretth.osmosis.core.lifecycle.ReleasableContainer;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.mysql.common.IdentityColumnValueLoader;
+import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
 
 /**
@@ -24,11 +27,25 @@ public class ChangesetManager implements Releasable {
 		"INSERT INTO changesets" +
 		" (user_id, created_at, min_lat, max_lat, min_lon, max_lon, closed_at, num_changes)" +
 		" VALUES" +
-		" (?, NOW(), -90, 90, -180, 180, NOW(), 0)";
+		" (?, NOW(), " +
+		FixedPrecisionCoordinateConvertor.convertToFixed(-90) + ", " +
+		FixedPrecisionCoordinateConvertor.convertToFixed(90) + ", " +
+		FixedPrecisionCoordinateConvertor.convertToFixed(-180) + ", " +
+		FixedPrecisionCoordinateConvertor.convertToFixed(180) +
+		", NOW(), 0)";
+	
+	private static final String SQL_INSERT_CHANGESET_TAG =
+		"INSERT INTO changeset_tags (id, k, v)" +
+		" VALUES (?, 'created_by', 'Osmosis " +
+		OsmosisConstants.VERSION +
+		"'), (?, 'replication', 'true')";
+	
 	private DatabaseContext dbCtx;
 	private Map<Integer, Long> userToChangesetMap;
+	private ReleasableContainer releasableContainer;
 	private ReleasableStatementContainer statementContainer;
 	private PreparedStatement insertStatement;
+	private PreparedStatement insertTagStatement;
 	private IdentityColumnValueLoader identityLoader;
 	
 	
@@ -42,22 +59,37 @@ public class ChangesetManager implements Releasable {
 		this.dbCtx = dbCtx;
 		
 		userToChangesetMap = new HashMap<Integer, Long>();
+		releasableContainer = new ReleasableContainer();
 		statementContainer = new ReleasableStatementContainer();
 		identityLoader = new IdentityColumnValueLoader(dbCtx);
+		
+		releasableContainer.add(statementContainer);
+		releasableContainer.add(identityLoader);
 	}
 	
 	
 	private long insertChangeset(int userId) {
 		if (insertStatement == null) {
-			insertStatement = statementContainer.add(dbCtx.prepareStatementForStreaming(SQL_INSERT_CHANGESET));
+			insertStatement = statementContainer.add(dbCtx.prepareStatement(SQL_INSERT_CHANGESET));
+			insertTagStatement = statementContainer.add(dbCtx.prepareStatement(SQL_INSERT_CHANGESET_TAG));
 		}
 		
 		try {
+			long changesetId;
 			int prmIndex;
 			
+			// Insert the new changeset record.
 			prmIndex = 1;
 			insertStatement.setInt(prmIndex++, userId);
 			insertStatement.executeUpdate();
+			
+			changesetId = identityLoader.getLastInsertId();
+			
+			// Insert the changeset tags.
+			prmIndex = 1;
+			insertTagStatement.setLong(prmIndex++, changesetId);
+			insertTagStatement.setLong(prmIndex++, changesetId);
+			insertTagStatement.executeUpdate();
 			
 			return identityLoader.getLastInsertId();
 			
@@ -97,6 +129,6 @@ public class ChangesetManager implements Releasable {
 	 */
 	@Override
 	public void release() {
-		statementContainer.release();
+		releasableContainer.release();
 	}
 }
