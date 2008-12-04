@@ -6,7 +6,7 @@
 	
 	<!-- set global properties for this build -->
 	<property name="project.name" value="osmosis"/>
-	<property name="project.version" value="0.29.4"/>
+	<property name="project.version" value="0.29.5"/>
 	
 	<!-- Define a classpath containing all lib jars. -->
 	<path id="libclasspath">
@@ -85,6 +85,13 @@
 			destfile="build/binary/${project.name}.jar"
 			basedir="build/src"
 			manifest="build/binary/jar.txt"/>
+		
+		<!-- Copy the jar to the root directory where it can be run. -->
+		<copy todir=".">
+			<fileset dir="build/binary">
+				<include name="**/*.jar"/>
+			</fileset>
+		</copy>
 	</target>
 	
 	<!-- Produces javadoc output from the source code. -->
@@ -93,65 +100,24 @@
 	</target>
 	
 	<target name="dist" depends="build_binary,javadoc" description="Generate the distribution.">
-		<!-- Copy the documentation into the distribution. -->
-		<copy todir="build/dist/doc">
-			<fileset dir="doc"/>
-		</copy>
-		
-		<!-- Copy the source into the distribution. -->
-		<copy todir="build/dist/src">
-			<fileset dir="src"/>
-		</copy>
-		
-		<!-- Copy the tests into the distribution. -->
-		<copy todir="build/dist/test">
-			<fileset dir="test"/>
-		</copy>
-		
-		<!-- Copy the libraries into the distribution. -->
-		<copy todir="build/dist/lib">
-			<fileset dir="lib"/>
-		</copy>
-		
-		<!-- Copy the binaries into the distribution. -->
-		<copy todir="build/dist">
-			<fileset dir="build/binary">
-				<include name="**/*.jar"/>
-			</fileset>
-		</copy>
-		
-		<!-- Copy binary launch scripts into the distribution. -->
-		<copy todir="build/dist/bin">
-			<fileset dir="bin"/>
-		</copy>
-		
-		<!-- Copy utility scripts into the distribution. -->
-		<copy todir="build/dist/script">
-			<fileset dir="script"/>
-		</copy>
-		
-		<!-- Copy readme file. -->
-		<copy todir="build/dist" file="readme.txt"/>
-		<!-- Copy changes file. -->
-		<copy todir="build/dist" file="changes.txt"/>
-		<!-- Copy build script. -->
-		<copy todir="build/dist" file="build.xml"/>
-		<!-- Copy copying.txt file. -->
-		<copy todir="build/dist" file="copying.txt"/>
-		<!-- Copy gpl.txt file. -->
-		<copy todir="build/dist" file="gpl.txt"/>
-		
 		<!-- Create the distribution zip file. -->
 		<mkdir dir="dist"/>
 		<zip destfile="dist/${project.name}-${project.version}.zip">
-			<zipfileset prefix="${project.name}-${project.version}" dir="build/dist"/>
+			<zipfileset prefix="${project.name}-${project.version}" dir=".">
+				<exclude name="build/"/>
+				<exclude name="dist/"/>
+				<exclude name="eclipse/"/>
+			</zipfileset>
 		</zip>
 		<tar destfile="dist/${project.name}-${project.version}.tar.gz" compression="gzip">
-			<tarfileset prefix="${project.name}-${project.version}" dir="build/dist" mode="755">
+			<tarfileset prefix="${project.name}-${project.version}" dir="." mode="755">
 				<include name="bin/*"/>
 			</tarfileset>
-			<tarfileset prefix="${project.name}-${project.version}" dir="build/dist">
+			<tarfileset prefix="${project.name}-${project.version}" dir=".">
 				<exclude name="bin/*"/>
+				<exclude name="build/"/>
+				<exclude name="dist/"/>
+				<exclude name="eclipse/"/>
 			</tarfileset>
 		</tar>
 	</target>
