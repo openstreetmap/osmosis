@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.mysql.v0_6.impl;
 
 import java.sql.PreparedStatement;
@@ -23,6 +24,14 @@ import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  * @author Brett Henderson
  */
 public class ChangesetManager implements Releasable {
+
+	/**
+	 * Defines the maximum number of entities that a single changeset may
+	 * contain.
+	 */
+	private static final int MAX_ENTITY_COUNT = 50000;
+	
+	
 	private static final String SQL_INSERT_CHANGESET =
 		"INSERT INTO changesets" +
 		" (user_id, created_at, min_lat, max_lat, min_lon, max_lon, closed_at, num_changes)" +
@@ -41,7 +50,7 @@ public class ChangesetManager implements Releasable {
 		"'), (?, 'replication', 'true')";
 	
 	private DatabaseContext dbCtx;
-	private Map<Integer, Long> userToChangesetMap;
+	private Map<Integer, ActiveChangeset> userToChangesetMap;
 	private ReleasableContainer releasableContainer;
 	private ReleasableStatementContainer statementContainer;
 	private PreparedStatement insertStatement;
@@ -58,7 +67,7 @@ public class ChangesetManager implements Releasable {
 	public ChangesetManager(DatabaseContext dbCtx) {
 		this.dbCtx = dbCtx;
 		
-		userToChangesetMap = new HashMap<Integer, Long>();
+		userToChangesetMap = new HashMap<Integer, ActiveChangeset>();
 		releasableContainer = new ReleasableContainer();
 		statementContainer = new ReleasableStatementContainer();
 		identityLoader = new IdentityColumnValueLoader(dbCtx);
@@ -110,15 +119,32 @@ public class ChangesetManager implements Releasable {
 	public long obtainChangesetId(OsmUser user) {
 		long changesetId;
 		int userId;
+		ActiveChangeset changeset;
 		
 		userId = user.getId();
 		
+		// If a changeset already exists for the user, use it up to the maximum
+		// entity count.
+		// If the maximum entity count has been reached or no changeset exists,
+		// create a new changeset.
 		if (userToChangesetMap.containsKey(userId)) {
-			changesetId = userToChangesetMap.get(userId);
+			changeset = userToChangesetMap.get(userId);
+			
+			if (changeset.getEntityCount() < MAX_ENTITY_COUNT) {
+				changesetId = changeset.getChangesetId();
+			} else {
+				changesetId = insertChangeset(userId);
+				changeset = new ActiveChangeset(changesetId);
+				userToChangesetMap.put(userId, changeset);
+			}
+			
 		} else {
 			changesetId = insertChangeset(userId);
-			userToChangesetMap.put(userId, changesetId);
+			changeset = new ActiveChangeset(changesetId);
+			userToChangesetMap.put(userId, changeset);
 		}
+		
+		changeset.incrementEntityCount();
 		
 		return changesetId;
 	}
