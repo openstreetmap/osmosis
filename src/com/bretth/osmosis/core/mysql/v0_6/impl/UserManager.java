@@ -125,10 +125,10 @@ public class UserManager implements Releasable {
 		try {
 			prmIndex = 1;
 			statementInsert.setInt(prmIndex++, user.getId());
-			statementInsert.setString(prmIndex++, "osmosis_user_" + user.getId() + "@bretth.com");
-			statementInsert.setString(prmIndex++, user.getName());
+			statementInsert.setString(prmIndex++, "osmosis_user_" + user.getId() + "@example.com");
+			statementInsert.setString(prmIndex++, OsmUser.NONE.equals(user) ? "Osmosis Anonymous" : user.getName());
 			statementInsert.setInt(prmIndex++, OsmUser.NONE.equals(user) ? 0 : 1);
-			statementInsert.setString(prmIndex++, user.getName());
+			statementInsert.setString(prmIndex++, OsmUser.NONE.equals(user) ? "Osmosis Anonymous" : user.getName());
 			
 			statementInsert.executeUpdate();
 			
@@ -153,7 +153,7 @@ public class UserManager implements Releasable {
 		
 		try {
 			prmIndex = 1;
-			statementUpdate.setString(prmIndex++, user.getName());
+			statementUpdate.setString(prmIndex++, OsmUser.NONE.equals(user) ? "Osmosis Anonymous" : user.getName());
 			statementUpdate.setInt(prmIndex++, user.getId());
 			
 			statementUpdate.executeUpdate();
