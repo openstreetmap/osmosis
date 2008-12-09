@@ -1,7 +1,6 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.progress.v0_6;
 
-import java.util.Date;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.container.v0_6.EntityContainer;
@@ -22,7 +21,7 @@ public class EntityProgressLogger implements SinkSource {
 	private Sink sink;
 	private int interval;
 	private boolean initialized;
-	private Date lastUpdateTimestamp;
+	private long lastUpdateTimestamp;
 	
 	
 	/**
@@ -43,19 +42,19 @@ public class EntityProgressLogger implements SinkSource {
 	 */
 	private boolean updateRequired() {
 		if (!initialized) {
-			lastUpdateTimestamp = new Date();
+			lastUpdateTimestamp = System.currentTimeMillis();
 			
 			initialized = true;
 			
 			return false;
 			
 		} else {
-			Date currentTimestamp;
+			long currentTimestamp;
 			long duration;
 			
 			// Calculate the time since the last update.
-			currentTimestamp = new Date();
-			duration = currentTimestamp.getTime() - lastUpdateTimestamp.getTime();
+			currentTimestamp = System.currentTimeMillis();
+			duration = currentTimestamp - lastUpdateTimestamp;
 			
 			if (duration > interval || duration < 0) {
 				lastUpdateTimestamp = currentTimestamp;
