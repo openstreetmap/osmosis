@@ -257,6 +257,7 @@ public class OsmosisExtractMysql {
 	 */
 	private void extractCommand() {
 		Configuration configuration;
+		boolean fullHistory;
 		TimestampTracker timestampTracker;
 		TimestampTracker dataTimestampSetter;
 		long extractTime;
@@ -264,6 +265,7 @@ public class OsmosisExtractMysql {
 		long nextExtractTime;
 		
 		configuration = getConfiguration();
+		fullHistory = configuration.getReadFullHistory();
 		timestampTracker = getTimestampTracker();
 		dataTimestampSetter = getDataTimestampSetter();
 		
@@ -290,7 +292,7 @@ public class OsmosisExtractMysql {
 			intervalEnd = new Date(nextExtractTime);
 			
 			// Extract a changeset for the current interval.
-			extractor = new IntervalExtractor(configuration, DATA_DIR, intervalBegin, intervalEnd);
+			extractor = new IntervalExtractor(configuration, DATA_DIR, intervalBegin, intervalEnd, fullHistory);
 			extractor.run();
 			
 			// Update and persist the latest extract timestamp to both the

@@ -23,11 +23,11 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
  */
 public class NodeChangeReader {
 	
+	private boolean fullHistory;
 	private PeekableIterator<EntityHistory<Node>> nodeHistoryReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> nodeTagHistoryReader;
 	private ChangeContainer nextValue;
-	
-	
+
 	/**
 	 * Creates a new instance.
 	 * 
@@ -41,8 +41,13 @@ public class NodeChangeReader {
 	 *            checked.
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
+	 * @param fullHistory
+	 *            Specifies if full version history should be returned, or just
+	 *            a single change per entity for the interval.
 	 */
-	public NodeChangeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+	public NodeChangeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd, boolean fullHistory) {
+		this.fullHistory = fullHistory;
+		
 		nodeHistoryReader =
 			new PeekableIterator<EntityHistory<Node>>(
 				new PersistentIterator<EntityHistory<Node>>(
@@ -105,9 +110,12 @@ public class NodeChangeReader {
 		node = mostRecentHistory.getEntity();
 		createdPreviously = (node.getVersion() > 1);
 		
-		while (nodeHistoryReader.hasNext() &&
-				(nodeHistoryReader.peekNext().getEntity().getId() == node.getId())) {
-			mostRecentHistory = readNextNodeHistory();
+		// Skip over intermediate objects unless full history is required.
+		if (!fullHistory) {
+			while (nodeHistoryReader.hasNext() &&
+					(nodeHistoryReader.peekNext().getEntity().getId() == node.getId())) {
+				mostRecentHistory = readNextNodeHistory();
+			}
 		}
 		
 		// The node in the result must be wrapped in a container.

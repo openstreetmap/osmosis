@@ -27,6 +27,7 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	private boolean readAllUsers;
 	private Date intervalBegin;
 	private Date intervalEnd;
+	private boolean fullHistory;
 	
 	
 	/**
@@ -44,13 +45,17 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	 *            checked.
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
+	 * @param fullHistory
+	 *            Specifies if full version history should be returned, or just
+	 *            a single change per entity for the interval.
 	 */
-	public MysqlChangeReader(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+	public MysqlChangeReader(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean readAllUsers, Date intervalBegin, Date intervalEnd, boolean fullHistory) {
 		this.loginCredentials = loginCredentials;
 		this.preferences = preferences;
 		this.readAllUsers = readAllUsers;
 		this.intervalBegin = intervalBegin;
 		this.intervalEnd = intervalEnd;
+		this.fullHistory = fullHistory;
 	}
 	
 	
@@ -66,7 +71,7 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	 * Reads all node changes and sends them to the change sink.
 	 */
 	private void processNodes() {
-		NodeChangeReader reader = new NodeChangeReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd);
+		NodeChangeReader reader = new NodeChangeReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd, fullHistory);
 		
 		try {
 			while (reader.hasNext()) {
@@ -83,7 +88,7 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	 * Reads all ways from the database and sends to the sink.
 	 */
 	private void processWays() {
-		WayChangeReader reader = new WayChangeReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd);
+		WayChangeReader reader = new WayChangeReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd, fullHistory);
 		
 		try {
 			while (reader.hasNext()) {
@@ -100,7 +105,7 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	 * Reads all relations from the database and sends to the sink.
 	 */
 	private void processRelations() {
-		RelationChangeReader reader = new RelationChangeReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd);
+		RelationChangeReader reader = new RelationChangeReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd, fullHistory);
 		
 		try {
 			while (reader.hasNext()) {

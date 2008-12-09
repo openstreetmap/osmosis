@@ -26,7 +26,8 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
  * @author Brett Henderson
  */
 public class RelationChangeReader {
-	
+
+	private boolean fullHistory;
 	private PeekableIterator<EntityHistory<Relation>> relationHistoryReader;
 	private PeekableIterator<DbFeatureHistory<DbOrderedFeature<RelationMember>>> relationMemberHistoryReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> relationTagHistoryReader;
@@ -46,8 +47,13 @@ public class RelationChangeReader {
 	 *            checked.
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
+	 * @param fullHistory
+	 *            Specifies if full version history should be returned, or just
+	 *            a single change per entity for the interval.
 	 */
-	public RelationChangeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+	public RelationChangeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd, boolean fullHistory) {
+		this.fullHistory = fullHistory;
+		
 		relationHistoryReader =
 			new PeekableIterator<EntityHistory<Relation>>(
 				new PersistentIterator<EntityHistory<Relation>>(
@@ -133,10 +139,13 @@ public class RelationChangeReader {
 		mostRecentHistory = readNextRelationHistory();
 		relation = mostRecentHistory.getEntity();
 		createdPreviously = (relation.getVersion() > 1);
-		
-		while (relationHistoryReader.hasNext() &&
-				(relationHistoryReader.peekNext().getEntity().getId() == relation.getId())) {
-			mostRecentHistory = readNextRelationHistory();
+
+		// Skip over intermediate objects unless full history is required.
+		if (!fullHistory) {
+			while (relationHistoryReader.hasNext() &&
+					(relationHistoryReader.peekNext().getEntity().getId() == relation.getId())) {
+				mostRecentHistory = readNextRelationHistory();
+			}
 		}
 		
 		// The relation in the result must be wrapped in a container.

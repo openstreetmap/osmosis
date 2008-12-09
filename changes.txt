@@ -8,9 +8,10 @@ Added an "inMemoryBbox" to the pgsql writer task allowing it to calculate boundi
 Added an automatic VACUUM ANALYZE of the database for pgsql writer and truncation tasks.
 Added migration tasks --migrate and --migrate-change allowing 0.5 data to be converted to 0.6 format.
 Added forceUtf8 and profileSql options to all MySQL tasks.
-Added a --tag-sort task allowing tags within entities to be sorted alphabetically.
-Enhanced the buffer tasks to chunk objects passed (chunks are 1/4 of max buffer size) to minimise thread synchronisation.
-Dropped the default buffer size from 100 to 20 which provides slightly improved performance in most cases.
+Added a --tag-sort task allowing tags within entities to be sorted alphabetically (0.6 only).
+Enhanced the buffer tasks to chunk objects passed (chunks are 1/4 of max buffer size) to minimise thread synchronisation (0.6 only).
+Dropped the default buffer size from 100 to 20 which provides slightly improved performance in most cases (0.6 only).
+Added the ability to generate full history changesets, as opposed to changesets with a single change per entity (0.6 only).
 
 0.29
 Fixed the --write-pgsql-simple-dump task to properly escape '\' characters.

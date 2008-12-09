@@ -20,7 +20,9 @@ public class MysqlChangeReaderFactory extends DatabaseTaskManagerFactory {
 	private static final String ARG_READ_ALL_USERS = "readAllUsers";
 	private static final String ARG_INTERVAL_BEGIN = "intervalBegin";
 	private static final String ARG_INTERVAL_END = "intervalEnd";
+	private static final String ARG_READ_FULL_HISTORY = "readFullHistory";
 	private static final boolean DEFAULT_READ_ALL_USERS = false;
+	private static final boolean DEFAULT_READ_FULL_HISTORY = false;
 	
 	
 	/**
@@ -33,6 +35,7 @@ public class MysqlChangeReaderFactory extends DatabaseTaskManagerFactory {
 		boolean readAllUsers;
 		Date intervalBegin;
 		Date intervalEnd;
+		boolean fullHistory;
 		
 		// Get the task arguments.
 		loginCredentials = getDatabaseLoginCredentials(taskConfig);
@@ -40,10 +43,11 @@ public class MysqlChangeReaderFactory extends DatabaseTaskManagerFactory {
 		readAllUsers = getBooleanArgument(taskConfig, ARG_READ_ALL_USERS, DEFAULT_READ_ALL_USERS);
 		intervalBegin = getDateArgument(taskConfig, ARG_INTERVAL_BEGIN, new Date(0));
 		intervalEnd = getDateArgument(taskConfig, ARG_INTERVAL_END, new Date());
+		fullHistory = getBooleanArgument(taskConfig, ARG_READ_FULL_HISTORY, DEFAULT_READ_FULL_HISTORY);
 		
 		return new RunnableChangeSourceManager(
 			taskConfig.getId(),
-			new MysqlChangeReader(loginCredentials, preferences, readAllUsers, intervalBegin, intervalEnd),
+			new MysqlChangeReader(loginCredentials, preferences, readAllUsers, intervalBegin, intervalEnd, fullHistory),
 			taskConfig.getPipeArgs()
 		);
 	}

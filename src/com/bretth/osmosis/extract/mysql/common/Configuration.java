@@ -24,6 +24,7 @@ public class Configuration {
 	private static final String KEY_CHANGE_FILE_BEGIN_FORMAT = "changeFileBeginFormat";
 	private static final String KEY_CHANGE_FILE_END_FORMAT = "changeFileEndFormat";
 	private static final String KEY_ENABLE_PROD_ENCODING_HACK = "enableProdEncodingHack";
+	private static final String KEY_READ_FULL_HISTORY = "readFullHistory";
 	
 	
 	private Properties properties;
@@ -154,5 +155,15 @@ public class Configuration {
 	 */
 	public boolean getEnableProductionEncodingHack() {
 		return Boolean.valueOf(properties.getProperty(KEY_ENABLE_PROD_ENCODING_HACK));
+	}
+	
+	
+	/**
+	 * Returns the full history flag.
+	 * 
+	 * @return The full history flag.
+	 */
+	public boolean getReadFullHistory() {
+		return Boolean.valueOf(properties.getProperty(KEY_READ_FULL_HISTORY));
 	}
 }

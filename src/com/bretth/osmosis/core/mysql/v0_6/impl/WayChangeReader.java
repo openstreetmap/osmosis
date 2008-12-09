@@ -26,7 +26,8 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
  * @author Brett Henderson
  */
 public class WayChangeReader {
-	
+
+	private boolean fullHistory;
 	private PeekableIterator<EntityHistory<Way>> wayHistoryReader;
 	private PeekableIterator<DbFeatureHistory<DbOrderedFeature<WayNode>>> wayNodeHistoryReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> wayTagHistoryReader;
@@ -46,8 +47,13 @@ public class WayChangeReader {
 	 *            checked.
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
+	 * @param fullHistory
+	 *            Specifies if full version history should be returned, or just
+	 *            a single change per entity for the interval.
 	 */
-	public WayChangeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+	public WayChangeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd, boolean fullHistory) {
+		this.fullHistory = fullHistory;
+		
 		wayHistoryReader =
 			new PeekableIterator<EntityHistory<Way>>(
 				new PersistentIterator<EntityHistory<Way>>(
@@ -133,10 +139,13 @@ public class WayChangeReader {
 		mostRecentHistory = readNextWayHistory();
 		way = mostRecentHistory.getEntity();
 		createdPreviously = (way.getVersion() > 1);
-		
-		while (wayHistoryReader.hasNext() &&
-				(wayHistoryReader.peekNext().getEntity().getId() == way.getId())) {
-			mostRecentHistory = readNextWayHistory();
+
+		// Skip over intermediate objects unless full history is required.
+		if (!fullHistory) {
+			while (wayHistoryReader.hasNext() &&
+					(wayHistoryReader.peekNext().getEntity().getId() == way.getId())) {
+				mostRecentHistory = readNextWayHistory();
+			}
 		}
 		
 		// The way in the result must be wrapped in a container.

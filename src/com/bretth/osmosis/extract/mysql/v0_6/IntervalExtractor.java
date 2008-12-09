@@ -27,6 +27,7 @@ public class IntervalExtractor {
 	private File baseDirectory;
 	private Date intervalBegin;
 	private Date intervalEnd;
+	private boolean fullHistory;
 	
 	
 	/**
@@ -40,12 +41,16 @@ public class IntervalExtractor {
 	 *            The beginning of the interval to extract.
 	 * @param intervalEnd
 	 *            The end of the interval to extract.
+	 * @param fullHistory
+	 *            Specifies if full version history should be returned, or just
+	 *            a single change per entity for the interval.
 	 */
-	public IntervalExtractor(Configuration config, File baseDirectory, Date intervalBegin, Date intervalEnd) {
+	public IntervalExtractor(Configuration config, File baseDirectory, Date intervalBegin, Date intervalEnd, boolean fullHistory) {
 		this.baseDirectory = baseDirectory;
 		this.config = config;
 		this.intervalBegin = intervalBegin;
 		this.intervalEnd = intervalEnd;
+		this.fullHistory = fullHistory;
 	}
 	
 	
@@ -94,7 +99,8 @@ public class IntervalExtractor {
 			new DatabasePreferences(true),
 			false,
 			intervalBegin,
-			intervalEnd
+			intervalEnd,
+			fullHistory
 		);
 		
 		// Connect the input task to the output task.
