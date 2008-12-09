@@ -14,7 +14,7 @@ import com.bretth.osmosis.core.pipeline.v0_6.ChangeSinkRunnableChangeSourceManag
  */
 public class ChangeBufferFactory extends TaskManagerFactory {
 	private static final String ARG_BUFFER_CAPACITY = "bufferCapacity";
-	private static final int DEFAULT_BUFFER_CAPACITY = 100;
+	private static final int DEFAULT_BUFFER_CAPACITY = 20;
 	
 	
 	/**
