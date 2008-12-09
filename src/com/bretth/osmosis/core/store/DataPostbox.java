@@ -17,10 +17,13 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
  * @param <T> The type of data held in the postbox.
  */
 public class DataPostbox<T> {
-	private int capacity;
+	private int bufferCapacity;
+	private int chunkSize;
 	private Lock lock;
 	private Condition dataWaitCondition;
-	private Queue<T> queue;
+	private Queue<T> centralQueue;
+	private Queue<T> inboundQueue;
+	private Queue<T> outboundQueue;
 	private boolean released;
 	private boolean complete;
 	private boolean outputOkay;
@@ -41,10 +44,16 @@ public class DataPostbox<T> {
 			);
 		}
 		
-		this.capacity = capacity;
+		this.bufferCapacity = capacity;
+		chunkSize = bufferCapacity / 4;
+		if (chunkSize <= 0) {
+			chunkSize = 1;
+		}
 		lock = new ReentrantLock();
 		dataWaitCondition = lock.newCondition();
-		queue = new LinkedList<T>();
+		centralQueue = new LinkedList<T>();
+		inboundQueue = new LinkedList<T>();
+		outboundQueue = new LinkedList<T>();
 		released = false;
 		complete = false;
 		outputOkay = true;
@@ -99,29 +108,72 @@ public class DataPostbox<T> {
 	
 	
 	/**
-	 * Adds a new object to the postbox.
+	 * Adds a group of objects to the central queue ready for consumption by the
+	 * receiver.
 	 * 
 	 * @param o
-	 *            The object to be added.
+	 *            The objects to be added.
 	 */
-	public void put(T o) {
+	private void populateCentralQueue() {
 		lock.lock();
 		
 		try {
 			checkForOutputErrors();
 			
 			// Wait until the currently posted data is cleared.
-			while (queue.size() >= capacity) {
+			while (centralQueue.size() >= bufferCapacity) {
 				waitForUpdate();
 				checkForOutputErrors();
 			}
 			
 			// Post the new data.
-			queue.add(o);
+			centralQueue.addAll(inboundQueue);
+			inboundQueue.clear();
 			signalUpdate();
 			
 		} finally {
 			lock.unlock();
+		}
+	}
+	
+	
+	/**
+	 * Empties the contents of the central queue into the outbound queue.
+	 */
+	private void consumeCentralQueue() {
+		lock.lock();
+		
+		try {
+			checkForInputErrors();
+			
+			// Wait until data is available.
+			while (!((centralQueue.size() > 0) || complete)) {
+				waitForUpdate();
+				checkForInputErrors();
+			}
+			
+			outboundQueue.addAll(centralQueue);
+			centralQueue.clear();
+			
+			signalUpdate();
+			
+		} finally {
+			lock.unlock();
+		}
+	}
+	
+	
+	/**
+	 * Adds a new object to the postbox.
+	 * 
+	 * @param o
+	 *            The object to be added.
+	 */
+	public void put(T o) {
+		inboundQueue.add(o);
+		
+		if (inboundQueue.size() >= chunkSize) {
+			populateCentralQueue();
 		}
 	}
 	
@@ -133,7 +185,8 @@ public class DataPostbox<T> {
 		lock.lock();
 		
 		try {
-			checkForOutputErrors();
+			populateCentralQueue();
+			
 			complete = true;
 			signalUpdate();
 			
@@ -168,22 +221,16 @@ public class DataPostbox<T> {
 	 * @return True if data is available.
 	 */
 	public boolean hasNext() {
-		lock.lock();
+		int queueSize;
 		
-		try {
-			checkForInputErrors();
-			
-			// Wait until data is available.
-			while (!((queue.size() > 0) || complete)) {
-				waitForUpdate();
-				checkForInputErrors();
-			}
-			
-			return queue.size() > 0;
-			
-		} finally {
-			lock.unlock();
+		queueSize = outboundQueue.size();
+		
+		if (queueSize <= 0) {
+			consumeCentralQueue();
+			queueSize = outboundQueue.size();
 		}
+		
+		return queueSize > 0;
 	}
 	
 	
@@ -194,23 +241,15 @@ public class DataPostbox<T> {
 	 * @return The next available object.
 	 */
 	public T getNext() {
-		lock.lock();
-		
-		try {
-			if (hasNext()) {
-				T result;
-				
-				result = queue.remove();
-				signalUpdate();
-				
-				return result;
-				
-			} else {
-				throw new OsmosisRuntimeException("No data is available, should call hasNext first.");
-			}
+		if (hasNext()) {
+			T result;
 			
-		} finally {
-			lock.unlock();
+			result = outboundQueue.remove();
+			
+			return result;
+			
+		} else {
+			throw new OsmosisRuntimeException("No data is available, should call hasNext first.");
 		}
 	}
 	
