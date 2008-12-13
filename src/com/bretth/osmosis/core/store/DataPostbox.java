@@ -12,9 +12,12 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 
 /**
  * This class provides a mechanism for a thread to pass data to another thread.
- * Both threads will block until the other is ready.
+ * Both threads will block until the other is ready. It supports a single
+ * writing thread, and a single reading thread. Multiple reading or writing
+ * threads are NOT supported.
  * 
- * @param <T> The type of data held in the postbox.
+ * @param <T>
+ *            The type of data held in the postbox.
  */
 public class DataPostbox<T> {
 	private int bufferCapacity;
@@ -45,6 +48,9 @@ public class DataPostbox<T> {
 		}
 		
 		this.bufferCapacity = capacity;
+		
+		// Use a chunk size one quarter of total buffer size. This is a magic
+		// number but performance isn't highly sensitive to this parameter.
 		chunkSize = bufferCapacity / 4;
 		if (chunkSize <= 0) {
 			chunkSize = 1;
