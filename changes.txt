@@ -13,6 +13,7 @@ Enhanced the buffer tasks to chunk objects passed (chunks are 1/4 of max buffer 
 Dropped the default buffer size from 100 to 20 which provides slightly improved performance in most cases (0.6 only).
 Added the ability to generate full history changesets, as opposed to changesets with a single change per entity (0.6 only).
 Added a new allowIncorrectSchemaVersion option to most database tasks.
+Added new clipIncompleteEntities option to area filter tasks.  It defaults to false which changes existing behaviour.
 
 0.29
 Fixed the --write-pgsql-simple-dump task to properly escape '\' characters.

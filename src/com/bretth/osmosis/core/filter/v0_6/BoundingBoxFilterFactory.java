@@ -22,13 +22,15 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 	private static final String ARG_X2 = "x2";
 	private static final String ARG_Y2 = "y2";
 	private static final String ARG_ZOOM = "zoom";
+	private static final String ARG_CLIP_INCOMPLETE_ENTITIES = "clipIncompleteEntities";
+	private static final String ARG_COMPLETE_WAYS = "completeWays";
+	private static final String ARG_COMPLETE_RELATIONS = "completeRelations";
 	private static final double DEFAULT_LEFT = -180;
 	private static final double DEFAULT_RIGHT = 180;
 	private static final double DEFAULT_TOP = 90;
 	private static final double DEFAULT_BOTTOM = -90;
 	private static final int DEFAULT_ZOOM = 12;
-	private static final String ARG_COMPLETE_WAYS = "completeWays";
-	private static final String ARG_COMPLETE_RELATIONS = "completeRelations";
+	private static final boolean DEFAULT_CLIP_INCOMPLETE_ENTITIES = false;
 	private static final boolean DEFAULT_COMPLETE_WAYS = false;
 	private static final boolean DEFAULT_COMPLETE_RELATIONS = false;
 
@@ -75,6 +77,7 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 		double right;
 		double top;
 		double bottom;
+		boolean clipIncompleteEntities;
 		boolean completeWays;
 		boolean completeRelations;
 		int zoom;
@@ -85,6 +88,7 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 		right = getDoubleArgument(taskConfig, ARG_RIGHT, DEFAULT_RIGHT);
 		top = getDoubleArgument(taskConfig, ARG_TOP, DEFAULT_TOP);
 		bottom = getDoubleArgument(taskConfig, ARG_BOTTOM, DEFAULT_BOTTOM);
+		clipIncompleteEntities = getBooleanArgument(taskConfig, ARG_CLIP_INCOMPLETE_ENTITIES, DEFAULT_CLIP_INCOMPLETE_ENTITIES);
 		completeWays = getBooleanArgument(taskConfig, ARG_COMPLETE_WAYS, DEFAULT_COMPLETE_WAYS);
 		completeRelations = getBooleanArgument(taskConfig, ARG_COMPLETE_RELATIONS, DEFAULT_COMPLETE_RELATIONS);
 		
@@ -102,7 +106,7 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 		
 		return new SinkSourceManager(
 			taskConfig.getId(),
-			new BoundingBoxFilter(idTrackerType, left, right, top, bottom, completeWays, completeRelations),
+			new BoundingBoxFilter(idTrackerType, left, right, top, bottom, clipIncompleteEntities, completeWays, completeRelations),
 			taskConfig.getPipeArgs()
 		);
 	}

@@ -16,8 +16,10 @@ import com.bretth.osmosis.core.pipeline.v0_6.SinkSourceManager;
 public class PolygonFilterFactory extends AreaFilterTaskManagerFactory {
 	private static final String ARG_FILE = "file";
 	private static final String DEFAULT_FILE = "polygon.txt";
+	private static final String ARG_CLIP_INCOMPLETE_ENTITIES = "clipIncompleteEntities";
 	private static final String ARG_COMPLETE_WAYS = "completeWays";
 	private static final String ARG_COMPLETE_RELATIONS = "completeRelations";
+	private static final boolean DEFAULT_CLIP_INCOMPLETE_ENTITIES = false;
 	private static final boolean DEFAULT_COMPLETE_WAYS = false;
 	private static final boolean DEFAULT_COMPLETE_RELATIONS = false;
 
@@ -30,12 +32,14 @@ public class PolygonFilterFactory extends AreaFilterTaskManagerFactory {
 		IdTrackerType idTrackerType;
 		String fileName;
 		File file;
+		boolean clipIncompleteEntities;
 		boolean completeWays;
 		boolean completeRelations;
 		
 		// Get the task arguments.
 		idTrackerType = getIdTrackerType(taskConfig);
 		fileName = getStringArgument(taskConfig, ARG_FILE, DEFAULT_FILE);
+		clipIncompleteEntities = getBooleanArgument(taskConfig, ARG_CLIP_INCOMPLETE_ENTITIES, DEFAULT_CLIP_INCOMPLETE_ENTITIES);
 		completeWays = getBooleanArgument(taskConfig, ARG_COMPLETE_WAYS, DEFAULT_COMPLETE_WAYS);
 		completeRelations = getBooleanArgument(taskConfig, ARG_COMPLETE_RELATIONS, DEFAULT_COMPLETE_RELATIONS);
 		
@@ -44,7 +48,7 @@ public class PolygonFilterFactory extends AreaFilterTaskManagerFactory {
 		
 		return new SinkSourceManager(
 			taskConfig.getId(),
-			new PolygonFilter(idTrackerType, file, completeWays, completeRelations),
+			new PolygonFilter(idTrackerType, file, clipIncompleteEntities, completeWays, completeRelations),
 			taskConfig.getPipeArgs()
 		);
 	}

@@ -30,6 +30,10 @@ public class BoundingBoxFilter extends AreaFilter {
 	 *            The latitude marking the top edge of the bounding box.
 	 * @param bottom
 	 *            The latitude marking the bottom edge of the bounding box.
+	 * @param clipIncompleteEntities
+	 *            If true, entities referring to non-existent entities will be
+	 *            modified to ensure referential integrity. For example, ways
+	 *            will be modified to only include nodes inside the area.
 	 * @param completeWays
 	 *            Include all nodes for ways which have at least one node inside the filtered area.
 	 * @param completeRelations
@@ -41,9 +45,11 @@ public class BoundingBoxFilter extends AreaFilter {
 	        double right,
 	        double top,
 	        double bottom,
+	        boolean clipIncompleteEntities,
 	        boolean completeWays,
 	        boolean completeRelations) {
-		super(idTrackerType, completeWays, completeRelations);
+		super(idTrackerType, clipIncompleteEntities, completeWays, completeRelations);
+		
 		this.bound = new Bound(right, left, top, bottom, "");
 	}
 

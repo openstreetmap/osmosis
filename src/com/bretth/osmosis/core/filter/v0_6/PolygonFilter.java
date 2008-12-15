@@ -31,14 +31,18 @@ public class PolygonFilter extends AreaFilter {
 	 *            Defines the id tracker implementation to use.
 	 * @param polygonFile
 	 *            The file containing the polygon coordinates.
+	 * @param clipIncompleteEntities
+	 *            If true, entities referring to non-existent entities will be
+	 *            modified to ensure referential integrity. For example, ways
+	 *            will be modified to only include nodes inside the area.
 	 * @param completeWays
 	 *            Include all nodes for ways which have at least one node inside the filtered area.
 	 * @param completeRelations
 	 *            Include all relations referenced by other relations which have members inside
 	 *            the filtered area.
 	 */
-	public PolygonFilter(IdTrackerType idTrackerType, File polygonFile, boolean completeWays, boolean completeRelations) {
-	    	super(idTrackerType, completeWays, completeRelations);
+	public PolygonFilter(IdTrackerType idTrackerType, File polygonFile, boolean clipIncompleteEntities, boolean completeWays, boolean completeRelations) {
+	    	super(idTrackerType, clipIncompleteEntities, completeWays, completeRelations);
 		this.polygonFile = polygonFile;
 		
 		area = null;

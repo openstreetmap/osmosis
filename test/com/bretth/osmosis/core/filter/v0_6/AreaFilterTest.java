@@ -65,6 +65,7 @@ public class AreaFilterTest {
 		        20,
 		        20,
 		        -20,
+		        true,
 		        false,
 		        false);
 		// simpleCompleteWayFilter doesn't cross antimeridian; complete ways but not relations
@@ -75,6 +76,7 @@ public class AreaFilterTest {
 		        20,
 		        -20,
 		        true,
+		        true,
 		        false);
 		// simpleCompleteRelationFilter doesn't cross antimeridian; complete ways but not relations
 		simpleCompleteRelationFilter = new BoundingBoxFilter(
@@ -83,6 +85,7 @@ public class AreaFilterTest {
 		        20,
 		        20,
 		        -20,
+		        true,
 		        false,
 		        true);
 		// simpleCompleteWayRelationFilter doesn't cross antimeridian; complete ways and relations
@@ -92,6 +95,7 @@ public class AreaFilterTest {
 		        20,
 		        20,
 		        -20,
+		        true,
 		        true,
 		        true);
 		simpleAreaFilter.setSink(entityInspector);

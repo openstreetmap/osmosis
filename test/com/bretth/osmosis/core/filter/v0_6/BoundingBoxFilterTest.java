@@ -48,6 +48,7 @@ public class BoundingBoxFilterTest {
 		        20,
 		        -20,
 		        false,
+		        false,
 		        false);
 		simpleAreaFilter.setSink(entityInspector);
 		intersectingBound = new Bound(30, 10, 30, 10, "intersecting");

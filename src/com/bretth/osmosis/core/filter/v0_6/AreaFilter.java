@@ -35,6 +35,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	private IdTracker availableNodes;
 	private IdTracker requiredNodes; // Nodes needed to make complete Ways
 	private SimpleObjectStore<NodeContainer> allNodes;
+	private boolean clipIncompleteEntities;
 	private boolean completeWays;
 	private IdTracker availableWays;
 	private SimpleObjectStore<WayContainer> allWays;
@@ -48,6 +49,10 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	 * 
 	 * @param idTrackerType
 	 *            Defines the id tracker implementation to use.
+	 * @param clipIncompleteEntities
+	 *            If true, entities referring to non-existent entities will be
+	 *            modified to ensure referential integrity. For example, ways
+	 *            will be modified to only include nodes inside the area.
 	 * @param completeWays
 	 *            Include all nodes for ways which have at least one node inside
 	 *            the filtered area.
@@ -55,7 +60,8 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	 *            Include all relations referenced by other relations which have
 	 *            members inside the filtered area.
 	 */
-	public AreaFilter(IdTrackerType idTrackerType, boolean completeWays, boolean completeRelations) {
+	public AreaFilter(IdTrackerType idTrackerType, boolean clipIncompleteEntities, boolean completeWays, boolean completeRelations) {
+		this.clipIncompleteEntities = clipIncompleteEntities;
 		this.completeWays = completeWays;
 		this.completeRelations = completeRelations;
 		
@@ -163,28 +169,33 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	 *            Complete way entity from which to filter out nodes which are not available.
 	 */
 	private void emitFilteredWay(Way way) {
-		Way filteredWay;
-		
-		// Create a new way object to contain only available nodes.
-		filteredWay = new Way(way.getId(), way.getVersion(), way.getTimestamp(), way.getUser());
-		
-		// Only add node references for nodes that are available.
-		for (WayNode nodeReference : way.getWayNodeList()) {
-			long nodeId;
+		if (clipIncompleteEntities) {
+			Way filteredWay;
 			
-			nodeId = nodeReference.getNodeId();
+			// Create a new way object to contain only available nodes.
+			filteredWay = new Way(way.getId(), way.getVersion(), way.getTimestamp(), way.getUser());
 			
-			if (availableNodes.get(nodeId)) {
-				filteredWay.addWayNode(nodeReference);
+			// Only add node references for nodes that are available.
+			for (WayNode nodeReference : way.getWayNodeList()) {
+				long nodeId;
+				
+				nodeId = nodeReference.getNodeId();
+				
+				if (availableNodes.get(nodeId)) {
+					filteredWay.addWayNode(nodeReference);
+				}
 			}
-		}
-		
-		// Only add ways that contain nodes.
-		if (filteredWay.getWayNodeList().size() > 0) {
-			// Add all tags to the filtered way.
-			filteredWay.addTags(way.getTagList());
 			
-			sink.process(new WayContainer(filteredWay));
+			// Only add ways that contain nodes.
+			if (filteredWay.getWayNodeList().size() > 0) {
+				// Add all tags to the filtered way.
+				filteredWay.addTags(way.getTagList());
+				
+				sink.process(new WayContainer(filteredWay));
+			}
+			
+		} else {
+			sink.process(new WayContainer(way));
 		}
 	}
 	
@@ -241,42 +252,48 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
      *            Complete relation from which to filter out members which are not available.
      */
     private void emitFilteredRelation(Relation relation) {
-	    Relation filteredRelation;
-	    // Create a new relation object to contain only items within the bounding box.
-		filteredRelation = new Relation(relation.getId(), relation.getVersion(), relation.getTimestamp(), relation.getUser());
-		
-		// Only add members for entities that are available.
-		for (RelationMember member : relation.getMemberList()) {
-			long memberId;
-			EntityType memberType;
+    	if (clipIncompleteEntities) {
+		    Relation filteredRelation;
+		    
+		    // Create a new relation object to contain only items within the bounding box.
+			filteredRelation = new Relation(relation.getId(), relation.getVersion(), relation.getTimestamp(), relation.getUser());
 			
-			memberId = member.getMemberId();
-			memberType = member.getMemberType();
-			
-			if (EntityType.Node.equals(memberType)) {
-				if (availableNodes.get(memberId)) {
-					filteredRelation.addMember(member);
+			// Only add members for entities that are available.
+			for (RelationMember member : relation.getMemberList()) {
+				long memberId;
+				EntityType memberType;
+				
+				memberId = member.getMemberId();
+				memberType = member.getMemberType();
+				
+				if (EntityType.Node.equals(memberType)) {
+					if (availableNodes.get(memberId)) {
+						filteredRelation.addMember(member);
+					}
+				} else if (EntityType.Way.equals(memberType)) {
+					if (availableWays.get(memberId)) {
+						filteredRelation.addMember(member);
+					}
+				} else if (EntityType.Relation.equals(memberType)) {
+					if (availableRelations.get(memberId)) {
+						filteredRelation.addMember(member);
+					}
+				} else {
+					throw new OsmosisRuntimeException("Unsupported member type + " + memberType + " for relation " + relation.getId() + ".");
 				}
-			} else if (EntityType.Way.equals(memberType)) {
-				if (availableWays.get(memberId)) {
-					filteredRelation.addMember(member);
-				}
-			} else if (EntityType.Relation.equals(memberType)) {
-				if (availableRelations.get(memberId)) {
-					filteredRelation.addMember(member);
-				}
-			} else {
-				throw new OsmosisRuntimeException("Unsupported member type + " + memberType + " for relation " + relation.getId() + ".");
 			}
-		}
-		
-		// Only add relations that contain entities.
-		if (filteredRelation.getMemberList().size() > 0) {
-			// Add all tags to the filtered relation.
-			filteredRelation.addTags(relation.getTagList());
 			
-			sink.process(new RelationContainer(filteredRelation));
-		}
+			// Only add relations that contain entities.
+			if (filteredRelation.getMemberList().size() > 0) {
+				// Add all tags to the filtered relation.
+				filteredRelation.addTags(relation.getTagList());
+				
+				sink.process(new RelationContainer(filteredRelation));
+			}
+			
+    	} else {
+    		sink.process(new RelationContainer(relation));
+    	}
 	}
 	
 	
