@@ -12,6 +12,7 @@ Added a --tag-sort task allowing tags within entities to be sorted alphabeticall
 Enhanced the buffer tasks to chunk objects passed (chunks are 1/4 of max buffer size) to minimise thread synchronisation (0.6 only).
 Dropped the default buffer size from 100 to 20 which provides slightly improved performance in most cases (0.6 only).
 Added the ability to generate full history changesets, as opposed to changesets with a single change per entity (0.6 only).
+Added a new allowIncorrectSchemaVersion option to most database tasks.
 
 0.29
 Fixed the --write-pgsql-simple-dump task to properly escape '\' characters.
