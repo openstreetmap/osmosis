@@ -26,7 +26,6 @@ public class MysqlChangeWriter implements ChangeSink {
 	
 	private ChangeWriter changeWriter;
 	private Map<ChangeAction, ActionChangeWriter> actionWriterMap;
-	private DatabasePreferences preferences;
 	private SchemaVersionValidator schemaVersionValidator;
 	
 	
@@ -42,15 +41,13 @@ public class MysqlChangeWriter implements ChangeSink {
 	 *            history tables.
 	 */
 	public MysqlChangeWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean populateCurrentTables) {
-		this.preferences = preferences;
-		
 		changeWriter = new ChangeWriter(loginCredentials, populateCurrentTables);
 		actionWriterMap = new HashMap<ChangeAction, ActionChangeWriter>();
 		actionWriterMap.put(ChangeAction.Create, new ActionChangeWriter(changeWriter, ChangeAction.Create));
 		actionWriterMap.put(ChangeAction.Modify, new ActionChangeWriter(changeWriter, ChangeAction.Modify));
 		actionWriterMap.put(ChangeAction.Delete, new ActionChangeWriter(changeWriter, ChangeAction.Delete));
 		
-		schemaVersionValidator = new SchemaVersionValidator(loginCredentials);
+		schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
 	}
 	
 	
@@ -61,9 +58,7 @@ public class MysqlChangeWriter implements ChangeSink {
 		ChangeAction action;
 		
 		// Verify that the schema version is supported.
-		if (preferences.getValidateSchemaVersion()) {
-			schemaVersionValidator.validateVersion(MySqlVersionConstants.SCHEMA_MIGRATIONS);
-		}
+		schemaVersionValidator.validateVersion(MySqlVersionConstants.SCHEMA_MIGRATIONS);
 		
 		action = change.getAction();
 		

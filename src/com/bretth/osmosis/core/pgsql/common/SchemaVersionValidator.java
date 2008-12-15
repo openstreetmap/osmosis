@@ -7,6 +7,7 @@ import java.sql.Statement;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.database.DatabasePreferences;
 
 
 /**
@@ -18,6 +19,7 @@ import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 public class SchemaVersionValidator {
 	private static final String SELECT_SQL = "SELECT version FROM schema_info";
 	
+	private DatabasePreferences preferences;
 	private DatabaseContext dbCtx;
 	private boolean validated;
 	
@@ -27,8 +29,12 @@ public class SchemaVersionValidator {
 	 * 
 	 * @param loginCredentials
 	 *            Contains all information required to connect to the database.
+	 * @param preferences
+	 *            The database preferences.
 	 */
-	public SchemaVersionValidator(DatabaseLoginCredentials loginCredentials) {
+	public SchemaVersionValidator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
+		this.preferences = preferences;
+		
 		dbCtx = new DatabaseContext(loginCredentials);
 	}
 	
@@ -57,34 +63,36 @@ public class SchemaVersionValidator {
 	 *            The expected version number.
 	 */
 	private void validateDBVersion(int expectedVersion) {
-		try {
-			Statement statement;
-			ResultSet resultSet;
-			int dbVersion;
-			
-			statement = dbCtx.createStatement();
-			resultSet = statement.executeQuery(SELECT_SQL);
-			
-			if (!resultSet.next()) {
-				throw new OsmosisRuntimeException("No rows were found in the schema info table.");
+		if (preferences.getValidateSchemaVersion()) {
+			try {
+				Statement statement;
+				ResultSet resultSet;
+				int dbVersion;
+				
+				statement = dbCtx.createStatement();
+				resultSet = statement.executeQuery(SELECT_SQL);
+				
+				if (!resultSet.next()) {
+					throw new OsmosisRuntimeException("No rows were found in the schema info table.");
+				}
+				
+				dbVersion = resultSet.getInt("version");
+				
+				if (dbVersion != expectedVersion) {
+					throw new OsmosisRuntimeException(
+						"The database schema version of " + dbVersion +
+						" does not match the expected version of " + expectedVersion + "."
+					);
+				}
+				
+				resultSet.close();
+				statement.close();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to read the schema version from the schema info table.", e);
+			} finally {
+				cleanup();
 			}
-			
-			dbVersion = resultSet.getInt("version");
-			
-			if (dbVersion != expectedVersion) {
-				throw new OsmosisRuntimeException(
-					"The database schema version of " + dbVersion +
-					" does not match the expected version of " + expectedVersion + "."
-				);
-			}
-			
-			resultSet.close();
-			statement.close();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to read the schema version from the schema info table.", e);
-		} finally {
-			cleanup();
 		}
 	}
 	

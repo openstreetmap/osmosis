@@ -126,7 +126,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	
 	
 	private DatabaseContext dbCtx;
-	private DatabasePreferences preferences;
 	private boolean enableInMemoryBbox;
 	private boolean enableInMemoryLinestring;
 	private SchemaVersionValidator schemaVersionValidator;
@@ -190,11 +189,10 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	public PostgreSqlWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean enableInMemoryBbox, boolean enableInMemoryLinestring) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		
-		this.preferences = preferences;
 		this.enableInMemoryBbox = enableInMemoryBbox;
 		this.enableInMemoryLinestring = enableInMemoryLinestring;
 		
-		schemaVersionValidator = new SchemaVersionValidator(loginCredentials);
+		schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 		
 		nodeBuffer = new ArrayList<Node>();
@@ -233,9 +231,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	private void initialize() {
 		if (!initialized) {
-			if (preferences.getValidateSchemaVersion()) {
-				schemaVersionValidator.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
-			}
+			schemaVersionValidator.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
 			
 			bulkNodeStatement = statementContainer.add(dbCtx.prepareStatement(nodeBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_NODE)));
 			singleNodeStatement = statementContainer.add(dbCtx.prepareStatement(nodeBuilder.getSqlInsert(1)));

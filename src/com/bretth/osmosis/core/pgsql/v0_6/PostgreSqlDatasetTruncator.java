@@ -28,7 +28,6 @@ public class PostgreSqlDatasetTruncator implements RunnableTask {
 	
 	
 	private DatabaseContext dbCtx;
-	private DatabasePreferences preferences;
 	private SchemaVersionValidator schemaVersionValidator;
 	
 	
@@ -41,11 +40,9 @@ public class PostgreSqlDatasetTruncator implements RunnableTask {
 	 *            Contains preferences configuring database behaviour.
 	 */
 	public PostgreSqlDatasetTruncator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
-		this.preferences = preferences;
-		
 		dbCtx = new DatabaseContext(loginCredentials);
 		
-		schemaVersionValidator = new SchemaVersionValidator(loginCredentials);
+		schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
 	}
 	
 	
@@ -54,9 +51,7 @@ public class PostgreSqlDatasetTruncator implements RunnableTask {
 	 */
 	public void run() {
 		try {
-			if (preferences.getValidateSchemaVersion()) {
-				schemaVersionValidator.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
-			}
+			schemaVersionValidator.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
 			
 			log.fine("Truncating tables.");
 			for (int i = 0; i < SQL_STATEMENTS.length; i++) {

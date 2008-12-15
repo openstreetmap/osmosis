@@ -91,7 +91,7 @@ public class IntervalExtractor {
 				false,
 				false
 			),
-			new DatabasePreferences(true),
+			new DatabasePreferences(config.getValidateSchemaVersion(), config.getAllowIncorrectSchemaVersion()),
 			false,
 			intervalBegin,
 			intervalEnd

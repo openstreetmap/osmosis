@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 
 
@@ -20,8 +22,11 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  * @author Brett Henderson
  */
 public class SchemaVersionValidator {
-	private static final String SELECT_SQL = "SELECT version FROM schema_migrations";
+	private static Logger log = Logger.getLogger(SchemaVersionValidator.class.getName());
 	
+	private static final String SELECT_SQL = "SELECT version FROM schema_migrations";
+
+	private DatabasePreferences preferences;
 	private DatabaseContext dbCtx;
 	private boolean validated;
 	
@@ -31,8 +36,12 @@ public class SchemaVersionValidator {
 	 * 
 	 * @param loginCredentials
 	 *            Contains all information required to connect to the database.
+	 * @param preferences
+	 *            The database preferences.
 	 */
-	public SchemaVersionValidator(DatabaseLoginCredentials loginCredentials) {
+	public SchemaVersionValidator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
+		this.preferences = preferences;
+		
 		dbCtx = new DatabaseContext(loginCredentials);
 	}
 	
@@ -61,59 +70,65 @@ public class SchemaVersionValidator {
 	 *            The expected schema migrations.
 	 */
 	private void validateDBVersion(String expectedMigrations[]) {
-		try {
-			ResultSet resultSet;
-			Set<String> actualMigrationSet;
-			Set<String> expectedMigrationSet;
-			List<String> matchingMigrations;
-			
-			// Load the expected migrations into a Set.
-			expectedMigrationSet = new HashSet<String>();
-			for (int i = 0; i < expectedMigrations.length; i++) {
-				expectedMigrationSet.add(expectedMigrations[i]);
-			}
-			
-			// Load the database migrations into a Set.
-			actualMigrationSet = new HashSet<String>();
-			resultSet = dbCtx.executeStreamingQuery(SELECT_SQL);
-			while (resultSet.next()) {
-				actualMigrationSet.add(resultSet.getString("version"));
-			}
-			resultSet.close();
-			
-			// Remove items from both sets that are identical.
-			matchingMigrations = new ArrayList<String>();
-			for (String migration : expectedMigrationSet) {
-				if (actualMigrationSet.contains(migration)) {
-					matchingMigrations.add(migration);
-				}
-			}
-			for (String migration : matchingMigrations) {
-				expectedMigrationSet.remove(migration);
-				actualMigrationSet.remove(migration);
-			}
-			
-			// If either Set contains elements, we have a schema version mismatch.
-			if (expectedMigrationSet.size() > 0 || actualMigrationSet.size() > 0) {
-				StringBuilder errorMessage;
+		if (preferences.getValidateSchemaVersion()) {
+			try {
+				ResultSet resultSet;
+				Set<String> actualMigrationSet;
+				Set<String> expectedMigrationSet;
+				List<String> matchingMigrations;
 				
-				errorMessage = new StringBuilder();
-				
-				errorMessage.append("Database version mismatch.");
-				if (expectedMigrationSet.size() > 0) {
-					errorMessage.append(" The schema is missing migrations " + expectedMigrationSet + ", may need to upgrade schema or specify validateSchemaVersion=no.");
-				}
-				if (actualMigrationSet.size() > 0) {
-					errorMessage.append(" The schema contains unexpected migrations " + actualMigrationSet + ", may need to upgrade osmosis or specify validateSchemaVersion=no.");
+				// Load the expected migrations into a Set.
+				expectedMigrationSet = new HashSet<String>();
+				for (int i = 0; i < expectedMigrations.length; i++) {
+					expectedMigrationSet.add(expectedMigrations[i]);
 				}
 				
-				throw new OsmosisRuntimeException(errorMessage.toString());
+				// Load the database migrations into a Set.
+				actualMigrationSet = new HashSet<String>();
+				resultSet = dbCtx.executeStreamingQuery(SELECT_SQL);
+				while (resultSet.next()) {
+					actualMigrationSet.add(resultSet.getString("version"));
+				}
+				resultSet.close();
+				
+				// Remove items from both sets that are identical.
+				matchingMigrations = new ArrayList<String>();
+				for (String migration : expectedMigrationSet) {
+					if (actualMigrationSet.contains(migration)) {
+						matchingMigrations.add(migration);
+					}
+				}
+				for (String migration : matchingMigrations) {
+					expectedMigrationSet.remove(migration);
+					actualMigrationSet.remove(migration);
+				}
+				
+				// If either Set contains elements, we have a schema version mismatch.
+				if (expectedMigrationSet.size() > 0 || actualMigrationSet.size() > 0) {
+					StringBuilder errorMessage;
+					
+					errorMessage = new StringBuilder();
+					
+					errorMessage.append("Database version mismatch.");
+					if (expectedMigrationSet.size() > 0) {
+						errorMessage.append(" The schema is missing migrations " + expectedMigrationSet + ", may need to upgrade schema or specify validateSchemaVersion=no.");
+					}
+					if (actualMigrationSet.size() > 0) {
+						errorMessage.append(" The schema contains unexpected migrations " + actualMigrationSet + ", may need to upgrade osmosis or specify validateSchemaVersion=no.");
+					}
+					
+					if (preferences.getAllowIncorrectSchemaVersion()) {
+						log.warning(errorMessage.toString());
+					} else {
+						throw new OsmosisRuntimeException(errorMessage.toString());
+					}
+				}
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to read the schema version from the schema info table.", e);
+			} finally {
+				cleanup();
 			}
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to read the schema version from the schema info table.", e);
-		} finally {
-			cleanup();
 		}
 	}
 	

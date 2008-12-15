@@ -212,7 +212,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	}
 	
 	
-	private DatabasePreferences preferences;
 	private DatabaseContext dbCtx;
 	private SchemaVersionValidator schemaVersionValidator;
 	private List<Node> nodeBuffer;
@@ -254,11 +253,9 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 *            Contains preferences configuring database behaviour.
 	 */
 	public PostgreSqlWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
-		this.preferences = preferences;
-		
 		dbCtx = new DatabaseContext(loginCredentials);
 		
-		schemaVersionValidator = new SchemaVersionValidator(loginCredentials);
+		schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
 		
 		nodeBuffer = new ArrayList<Node>();
 		nodeTagBuffer = new ArrayList<DBEntityTag>();
@@ -284,9 +281,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	private void initialize() {
 		if (!initialized) {
-			if (preferences.getValidateSchemaVersion()) {
-				schemaVersionValidator.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
-			}
+			schemaVersionValidator.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
 			
 			bulkNodeStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_NODE);
 			singleNodeStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_NODE);

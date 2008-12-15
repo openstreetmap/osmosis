@@ -218,7 +218,6 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	}
 	
 	
-	private DatabasePreferences preferences;
 	private DatabaseContext dbCtx;
 	private UserIdManager userIdManager;
 	private SchemaVersionValidator schemaVersionValidator;
@@ -275,13 +274,11 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 *            history tables.
 	 */
 	public MysqlWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean lockTables, boolean populateCurrentTables) {
-		this.preferences = preferences;
-		
 		dbCtx = new DatabaseContext(loginCredentials);
 		
 		userIdManager = new UserIdManager(dbCtx);
 		
-		schemaVersionValidator = new SchemaVersionValidator(loginCredentials);
+		schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
 		
 		this.lockTables = lockTables;
 		this.populateCurrentTables = populateCurrentTables;
@@ -312,9 +309,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 */
 	private void initialize() {
 		if (!initialized) {
-			if (preferences.getValidateSchemaVersion()) {
-				schemaVersionValidator.validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
-			}
+			schemaVersionValidator.validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
 			
 			bulkNodeStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_NODE);
 			singleNodeStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_NODE);

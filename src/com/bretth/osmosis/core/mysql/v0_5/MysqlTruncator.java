@@ -36,7 +36,6 @@ public class MysqlTruncator implements RunnableTask {
 	
 	
 	private DatabaseContext dbCtx;
-	private DatabasePreferences preferences;
 	private SchemaVersionValidator schemaVersionValidator;
 	
 	
@@ -49,11 +48,9 @@ public class MysqlTruncator implements RunnableTask {
 	 *            Contains preferences configuring database behaviour.
 	 */
 	public MysqlTruncator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
-		this.preferences = preferences;
-		
 		dbCtx = new DatabaseContext(loginCredentials);
 		
-		schemaVersionValidator = new SchemaVersionValidator(loginCredentials);
+		schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
 	}
 	
 	
@@ -62,9 +59,7 @@ public class MysqlTruncator implements RunnableTask {
 	 */
 	public void run() {
 		try {
-			if (preferences.getValidateSchemaVersion()) {
-				schemaVersionValidator.validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
-			}
+			schemaVersionValidator.validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
 			
 			for (int i = 0; i < SQL_STATEMENTS.length; i++) {
 				dbCtx.executeStatement(SQL_STATEMENTS[i]);

@@ -40,6 +40,11 @@ public interface DatabaseConstants {
 	static final String TASK_ARG_VALIDATE_SCHEMA_VERSION = "validateSchemaVersion";
 	
 	/**
+	 * The task argument for specifying what should occur if an invalid schema version is encountered.
+	 */
+	static final String TASK_ARG_ALLOW_INCORRECT_SCHEMA_VERSION = "allowIncorrectSchemaVersion";
+	
+	/**
 	 * The task argument for forcing a utf-8 database connection.
 	 */
 	static final String TASK_ARG_FORCE_UTF8 = "forceUtf8";
@@ -73,6 +78,11 @@ public interface DatabaseConstants {
 	 * The default value for whether schema version validation should be performed.
 	 */
 	static final boolean TASK_DEFAULT_VALIDATE_SCHEMA_VERSION = true;
+	
+	/**
+	 * The default value for whether the program should allow an incorrect schema version. 
+	 */
+	static final boolean TASK_ALLOW_INCORRECT_SCHEMA_VERSION = false;
 	
 	/**
 	 * The default value for forcing a utf-8 connection.

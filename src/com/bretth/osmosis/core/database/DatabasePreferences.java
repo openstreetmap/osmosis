@@ -9,6 +9,7 @@ package com.bretth.osmosis.core.database;
  */
 public class DatabasePreferences {
 	private boolean validateSchemaVersion;
+	private boolean allowIncorrectSchemaVersion;
 	
 	
 	/**
@@ -16,9 +17,13 @@ public class DatabasePreferences {
 	 * 
 	 * @param validateSchemaVersion
 	 *            Specifies whether a schema version check should be performed.
+	 * @param allowIncorrectSchemaVersion
+	 *            Defines behaviour on an incorrect schema version. If true, a
+	 *            warning will be logged. If false, execution will abort.
 	 */
-	public DatabasePreferences(boolean validateSchemaVersion) {
+	public DatabasePreferences(boolean validateSchemaVersion, boolean allowIncorrectSchemaVersion) {
 		this.validateSchemaVersion = validateSchemaVersion;
+		this.allowIncorrectSchemaVersion = allowIncorrectSchemaVersion;
 	}
 	
 	
@@ -40,5 +45,26 @@ public class DatabasePreferences {
 	 */
 	public void setValidateSchemaVersion(boolean validateSchemaVersion) {
 		this.validateSchemaVersion = validateSchemaVersion;
+	}
+	
+	
+	/**
+	 * Returns the allowIncorrectSchemaVersion flag.
+	 * 
+	 * @return The allowIncorrectSchemaVersion value.
+	 */
+	public boolean getAllowIncorrectSchemaVersion() {
+		return allowIncorrectSchemaVersion;
+	}
+	
+	
+	/**
+	 * Updates the allowIncorrectSchemaVersion flag.
+	 * 
+	 * @param allowIncorrectSchemaVersion
+	 *            The new allowIncorrectSchemaVersion value.
+	 */
+	public void setAllowIncorrectVersion(boolean allowIncorrectSchemaVersion) {
+		this.allowIncorrectSchemaVersion = allowIncorrectSchemaVersion;
 	}
 }

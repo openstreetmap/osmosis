@@ -25,6 +25,8 @@ public class Configuration {
 	private static final String KEY_CHANGE_FILE_END_FORMAT = "changeFileEndFormat";
 	private static final String KEY_ENABLE_PROD_ENCODING_HACK = "enableProdEncodingHack";
 	private static final String KEY_READ_FULL_HISTORY = "readFullHistory";
+	private static final String KEY_VALIDATE_SCHEMA_VERSION = "validateSchemaVersion";
+	private static final String KEY_ALLOW_INCORRECT_SCHEMA_VERSION = "allowIncorrectSchemaVersion";
 	
 	
 	private Properties properties;
@@ -165,5 +167,25 @@ public class Configuration {
 	 */
 	public boolean getReadFullHistory() {
 		return Boolean.valueOf(properties.getProperty(KEY_READ_FULL_HISTORY));
+	}
+	
+	
+	/**
+	 * Returns the validate schema version flag.
+	 * 
+	 * @return The validate schema version flag.
+	 */
+	public boolean getValidateSchemaVersion() {
+		return Boolean.valueOf(properties.getProperty(KEY_VALIDATE_SCHEMA_VERSION));
+	}
+	
+	
+	/**
+	 * Returns the validate schema version flag.
+	 * 
+	 * @return The validate schema version flag.
+	 */
+	public boolean getAllowIncorrectSchemaVersion() {
+		return Boolean.valueOf(properties.getProperty(KEY_ALLOW_INCORRECT_SCHEMA_VERSION));
 	}
 }

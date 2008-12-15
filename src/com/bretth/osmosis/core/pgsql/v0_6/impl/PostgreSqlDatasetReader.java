@@ -89,9 +89,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 		if (dbCtx == null) {
 			dbCtx = new DatabaseContext(loginCredentials);
 			
-			if (preferences.getValidateSchemaVersion()) {
-				new SchemaVersionValidator(loginCredentials).validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
-			}
+			new SchemaVersionValidator(loginCredentials, preferences).validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
 			
 			capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 			nodeDao = new NodeDao(dbCtx);

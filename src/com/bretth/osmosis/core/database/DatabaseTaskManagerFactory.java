@@ -113,7 +113,10 @@ public abstract class DatabaseTaskManagerFactory extends TaskManagerFactory {
 		DatabasePreferences preferences;
 		
 		// Create a new preferences object with default values.
-		preferences = new DatabasePreferences(DatabaseConstants.TASK_DEFAULT_VALIDATE_SCHEMA_VERSION);
+		preferences = new DatabasePreferences(
+			DatabaseConstants.TASK_DEFAULT_VALIDATE_SCHEMA_VERSION,
+			DatabaseConstants.TASK_ALLOW_INCORRECT_SCHEMA_VERSION
+		);
 		
 		// Update the preferences with any explicit arguments provided on the
 		// command line.
@@ -122,6 +125,13 @@ public abstract class DatabaseTaskManagerFactory extends TaskManagerFactory {
 				taskConfig,
 				DatabaseConstants.TASK_ARG_VALIDATE_SCHEMA_VERSION,
 				preferences.getValidateSchemaVersion()
+			)
+		);
+		preferences.setAllowIncorrectVersion(
+			getBooleanArgument(
+				taskConfig,
+				DatabaseConstants.TASK_ARG_ALLOW_INCORRECT_SCHEMA_VERSION,
+				preferences.getAllowIncorrectSchemaVersion()
 			)
 		);
 		

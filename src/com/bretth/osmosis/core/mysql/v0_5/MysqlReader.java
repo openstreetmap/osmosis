@@ -150,9 +150,7 @@ public class MysqlReader implements RunnableSource {
 	 */
 	public void run() {
 		try {
-			if (preferences.getValidateSchemaVersion()) {
-				new SchemaVersionValidator(loginCredentials).validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
-			}
+			new SchemaVersionValidator(loginCredentials, preferences).validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
 			
 			sink.process(new BoundContainer(new Bound("Osmosis " + OsmosisConstants.VERSION)));
 			processNodes();

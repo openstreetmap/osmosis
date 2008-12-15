@@ -3,9 +3,11 @@ package com.bretth.osmosis.core.mysql.v0_5.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 
 
@@ -16,8 +18,11 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  * @author Brett Henderson
  */
 public class SchemaVersionValidator {
+	private static Logger log = Logger.getLogger(SchemaVersionValidator.class.getName());
+	
 	private static final String SELECT_SQL = "SELECT version FROM schema_info";
 	
+	private DatabasePreferences preferences;
 	private DatabaseContext dbCtx;
 	private boolean validated;
 	
@@ -27,8 +32,11 @@ public class SchemaVersionValidator {
 	 * 
 	 * @param loginCredentials
 	 *            Contains all information required to connect to the database.
+	 * @param preferences
+	 *            The database preferences.
 	 */
-	public SchemaVersionValidator(DatabaseLoginCredentials loginCredentials) {
+	public SchemaVersionValidator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
+		this.preferences = preferences;
 		dbCtx = new DatabaseContext(loginCredentials);
 	}
 	
@@ -57,31 +65,41 @@ public class SchemaVersionValidator {
 	 *            The expected version number.
 	 */
 	private void validateDBVersion(int expectedVersion) {
-		try {
-			ResultSet resultSet;
-			int dbVersion;
-			
-			resultSet = dbCtx.executeStreamingQuery(SELECT_SQL);
-			
-			if (!resultSet.next()) {
-				throw new OsmosisRuntimeException("No rows were found in the schema info table.");
+		if (preferences.getValidateSchemaVersion()) {
+			try {
+				ResultSet resultSet;
+				int dbVersion;
+				
+				resultSet = dbCtx.executeStreamingQuery(SELECT_SQL);
+				
+				if (!resultSet.next()) {
+					throw new OsmosisRuntimeException("No rows were found in the schema info table.");
+				}
+				
+				dbVersion = resultSet.getInt("version");
+				
+				if (dbVersion != expectedVersion) {
+					String message;
+					
+					message =
+						"The database schema version of " + dbVersion +
+						" does not match the expected version of " +
+						expectedVersion + ".";
+					
+					if (preferences.getAllowIncorrectSchemaVersion()) {
+						log.warning(message);
+					} else {
+						throw new OsmosisRuntimeException(message);
+					}
+				}
+				
+				resultSet.close();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to read the schema version from the schema info table.", e);
+			} finally {
+				cleanup();
 			}
-			
-			dbVersion = resultSet.getInt("version");
-			
-			if (dbVersion != expectedVersion) {
-				throw new OsmosisRuntimeException(
-					"The database schema version of " + dbVersion +
-					" does not match the expected version of " + expectedVersion + "."
-				);
-			}
-			
-			resultSet.close();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to read the schema version from the schema info table.", e);
-		} finally {
-			cleanup();
 		}
 	}
 	

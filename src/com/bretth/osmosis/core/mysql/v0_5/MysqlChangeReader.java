@@ -118,9 +118,8 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	 */
 	public void run() {
 		try {
-			if (preferences.getValidateSchemaVersion()) {
-				new SchemaVersionValidator(loginCredentials).validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
-			}
+			new SchemaVersionValidator(loginCredentials, preferences).validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
+			
 			processNodes();
 			processWays();
 			processRelations();
