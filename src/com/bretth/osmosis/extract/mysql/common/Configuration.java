@@ -69,13 +69,26 @@ public class Configuration {
 	}
 	
 	
+	private String getProperty(String propertyName) {
+		String value;
+		
+		value = properties.getProperty(propertyName);
+		
+		if (value == null) {
+			throw new OsmosisRuntimeException("Property " + propertyName + " cannot be found.");
+		}
+		
+		return value;
+	}
+	
+	
 	/**
 	 * Returns the database host.
 	 * 
 	 * @return The database host.
 	 */
 	public String getHost() {
-		return properties.getProperty(KEY_HOST);
+		return getProperty(KEY_HOST);
 	}
 	
 	
@@ -85,7 +98,7 @@ public class Configuration {
 	 * @return The database instance.
 	 */
 	public String getDatabase() {
-		return properties.getProperty(KEY_DATABASE);
+		return getProperty(KEY_DATABASE);
 	}
 	
 	
@@ -95,7 +108,7 @@ public class Configuration {
 	 * @return The database user.
 	 */
 	public String getUser() {
-		return properties.getProperty(KEY_USER);
+		return getProperty(KEY_USER);
 	}
 	
 	
@@ -105,7 +118,7 @@ public class Configuration {
 	 * @return The database password.
 	 */
 	public String getPassword() {
-		return properties.getProperty(KEY_PASSWORD);
+		return getProperty(KEY_PASSWORD);
 	}
 	
 	
@@ -115,7 +128,7 @@ public class Configuration {
 	 * @return The interval length in milliseconds.
 	 */
 	public int getIntervalLength() {
-		return Integer.parseInt(properties.getProperty(KEY_INTERVAL_LENGTH)) * 1000;
+		return Integer.parseInt(getProperty(KEY_INTERVAL_LENGTH)) * 1000;
 	}
 	
 	
@@ -126,7 +139,7 @@ public class Configuration {
 	 * @return The lag length in milliseconds.
 	 */
 	public int getLagLength() {
-		return Integer.parseInt(properties.getProperty(KEY_LAG_LENGTH)) * 1000;
+		return Integer.parseInt(getProperty(KEY_LAG_LENGTH)) * 1000;
 	}
 	
 	
@@ -136,7 +149,7 @@ public class Configuration {
 	 * @return The format.
 	 */
 	public String getChangeFileBeginFormat() {
-		return properties.getProperty(KEY_CHANGE_FILE_BEGIN_FORMAT);
+		return getProperty(KEY_CHANGE_FILE_BEGIN_FORMAT);
 	}
 	
 	
@@ -146,7 +159,7 @@ public class Configuration {
 	 * @return The format.
 	 */
 	public String getChangeFileEndFormat() {
-		return properties.getProperty(KEY_CHANGE_FILE_END_FORMAT);
+		return getProperty(KEY_CHANGE_FILE_END_FORMAT);
 	}
 	
 	
@@ -156,7 +169,7 @@ public class Configuration {
 	 * @return The production encoding hack flag.
 	 */
 	public boolean getEnableProductionEncodingHack() {
-		return Boolean.valueOf(properties.getProperty(KEY_ENABLE_PROD_ENCODING_HACK));
+		return Boolean.valueOf(getProperty(KEY_ENABLE_PROD_ENCODING_HACK));
 	}
 	
 	
@@ -166,7 +179,7 @@ public class Configuration {
 	 * @return The full history flag.
 	 */
 	public boolean getReadFullHistory() {
-		return Boolean.valueOf(properties.getProperty(KEY_READ_FULL_HISTORY));
+		return Boolean.valueOf(getProperty(KEY_READ_FULL_HISTORY));
 	}
 	
 	
@@ -176,7 +189,7 @@ public class Configuration {
 	 * @return The validate schema version flag.
 	 */
 	public boolean getValidateSchemaVersion() {
-		return Boolean.valueOf(properties.getProperty(KEY_VALIDATE_SCHEMA_VERSION));
+		return Boolean.valueOf(getProperty(KEY_VALIDATE_SCHEMA_VERSION));
 	}
 	
 	
@@ -186,6 +199,6 @@ public class Configuration {
 	 * @return The validate schema version flag.
 	 */
 	public boolean getAllowIncorrectSchemaVersion() {
-		return Boolean.valueOf(properties.getProperty(KEY_ALLOW_INCORRECT_SCHEMA_VERSION));
+		return Boolean.valueOf(getProperty(KEY_ALLOW_INCORRECT_SCHEMA_VERSION));
 	}
 }
