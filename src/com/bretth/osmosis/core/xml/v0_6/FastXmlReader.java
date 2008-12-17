@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 import javax.xml.stream.XMLInputFactory;
 
-import org.codehaus.stax2.XMLInputFactory2;
 import org.codehaus.stax2.XMLStreamReader2;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
@@ -86,10 +85,10 @@ public class FastXmlReader implements RunnableSource {
 					new CompressionActivator(compressionMethod).
 						createCompressionInputStream(inputStream);
 				
-		        XMLInputFactory factory = XMLInputFactory2.newInstance();
-		        factory.setProperty(XMLInputFactory2.IS_COALESCING, false);
-		        factory.setProperty(XMLInputFactory2.IS_NAMESPACE_AWARE, false);
-		        factory.setProperty(XMLInputFactory2.IS_VALIDATING, false);
+		        XMLInputFactory factory = XMLInputFactory.newInstance();
+		        factory.setProperty(XMLInputFactory.IS_COALESCING, false);
+		        factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, false);
+		        factory.setProperty(XMLInputFactory.IS_VALIDATING, false);
 		        XMLStreamReader2 xpp = (XMLStreamReader2)factory.createXMLStreamReader(inputStream);
 				
 				parser = new FastXmlParser(sink, xpp, enableDateParsing);

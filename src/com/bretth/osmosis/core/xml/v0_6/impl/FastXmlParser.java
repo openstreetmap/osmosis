@@ -4,8 +4,8 @@ import java.util.Calendar;
 import java.util.logging.Logger;
 
 import javax.xml.stream.Location;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import org.codehaus.stax2.XMLStreamReader2;
 
@@ -107,9 +107,9 @@ public class FastXmlParser {
 				reader.getName(), l.getPublicId(), l.getSystemId(), l.getLineNumber(), l.getColumnNumber()));
 		
 		do {
-			if (reader.getEventType() == XMLStreamReader.START_ELEMENT) {
+			if (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
 				level++;
-			} else if (reader.getEventType() == XMLStreamReader.END_ELEMENT) {
+			} else if (reader.getEventType() == XMLStreamConstants.END_ELEMENT) {
 				level--;
 			}
 			reader.nextTag();
@@ -214,7 +214,7 @@ public class FastXmlParser {
 		Node node = new Node(id, version, timestamp, user, latitude, longitude);
 		
 		reader.nextTag();
-		while (reader.getEventType() == XMLStreamReader.START_ELEMENT) {
+		while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
 			if (reader.getLocalName().equals(ELEMENT_NAME_TAG)) {
 				node.addTag(readTag());
 			} else {
@@ -252,7 +252,7 @@ public class FastXmlParser {
 		Way way = new Way(id, version, timestamp, user);
 		
 		reader.nextTag();
-		while (reader.getEventType() == XMLStreamReader.START_ELEMENT) {
+		while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
 			if (reader.getLocalName().equals(ELEMENT_NAME_TAG)) {
 				way.addTag(readTag());
 			} else if (reader.getLocalName().equals(ELEMENT_NAME_NODE_REFERENCE)) {
@@ -300,7 +300,7 @@ public class FastXmlParser {
 		Relation relation = new Relation(id, version, timestamp, user);
 		
 		reader.nextTag();
-		while (reader.getEventType() == XMLStreamReader.START_ELEMENT) {
+		while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
 			if (reader.getLocalName().equals(ELEMENT_NAME_TAG)) {
 				relation.addTag(readTag());
 			} else if (reader.getLocalName().equals(ELEMENT_NAME_MEMBER)) {
@@ -318,7 +318,7 @@ public class FastXmlParser {
 		
 		try {
 		
-			if (reader.nextTag() == XMLStreamReader.START_ELEMENT && reader.getLocalName().equals("osm")) {
+			if (reader.nextTag() == XMLStreamConstants.START_ELEMENT && reader.getLocalName().equals("osm")) {
 
 				String fileVersion;
 
@@ -334,12 +334,12 @@ public class FastXmlParser {
 				reader.nextTag();
 				
 
-				if (reader.getEventType() == XMLStreamReader.START_ELEMENT
+				if (reader.getEventType() == XMLStreamConstants.START_ELEMENT
 						&& reader.getLocalName().equals(ELEMENT_NAME_BOUND)) {
 					sink.process(new BoundContainer(readBound()));
 				}
 
-				while (reader.getEventType() == XMLStreamReader.START_ELEMENT) {			
+				while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {			
 					// Node, way, relation
 					if (reader.getLocalName().equals(ELEMENT_NAME_NODE)) {
 						sink.process(new NodeContainer(readNode()));

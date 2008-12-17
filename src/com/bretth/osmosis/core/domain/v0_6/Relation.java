@@ -12,7 +12,6 @@ import com.bretth.osmosis.core.domain.common.TimestampContainer;
 import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
 import com.bretth.osmosis.core.store.StoreWriter;
-import com.bretth.osmosis.core.store.Storeable;
 import com.bretth.osmosis.core.util.IntAsChar;
 
 
@@ -21,7 +20,7 @@ import com.bretth.osmosis.core.util.IntAsChar;
  * 
  * @author Brett Henderson
  */
-public class Relation extends Entity implements Comparable<Relation>, Storeable {
+public class Relation extends Entity implements Comparable<Relation> {
 	private static final long serialVersionUID = 1L;
 	
 	

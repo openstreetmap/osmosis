@@ -47,6 +47,7 @@ public class MultiMemberGZIPInputStream extends GZIPInputStream {
 	private int size;
 	private boolean eos;
 
+	@Override
 	public int read(byte[] inputBuffer, int inputBufferOffset,
 			int inputBufferLen) throws IOException {
 
@@ -85,12 +86,12 @@ public class MultiMemberGZIPInputStream extends GZIPInputStream {
 					((PushbackInputStream) this.in).unread(b, 0, 1);
 			}
 
-			MultiMemberGZIPInputStream child;
+			MultiMemberGZIPInputStream tmpChild;
 			if (this.size == -1)
-				child = new MultiMemberGZIPInputStream(this);
+				tmpChild = new MultiMemberGZIPInputStream(this);
 			else
-				child = new MultiMemberGZIPInputStream(this, this.size);
-			return child.read(inputBuffer, inputBufferOffset, inputBufferLen);
+				tmpChild = new MultiMemberGZIPInputStream(this, this.size);
+			return tmpChild.read(inputBuffer, inputBufferOffset, inputBufferLen);
 		} else
 			return charsRead;
 	}
