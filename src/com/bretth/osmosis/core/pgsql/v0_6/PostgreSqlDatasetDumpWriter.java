@@ -23,6 +23,7 @@ import com.bretth.osmosis.core.pgsql.common.CopyFileWriter;
 import com.bretth.osmosis.core.pgsql.common.PointBuilder;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.ChangesetAction;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.MemberTypeValueMapper;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.NodeLocationStoreType;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.WayGeometryBuilder;
 import com.bretth.osmosis.core.task.v0_6.Sink;
 
@@ -46,8 +47,8 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 	private static final String RELATION_MEMBER_SUFFIX = "relation_members.txt";
 	
 	
-	private boolean enableInMemoryBbox;
-	private boolean enableInMemoryLinestring;
+	private boolean enableBboxBuilder;
+	private boolean enableLinestringBuilder;
 	private WayGeometryBuilder wayGeometryBuilder;
 	private CompletableContainer writerContainer;
 	private MemberTypeValueMapper memberTypeValueMapper;
@@ -62,25 +63,29 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 	private CopyFileWriter relationMemberWriter;
 	private PointBuilder pointBuilder;
 	private Set<Integer> userSet;
-
-
+	
+	
 	/**
 	 * Creates a new instance.
 	 * 
 	 * @param filePrefix
 	 *            The prefix to prepend to all generated file names.
-	 * @param enableInMemoryBBox
-	 *            If true, an in-memory bounding box calculator is enabled for
-	 *            way creation. This requires caching the lat and lon values for
-	 *            all nodes.
-	 * @param enableInMemoryLinestring
-	 *            If true, an in-memory linestring calculator is enabled for way
-	 *            creation. This requires caching the lat and lon values for all
-	 *            nodes.
+	 * @param enableBboxBuilder
+	 *            If true, the way bbox geometry is built during processing
+	 *            instead of relying on the database to build them after import.
+	 *            This increases processing but is faster than relying on the
+	 *            database.
+	 * @param enableLinestringBuilder
+	 *            If true, the way linestring geometry is built during
+	 *            processing instead of relying on the database to build them
+	 *            after import. This increases processing but is faster than
+	 *            relying on the database.
+	 * @param storeType
+	 *            The node location storage type used by the geometry builders.
 	 */
-	public PostgreSqlDatasetDumpWriter(File filePrefix, boolean enableInMemoryBBox, boolean enableInMemoryLinestring) {
-		this.enableInMemoryBbox = enableInMemoryBBox;
-		this.enableInMemoryLinestring = enableInMemoryLinestring;
+	public PostgreSqlDatasetDumpWriter(File filePrefix, boolean enableBboxBuilder, boolean enableLinestringBuilder, NodeLocationStoreType storeType) {
+		this.enableBboxBuilder = enableBboxBuilder;
+		this.enableLinestringBuilder = enableLinestringBuilder;
 		
 		writerContainer = new CompletableContainer();
 		
@@ -95,7 +100,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		relationMemberWriter = writerContainer.add(new CopyFileWriter(new File(filePrefix, RELATION_MEMBER_SUFFIX)));
 		
 		pointBuilder = new PointBuilder();
-		wayGeometryBuilder = new WayGeometryBuilder();
+		wayGeometryBuilder = new WayGeometryBuilder(storeType);
 		memberTypeValueMapper = new MemberTypeValueMapper();
 		
 		userSet = new HashSet<Integer>();
@@ -156,7 +161,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 			nodeTagWriter.endRecord();
 		}
 		
-		if (enableInMemoryBbox || enableInMemoryLinestring) {
+		if (enableBboxBuilder || enableLinestringBuilder) {
 			wayGeometryBuilder.addNodeLocation(node);
 		}
 	}
@@ -178,10 +183,10 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 			wayWriter.writeField(way.getUser().getId());
 			wayWriter.writeField(way.getTimestamp());
 			wayWriter.writeField(ChangesetAction.CREATE.getDatabaseValue());
-			if (enableInMemoryBbox) {
+			if (enableBboxBuilder) {
 				wayWriter.writeField(wayGeometryBuilder.createWayBbox(way));
 			}
-			if (enableInMemoryLinestring) {
+			if (enableLinestringBuilder) {
 				wayWriter.writeField(wayGeometryBuilder.createWayLinestring(way));
 			}
 			wayWriter.endRecord();

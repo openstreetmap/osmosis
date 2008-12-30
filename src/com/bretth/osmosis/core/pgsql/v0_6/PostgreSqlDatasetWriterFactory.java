@@ -4,6 +4,7 @@ package com.bretth.osmosis.core.pgsql.v0_6;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.database.DatabaseTaskManagerFactory;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.NodeLocationStoreType;
 import com.bretth.osmosis.core.pipeline.common.TaskConfiguration;
 import com.bretth.osmosis.core.pipeline.common.TaskManager;
 import com.bretth.osmosis.core.pipeline.v0_6.SinkManager;
@@ -15,10 +16,12 @@ import com.bretth.osmosis.core.pipeline.v0_6.SinkManager;
  * @author Brett Henderson
  */
 public class PostgreSqlDatasetWriterFactory extends DatabaseTaskManagerFactory {
-	private static final String ARG_IN_MEMORY_BBOX = "inMemoryBbox";
-	private static final String ARG_IN_MEMORY_LINESTRING = "inMemoryLinestring";
-	private static final boolean DEFAULT_IN_MEMORY_BBOX = false;
-	private static final boolean DEFAULT_IN_MEMORY_LINESTRING = false;
+	private static final String ARG_ENABLE_BBOX_BUILDER = "enableBboxBuilder";
+	private static final String ARG_ENABLE_LINESTRING_BUILDER = "enableLinestringBuilder";
+	private static final String ARG_NODE_LOCATION_STORE_TYPE = "nodeLocationStoreType";
+	private static final boolean DEFAULT_ENABLE_BBOX_BUILDER = false;
+	private static final boolean DEFAULT_ENABLE_LINESTRING_BUILDER = false;
+	private static final String DEFAULT_NODE_LOCATION_STORE_TYPE = "InMemory";
 	
 	/**
 	 * {@inheritDoc}
@@ -27,18 +30,20 @@ public class PostgreSqlDatasetWriterFactory extends DatabaseTaskManagerFactory {
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		DatabaseLoginCredentials loginCredentials;
 		DatabasePreferences preferences;
-		boolean inMemoryBbox;
-		boolean inMemoryLinestring;
+		boolean enableBboxBuilder;
+		boolean enableLinestringBuilder;
+		NodeLocationStoreType storeType;
 		
 		// Get the task arguments.
 		loginCredentials = getDatabaseLoginCredentials(taskConfig);
 		preferences = getDatabasePreferences(taskConfig);
-		inMemoryBbox = getBooleanArgument(taskConfig, ARG_IN_MEMORY_BBOX, DEFAULT_IN_MEMORY_BBOX);
-		inMemoryLinestring = getBooleanArgument(taskConfig, ARG_IN_MEMORY_LINESTRING, DEFAULT_IN_MEMORY_LINESTRING);
+		enableBboxBuilder = getBooleanArgument(taskConfig, ARG_ENABLE_BBOX_BUILDER, DEFAULT_ENABLE_BBOX_BUILDER);
+		enableLinestringBuilder = getBooleanArgument(taskConfig, ARG_ENABLE_LINESTRING_BUILDER, DEFAULT_ENABLE_LINESTRING_BUILDER);
+		storeType = Enum.valueOf(NodeLocationStoreType.class, getStringArgument(taskConfig, ARG_NODE_LOCATION_STORE_TYPE, DEFAULT_NODE_LOCATION_STORE_TYPE));
 		
 		return new SinkManager(
 			taskConfig.getId(),
-			new PostgreSqlWriter(loginCredentials, preferences, inMemoryBbox, inMemoryLinestring),
+			new PostgreSqlWriter(loginCredentials, preferences, enableBboxBuilder, enableLinestringBuilder, storeType),
 			taskConfig.getPipeArgs()
 		);
 	}

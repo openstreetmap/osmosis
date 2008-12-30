@@ -1,15 +1,7 @@
 package com.bretth.osmosis.core.pgsql.v0_6.impl;
 
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.postgis.Geometry;
 import org.postgis.LineString;
@@ -22,9 +14,6 @@ import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.domain.v0_6.Way;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.lifecycle.Releasable;
-import com.bretth.osmosis.core.store.BufferedRandomAccessFileInputStream;
-import com.bretth.osmosis.core.store.StorageStage;
-import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
 
 /**
@@ -34,97 +23,22 @@ import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  * @author Brett Henderson
  */
 public class WayGeometryBuilder implements Releasable {
-	
-	private static final Logger log = Logger.getLogger(WayGeometryBuilder.class.getName());
-	private static final int ZERO_BUFFER_SIZE = 1024 * 1024;
-	private static final int NODE_DATA_SIZE = 9;
-	
-	private File nodeStorageFile;
-	private StorageStage stage;
-	private long lastNodeId;
-	private FileOutputStream fileOutStream;
-	private DataOutputStream dataOutStream;
-	private BufferedRandomAccessFileInputStream fileInStream;
-	private DataInputStream dataInStream;
-	private long currentFileOffset;
-	private byte[] zeroBuffer;
+	private NodeLocationStore locationStore;
 	
 	
 	/**
 	 * Creates a new instance.
+	 * 
+	 * @param storeType
+	 *            The type of storage to use for holding node locations.
 	 */
-	public WayGeometryBuilder() {
-		stage = StorageStage.NotStarted;
-		
-		lastNodeId = Long.MIN_VALUE;
-		
-		zeroBuffer = new byte[ZERO_BUFFER_SIZE];
-		Arrays.fill(zeroBuffer, (byte) 0);
-	}
-	
-	
-	private void initializeAddStage() {
-		// We can't add if we've passed the add stage.
-		if (stage.compareTo(StorageStage.Add) > 0) {
-			throw new OsmosisRuntimeException("Cannot add to storage in stage " + stage + ".");
-		}
-		
-		// If we're not up to the add stage, initialise for adding.
-		if (stage.compareTo(StorageStage.Add) < 0) {
-			try {
-				nodeStorageFile = File.createTempFile("nodelatlon", null);
-				
-				fileOutStream = new FileOutputStream(nodeStorageFile);
-				dataOutStream = new DataOutputStream(new BufferedOutputStream(fileOutStream, 65536));
-				currentFileOffset = 0;
-				
-				stage = StorageStage.Add;
-				
-			} catch (IOException e) {
-				throw new OsmosisRuntimeException("Unable to create object stream writing to temporary file " + nodeStorageFile + ".", e);
-			}
-		}
-	}
-	
-	
-	private void initializeReadingStage() {
-		// If we're already in the reading stage, do nothing.
-		if (stage.compareTo(StorageStage.Reading) == 0) {
-			return;
-		}
-		
-		// If we've been released, we can't iterate.
-		if (stage.compareTo(StorageStage.Released) >= 0) {
-			throw new OsmosisRuntimeException("Cannot read from node storage in stage " + stage + ".");
-		}
-		
-		// If no data was written, writing should be initialized before reading.
-		if (stage.compareTo(StorageStage.NotStarted) <= 0) {
-			initializeAddStage();
-		}
-		
-		// If we're in the add stage, close the output streams.
-		if (stage.compareTo(StorageStage.Add) == 0) {
-			try {
-				dataOutStream.close();
-				fileOutStream.close();
-				
-			} catch (IOException e) {
-				throw new OsmosisRuntimeException("Unable to close output stream.", e);
-			} finally {
-				dataOutStream = null;
-				fileOutStream = null;
-			}
-			
-			try {
-				fileInStream = new BufferedRandomAccessFileInputStream(nodeStorageFile);
-				dataInStream = new DataInputStream(fileInStream);
-				
-			} catch (IOException e) {
-				throw new OsmosisRuntimeException("Unable to open the node data file " + nodeStorageFile + ".", e);
-			}
-			
-			stage = StorageStage.Reading;
+	public WayGeometryBuilder(NodeLocationStoreType storeType) {
+		if (NodeLocationStoreType.InMemory.equals(storeType)) {
+			locationStore = new InMemoryNodeLocationStore();
+		} else if (NodeLocationStoreType.TempFile.equals(storeType)) {
+			locationStore = new PersistentNodeLocationStore();
+		} else {
+			throw new OsmosisRuntimeException("The store type " + storeType + " is not recognized.");
 		}
 	}
 	
@@ -136,54 +50,7 @@ public class WayGeometryBuilder implements Releasable {
 	 *            The node to add.
 	 */
 	public void addNodeLocation(Node node) {
-		long nodeId;
-		long requiredFileOffset;
-		
-		initializeAddStage();
-		
-		// We can only add nodes in sorted order.
-		nodeId = node.getId();
-		if (nodeId <= lastNodeId) {
-			throw new OsmosisRuntimeException(
-				"The node id of " + nodeId +
-				" must be greater than the previous id of " +
-				lastNodeId + "."
-			);
-		}
-		lastNodeId = nodeId;
-		
-		try {
-			// Write zeros to the file where no node data is available.
-			requiredFileOffset = nodeId * NODE_DATA_SIZE;
-			if (requiredFileOffset > currentFileOffset) {
-				while (currentFileOffset < requiredFileOffset) {
-					long offsetDifference;
-					
-					offsetDifference = requiredFileOffset - currentFileOffset;
-					if (offsetDifference > ZERO_BUFFER_SIZE) {
-						offsetDifference = ZERO_BUFFER_SIZE;
-					}
-					
-					dataOutStream.write(zeroBuffer, 0, (int) offsetDifference);
-					
-					currentFileOffset += offsetDifference;
-				}
-			}
-			
-			// Write the node data. Prefix with a non-zero byte to identify that
-			// data is available for this node.
-			dataOutStream.writeByte(1);
-			dataOutStream.writeInt(FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
-			dataOutStream.writeInt(FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
-			currentFileOffset += NODE_DATA_SIZE;
-			
-		} catch (IOException e) {
-			throw new OsmosisRuntimeException(
-				"Unable to write node location data to node storage file " +
-				nodeStorageFile + ".",
-				e
-			);
-		}
+		locationStore.addLocation(node.getId(), new NodeLocation(node.getLongitude(), node.getLatitude()));
 	}
 	
 	
@@ -216,43 +83,6 @@ public class WayGeometryBuilder implements Releasable {
 		
 		return lineString;
 	}
-
-
-	/**
-	 * Retrieves node location information from the temporary data file.
-	 * 
-	 * @param nodeId
-	 *            The id of the node to retrieve.
-	 * @return The node location details.
-	 */
-	private NodeLocation getNodeLocation(long nodeId) {
-		NodeLocation nodeLocation;
-		long offset;
-		
-		offset = nodeId * NODE_DATA_SIZE;
-		
-		nodeLocation = new NodeLocation();
-		
-		if (offset < currentFileOffset) {
-			try {
-				byte validFlag;
-				
-				fileInStream.seek(offset);
-				validFlag = dataInStream.readByte();
-				
-				if (validFlag != 0) {
-					nodeLocation.validFlag = true;
-					nodeLocation.longitude = FixedPrecisionCoordinateConvertor.convertToDouble(dataInStream.readInt());
-					nodeLocation.latitude = FixedPrecisionCoordinateConvertor.convertToDouble(dataInStream.readInt());
-				}
-				
-			} catch (IOException e) {
-				throw new OsmosisRuntimeException("Unable to read node information from the node storage file.", e);
-			}
-		}
-		
-		return nodeLocation;
-	}
 	
 	
 	/**
@@ -270,8 +100,6 @@ public class WayGeometryBuilder implements Releasable {
 		double bottom;
 		boolean nodesFound;
 		
-		initializeReadingStage();
-		
 		nodesFound = false;
 		left = 0;
 		right = 0;
@@ -279,28 +107,32 @@ public class WayGeometryBuilder implements Releasable {
 		top = 0;
 		for (WayNode wayNode : way.getWayNodeList()) {
 			NodeLocation nodeLocation;
+			double longitude;
+			double latitude;
 			
-			nodeLocation = getNodeLocation(wayNode.getNodeId());
+			nodeLocation = locationStore.getNodeLocation(wayNode.getNodeId());
+			longitude = nodeLocation.getLongitude();
+			latitude = nodeLocation.getLatitude();
 			
-			if (nodeLocation.validFlag) {
+			if (nodeLocation.isValid()) {
 				if (nodesFound) {
-					if (nodeLocation.longitude < left) {
-						left = nodeLocation.longitude;
+					if (longitude < left) {
+						left = longitude;
 					}
-					if (nodeLocation.longitude > right) {
-						right = nodeLocation.longitude;
+					if (longitude > right) {
+						right = longitude;
 					}
-					if (nodeLocation.latitude < bottom) {
-						bottom = nodeLocation.latitude;
+					if (latitude < bottom) {
+						bottom = latitude;
 					}
-					if (nodeLocation.latitude > top) {
-						top = nodeLocation.latitude;
+					if (latitude > top) {
+						top = latitude;
 					}
 				} else {
-					left = nodeLocation.longitude;
-					right = nodeLocation.longitude;
-					bottom = nodeLocation.latitude;
-					top = nodeLocation.latitude;
+					left = longitude;
+					right = longitude;
+					bottom = latitude;
+					top = latitude;
 					
 					nodesFound = true;
 				}
@@ -322,16 +154,14 @@ public class WayGeometryBuilder implements Releasable {
 	public Geometry createWayLinestring(Way way) {
 		List<Point> linePoints;
 		
-		initializeReadingStage();
-		
 		linePoints = new ArrayList<Point>();
 		for (WayNode wayNode : way.getWayNodeList()) {
 			NodeLocation nodeLocation;
 			
-			nodeLocation = getNodeLocation(wayNode.getNodeId());
+			nodeLocation = locationStore.getNodeLocation(wayNode.getNodeId());
 			
-			if (nodeLocation.validFlag) {
-				linePoints.add(new Point(nodeLocation.longitude, nodeLocation.latitude));
+			if (nodeLocation.isValid()) {
+				linePoints.add(new Point(nodeLocation.getLongitude(), nodeLocation.getLatitude()));
 			}
 		}
 		
@@ -344,48 +174,6 @@ public class WayGeometryBuilder implements Releasable {
 	 */
 	@Override
 	public void release() {
-		if (fileOutStream != null) {
-			try {
-				fileOutStream.close();
-			} catch (Exception e) {
-				// Do nothing.
-			}
-			fileOutStream = null;
-		}
-		
-		if (fileInStream != null) {
-			try {
-				fileInStream.close();
-			} catch (Exception e) {
-				// Do nothing.
-			}
-			fileInStream = null;
-		}
-		
-		if (nodeStorageFile != null) {
-			if (!nodeStorageFile.delete()) {
-				log.warning("Unable to delete file " + nodeStorageFile);
-			}
-			nodeStorageFile = null;
-		}
-	}
-	
-	
-	/**
-	 * Data structure containing node location information.
-	 * 
-	 * @author Brett Henderson
-	 */
-	private static class NodeLocation {
-		/**
-		 * Creates a new instance.
-		 */
-		public NodeLocation() {
-			validFlag = false;
-		}
-		
-		public boolean validFlag;
-		public double latitude;
-		public double longitude;
+		locationStore.release();
 	}
 }

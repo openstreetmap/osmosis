@@ -33,6 +33,7 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.DatabaseCapabilityChecker;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.NodeBuilder;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.NodeLocationStoreType;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.RelationBuilder;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.RelationMemberBuilder;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.TagBuilder;
@@ -126,8 +127,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	
 	
 	private DatabaseContext dbCtx;
-	private boolean enableInMemoryBbox;
-	private boolean enableInMemoryLinestring;
+	private boolean enableBboxBuilder;
+	private boolean enableLinestringBuilder;
 	private SchemaVersionValidator schemaVersionValidator;
 	private DatabaseCapabilityChecker capabilityChecker;
 	private List<Node> nodeBuffer;
@@ -177,20 +178,24 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 *            Contains all information required to connect to the database.
 	 * @param preferences
 	 *            Contains preferences configuring database behaviour.
-	 * @param enableInMemoryBbox
-	 *            If true, an in-memory bounding box calculator is enabled for
-	 *            way creation. This requires caching the lat and lon values for
-	 *            all nodes.
-	 * @param enableInMemoryLinestring
-	 *            If true, an in-memory linestring calculator is enabled for way
-	 *            creation. This requires caching the lat and lon values for all
-	 *            nodes.
+	 * @param enableBboxBuilder
+	 *            If true, the way bbox geometry is built during processing
+	 *            instead of relying on the database to build them after import.
+	 *            This increases processing but is faster than relying on the
+	 *            database.
+	 * @param enableLinestringBuilder
+	 *            If true, the way linestring geometry is built during
+	 *            processing instead of relying on the database to build them
+	 *            after import. This increases processing but is faster than
+	 *            relying on the database.
+	 * @param storeType
+	 *            The node location storage type used by the geometry builders.
 	 */
-	public PostgreSqlWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean enableInMemoryBbox, boolean enableInMemoryLinestring) {
+	public PostgreSqlWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean enableBboxBuilder, boolean enableLinestringBuilder, NodeLocationStoreType storeType) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		
-		this.enableInMemoryBbox = enableInMemoryBbox;
-		this.enableInMemoryLinestring = enableInMemoryLinestring;
+		this.enableBboxBuilder = enableBboxBuilder;
+		this.enableLinestringBuilder = enableLinestringBuilder;
 		
 		schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
@@ -208,14 +213,14 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		userDao = new UserDao(dbCtx);
 		
 		nodeBuilder = new NodeBuilder();
-		wayBuilder = new WayBuilder(enableInMemoryBbox, enableInMemoryLinestring);
+		wayBuilder = new WayBuilder(enableBboxBuilder, enableLinestringBuilder);
 		relationBuilder = new RelationBuilder();
 		nodeTagBuilder = new TagBuilder(nodeBuilder.getEntityName());
 		wayTagBuilder = new TagBuilder(wayBuilder.getEntityName());
 		relationTagBuilder = new TagBuilder(relationBuilder.getEntityName());
 		wayNodeBuilder = new WayNodeBuilder();
 		relationMemberBuilder = new RelationMemberBuilder();
-		wayGeometryBuilder = new WayGeometryBuilder();
+		wayGeometryBuilder = new WayGeometryBuilder(storeType);
 		
 		uncommittedEntityCount = 0;
 		
@@ -457,10 +462,10 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				processedWays.add(way);
 				
 				geometries = new ArrayList<Geometry>();
-				if (enableInMemoryBbox) {
+				if (enableBboxBuilder) {
 					geometries.add(wayGeometryBuilder.createWayBbox(way));
 				}
-				if (enableInMemoryLinestring) {
+				if (enableLinestringBuilder) {
 					geometries.add(wayGeometryBuilder.createWayLinestring(way));
 				}
 				prmIndex = wayBuilder.populateEntityParameters(bulkWayStatement, prmIndex, way, geometries);
@@ -488,10 +493,10 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				way = wayBuffer.remove(0);
 				
 				geometries = new ArrayList<Geometry>();
-				if (enableInMemoryBbox) {
+				if (enableBboxBuilder) {
 					geometries.add(wayGeometryBuilder.createWayBbox(way));
 				}
-				if (enableInMemoryLinestring) {
+				if (enableLinestringBuilder) {
 					geometries.add(wayGeometryBuilder.createWayLinestring(way));
 				}
 				wayBuilder.populateEntityParameters(singleWayStatement, 1, way, geometries);
@@ -832,7 +837,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		}
 		if (capabilityChecker.isWayBboxSupported()) {
 			log.fine("Running post-load bbox SQL statements.");
-			if (!enableInMemoryBbox) {
+			if (!enableBboxBuilder) {
 				log.finer("SQL: " + POST_LOAD_SQL_POPULATE_WAY_BBOX);
 				dbCtx.executeStatement(POST_LOAD_SQL_POPULATE_WAY_BBOX);
 			}
@@ -843,7 +848,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		}
 		if (capabilityChecker.isWayLinestringSupported()) {
 			log.fine("Running post-load linestring SQL statements.");
-			if (!enableInMemoryLinestring) {
+			if (!enableLinestringBuilder) {
 				log.finer("SQL: " + POST_LOAD_SQL_POPULATE_WAY_LINESTRING);
 				dbCtx.executeStatement(POST_LOAD_SQL_POPULATE_WAY_LINESTRING);
 			}
@@ -890,7 +895,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(NodeContainer nodeContainer) {
-		if (enableInMemoryBbox || enableInMemoryLinestring) {
+		if (enableBboxBuilder || enableLinestringBuilder) {
 			wayGeometryBuilder.addNodeLocation(nodeContainer.getEntity());
 		}
 		
