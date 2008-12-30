@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 
 import org.postgis.Geometry;
 import org.postgis.binary.BinaryWriter;
-import org.postgresql.geometric.PGpoint;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.lifecycle.Completable;
@@ -223,26 +222,6 @@ public class CopyFileWriter implements Completable {
 			separateField();
 			
 			writer.write(dateFormat.format(data));
-			
-		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to write value (" + data + ")", e);
-		}
-	}
-	
-	
-	/**
-	 * Writes data to the output file.
-	 * 
-	 * @param data
-	 *            The data to be written.
-	 */
-	public void writeField(PGpoint data) {
-		initialize();
-		
-		try {
-			separateField();
-			
-			writer.write(data.getValue());
 			
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to write value (" + data + ")", e);
