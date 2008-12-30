@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
@@ -20,6 +21,7 @@ import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
  * @author Brett Henderson
  */
 public class DatabaseContext {
+	private static final Logger log = Logger.getLogger(DatabaseContext.class.getName());
 	private static boolean driverLoaded;
 	
 	private DatabaseLoginCredentials loginCredentials;
@@ -51,6 +53,7 @@ public class DatabaseContext {
 				// Check again to ensure another thread hasn't loaded the driver
 				// while we waited for the lock.
 				if (!driverLoaded) {
+					log.fine("Registering PostgreSQL jdbc driver.");
 					try {
 						Class.forName("org.postgresql.Driver");
 						
@@ -77,6 +80,8 @@ public class DatabaseContext {
 			loadDatabaseDriver();
 			
 			try {
+				log.finer("Creating a new database connection.");
+				
 				connection = DriverManager.getConnection(
 					"jdbc:postgresql://" + loginCredentials.getHost() + "/"
 					+ loginCredentials.getDatabase()
@@ -103,6 +108,8 @@ public class DatabaseContext {
 	 */
 	public void executeStatement(String sql) {
 		try {
+			log.finest("Executing statement {" + sql + "}");
+			
 			if (statement != null) {
 				statement.close();
 			}
@@ -128,6 +135,8 @@ public class DatabaseContext {
 		try {
 			PreparedStatement preparedStatement;
 			
+			log.finest("Creating prepared statement {" + sql + "}");
+			
 			preparedStatement = getConnection().prepareStatement(sql);
 			
 			return preparedStatement;
@@ -149,6 +158,8 @@ public class DatabaseContext {
 		try {
 			CallableStatement callableStatement;
 			
+			log.finest("Creating callable statement {" + sql + "}");
+			
 			callableStatement = getConnection().prepareCall(sql);
 			
 			return callableStatement;
@@ -167,6 +178,8 @@ public class DatabaseContext {
 	public Statement createStatement() {
 		try {
 			Statement resultStatement;
+			
+			log.finest("Creating a new statement.");
 			
 			resultStatement = getConnection().createStatement();
 			
@@ -189,6 +202,8 @@ public class DatabaseContext {
 	public ResultSet executeQuery(String sql) {
 		try {
 			ResultSet resultSet;
+			
+			log.finest("Executing query {" + sql + "}");
 			
 			if (statement != null) {
 				statement.close();
@@ -222,6 +237,8 @@ public class DatabaseContext {
 		boolean result;
 		
 		try {
+			log.finest("Checking if column {" + columnName + "} in table {" + tableName + "} exists.");
+			
 			resultSet = getConnection().getMetaData().getColumns(null, null, tableName, columnName);
 			result = resultSet.next();
 			resultSet.close();
@@ -255,6 +272,8 @@ public class DatabaseContext {
 	public void setAutoCommit(boolean autoCommit) {
 		if (connection != null) {
 			try {
+				log.finest("Setting auto commit to " + autoCommit + ".");
+				
 				connection.setAutoCommit(autoCommit);
 			} catch (SQLException e) {
 				throw new OsmosisRuntimeException("Unable to commit changes.", e);
@@ -270,7 +289,10 @@ public class DatabaseContext {
 	public void commit() {
 		if (connection != null) {
 			try {
+				log.finest("Committing changes.");
+				
 				connection.commit();
+				
 			} catch (SQLException e) {
 				throw new OsmosisRuntimeException("Unable to commit changes.", e);
 			}
@@ -286,6 +308,8 @@ public class DatabaseContext {
 	public void release() {
 		if (connection != null) {
 			try {
+				log.finest("Closing the database connection.");
+				
 				connection.close();
 				
 			} catch (SQLException e) {
