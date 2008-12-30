@@ -45,7 +45,7 @@
 		
 		<ivy:resolve file="${ivy.dep.file}" conf="${ivy.configurations}" />
 		
-		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact].[ext]" conf="${ivy.configurations}" />
+		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact]-[revision].[ext]" sync="true" conf="${ivy.configurations}" />
 	</target>
 	
 	<target name="clean-cache" depends="init-ivy" description="Clean the ivy cache.">
