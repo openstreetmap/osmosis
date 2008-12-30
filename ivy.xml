@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ivy-module version="2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	
+    <info organisation="bretth.com" module="osmosis"/>
+    
+    <configurations>
+    	<conf name="dist" description="The main output configuration."/>
+    	<conf name="test" extends="dist" visibility="private" description="Internal configuration required for building and running of tests."/>
+    </configurations>
+    
+    <publications>
+    	<artifact name="osmosis" type="jar" conf="dist" ext="jar"/>
+    </publications>
+    
+    <dependencies>
+        <dependency org="postgresql" name="postgresql" rev="8.3-603.jdbc4" conf="dist->default"/>
+        <dependency org="org.codehaus.woodstox" name="wstx-lgpl" rev="latest.integration" conf="dist->default">
+			<!-- Stax is included in the JDK from java 1.6 onwards. -->
+        	<exclude module="stax-api"/>
+        </dependency>
+        <dependency org="mysql" name="mysql-connector-java" rev="latest.integration" conf="dist->default"/>
+        <dependency org="junit" name="junit" rev="latest.integration" conf="test->default"/>
+    </dependencies>
+</ivy-module>
