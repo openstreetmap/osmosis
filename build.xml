@@ -8,6 +8,8 @@
 	<property name="project.name" value="osmosis"/>
 	<property name="project.version" value="0.29.5"/>
 	
+	<import file="build-ivy.xml"/>
+	
 	<!-- Define a classpath containing all lib jars. -->
 	<path id="libclasspath">
 		<fileset dir="lib" includes="**/*.jar"/>
