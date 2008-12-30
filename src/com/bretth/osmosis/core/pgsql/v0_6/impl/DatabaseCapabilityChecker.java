@@ -10,6 +10,9 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
  */
 public class DatabaseCapabilityChecker {
 	private DatabaseContext dbCtx;
+	private boolean initialized;
+	private boolean isWayBboxSupported;
+	private boolean isWayLinestringSupported;
 	
 	
 	/**
@@ -19,6 +22,18 @@ public class DatabaseCapabilityChecker {
 	 */
 	public DatabaseCapabilityChecker(DatabaseContext dbCtx) {
 		this.dbCtx = dbCtx;
+		
+		initialized = false;
+	}
+	
+	
+	private void initialize() {
+		if (!initialized) {
+			isWayBboxSupported = dbCtx.doesColumnExist("ways", "bbox");
+			isWayLinestringSupported = dbCtx.doesColumnExist("ways", "linestring");
+			
+			initialized = true;
+		}
 	}
 	
 	
@@ -28,7 +43,9 @@ public class DatabaseCapabilityChecker {
 	 * @return True if supported, otherwise false.
 	 */
 	public boolean isWayBboxSupported() {
-		return dbCtx.doesColumnExist("ways", "bbox");
+		initialize();
+		
+		return isWayBboxSupported;
 	}
 	
 	
@@ -38,6 +55,8 @@ public class DatabaseCapabilityChecker {
 	 * @return True if supported, otherwise false.
 	 */
 	public boolean isWayLinestringSupported() {
-		return dbCtx.doesColumnExist("ways", "linestring");
+		initialize();
+		
+		return isWayLinestringSupported;
 	}
 }
