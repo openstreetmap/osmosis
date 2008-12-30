@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<xsd:complexType name="Tag">
+        <xsd:annotation>
+        	<xsd:documentation>A name value pair describing the entity to which it is attached.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="k" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="v" type="xsd:string"></xsd:attribute>
+		<xsd:anyAttribute></xsd:anyAttribute>
+	</xsd:complexType>
+
+	<xsd:element name="tag" type="Tag"/>
+
+	<xsd:complexType name="Entity">
+		<xsd:annotation>
+			<xsd:documentation>
+				The base type from which all OSM top-level data inherit.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="tag"></xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="xsd:long"></xsd:attribute>
+		<xsd:attribute name="version" type="xsd:int"></xsd:attribute>
+		<xsd:attribute name="timestamp" type="xsd:dateTime"></xsd:attribute>
+		<xsd:attribute name="uid" type="xsd:int"></xsd:attribute>
+		<xsd:attribute name="user" type="xsd:string"></xsd:attribute>
+		<xsd:anyAttribute></xsd:anyAttribute>
+	</xsd:complexType>
+
+	<xsd:complexType name="Node">
+        <xsd:annotation>
+        	<xsd:documentation>A single geo-spatial point.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+			<xsd:extension base="Entity">
+				<xsd:attribute name="lat" type="xsd:double"></xsd:attribute>
+				<xsd:attribute name="lon" type="xsd:double"></xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="WayNode">
+        <xsd:annotation>
+        	<xsd:documentation>Maps a node into a way.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="id" type="xsd:long"></xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:element name="wn" type="WayNode">
+		<xsd:annotation>
+			<xsd:documentation>A way node.</xsd:documentation>
+		</xsd:annotation></xsd:element>
+
+	<xsd:complexType name="Way">
+        <xsd:annotation>
+        	<xsd:documentation>A geo-spatial path between points.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+			<xsd:extension base="Entity">
+				<xsd:sequence>
+					<xsd:element ref="wn"></xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:complexType name="RelationMember">
+        <xsd:annotation>
+        	<xsd:documentation>Maps an entity to a role within a relation.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="member_type" type="xsd:string"></xsd:attribute>
+		<xsd:attribute name="member_id" type="xsd:long"></xsd:attribute>
+		<xsd:attribute name="member_role" type="xsd:string"></xsd:attribute>
+	</xsd:complexType>
+
+	<xsd:element name="member" type="RelationMember">
+		<xsd:annotation>
+			<xsd:documentation>A relation member.</xsd:documentation>
+		</xsd:annotation></xsd:element>
+
+	<xsd:complexType name="Relation">
+        <xsd:annotation>
+        	<xsd:documentation>A logical data item without geo-spatial representation that relates several data items together.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+			<xsd:extension base="Entity">
+				<xsd:sequence>
+					<xsd:element ref="member"></xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<xsd:element name="node" type="Node">
+		<xsd:annotation>
+			<xsd:documentation>A node.</xsd:documentation>
+		</xsd:annotation></xsd:element>
+	<xsd:element name="way" type="Way">
+		<xsd:annotation>
+			<xsd:documentation>A way.</xsd:documentation>
+		</xsd:annotation></xsd:element>
+	<xsd:element name="relation" type="Relation">
+		<xsd:annotation>
+			<xsd:documentation>A relation.</xsd:documentation>
+		</xsd:annotation></xsd:element>
+	
+	<xsd:complexType name="EntityCollection">
+        <xsd:annotation>
+        	<xsd:documentation>A collection of entities.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+			<xsd:element ref="node"></xsd:element>
+			<xsd:element ref="way"></xsd:element>
+			<xsd:element ref="relation"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:element name="osm" type="EntityCollection">
+		<xsd:annotation>
+			<xsd:documentation>A collection of entities.</xsd:documentation>
+		</xsd:annotation></xsd:element>
+
+	<xsd:element name="create" type="EntityCollection">
+		<xsd:annotation>
+			<xsd:documentation>A collection of entities to be created.</xsd:documentation>
+		</xsd:annotation></xsd:element>
+	<xsd:element name="modify" type="EntityCollection">
+		<xsd:annotation>
+			<xsd:documentation>A collection of entities to be modified.</xsd:documentation>
+		</xsd:annotation></xsd:element>
+	<xsd:element name="delete" type="EntityCollection">
+		<xsd:annotation>
+			<xsd:documentation>A collection of entities to be deleted.</xsd:documentation>
+		</xsd:annotation></xsd:element>
+
+	<xsd:complexType name="ChangeCollection">
+        <xsd:annotation>
+        	<xsd:documentation>A collection of change items.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+			<xsd:element ref="create"></xsd:element>
+			<xsd:element ref="modify"></xsd:element>
+			<xsd:element ref="delete"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:element name="osmChange" type="ChangeCollection">
+		<xsd:annotation>
+			<xsd:documentation>A collection of changes.</xsd:documentation>
+		</xsd:annotation></xsd:element>
+</xsd:schema>
