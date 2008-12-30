@@ -126,8 +126,8 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		// Ignore ways with a single node because they can't be loaded into postgis.
 		if (way.getWayNodeList().size() > 1) {
 			wayWriter.writeField(way.getId());
-			nodeWriter.writeField(way.getUser().getId());
-			nodeWriter.writeField(way.getUser().getName());
+			wayWriter.writeField(way.getUser().getId());
+			wayWriter.writeField(way.getUser().getName());
 			wayWriter.writeField(way.getTimestamp());
 			wayWriter.endRecord();
 			
@@ -161,8 +161,8 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		relation = relationContainer.getEntity();
 		
 		relationWriter.writeField(relation.getId());
-		nodeWriter.writeField(relation.getUser().getId());
-		nodeWriter.writeField(relation.getUser().getName());
+		relationWriter.writeField(relation.getUser().getId());
+		relationWriter.writeField(relation.getUser().getName());
 		relationWriter.writeField(relation.getTimestamp());
 		relationWriter.endRecord();
 		

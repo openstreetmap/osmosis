@@ -11,7 +11,6 @@ import com.bretth.osmosis.core.container.v0_6.EntityProcessor;
 import com.bretth.osmosis.core.container.v0_6.NodeContainer;
 import com.bretth.osmosis.core.container.v0_6.RelationContainer;
 import com.bretth.osmosis.core.container.v0_6.WayContainer;
-import com.bretth.osmosis.core.domain.v0_6.EntityType;
 import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
@@ -23,6 +22,7 @@ import com.bretth.osmosis.core.lifecycle.CompletableContainer;
 import com.bretth.osmosis.core.pgsql.common.CopyFileWriter;
 import com.bretth.osmosis.core.pgsql.common.PointBuilder;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.ChangesetAction;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.MemberTypeValueMapper;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.WayGeometryBuilder;
 import com.bretth.osmosis.core.task.v0_6.Sink;
 
@@ -50,6 +50,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 	private boolean enableInMemoryLinestring;
 	private WayGeometryBuilder wayGeometryBuilder;
 	private CompletableContainer writerContainer;
+	private MemberTypeValueMapper memberTypeValueMapper;
 	private CopyFileWriter userWriter;
 	private CopyFileWriter nodeWriter;
 	private CopyFileWriter nodeTagWriter;
@@ -95,6 +96,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		
 		pointBuilder = new PointBuilder();
 		wayGeometryBuilder = new WayGeometryBuilder();
+		memberTypeValueMapper = new MemberTypeValueMapper();
 		
 		userSet = new HashSet<Integer>();
 	}
@@ -207,9 +209,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 	 */
 	public void process(RelationContainer relationContainer) {
 		Relation relation;
-		EntityType[] entityTypes;
-		
-		entityTypes = EntityType.values();
+		int memberSequenceId;
 		
 		relation = relationContainer.getEntity();
 		
@@ -227,15 +227,13 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 			relationTagWriter.endRecord();
 		}
 		
+		memberSequenceId = 0;
 		for (RelationMember member : relation.getMemberList()) {
 			relationMemberWriter.writeField(relation.getId());
 			relationMemberWriter.writeField(member.getMemberId());
-			for (byte i = 0; i < entityTypes.length; i++) {
-				if (entityTypes[i].equals(member.getMemberType())) {
-					relationMemberWriter.writeField(i);
-				}
-			}
+			relationMemberWriter.writeField(memberTypeValueMapper.getMemberType(member.getMemberType()));
 			relationMemberWriter.writeField(member.getMemberRole());
+			relationMemberWriter.writeField(memberSequenceId++);
 			relationMemberWriter.endRecord();
 		}
 	}
