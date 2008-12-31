@@ -94,7 +94,7 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 		
 		buffer = buffers.get(bufferIndex);
 		
-		bufferOffset = (int) (nodeId - (bufferIndex * BUFFER_ELEMENT_COUNT));
+		bufferOffset = (int) ((nodeId - (bufferIndex * BUFFER_ELEMENT_COUNT)) * NODE_DATA_SIZE);
 		
 		buffer[bufferOffset++] = 1;
 		writeIntToBuffer(FixedPrecisionCoordinateConvertor.convertToFixed(nodeLocation.getLongitude()), buffer, bufferOffset);
@@ -123,7 +123,7 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 			
 			buffer = buffers.get(bufferIndex);
 			
-			bufferOffset = (int) (nodeId - (bufferIndex * BUFFER_ELEMENT_COUNT));
+			bufferOffset = (int) ((nodeId - (bufferIndex * BUFFER_ELEMENT_COUNT)) * NODE_DATA_SIZE);
 			
 			validFlag = buffer[bufferOffset++];
 			
