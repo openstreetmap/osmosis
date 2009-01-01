@@ -1,11 +1,11 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.progress.v0_6;
 
-import java.util.Date;
 import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.container.v0_6.ChangeContainer;
 import com.bretth.osmosis.core.domain.v0_6.Entity;
+import com.bretth.osmosis.core.progress.v0_6.impl.ProgressTracker;
 import com.bretth.osmosis.core.task.common.ChangeAction;
 import com.bretth.osmosis.core.task.v0_6.ChangeSink;
 import com.bretth.osmosis.core.task.v0_6.ChangeSinkChangeSource;
@@ -21,9 +21,7 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 	private static final Logger log = Logger.getLogger(ChangeProgressLogger.class.getName());
 	
 	private ChangeSink sink;
-	private int interval;
-	private boolean initialized;
-	private Date lastUpdateTimestamp;
+	private ProgressTracker progressTracker;
 	
 	
 	/**
@@ -33,40 +31,7 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 	 *            The interval between logging progress reports in milliseconds.
 	 */
 	public ChangeProgressLogger(int interval) {
-		this.interval = interval;
-		
-		initialized = false;
-	}
-	
-	
-	/**
-	 * Initialises internal state.  This can be called multiple times.
-	 */
-	private boolean updateRequired() {
-		if (!initialized) {
-			lastUpdateTimestamp = new Date();
-			
-			initialized = true;
-			
-			return false;
-			
-		} else {
-			Date currentTimestamp;
-			long duration;
-			
-			// Calculate the time since the last update.
-			currentTimestamp = new Date();
-			duration = currentTimestamp.getTime() - lastUpdateTimestamp.getTime();
-			
-			if (duration > interval || duration < 0) {
-				lastUpdateTimestamp = currentTimestamp;
-				
-				return true;
-				
-			} else {
-				return false;
-			}
-		}
+		progressTracker = new ProgressTracker(interval);
 	}
 	
 	
@@ -80,8 +45,8 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 		entity = changeContainer.getEntityContainer().getEntity();
 		action = changeContainer.getAction();
 		
-		if (updateRequired()) {
-			log.info("Processing " + entity.getType() + " " + entity.getId() + " with action " + action + ".");
+		if (progressTracker.updateRequired()) {
+			log.info("Processing " + entity.getType() + " " + entity.getId() + " with action " + action + ", " + progressTracker.getObjectsPerSecond() + " objects/second.");
 		}
 		
 		sink.process(changeContainer);

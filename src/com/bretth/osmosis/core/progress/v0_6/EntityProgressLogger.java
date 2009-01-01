@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.container.v0_6.EntityContainer;
 import com.bretth.osmosis.core.domain.v0_6.Entity;
+import com.bretth.osmosis.core.progress.v0_6.impl.ProgressTracker;
 import com.bretth.osmosis.core.task.v0_6.Sink;
 import com.bretth.osmosis.core.task.v0_6.SinkSource;
 
@@ -19,9 +20,7 @@ public class EntityProgressLogger implements SinkSource {
 	private static final Logger log = Logger.getLogger(EntityProgressLogger.class.getName());
 	
 	private Sink sink;
-	private int interval;
-	private boolean initialized;
-	private long lastUpdateTimestamp;
+	private ProgressTracker progressTracker;
 	
 	
 	/**
@@ -31,40 +30,7 @@ public class EntityProgressLogger implements SinkSource {
 	 *            The interval between logging progress reports in milliseconds.
 	 */
 	public EntityProgressLogger(int interval) {
-		this.interval = interval;
-		
-		initialized = false;
-	}
-	
-	
-	/**
-	 * Initialises internal state.  This can be called multiple times.
-	 */
-	private boolean updateRequired() {
-		if (!initialized) {
-			lastUpdateTimestamp = System.currentTimeMillis();
-			
-			initialized = true;
-			
-			return false;
-			
-		} else {
-			long currentTimestamp;
-			long duration;
-			
-			// Calculate the time since the last update.
-			currentTimestamp = System.currentTimeMillis();
-			duration = currentTimestamp - lastUpdateTimestamp;
-			
-			if (duration > interval || duration < 0) {
-				lastUpdateTimestamp = currentTimestamp;
-				
-				return true;
-				
-			} else {
-				return false;
-			}
-		}
+		progressTracker = new ProgressTracker(interval);
 	}
 	
 	
@@ -76,8 +42,8 @@ public class EntityProgressLogger implements SinkSource {
 		
 		entity = entityContainer.getEntity();
 		
-		if (updateRequired()) {
-			log.info("Processing " + entity.getType() + " " + entity.getId() + ".");
+		if (progressTracker.updateRequired()) {
+			log.info("Processing " + entity.getType() + " " + entity.getId() + ", " + progressTracker.getObjectsPerSecond() + " objects/second.");
 		}
 		
 		sink.process(entityContainer);

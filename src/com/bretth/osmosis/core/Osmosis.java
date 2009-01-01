@@ -54,6 +54,10 @@ public class Osmosis {
 		CommandLineParser commandLineParser;
 		TaskRegistrar taskRegistrar;
 		Pipeline pipeline;
+		long startTime;
+		long finishTime;
+		
+		startTime = System.currentTimeMillis();
 		
 		configureLoggingConsole();
 		
@@ -81,6 +85,10 @@ public class Osmosis {
 		pipeline.waitForCompletion();
 		
 		log.info("Pipeline complete.");
+		
+		finishTime = System.currentTimeMillis();
+		
+		log.info("Total execution time: " + (finishTime - startTime) + " milliseconds.");
 	}
 	
 	
