@@ -200,17 +200,15 @@ public abstract class EntityBuilder<T extends Entity> {
 	
 	
 	/**
-	 * The SQL UPDATE statement for resetting the action column to unchanged.
+	 * The SQL UPDATE statements for resetting the action column to unchanged.
 	 * 
-	 * @return The SQL String.
+	 * @return The SQL strings.
 	 */
-	public String getSqlResetAction() {
-		StringBuilder resultSql;
-		
-		resultSql = new StringBuilder();
-		resultSql.append("UPDATE ").append(getEntityName()).append("s SET action = '").append(ChangesetAction.NONE.getDatabaseValue()).append("'");
-		
-		return resultSql.toString();
+	public String[] getSqlResetActions() {
+		return new String[] {
+			new StringBuilder().append("UPDATE ").append(getEntityName()).append("s SET action = '").append(ChangesetAction.NONE.getDatabaseValue()).append("' WHERE action < '").append(ChangesetAction.NONE.getDatabaseValue()).append("'").toString(),
+			new StringBuilder().append("UPDATE ").append(getEntityName()).append("s SET action = '").append(ChangesetAction.NONE.getDatabaseValue()).append("' WHERE action > '").append(ChangesetAction.NONE.getDatabaseValue()).append("'").toString()
+		};
 	}
 	
 	

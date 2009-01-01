@@ -34,7 +34,7 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	private PreparedStatement updateStatement;
 	private PreparedStatement deleteStatement;
 	private PreparedStatement purgeStatement;
-	private PreparedStatement resetStatement;
+	private PreparedStatement resetStatements[];
 	
 	
 	/**
@@ -290,12 +290,21 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 			);
 		}
 		
-		if (resetStatement == null) {
-			resetStatement = prepareStatement(entityBuilder.getSqlResetAction());
+		if (resetStatements == null) {
+			String resetActions[];
+			
+			resetActions = entityBuilder.getSqlResetActions();
+			
+			resetStatements = new PreparedStatement[resetActions.length];
+			for (int i = 0; i < resetActions.length; i++) {
+				resetStatements[i] = prepareStatement(resetActions[i]);
+			}
 		}
 		
 		try {
-			resetStatement.executeUpdate();
+			for (int i = 0; i < resetStatements.length; i++) {
+				resetStatements[i].executeUpdate();
+			}
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
