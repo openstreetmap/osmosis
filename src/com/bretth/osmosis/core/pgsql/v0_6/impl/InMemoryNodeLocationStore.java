@@ -2,6 +2,8 @@ package com.bretth.osmosis.core.pgsql.v0_6.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
@@ -12,6 +14,8 @@ import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  * @author Brett Henderson
  */
 public class InMemoryNodeLocationStore implements NodeLocationStore {
+	private static final Logger log = Logger.getLogger(InMemoryNodeLocationStore.class.getName());
+	
 	private static final int NODE_DATA_SIZE = 9;
 	private static final int BUFFER_ELEMENT_COUNT = 131072;
 	private static final int BUFFER_SIZE = NODE_DATA_SIZE * BUFFER_ELEMENT_COUNT;
@@ -90,6 +94,13 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 			buffer = new byte[BUFFER_SIZE];
 			
 			buffers.add(buffer);
+			
+			if (log.isLoggable(Level.FINER)) {
+				log.finer(
+					"The store contains " + buffers.size() +
+					" buffers of " + BUFFER_SIZE + " bytes, total " +
+					(buffers.size() * BUFFER_SIZE) + " bytes.");
+			}
 		}
 		
 		buffer = buffers.get(bufferIndex);
@@ -152,6 +163,11 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 	 */
 	@Override
 	public void release() {
-		// Do nothing.
+		if (log.isLoggable(Level.FINE)) {
+			log.fine(
+				"The store contains " + buffers.size() +
+				" buffers of " + BUFFER_SIZE + " bytes, total " +
+				(buffers.size() * BUFFER_SIZE) + " bytes.");
+		}
 	}
 }
