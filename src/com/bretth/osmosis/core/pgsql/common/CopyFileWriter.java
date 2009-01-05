@@ -261,8 +261,12 @@ public class CopyFileWriter implements Completable {
 		
 		try {
 			separateField();
-			
-			writer.write(postgisBinaryWriter.writeHexed(data));
+
+		    if (data == null) {
+                writer.write(escapeString(null));
+            } else {	
+			    writer.write(postgisBinaryWriter.writeHexed(data));
+            }
 			
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to write value (" + data + ")", e);
