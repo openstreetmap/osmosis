@@ -1,5 +1,6 @@
 package com.bretth.osmosis.core.pgsql.v0_6.impl;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -32,6 +33,42 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 		buffers = new ArrayList<byte[]>();
 		
 		invalidNodeLocation = new NodeLocation();
+	}
+
+	/**
+	 * Writes a summary of the current memory consumption at the specified
+	 * logging level.
+	 * 
+	 * @param level
+	 *            The logging level to write the summary at.
+	 */
+	private void logMemoryConsumption(Level level) {
+		if (log.isLoggable(level)) {
+			Runtime runtime;
+			long totalUsed;
+			double percentageUsed;
+			long maxMemory;
+			DecimalFormat percentageFormat;
+			
+			runtime = Runtime.getRuntime();
+			percentageFormat = new DecimalFormat("#0.##");
+			
+			// Calculate the percentage of memory currently used.
+			percentageUsed = ((double) runtime.totalMemory()) / runtime.maxMemory() * 100;
+			totalUsed = ((long) buffers.size()) * BUFFER_SIZE / 1048576;
+			maxMemory = runtime.maxMemory() / 1048576;
+			
+			log.log(
+				level,
+				"The store contains " + buffers.size() +
+				" buffers of " + (BUFFER_SIZE / 1024) + "KB, total " +
+				totalUsed + "MB.");
+			log.log(
+				level,
+				"The JVM is using " + percentageFormat.format(percentageUsed) +
+				"% of the maximum " + maxMemory +
+				"MB of memory.");
+		}
 	}
 	
 	
@@ -95,12 +132,7 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 			
 			buffers.add(buffer);
 			
-			if (log.isLoggable(Level.FINER)) {
-				log.finer(
-					"The store contains " + buffers.size() +
-					" buffers of " + BUFFER_SIZE + " bytes, total " +
-					(buffers.size() * BUFFER_SIZE) + " bytes.");
-			}
+			logMemoryConsumption(Level.FINER);
 		}
 		
 		buffer = buffers.get(bufferIndex);
@@ -163,11 +195,6 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 	 */
 	@Override
 	public void release() {
-		if (log.isLoggable(Level.FINE)) {
-			log.fine(
-				"The store contains " + buffers.size() +
-				" buffers of " + BUFFER_SIZE + " bytes, total " +
-				(buffers.size() * BUFFER_SIZE) + " bytes.");
-		}
+		logMemoryConsumption(Level.FINE);
 	}
 }
