@@ -27,14 +27,13 @@ import com.bretth.osmosis.core.pgsql.common.NoSuchRecordException;
 public abstract class EntityDao<T extends Entity> extends BaseDao {
 	
 	private EntityFeatureDao<Tag, DbFeature<Tag>> tagDao;
+	private ActionDao actionDao;
 	private EntityBuilder<T> entityBuilder;
 	private PreparedStatement countStatement;
 	private PreparedStatement getStatement;
 	private PreparedStatement insertStatement;
 	private PreparedStatement updateStatement;
 	private PreparedStatement deleteStatement;
-	private PreparedStatement purgeStatement;
-	private PreparedStatement resetStatements[];
 	
 	
 	/**
@@ -44,11 +43,14 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	 *            The database context to use for accessing the database.
 	 * @param entityBuilder
 	 *            Provides entity type specific JDBC support.
+	 * @param actionDao
+	 *            The dao to use for adding action records to the database.
 	 */
-	protected EntityDao(DatabaseContext dbCtx, EntityBuilder<T> entityBuilder) {
+	protected EntityDao(DatabaseContext dbCtx, EntityBuilder<T> entityBuilder, ActionDao actionDao) {
 		super(dbCtx);
 		
 		this.entityBuilder = entityBuilder;
+		this.actionDao = actionDao;
 		
 		tagDao = new EntityFeatureDao<Tag, DbFeature<Tag>>(dbCtx, new TagBuilder(entityBuilder.getEntityName()));
 	}
@@ -202,6 +204,8 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 		}
 		
 		addTagList(entity.getId(), entity.getTagList());
+		
+		actionDao.addAction(entityBuilder.getEntityType(), ChangesetAction.CREATE, entity.getId());
 	}
 	
 	
@@ -236,6 +240,8 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 		
 		tagDao.removeList(entity.getId());
 		addTagList(entity.getId(), entity.getTagList());
+		
+		actionDao.addAction(entityBuilder.getEntityType(), ChangesetAction.MODIFY, entity.getId());
 	}
 	
 	
@@ -267,52 +273,8 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 				e
 			);
 		}
-	}
-	
-	
-	/**
-	 * Purges all deleted records from the database and marks all remaining
-	 * records as unchanged.
-	 */
-	public void purgeAndResetAction() {
-		if (purgeStatement == null) {
-			purgeStatement = prepareStatement(entityBuilder.getSqlPurge());
-		}
 		
-		try {
-			purgeStatement.executeUpdate();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException(
-				"Purge failed for " +
-				entityBuilder.getEntityName() + ".",
-				e
-			);
-		}
-		
-		if (resetStatements == null) {
-			String resetActions[];
-			
-			resetActions = entityBuilder.getSqlResetActions();
-			
-			resetStatements = new PreparedStatement[resetActions.length];
-			for (int i = 0; i < resetActions.length; i++) {
-				resetStatements[i] = prepareStatement(resetActions[i]);
-			}
-		}
-		
-		try {
-			for (int i = 0; i < resetStatements.length; i++) {
-				resetStatements[i].executeUpdate();
-			}
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException(
-				"Reset action failed for " +
-				entityBuilder.getEntityName() + ".",
-				e
-			);
-		}
+		actionDao.addAction(entityBuilder.getEntityType(), ChangesetAction.DELETE, entityId);
 	}
 	
 	

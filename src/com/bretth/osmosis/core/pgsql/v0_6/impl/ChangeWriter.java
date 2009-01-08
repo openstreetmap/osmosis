@@ -27,6 +27,7 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
 public class ChangeWriter {
 	
 	private DatabaseContext dbCtx;
+	private ActionDao actionDao;
 	private UserDao userDao;
 	private NodeDao nodeDao;
 	private WayDao wayDao;
@@ -42,11 +43,12 @@ public class ChangeWriter {
 	 */
 	public ChangeWriter(DatabaseLoginCredentials loginCredentials) {
 		dbCtx = new DatabaseContext(loginCredentials);
-
-		userDao = new UserDao(dbCtx);
-		nodeDao = new NodeDao(dbCtx);
-		wayDao = new WayDao(dbCtx);
-		relationDao = new RelationDao(dbCtx);
+		
+		actionDao = new ActionDao(dbCtx);
+		userDao = new UserDao(dbCtx, actionDao);
+		nodeDao = new NodeDao(dbCtx, actionDao);
+		wayDao = new WayDao(dbCtx, actionDao);
+		relationDao = new RelationDao(dbCtx, actionDao);
 		
 		userSet = new HashSet<Integer>();
 	}
@@ -209,10 +211,8 @@ public class ChangeWriter {
 			statementContainer.release();
 		}
 		
-		nodeDao.purgeAndResetAction();
-		wayDao.purgeAndResetAction();
-		relationDao.purgeAndResetAction();
-		userDao.resetAction();
+		// Clear all action records.
+		actionDao.truncate();
 		
 		dbCtx.commit();
 	}

@@ -26,9 +26,11 @@ public class RelationDao extends EntityDao<Relation> {
 	 * 
 	 * @param dbCtx
 	 *            The database context to use for accessing the database.
+	 * @param actionDao
+	 *            The dao to use for adding action records to the database.
 	 */
-	public RelationDao(DatabaseContext dbCtx) {
-		super(dbCtx, new RelationBuilder());
+	public RelationDao(DatabaseContext dbCtx, ActionDao actionDao) {
+		super(dbCtx, new RelationBuilder(), actionDao);
 		
 		relationMemberDao = new EntityFeatureDao<RelationMember, DbOrderedFeature<RelationMember>>(dbCtx, new RelationMemberBuilder());
 	}

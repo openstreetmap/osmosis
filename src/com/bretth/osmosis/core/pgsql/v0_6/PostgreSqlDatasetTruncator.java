@@ -23,7 +23,7 @@ public class PostgreSqlDatasetTruncator implements RunnableTask {
 	
 	// These SQL statements will be invoked to truncate each table.
 	private static final String[] SQL_STATEMENTS = {
-		"TRUNCATE users, nodes, node_tags, ways, way_tags, way_nodes, relations, relation_tags, relation_members"
+		"TRUNCATE actions, users, nodes, node_tags, ways, way_tags, way_nodes, relations, relation_tags, relation_members"
 	};
 	
 	

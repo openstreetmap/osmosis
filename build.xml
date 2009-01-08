@@ -122,7 +122,7 @@
 		</tar>
 	</target>
 	
-	<!-- Runs all of the unit tests in the application.  Uses the AllTests suite to achieve this. -->
+	<!-- Runs all of the unit tests in the application. -->
 	<target name="test" depends="build_test" description="Run automated test cases.">
 		<junit fork="yes" maxmemory="512m" printsummary="on" haltonerror="on" haltonfailure="on" filtertrace="on">
 			<formatter type="plain" usefile="true"/>

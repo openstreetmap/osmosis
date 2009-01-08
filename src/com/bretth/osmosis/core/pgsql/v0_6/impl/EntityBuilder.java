@@ -31,6 +31,14 @@ public abstract class EntityBuilder<T extends Entity> {
 	
 	
 	/**
+	 * Returns the action data type of the entity.
+	 * 
+	 * @return The action type.
+	 */
+	public abstract ActionDataType getEntityType();
+	
+	
+	/**
 	 * Returns the class for the entity type being supported.
 	 * 
 	 * @return The entity type class.
@@ -118,7 +126,7 @@ public abstract class EntityBuilder<T extends Entity> {
 		
 		resultSql = new StringBuilder();
 		resultSql.append("INSERT INTO ").append(getEntityName()).append("s");
-		resultSql.append("(id, version, user_id, tstamp, action");
+		resultSql.append("(id, version, user_id, tstamp");
 		for (String fieldName : Arrays.asList(typeSpecificFieldNames)) {
 			resultSql.append(", ").append(fieldName);
 		}
@@ -127,7 +135,7 @@ public abstract class EntityBuilder<T extends Entity> {
 			if (row > 0) {
 				resultSql.append(", ");
 			}
-			resultSql.append("(?, ?, ?, ?, '").append(ChangesetAction.CREATE.getDatabaseValue()).append("'");
+			resultSql.append("(?, ?, ?, ?");
 			for (int i = 0; i < typeSpecificFieldNames.length; i++) {
 				resultSql.append(", ?");
 			}
@@ -150,7 +158,7 @@ public abstract class EntityBuilder<T extends Entity> {
 		StringBuilder resultSql;
 		
 		resultSql = new StringBuilder();
-		resultSql.append("UPDATE ").append(getEntityName()).append("s SET id = ?, version = ?, user_id = ?, tstamp = ?, action = '").append(ChangesetAction.MODIFY.getDatabaseValue()).append("'");
+		resultSql.append("UPDATE ").append(getEntityName()).append("s SET id = ?, version = ?, user_id = ?, tstamp = ?");
 		for (String fieldName : Arrays.asList(getTypeSpecificFieldNames())) {
 			resultSql.append(", ").append(fieldName).append(" = ?");
 		}
@@ -174,41 +182,12 @@ public abstract class EntityBuilder<T extends Entity> {
 		StringBuilder resultSql;
 		
 		resultSql = new StringBuilder();
-		resultSql.append("UPDATE ").append(getEntityName()).append("s SET action = '").append(ChangesetAction.DELETE.getDatabaseValue()).append("'");
+		resultSql.append("DELETE FROM ").append(getEntityName()).append("s");
 		if (filterByEntityId) {
 			resultSql.append(" WHERE id = ?");
 		}
 		
 		return resultSql.toString();
-	}
-	
-	
-	/**
-	 * The SQL DELETE statement for purging entities.
-	 * 
-	 * @return The SQL String.
-	 */
-	public String getSqlPurge() {
-		StringBuilder resultSql;
-		
-		resultSql = new StringBuilder();
-		resultSql.append("DELETE FROM ").append(getEntityName()).append("s");
-		resultSql.append(" WHERE action = '").append(ChangesetAction.DELETE.getDatabaseValue()).append("'");
-		
-		return resultSql.toString();
-	}
-	
-	
-	/**
-	 * The SQL UPDATE statements for resetting the action column to unchanged.
-	 * 
-	 * @return The SQL strings.
-	 */
-	public String[] getSqlResetActions() {
-		return new String[] {
-			new StringBuilder().append("UPDATE ").append(getEntityName()).append("s SET action = '").append(ChangesetAction.NONE.getDatabaseValue()).append("' WHERE action < '").append(ChangesetAction.NONE.getDatabaseValue()).append("'").toString(),
-			new StringBuilder().append("UPDATE ").append(getEntityName()).append("s SET action = '").append(ChangesetAction.NONE.getDatabaseValue()).append("' WHERE action > '").append(ChangesetAction.NONE.getDatabaseValue()).append("'").toString()
-		};
 	}
 	
 	

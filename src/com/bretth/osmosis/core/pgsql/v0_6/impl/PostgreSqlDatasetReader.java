@@ -87,14 +87,18 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	 */
 	private void initialize() {
 		if (dbCtx == null) {
+			ActionDao actionDao;
+			
 			dbCtx = new DatabaseContext(loginCredentials);
 			
 			new SchemaVersionValidator(loginCredentials, preferences).validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
 			
+			actionDao = new ActionDao(dbCtx);
+			
 			capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
-			nodeDao = new NodeDao(dbCtx);
-			wayDao = new WayDao(dbCtx);
-			relationDao = new RelationDao(dbCtx);
+			nodeDao = new NodeDao(dbCtx, actionDao);
+			wayDao = new WayDao(dbCtx, actionDao);
+			relationDao = new RelationDao(dbCtx, actionDao);
 		}
 		
 		initialized = true;

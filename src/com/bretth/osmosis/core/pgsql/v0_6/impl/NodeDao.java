@@ -46,9 +46,11 @@ public class NodeDao extends EntityDao<Node> {
 	 * 
 	 * @param dbCtx
 	 *            The database context to use for accessing the database.
+	 * @param actionDao
+	 *            The dao to use for adding action records to the database.
 	 */
-	public NodeDao(DatabaseContext dbCtx) {
-		super(dbCtx, new NodeBuilder());
+	public NodeDao(DatabaseContext dbCtx, ActionDao actionDao) {
+		super(dbCtx, new NodeBuilder(), actionDao);
 		
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 	}

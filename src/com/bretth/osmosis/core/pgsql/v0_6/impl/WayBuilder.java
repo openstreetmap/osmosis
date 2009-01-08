@@ -61,6 +61,15 @@ public class WayBuilder extends EntityBuilder<Way> {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public ActionDataType getEntityType() {
+		return ActionDataType.WAY;
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Class<Way> getEntityClass() {
 		return Way.class;
 	}

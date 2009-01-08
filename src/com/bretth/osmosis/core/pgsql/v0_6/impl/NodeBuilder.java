@@ -45,6 +45,15 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public ActionDataType getEntityType() {
+		return ActionDataType.NODE;
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Class<Node> getEntityClass() {
 		return Node.class;
 	}

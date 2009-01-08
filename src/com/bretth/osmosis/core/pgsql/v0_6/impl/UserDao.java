@@ -19,14 +19,13 @@ import com.bretth.osmosis.core.pgsql.common.NoSuchRecordException;
  */
 public class UserDao extends BaseDao {
 	private static final String SELECT_USER = "SELECT id, name FROM users WHERE id = ?";
-	private static final String INSERT_USER = "INSERT INTO users(id, name, action) VALUES(?, ?, ?)";
-	private static final String UPDATE_USER = "UPDATE users SET name = ?, action = ? WHERE id = ?";
-	private static final String RESET_USER = "UPDATE users SET action = '" + ChangesetAction.NONE.getDatabaseValue() + "'";
+	private static final String INSERT_USER = "INSERT INTO users(id, name) VALUES(?, ?)";
+	private static final String UPDATE_USER = "UPDATE users SET name = ? WHERE id = ?";
 	
 	private PreparedStatement selectUserStatement;
 	private PreparedStatement insertUserStatement;
 	private PreparedStatement updateUserStatement;
-	private PreparedStatement resetStatement;
+	private ActionDao actionDao;
 	
 	
 	/**
@@ -34,9 +33,13 @@ public class UserDao extends BaseDao {
 	 * 
 	 * @param dbCtx
 	 *            The database context to use for accessing the database.
+	 * @param actionDao
+	 *            The dao to use for adding action records to the database.
 	 */
-	public UserDao(DatabaseContext dbCtx) {
+	public UserDao(DatabaseContext dbCtx, ActionDao actionDao) {
 		super(dbCtx);
+		
+		this.actionDao = actionDao;
 	}
 	
 	
@@ -122,7 +125,6 @@ public class UserDao extends BaseDao {
 		try {
 			insertUserStatement.setInt(prmIndex++, user.getId());
 			insertUserStatement.setString(prmIndex++, user.getName());
-			insertUserStatement.setString(prmIndex++, ChangesetAction.CREATE.getDatabaseValue());
 			
 			insertUserStatement.executeUpdate();
 			
@@ -130,6 +132,8 @@ public class UserDao extends BaseDao {
 			throw new OsmosisRuntimeException(
 				"Unable to insert user " + user.getId() + ".", e);
 		}
+		
+		actionDao.addAction(ActionDataType.USER, ChangesetAction.CREATE, user.getId());
 	}
 	
 	
@@ -149,7 +153,6 @@ public class UserDao extends BaseDao {
 		prmIndex = 1;
 		try {
 			updateUserStatement.setString(prmIndex++, user.getName());
-			updateUserStatement.setString(prmIndex++, ChangesetAction.MODIFY.getDatabaseValue());
 			updateUserStatement.setInt(prmIndex++, user.getId());
 			
 			updateUserStatement.executeUpdate();
@@ -158,25 +161,7 @@ public class UserDao extends BaseDao {
 			throw new OsmosisRuntimeException(
 				"Unable to update user " + user.getId() + ".", e);
 		}
-	}
-	
-	
-	/**
-	 * Marks all records as unchanged.
-	 */
-	public void resetAction() {
-		if (resetStatement == null) {
-			resetStatement = prepareStatement(RESET_USER);
-		}
 		
-		try {
-			resetStatement.executeUpdate();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException(
-				"Reset action failed for users.",
-				e
-			);
-		}
+		actionDao.addAction(ActionDataType.USER, ChangesetAction.MODIFY, user.getId());
 	}
 }

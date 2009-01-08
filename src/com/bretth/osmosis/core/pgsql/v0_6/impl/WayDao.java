@@ -47,9 +47,11 @@ public class WayDao extends EntityDao<Way> {
 	 * 
 	 * @param dbCtx
 	 *            The database context to use for accessing the database.
+	 * @param actionDao
+	 *            The dao to use for adding action records to the database.
 	 */
-	public WayDao(DatabaseContext dbCtx) {
-		super(dbCtx, new WayBuilder());
+	public WayDao(DatabaseContext dbCtx, ActionDao actionDao) {
+		super(dbCtx, new WayBuilder(), actionDao);
 		
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 		wayNodeDao = new EntityFeatureDao<WayNode, DbOrderedFeature<WayNode>>(dbCtx, new WayNodeBuilder());

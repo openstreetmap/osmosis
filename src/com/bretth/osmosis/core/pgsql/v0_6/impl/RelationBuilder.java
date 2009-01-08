@@ -30,6 +30,15 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public ActionDataType getEntityType() {
+		return ActionDataType.RELATION;
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Class<Relation> getEntityClass() {
 		return Relation.class;
 	}
