@@ -11,6 +11,7 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 public class DatabaseCapabilityChecker {
 	private DatabaseContext dbCtx;
 	private boolean initialized;
+	private boolean isActionSupported;
 	private boolean isWayBboxSupported;
 	private boolean isWayLinestringSupported;
 	
@@ -29,11 +30,24 @@ public class DatabaseCapabilityChecker {
 	
 	private void initialize() {
 		if (!initialized) {
+			isActionSupported = dbCtx.doesTableExist("actions");
 			isWayBboxSupported = dbCtx.doesColumnExist("ways", "bbox");
 			isWayLinestringSupported = dbCtx.doesColumnExist("ways", "linestring");
 			
 			initialized = true;
 		}
+	}
+	
+	
+	/**
+	 * Indicates if action support is available.
+	 * 
+	 * @return True if supported, otherwise false.
+	 */
+	public boolean isActionSupported() {
+		initialize();
+		
+		return isActionSupported;
 	}
 	
 	

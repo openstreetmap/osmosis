@@ -23,14 +23,6 @@ CREATE TABLE schema_info (
 );
 
 
--- Create a table for actions.
-CREATE TABLE actions (
-	data_type character(1) NOT NULL,
-	action character(1) NOT NULL,
-	id bigint NOT NULL
-);
-
-
 -- Create a table for users.
 CREATE TABLE users (
     id int NOT NULL,
@@ -114,8 +106,6 @@ INSERT INTO schema_info (version) VALUES (3);
 
 -- Add primary keys to tables.
 ALTER TABLE ONLY schema_info ADD CONSTRAINT pk_schema_info PRIMARY KEY (version);
-
-ALTER TABLE ONLY actions ADD CONSTRAINT pk_actions PRIMARY KEY (data_type, id);
 
 ALTER TABLE ONLY users ADD CONSTRAINT pk_users PRIMARY KEY (id);
 

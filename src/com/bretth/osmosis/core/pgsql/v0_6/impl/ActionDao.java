@@ -19,6 +19,7 @@ public class ActionDao extends BaseDao {
 	private static final String SQL_TRUNCATE = "TRUNCATE actions";
 	
 	private boolean enabled;
+	private DatabaseCapabilityChecker capabilityChecker;
 	private PreparedStatement insertStatement;
 	private PreparedStatement truncateStatement;
 	
@@ -31,6 +32,8 @@ public class ActionDao extends BaseDao {
 	 */
 	public ActionDao(DatabaseContext dbCtx) {
 		this(dbCtx, true);
+		
+		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 	}
 	
 	
@@ -57,7 +60,7 @@ public class ActionDao extends BaseDao {
 	 * @param id The identifier of the data. 
 	 */
 	public void addAction(ActionDataType dataType, ChangesetAction action, long id) {
-		if (enabled) {
+		if (enabled && capabilityChecker.isActionSupported()) {
 			int prmIndex;
 			
 			if (insertStatement == null) {
@@ -85,18 +88,20 @@ public class ActionDao extends BaseDao {
 	 * Removes all action records.
 	 */
 	public void truncate() {
-		if (truncateStatement == null) {
-			truncateStatement = prepareStatement(SQL_TRUNCATE);
-		}
-		
-		try {
-			truncateStatement.executeUpdate();
+		if (enabled && capabilityChecker.isActionSupported()) {
+			if (truncateStatement == null) {
+				truncateStatement = prepareStatement(SQL_TRUNCATE);
+			}
 			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException(
-				"Truncate failed for users.",
-				e
-			);
+			try {
+				truncateStatement.executeUpdate();
+				
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException(
+					"Truncate failed for actions.",
+					e
+				);
+			}
 		}
 	}
 }

@@ -261,6 +261,43 @@ public class DatabaseContext {
 			}
 		}
 	}
+	
+	
+	/**
+	 * Indicates if the specified table exists in the database.
+	 * 
+	 * @param tableName The table to check for.
+	 * @return True if the table exists, false otherwise.
+	 */
+	public boolean doesTableExist(String tableName) {
+		ResultSet resultSet = null;
+		boolean result;
+		
+		try {
+			log.finest("Checking if table {" + tableName + "} exists.");
+			
+			resultSet = getConnection().getMetaData().getTables(null, null, tableName, new String[]{"TABLE"});
+			result = resultSet.next();
+			resultSet.close();
+			resultSet = null;
+			
+			return result;
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException(
+				"Unable to check for the existence of table " + tableName + ".",
+				e
+			);
+		} finally {
+			if (resultSet != null) {
+				try {
+					resultSet.close();
+				} catch (SQLException e) {
+					// Do nothing.
+				}
+			}
+		}
+	}
 
 
 	/**

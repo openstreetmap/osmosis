@@ -21,9 +21,13 @@ public class PostgreSqlDatasetTruncator implements RunnableTask {
 	private static final Logger log = Logger.getLogger(PostgreSqlDatasetTruncator.class.getName());
 	
 	
-	// These SQL statements will be invoked to truncate each table.
-	private static final String[] SQL_STATEMENTS = {
-		"TRUNCATE actions, users, nodes, node_tags, ways, way_tags, way_nodes, relations, relation_tags, relation_members"
+	// These tables will be truncated.
+	private static final String[] SQL_TABLE_NAMES = {
+		"actions",
+		"users",
+		"nodes", "node_tags",
+		"ways", "way_tags", "way_nodes",
+		"relations", "relation_tags", "relation_members"
 	};
 	
 	
@@ -54,8 +58,13 @@ public class PostgreSqlDatasetTruncator implements RunnableTask {
 			schemaVersionValidator.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
 			
 			log.fine("Truncating tables.");
-			for (int i = 0; i < SQL_STATEMENTS.length; i++) {
-				dbCtx.executeStatement(SQL_STATEMENTS[i]);
+			for (int i = 0; i < SQL_TABLE_NAMES.length; i++) {
+				if (dbCtx.doesTableExist(SQL_TABLE_NAMES[i])) {
+					log.finer("Truncating table " + SQL_TABLE_NAMES[i] + ".");
+					dbCtx.executeStatement("TRUNCATE " + SQL_TABLE_NAMES[i]);
+				} else {
+					log.finer("Skipping table " + SQL_TABLE_NAMES[i] + " which doesn't exist in the current schema.");
+				}
 			}
 			
 			log.fine("Committing changes.");
