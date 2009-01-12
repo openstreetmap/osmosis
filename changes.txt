@@ -1,6 +1,6 @@
 0.30
 Added 0.6 support.
-Enhanced the pgsql tasks and schema to support "action" columns.
+Enhanced the pgsql tasks and schema to support an optional "action" table.
 Enhanced the pgsql schema to introduce a stored procedure called during every changeset application.
 Enhanced the pgsql schema to include optional bbox and linestring columns on the way table.
 Added ability to specify slipping map zoom and coordinates as arguments to the bounding box filter.
