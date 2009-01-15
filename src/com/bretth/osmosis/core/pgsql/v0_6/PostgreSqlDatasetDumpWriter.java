@@ -21,7 +21,6 @@ import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.lifecycle.CompletableContainer;
 import com.bretth.osmosis.core.pgsql.common.CopyFileWriter;
 import com.bretth.osmosis.core.pgsql.common.PointBuilder;
-import com.bretth.osmosis.core.pgsql.v0_6.impl.ChangesetAction;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.MemberTypeValueMapper;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.NodeLocationStoreType;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.WayGeometryBuilder;
@@ -150,7 +149,6 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		nodeWriter.writeField(node.getVersion());
 		nodeWriter.writeField(node.getUser().getId());
 		nodeWriter.writeField(node.getTimestamp());
-		nodeWriter.writeField(ChangesetAction.CREATE.getDatabaseValue());
 		nodeWriter.writeField(pointBuilder.createPoint(node.getLatitude(), node.getLongitude()));
 		nodeWriter.endRecord();
 		
@@ -182,7 +180,6 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 			wayWriter.writeField(way.getVersion());
 			wayWriter.writeField(way.getUser().getId());
 			wayWriter.writeField(way.getTimestamp());
-			wayWriter.writeField(ChangesetAction.CREATE.getDatabaseValue());
 			if (enableBboxBuilder) {
 				wayWriter.writeField(wayGeometryBuilder.createWayBbox(way));
 			}
@@ -222,7 +219,6 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		relationWriter.writeField(relation.getVersion());
 		relationWriter.writeField(relation.getUser().getId());
 		relationWriter.writeField(relation.getTimestamp());
-		relationWriter.writeField(ChangesetAction.CREATE.getDatabaseValue());
 		relationWriter.endRecord();
 		
 		for (Tag tag : relation.getTagList()) {
