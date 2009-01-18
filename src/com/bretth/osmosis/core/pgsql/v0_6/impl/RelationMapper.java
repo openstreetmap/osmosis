@@ -8,6 +8,7 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
 
 
 /**
@@ -15,7 +16,7 @@ import com.bretth.osmosis.core.domain.v0_6.Relation;
  * 
  * @author Brett Henderson
  */
-public class RelationBuilder extends EntityBuilder<Relation> {
+public class RelationMapper extends EntityMapper<Relation, RelationBuilder> {
 	
 	/**
 	 * {@inheritDoc}
@@ -39,8 +40,8 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Class<Relation> getEntityClass() {
-		return Relation.class;
+	public Class<RelationBuilder> getBuilderClass() {
+		return RelationBuilder.class;
 	}
 	
 	
@@ -57,9 +58,9 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Relation buildEntity(ResultSet resultSet) {
+	public RelationBuilder parseRecord(ResultSet resultSet) {
 		try {
-			return new Relation(
+			return new RelationBuilder(
 				resultSet.getLong("id"),
 				resultSet.getInt("version"),
 				new Date(resultSet.getTimestamp("tstamp").getTime()),

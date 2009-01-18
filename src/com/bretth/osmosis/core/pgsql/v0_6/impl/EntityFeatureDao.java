@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
@@ -29,7 +30,7 @@ public class EntityFeatureDao<Tef extends Storeable, Tdb extends DbFeature<Tef>>
 	/**
 	 * Provides jdbc mapping functionality for this entity feature type.
 	 */
-	protected EntityFeatureBuilder<Tdb> entityFeatureBuilder;
+	protected EntityFeatureMapper<Tdb> entityFeatureBuilder;
 	private PreparedStatement getStatement;
 	private PreparedStatement insertStatement;
 	private PreparedStatement deleteStatement;
@@ -43,7 +44,7 @@ public class EntityFeatureDao<Tef extends Storeable, Tdb extends DbFeature<Tef>>
 	 * @param entityFeatureBuilder
 	 *            Provides entity type specific JDBC support.
 	 */
-	protected EntityFeatureDao(DatabaseContext dbCtx, EntityFeatureBuilder<Tdb> entityFeatureBuilder) {
+	protected EntityFeatureDao(DatabaseContext dbCtx, EntityFeatureMapper<Tdb> entityFeatureBuilder) {
 		super(dbCtx);
 		
 		this.entityFeatureBuilder = entityFeatureBuilder;
@@ -57,7 +58,7 @@ public class EntityFeatureDao<Tef extends Storeable, Tdb extends DbFeature<Tef>>
 	 *            The unique identifier of the entity.
 	 * @return All instances of this feature type for the entity.
 	 */
-	public List<Tdb> getList(long entityId) {
+	public Collection<Tdb> getAll(long entityId) {
 		ResultSet resultSet = null;
 		
 		if (getStatement == null) {
@@ -102,32 +103,32 @@ public class EntityFeatureDao<Tef extends Storeable, Tdb extends DbFeature<Tef>>
 	 *            The unique identifier of the entity.
 	 * @return All instances of this feature type for the entity.
 	 */
-	public List<Tef> getRawList(long entityId) {
-		List<Tdb> dbList;
-		List<Tef> rawList;
+	public Collection<Tef> getAllRaw(long entityId) {
+		Collection<Tdb> dbFeatures;
+		Collection<Tef> rawFeatures;
 		
-		dbList = getList(entityId);
-		rawList = new ArrayList<Tef>(dbList.size());
-		for (Tdb dbFeature : dbList) {
-			rawList.add(dbFeature.getFeature());
+		dbFeatures = getAll(entityId);
+		rawFeatures = new ArrayList<Tef>(dbFeatures.size());
+		for (Tdb dbFeature : dbFeatures) {
+			rawFeatures.add(dbFeature.getFeature());
 		}
 		
-		return rawList;
+		return rawFeatures;
 	}
 	
 	
 	/**
-	 * Adds the specified feature list to the database.
+	 * Adds the specified features to the database.
 	 * 
-	 * @param featureList
-	 *            The list of features to add.
+	 * @param features
+	 *            The features to add.
 	 */
-	public void addList(List<Tdb> featureList) {
+	public void addAll(Collection<Tdb> features) {
 		if (insertStatement == null) {
 			insertStatement = prepareStatement(entityFeatureBuilder.getSqlInsert(1));
 		}
 		
-		for (Tdb feature : featureList) {
+		for (Tdb feature : features) {
 			try {
 				entityFeatureBuilder.populateEntityParameters(insertStatement, 1, feature);
 				insertStatement.executeUpdate();

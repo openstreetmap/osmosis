@@ -3,7 +3,7 @@ package com.bretth.osmosis.core.mysql.v0_6.impl;
 
 import java.util.Comparator;
 
-import com.bretth.osmosis.core.domain.v0_6.Entity;
+import com.bretth.osmosis.core.domain.v0_6.EntityBuilder;
 
 
 /**
@@ -13,7 +13,7 @@ import com.bretth.osmosis.core.domain.v0_6.Entity;
  * @param <T>
  *            The data type to be compared.
  */
-public class EntityHistoryComparator<T extends Entity> implements Comparator<EntityHistory<T>> {
+public class EntityHistoryComparator<T extends EntityBuilder<?>> implements Comparator<EntityHistory<T>> {
 	
 	/**
 	 * {@inheritDoc}

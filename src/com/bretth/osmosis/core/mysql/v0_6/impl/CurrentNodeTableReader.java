@@ -7,7 +7,7 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
-import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.NodeBuilder;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
@@ -19,7 +19,7 @@ import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  * 
  * @author Brett Henderson
  */
-public class CurrentNodeTableReader extends BaseEntityReader<Node> {
+public class CurrentNodeTableReader extends BaseEntityReader<NodeBuilder> {
 	private static final String SELECT_SQL =
 		"SELECT n.id, n.version, n.timestamp, n.visible, u.data_public, u.id AS user_id, u.display_name, n.latitude, n.longitude"
 		+ " FROM current_nodes n"
@@ -55,7 +55,7 @@ public class CurrentNodeTableReader extends BaseEntityReader<Node> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<Node> createNextValue(ResultSet resultSet) {
+	protected ReadResult<NodeBuilder> createNextValue(ResultSet resultSet) {
 		long id;
 		int version;
 		Date timestamp;
@@ -82,9 +82,9 @@ public class CurrentNodeTableReader extends BaseEntityReader<Node> {
 		}
 		
 		// Non-visible records will be ignored by the caller.
-		return new ReadResult<Node>(
+		return new ReadResult<NodeBuilder>(
 			visible,
-			new Node(id, version, timestamp, user, latitude, longitude)
+			new NodeBuilder(id, version, timestamp, user, latitude, longitude)
 		);
 	}
 }

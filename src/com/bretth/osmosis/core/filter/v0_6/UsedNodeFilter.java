@@ -84,7 +84,7 @@ public class UsedNodeFilter implements SinkSource, EntityProcessor {
 
 		// mark all nodes as required		
 		way = container.getEntity();
-		for (WayNode nodeReference : way.getWayNodeList()) {
+		for (WayNode nodeReference : way.getWayNodes()) {
 			long nodeId = nodeReference.getNodeId();
 			requiredNodes.set(nodeId);
 		}

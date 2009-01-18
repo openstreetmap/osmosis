@@ -21,11 +21,14 @@ import com.bretth.osmosis.core.domain.common.UnparsedTimestampContainer;
 import com.bretth.osmosis.core.domain.v0_6.Bound;
 import com.bretth.osmosis.core.domain.v0_6.EntityType;
 import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.NodeBuilder;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.domain.v0_6.WayBuilder;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.task.v0_6.Sink;
 import com.bretth.osmosis.core.xml.common.XmlTimestampFormat;
@@ -63,10 +66,20 @@ public class FastXmlParser {
 	
 	private static final Logger log = Logger.getLogger(FastXmlParser.class.getName());
 	
+	
+	private NodeBuilder nodeBuilder;
+	private WayBuilder wayBuilder;
+	private RelationBuilder relationBuilder;
+	
+	
 	public FastXmlParser(Sink sink, XMLStreamReader2 reader, boolean enableDateParsing) {
 		this.sink = sink;
 		this.enableDateParsing = enableDateParsing;
 		this.reader = reader;
+		
+		nodeBuilder = new NodeBuilder();
+		wayBuilder = new WayBuilder();
+		relationBuilder = new RelationBuilder();
 		
 		if (enableDateParsing) {
 			timestampFormat = new XmlTimestampFormat();
@@ -211,12 +224,12 @@ public class FastXmlParser {
 		latitude = Double.parseDouble(reader.getAttributeValue(null, ATTRIBUTE_NAME_LATITUDE));
 		longitude = Double.parseDouble(reader.getAttributeValue(null, ATTRIBUTE_NAME_LONGITUDE));
 		
-		Node node = new Node(id, version, timestamp, user, latitude, longitude);
+		nodeBuilder.initialize(id, version, timestamp, user, latitude, longitude);
 		
 		reader.nextTag();
 		while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
 			if (reader.getLocalName().equals(ELEMENT_NAME_TAG)) {
-				node.addTag(readTag());
+				nodeBuilder.addTag(readTag());
 			} else {
 				readUnknownElement();
 			}
@@ -224,7 +237,7 @@ public class FastXmlParser {
 		
 		reader.nextTag();
 		
-		return node;
+		return nodeBuilder.buildEntity();
 	}
 	
 	private WayNode readWayNode() throws Exception {
@@ -249,21 +262,21 @@ public class FastXmlParser {
 			reader.getAttributeValue(null, ATTRIBUTE_NAME_USER)
 		);
 		
-		Way way = new Way(id, version, timestamp, user);
+		wayBuilder.initialize(id, version, timestamp, user);
 		
 		reader.nextTag();
 		while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
 			if (reader.getLocalName().equals(ELEMENT_NAME_TAG)) {
-				way.addTag(readTag());
+				wayBuilder.addTag(readTag());
 			} else if (reader.getLocalName().equals(ELEMENT_NAME_NODE_REFERENCE)) {
-				way.addWayNode(readWayNode());
+				wayBuilder.addWayNode(readWayNode());
 			} else {
 				readUnknownElement();
 			}
 		}
 		reader.nextTag();
 
-		return way;
+		return wayBuilder.buildEntity();
 	}
 	
 	private RelationMember readRelationMember() throws Exception {
@@ -297,21 +310,21 @@ public class FastXmlParser {
 			reader.getAttributeValue(null, ATTRIBUTE_NAME_USER)
 		);
 		
-		Relation relation = new Relation(id, version, timestamp, user);
+		relationBuilder.initialize(id, version, timestamp, user);
 		
 		reader.nextTag();
 		while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
 			if (reader.getLocalName().equals(ELEMENT_NAME_TAG)) {
-				relation.addTag(readTag());
+				relationBuilder.addTag(readTag());
 			} else if (reader.getLocalName().equals(ELEMENT_NAME_MEMBER)) {
-				relation.addMember(readRelationMember());
+				relationBuilder.addMember(readRelationMember());
 			} else {
 				readUnknownElement();
 			}
 		}
 		reader.nextTag();
 		
-		return relation;
+		return relationBuilder.buildEntity();
 	}
 
 	public void readOsm() {

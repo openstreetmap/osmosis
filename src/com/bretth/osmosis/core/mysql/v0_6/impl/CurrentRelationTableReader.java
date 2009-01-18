@@ -8,7 +8,7 @@ import java.util.Date;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
-import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 
 
@@ -18,7 +18,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class CurrentRelationTableReader extends BaseEntityReader<Relation> {
+public class CurrentRelationTableReader extends BaseEntityReader<RelationBuilder> {
 	private static final String SELECT_SQL =
 		"SELECT r.id, r.version, r.timestamp, r.visible, u.data_public, u.id AS user_id, u.display_name"
 		+ " FROM current_relations r"
@@ -54,7 +54,7 @@ public class CurrentRelationTableReader extends BaseEntityReader<Relation> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<Relation> createNextValue(ResultSet resultSet) {
+	protected ReadResult<RelationBuilder> createNextValue(ResultSet resultSet) {
 		long id;
 		int version;
 		Date timestamp;
@@ -77,9 +77,9 @@ public class CurrentRelationTableReader extends BaseEntityReader<Relation> {
 		}
 		
 		// Non-visible records will be ignored by the caller.
-		return new ReadResult<Relation>(
+		return new ReadResult<RelationBuilder>(
 			visible,
-			new Relation(id, version, timestamp, user)
+			new RelationBuilder(id, version, timestamp, user)
 		);
 	}
 }

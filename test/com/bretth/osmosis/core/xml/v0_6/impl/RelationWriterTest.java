@@ -16,6 +16,7 @@ import org.junit.Test;
 import com.bretth.osmosis.core.domain.v0_6.EntityType;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 
@@ -86,11 +87,13 @@ public class RelationWriterTest {
 	 */
 	@Test
 	public final void testProcessNormalRelation() {
-		Relation relation = new Relation(1234, 2, timestamp, new OsmUser(23, "someuser"));
-		relation.addTag(new Tag("relationkey", "relationvalue"));
-		relation.addMember(new RelationMember(2345, EntityType.Node, "noderole"));
-		relation.addMember(new RelationMember(3456, EntityType.Way, "wayrole"));
-		relation.addMember(new RelationMember(4567, EntityType.Relation, "relationrole"));
+		Relation relation =
+			new RelationBuilder(1234, 2, timestamp, new OsmUser(23, "someuser"))
+			.addMember(new RelationMember(2345, EntityType.Node, "noderole"))
+			.addMember(new RelationMember(3456, EntityType.Way, "wayrole"))
+			.addMember(new RelationMember(4567, EntityType.Relation, "relationrole"))
+			.addTag(new Tag("relationkey", "relationvalue"))
+			.buildEntity();
 		testRelationWriter.process(relation);
 		try {
 			testBufferedWriter.flush();
@@ -113,11 +116,13 @@ public class RelationWriterTest {
 	 */
 	@Test
 	public final void testProcessRelationWithNoUser() {
-		Relation relation = new Relation(1234, 2, timestamp, OsmUser.NONE);
-		relation.addTag(new Tag("relationkey", "relationvalue"));
-		relation.addMember(new RelationMember(2345, EntityType.Node, "noderole"));
-		relation.addMember(new RelationMember(3456, EntityType.Way, "wayrole"));
-		relation.addMember(new RelationMember(4567, EntityType.Relation, "relationrole"));
+		Relation relation =
+			new RelationBuilder(1234, 2, timestamp, OsmUser.NONE)
+			.addMember(new RelationMember(2345, EntityType.Node, "noderole"))
+			.addMember(new RelationMember(3456, EntityType.Way, "wayrole"))
+			.addMember(new RelationMember(4567, EntityType.Relation, "relationrole"))
+			.addTag(new Tag("relationkey", "relationvalue"))
+			.buildEntity();
 		testRelationWriter.process(relation);
 		try {
 			testBufferedWriter.flush();
@@ -145,10 +150,12 @@ public class RelationWriterTest {
 	 */
 	@Test
 	public final void testProcessRelationNoTags() {
-		Relation relation = new Relation(1234, 2, timestamp, new OsmUser(23, "someuser"));
-		relation.addMember(new RelationMember(2345, EntityType.Node, "noderole"));
-		relation.addMember(new RelationMember(3456, EntityType.Way, "wayrole"));
-		relation.addMember(new RelationMember(4567, EntityType.Relation, "relationrole"));
+		Relation relation =
+			new RelationBuilder(1234, 2, timestamp, new OsmUser(23, "someuser"))
+			.addMember(new RelationMember(2345, EntityType.Node, "noderole"))
+			.addMember(new RelationMember(3456, EntityType.Way, "wayrole"))
+			.addMember(new RelationMember(4567, EntityType.Relation, "relationrole"))
+			.buildEntity();
 		testRelationWriter.process(relation);
 		try {
 			testBufferedWriter.flush();

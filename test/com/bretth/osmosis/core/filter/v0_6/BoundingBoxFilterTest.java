@@ -3,7 +3,9 @@ package com.bretth.osmosis.core.filter.v0_6;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -13,6 +15,7 @@ import com.bretth.osmosis.core.container.v0_6.BoundContainer;
 import com.bretth.osmosis.core.domain.v0_6.Bound;
 import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
+import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.filter.common.IdTrackerType;
 import com.bretth.osmosis.test.task.v0_6.SinkEntityInspector;
 
@@ -39,6 +42,11 @@ public class BoundingBoxFilterTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
+		List<Tag> tags;
+		
+		// All nodes have an empty tags list.
+		tags = new ArrayList<Tag>();
+		
 		entityInspector = new SinkEntityInspector();
 		// simpleAreaFilter doesn't cross antimeridian; no complete ways or relations
 		simpleAreaFilter = new BoundingBoxFilter(
@@ -53,12 +61,12 @@ public class BoundingBoxFilterTest {
 		simpleAreaFilter.setSink(entityInspector);
 		intersectingBound = new Bound(30, 10, 30, 10, "intersecting");
 		nonIntersectingBound = new Bound(-30, -50, 10, -10, "nonintersecting");
-		inAreaNode = new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), 10, 10);
-		outOfAreaNode = new Node(1235, 0, new Date(), new OsmUser(12, "OsmosisTest"), 30, 30);
-		edgeNodeEast = new Node(1236, 0, new Date(), new OsmUser(12, "OsmosisTest"), 10, 20);
-		edgeNodeWest = new Node(1237, 0, new Date(), new OsmUser(12, "OsmosisTest"), 10, -20);
-		edgeNodeNorth = new Node(1238, 0, new Date(), new OsmUser(12, "OsmosisTest"), 20, 10);
-		edgeNodeSouth = new Node(1239, 0, new Date(), new OsmUser(12, "OsmosisTest"), -20, 10);
+		inAreaNode = new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, 10, 10);
+		outOfAreaNode = new Node(1235, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, 30, 30);
+		edgeNodeEast = new Node(1236, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, 10, 20);
+		edgeNodeWest = new Node(1237, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, 10, -20);
+		edgeNodeNorth = new Node(1238, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, 20, 10);
+		edgeNodeSouth = new Node(1239, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, -20, 10);
 	}
 
 

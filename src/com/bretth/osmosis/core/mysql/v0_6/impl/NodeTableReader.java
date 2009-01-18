@@ -7,8 +7,8 @@ import java.util.Date;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
+import com.bretth.osmosis.core.domain.v0_6.NodeBuilder;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
-import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
@@ -19,7 +19,7 @@ import com.bretth.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  * 
  * @author Brett Henderson
  */
-public class NodeTableReader extends BaseEntityReader<EntityHistory<Node>> {
+public class NodeTableReader extends BaseEntityReader<EntityHistory<NodeBuilder>> {
 	private static final String SELECT_SQL =
 		"SELECT n.id, n.version, n.timestamp, n.visible, u.data_public, u.id AS user_id, u.display_name, n.latitude, n.longitude"
 		+ " FROM nodes n"
@@ -55,7 +55,7 @@ public class NodeTableReader extends BaseEntityReader<EntityHistory<Node>> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<EntityHistory<Node>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<NodeBuilder>> createNextValue(ResultSet resultSet) {
 		long id;
 		int version;
 		Date timestamp;
@@ -81,9 +81,9 @@ public class NodeTableReader extends BaseEntityReader<EntityHistory<Node>> {
 			throw new OsmosisRuntimeException("Unable to read node fields.", e);
 		}
 		
-		return new ReadResult<EntityHistory<Node>>(
+		return new ReadResult<EntityHistory<NodeBuilder>>(
 			true,
-			new EntityHistory<Node>(new Node(id, version, timestamp, user, latitude, longitude), visible)
+			new EntityHistory<NodeBuilder>(new NodeBuilder(id, version, timestamp, user, latitude, longitude), visible)
 		);
 	}
 }

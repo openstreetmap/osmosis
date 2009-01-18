@@ -1,9 +1,12 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.domain.v0_6;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.bretth.osmosis.core.store.StoreClassRegister;
 import com.bretth.osmosis.core.store.StoreReader;
@@ -20,6 +23,7 @@ public class Bound extends Entity implements Comparable<Bound> {
 	private static final double MAX_LATITUDE = 90.0;
 	private static final double MIN_LONGITUDE = -180.0;
 	private static final double MAX_LONGITUDE = 180.0;
+	private static final List<Tag> EMPTY_TAG_LIST = new ArrayList<Tag>(0);
 	
 	private double right;
 	private double left;
@@ -55,7 +59,7 @@ public class Bound extends Entity implements Comparable<Bound> {
 	 *            The origin (source) of the data, typically a URI
 	 */
 	public Bound(double right, double left, double top, double bottom, String origin) {
-		super(0, 0, new Date(), OsmUser.NONE); // minimal underlying entity
+		super(0, 0, new Date(), OsmUser.NONE, EMPTY_TAG_LIST); // minimal underlying entity
 		// Check if any coordinates are out of bounds
 		if (Double.compare(right, MAX_LONGITUDE) > 0
 		        || Double.compare(right, MIN_LONGITUDE) < 0

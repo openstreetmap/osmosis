@@ -371,7 +371,7 @@ public class ChangeWriter {
 		}
 		
 		// Insert the tags of the new node into the history table.
-		for (Tag tag : node.getTagList()) {
+		for (Tag tag : node.getTags()) {
 			try {
 				prmIndex = 1;
 				insertNodeTagStatement.setLong(prmIndex++, node.getId());
@@ -445,7 +445,7 @@ public class ChangeWriter {
 			}
 			
 			// Insert the tags of the new node into the current table.
-			for (Tag tag : node.getTagList()) {
+			for (Tag tag : node.getTags()) {
 				try {
 					prmIndex = 1;
 					insertNodeTagCurrentStatement.setLong(prmIndex++, node.getId());
@@ -486,7 +486,7 @@ public class ChangeWriter {
 		// Add or update the user in the database.
 		userManager.addOrUpdateUser(way.getUser());
 		
-		nodeReferenceList = way.getWayNodeList();
+		nodeReferenceList = way.getWayNodes();
 		
 		// If this is a deletion, the entity is not visible.
 		visible = !action.equals(ChangeAction.Delete);
@@ -573,7 +573,7 @@ public class ChangeWriter {
 		}
 		
 		// Insert the tags of the new way into the history table.
-		for (Tag tag : way.getTagList()) {
+		for (Tag tag : way.getTags()) {
 			try {
 				prmIndex = 1;
 				insertWayTagStatement.setLong(prmIndex++, way.getId());
@@ -672,7 +672,7 @@ public class ChangeWriter {
 			}
 			
 			// Insert the tags of the new way into the current table.
-			for (Tag tag : way.getTagList()) {
+			for (Tag tag : way.getTags()) {
 				try {
 					prmIndex = 1;
 					insertWayTagCurrentStatement.setLong(prmIndex++, way.getId());
@@ -734,7 +734,7 @@ public class ChangeWriter {
 		// Add or update the user in the database.
 		userManager.addOrUpdateUser(relation.getUser());
 		
-		relationMemberList = relation.getMemberList();
+		relationMemberList = relation.getMembers();
 		
 		// If this is a deletion, the entity is not visible.
 		visible = !action.equals(ChangeAction.Delete);
@@ -821,7 +821,7 @@ public class ChangeWriter {
 		}
 		
 		// Insert the tags of the new relation into the history table.
-		for (Tag tag : relation.getTagList()) {
+		for (Tag tag : relation.getTags()) {
 			try {
 				prmIndex = 1;
 				insertRelationTagStatement.setLong(prmIndex++, relation.getId());
@@ -923,7 +923,7 @@ public class ChangeWriter {
 			}
 			
 			// Insert the tags of the new relation into the current table.
-			for (Tag tag : relation.getTagList()) {
+			for (Tag tag : relation.getTags()) {
 				try {
 					prmIndex = 1;
 					insertRelationTagCurrentStatement.setLong(prmIndex++, relation.getId());

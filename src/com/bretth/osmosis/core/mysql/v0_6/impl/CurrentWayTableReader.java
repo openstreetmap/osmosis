@@ -8,7 +8,7 @@ import java.util.Date;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
-import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.domain.v0_6.WayBuilder;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 
 
@@ -18,7 +18,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class CurrentWayTableReader extends BaseEntityReader<Way> {
+public class CurrentWayTableReader extends BaseEntityReader<WayBuilder> {
 	private static final String SELECT_SQL =
 		"SELECT w.id, w.version, w.timestamp, w.visible, u.data_public, u.id AS user_id, u.display_name"
 		+ " FROM current_ways w"
@@ -54,7 +54,7 @@ public class CurrentWayTableReader extends BaseEntityReader<Way> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<Way> createNextValue(ResultSet resultSet) {
+	protected ReadResult<WayBuilder> createNextValue(ResultSet resultSet) {
 		long id;
 		int version;
 		Date timestamp;
@@ -77,9 +77,9 @@ public class CurrentWayTableReader extends BaseEntityReader<Way> {
 		}
 		
 		// Non-visible records will be ignored by the caller.
-		return new ReadResult<Way>(
+		return new ReadResult<WayBuilder>(
 			visible,
-			new Way(id, version, timestamp, user)
+			new WayBuilder(id, version, timestamp, user)
 		);
 	}
 }

@@ -15,7 +15,7 @@ import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
  * 
  * @author Brett Henderson
  */
-public class TagBuilder extends EntityFeatureBuilder<DbFeature<Tag>> {
+public class TagMapper extends EntityFeatureMapper<DbFeature<Tag>> {
 	private String parentEntityName;
 	
 	
@@ -26,7 +26,7 @@ public class TagBuilder extends EntityFeatureBuilder<DbFeature<Tag>> {
 	 *            The name of the parent entity. This is used to generate SQL
 	 *            statements for the correct tag table name.
 	 */
-	public TagBuilder(String parentEntityName) {
+	public TagMapper(String parentEntityName) {
 		this.parentEntityName = parentEntityName;
 	}
 	

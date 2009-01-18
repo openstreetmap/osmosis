@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
-import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.domain.v0_6.WayBuilder;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.store.PeekableIterator;
@@ -22,12 +22,12 @@ import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
  * 
  * @author Brett Henderson
  */
-public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
+public class WayReader implements ReleasableIterator<EntityHistory<WayBuilder>> {
 	
-	private ReleasableIterator<EntityHistory<Way>> wayReader;
+	private ReleasableIterator<EntityHistory<WayBuilder>> wayReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> wayTagReader;
 	private PeekableIterator<DbFeatureHistory<DbOrderedFeature<WayNode>>> wayNodeReader;
-	private EntityHistory<Way> nextValue;
+	private EntityHistory<WayBuilder> nextValue;
 	private boolean nextValueLoaded;
 	
 	
@@ -41,7 +41,7 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 	 *            regardless of their public edits flag.
 	 */
 	public WayReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
-		wayReader = new PersistentIterator<EntityHistory<Way>>(
+		wayReader = new PersistentIterator<EntityHistory<WayBuilder>>(
 			new SingleClassObjectSerializationFactory(EntityHistory.class),
 			new WayTableReader(loginCredentials, readAllUsers),
 			"way",
@@ -71,10 +71,10 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 	 */
 	public boolean hasNext() {
 		if (!nextValueLoaded && wayReader.hasNext()) {
-			EntityHistory<Way> wayHistory;
+			EntityHistory<WayBuilder> wayHistory;
 			long wayId;
 			int wayVersion;
-			Way way;
+			WayBuilder way;
 			List<DbOrderedFeature<WayNode>> wayNodes;
 			
 			wayHistory = wayReader.next();
@@ -153,8 +153,8 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public EntityHistory<Way> next() {
-		EntityHistory<Way> result;
+	public EntityHistory<WayBuilder> next() {
+		EntityHistory<WayBuilder> result;
 		
 		if (!hasNext()) {
 			throw new NoSuchElementException();

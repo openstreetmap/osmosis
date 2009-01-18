@@ -2,6 +2,7 @@
 package com.bretth.osmosis.core.xml.v0_6.impl;
 
 import java.io.BufferedWriter;
+import java.util.Collection;
 import java.util.List;
 
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
@@ -46,7 +47,7 @@ public class RelationWriter extends ElementWriter {
 	public void process(Relation relation) {
 		OsmUser user;
 		List<RelationMember> relationMembers;
-		List<Tag> tags;
+		Collection<Tag> tags;
 		
 		user = relation.getUser();
 		
@@ -60,8 +61,8 @@ public class RelationWriter extends ElementWriter {
 			addAttribute("user", user.getName());
 		}
 		
-		relationMembers = relation.getMemberList();
-		tags = relation.getTagList();
+		relationMembers = relation.getMembers();
+		tags = relation.getTags();
 		
 		if (relationMembers.size() > 0 || tags.size() > 0) {
 			endOpenElement(false);

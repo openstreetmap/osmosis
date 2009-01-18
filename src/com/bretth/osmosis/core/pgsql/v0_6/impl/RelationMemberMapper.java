@@ -15,7 +15,7 @@ import com.bretth.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
  * 
  * @author Brett Henderson
  */
-public class RelationMemberBuilder extends EntityFeatureBuilder<DbOrderedFeature<RelationMember>> {
+public class RelationMemberMapper extends EntityFeatureMapper<DbOrderedFeature<RelationMember>> {
 	
 	private MemberTypeValueMapper memberTypeValueMapper;
 	
@@ -23,7 +23,7 @@ public class RelationMemberBuilder extends EntityFeatureBuilder<DbOrderedFeature
 	/**
 	 * Creates a new instance.
 	 */
-	public RelationMemberBuilder() {
+	public RelationMemberMapper() {
 		memberTypeValueMapper = new MemberTypeValueMapper();
 	}
 	

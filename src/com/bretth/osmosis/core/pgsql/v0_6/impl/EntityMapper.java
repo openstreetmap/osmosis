@@ -9,17 +9,20 @@ import java.util.Arrays;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Entity;
+import com.bretth.osmosis.core.domain.v0_6.EntityBuilder;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 
 
 /**
- * Provides functionality common to all entity builder implementations.
+ * Provides functionality common to all database entity builder implementations.
  * 
  * @author Brett Henderson
- * @param <T>
- *            The type of entity to be built.
+ * @param <Te>
+ *            The entity type to be supported.
+ * @param <Tb>
+ *            The builder type for the entity.
  */
-public abstract class EntityBuilder<T extends Entity> {
+public abstract class EntityMapper<Te extends Entity,  Tb extends EntityBuilder<Te>> {
 	
 	/**
 	 * Returns the name of the entity to substitute into SQL statements. This is
@@ -39,11 +42,11 @@ public abstract class EntityBuilder<T extends Entity> {
 	
 	
 	/**
-	 * Returns the class for the entity type being supported.
+	 * Returns the class type for the entity builder.
 	 * 
-	 * @return The entity type class.
+	 * @return The entity builder type class.
 	 */
-	public abstract Class<T> getEntityClass();
+	public abstract Class<Tb> getBuilderClass();
 	
 	
 	/**
@@ -198,7 +201,7 @@ public abstract class EntityBuilder<T extends Entity> {
 	 *            The result set to read from.
 	 * @return The newly built entity object.
 	 */
-	public abstract T buildEntity(ResultSet resultSet);
+	public abstract Tb parseRecord(ResultSet resultSet);
 	
 	
 	/**
@@ -280,5 +283,5 @@ public abstract class EntityBuilder<T extends Entity> {
 	 *            The entity containing the data to be inserted.
 	 * @return The current parameter offset.
 	 */
-	public abstract int populateEntityParameters(PreparedStatement statement, int initialIndex, T entity);
+	public abstract int populateEntityParameters(PreparedStatement statement, int initialIndex, Te entity);
 }

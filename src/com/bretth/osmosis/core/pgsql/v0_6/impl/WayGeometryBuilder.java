@@ -105,7 +105,7 @@ public class WayGeometryBuilder implements Releasable {
 		right = 0;
 		bottom = 0;
 		top = 0;
-		for (WayNode wayNode : way.getWayNodeList()) {
+		for (WayNode wayNode : way.getWayNodes()) {
 			NodeLocation nodeLocation;
 			double longitude;
 			double latitude;
@@ -156,7 +156,7 @@ public class WayGeometryBuilder implements Releasable {
 		int numValidNodes = 0;
 		
 		linePoints = new ArrayList<Point>();
-		for (WayNode wayNode : way.getWayNodeList()) {
+		for (WayNode wayNode : way.getWayNodes()) {
 			NodeLocation nodeLocation;
 			
 			nodeLocation = locationStore.getNodeLocation(wayNode.getNodeId());

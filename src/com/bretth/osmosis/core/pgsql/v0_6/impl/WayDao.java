@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.domain.v0_6.WayBuilder;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
@@ -19,7 +20,7 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class WayDao extends EntityDao<Way> {
+public class WayDao extends EntityDao<Way, WayBuilder> {
 	
 	private static final String SQL_UPDATE_WAY_BBOX =
 		"UPDATE ways SET bbox = (" +
@@ -51,10 +52,10 @@ public class WayDao extends EntityDao<Way> {
 	 *            The dao to use for adding action records to the database.
 	 */
 	public WayDao(DatabaseContext dbCtx, ActionDao actionDao) {
-		super(dbCtx, new WayBuilder(), actionDao);
+		super(dbCtx, new WayMapper(), actionDao);
 		
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
-		wayNodeDao = new EntityFeatureDao<WayNode, DbOrderedFeature<WayNode>>(dbCtx, new WayNodeBuilder());
+		wayNodeDao = new EntityFeatureDao<WayNode, DbOrderedFeature<WayNode>>(dbCtx, new WayNodeMapper());
 	}
 	
 	
@@ -62,17 +63,11 @@ public class WayDao extends EntityDao<Way> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Way getEntity(long entityId) {
-		Way way;
-		
-		way = super.getEntity(entityId);
-		
-		way.addWayNodes(wayNodeDao.getRawList(entityId));
-		
-		return way;
+	protected void loadFeatures(long entityId, WayBuilder entityBuilder) {
+		entityBuilder.setWayNodes(new ArrayList<WayNode>(wayNodeDao.getAllRaw(entityId)));
 	}
-	
-	
+
+
 	/**
 	 * Adds the specified way node list to the database.
 	 * 
@@ -90,7 +85,7 @@ public class WayDao extends EntityDao<Way> {
 			dbList.add(new DbOrderedFeature<WayNode>(entityId, wayNodeList.get(i), i));
 		}
 		
-		wayNodeDao.addList(dbList);
+		wayNodeDao.addAll(dbList);
 	}
 	
 	
@@ -143,7 +138,7 @@ public class WayDao extends EntityDao<Way> {
 	public void addEntity(Way entity) {
 		super.addEntity(entity);
 		
-		addWayNodeList(entity.getId(), entity.getWayNodeList());
+		addWayNodeList(entity.getId(), entity.getWayNodes());
 		
 		updateWayGeometries(entity.getId());
 	}
@@ -160,7 +155,7 @@ public class WayDao extends EntityDao<Way> {
 		
 		wayId = entity.getId();
 		wayNodeDao.removeList(wayId);
-		addWayNodeList(entity.getId(), entity.getWayNodeList());
+		addWayNodeList(entity.getId(), entity.getWayNodes());
 		
 		updateWayGeometries(entity.getId());
 	}

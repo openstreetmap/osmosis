@@ -1,7 +1,8 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.filter.v0_6;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -10,8 +11,22 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bretth.osmosis.core.container.v0_6.*;
-import com.bretth.osmosis.core.domain.v0_6.*;
+import com.bretth.osmosis.core.container.v0_6.EntityContainer;
+import com.bretth.osmosis.core.container.v0_6.NodeContainer;
+import com.bretth.osmosis.core.container.v0_6.RelationContainer;
+import com.bretth.osmosis.core.container.v0_6.WayContainer;
+import com.bretth.osmosis.core.domain.v0_6.Entity;
+import com.bretth.osmosis.core.domain.v0_6.EntityType;
+import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.NodeBuilder;
+import com.bretth.osmosis.core.domain.v0_6.OsmUser;
+import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
+import com.bretth.osmosis.core.domain.v0_6.RelationMember;
+import com.bretth.osmosis.core.domain.v0_6.Tag;
+import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.domain.v0_6.WayBuilder;
+import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.filter.common.IdTrackerType;
 import com.bretth.osmosis.test.task.v0_6.SinkEntityInspector;
 
@@ -35,7 +50,6 @@ public class AreaFilterTest {
 	private Way outOfAreaWay;
 	private Way inOutWay;
 	private Way mangledInOutWay1;
-	private Way mangledInOutWay2;
 	private Relation inAreaRelation;
 	private Relation outOfAreaRelation1;
 	private Relation inOutRelation1;
@@ -106,134 +120,119 @@ public class AreaFilterTest {
 
 
 	private void setUpNodes() {
-		inAreaNode = new Node(1234, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 10, 10);
-		inAreaNode.addTag(new Tag("test_key1", "test_value1"));
-		outOfAreaNode = new Node(1235, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 30, 30);
-		inAreaWayNode1 = new Node(2345, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 10, 10);
-		inAreaWayNode2 = new Node(2346, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), -10, -10);
-		outOfAreaWayNode1 = new Node(2347, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), -30, -30);
-		outOfAreaWayNode2 = new Node(2348, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), -40, -40);
+		NodeBuilder nodeBuilder;
+		
+		nodeBuilder = new NodeBuilder();
+		
+		inAreaNode = nodeBuilder
+			.initialize(1234, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 10, 10)
+			.addTag(new Tag("test_key1", "test_value1"))
+			.buildEntity();
+		inAreaNode = nodeBuilder.buildEntity();
+		outOfAreaNode = nodeBuilder
+			.initialize(1235, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 30, 30)
+			.buildEntity();
+		inAreaWayNode1 = nodeBuilder
+			.initialize(2345, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 10, 10)
+			.buildEntity();
+		inAreaWayNode2 = nodeBuilder
+			.initialize(2346, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), -10, -10)
+			.buildEntity();
+		outOfAreaWayNode1 = nodeBuilder
+			.initialize(2347, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), -30, -30)
+			.buildEntity();
+		outOfAreaWayNode2 = nodeBuilder
+			.initialize(2348, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), -40, -40)
+			.buildEntity();
 	}
 
 
 	private void setUpWays() {
-		inAreaWay = new Way(3456, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER));
-		inAreaWay.addWayNode(new WayNode(inAreaWayNode1.getId()));
-		inAreaWay.addWayNode(new WayNode(inAreaWayNode2.getId()));
-		inAreaWay.addTag(new Tag("test_key2", "test_value2"));
-		outOfAreaWay = new Way(3457, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER));
-		outOfAreaWay.addWayNode(new WayNode(outOfAreaWayNode1.getId()));
-		outOfAreaWay.addWayNode(new WayNode(outOfAreaWayNode2.getId()));
-		inOutWay = new Way(3458, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER));
-		inOutWay.addWayNode(new WayNode(inAreaWayNode1.getId()));
-		inOutWay.addWayNode(new WayNode(outOfAreaWayNode1.getId()));
-		inOutWay.addWayNode(new WayNode(inAreaWayNode2.getId()));
-		inOutWay.addWayNode(new WayNode(outOfAreaWayNode2.getId()));
-		inOutWay.addTag(new Tag("test_key3", "test_value3"));
+		WayBuilder wayBuilder;
+		
+		wayBuilder = new WayBuilder();
+		
+		inAreaWay = wayBuilder
+			.initialize(3456, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER))
+			.addWayNode(new WayNode(inAreaWayNode1.getId()))
+			.addTag(new Tag("test_key2", "test_value2"))
+			.buildEntity();
+		
+		outOfAreaWay = wayBuilder
+			.initialize(3457, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER))
+			.addWayNode(new WayNode(outOfAreaWayNode1.getId()))
+			.addWayNode(new WayNode(outOfAreaWayNode2.getId()))
+			.buildEntity();
+		inOutWay = wayBuilder
+			.initialize(3458, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER))
+			.addWayNode(new WayNode(inAreaWayNode1.getId()))
+			.addWayNode(new WayNode(outOfAreaWayNode1.getId()))
+			.addWayNode(new WayNode(inAreaWayNode2.getId()))
+			.addWayNode(new WayNode(outOfAreaWayNode2.getId()))
+			.addTag(new Tag("test_key3", "test_value3"))
+			.buildEntity();
 		// mangledInOutWay1 is mangled by completeWays=false
-		mangledInOutWay1 = new Way(inOutWay.getId(), 0, inOutWay.getTimestamp(), inOutWay.getUser());
-		mangledInOutWay1.addWayNode(new WayNode(inAreaWayNode1.getId()));
-		mangledInOutWay1.addWayNode(new WayNode(inAreaWayNode2.getId()));
-		mangledInOutWay1.addTags(inOutWay.getTagList());
-		// mangledInOutWay2 is mangled by completeRelations=false
-		mangledInOutWay2 = new Way(inOutWay.getId(), 0, inOutWay.getTimestamp(), inOutWay.getUser());
-		mangledInOutWay2.addWayNode(new WayNode(inAreaWayNode1.getId()));
-		mangledInOutWay2.addWayNode(new WayNode(inAreaWayNode2.getId()));
-		mangledInOutWay2.addWayNode(new WayNode(outOfAreaWayNode2.getId()));
+		mangledInOutWay1 = wayBuilder
+			.initialize(inOutWay.getId(), 0, inOutWay.getTimestamp(), inOutWay.getUser())
+			.addWayNode(new WayNode(inAreaWayNode1.getId()))
+			.addWayNode(new WayNode(inAreaWayNode2.getId()))
+			.setTags(inOutWay.getTags())
+			.buildEntity();
 	}
 
 
 	private void setUpRelations() {
-		inAreaRelation = new Relation(4567, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER));
-		inAreaRelation.addMember(new RelationMember(
-		        inAreaWayNode1.getId(),
-		        EntityType.Node,
-		        "node1"));
-		inAreaRelation.addMember(new RelationMember(
-		        inAreaWayNode2.getId(),
-		        EntityType.Node,
-		        "node2"));
-		inAreaRelation.addMember(new RelationMember(inAreaWay.getId(), EntityType.Way, "way1"));
-		inAreaRelation.addTag(new Tag("test_key4", "test_value4"));
-		outOfAreaRelation1 = new Relation(4568, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER));
-		outOfAreaRelation1.addMember(new RelationMember(
-		        outOfAreaWayNode1.getId(),
-		        EntityType.Node,
-		        "node1"));
-		outOfAreaRelation1.addMember(new RelationMember(
-		        outOfAreaWayNode2.getId(),
-		        EntityType.Node,
-		        "node2"));
-		outOfAreaRelation1.addMember(new RelationMember(
-		        outOfAreaWay.getId(),
-		        EntityType.Way,
-		        "way1"));
-		inOutRelation2 = new Relation(4570, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER));
-		inOutRelation2.addMember(new RelationMember(
-		        inAreaWayNode2.getId(),
-		        EntityType.Node,
-		        "node1"));
-		inOutRelation2.addMember(new RelationMember(
-		        outOfAreaWayNode2.getId(),
-		        EntityType.Node,
-		        "node2"));
-		inOutRelation2.addMember(new RelationMember(inOutWay.getId(), EntityType.Way, "way1"));
-		inOutRelation2.addTag(new Tag("test_key5", "test_value5"));
-		inOutRelation1 = new Relation(4569, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER));
-		inOutRelation1.addMember(new RelationMember(
-		        inAreaWayNode1.getId(),
-		        EntityType.Node,
-		        "node1"));
-		inOutRelation1.addMember(new RelationMember(
-		        outOfAreaWayNode1.getId(),
-		        EntityType.Node,
-		        "node2"));
-		inOutRelation1.addMember(new RelationMember(inOutWay.getId(), EntityType.Way, "way1"));
-		inOutRelation1.addMember(new RelationMember(
-		        inOutRelation2.getId(),
-		        EntityType.Relation,
-		        "relation1"));
-		inOutRelation1.addTag(new Tag("test_key4", "test_value4"));
-		mangledInOutRelation1 = new Relation(
-		        inOutRelation1.getId(),
-		        inOutRelation1.getVersion(),
-		        inOutRelation1.getTimestamp(),
-		        inOutRelation1.getUser());
-		mangledInOutRelation1.addMember(new RelationMember(
-		        inAreaWayNode1.getId(),
-		        EntityType.Node,
-		        "node1"));
-		mangledInOutRelation1.addMember(new RelationMember(inOutWay.getId(), EntityType.Way, "way1"));
-		mangledInOutRelation1.addTags(inOutRelation1.getTagList());
-		mangledInOutRelation2 = new Relation(
-		        inOutRelation2.getId(),
-		        inOutRelation2.getVersion(),
-		        inOutRelation2.getTimestamp(),
-		        inOutRelation2.getUser());
-		mangledInOutRelation2.addMember(new RelationMember(
-		        inAreaWayNode2.getId(),
-		        EntityType.Node,
-		        "node1"));
-		mangledInOutRelation2.addMember(new RelationMember(inOutWay.getId(), EntityType.Way, "way1"));
-		mangledInOutRelation2.addTags(inOutRelation2.getTagList());
-		mangledCompleteInOutRelation1 = new Relation(
-		        inOutRelation1.getId(),
-		        inOutRelation1.getVersion(),
-		        inOutRelation1.getTimestamp(),
-		        inOutRelation1.getUser());
-		mangledCompleteInOutRelation1.addMember(new RelationMember(
-		        inAreaWayNode1.getId(),
-		        EntityType.Node,
-		        "node1"));
-		mangledCompleteInOutRelation1.addMember(new RelationMember(
-		        inOutWay.getId(),
-		        EntityType.Way,
-		        "way1"));
-		mangledCompleteInOutRelation1.addTags(inOutRelation1.getTagList());
-		mangledCompleteInOutRelation1.addMember(new RelationMember(
-		        inOutRelation2.getId(),
-		        EntityType.Relation,
-		        "relation1"));
+		RelationBuilder relationBuilder;
+		
+		relationBuilder = new RelationBuilder();
+		
+		inAreaRelation = relationBuilder
+			.initialize(4567, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER))
+			.addMember(new RelationMember(inAreaWayNode1.getId(), EntityType.Node, "node1"))
+			.addMember(new RelationMember(inAreaWayNode2.getId(), EntityType.Node, "node2"))
+			.addMember(new RelationMember(inAreaWay.getId(), EntityType.Way, "way1"))
+			.addTag(new Tag("test_key4", "test_value4"))
+			.buildEntity();
+		outOfAreaRelation1 = relationBuilder
+			.initialize(4568, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER))
+			.addMember(new RelationMember(outOfAreaWayNode1.getId(), EntityType.Node, "node1"))
+			.addMember(new RelationMember(outOfAreaWayNode2.getId(), EntityType.Node, "node2"))
+			.addMember(new RelationMember(outOfAreaWay.getId(), EntityType.Way, "way1"))
+			.buildEntity();
+		inOutRelation2 = relationBuilder
+			.initialize(4570, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER))
+			.addMember(new RelationMember(inAreaWayNode2.getId(), EntityType.Node, "node1"))
+			.addMember(new RelationMember(outOfAreaWayNode2.getId(), EntityType.Node, "node2"))
+			.addMember(new RelationMember(inOutWay.getId(), EntityType.Way, "way1"))
+			.addTag(new Tag("test_key5", "test_value5"))
+			.buildEntity();
+		inOutRelation1 = relationBuilder
+			.initialize(4569, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER))
+			.addMember(new RelationMember(inAreaWayNode1.getId(), EntityType.Node, "node1"))
+			.addMember(new RelationMember(outOfAreaWayNode1.getId(), EntityType.Node, "node2"))
+			.addMember(new RelationMember(inOutWay.getId(), EntityType.Way, "way1"))
+			.addMember(new RelationMember(inOutRelation2.getId(), EntityType.Relation, "relation1"))
+			.addTag(new Tag("test_key4", "test_value4"))
+			.buildEntity();
+		mangledInOutRelation1 = relationBuilder
+			.initialize(inOutRelation1.getId(), inOutRelation1.getVersion(), inOutRelation1.getTimestamp(), inOutRelation1.getUser())
+			.addMember(new RelationMember(inAreaWayNode1.getId(), EntityType.Node, "node1"))
+			.addMember(new RelationMember(inOutWay.getId(), EntityType.Way, "way1"))
+			.setTags(inOutRelation1.getTags())
+			.buildEntity();
+		mangledInOutRelation2 = relationBuilder
+			.initialize(inOutRelation2.getId(), inOutRelation2.getVersion(), inOutRelation2.getTimestamp(), inOutRelation2.getUser())
+			.addMember(new RelationMember(inAreaWayNode2.getId(), EntityType.Node, "node1"))
+			.addMember(new RelationMember(inOutWay.getId(), EntityType.Way, "way1"))
+			.setTags(inOutRelation2.getTags())
+			.buildEntity();
+		mangledCompleteInOutRelation1 = relationBuilder
+			.initialize(inOutRelation1.getId(), inOutRelation1.getVersion(), inOutRelation1.getTimestamp(), inOutRelation1.getUser())
+			.addMember(new RelationMember(inAreaWayNode1.getId(), EntityType.Node, "node1"))
+			.addMember(new RelationMember(inOutWay.getId(), EntityType.Way, "way1"))
+			.addMember(new RelationMember(inOutRelation2.getId(), EntityType.Relation, "relation1"))
+			.setTags(inOutRelation1.getTags())
+			.buildEntity();
 	}
 
 

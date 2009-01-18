@@ -2,17 +2,18 @@
 package com.bretth.osmosis.core.change.v0_6.impl;
 
 import java.util.Calendar;
-import java.util.Date;
 
+import com.bretth.osmosis.core.container.v0_6.BoundContainer;
 import com.bretth.osmosis.core.container.v0_6.ChangeContainer;
 import com.bretth.osmosis.core.container.v0_6.EntityProcessor;
-import com.bretth.osmosis.core.container.v0_6.BoundContainer;
 import com.bretth.osmosis.core.container.v0_6.NodeContainer;
 import com.bretth.osmosis.core.container.v0_6.RelationContainer;
 import com.bretth.osmosis.core.container.v0_6.WayContainer;
-import com.bretth.osmosis.core.domain.v0_6.Node;
-import com.bretth.osmosis.core.domain.v0_6.Relation;
-import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.domain.common.SimpleTimestampContainer;
+import com.bretth.osmosis.core.domain.common.TimestampContainer;
+import com.bretth.osmosis.core.domain.v0_6.NodeBuilder;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
+import com.bretth.osmosis.core.domain.v0_6.WayBuilder;
 import com.bretth.osmosis.core.task.common.ChangeAction;
 import com.bretth.osmosis.core.task.v0_6.ChangeSink;
 
@@ -26,7 +27,10 @@ import com.bretth.osmosis.core.task.v0_6.ChangeSink;
 public class TimestampChangeSetter implements EntityProcessor {
 	private ChangeAction action;
 	private ChangeSink changeSink;
-	private Date timestamp;
+	private TimestampContainer timestamp;
+	private NodeBuilder nodeBuilder;
+	private WayBuilder wayBuilder;
+	private RelationBuilder relationBuilder;
 	
 	
 	/**
@@ -45,7 +49,11 @@ public class TimestampChangeSetter implements EntityProcessor {
 		
 		calendar = Calendar.getInstance();
 		calendar.set(Calendar.MILLISECOND, 0);
-		timestamp = calendar.getTime();
+		timestamp = new SimpleTimestampContainer(calendar.getTime());
+		
+		nodeBuilder = new NodeBuilder();
+		wayBuilder = new WayBuilder();
+		relationBuilder = new RelationBuilder();
 	}
 	
 	
@@ -61,19 +69,13 @@ public class TimestampChangeSetter implements EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(NodeContainer nodeContainer) {
-		Node inputEntity = nodeContainer.getEntity();
+		nodeBuilder.initialize(nodeContainer.getEntity());
+		nodeBuilder.setTimestamp(timestamp);
 		
 		changeSink.process(
 			new ChangeContainer(
 				new NodeContainer(
-					new Node(
-						inputEntity.getId(),
-						inputEntity.getVersion(),
-						timestamp,
-						inputEntity.getUser(),
-						inputEntity.getLatitude(),
-						inputEntity.getLongitude()
-					)
+					nodeBuilder.buildEntity()
 				),
 				action
 			)
@@ -85,19 +87,14 @@ public class TimestampChangeSetter implements EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(WayContainer wayContainer) {
-		Way inputEntity = wayContainer.getEntity();
-		Way outputEntity;
-		
-		outputEntity = new Way(inputEntity.getId(),
-							inputEntity.getVersion(),
-							timestamp,
-							inputEntity.getUser());
-		
-		outputEntity.addTags(inputEntity.getTagList());
+		wayBuilder.initialize(wayContainer.getEntity());
+		wayBuilder.setTimestamp(timestamp);
 		
 		changeSink.process(
 			new ChangeContainer(
-				new WayContainer(outputEntity),
+				new WayContainer(
+					wayBuilder.buildEntity()
+				),
 				action
 			)
 		);
@@ -108,19 +105,14 @@ public class TimestampChangeSetter implements EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(RelationContainer relationContainer) {
-		Relation inputEntity = relationContainer.getEntity();
-		Relation outputEntity;
-		
-		outputEntity = new Relation(inputEntity.getId(),
-							inputEntity.getVersion(),
-							timestamp,
-							inputEntity.getUser());
-		
-		outputEntity.addTags(inputEntity.getTagList());
+		relationBuilder.initialize(relationContainer.getEntity());
+		relationBuilder.setTimestamp(timestamp);
 		
 		changeSink.process(
 			new ChangeContainer(
-				new RelationContainer(outputEntity),
+				new RelationContainer(
+					relationBuilder.buildEntity()
+				),
 				action
 			)
 		);

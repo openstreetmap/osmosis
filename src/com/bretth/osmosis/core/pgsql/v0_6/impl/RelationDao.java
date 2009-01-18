@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
@@ -16,7 +17,7 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class RelationDao extends EntityDao<Relation> {
+public class RelationDao extends EntityDao<Relation, RelationBuilder> {
 	
 	private EntityFeatureDao<RelationMember, DbOrderedFeature<RelationMember>> relationMemberDao;
 	
@@ -30,9 +31,9 @@ public class RelationDao extends EntityDao<Relation> {
 	 *            The dao to use for adding action records to the database.
 	 */
 	public RelationDao(DatabaseContext dbCtx, ActionDao actionDao) {
-		super(dbCtx, new RelationBuilder(), actionDao);
+		super(dbCtx, new RelationMapper(), actionDao);
 		
-		relationMemberDao = new EntityFeatureDao<RelationMember, DbOrderedFeature<RelationMember>>(dbCtx, new RelationMemberBuilder());
+		relationMemberDao = new EntityFeatureDao<RelationMember, DbOrderedFeature<RelationMember>>(dbCtx, new RelationMemberMapper());
 	}
 	
 	
@@ -40,14 +41,8 @@ public class RelationDao extends EntityDao<Relation> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Relation getEntity(long entityId) {
-		Relation relation;
-		
-		relation = super.getEntity(entityId);
-		
-		relation.addMembers(relationMemberDao.getRawList(entityId));
-		
-		return relation;
+	protected void loadFeatures(long entityId, RelationBuilder entityBuilder) {
+		entityBuilder.setMembers(new ArrayList<RelationMember>(relationMemberDao.getAllRaw(entityId)));
 	}
 	
 	
@@ -59,7 +54,7 @@ public class RelationDao extends EntityDao<Relation> {
 	 * @param memberList
 	 *            The list of features to add.
 	 */
-	private void addMemberList(long entityId, List<RelationMember> memberList) {
+	private void addMembers(long entityId, List<RelationMember> memberList) {
 		List<DbOrderedFeature<RelationMember>> dbList;
 		
 		dbList = new ArrayList<DbOrderedFeature<RelationMember>>(memberList.size());
@@ -68,7 +63,7 @@ public class RelationDao extends EntityDao<Relation> {
 			dbList.add(new DbOrderedFeature<RelationMember>(entityId, memberList.get(i), i));
 		}
 		
-		relationMemberDao.addList(dbList);
+		relationMemberDao.addAll(dbList);
 	}
 	
 	
@@ -79,7 +74,7 @@ public class RelationDao extends EntityDao<Relation> {
 	public void addEntity(Relation entity) {
 		super.addEntity(entity);
 		
-		addMemberList(entity.getId(), entity.getMemberList());
+		addMembers(entity.getId(), entity.getMembers());
 	}
 	
 	
@@ -94,7 +89,7 @@ public class RelationDao extends EntityDao<Relation> {
 		
 		relationId = entity.getId();
 		relationMemberDao.removeList(relationId);
-		addMemberList(entity.getId(), entity.getMemberList());
+		addMembers(entity.getId(), entity.getMembers());
 	}
 	
 	

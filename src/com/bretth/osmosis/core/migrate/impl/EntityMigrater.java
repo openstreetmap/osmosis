@@ -104,14 +104,14 @@ public class EntityMigrater {
 		Node newEntity;
 		
 		newEntity = new Node(
-				entity.getId(),
+			entity.getId(),
 			1,
 			entity.getTimestamp(),
 			migrateUser(entity.getUser()),
+			migrateTags(entity),
 			entity.getLatitude(),
 			entity.getLongitude()
 		);
-		newEntity.addTags(migrateTags(entity));
 		
 		return newEntity;
 	}
@@ -131,10 +131,10 @@ public class EntityMigrater {
 			entity.getId(),
 			1,
 			entity.getTimestamp(),
-			migrateUser(entity.getUser())
+			migrateUser(entity.getUser()),
+			migrateTags(entity),
+			migrateWayNodes(entity)
 		);
-		newEntity.addTags(migrateTags(entity));
-		newEntity.addWayNodes(migrateWayNodes(entity));
 		
 		return newEntity;
 	}
@@ -154,10 +154,10 @@ public class EntityMigrater {
 			entity.getId(),
 			1,
 			entity.getTimestamp(),
-			migrateUser(entity.getUser())
+			migrateUser(entity.getUser()),
+			migrateTags(entity),
+			migrateRelationMembers(entity)
 		);
-		newEntity.addTags(migrateTags(entity));
-		newEntity.addMembers(migrateRelationMembers(entity));
 		
 		return newEntity;
 	}

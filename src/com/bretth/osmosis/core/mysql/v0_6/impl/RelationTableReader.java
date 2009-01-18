@@ -8,7 +8,7 @@ import java.util.Date;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
-import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
 import com.bretth.osmosis.core.mysql.common.DatabaseContext;
 
 
@@ -18,7 +18,7 @@ import com.bretth.osmosis.core.mysql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class RelationTableReader extends BaseEntityReader<EntityHistory<Relation>> {
+public class RelationTableReader extends BaseEntityReader<EntityHistory<RelationBuilder>> {
 	private static final String SELECT_SQL =
 		"SELECT r.id, r.version, r.timestamp, r.visible, u.data_public, u.id AS user_id, u.display_name"
 		+ " FROM relations r"
@@ -54,7 +54,7 @@ public class RelationTableReader extends BaseEntityReader<EntityHistory<Relation
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<EntityHistory<Relation>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<RelationBuilder>> createNextValue(ResultSet resultSet) {
 		long id;
 		int version;
 		Date timestamp;
@@ -76,9 +76,9 @@ public class RelationTableReader extends BaseEntityReader<EntityHistory<Relation
 			throw new OsmosisRuntimeException("Unable to read relation fields.", e);
 		}
 		
-		return new ReadResult<EntityHistory<Relation>>(
+		return new ReadResult<EntityHistory<RelationBuilder>>(
 			true,
-			new EntityHistory<Relation>(new Relation(id, version, timestamp, user), visible)
+			new EntityHistory<RelationBuilder>(new RelationBuilder(id, version, timestamp, user), visible)
 		);
 	}
 }

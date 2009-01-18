@@ -10,7 +10,9 @@ import com.bretth.osmosis.core.container.v0_6.RelationContainer;
 import com.bretth.osmosis.core.container.v0_6.WayContainer;
 import com.bretth.osmosis.core.domain.v0_6.EntityType;
 import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
+import com.bretth.osmosis.core.domain.v0_6.WayBuilder;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
 import com.bretth.osmosis.core.domain.v0_6.Way;
@@ -42,6 +44,8 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	private IdTracker availableRelations;
 	private boolean completeRelations;
 	private SimpleObjectStore<RelationContainer> allRelations;
+	private WayBuilder wayBuilder;
+	private RelationBuilder relationBuilder;
 	
 	
 	/**
@@ -76,6 +80,9 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		if (this.completeRelations || this.completeWays) {
 			allRelations = new SimpleObjectStore<RelationContainer>(new SingleClassObjectSerializationFactory(RelationContainer.class), "afrl", true);
 		}
+		
+		wayBuilder = new WayBuilder();
+		relationBuilder = new RelationBuilder();
 	}
 	
 	
@@ -140,7 +147,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		way = container.getEntity();
 
 		// First look through all the nodes to see if any are within the filtered area
-		for (WayNode nodeReference : way.getWayNodeList()) {
+		for (WayNode nodeReference : way.getWayNodes()) {
 			if (availableNodes.get(nodeReference.getNodeId())) {
 				availableWays.set(way.getId());
 				break;
@@ -152,7 +159,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			// If complete ways are desired, mark all its nodes as required, then stuff the way into
 			// a file until all the ways are read
 			if (completeWays) {
-				for (WayNode nodeReference : way.getWayNodeList()) {
+				for (WayNode nodeReference : way.getWayNodes()) {
 					requiredNodes.set(nodeReference.getNodeId());
 				}
 				allWays.add(container);
@@ -170,28 +177,24 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	 */
 	private void emitFilteredWay(Way way) {
 		if (clipIncompleteEntities) {
-			Way filteredWay;
-			
-			// Create a new way object to contain only available nodes.
-			filteredWay = new Way(way.getId(), way.getVersion(), way.getTimestamp(), way.getUser());
+			// Create a new way to contain only available nodes.
+			wayBuilder.initialize(way);
+			wayBuilder.clearWayNodes();
 			
 			// Only add node references for nodes that are available.
-			for (WayNode nodeReference : way.getWayNodeList()) {
+			for (WayNode nodeReference : way.getWayNodes()) {
 				long nodeId;
 				
 				nodeId = nodeReference.getNodeId();
 				
 				if (availableNodes.get(nodeId)) {
-					filteredWay.addWayNode(nodeReference);
+					wayBuilder.addWayNode(nodeReference);
 				}
 			}
 			
 			// Only add ways that contain nodes.
-			if (filteredWay.getWayNodeList().size() > 0) {
-				// Add all tags to the filtered way.
-				filteredWay.addTags(way.getTagList());
-				
-				sink.process(new WayContainer(filteredWay));
+			if (wayBuilder.getWayNodes().size() > 0) {
+				sink.process(new WayContainer(wayBuilder.buildEntity()));
 			}
 			
 		} else {
@@ -217,7 +220,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			availableRelations.set(relation.getId());
 		} else { // examine the relation to see if it should be passed on
 			// First look through all the members to see if any are within the filtered area
-			for (RelationMember member : relation.getMemberList()) {
+			for (RelationMember member : relation.getMembers()) {
 				long memberId;
 				EntityType memberType;
 				
@@ -253,13 +256,12 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
      */
     private void emitFilteredRelation(Relation relation) {
     	if (clipIncompleteEntities) {
-		    Relation filteredRelation;
-		    
 		    // Create a new relation object to contain only items within the bounding box.
-			filteredRelation = new Relation(relation.getId(), relation.getVersion(), relation.getTimestamp(), relation.getUser());
+    		relationBuilder.initialize(relation);
+    		relationBuilder.clearMembers();
 			
 			// Only add members for entities that are available.
-			for (RelationMember member : relation.getMemberList()) {
+			for (RelationMember member : relation.getMembers()) {
 				long memberId;
 				EntityType memberType;
 				
@@ -268,15 +270,15 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 				
 				if (EntityType.Node.equals(memberType)) {
 					if (availableNodes.get(memberId)) {
-						filteredRelation.addMember(member);
+						relationBuilder.addMember(member);
 					}
 				} else if (EntityType.Way.equals(memberType)) {
 					if (availableWays.get(memberId)) {
-						filteredRelation.addMember(member);
+						relationBuilder.addMember(member);
 					}
 				} else if (EntityType.Relation.equals(memberType)) {
 					if (availableRelations.get(memberId)) {
-						filteredRelation.addMember(member);
+						relationBuilder.addMember(member);
 					}
 				} else {
 					throw new OsmosisRuntimeException("Unsupported member type + " + memberType + " for relation " + relation.getId() + ".");
@@ -284,11 +286,8 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			}
 			
 			// Only add relations that contain entities.
-			if (filteredRelation.getMemberList().size() > 0) {
-				// Add all tags to the filtered relation.
-				filteredRelation.addTags(relation.getTagList());
-				
-				sink.process(new RelationContainer(filteredRelation));
+			if (relationBuilder.getMembers().size() > 0) {
+				sink.process(new RelationContainer(relationBuilder.buildEntity()));
 			}
 			
     	} else {

@@ -68,7 +68,7 @@ public class NodeKeyValueFilter implements SinkSource, EntityProcessor {
 		Node node = container.getEntity();
 
 		boolean matchesFilter = false;
-		for (Tag tag : node.getTagList()) {
+		for (Tag tag : node.getTags()) {
 			String keyValue = tag.getKey() + "." + tag.getValue();
 			if (allowedKeyValues.contains(keyValue)) {
 				matchesFilter = true;

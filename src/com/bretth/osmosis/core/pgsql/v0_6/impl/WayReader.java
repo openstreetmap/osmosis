@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.domain.v0_6.WayBuilder;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DbOrderedFeatureComparator;
@@ -19,7 +20,7 @@ import com.bretth.osmosis.core.store.PeekableIterator;
  * 
  * @author Brett Henderson
  */
-public class WayReader extends EntityReader<Way> {
+public class WayReader extends EntityReader<Way, WayBuilder> {
 	
 	private PeekableIterator<DbOrderedFeature<WayNode>> wayNodeReader;
 	
@@ -31,10 +32,10 @@ public class WayReader extends EntityReader<Way> {
 	 *            The database context to use for accessing the database.
 	 */
 	public WayReader(DatabaseContext dbCtx) {
-		super(dbCtx, new WayBuilder());
+		super(dbCtx, new WayMapper());
 		
 		wayNodeReader = new PeekableIterator<DbOrderedFeature<WayNode>>(
-			new EntityFeatureTableReader<WayNode, DbOrderedFeature<WayNode>>(dbCtx, new WayNodeBuilder())
+			new EntityFeatureTableReader<WayNode, DbOrderedFeature<WayNode>>(dbCtx, new WayNodeMapper())
 		);
 	}
 	
@@ -49,10 +50,10 @@ public class WayReader extends EntityReader<Way> {
 	 *            entities to be returned.
 	 */
 	public WayReader(DatabaseContext dbCtx, String constraintTable) {
-		super(dbCtx, new WayBuilder(), constraintTable);
+		super(dbCtx, new WayMapper(), constraintTable);
 		
 		wayNodeReader = new PeekableIterator<DbOrderedFeature<WayNode>>(
-			new EntityFeatureTableReader<WayNode, DbOrderedFeature<WayNode>>(dbCtx, new WayNodeBuilder(), constraintTable)
+			new EntityFeatureTableReader<WayNode, DbOrderedFeature<WayNode>>(dbCtx, new WayNodeMapper(), constraintTable)
 		);
 	}
 	
@@ -61,7 +62,7 @@ public class WayReader extends EntityReader<Way> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void populateEntityFeatures(Way entity) {
+	protected void populateEntityFeatures(WayBuilder entity) {
 		long wayId;
 		List<DbOrderedFeature<WayNode>> wayNodes;
 		

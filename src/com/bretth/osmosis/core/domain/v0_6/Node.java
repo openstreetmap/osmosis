@@ -1,6 +1,7 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.domain.v0_6;
 
+import java.util.Collection;
 import java.util.Date;
 
 import com.bretth.osmosis.core.domain.common.SimpleTimestampContainer;
@@ -33,14 +34,16 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param tags
+	 *            The tags to apply to the object.
 	 * @param latitude
 	 *            The geographic latitude.
 	 * @param longitude
 	 *            The geographic longitude.
 	 */
-	public Node(long id, int version, Date timestamp, OsmUser user, double latitude, double longitude) {
+	public Node(long id, int version, Date timestamp, OsmUser user, Collection<Tag> tags, double latitude, double longitude) {
 		// Chain to the more-specific constructor
-		this(id, version, new SimpleTimestampContainer(timestamp), user, latitude, longitude);
+		this(id, version, new SimpleTimestampContainer(timestamp), user, tags, latitude, longitude);
 	}
 	
 	
@@ -56,13 +59,15 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            timestamp representation.
 	 * @param user
 	 *            The name of the user that last modified this entity.
+	 * @param tags
+	 *            The tags to apply to the object.
 	 * @param latitude
 	 *            The geographic latitude.
 	 * @param longitude
 	 *            The geographic longitude.
 	 */
-	public Node(long id, int version, TimestampContainer timestampContainer, OsmUser user, double latitude, double longitude) {
-		super(id, timestampContainer, user, version);
+	public Node(long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags, double latitude, double longitude) {
+		super(id, timestampContainer, user, version, tags);
 		
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -179,7 +184,7 @@ public class Node extends Entity implements Comparable<Node> {
 			}
 		}
 		
-		return compareTags(comparisonNode.getTagList());
+		return compareTags(comparisonNode.getTags());
 	}
 	
 	

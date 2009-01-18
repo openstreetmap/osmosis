@@ -11,6 +11,7 @@ import org.postgis.Point;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.NodeBuilder;
 import com.bretth.osmosis.core.pgsql.common.PointBuilder;
 
 
@@ -19,7 +20,7 @@ import com.bretth.osmosis.core.pgsql.common.PointBuilder;
  * 
  * @author Brett Henderson
  */
-public class NodeBuilder extends EntityBuilder<Node> {
+public class NodeMapper extends EntityMapper<Node, NodeBuilder> {
 	
 	private PointBuilder pointBuilder;
 	
@@ -27,7 +28,7 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	/**
 	 * Creates a new instance.
 	 */
-	public NodeBuilder() {
+	public NodeMapper() {
 		pointBuilder = new PointBuilder();
 	}
 	
@@ -54,8 +55,8 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Class<Node> getEntityClass() {
-		return Node.class;
+	public Class<NodeBuilder> getBuilderClass() {
+		return NodeBuilder.class;
 	}
 	
 	
@@ -72,7 +73,7 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Node buildEntity(ResultSet resultSet) {
+	public NodeBuilder parseRecord(ResultSet resultSet) {
 		try {
 			PGgeometry geom;
 			Point point;
@@ -80,7 +81,7 @@ public class NodeBuilder extends EntityBuilder<Node> {
 			geom = (PGgeometry) resultSet.getObject("geom");
 			point = (Point) geom.getGeometry();
 			
-			return new Node(
+			return new NodeBuilder(
 				resultSet.getLong("id"),
 				resultSet.getInt("version"),
 				new Date(resultSet.getTimestamp("tstamp").getTime()),

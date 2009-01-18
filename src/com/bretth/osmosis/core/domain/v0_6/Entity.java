@@ -30,7 +30,7 @@ public abstract class Entity implements Storeable {
 	private int version;
 	private TimestampContainer timestampContainer;
 	private OsmUser user;
-	private List<Tag> tagList;
+	private Collection<Tag> tags;
 	
 	
 	/**
@@ -44,10 +44,12 @@ public abstract class Entity implements Storeable {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param tags
+	 *            The tags to apply to the object.
 	 */
-	public Entity(long id, int version, Date timestamp, OsmUser user) {
+	public Entity(long id, int version, Date timestamp, OsmUser user, Collection<Tag> tags) {
 		// Chain to the more specific constructor
-		this(id, new SimpleTimestampContainer(timestamp), user, version);
+		this(id, new SimpleTimestampContainer(timestamp), user, version, tags);
 	}
 	
 	
@@ -63,14 +65,15 @@ public abstract class Entity implements Storeable {
 	 *            The user that last modified this entity.
 	 * @param version
 	 *            The version of the entity.
+	 * @param tags
+	 *            The tags to apply to the object.
 	 */
-	public Entity(long id, TimestampContainer timestampContainer, OsmUser user, int version) {
+	public Entity(long id, TimestampContainer timestampContainer, OsmUser user, int version, Collection<Tag> tags) {
 		this.id = LongAsInt.longToInt(id);
 		this.timestampContainer = timestampContainer;
 		this.user = user;
 		this.version = version;
-		
-		tagList = new ArrayList<Tag>();
+		this.tags = Collections.unmodifiableCollection(new ArrayList<Tag>(tags));
 	}
 	
 	
@@ -85,6 +88,7 @@ public abstract class Entity implements Storeable {
 	 */
 	public Entity(StoreReader sr, StoreClassRegister scr) {
 		int tagCount;
+		Collection<Tag> tmpTags;
 		
 		id = sr.readInteger();
 		
@@ -97,11 +101,11 @@ public abstract class Entity implements Storeable {
 		user = new OsmUser(sr, scr);
 		
 		tagCount = sr.readCharacter();
-		tagList = new ArrayList<Tag>(tagCount);
-		
+		tmpTags = new ArrayList<Tag>(tagCount);
 		for (int i = 0; i < tagCount; i++) {
-			addTag(new Tag(sr, scr));
+			tmpTags.add(new Tag(sr, scr));
 		}
+		tags = Collections.unmodifiableCollection(tmpTags);
 	}
 	
 	
@@ -122,40 +126,40 @@ public abstract class Entity implements Storeable {
 		
 		user.store(sw, scr);
 		
-		sw.writeCharacter(IntAsChar.intToChar(tagList.size()));
-		for (Tag tag : tagList) {
+		sw.writeCharacter(IntAsChar.intToChar(tags.size()));
+		for (Tag tag : tags) {
 			tag.store(sw, scr);
 		}
 	}
 	
 	
 	/**
-	 * Compares this tag list to the specified tag list. The tag comparison is
-	 * based on a comparison of key and value in that order.
+	 * Compares the tags on this entity to the specified tags. The tag
+	 * comparison is based on a comparison of key and value in that order.
 	 * 
-	 * @param comparisonTagList
-	 *            The tagList to compare to.
+	 * @param comparisonTags
+	 *            The tags to compare to.
 	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
 	 *         "bigger".
 	 */
-	protected int compareTags(List<Tag> comparisonTagList) {
-		List<Tag> tagList1;
-		List<Tag> tagList2;
+	protected int compareTags(Collection<Tag> comparisonTags) {
+		List<Tag> tags1;
+		List<Tag> tags2;
 		
-		tagList1 = new ArrayList<Tag>(tagList);
-		tagList2 = new ArrayList<Tag>(comparisonTagList);
+		tags1 = new ArrayList<Tag>(tags);
+		tags2 = new ArrayList<Tag>(comparisonTags);
 		
-		Collections.sort(tagList1);
-		Collections.sort(tagList2);
+		Collections.sort(tags1);
+		Collections.sort(tags2);
 		
 		// The list with the most tags is considered bigger.
-		if (tagList1.size() != tagList2.size()) {
-			return tagList1.size() - tagList2.size();
+		if (tags1.size() != tags2.size()) {
+			return tags1.size() - tags2.size();
 		}
 		
 		// Check the individual tags.
-		for (int i = 0; i < tagList1.size(); i++) {
-			int result = tagList1.get(i).compareTo(tagList2.get(i));
+		for (int i = 0; i < tags1.size(); i++) {
+			int result = tags1.get(i).compareTo(tags2.get(i));
 			
 			if (result != 0) {
 				return result;
@@ -192,10 +196,26 @@ public abstract class Entity implements Storeable {
 	
 	
 	/**
-	 * @return The timestamp. 
+	 * Gets the timestamp in date form. This is the standard method for
+	 * retrieving timestamp information.
+	 * 
+	 * @return The timestamp.
 	 */
 	public Date getTimestamp() {
 		return timestampContainer.getTimestamp();
+	}
+	
+	
+	/**
+	 * Gets the timestamp container object which may hold the timestamp in a
+	 * different format. This is most useful if creating new copies of entities
+	 * because it can avoid the need to parse timestamp information into Date
+	 * form.
+	 * 
+	 * @return The timestamp container.
+	 */
+	public TimestampContainer getTimestampContainer() {
+		return timestampContainer;
 	}
 	
 	
@@ -225,33 +245,11 @@ public abstract class Entity implements Storeable {
 	
 	
 	/**
-	 * Returns the attached list of tags. The returned list is read-only.
+	 * Returns the attached tags. The returned collection is read-only.
 	 * 
 	 * @return The tagList.
 	 */
-	public List<Tag> getTagList() {
-		return Collections.unmodifiableList(tagList);
-	}
-	
-	
-	/**
-	 * Adds a new tag.
-	 * 
-	 * @param tag
-	 *            The tag to add.
-	 */
-	public void addTag(Tag tag) {
-		tagList.add(tag);
-	}
-	
-	
-	/**
-	 * Adds all tags in the collection to the node.
-	 * 
-	 * @param tags
-	 *            The collection of tags to be added.
-	 */
-	public void addTags(Collection<Tag> tags) {
-		tagList.addAll(tags);
+	public Collection<Tag> getTags() {
+		return tags;
 	}
 }

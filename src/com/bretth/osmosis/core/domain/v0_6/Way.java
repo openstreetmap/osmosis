@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import com.bretth.osmosis.core.domain.common.SimpleTimestampContainer;
@@ -22,7 +23,7 @@ import com.bretth.osmosis.core.util.IntAsChar;
  */
 public class Way extends Entity implements Comparable<Way> {
 	
-	private List<WayNode> wayNodeList;
+	private List<WayNode> wayNodes;
 	
 	
 	/**
@@ -36,10 +37,14 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param tags
+	 *            The tags to apply to the object.
+	 * @param wayNodes
+	 *            The way nodes to apply to the object
 	 */
-	public Way(long id, int version, Date timestamp, OsmUser user) {
+	public Way(long id, int version, Date timestamp, OsmUser user, Collection<Tag> tags, List<WayNode> wayNodes) {
 		// Chain to the more specific constructor
-		this(id, version, new SimpleTimestampContainer(timestamp), user);
+		this(id, version, new SimpleTimestampContainer(timestamp), user, tags, wayNodes);
 	}
 	
 	
@@ -55,11 +60,15 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            timestamp representation.
 	 * @param user
 	 *            The name of the user that last modified this entity.
+	 * @param tags
+	 *            The tags to apply to the object.
+	 * @param wayNodes
+	 *            The way nodes to apply to the object
 	 */
-	public Way(long id, int version, TimestampContainer timestampContainer, OsmUser user) {
-		super(id, timestampContainer, user, version);
+	public Way(long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags, List<WayNode> wayNodes) {
+		super(id, timestampContainer, user, version, tags);
 		
-		wayNodeList = new ArrayList<WayNode>();
+		this.wayNodes = Collections.unmodifiableList(new ArrayList<WayNode>(wayNodes));
 	}
 	
 	
@@ -75,14 +84,16 @@ public class Way extends Entity implements Comparable<Way> {
 	public Way(StoreReader sr, StoreClassRegister scr) {
 		super(sr, scr);
 		
-		int nodeCount;
+		List<WayNode> tmpWayNodes;
+		int featureCount;
 		
-		nodeCount = sr.readCharacter();
+		featureCount = sr.readCharacter();
 		
-		wayNodeList = new ArrayList<WayNode>();
-		for (int i = 0; i < nodeCount; i++) {
-			addWayNode(new WayNode(sr, scr));
+		tmpWayNodes = new ArrayList<WayNode>();
+		for (int i = 0; i < featureCount; i++) {
+			tmpWayNodes.add(new WayNode(sr, scr));
 		}
+		wayNodes = Collections.unmodifiableList(tmpWayNodes);
 	}
 	
 	
@@ -93,8 +104,8 @@ public class Way extends Entity implements Comparable<Way> {
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		super.store(sw, scr);
 		
-		sw.writeCharacter(IntAsChar.intToChar(wayNodeList.size()));
-		for (WayNode wayNode : wayNodeList) {
+		sw.writeCharacter(IntAsChar.intToChar(wayNodes.size()));
+		for (WayNode wayNode : wayNodes) {
 			wayNode.store(sw, scr);
 		}
 	}
@@ -126,20 +137,25 @@ public class Way extends Entity implements Comparable<Way> {
 	 * Compares this node list to the specified node list. The comparison is
 	 * based on a direct comparison of the node ids.
 	 * 
-	 * @param comparisonWayNodeList
+	 * @param comparisonWayNodes
 	 *            The node list to compare to.
 	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
 	 *         "bigger".
 	 */
-	protected int compareWayNodes(List<WayNode> comparisonWayNodeList) {
+	protected int compareWayNodes(List<WayNode> comparisonWayNodes) {
+		Iterator<WayNode> i;
+		Iterator<WayNode> j;
+		
 		// The list with the most entities is considered bigger.
-		if (wayNodeList.size() != comparisonWayNodeList.size()) {
-			return wayNodeList.size() - comparisonWayNodeList.size();
+		if (wayNodes.size() != comparisonWayNodes.size()) {
+			return wayNodes.size() - comparisonWayNodes.size();
 		}
 		
 		// Check the individual way nodes.
-		for (int i = 0; i < wayNodeList.size(); i++) {
-			int result = wayNodeList.get(i).compareTo(comparisonWayNodeList.get(i));
+		i = wayNodes.iterator();
+		j = comparisonWayNodes.iterator();
+		while (i.hasNext()) {
+			int result = i.next().compareTo(j.next());
 			
 			if (result != 0) {
 				return result;
@@ -194,14 +210,14 @@ public class Way extends Entity implements Comparable<Way> {
 		}
 		
 		wayNodeListResult = compareWayNodes(
-			comparisonWay.getWayNodeList()
+			comparisonWay.getWayNodes()
 		);
 		
 		if (wayNodeListResult != 0) {
 			return wayNodeListResult;
 		}
 		
-		return compareTags(comparisonWay.getTagList());
+		return compareTags(comparisonWay.getTags());
 	}
 	
 	
@@ -210,29 +226,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 * 
 	 * @return The wayNodeList.
 	 */
-	public List<WayNode> getWayNodeList() {
-		return Collections.unmodifiableList(wayNodeList);
-	}
-	
-	
-	/**
-	 * Adds a new way node.
-	 * 
-	 * @param wayNode
-	 *            The way node to add.
-	 */
-	public void addWayNode(WayNode wayNode) {
-		wayNodeList.add(wayNode);
-	}
-	
-	
-	/**
-	 * Adds all node references in the collection to the node.
-	 * 
-	 * @param wayNodes
-	 *            The collection of node references to be added.
-	 */
-	public void addWayNodes(Collection<WayNode> wayNodes) {
-		wayNodeList.addAll(wayNodes);
+	public List<WayNode> getWayNodes() {
+		return wayNodes;
 	}
 }

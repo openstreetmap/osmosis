@@ -7,7 +7,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.container.v0_6.ChangeContainer;
 import com.bretth.osmosis.core.container.v0_6.NodeContainer;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
-import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.NodeBuilder;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.store.PersistentIterator;
@@ -24,7 +24,7 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
 public class NodeChangeReader {
 	
 	private boolean fullHistory;
-	private PeekableIterator<EntityHistory<Node>> nodeHistoryReader;
+	private PeekableIterator<EntityHistory<NodeBuilder>> nodeHistoryReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> nodeTagHistoryReader;
 	private ChangeContainer nextValue;
 
@@ -49,8 +49,8 @@ public class NodeChangeReader {
 		this.fullHistory = fullHistory;
 		
 		nodeHistoryReader =
-			new PeekableIterator<EntityHistory<Node>>(
-				new PersistentIterator<EntityHistory<Node>>(
+			new PeekableIterator<EntityHistory<NodeBuilder>>(
+				new PersistentIterator<EntityHistory<NodeBuilder>>(
 					new SingleClassObjectSerializationFactory(EntityHistory.class),
 					new NodeHistoryReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd),
 					"nod",
@@ -76,9 +76,9 @@ public class NodeChangeReader {
 	 * @return A node history record where the node is fully populated with nodes
 	 *         and tags.
 	 */
-	private EntityHistory<Node> readNextNodeHistory() {
-		EntityHistory<Node> nodeHistory;
-		Node node;
+	private EntityHistory<NodeBuilder> readNextNodeHistory() {
+		EntityHistory<NodeBuilder> nodeHistory;
+		NodeBuilder node;
 		
 		nodeHistory = nodeHistoryReader.next();
 		node = nodeHistory.getEntity();
@@ -99,8 +99,8 @@ public class NodeChangeReader {
 	 */
 	private ChangeContainer readChange() {
 		boolean createdPreviously;
-		EntityHistory<Node> mostRecentHistory;
-		Node node;
+		EntityHistory<NodeBuilder> mostRecentHistory;
+		NodeBuilder node;
 		NodeContainer nodeContainer;
 		
 		// Check the first node, if it has a version greater than 1 the node
@@ -119,7 +119,7 @@ public class NodeChangeReader {
 		}
 		
 		// The node in the result must be wrapped in a container.
-		nodeContainer = new NodeContainer(node);
+		nodeContainer = new NodeContainer(node.buildEntity());
 		
 		// The entity has been modified if it is visible and was created previously.
 		// It is a create if it is visible and was NOT created previously.

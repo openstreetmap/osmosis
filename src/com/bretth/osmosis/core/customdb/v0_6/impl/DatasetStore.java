@@ -278,7 +278,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 		tilesFound = false;
 		minimumTile = 0;
 		maximumTile = 0;
-		for (WayNode wayNode : way.getWayNodeList()) {
+		for (WayNode wayNode : way.getWayNodes()) {
 			long nodeId;
 			Node node;
 			int tile;
@@ -325,7 +325,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 			}
 			
 		} else {
-			for (WayNode wayNode : way.getWayNodeList()) {
+			for (WayNode wayNode : way.getWayNodes()) {
 				long nodeId;
 				
 				nodeId = wayNode.getNodeId();
@@ -355,7 +355,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 		);
 		
 		// Write the relation id to indexes keyed by each of the relation members.
-		for (RelationMember member : relation.getMemberList()) {
+		for (RelationMember member : relation.getMembers()) {
 			EntityType memberType;
 			
 			memberType = member.getMemberType();

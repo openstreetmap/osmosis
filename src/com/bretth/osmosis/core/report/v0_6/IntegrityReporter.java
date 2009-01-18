@@ -160,7 +160,7 @@ public class IntegrityReporter implements Sink, EntityProcessor {
 		
 		wayBitSet.set(way.getId());
 		
-		for (WayNode wayNode : way.getWayNodeList()) {
+		for (WayNode wayNode : way.getWayNodes()) {
 			if (!nodeBitSet.get(wayNode.getNodeId())) {
 				initialize();
 				
@@ -179,7 +179,7 @@ public class IntegrityReporter implements Sink, EntityProcessor {
 		
 		relation = relationContainer.getEntity();
 		
-		for (RelationMember relationMember : relation.getMemberList()) {
+		for (RelationMember relationMember : relation.getMembers()) {
 			EntityType memberType;
 			
 			memberType = relationMember.getMemberType();

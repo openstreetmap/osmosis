@@ -4,7 +4,7 @@ package com.bretth.osmosis.core.mysql.v0_6.impl;
 import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
-import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.NodeBuilder;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.store.PeekableIterator;
@@ -18,11 +18,11 @@ import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
  * 
  * @author Brett Henderson
  */
-public class NodeReader implements ReleasableIterator<EntityHistory<Node>> {
+public class NodeReader implements ReleasableIterator<EntityHistory<NodeBuilder>> {
 	
-	private ReleasableIterator<EntityHistory<Node>> nodeReader;
+	private ReleasableIterator<EntityHistory<NodeBuilder>> nodeReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> nodeTagReader;
-	private EntityHistory<Node> nextValue;
+	private EntityHistory<NodeBuilder> nextValue;
 	private boolean nextValueLoaded;
 	
 	
@@ -36,7 +36,7 @@ public class NodeReader implements ReleasableIterator<EntityHistory<Node>> {
 	 *            regardless of their public edits flag.
 	 */
 	public NodeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
-		nodeReader = new PersistentIterator<EntityHistory<Node>>(
+		nodeReader = new PersistentIterator<EntityHistory<NodeBuilder>>(
 			new SingleClassObjectSerializationFactory(EntityHistory.class),
 			new NodeTableReader(loginCredentials, readAllUsers),
 			"nod",
@@ -58,10 +58,10 @@ public class NodeReader implements ReleasableIterator<EntityHistory<Node>> {
 	 */
 	public boolean hasNext() {
 		if (!nextValueLoaded && nodeReader.hasNext()) {
-			EntityHistory<Node> nodeHistory;
+			EntityHistory<NodeBuilder> nodeHistory;
 			long nodeId;
 			int nodeVersion;
-			Node node;
+			NodeBuilder node;
 			
 			nodeHistory = nodeReader.next();
 			
@@ -106,8 +106,8 @@ public class NodeReader implements ReleasableIterator<EntityHistory<Node>> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public EntityHistory<Node> next() {
-		EntityHistory<Node> result;
+	public EntityHistory<NodeBuilder> next() {
+		EntityHistory<NodeBuilder> result;
 		
 		if (!hasNext()) {
 			throw new NoSuchElementException();

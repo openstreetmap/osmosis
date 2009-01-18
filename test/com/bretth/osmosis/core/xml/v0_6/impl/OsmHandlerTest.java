@@ -1,7 +1,9 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core.xml.v0_6.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -12,7 +14,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -20,6 +21,7 @@ import org.xml.sax.SAXException;
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Bound;
 import com.bretth.osmosis.test.task.v0_6.SinkEntityInspector;
+
 
 /**
  * Not sure how to go about unit testing this. The individual parser classes seem to require a lot
@@ -47,11 +49,6 @@ public class OsmHandlerTest {
 		} catch (SAXException e) {
 			throw new OsmosisRuntimeException("Unable to create SAX Parser.", e);
 		}
-	}
-
-
-	@After
-	public void tearDown() throws Exception {
 	}
 
 

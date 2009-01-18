@@ -6,13 +6,13 @@ import java.sql.ResultSet;
 
 
 /**
- * Provides functionality common to all entity feature builder implementations.
+ * Provides functionality common to all entity feature mapper implementations.
  * 
  * @author Brett Henderson
  * @param <T>
  *            The type of feature to be built.
  */
-public abstract class EntityFeatureBuilder<T> {
+public abstract class EntityFeatureMapper<T> {
 
 	/**
 	 * Returns the name of the entity features entity type.

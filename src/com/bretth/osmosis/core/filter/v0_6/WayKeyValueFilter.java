@@ -78,7 +78,7 @@ public class WayKeyValueFilter implements SinkSource, EntityProcessor {
 		Way way = container.getEntity();
 
 		boolean matchesFilter = false;
-		for (Tag tag : way.getTagList()) {
+		for (Tag tag : way.getTags()) {
 			String keyValue = tag.getKey() + "." + tag.getValue();
 			if (allowedKeyValues.contains(keyValue)) {
 				matchesFilter = true;

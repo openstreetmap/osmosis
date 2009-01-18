@@ -5,7 +5,7 @@ import org.xml.sax.Attributes;
 
 import com.bretth.osmosis.core.container.v0_6.NodeContainer;
 import com.bretth.osmosis.core.domain.common.TimestampContainer;
-import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.NodeBuilder;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.task.v0_6.Sink;
@@ -29,7 +29,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	private static final String ATTRIBUTE_NAME_LONGITUDE = "lon";
 	
 	private TagElementProcessor tagElementProcessor;
-	private Node node;
+	private NodeBuilder nodeBuilder;
 	
 	
 	/**
@@ -46,6 +46,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	public NodeElementProcessor(BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing) {
 		super(parentProcessor, sink, enableDateParsing);
 		
+		nodeBuilder = new NodeBuilder();
 		tagElementProcessor = new TagElementProcessor(this, this);
 	}
 	
@@ -73,7 +74,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 		
 		user = buildUser(rawUserId, rawUserName);
 		
-		node = new Node(id, version, timestampContainer, user, latitude, longitude);
+		nodeBuilder.initialize(id, version, timestampContainer, user, latitude, longitude);
 	}
 	
 	
@@ -103,8 +104,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	 * {@inheritDoc}
 	 */
 	public void end() {
-		getSink().process(new NodeContainer(node));
-		node = null;
+		getSink().process(new NodeContainer(nodeBuilder.buildEntity()));
 	}
 	
 	
@@ -116,6 +116,6 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	 *            The tag to be processed.
 	 */
 	public void processTag(Tag tag) {
-		node.addTag(tag);
+		nodeBuilder.addTag(tag);
 	}
 }

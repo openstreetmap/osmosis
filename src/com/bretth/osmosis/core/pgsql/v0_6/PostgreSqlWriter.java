@@ -33,15 +33,15 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 import com.bretth.osmosis.core.pgsql.common.SchemaVersionValidator;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.ActionDao;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.DatabaseCapabilityChecker;
-import com.bretth.osmosis.core.pgsql.v0_6.impl.NodeBuilder;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.NodeMapper;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.NodeLocationStoreType;
-import com.bretth.osmosis.core.pgsql.v0_6.impl.RelationBuilder;
-import com.bretth.osmosis.core.pgsql.v0_6.impl.RelationMemberBuilder;
-import com.bretth.osmosis.core.pgsql.v0_6.impl.TagBuilder;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.RelationMapper;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.RelationMemberMapper;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.TagMapper;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.UserDao;
 import com.bretth.osmosis.core.pgsql.v0_6.impl.WayGeometryBuilder;
-import com.bretth.osmosis.core.pgsql.v0_6.impl.WayBuilder;
-import com.bretth.osmosis.core.pgsql.v0_6.impl.WayNodeBuilder;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.WayMapper;
+import com.bretth.osmosis.core.pgsql.v0_6.impl.WayNodeMapper;
 import com.bretth.osmosis.core.task.v0_6.Sink;
 
 
@@ -156,14 +156,14 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private PreparedStatement singleRelationMemberStatement;
 	private PreparedStatement bulkRelationMemberStatement;
 	private int uncommittedEntityCount;
-	private NodeBuilder nodeBuilder;
-	private WayBuilder wayBuilder;
-	private RelationBuilder relationBuilder;
-	private TagBuilder nodeTagBuilder;
-	private TagBuilder wayTagBuilder;
-	private TagBuilder relationTagBuilder;
-	private WayNodeBuilder wayNodeBuilder;
-	private RelationMemberBuilder relationMemberBuilder;
+	private NodeMapper nodeBuilder;
+	private WayMapper wayBuilder;
+	private RelationMapper relationBuilder;
+	private TagMapper nodeTagBuilder;
+	private TagMapper wayTagBuilder;
+	private TagMapper relationTagBuilder;
+	private WayNodeMapper wayNodeBuilder;
+	private RelationMemberMapper relationMemberBuilder;
 	private WayGeometryBuilder wayGeometryBuilder;
 
 
@@ -211,14 +211,14 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		userSet = new HashSet<Integer>();
 		userDao = new UserDao(dbCtx, actionDao);
 		
-		nodeBuilder = new NodeBuilder();
-		wayBuilder = new WayBuilder(enableBboxBuilder, enableLinestringBuilder);
-		relationBuilder = new RelationBuilder();
-		nodeTagBuilder = new TagBuilder(nodeBuilder.getEntityName());
-		wayTagBuilder = new TagBuilder(wayBuilder.getEntityName());
-		relationTagBuilder = new TagBuilder(relationBuilder.getEntityName());
-		wayNodeBuilder = new WayNodeBuilder();
-		relationMemberBuilder = new RelationMemberBuilder();
+		nodeBuilder = new NodeMapper();
+		wayBuilder = new WayMapper(enableBboxBuilder, enableLinestringBuilder);
+		relationBuilder = new RelationMapper();
+		nodeTagBuilder = new TagMapper(nodeBuilder.getEntityName());
+		wayTagBuilder = new TagMapper(wayBuilder.getEntityName());
+		relationTagBuilder = new TagMapper(relationBuilder.getEntityName());
+		wayNodeBuilder = new WayNodeMapper();
+		relationMemberBuilder = new RelationMemberMapper();
 		wayGeometryBuilder = new WayGeometryBuilder(storeType);
 		
 		uncommittedEntityCount = 0;
@@ -387,7 +387,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 *            The node to be processed.
 	 */
 	private void addNodeTags(Node node) {
-		for (Tag tag : node.getTagList()) {
+		for (Tag tag : node.getTags()) {
 			nodeTagBuffer.add(new DbFeature<Tag>(node.getId(), tag));
 		}
 		
@@ -524,7 +524,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 *            The way to be processed.
 	 */
 	private void addWayTags(Way way) {
-		for (Tag tag : way.getTagList()) {
+		for (Tag tag : way.getTags()) {
 			wayTagBuffer.add(new DbFeature<Tag>(way.getId(), tag));
 		}
 		
@@ -542,7 +542,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		int sequenceId;
 		
 		sequenceId = 0;
-		for (WayNode wayNode : way.getWayNodeList()) {
+		for (WayNode wayNode : way.getWayNodes()) {
 			wayNodeBuffer.add(new DbOrderedFeature<WayNode>(way.getId(), wayNode, sequenceId++));
 		}
 		
@@ -703,7 +703,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 *            The relation to be processed.
 	 */
 	private void addRelationTags(Relation relation) {
-		for (Tag tag : relation.getTagList()) {
+		for (Tag tag : relation.getTags()) {
 			relationTagBuffer.add(new DbFeature<Tag>(relation.getId(), tag));
 		}
 		
@@ -721,7 +721,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		int sequenceId;
 		
 		sequenceId = 0;
-		for (RelationMember relationMember : relation.getMemberList()) {
+		for (RelationMember relationMember : relation.getMembers()) {
 			relationMemberBuffer.add(new DbOrderedFeature<RelationMember>(relation.getId(), relationMember, sequenceId++));
 		}
 		
@@ -909,7 +909,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 */
 	public void process(WayContainer wayContainer) {
 		// Ignore ways with a single node because they can't be loaded into postgis.
-		if (wayContainer.getEntity().getWayNodeList().size() > 1) {
+		if (wayContainer.getEntity().getWayNodes().size() > 1) {
 			wayBuffer.add(wayContainer.getEntity());
 		}
 		

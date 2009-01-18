@@ -2,6 +2,7 @@
 package com.bretth.osmosis.core.sort.v0_6;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,10 +13,10 @@ import com.bretth.osmosis.core.container.v0_6.NodeContainer;
 import com.bretth.osmosis.core.container.v0_6.RelationContainer;
 import com.bretth.osmosis.core.container.v0_6.WayContainer;
 import com.bretth.osmosis.core.domain.v0_6.Bound;
-import com.bretth.osmosis.core.domain.v0_6.Node;
-import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.NodeBuilder;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
-import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.domain.v0_6.WayBuilder;
 import com.bretth.osmosis.core.task.v0_6.Sink;
 import com.bretth.osmosis.core.task.v0_6.SinkSource;
 
@@ -28,6 +29,16 @@ import com.bretth.osmosis.core.task.v0_6.SinkSource;
  */
 public class TagSorter implements SinkSource, EntityProcessor {
 	private Sink sink;
+	private NodeBuilder nodeBuilder;
+	private WayBuilder wayBuilder;
+	private RelationBuilder relationBuilder;
+	
+	
+	public TagSorter() {
+		nodeBuilder = new NodeBuilder();
+		wayBuilder = new WayBuilder();
+		relationBuilder = new RelationBuilder();
+	}
 	
 	
 	/**
@@ -45,7 +56,7 @@ public class TagSorter implements SinkSource, EntityProcessor {
 	 *            The tag list to be sorted.
 	 * @return A new list containing the sorted tags.
 	 */
-	private List<Tag> sortTagList(List<Tag> tagList) {
+	private List<Tag> sortTags(Collection<Tag> tagList) {
 		List<Tag> sortedTagList;
 		
 		sortedTagList = new ArrayList<Tag>(tagList);
@@ -66,7 +77,6 @@ public class TagSorter implements SinkSource, EntityProcessor {
 		oldBound = boundContainer.getEntity();
 		
 		newBound = new Bound(oldBound.getRight(), oldBound.getLeft(), oldBound.getTop(), oldBound.getBottom(), oldBound.getOrigin());
-		newBound.addTags(sortTagList(oldBound.getTagList()));
 		
 		sink.process(new BoundContainer(newBound));
 	}
@@ -77,15 +87,10 @@ public class TagSorter implements SinkSource, EntityProcessor {
 	 */
 	@Override
 	public void process(NodeContainer nodeContainer) {
-		Node oldNode;
-		Node newNode;
+		nodeBuilder.initialize(nodeContainer.getEntity());
+		nodeBuilder.setTags(sortTags(nodeBuilder.getTags()));
 		
-		oldNode = nodeContainer.getEntity();
-		
-		newNode = new Node(oldNode.getId(), oldNode.getVersion(), oldNode.getTimestamp(), oldNode.getUser(), oldNode.getLatitude(), oldNode.getLongitude());
-		newNode.addTags(sortTagList(oldNode.getTagList()));
-		
-		sink.process(new NodeContainer(newNode));
+		sink.process(new NodeContainer(nodeBuilder.buildEntity()));
 	}
 	
 	
@@ -94,16 +99,10 @@ public class TagSorter implements SinkSource, EntityProcessor {
 	 */
 	@Override
 	public void process(WayContainer wayContainer) {
-		Way oldWay;
-		Way newWay;
+		wayBuilder.initialize(wayContainer.getEntity());
+		wayBuilder.setTags(sortTags(wayBuilder.getTags()));
 		
-		oldWay = wayContainer.getEntity();
-		
-		newWay = new Way(oldWay.getId(), oldWay.getVersion(), oldWay.getTimestamp(), oldWay.getUser());
-		newWay.addTags(sortTagList(oldWay.getTagList()));
-		newWay.addWayNodes(oldWay.getWayNodeList());
-		
-		sink.process(new WayContainer(newWay));
+		sink.process(new WayContainer(wayBuilder.buildEntity()));
 	}
 	
 	
@@ -112,16 +111,10 @@ public class TagSorter implements SinkSource, EntityProcessor {
 	 */
 	@Override
 	public void process(RelationContainer relationContainer) {
-		Relation oldRelation;
-		Relation newRelation;
+		relationBuilder.initialize(relationContainer.getEntity());
+		relationBuilder.setTags(sortTags(relationBuilder.getTags()));
 		
-		oldRelation = relationContainer.getEntity();
-		
-		newRelation = new Relation(oldRelation.getId(), oldRelation.getVersion(), oldRelation.getTimestamp(), oldRelation.getUser());
-		newRelation.addTags(sortTagList(oldRelation.getTagList()));
-		newRelation.addMembers(oldRelation.getMemberList());
-		
-		sink.process(new RelationContainer(newRelation));
+		sink.process(new RelationContainer(relationBuilder.buildEntity()));
 	}
 	
 	

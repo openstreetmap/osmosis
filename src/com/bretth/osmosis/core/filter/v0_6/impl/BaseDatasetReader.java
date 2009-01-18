@@ -220,7 +220,7 @@ public abstract class BaseDatasetReader implements DatasetReader {
 				
 				// Load the nodes within the way.
 				nodes = new ArrayList<Node>();
-				for (WayNode wayNode : way.getWayNodeList()) {
+				for (WayNode wayNode : way.getWayNodes()) {
 					try {
 						nodes.add(getNode(wayNode.getNodeId()));
 					} catch (NoSuchIndexElementException e) {
@@ -242,7 +242,7 @@ public abstract class BaseDatasetReader implements DatasetReader {
 					// adding any nodes that haven't already been selected (ie.
 					// those that are outside the box).
 					if (completeWays) {
-						for (WayNode wayNode : way.getWayNodeList()) {
+						for (WayNode wayNode : way.getWayNodes()) {
 							long nodeId;
 							
 							nodeId = wayNode.getNodeId();
@@ -293,7 +293,7 @@ public abstract class BaseDatasetReader implements DatasetReader {
 				
 				way = getWay(wayId);
 				
-				for (WayNode wayNode : way.getWayNodeList()) {
+				for (WayNode wayNode : way.getWayNodes()) {
 					long externalNodeId;
 					
 					externalNodeId = wayNode.getNodeId();

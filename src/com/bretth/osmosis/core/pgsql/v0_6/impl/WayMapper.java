@@ -13,6 +13,7 @@ import org.postgis.PGgeometry;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.domain.v0_6.WayBuilder;
 
 
 /**
@@ -20,7 +21,7 @@ import com.bretth.osmosis.core.domain.v0_6.Way;
  * 
  * @author Brett Henderson
  */
-public class WayBuilder extends EntityBuilder<Way> {
+public class WayMapper extends EntityMapper<Way, WayBuilder> {
 	
 	private boolean supportBboxColumn;
 	private boolean supportLinestringColumn;
@@ -29,7 +30,7 @@ public class WayBuilder extends EntityBuilder<Way> {
 	/**
 	 * Creates a new instance.
 	 */
-	public WayBuilder() {
+	public WayMapper() {
 		supportBboxColumn = false;
 	}
 
@@ -42,7 +43,7 @@ public class WayBuilder extends EntityBuilder<Way> {
 	 * @param supportLinestringColumn
 	 *            If true, the linestring column will be included in updates.
 	 */
-	public WayBuilder(boolean supportBboxColumn, boolean supportLinestringColumn) {
+	public WayMapper(boolean supportBboxColumn, boolean supportLinestringColumn) {
 		this.supportBboxColumn = supportBboxColumn;
 		this.supportLinestringColumn = supportLinestringColumn;
 	}
@@ -70,8 +71,8 @@ public class WayBuilder extends EntityBuilder<Way> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Class<Way> getEntityClass() {
-		return Way.class;
+	public Class<WayBuilder> getBuilderClass() {
+		return WayBuilder.class;
 	}
 	
 	
@@ -99,9 +100,9 @@ public class WayBuilder extends EntityBuilder<Way> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Way buildEntity(ResultSet resultSet) {
+	public WayBuilder parseRecord(ResultSet resultSet) {
 		try {
-			return new Way(
+			return new WayBuilder(
 				resultSet.getLong("id"),
 				resultSet.getInt("version"),
 				new Date(resultSet.getTimestamp("tstamp").getTime()),

@@ -16,6 +16,7 @@ import org.junit.Test;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.domain.v0_6.WayBuilder;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
 
 public class WayWriterTest {
@@ -73,10 +74,12 @@ public class WayWriterTest {
 	 */
 	@Test
 	public final void testProcessNormalWay() {
-		Way way = new Way(1234, 2, timestamp, new OsmUser(23, "someuser"));
-		way.addTag(new Tag("waykey", "wayvalue"));
-		way.addWayNode(new WayNode(1235));
-		way.addWayNode(new WayNode(1236));
+		Way way =
+			new WayBuilder(1234, 2, timestamp, new OsmUser(23, "someuser"))
+			.addWayNode(new WayNode(1235))
+			.addWayNode(new WayNode(1236))
+			.addTag(new Tag("waykey", "wayvalue"))
+			.buildEntity();
 		testWayWriter.process(way);
 		try {
 			testBufferedWriter.flush();
@@ -98,10 +101,12 @@ public class WayWriterTest {
 	 */
 	@Test
 	public final void testProcessWayWithNoUser() {
-		Way way = new Way(1234, 2, timestamp, OsmUser.NONE);
-		way.addTag(new Tag("waykey", "wayvalue"));
-		way.addWayNode(new WayNode(1235));
-		way.addWayNode(new WayNode(1236));
+		Way way =
+			new WayBuilder(1234, 2, timestamp, OsmUser.NONE)
+			.addWayNode(new WayNode(1235))
+			.addWayNode(new WayNode(1236))
+			.addTag(new Tag("waykey", "wayvalue"))
+			.buildEntity();
 		testWayWriter.process(way);
 		try {
 			testBufferedWriter.flush();
@@ -128,9 +133,11 @@ public class WayWriterTest {
 	 */
 	@Test
 	public final void testProcessWayNoTags() {
-		Way way = new Way(1234, 2, timestamp, new OsmUser(23, "someuser"));
-		way.addWayNode(new WayNode(1235));
-		way.addWayNode(new WayNode(1236));
+		Way way =
+			new WayBuilder(1234, 2, timestamp, new OsmUser(23, "someuser"))
+			.addWayNode(new WayNode(1235))
+			.addWayNode(new WayNode(1236))
+			.buildEntity();
 		testWayWriter.process(way);
 		try {
 			testBufferedWriter.flush();

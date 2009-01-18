@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -14,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.NodeBuilder;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 
@@ -74,8 +76,10 @@ public class NodeWriterTest {
 	 */
 	@Test
 	public final void testProcessNormalNode() {
-		Node node = new Node(1234, 2, timestamp, new OsmUser(23, "someuser"), 20.12345678, -21.98765432);
-		node.addTag(new Tag("nodekey", "nodevalue"));
+		Node node =
+			new NodeBuilder(1234, 2, timestamp, new OsmUser(23, "someuser"), 20.12345678, -21.98765432)
+			.addTag(new Tag("nodekey", "nodevalue"))
+			.buildEntity();
 		testNodeWriter.process(node);
 		try {
 			testBufferedWriter.flush();
@@ -95,7 +99,7 @@ public class NodeWriterTest {
 	 */
 	@Test
 	public final void testProcessNodeNoTags() {
-		testNodeWriter.process(new Node(1234, 2, timestamp, new OsmUser(23, "someuser"), 20.12345678, -21.98765432));
+		testNodeWriter.process(new Node(1234, 2, timestamp, new OsmUser(23, "someuser"), new ArrayList<Tag>(), 20.12345678, -21.98765432));
 		try {
 			testBufferedWriter.flush();
 		} catch (IOException e) {
@@ -120,8 +124,10 @@ public class NodeWriterTest {
 	 */
 	@Test
 	public final void testProcessNodeWithNoUser() {
-		Node node = new Node(1234, 2, timestamp, OsmUser.NONE, 20.12345678, -21.98765432);
-		node.addTag(new Tag("nodekey", "nodevalue"));
+		Node node =
+			new NodeBuilder(1234, 2, timestamp, OsmUser.NONE, 20.12345678, -21.98765432)
+			.addTag(new Tag("nodekey", "nodevalue"))
+			.buildEntity();
 		testNodeWriter.process(node);
 		try {
 			testBufferedWriter.flush();

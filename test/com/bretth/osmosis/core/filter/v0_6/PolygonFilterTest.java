@@ -4,7 +4,9 @@ package com.bretth.osmosis.core.filter.v0_6;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,6 +16,7 @@ import com.bretth.osmosis.core.container.v0_6.BoundContainer;
 import com.bretth.osmosis.core.domain.v0_6.Bound;
 import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
+import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.filter.common.IdTrackerType;
 import com.bretth.osmosis.test.task.v0_6.SinkEntityInspector;
 
@@ -32,6 +35,11 @@ public class PolygonFilterTest {
 
 	@Before
 	public void setUp() throws Exception {
+		List<Tag> tags;
+		
+		// All nodes have an empty tags list.
+		tags = new ArrayList<Tag>();
+		
 		polygonFile = new File("test/com/bretth/osmosis/core/filter/v0_6/testPolygon.txt");
 		entityInspector = new SinkEntityInspector();
 		// polyAreaFilter has a notch out of the Northeast corner.
@@ -40,9 +48,9 @@ public class PolygonFilterTest {
 		intersectingBound = new Bound(30, 0, 30, 0, "intersecting");
 		crossingIntersectingBound = new Bound(-10, 10, 30, -30, "crossing intersecting");
 		nonIntersectingBound = new Bound(30, 15, 30, 15, "nonintersecting");
-		inAreaNode = new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), 5, 10);
-		outOfAreaNode = new Node(1235, 0, new Date(), new OsmUser(12, "OsmosisTest"), 15, 15);
-		edgeNode = new Node(1236, 0, new Date(), new OsmUser(12, "OsmosisTest"), 15, 10);
+		inAreaNode = new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, 5, 10);
+		outOfAreaNode = new Node(1235, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, 15, 15);
+		edgeNode = new Node(1236, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, 15, 10);
 	}
 
 

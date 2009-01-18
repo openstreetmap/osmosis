@@ -5,7 +5,7 @@ import java.io.BufferedWriter;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import java.util.List;
+import java.util.Collection;
 import java.util.Locale;
 
 import com.bretth.osmosis.core.domain.v0_6.Node;
@@ -54,7 +54,7 @@ public class NodeWriter extends ElementWriter {
 	 */
 	public void process(Node node) {
 		OsmUser user;
-		List<Tag> tags;
+		Collection<Tag> tags;
 		
 		user = node.getUser();
 		
@@ -71,7 +71,7 @@ public class NodeWriter extends ElementWriter {
 		addAttribute("lat", numberFormat.format(node.getLatitude()));
 		addAttribute("lon", numberFormat.format(node.getLongitude()));
 		
-		tags = node.getTagList();
+		tags = node.getTags();
 		
 		if (tags.size() > 0) {
 			endOpenElement(false);

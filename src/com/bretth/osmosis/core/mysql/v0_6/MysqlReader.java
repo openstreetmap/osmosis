@@ -11,16 +11,16 @@ import com.bretth.osmosis.core.container.v0_6.WayContainer;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.database.DatabasePreferences;
 import com.bretth.osmosis.core.domain.v0_6.Bound;
-import com.bretth.osmosis.core.domain.v0_6.Node;
-import com.bretth.osmosis.core.domain.v0_6.Relation;
-import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.domain.v0_6.NodeBuilder;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
+import com.bretth.osmosis.core.domain.v0_6.WayBuilder;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
-import com.bretth.osmosis.core.mysql.v0_6.impl.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.v0_6.impl.EntityHistory;
 import com.bretth.osmosis.core.mysql.v0_6.impl.EntityHistoryComparator;
 import com.bretth.osmosis.core.mysql.v0_6.impl.EntitySnapshotReader;
 import com.bretth.osmosis.core.mysql.v0_6.impl.NodeReader;
 import com.bretth.osmosis.core.mysql.v0_6.impl.RelationReader;
+import com.bretth.osmosis.core.mysql.v0_6.impl.SchemaVersionValidator;
 import com.bretth.osmosis.core.mysql.v0_6.impl.WayReader;
 import com.bretth.osmosis.core.store.PeekableIterator;
 import com.bretth.osmosis.core.task.v0_6.RunnableSource;
@@ -74,19 +74,19 @@ public class MysqlReader implements RunnableSource {
 	 * Reads all nodes from the database and sends to the sink.
 	 */
 	private void processNodes() {
-		ReleasableIterator<Node> reader;
+		ReleasableIterator<NodeBuilder> reader;
 		
-		reader = new EntitySnapshotReader<Node>(
-			new PeekableIterator<EntityHistory<Node>>(
+		reader = new EntitySnapshotReader<NodeBuilder>(
+			new PeekableIterator<EntityHistory<NodeBuilder>>(
 				new NodeReader(loginCredentials, readAllUsers)
 			),
 			snapshotInstant,
-			new EntityHistoryComparator<Node>()
+			new EntityHistoryComparator<NodeBuilder>()
 		);
 		
 		try {
 			while (reader.hasNext()) {
-				sink.process(new NodeContainer(reader.next()));
+				sink.process(new NodeContainer(reader.next().buildEntity()));
 			}
 			
 		} finally {
@@ -99,19 +99,19 @@ public class MysqlReader implements RunnableSource {
 	 * Reads all ways from the database and sends to the sink.
 	 */
 	private void processWays() {
-		ReleasableIterator<Way> reader;
+		ReleasableIterator<WayBuilder> reader;
 		
-		reader = new EntitySnapshotReader<Way>(
-			new PeekableIterator<EntityHistory<Way>>(
+		reader = new EntitySnapshotReader<WayBuilder>(
+			new PeekableIterator<EntityHistory<WayBuilder>>(
 				new WayReader(loginCredentials, readAllUsers)
 			),
 			snapshotInstant,
-			new EntityHistoryComparator<Way>()
+			new EntityHistoryComparator<WayBuilder>()
 		);
 		
 		try {
 			while (reader.hasNext()) {
-				sink.process(new WayContainer(reader.next()));
+				sink.process(new WayContainer(reader.next().buildEntity()));
 			}
 			
 		} finally {
@@ -124,19 +124,19 @@ public class MysqlReader implements RunnableSource {
 	 * Reads all relations from the database and sends to the sink.
 	 */
 	private void processRelations() {
-		ReleasableIterator<Relation> reader;
+		ReleasableIterator<RelationBuilder> reader;
 		
-		reader = new EntitySnapshotReader<Relation>(
-			new PeekableIterator<EntityHistory<Relation>>(
+		reader = new EntitySnapshotReader<RelationBuilder>(
+			new PeekableIterator<EntityHistory<RelationBuilder>>(
 				new RelationReader(loginCredentials, readAllUsers)
 			),
 			snapshotInstant,
-			new EntityHistoryComparator<Relation>()
+			new EntityHistoryComparator<RelationBuilder>()
 		);
 		
 		try {
 			while (reader.hasNext()) {
-				sink.process(new RelationContainer(reader.next()));
+				sink.process(new RelationContainer(reader.next().buildEntity()));
 			}
 			
 		} finally {

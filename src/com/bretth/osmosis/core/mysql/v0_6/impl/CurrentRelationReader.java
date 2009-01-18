@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
@@ -25,7 +26,7 @@ import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
  */
 public class CurrentRelationReader implements ReleasableIterator<Relation> {
 	
-	private ReleasableIterator<Relation> relationReader;
+	private ReleasableIterator<RelationBuilder> relationReader;
 	private PeekableIterator<DbFeature<Tag>> relationTagReader;
 	private PeekableIterator<DbOrderedFeature<RelationMember>> relationMemberReader;
 	private Relation nextValue;
@@ -42,8 +43,8 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 	 *            regardless of their public edits flag.
 	 */
 	public CurrentRelationReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
-		relationReader = new PersistentIterator<Relation>(
-			new SingleClassObjectSerializationFactory(Relation.class),
+		relationReader = new PersistentIterator<RelationBuilder>(
+			new SingleClassObjectSerializationFactory(RelationBuilder.class),
 			new CurrentRelationTableReader(loginCredentials, readAllUsers),
 			"rel",
 			true
@@ -72,7 +73,7 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 	 */
 	public boolean hasNext() {
 		if (!nextValueLoaded && relationReader.hasNext()) {
-			Relation relation;
+			RelationBuilder relation;
 			long relationId;
 			List<DbOrderedFeature<RelationMember>> relationMembers;
 			
@@ -123,7 +124,7 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 				relation.addMember(dbRelationMember.getFeature());
 			}
 			
-			nextValue = relation;
+			nextValue = relation.buildEntity();
 			nextValueLoaded = true;
 		}
 		

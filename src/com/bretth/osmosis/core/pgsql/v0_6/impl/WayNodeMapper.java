@@ -15,7 +15,7 @@ import com.bretth.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
  * 
  * @author Brett Henderson
  */
-public class WayNodeBuilder extends EntityFeatureBuilder<DbOrderedFeature<WayNode>> {
+public class WayNodeMapper extends EntityFeatureMapper<DbOrderedFeature<WayNode>> {
 	
 	/**
 	 * {@inheritDoc}

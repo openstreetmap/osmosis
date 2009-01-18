@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
@@ -18,7 +19,7 @@ import com.bretth.osmosis.core.store.PeekableIterator;
  * 
  * @author Brett Henderson
  */
-public class RelationReader  extends EntityReader<Relation> {
+public class RelationReader  extends EntityReader<Relation, RelationBuilder> {
 	
 	private PeekableIterator<DbOrderedFeature<RelationMember>> relationMemberReader;
 	
@@ -30,10 +31,10 @@ public class RelationReader  extends EntityReader<Relation> {
 	 *            The database context to use for accessing the database.
 	 */
 	public RelationReader(DatabaseContext dbCtx) {
-		super(dbCtx, new RelationBuilder());
+		super(dbCtx, new RelationMapper());
 		
 		relationMemberReader = new PeekableIterator<DbOrderedFeature<RelationMember>>(
-			new EntityFeatureTableReader<RelationMember, DbOrderedFeature<RelationMember>>(dbCtx, new RelationMemberBuilder())
+			new EntityFeatureTableReader<RelationMember, DbOrderedFeature<RelationMember>>(dbCtx, new RelationMemberMapper())
 		);
 	}
 	
@@ -48,10 +49,10 @@ public class RelationReader  extends EntityReader<Relation> {
 	 *            entities to be returned.
 	 */
 	public RelationReader(DatabaseContext dbCtx, String constraintTable) {
-		super(dbCtx, new RelationBuilder(), constraintTable);
+		super(dbCtx, new RelationMapper(), constraintTable);
 		
 		relationMemberReader = new PeekableIterator<DbOrderedFeature<RelationMember>>(
-			new EntityFeatureTableReader<RelationMember, DbOrderedFeature<RelationMember>>(dbCtx, new RelationMemberBuilder(), constraintTable)
+			new EntityFeatureTableReader<RelationMember, DbOrderedFeature<RelationMember>>(dbCtx, new RelationMemberMapper(), constraintTable)
 		);
 	}
 	
@@ -60,7 +61,7 @@ public class RelationReader  extends EntityReader<Relation> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void populateEntityFeatures(Relation entity) {
+	protected void populateEntityFeatures(RelationBuilder entity) {
 		long relationId;
 		List<DbFeature<RelationMember>> relationMembers;
 		

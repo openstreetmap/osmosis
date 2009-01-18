@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
-import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
@@ -22,12 +22,12 @@ import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
  * 
  * @author Brett Henderson
  */
-public class RelationReader implements ReleasableIterator<EntityHistory<Relation>> {
+public class RelationReader implements ReleasableIterator<EntityHistory<RelationBuilder>> {
 	
-	private ReleasableIterator<EntityHistory<Relation>> relationReader;
+	private ReleasableIterator<EntityHistory<RelationBuilder>> relationReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> relationTagReader;
 	private PeekableIterator<DbFeatureHistory<DbOrderedFeature<RelationMember>>> relationMemberReader;
-	private EntityHistory<Relation> nextValue;
+	private EntityHistory<RelationBuilder> nextValue;
 	private boolean nextValueLoaded;
 	
 	
@@ -41,7 +41,7 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 	 *            regardless of their public edits flag.
 	 */
 	public RelationReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
-		relationReader = new PersistentIterator<EntityHistory<Relation>>(
+		relationReader = new PersistentIterator<EntityHistory<RelationBuilder>>(
 			new SingleClassObjectSerializationFactory(EntityHistory.class),
 			new RelationTableReader(loginCredentials, readAllUsers),
 			"rel",
@@ -71,10 +71,10 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 	 */
 	public boolean hasNext() {
 		if (!nextValueLoaded && relationReader.hasNext()) {
-			EntityHistory<Relation> relationHistory;
+			EntityHistory<RelationBuilder> relationHistory;
 			long relationId;
 			int relationVersion;
-			Relation relation;
+			RelationBuilder relation;
 			List<DbOrderedFeature<RelationMember>> relationMembers;
 			
 			relationHistory = relationReader.next();
@@ -153,8 +153,8 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 	/**
 	 * {@inheritDoc}
 	 */
-	public EntityHistory<Relation> next() {
-		EntityHistory<Relation> result;
+	public EntityHistory<RelationBuilder> next() {
+		EntityHistory<RelationBuilder> result;
 		
 		if (!hasNext()) {
 			throw new NoSuchElementException();

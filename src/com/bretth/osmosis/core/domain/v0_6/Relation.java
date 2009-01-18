@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import com.bretth.osmosis.core.domain.common.SimpleTimestampContainer;
@@ -24,7 +25,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	private static final long serialVersionUID = 1L;
 	
 	
-	private List<RelationMember> memberList;
+	private List<RelationMember> members;
 	
 	
 	/**
@@ -38,10 +39,14 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param tags
+	 *            The tags to apply to the object.
+	 * @param members
+	 *            The members to apply to the object.
 	 */
-	public Relation(long id, int version, Date timestamp, OsmUser user) {
+	public Relation(long id, int version, Date timestamp, OsmUser user, Collection<Tag> tags, List<RelationMember> members) {
 		// Chain to the more-specific constructor
-		this(id, version, new SimpleTimestampContainer(timestamp), user);
+		this(id, version, new SimpleTimestampContainer(timestamp), user, tags, members);
 	}
 	
 	
@@ -57,11 +62,15 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *            timestamp representation.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param tags
+	 *            The tags to apply to the object.
+	 * @param members
+	 *            The members to apply to the object.
 	 */
-	public Relation(long id, int version, TimestampContainer timestampContainer, OsmUser user) {
-		super(id, timestampContainer, user, version);
+	public Relation(long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags, List<RelationMember> members) {
+		super(id, timestampContainer, user, version, tags);
 		
-		memberList = new ArrayList<RelationMember>();
+		this.members = Collections.unmodifiableList(new ArrayList<RelationMember>(members));
 	}
 	
 	
@@ -77,14 +86,16 @@ public class Relation extends Entity implements Comparable<Relation> {
 	public Relation(StoreReader sr, StoreClassRegister scr) {
 		super(sr, scr);
 		
-		int nodeCount;
+		List<RelationMember> tmpMembers;
+		int featureCount;
 		
-		nodeCount = sr.readCharacter();
+		featureCount = sr.readCharacter();
 		
-		memberList = new ArrayList<RelationMember>();
-		for (int i = 0; i < nodeCount; i++) {
-			addMember(new RelationMember(sr, scr));
+		tmpMembers = new ArrayList<RelationMember>();
+		for (int i = 0; i < featureCount; i++) {
+			tmpMembers.add(new RelationMember(sr, scr));
 		}
+		members = Collections.unmodifiableList(tmpMembers);
 	}
 	
 	
@@ -95,8 +106,8 @@ public class Relation extends Entity implements Comparable<Relation> {
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		super.store(sw, scr);
 		
-		sw.writeCharacter(IntAsChar.intToChar(memberList.size()));
-		for (RelationMember relationMember : memberList) {
+		sw.writeCharacter(IntAsChar.intToChar(members.size()));
+		for (RelationMember relationMember : members) {
 			relationMember.store(sw, scr);
 		}
 	}
@@ -134,15 +145,20 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
 	 *         "bigger".
 	 */
-	protected int compareMemberList(List<RelationMember> comparisonMemberList) {
+	protected int compareMemberList(Collection<RelationMember> comparisonMemberList) {
+		Iterator<RelationMember> i;
+		Iterator<RelationMember> j;
+		
 		// The list with the most entities is considered bigger.
-		if (memberList.size() != comparisonMemberList.size()) {
-			return memberList.size() - comparisonMemberList.size();
+		if (members.size() != comparisonMemberList.size()) {
+			return members.size() - comparisonMemberList.size();
 		}
 		
 		// Check the individual node references.
-		for (int i = 0; i < memberList.size(); i++) {
-			int result = memberList.get(i).compareTo(comparisonMemberList.get(i));
+		i = members.iterator();
+		j = comparisonMemberList.iterator();
+		while (i.hasNext()) {
+			int result = i.next().compareTo(j.next());
 			
 			if (result != 0) {
 				return result;
@@ -197,14 +213,14 @@ public class Relation extends Entity implements Comparable<Relation> {
 		}
 		
 		memberListResult = compareMemberList(
-			comparisonRelation.memberList
+			comparisonRelation.members
 		);
 		
 		if (memberListResult != 0) {
 			return memberListResult;
 		}
 		
-		return compareTags(comparisonRelation.getTagList());
+		return compareTags(comparisonRelation.getTags());
 	}
 	
 	
@@ -214,29 +230,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 * 
 	 * @return The member list.
 	 */
-	public List<RelationMember> getMemberList() {
-		return Collections.unmodifiableList(memberList);
-	}
-	
-	
-	/**
-	 * Adds a new member.
-	 * 
-	 * @param member
-	 *            The member to add.
-	 */
-	public void addMember(RelationMember member) {
-		memberList.add(member);
-	}
-	
-	
-	/**
-	 * Adds all members in the collection to the relation.
-	 * 
-	 * @param members
-	 *            The collection of members to be added.
-	 */
-	public void addMembers(Collection<RelationMember> members) {
-		memberList.addAll(members);
+	public List<RelationMember> getMembers() {
+		return members;
 	}
 }

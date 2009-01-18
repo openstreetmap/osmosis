@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.BufferedWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.junit.After;
@@ -20,9 +21,11 @@ import com.bretth.osmosis.core.domain.v0_6.EntityType;
 import com.bretth.osmosis.core.domain.v0_6.Node;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.domain.v0_6.WayBuilder;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
 
 public class OsmWriterTest {
@@ -75,7 +78,7 @@ public class OsmWriterTest {
 	 */
 	@Test
 	public final void testProcess3() {
-		testOsmWriter.process(new NodeContainer(new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), 20, 20)));
+		testOsmWriter.process(new NodeContainer(new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), new ArrayList<Tag>(), 20, 20)));
 		// Nothing to assert; just expect no exception
 	}
 
@@ -85,7 +88,7 @@ public class OsmWriterTest {
 	 */
 	@Test(expected=OsmosisRuntimeException.class)
 	public final void testProcess4() {
-		testOsmWriter.process(new NodeContainer(new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), 20, 20)));
+		testOsmWriter.process(new NodeContainer(new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), new ArrayList<Tag>(), 20, 20)));
 		testOsmWriter.process(new BoundContainer(new Bound("source")));
 		fail("Expected to throw an exception.");
 	}
@@ -97,10 +100,14 @@ public class OsmWriterTest {
 	@Test
 	public final void testProcess6() {
 		Way testWay;
-		testWay = new Way(3456, 0, new Date(), new OsmUser(12, "OsmosisTest"));
-		testWay.addWayNode(new WayNode(1234));
-		testWay.addWayNode(new WayNode(1235));
-		testWay.addTag(new Tag("test_key1", "test_value1"));
+		
+		testWay =
+			new WayBuilder(3456, 0, new Date(), new OsmUser(12, "OsmosisTest"))
+			.addWayNode(new WayNode(1234))
+			.addWayNode(new WayNode(1235))
+			.addTag(new Tag("test_key1", "test_value1"))
+			.buildEntity();
+		
 		testOsmWriter.process(new WayContainer(testWay));
 		// Nothing to assert; just expect no exception
 	}
@@ -112,10 +119,14 @@ public class OsmWriterTest {
 	@Test(expected=OsmosisRuntimeException.class)
 	public final void testProcess7() {
 		Way testWay;
-		testWay = new Way(3456, 0, new Date(), new OsmUser(12, "OsmosisTest"));
-		testWay.addWayNode(new WayNode(1234));
-		testWay.addWayNode(new WayNode(1235));
-		testWay.addTag(new Tag("test_key1", "test_value1"));
+		
+		testWay =
+			new WayBuilder(3456, 0, new Date(), new OsmUser(12, "OsmosisTest"))
+			.addWayNode(new WayNode(1234))
+			.addWayNode(new WayNode(1235))
+			.addTag(new Tag("test_key1", "test_value1"))
+			.buildEntity();
+		
 		testOsmWriter.process(new WayContainer(testWay));
 		testOsmWriter.process(new BoundContainer(new Bound("source")));
 	}
@@ -127,9 +138,13 @@ public class OsmWriterTest {
 	@Test
 	public final void testProcess8() {
 		Relation testRelation;
-		testRelation = new Relation(3456, 0, new Date(), new OsmUser(12, "OsmosisTest"));
-		testRelation.addMember(new RelationMember(1234, EntityType.Node, "role1"));
-		testRelation.addTag(new Tag("test_key1", "test_value1"));
+		
+		testRelation =
+			new RelationBuilder(3456, 0, new Date(), new OsmUser(12, "OsmosisTest"))
+			.addMember(new RelationMember(1234, EntityType.Node, "role1"))
+			.addTag(new Tag("test_key1", "test_value1"))
+			.buildEntity();
+		
 		testOsmWriter.process(new RelationContainer(testRelation));
 		// Nothing to assert; just expect no exception
 	}
@@ -141,9 +156,12 @@ public class OsmWriterTest {
 	@Test(expected=OsmosisRuntimeException.class)
 	public final void testProcess9() {
 		Relation testRelation;
-		testRelation = new Relation(3456, 0, new Date(), new OsmUser(12, "OsmosisTest"));
-		testRelation.addMember(new RelationMember(1234, EntityType.Node, "role1"));
-		testRelation.addTag(new Tag("test_key1", "test_value1"));
+		
+		testRelation =
+			new RelationBuilder(3456, 0, new Date(), new OsmUser(12, "OsmosisTest"))
+			.addMember(new RelationMember(1234, EntityType.Node, "role1"))
+			.addTag(new Tag("test_key1", "test_value1"))
+			.buildEntity();
 		testOsmWriter.process(new RelationContainer(testRelation));
 		testOsmWriter.process(new BoundContainer(new Bound("source")));
 	}

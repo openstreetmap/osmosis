@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.NodeBuilder;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.store.PeekableIterator;
@@ -20,7 +21,7 @@ import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
  */
 public class CurrentNodeReader implements ReleasableIterator<Node> {
 	
-	private ReleasableIterator<Node> nodeReader;
+	private ReleasableIterator<NodeBuilder> nodeReader;
 	private PeekableIterator<DbFeature<Tag>> nodeTagReader;
 	private Node nextValue;
 	private boolean nextValueLoaded;
@@ -36,8 +37,8 @@ public class CurrentNodeReader implements ReleasableIterator<Node> {
 	 *            regardless of their public edits flag.
 	 */
 	public CurrentNodeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
-		nodeReader = new PersistentIterator<Node>(
-			new SingleClassObjectSerializationFactory(Node.class),
+		nodeReader = new PersistentIterator<NodeBuilder>(
+			new SingleClassObjectSerializationFactory(NodeBuilder.class),
 			new CurrentNodeTableReader(loginCredentials, readAllUsers),
 			"nod",
 			true
@@ -58,7 +59,7 @@ public class CurrentNodeReader implements ReleasableIterator<Node> {
 	 */
 	public boolean hasNext() {
 		if (!nextValueLoaded && nodeReader.hasNext()) {
-			Node node;
+			NodeBuilder node;
 			long nodeId;
 			
 			node = nodeReader.next();
@@ -83,7 +84,7 @@ public class CurrentNodeReader implements ReleasableIterator<Node> {
 				node.addTag(nodeTagReader.next().getFeature());
 			}
 			
-			nextValue = node;
+			nextValue = node.buildEntity();
 			nextValueLoaded = true;
 		}
 		

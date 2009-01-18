@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.NodeBuilder;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 
@@ -15,7 +16,7 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class NodeDao extends EntityDao<Node> {
+public class NodeDao extends EntityDao<Node, NodeBuilder> {
 	private static final String SQL_UPDATE_WAY_BBOX =
 		"UPDATE ways w SET bbox = (" +
 		" SELECT Envelope(Collect(n.geom))" +
@@ -50,9 +51,18 @@ public class NodeDao extends EntityDao<Node> {
 	 *            The dao to use for adding action records to the database.
 	 */
 	public NodeDao(DatabaseContext dbCtx, ActionDao actionDao) {
-		super(dbCtx, new NodeBuilder(), actionDao);
+		super(dbCtx, new NodeMapper(), actionDao);
 		
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void loadFeatures(long entityId, NodeBuilder entityBuilder) {
+		// Nodes have no additional features.
 	}
 	
 	

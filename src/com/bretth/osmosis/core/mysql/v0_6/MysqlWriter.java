@@ -1138,7 +1138,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 *            The node to be processed.
 	 */
 	private void addNodeTags(Node node) {
-		for (Tag tag: node.getTagList()) {
+		for (Tag tag: node.getTags()) {
 			nodeTagBuffer.add(new DbFeatureHistory<DbFeature<Tag>>(new DbFeature<Tag>(node.getId(), tag), node.getVersion()));
 		}
 		
@@ -1175,7 +1175,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 *            The way to be processed.
 	 */
 	private void addWayTags(Way way) {
-		for (Tag tag: way.getTagList()) {
+		for (Tag tag: way.getTags()) {
 			wayTagBuffer.add(new DbFeatureHistory<DbFeature<Tag>>(new DbFeature<Tag>(way.getId(), tag), way.getVersion()));
 		}
 		
@@ -1192,7 +1192,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private void addWayNodes(Way way) {
 		List<WayNode> nodeReferenceList;
 		
-		nodeReferenceList = way.getWayNodeList();
+		nodeReferenceList = way.getWayNodes();
 		
 		for (int i = 0; i < nodeReferenceList.size(); i++) {
 			wayNodeBuffer.add(
@@ -1240,7 +1240,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 *            The relation to be processed.
 	 */
 	private void addRelationTags(Relation relation) {
-		for (Tag tag: relation.getTagList()) {
+		for (Tag tag: relation.getTags()) {
 			relationTagBuffer.add(new DbFeatureHistory<DbFeature<Tag>>(new DbFeature<Tag>(relation.getId(), tag), relation.getVersion()));
 		}
 		
@@ -1257,7 +1257,7 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private void addRelationMembers(Relation relation) {
 		List<RelationMember> memberReferenceList;
 		
-		memberReferenceList = relation.getMemberList();
+		memberReferenceList = relation.getMembers();
 		
 		for (int i = 0; i < memberReferenceList.size(); i++) {
 			relationMemberBuffer.add(

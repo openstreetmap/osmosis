@@ -4,6 +4,7 @@ package com.bretth.osmosis.core.pgsql.v0_6.impl;
 import java.sql.ResultSet;
 
 import com.bretth.osmosis.core.domain.v0_6.Entity;
+import com.bretth.osmosis.core.domain.v0_6.EntityBuilder;
 import com.bretth.osmosis.core.pgsql.common.BaseTableReader;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 
@@ -13,11 +14,13 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
  * won't be populated with tags.
  * 
  * @author Brett Henderson
- * @param <T>
- *            The type of entity to be read.
+ * @param <Te>
+ *            The entity type to be supported.
+ * @param <Tb>
+ *            The builder type for the entity.
  */
-public class EntityTableReader<T extends Entity> extends BaseTableReader<T> {
-	private EntityBuilder<T> entityBuilder;
+public class EntityTableReader<Te extends Entity,  Tb extends EntityBuilder<Te>> extends BaseTableReader<Tb> {
+	private EntityMapper<Te, Tb> entityMapper;
 	private String sql;
 	
 	
@@ -29,10 +32,10 @@ public class EntityTableReader<T extends Entity> extends BaseTableReader<T> {
 	 * @param entityBuilder
 	 *            The entity builder implementation to utilise.
 	 */
-	public EntityTableReader(DatabaseContext dbCtx, EntityBuilder<T> entityBuilder) {
+	public EntityTableReader(DatabaseContext dbCtx, EntityMapper<Te, Tb> entityBuilder) {
 		super(dbCtx);
 		
-		this.entityBuilder = entityBuilder;
+		this.entityMapper = entityBuilder;
 		
 		sql =
 			entityBuilder.getSqlSelect(false, false) +
@@ -51,10 +54,10 @@ public class EntityTableReader<T extends Entity> extends BaseTableReader<T> {
 	 *            The table containing a column named id defining the list of
 	 *            entities to be returned.
 	 */
-	public EntityTableReader(DatabaseContext dbCtx, EntityBuilder<T> entityBuilder, String constraintTable) {
+	public EntityTableReader(DatabaseContext dbCtx, EntityMapper<Te, Tb> entityBuilder, String constraintTable) {
 		super(dbCtx);
 		
-		this.entityBuilder = entityBuilder;
+		this.entityMapper = entityBuilder;
 		
 		sql =
 			entityBuilder.getSqlSelect(false, false) +
@@ -76,11 +79,11 @@ public class EntityTableReader<T extends Entity> extends BaseTableReader<T> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<T> createNextValue(ResultSet resultSet) {
-		T entity;
+	protected ReadResult<Tb> createNextValue(ResultSet resultSet) {
+		Tb entity;
 		
-		entity = entityBuilder.buildEntity(resultSet);
+		entity = entityMapper.parseRecord(resultSet);
 		
-		return new ReadResult<T>(true, entity);
+		return new ReadResult<Tb>(true, entity);
 	}
 }

@@ -10,7 +10,7 @@ import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.container.v0_6.ChangeContainer;
 import com.bretth.osmosis.core.container.v0_6.RelationContainer;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
-import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.store.PeekableIterator;
@@ -28,7 +28,7 @@ import com.bretth.osmosis.core.task.common.ChangeAction;
 public class RelationChangeReader {
 
 	private boolean fullHistory;
-	private PeekableIterator<EntityHistory<Relation>> relationHistoryReader;
+	private PeekableIterator<EntityHistory<RelationBuilder>> relationHistoryReader;
 	private PeekableIterator<DbFeatureHistory<DbOrderedFeature<RelationMember>>> relationMemberHistoryReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> relationTagHistoryReader;
 	private ChangeContainer nextValue;
@@ -55,8 +55,8 @@ public class RelationChangeReader {
 		this.fullHistory = fullHistory;
 		
 		relationHistoryReader =
-			new PeekableIterator<EntityHistory<Relation>>(
-				new PersistentIterator<EntityHistory<Relation>>(
+			new PeekableIterator<EntityHistory<RelationBuilder>>(
+				new PersistentIterator<EntityHistory<RelationBuilder>>(
 					new SingleClassObjectSerializationFactory(EntityHistory.class),
 					new RelationHistoryReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd),
 					"rel",
@@ -91,9 +91,9 @@ public class RelationChangeReader {
 	 * @return A relation history record where the relation is fully populated
 	 *         with members and tags.
 	 */
-	private EntityHistory<Relation> readNextRelationHistory() {
-		EntityHistory<Relation> relationHistory;
-		Relation relation;
+	private EntityHistory<RelationBuilder> readNextRelationHistory() {
+		EntityHistory<RelationBuilder> relationHistory;
+		RelationBuilder relation;
 		List<DbOrderedFeature<RelationMember>> relationMembers;
 		
 		relationHistory = relationHistoryReader.next();
@@ -129,8 +129,8 @@ public class RelationChangeReader {
 	 */
 	private ChangeContainer readChange() {
 		boolean createdPreviously;
-		EntityHistory<Relation> mostRecentHistory;
-		Relation relation;
+		EntityHistory<RelationBuilder> mostRecentHistory;
+		RelationBuilder relation;
 		RelationContainer relationContainer;
 		
 		// Check the first relation, if it has a version greater than 1 the
@@ -149,7 +149,7 @@ public class RelationChangeReader {
 		}
 		
 		// The relation in the result must be wrapped in a container.
-		relationContainer = new RelationContainer(relation);
+		relationContainer = new RelationContainer(relation.buildEntity());
 		
 		// The entity has been modified if it is visible and was created previously.
 		// It is a create if it is visible and was NOT created previously.

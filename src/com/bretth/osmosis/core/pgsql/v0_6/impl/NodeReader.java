@@ -2,6 +2,7 @@
 package com.bretth.osmosis.core.pgsql.v0_6.impl;
 
 import com.bretth.osmosis.core.domain.v0_6.Node;
+import com.bretth.osmosis.core.domain.v0_6.NodeBuilder;
 import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
 
 
@@ -11,7 +12,7 @@ import com.bretth.osmosis.core.pgsql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class NodeReader extends EntityReader<Node> {
+public class NodeReader extends EntityReader<Node, NodeBuilder> {
 	
 	/**
 	 * Creates a new instance.
@@ -20,7 +21,7 @@ public class NodeReader extends EntityReader<Node> {
 	 *            The database context to use for accessing the database.
 	 */
 	public NodeReader(DatabaseContext dbCtx) {
-		super(dbCtx, new NodeBuilder());
+		super(dbCtx, new NodeMapper());
 	}
 	
 	
@@ -34,6 +35,6 @@ public class NodeReader extends EntityReader<Node> {
 	 *            entities to be returned.
 	 */
 	public NodeReader(DatabaseContext dbCtx, String constraintTable) {
-		super(dbCtx, new NodeBuilder(), constraintTable);
+		super(dbCtx, new NodeMapper(), constraintTable);
 	}
 }

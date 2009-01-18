@@ -4,6 +4,7 @@ package com.bretth.osmosis.core.pgsql.v0_6.impl;
 import java.util.NoSuchElementException;
 
 import com.bretth.osmosis.core.domain.v0_6.Entity;
+import com.bretth.osmosis.core.domain.v0_6.EntityBuilder;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
@@ -19,14 +20,16 @@ import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
  * configured entity objects.
  * 
  * @author Brett Henderson
- * @param <T>
+ * @param <Te>
  *            The entity type to be supported.
+ * @param <Tb>
+ *            The builder type for the entity.
  */
-public class EntityReader<T extends Entity> implements ReleasableIterator<T> {
+public class EntityReader<Te extends Entity,  Tb extends EntityBuilder<Te>> implements ReleasableIterator<Te> {
 	
-	private ReleasableIterator<T> entityReader;
+	private ReleasableIterator<Tb> entityReader;
 	private PeekableIterator<DbFeature<Tag>> entityTagReader;
-	private T nextValue;
+	private Te nextValue;
 	private boolean nextValueLoaded;
 	
 	
@@ -35,23 +38,23 @@ public class EntityReader<T extends Entity> implements ReleasableIterator<T> {
 	 * 
 	 * @param dbCtx
 	 *            The database context to use for accessing the database.
-	 * @param entityBuilder
+	 * @param entityMapper
 	 *            The database mapper for the entity type.
 	 */
-	public EntityReader(DatabaseContext dbCtx, EntityBuilder<T> entityBuilder) {
+	public EntityReader(DatabaseContext dbCtx, EntityMapper<Te, Tb> entityMapper) {
 		// The postgres jdbc driver doesn't appear to allow concurrent result
 		// sets on the same connection so only the last opened result set may be
 		// streamed. The rest of the result sets must be persisted first.
-		entityReader = new PersistentIterator<T>(
-			new SingleClassObjectSerializationFactory(entityBuilder.getEntityClass()),
-			new EntityTableReader<T>(dbCtx, entityBuilder),
+		entityReader = new PersistentIterator<Tb>(
+			new SingleClassObjectSerializationFactory(entityMapper.getBuilderClass()),
+			new EntityTableReader<Te, Tb>(dbCtx, entityMapper),
 			"ent",
 			true
 		);
 		entityTagReader = new PeekableIterator<DbFeature<Tag>>(
 			new PersistentIterator<DbFeature<Tag>>(
 				new SingleClassObjectSerializationFactory(DbFeature.class),
-				new EntityFeatureTableReader<Tag, DbFeature<Tag>>(dbCtx, new TagBuilder(entityBuilder.getEntityName())),
+				new EntityFeatureTableReader<Tag, DbFeature<Tag>>(dbCtx, new TagMapper(entityMapper.getEntityName())),
 				"enttag",
 				true
 			)
@@ -64,26 +67,26 @@ public class EntityReader<T extends Entity> implements ReleasableIterator<T> {
 	 * 
 	 * @param dbCtx
 	 *            The database context to use for accessing the database.
-	 * @param entityBuilder
+	 * @param entityMapper
 	 *            The database mapper for the entity type.
 	 * @param constraintTable
 	 *            The table containing a column named id defining the list of
 	 *            entities to be returned.
 	 */
-	public EntityReader(DatabaseContext dbCtx, EntityBuilder<T> entityBuilder, String constraintTable) {
+	public EntityReader(DatabaseContext dbCtx, EntityMapper<Te, Tb> entityMapper, String constraintTable) {
 		// The postgres jdbc driver doesn't appear to allow concurrent result
 		// sets on the same connection so only the last opened result set may be
 		// streamed. The rest of the result sets must be persisted first.
-		entityReader = new PersistentIterator<T>(
-			new SingleClassObjectSerializationFactory(entityBuilder.getEntityClass()),
-			new EntityTableReader<T>(dbCtx, entityBuilder, constraintTable),
+		entityReader = new PersistentIterator<Tb>(
+			new SingleClassObjectSerializationFactory(entityMapper.getBuilderClass()),
+			new EntityTableReader<Te, Tb>(dbCtx, entityMapper, constraintTable),
 			"nod",
 			true
 		);
 		entityTagReader = new PeekableIterator<DbFeature<Tag>>(
 			new PersistentIterator<DbFeature<Tag>>(
 				new SingleClassObjectSerializationFactory(DbFeature.class),
-				new EntityFeatureTableReader<Tag, DbFeature<Tag>>(dbCtx, new TagBuilder(entityBuilder.getEntityName()), constraintTable),
+				new EntityFeatureTableReader<Tag, DbFeature<Tag>>(dbCtx, new TagMapper(entityMapper.getEntityName()), constraintTable),
 				"enttag",
 				true
 			)
@@ -98,7 +101,7 @@ public class EntityReader<T extends Entity> implements ReleasableIterator<T> {
 	 * @param entity
 	 *            The entity to be populated.
 	 */
-	protected void populateEntityFeatures(T entity) {
+	protected void populateEntityFeatures(Tb entity) {
 		long entityId;
 		
 		entityId = entity.getId();
@@ -128,13 +131,13 @@ public class EntityReader<T extends Entity> implements ReleasableIterator<T> {
 	 */
 	public boolean hasNext() {
 		if (!nextValueLoaded && entityReader.hasNext()) {
-			T entity;
+			Tb entityBuilder;
 			
-			entity = entityReader.next();
+			entityBuilder = entityReader.next();
 			
-			populateEntityFeatures(entity);
+			populateEntityFeatures(entityBuilder);
 			
-			nextValue = entity;
+			nextValue = entityBuilder.buildEntity();
 			nextValueLoaded = true;
 		}
 		
@@ -145,8 +148,8 @@ public class EntityReader<T extends Entity> implements ReleasableIterator<T> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public T next() {
-		T result;
+	public Te next() {
+		Te result;
 		
 		if (!hasNext()) {
 			throw new NoSuchElementException();

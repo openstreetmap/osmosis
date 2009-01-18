@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
 import com.bretth.osmosis.core.database.DatabaseLoginCredentials;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.domain.v0_6.WayBuilder;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.store.PeekableIterator;
@@ -24,7 +25,7 @@ import com.bretth.osmosis.core.store.SingleClassObjectSerializationFactory;
  */
 public class CurrentWayReader implements ReleasableIterator<Way> {
 	
-	private ReleasableIterator<Way> wayReader;
+	private ReleasableIterator<WayBuilder> wayReader;
 	private PeekableIterator<DbFeature<Tag>> wayTagReader;
 	private PeekableIterator<DbOrderedFeature<WayNode>> wayNodeReader;
 	private Way nextValue;
@@ -41,8 +42,8 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 	 *            regardless of their public edits flag.
 	 */
 	public CurrentWayReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
-		wayReader = new PersistentIterator<Way>(
-			new SingleClassObjectSerializationFactory(Way.class),
+		wayReader = new PersistentIterator<WayBuilder>(
+			new SingleClassObjectSerializationFactory(WayBuilder.class),
 			new CurrentWayTableReader(loginCredentials, readAllUsers),
 			"way",
 			true
@@ -71,7 +72,7 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 	 */
 	public boolean hasNext() {
 		if (!nextValueLoaded && wayReader.hasNext()) {
-			Way way;
+			WayBuilder way;
 			long wayId;
 			List<DbOrderedFeature<WayNode>> wayNodes;
 			
@@ -122,7 +123,7 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 				way.addWayNode(dbWayNode.getFeature());
 			}
 			
-			nextValue = way;
+			nextValue = way.buildEntity();
 			nextValueLoaded = true;
 		}
 		

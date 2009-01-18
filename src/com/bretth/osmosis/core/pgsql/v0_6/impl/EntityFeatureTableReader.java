@@ -21,7 +21,7 @@ import com.bretth.osmosis.core.store.Storeable;
  */
 public class EntityFeatureTableReader<Tef extends Storeable, Tdb extends DbFeature<Tef>> extends BaseTableReader<Tdb> {
 	
-	private EntityFeatureBuilder<Tdb> entityFeatureBuilder;
+	private EntityFeatureMapper<Tdb> entityFeatureBuilder;
 	private String sql;
 	
 	
@@ -33,7 +33,7 @@ public class EntityFeatureTableReader<Tef extends Storeable, Tdb extends DbFeatu
 	 * @param entityFeatureBuilder
 	 *            Provides entity feature jdbc bindings.
 	 */
-	public EntityFeatureTableReader(DatabaseContext dbCtx, EntityFeatureBuilder<Tdb> entityFeatureBuilder) {
+	public EntityFeatureTableReader(DatabaseContext dbCtx, EntityFeatureMapper<Tdb> entityFeatureBuilder) {
 		super(dbCtx);
 		
 		this.entityFeatureBuilder = entityFeatureBuilder;
@@ -53,7 +53,7 @@ public class EntityFeatureTableReader<Tef extends Storeable, Tdb extends DbFeatu
 	 *            The table containing a column named id defining the list of
 	 *            entities to be returned.
 	 */
-	public EntityFeatureTableReader(DatabaseContext dbCtx, EntityFeatureBuilder<Tdb> entityFeatureBuilder, String constraintTable) {
+	public EntityFeatureTableReader(DatabaseContext dbCtx, EntityFeatureMapper<Tdb> entityFeatureBuilder, String constraintTable) {
 		super(dbCtx);
 		
 		this.entityFeatureBuilder = entityFeatureBuilder;

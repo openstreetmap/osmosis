@@ -152,7 +152,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		nodeWriter.writeField(pointBuilder.createPoint(node.getLatitude(), node.getLongitude()));
 		nodeWriter.endRecord();
 		
-		for (Tag tag : node.getTagList()) {
+		for (Tag tag : node.getTags()) {
 			nodeTagWriter.writeField(node.getId());
 			nodeTagWriter.writeField(tag.getKey());
 			nodeTagWriter.writeField(tag.getValue());
@@ -175,7 +175,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		way = wayContainer.getEntity();
 		
 		// Ignore ways with a single node because they can't be loaded into postgis.
-		if (way.getWayNodeList().size() > 1) {
+		if (way.getWayNodes().size() > 1) {
 			wayWriter.writeField(way.getId());
 			wayWriter.writeField(way.getVersion());
 			wayWriter.writeField(way.getUser().getId());
@@ -188,7 +188,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 			}
 			wayWriter.endRecord();
 			
-			for (Tag tag : way.getTagList()) {
+			for (Tag tag : way.getTags()) {
 				wayTagWriter.writeField(way.getId());
 				wayTagWriter.writeField(tag.getKey());
 				wayTagWriter.writeField(tag.getValue());
@@ -196,7 +196,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 			}
 			
 			sequenceId = 0;
-			for (WayNode wayNode : way.getWayNodeList()) {
+			for (WayNode wayNode : way.getWayNodes()) {
 				wayNodeWriter.writeField(way.getId());
 				wayNodeWriter.writeField(wayNode.getNodeId());
 				wayNodeWriter.writeField(sequenceId++);
@@ -221,7 +221,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		relationWriter.writeField(relation.getTimestamp());
 		relationWriter.endRecord();
 		
-		for (Tag tag : relation.getTagList()) {
+		for (Tag tag : relation.getTags()) {
 			relationTagWriter.writeField(relation.getId());
 			relationTagWriter.writeField(tag.getKey());
 			relationTagWriter.writeField(tag.getValue());
@@ -229,7 +229,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		}
 		
 		memberSequenceId = 0;
-		for (RelationMember member : relation.getMemberList()) {
+		for (RelationMember member : relation.getMembers()) {
 			relationMemberWriter.writeField(relation.getId());
 			relationMemberWriter.writeField(member.getMemberId());
 			relationMemberWriter.writeField(memberTypeValueMapper.getMemberType(member.getMemberType()));

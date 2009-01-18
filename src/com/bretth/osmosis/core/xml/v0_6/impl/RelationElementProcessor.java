@@ -6,7 +6,7 @@ import org.xml.sax.Attributes;
 import com.bretth.osmosis.core.container.v0_6.RelationContainer;
 import com.bretth.osmosis.core.domain.common.TimestampContainer;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
-import com.bretth.osmosis.core.domain.v0_6.Relation;
+import com.bretth.osmosis.core.domain.v0_6.RelationBuilder;
 import com.bretth.osmosis.core.domain.v0_6.RelationMember;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.task.v0_6.Sink;
@@ -30,7 +30,7 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 	
 	private TagElementProcessor tagElementProcessor;
 	private RelationMemberElementProcessor relationMemberElementProcessor;
-	private Relation relation;
+	private RelationBuilder relationBuilder;
 	
 	
 	/**
@@ -47,6 +47,7 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 	public RelationElementProcessor(BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing) {
 		super(parentProcessor, sink, enableDateParsing);
 		
+		relationBuilder = new RelationBuilder();
 		tagElementProcessor = new TagElementProcessor(this, this);
 		relationMemberElementProcessor = new RelationMemberElementProcessor(this, this);
 	}
@@ -71,7 +72,7 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 		
 		user = buildUser(rawUserId, rawUserName);
 		
-		relation = new Relation(id, version, timestampContainer, user);
+		relationBuilder.initialize(id, version, timestampContainer, user);
 	}
 	
 	
@@ -103,8 +104,7 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 	 * {@inheritDoc}
 	 */
 	public void end() {
-		getSink().process(new RelationContainer(relation));
-		relation = null;
+		getSink().process(new RelationContainer(relationBuilder.buildEntity()));
 	}
 	
 	
@@ -116,7 +116,7 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 	 *            The tag to be processed.
 	 */
 	public void processTag(Tag tag) {
-		relation.addTag(tag);
+		relationBuilder.addTag(tag);
 	}
 	
 	
@@ -128,6 +128,6 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 	 *            The wayNode to be processed.
 	 */
 	public void processRelationMember(RelationMember relationMember) {
-		relation.addMember(relationMember);
+		relationBuilder.addMember(relationMember);
 	}
 }

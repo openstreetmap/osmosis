@@ -2,6 +2,7 @@
 package com.bretth.osmosis.core.xml.v0_6.impl;
 
 import java.io.BufferedWriter;
+import java.util.Collection;
 import java.util.List;
 
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
@@ -46,7 +47,7 @@ public class WayWriter extends ElementWriter {
 	public void process(Way way) {
 		OsmUser user;
 		List<WayNode> wayNodes;
-		List<Tag> tags;
+		Collection<Tag> tags;
 		
 		user = way.getUser();
 		
@@ -60,8 +61,8 @@ public class WayWriter extends ElementWriter {
 			addAttribute("user", user.getName());
 		}
 		
-		wayNodes = way.getWayNodeList();
-		tags = way.getTagList();
+		wayNodes = way.getWayNodes();
+		tags = way.getTags();
 		
 		if (wayNodes.size() > 0 || tags.size() > 0) {
 			endOpenElement(false);

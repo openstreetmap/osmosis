@@ -7,7 +7,7 @@ import com.bretth.osmosis.core.container.v0_6.WayContainer;
 import com.bretth.osmosis.core.domain.common.TimestampContainer;
 import com.bretth.osmosis.core.domain.v0_6.OsmUser;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
-import com.bretth.osmosis.core.domain.v0_6.Way;
+import com.bretth.osmosis.core.domain.v0_6.WayBuilder;
 import com.bretth.osmosis.core.domain.v0_6.WayNode;
 import com.bretth.osmosis.core.task.v0_6.Sink;
 import com.bretth.osmosis.core.xml.common.BaseElementProcessor;
@@ -30,7 +30,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 	
 	private TagElementProcessor tagElementProcessor;
 	private WayNodeElementProcessor wayNodeElementProcessor;
-	private Way way;
+	private WayBuilder wayBuilder;
 	
 	
 	/**
@@ -47,6 +47,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 	public WayElementProcessor(BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing) {
 		super(parentProcessor, sink, enableDateParsing);
 		
+		wayBuilder = new WayBuilder();
 		tagElementProcessor = new TagElementProcessor(this, this);
 		wayNodeElementProcessor = new WayNodeElementProcessor(this, this);
 	}
@@ -71,7 +72,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 		
 		user = buildUser(rawUserId, rawUserName);
 		
-		way = new Way(id, version, timestampContainer, user);
+		wayBuilder.initialize(id, version, timestampContainer, user);
 	}
 	
 	
@@ -103,8 +104,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 	 * {@inheritDoc}
 	 */
 	public void end() {
-		getSink().process(new WayContainer(way));
-		way = null;
+		getSink().process(new WayContainer(wayBuilder.buildEntity()));
 	}
 	
 	
@@ -116,7 +116,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 	 *            The tag to be processed.
 	 */
 	public void processTag(Tag tag) {
-		way.addTag(tag);
+		wayBuilder.addTag(tag);
 	}
 	
 	
@@ -128,6 +128,6 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 	 *            The wayNode to be processed.
 	 */
 	public void processWayNode(WayNode wayNode) {
-		way.addWayNode(wayNode);
+		wayBuilder.addWayNode(wayNode);
 	}
 }

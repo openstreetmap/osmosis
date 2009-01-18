@@ -5,10 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.domain.v0_6.Entity;
+import com.bretth.osmosis.core.domain.v0_6.EntityBuilder;
 import com.bretth.osmosis.core.domain.v0_6.Tag;
 import com.bretth.osmosis.core.lifecycle.ReleasableIterator;
 import com.bretth.osmosis.core.mysql.v0_6.impl.DbFeature;
@@ -21,14 +22,16 @@ import com.bretth.osmosis.core.pgsql.common.NoSuchRecordException;
  * Provides functionality common to all top level entity daos.
  * 
  * @author Brett Henderson
- * @param <T>
+ * @param <Te>
  *            The entity type to be supported.
+ * @param <Tb>
+ *            The builder type for the entity.
  */
-public abstract class EntityDao<T extends Entity> extends BaseDao {
+public abstract class EntityDao<Te extends Entity, Tb extends EntityBuilder<Te>> extends BaseDao {
 	
 	private EntityFeatureDao<Tag, DbFeature<Tag>> tagDao;
 	private ActionDao actionDao;
-	private EntityBuilder<T> entityBuilder;
+	private EntityMapper<Te, Tb> entityMapper;
 	private PreparedStatement countStatement;
 	private PreparedStatement getStatement;
 	private PreparedStatement insertStatement;
@@ -41,18 +44,18 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	 * 
 	 * @param dbCtx
 	 *            The database context to use for accessing the database.
-	 * @param entityBuilder
+	 * @param entityMapper
 	 *            Provides entity type specific JDBC support.
 	 * @param actionDao
 	 *            The dao to use for adding action records to the database.
 	 */
-	protected EntityDao(DatabaseContext dbCtx, EntityBuilder<T> entityBuilder, ActionDao actionDao) {
+	protected EntityDao(DatabaseContext dbCtx, EntityMapper<Te, Tb> entityMapper, ActionDao actionDao) {
 		super(dbCtx);
 		
-		this.entityBuilder = entityBuilder;
+		this.entityMapper = entityMapper;
 		this.actionDao = actionDao;
 		
-		tagDao = new EntityFeatureDao<Tag, DbFeature<Tag>>(dbCtx, new TagBuilder(entityBuilder.getEntityName()));
+		tagDao = new EntityFeatureDao<Tag, DbFeature<Tag>>(dbCtx, new TagMapper(entityMapper.getEntityName()));
 	}
 	
 	
@@ -67,7 +70,7 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 		ResultSet resultSet = null;
 		
 		if (countStatement == null) {
-			countStatement = prepareStatement(entityBuilder.getSqlSelectCount(true));
+			countStatement = prepareStatement(entityMapper.getSqlSelectCount(true));
 		}
 		
 		try {
@@ -91,7 +94,7 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
 				"Count query failed for " +
-				entityBuilder.getEntityName() + " " + entityId + ".",
+				entityMapper.getEntityName() + " " + entityId + ".",
 				e
 			);
 		} finally {
@@ -113,12 +116,12 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	 *            The unique identifier of the entity.
 	 * @return The loaded entity.
 	 */
-	public T getEntity(long entityId) {
+	public Te getEntity(long entityId) {
 		ResultSet resultSet = null;
-		T entity;
+		Tb entityBuilder;
 		
 		if (getStatement == null) {
-			getStatement = prepareStatement(entityBuilder.getSqlSelect(true, true));
+			getStatement = prepareStatement(entityMapper.getSqlSelect(true, true));
 		}
 		
 		try {
@@ -127,24 +130,27 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 			resultSet = getStatement.executeQuery();
 			
 			if (!resultSet.next()) {
-				throw new NoSuchRecordException(entityBuilder.getEntityName()
+				throw new NoSuchRecordException(entityMapper.getEntityName()
 						+ " " + entityId + " doesn't exist.");
 			}
-			entity = entityBuilder.buildEntity(resultSet);
+			entityBuilder = entityMapper.parseRecord(resultSet);
 			
 			resultSet.close();
 			resultSet = null;
 			
-			for (DbFeature<Tag> dbTag : tagDao.getList(entityId)) {
-				entity.addTag(dbTag.getFeature());
+			for (DbFeature<Tag> dbTag : tagDao.getAll(entityId)) {
+				entityBuilder.addTag(dbTag.getFeature());
 			}
 			
-			return entity;
+			// Add the type specific features.
+			loadFeatures(entityId, entityBuilder);
+			
+			return entityBuilder.buildEntity();
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
 				"Query failed for " +
-				entityBuilder.getEntityName() + " " + entityId + ".",
+				entityMapper.getEntityName() + " " + entityId + ".",
 				e
 			);
 		} finally {
@@ -160,24 +166,35 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	
 	
 	/**
-	 * Adds the specified tag list to the database.
+	 * Adds the specified tags to the database.
 	 * 
 	 * @param entityId
 	 *            The identifier of the entity to add these features to.
-	 * @param tagList
-	 *            The list of features to add.
+	 * @param tags
+	 *            The features to add.
 	 */
-	private void addTagList(long entityId, List<Tag> tagList) {
-		List<DbFeature<Tag>> dbList;
+	private void addTags(long entityId, Collection<Tag> tags) {
+		Collection<DbFeature<Tag>> dbList;
 		
-		dbList = new ArrayList<DbFeature<Tag>>(tagList.size());
+		dbList = new ArrayList<DbFeature<Tag>>(tags.size());
 		
-		for (Tag tag : tagList) {
+		for (Tag tag : tags) {
 			dbList.add(new DbFeature<Tag>(entityId, tag));
 		}
 		
-		tagDao.addList(dbList);
+		tagDao.addAll(dbList);
 	}
+	
+	
+	/**
+	 * Adds the type specific features to the entity.
+	 * 
+	 * @param entityId
+	 *            The entity id.
+	 * @param entityBuilder
+	 *            The entity requiring features to be added.
+	 */
+	protected abstract void loadFeatures(long entityId, Tb entityBuilder);
 	
 	
 	/**
@@ -186,26 +203,26 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	 * @param entity
 	 *            The entity to add.
 	 */
-	public void addEntity(T entity) {
+	public void addEntity(Te entity) {
 		if (insertStatement == null) {
-			insertStatement = prepareStatement(entityBuilder.getSqlInsert(1));
+			insertStatement = prepareStatement(entityMapper.getSqlInsert(1));
 		}
 		
 		try {
-			entityBuilder.populateEntityParameters(insertStatement, 1, entity);
+			entityMapper.populateEntityParameters(insertStatement, 1, entity);
 			insertStatement.executeUpdate();
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
-				"Insert failed for " + entityBuilder.getEntityName() +
+				"Insert failed for " + entityMapper.getEntityName() +
 				" " + entity.getId() + ".",
 				e
 			);
 		}
 		
-		addTagList(entity.getId(), entity.getTagList());
+		addTags(entity.getId(), entity.getTags());
 		
-		actionDao.addAction(entityBuilder.getEntityType(), ChangesetAction.CREATE, entity.getId());
+		actionDao.addAction(entityMapper.getEntityType(), ChangesetAction.CREATE, entity.getId());
 	}
 	
 	
@@ -215,9 +232,9 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	 * @param entity
 	 *            The entity to update.
 	 */
-	public void modifyEntity(T entity) {
+	public void modifyEntity(Te entity) {
 		if (updateStatement == null) {
-			updateStatement = prepareStatement(entityBuilder.getSqlUpdate(true));
+			updateStatement = prepareStatement(entityMapper.getSqlUpdate(true));
 		}
 		
 		try {
@@ -225,23 +242,23 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 			
 			prmIndex = 1;
 			
-			prmIndex = entityBuilder.populateEntityParameters(updateStatement, prmIndex, entity);
+			prmIndex = entityMapper.populateEntityParameters(updateStatement, prmIndex, entity);
 			updateStatement.setLong(prmIndex++, entity.getId());
 			updateStatement.executeUpdate();
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
 				"Update failed for " +
-				entityBuilder.getEntityName() + " " +
+				entityMapper.getEntityName() + " " +
 				entity.getId() + ".",
 				e
 			);
 		}
 		
 		tagDao.removeList(entity.getId());
-		addTagList(entity.getId(), entity.getTagList());
+		addTags(entity.getId(), entity.getTags());
 		
-		actionDao.addAction(entityBuilder.getEntityType(), ChangesetAction.MODIFY, entity.getId());
+		actionDao.addAction(entityMapper.getEntityType(), ChangesetAction.MODIFY, entity.getId());
 	}
 	
 	
@@ -257,7 +274,7 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 		tagDao.removeList(entityId);
 		
 		if (deleteStatement == null) {
-			deleteStatement = prepareStatement(entityBuilder.getSqlDelete(true));
+			deleteStatement = prepareStatement(entityMapper.getSqlDelete(true));
 		}
 		
 		try {
@@ -268,13 +285,13 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
 				"Delete failed for " +
-				entityBuilder.getEntityName() + " "
+				entityMapper.getEntityName() + " "
 				+ entityId + ".",
 				e
 			);
 		}
 		
-		actionDao.addAction(entityBuilder.getEntityType(), ChangesetAction.DELETE, entityId);
+		actionDao.addAction(entityMapper.getEntityType(), ChangesetAction.DELETE, entityId);
 	}
 	
 	
@@ -283,5 +300,5 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	 * 
 	 * @return The entity iterator.
 	 */
-	public abstract ReleasableIterator<T> iterate();
+	public abstract ReleasableIterator<Te> iterate();
 }
