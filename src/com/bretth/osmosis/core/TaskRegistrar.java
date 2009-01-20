@@ -1,10 +1,31 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package com.bretth.osmosis.core;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.java.plugin.ObjectFactory;
+import org.java.plugin.PluginLifecycleException;
+import org.java.plugin.PluginManager;
+import org.java.plugin.PluginManager.PluginLocation;
+//import org.java.plugin.registry.Extension;
+//import org.java.plugin.registry.ExtensionPoint;
+import org.java.plugin.registry.Extension;
+import org.java.plugin.registry.ExtensionPoint;
+import org.java.plugin.registry.ManifestProcessingException;
+import org.java.plugin.registry.PluginDescriptor;
+import org.java.plugin.standard.StandardPluginLocation;
+import org.java.plugin.standard.StandardPluginManager;
 
 import com.bretth.osmosis.core.buffer.v0_6.ChangeBufferFactory;
 import com.bretth.osmosis.core.buffer.v0_6.EntityBufferFactory;
@@ -70,11 +91,17 @@ import com.bretth.osmosis.core.xml.v0_6.XmlWriterFactory;
  */
 public class TaskRegistrar {
 	
+	/**
+	 * Out logger for debug and error -output.
+	 */
+	private static final Logger log = Logger.getLogger(TaskRegistrar.class.getName());
 
 	 /**
 	  * The register containing all known task manager factories.
 	  */
 	 private TaskManagerFactoryRegister factoryRegister;
+
+	public static PluginManager myPluginManager;
 	
 	
 	/**
@@ -82,6 +109,9 @@ public class TaskRegistrar {
 	 */
 	public TaskRegistrar() {
 		factoryRegister = new TaskManagerFactoryRegister();
+		if (myPluginManager == null) {
+			myPluginManager = ObjectFactory.newInstance().createManager();
+		}
 	}
 	
 	
@@ -99,11 +129,6 @@ public class TaskRegistrar {
 	 * Initialises factories for all tasks. No plugins are loaded by this
 	 * method.
 	 */
-	public void initialize() {
-		initialize(new ArrayList<String>());
-	}
-	
-	
 	/**
 	 * Initialises factories for all tasks. Loads additionally specified plugins
 	 * as well as default tasks.
@@ -322,48 +347,148 @@ public class TaskRegistrar {
 		for (String plugin : plugins) {
 			loadPlugin(plugin);
 		}
+		loadJPFPlugins();
 	}
 	
-	
 	/**
-	 * Loads the tasks associated with a plugin.
+	 * Loads the tasks implemented as plugins.
+	 * 
+	 */	
+	private void loadJPFPlugins() {
+		 File[] pluginsDirs = new File[] {
+				 new File("plugins"),
+				 new File(System.getProperty("user.home") + "/.openstreetmap" + File.separator + "osmosis" + File.separator + "plugins"),
+				 new File(System.getenv("APPDATA") + File.separator + "openstreetmap" + File.separator + "osmosis" + File.separator + "plugins")
+		 };
+		 
+		 FilenameFilter pluginFileNameFilter = new FilenameFilter() {
+
+			 /**
+			  * @param dir the directory of the file
+			  * @param name the unqualified name of the file
+			  * @return true if this may be a plugin-file
+			  */
+			 public boolean accept(final File dir, final String name) {
+				 return name.toLowerCase().endsWith(".zip") || name.toLowerCase().endsWith(".jar");
+			 }
+		    };
+		    // register the core-plugin
+		    try {
+				URL core = getClass().getResource("/com/bretth/osmosis/core/plugin/plugin.xml");
+				System.err.println("core-plugin-url=" + core.toExternalForm());
+				myPluginManager.getRegistry().register(new URL[]{core});
+				PluginDescriptor coreDescriptor = myPluginManager.getRegistry().getPluginDescriptor("com.bretth.osmosis.core.plugin.Core");
+				myPluginManager.enablePlugin(coreDescriptor, true);
+				myPluginManager.activatePlugin("com.bretth.osmosis.core.plugin.Core");
+			} catch (Exception e1) {
+				log.log(Level.SEVERE, "cannot register top-level plugin", e1);
+				e1.printStackTrace(System.err);
+			}
+			List<PluginLocation> locations = new LinkedList<PluginLocation>();
+		    for (File pluginDir : pluginsDirs) {
+		    	log.info("looking for plugin-zip-files in " + pluginDir.getAbsolutePath());
+		    	System.err.println("looking for plugin-zip-files in " + pluginDir.getAbsolutePath());
+		    	if (!pluginDir.exists()) {
+		    		continue;
+		    	}
+		    	File[] plugins = pluginDir.listFiles(pluginFileNameFilter);
+			    try {      
+			            
+			        for (int i = 0; i < plugins.length; i++) {
+			        	System.err.println("looking for plugin-zip-file " + plugins[i].getAbsolutePath());
+			        	locations.add(StandardPluginLocation.create(plugins[i]));
+			        }
+			    } catch (Exception e) {
+			    	log.log(Level.SEVERE, "Cannot list plugins in dir " + pluginDir.getAbsolutePath(), e);
+			    }	
+			}
+	        try {
+	        	myPluginManager.publishPlugins(locations.toArray(new PluginLocation[locations.size()]));
+	        } catch (Exception e) {
+		    	log.log(Level.SEVERE, "Cannot publish plugins", e);
+		    }
+
+		    
+		// load plugins for the task-extension-point
+		    PluginDescriptor core =
+		    	myPluginManager.getRegistry().getPluginDescriptor("com.bretth.osmosis.core.plugin.Core");
+		    	           
+		    ExtensionPoint point =
+		    	myPluginManager.getRegistry().getExtensionPoint(core.getId(), "Task");
+		    for (Iterator<Extension> it = point.getConnectedExtensions().iterator(); it.hasNext();) {
+				    	                
+		    	Extension ext = it.next();        
+		    	PluginDescriptor descr = ext.getDeclaringPluginDescriptor();
+		    	try {
+		    		myPluginManager.enablePlugin(descr, true);
+		    		myPluginManager.activatePlugin(descr.getId());
+					ClassLoader classLoader = myPluginManager.getPluginClassLoader(descr);
+					loadPluginClass(ext.getParameter("class").valueAsString(), classLoader);
+				} catch (PluginLifecycleException e) {
+					log.log(Level.SEVERE, "Cannot load JPF-plugin '"
+							+ ext.getId() + "' for extensionpoint '"
+							+ ext.getExtendedPointId() + "'", e);
+				}
+		    }
+
+	}
+
+
+	/**
+	 * Loads the tasks associated with a plugin
+	 * (old plugoin-api).
 	 * 
 	 * @param plugin
 	 *            The plugin loader class name.
 	 */
-	@SuppressWarnings("unchecked")
-	private void loadPlugin(String plugin) {
+	private void loadPlugin(final String plugin) {
 		ClassLoader classLoader;
-		Class<?> untypedPluginClass;
-		Class<PluginLoader> pluginClass;
-		PluginLoader pluginLoader;
-		Map<String, TaskManagerFactory> pluginTasks;
+		//Class<PluginLoader> pluginClass;
+		//Map<String, TaskManagerFactory> pluginTasks;
 		
 		// Obtain the thread context class loader. This becomes important if run
 		// within an application server environment where plugins might be
 		// inaccessible to this class's classloader.
 		classLoader = Thread.currentThread().getContextClassLoader();
 		
+		loadPluginClass(plugin, classLoader);
+	}
+
+
+	/**
+	 * @param plugin
+	 * @param classLoader
+	 * @param untypedPluginClass
+	 * @param pluginLoader
+	 */
+	@SuppressWarnings("unchecked")
+	private void loadPluginClass(final String aPluginClassName, final ClassLoader aClassLoader) {
+		Class<?> untypedPluginClass;
+		PluginLoader pluginLoader;
+		Map<String, TaskManagerFactory> pluginTasks;
 		// Load the plugin class.
 		try {
-			untypedPluginClass = classLoader.loadClass(plugin);
+			untypedPluginClass = aClassLoader.loadClass(aPluginClassName);
 		} catch (ClassNotFoundException e) {
-			throw new OsmosisRuntimeException("Unable to load plugin class (" + plugin + ").", e);
+			log.log(Level.SEVERE, "Unable to load plugin class (" + aPluginClassName + ").", e);
+			return;
 		}
-		
 		// Verify that the plugin implements the plugin loader interface.
 		if (!PluginLoader.class.isAssignableFrom(untypedPluginClass)) {
-			throw new OsmosisRuntimeException("The class (" + plugin + ") does not implement interface (" + PluginLoader.class.getName() + ").");
+			log.log(Level.SEVERE, "The class (" + aPluginClassName + ") does not implement interface (" + PluginLoader.class.getName() + ").");
+			return;
 		}
-		pluginClass = (Class<PluginLoader>) untypedPluginClass;
+		Class<PluginLoader> pluginClass = (Class<PluginLoader>) untypedPluginClass;
 		
 		// Instantiate the plugin loader.
 		try {
 			pluginLoader = pluginClass.newInstance();
 		} catch (InstantiationException e) {
-			throw new OsmosisRuntimeException("Unable to instantiate class (" + plugin + ")", e);
+			log.log(Level.SEVERE, "Unable to instantiate class (" + aPluginClassName + ")", e);
+			return;
 		} catch (IllegalAccessException e) {
-			throw new OsmosisRuntimeException("Unable to instantiate class (" + plugin + ")", e);
+			log.log(Level.SEVERE, "Unable to instantiate class (" + aPluginClassName + ")", e);
+			return;
 		}
 		
 		// Obtain the plugin task factories with their names.
