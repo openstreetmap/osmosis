@@ -5,10 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import com.bretth.osmosis.core.domain.common.SimpleTimestampContainer;
 import com.bretth.osmosis.core.domain.common.TimestampContainer;
@@ -34,9 +31,8 @@ public abstract class Entity implements Storeable {
 	private TimestampContainer timestampContainer;
 	private OsmUser user;
 	private Collection<Tag> tags;
-
-	private Map<Object, Object> myClientProperties = null;
-
+	
+	
 	/**
 	 * Creates a new instance.
 	 * 
@@ -256,132 +252,4 @@ public abstract class Entity implements Storeable {
 	public Collection<Tag> getTags() {
 		return tags;
 	}
-	
-	
-	/**
-	 * Adds a new tag.
-	 * 
-	 * @param tag
-	 *            The tag to add.
-	 */
-	public void addTag(final Tag tag) {
-		this.tags.add(tag);
-	}	
-	
-	/**
-	 * Adds a new tag.
-	 * 
-	 * @param aKey the key for the new tag
-	 * @param aValue the value for the new tag
-	 */
-	public void addTag(final String aKey, final String aValue) {
-		this.tags.add(new Tag(aKey, aValue));
-	}
-
-	/**
-	 * Adds all tags in the collection to the node.
-	 * 
-	 * @param tags
-	 *            The collection of tags to be added.
-	 */
-	public void addTags(Collection<Tag> tags) {
-		this.tags.addAll(tags);
-	}
-
-	/**
-	 * Search the list of {@link Tag}s and return all
-	 * Values of Tags that have a given key.
-	 * Modifying the returned list has no effect on this
-	 * Entity.
-	 * Note that most OSM-editors do not allow multiple values
-	 * per key, thus this method usually returns only one or
-	 * no values.
-	 * @param aKey the key to look for. Not null and case-sensitive.
-	 * @return all values of such tags. Never null.
-	 */
-	public Collection<String> getTagValuesByKey(final String aKey) {
-		if (aKey == null) {
-			throw new IllegalArgumentException("Null key given.");
-		}
-		List<String> retval = new LinkedList<String>();
-		for (Tag tag : this.tags) {
-			if (tag.getKey() != null && tag.getKey().equals(aKey)) {
-				retval.add(tag.getValue());
-			}
-		}
-		return retval;
-	}
-
-	/**
-	 * Search the list of {@link Tag}s and return true
-	 * if this entity contains the given value for the given
-	 * key.
-	 * @param aKey the key to look for. Not null and case-sensitive.
-	 * @param aValue the value to look for. Not null and case-sensitive.
-	 * @return true if this entity contains such a key with such a value.
-	 */
-	public boolean hasTagValue(final String aKey, final String aValue) {
-		if (aKey == null) {
-			throw new IllegalArgumentException("Null key given.");
-		}
-		if (aValue == null) {
-			throw new IllegalArgumentException("Null value given.");
-		}
-		for (Tag tag : this.tags) {
-			if (tag.getKey() != null && tag.getKey().equals(aKey)) {
-				if (tag.getValue() != null && tag.getValue().equals(aValue)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-    /**
-     * Returns the value of the property with the specified key.  Only
-     * properties added with <code>putClientProperty</code> will return
-     * a non-<code>null</code> value.  
-     * 
-     * @param key the being queried
-     * @return the value of this property or <code>null</code>
-     * @see #putClientProperty
-     */
-    public final Object getClientProperty(Object key) {
-    	if(myClientProperties == null) {
-    		return null;
-    	} else {
-    		synchronized(myClientProperties) {
-    			return myClientProperties.get(key);
-    		}
-    	}
-    }
-    
-    /**
-     * Adds an arbitrary key/value "client property" to this component.
-     * <p>
-     * The <code>get/putClientProperty</code> methods provide access to 
-     * a small per-instance hashtable. Callers can use get/putClientProperty
-     * to annotate components that were created by another module.
-     * If value is <code>null</code> this method will remove the property.
-     * The name of the property (for the sake of PropertyChange
-     * events) is <code>key.toString()</code>.  
-     * <p>
-     * The <code>clientProperty</code> dictionary is not intended to
-     * support large 
-     * scale extensions to Entity nor should be it considered an 
-     * alternative to subclassing when designing a new component.
-     * 
-     * @param key the new client property key
-     * @param value the new client property value; if <code>null</code>
-     *		this method will remove the property
-     * @see #getClientProperty
-     */
-    public final void putClientProperty(final Object key, final Object value) {
-    	if (myClientProperties == null) {
-    		myClientProperties = new HashMap<Object, Object>();
-    	}
-    	synchronized (myClientProperties) {
-    		myClientProperties.put(key, value);
-		}
-    }
 }

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -233,63 +232,5 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 */
 	public List<RelationMember> getMembers() {
 		return members;
-	}
-
-	/**
-	 * Returns a list of all relation members that have the given
-	 * role. Modifying the returned list has no effect on this
-	 * relation's member-list.
-	 * 
-	 * @param aRole the role to search for. Not null and case-sensitive.
-	 * @return The member list.
-	 */
-	public List<RelationMember> getMembersByRole(final String aRole) {
-		if (aRole == null) {
-			throw new IllegalArgumentException("Null role given.");
-		}
-		List<RelationMember> retval = new LinkedList<RelationMember>();
-		for (RelationMember relationMember : this.members) {
-			if (relationMember.getMemberRole() != null
-				&& relationMember.getMemberRole().equals(aRole)) {
-				retval.add(relationMember);
-			}
-		}
-		return retval;
-	}
-
-	/**
-	 * Adds a new member.
-	 * 
-	 * @param member
-	 *            The member to add.
-	 */
-	public void addMember(final RelationMember member) {
-		members.add(member);
-	}
-
-	/**
-	 * Create a new relation with the given member removed.
-	 * 
-	 * @param member
-	 *            The member to remove.
-	 * @return a relation identical to this but without the given member
-	 */
-	public Relation removeMember(final RelationMember member) {
-		ArrayList<RelationMember> newMembers = new ArrayList<RelationMember>(getMembers());
-		newMembers.remove(member);
-		Relation newRelation = new Relation(getId(), getVersion(), getTimestamp(), getUser(), getTags(), newMembers);
-		newRelation.addMembers(newMembers);
-		return newRelation;
-	}
-
-
-	/**
-	 * Adds all members in the collection to the relation.
-	 * 
-	 * @param members
-	 *            The collection of members to be added.
-	 */
-	public void addMembers(Collection<RelationMember> members) {
-		this.members.addAll(members);
 	}
 }

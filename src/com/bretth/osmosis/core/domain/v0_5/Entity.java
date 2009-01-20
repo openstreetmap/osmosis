@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.bretth.osmosis.core.domain.common.SimpleTimestampContainer;
@@ -225,76 +224,18 @@ public abstract class Entity implements Storeable {
 	 * @param tag
 	 *            The tag to add.
 	 */
-	public void addTag(final Tag tag) {
+	public void addTag(Tag tag) {
 		tagList.add(tag);
 	}
-
-	/**
-	 * Adds a new tag.
-	 * 
-	 * @param aKey the key for the new tag
-	 * @param aValue the value for the new tag
-	 */
-	public void addTag(final String aKey, final String aValue) {
-		tagList.add(new Tag(aKey, aValue));
-	}
-
+	
+	
 	/**
 	 * Adds all tags in the collection to the node.
 	 * 
 	 * @param tags
 	 *            The collection of tags to be added.
 	 */
-	public void addTags(final Collection<Tag> tags) {
+	public void addTags(Collection<Tag> tags) {
 		tagList.addAll(tags);
-	}
-
-	/**
-	 * Search the list of {@link Tag}s and return all
-	 * Values of Tags that have a given key.
-	 * Modifying the returned list has no effect on this
-	 * Entity.
-	 * Note that most OSM-editors do not allow multiple values
-	 * per key, thus this method usually returns only one or
-	 * no values.
-	 * @param aKey the key to look for. Not null and case-sensitive.
-	 * @return all values of such tags. Never null.
-	 */
-	public Collection<String> getTagValuesByKey(final String aKey) {
-		if (aKey == null) {
-			throw new IllegalArgumentException("Null key given.");
-		}
-		List<String> retval = new LinkedList<String>();
-		for (Tag tag : this.tagList) {
-			if (tag.getKey() != null && tag.getKey().equals(aKey)) {
-				retval.add(tag.getValue());
-			}
-		}
-		return retval;
-	}
-
-	/**
-	 * Search the list of {@link Tag}s and return true
-	 * if this entity contains the given value for the given
-	 * key.
-	 * @param aKey the key to look for. Not null and case-sensitive.
-	 * @param aValue the value to look for. Not null and case-sensitive.
-	 * @return true if this entity contains such a key with such a value.
-	 */
-	public boolean hasTagValue(final String aKey, final String aValue) {
-		if (aKey == null) {
-			throw new IllegalArgumentException("Null key given.");
-		}
-		if (aValue == null) {
-			throw new IllegalArgumentException("Null value given.");
-		}
-		for (Tag tag : this.tagList) {
-			if (tag.getKey() != null && tag.getKey().equals(aKey)) {
-				if (tag.getValue() != null && tag.getValue().equals(aValue)) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 }

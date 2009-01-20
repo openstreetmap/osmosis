@@ -8,6 +8,5 @@
 	<classpathentry kind="lib" path="lib/postgresql-8.3-603.jdbc4.jar"/>
 	<classpathentry kind="lib" path="lib/postgis_1.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/wstx-lgpl-4.0pr1.jar"/>
-	<classpathentry kind="lib" path="lib/jpf.jar" sourcepath="/libosm/lib/jpf-1.5.1-src/source"/>
 	<classpathentry kind="output" path="eclipse"/>
 </classpath>
