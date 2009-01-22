@@ -3,9 +3,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/test/junit.jar"/>
-	<classpathentry kind="lib" path="lib/test/mysql-connector-java.jar"/>
-	<classpathentry kind="lib" path="lib/test/postgresql.jar"/>
-	<classpathentry kind="lib" path="lib/test/wstx-lgpl.jar"/>
+	<classpathentry kind="lib" path="lib/test/junit-4.4.jar"/>
+	<classpathentry kind="lib" path="lib/test/mysql-connector-java-5.1.6.jar"/>
+	<classpathentry kind="lib" path="lib/test/postgis_1.3.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/postgresql-8.3-603.jdbc4.jar"/>
+	<classpathentry kind="lib" path="lib/test/wstx-lgpl-3.2.8.jar"/>
 	<classpathentry kind="output" path="eclipse"/>
 </classpath>

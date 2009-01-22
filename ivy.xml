@@ -12,7 +12,7 @@
     </configurations>
     
     <publications>
-    	<artifact name="osmosis" type="jar" conf="dist" ext="jar"/>
+    	<artifact name="osmosis" type="jar" conf="default" ext="jar"/>
     </publications>
     
     <dependencies>

@@ -9,7 +9,7 @@
 	<property name="ivy.jar.dir" value="ivy" />
 	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
 
-	<target name="download-ivy" unless="ivy.available">
+	<target name="download-ivy" unless="ivy.available" description="Downloads the ivy library from public repositories.">
 		<mkdir dir="${ivy.jar.dir}" />
 		<!--
 			Download Ivy from web site so that it can be used even without any
@@ -20,7 +20,7 @@
 			dest="${ivy.jar.file}" usetimestamp="true"/>
 	</target>
 
-	<target name="init-ivy">
+	<target name="init-ivy" description="Registers ivy with ant and initializes it.">
 		<!-- Determine if the ivy jar is already available. -->
 		<available property="ivy.available" file="${ivy.jar.file}" />
 		<!-- Download ivy.  This will only execute if the ivy.available property is not set. -->
@@ -40,12 +40,29 @@
 			classpathref="ivy.lib.path" />
 	</target>
 	
-	<target name="resolve" depends="init-ivy">
+	<target name="resolve" depends="init-ivy" description="Downloads all program dependencies using ivy.">
 		<ivy:configure />
 		
 		<ivy:resolve file="${ivy.dep.file}" conf="${ivy.configurations}" />
 		
 		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact]-[revision].[ext]" sync="true" conf="${ivy.configurations}" />
+		
+		<!-- Copy all locally managed libraries into the library directories. -->
+		<copy todir="lib/compile">
+			<fileset dir="repo">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="lib/default">
+			<fileset dir="repo">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="lib/test">
+			<fileset dir="repo">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
 	</target>
 	
 	<target name="clean-cache" depends="init-ivy" description="Clean the ivy cache.">
