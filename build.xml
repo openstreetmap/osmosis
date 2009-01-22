@@ -132,7 +132,7 @@
 	
 	<!-- Runs all of the unit tests in the application.  Uses the AllTests suite to achieve this. -->
 	<target name="test" depends="build_test" description="Run automated test cases.">
-		<junit fork="yes" maxmemory="512m" printsummary="on" haltonerror="on" haltonfailure="on" filtertrace="on">
+		<junit fork="no" maxmemory="512m" printsummary="on" haltonerror="on" haltonfailure="on" filtertrace="on">
 			<formatter type="plain" usefile="true"/>
 			<classpath>
 				<path refid="classpath.test"/>
