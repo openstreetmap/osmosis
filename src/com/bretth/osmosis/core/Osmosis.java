@@ -126,5 +126,8 @@ public class Osmosis {
 		
 		// Set the required logging level.
 		rootLogger.setLevel(level);
+		
+		// Set the JPF logger to one level lower.
+		Logger.getLogger("org.java.plugin").setLevel(Level.WARNING);
 	}
 }

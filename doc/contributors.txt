@@ -1,7 +1,8 @@
 Brett Henderson
-- Majority of existing code.
+- Initial implementation and much of codebase.
 Marcus Wolschon
 - XmlDownloader (--read-api) task.
+- JPF plugin support.
 Karl Newman
 - Area filtering task (--bounding-box, --bounding-polygon) improvements.  Pipeline bound support.
 - Windows launch batch file.

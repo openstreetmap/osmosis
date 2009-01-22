@@ -21,10 +21,11 @@ public class TagRemoverBuilder extends EntityContainerBuilder {
 	
 	/**
 	 * Creates a new instance.
-	 *
-	 * @param keyValueList
-	 *            Comma-separated list of allowed key-value combinations,
-	 *            e.g. "place.city,place.town"
+	 * 
+	 * @param keyList
+	 *            Comma separated list of keys of tags to be removed.
+	 * @param keyPrefixList
+	 *            Comma separated list of key prefixes of tags to be removed.
 	 */
 	public TagRemoverBuilder(String keyList, String keyPrefixList) {
 		keysToDrop = new HashSet<String>();
