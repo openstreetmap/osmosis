@@ -40,7 +40,7 @@
 			classpathref="ivy.lib.path" />
 	</target>
 	
-	<target name="resolve" depends="init-ivy" description="Downloads all program dependencies using ivy.">
+	<target name="resolve" depends="init-ivy" unless="ivy.resolve.skip" description="Downloads all program dependencies using ivy.">
 		<ivy:configure />
 		
 		<ivy:resolve file="${ivy.dep.file}" conf="${ivy.configurations}" />
@@ -63,6 +63,13 @@
 				<include name="*.jar"/>
 			</fileset>
 		</copy>
+	</target>
+	
+	<target name="conditional-resolve" depends="init-ivy" description="Invokes resolve only if no libraries are available.">
+		<!-- Determine if the libraries have already been resolved. -->
+		<available property="ivy.resolve.skip" file="lib/compile" />
+		<!-- Download required libraries.  This will only execute if the ivy.resolve.skip property is not set. -->
+		<antcall target="resolve" />
 	</target>
 	
 	<target name="clean-cache" depends="init-ivy" description="Clean the ivy cache.">
