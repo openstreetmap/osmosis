@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="Osmosis.Ivy" default="init-ivy" basedir="."
+	xmlns:ivy="antlib:org.apache.ivy.ant">
+	<description>
+		Installs and configures the ivy build dependencies system.
+	</description>
+
+	<property name="ivy.install.version" value="2.0.0-rc2" />
+	<property name="ivy.jar.dir" value="ivy" />
+	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+
+	<target name="download-ivy" unless="ivy.available" description="Downloads the ivy library from public repositories.">
+		<mkdir dir="${ivy.jar.dir}" />
+		<!--
+			Download Ivy from web site so that it can be used even without any
+			special installation
+		-->
+		<get
+			src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+			dest="${ivy.jar.file}" usetimestamp="true"/>
+	</target>
+
+	<target name="init-ivy" description="Registers ivy with ant and initializes it.">
+		<!-- Determine if the ivy jar is already available. -->
+		<available property="ivy.available" file="${ivy.jar.file}" />
+		<!-- Download ivy.  This will only execute if the ivy.available property is not set. -->
+		<antcall target="download-ivy" />
+		<!--
+			Try to load ivy in case the user has not already
+			dropped it into ant's lib dir (note that the latter copy will always
+			take precedence). We will not fail as long as local lib dir exists
+			(it may be empty) and ivy is in at least one of ant's lib dir or the
+			local lib dir.
+		-->
+		<path id="ivy.lib.path">
+			<fileset dir="${ivy.jar.dir}" includes="*.jar" />
+
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant"
+			classpathref="ivy.lib.path" />
+	</target>
+	
+	<target name="resolve" depends="init-ivy" description="Downloads all program dependencies using ivy.">
+		<ivy:configure />
+		
+		<ivy:resolve file="${ivy.dep.file}" conf="${ivy.configurations}" />
+		
+		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact]-[revision].[ext]" sync="true" conf="${ivy.configurations}" />
+		
+		<!-- Copy all locally managed libraries into the library directories. -->
+		<copy todir="lib/compile">
+			<fileset dir="repo">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="lib/default">
+			<fileset dir="repo">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="lib/test">
+			<fileset dir="repo">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="clean-cache" depends="init-ivy" description="Clean the ivy cache.">
+		<ivy:cleancache />
+	</target>
+	
+	<target name="clean-ivy" description="Clean the ivy installation.">
+		<delete dir="${ivy.jar.dir}"/>
+	</target>
+</project>

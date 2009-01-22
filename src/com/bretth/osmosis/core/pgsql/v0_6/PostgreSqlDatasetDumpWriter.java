@@ -101,6 +101,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		pointBuilder = new PointBuilder();
 		wayGeometryBuilder = new WayGeometryBuilder(storeType);
 		memberTypeValueMapper = new MemberTypeValueMapper();
+		memberTypeValueMapper = new MemberTypeValueMapper();
 		
 		userSet = new HashSet<Integer>();
 	}

@@ -19,6 +19,31 @@ JAVACMD - The java command to be invoked.  Default is "java".
 JAVACMD_OPTIONS - The java jvm options to apply (eg. -Xmx512M).
 OSMOSIS_OPTIONS - The osmosis options to apply (eg. -q or -plugin MyPluginLoaderClass).
 
+COMPILATION
+To perform a complete osmosis rebuild, the following command may be run from the osmosis root directory.
+
+ant all
+
+The "all" ant target performs all steps including creation of new distribution files, javadoc generation, and unit tests.
+To just recompile the main osmosis jar file, run the following command.
+
+ant build_binary
+
+Sometimes old files can be left hanging around causing problems.  It may be necessary to run the following command
+to clean up any old files.
+
+ant clean
+
+If you wish to rebuild the distribution zip and/or tar.gz files, the following command may be used.
+
+ant dist
+
+If any project dependencies are modified or if osmosis is downloaded directly from svn, the project dependencies
+will not be available.  This is because the ivy tool is used to manage project dependencies.
+To download all dependencies, run the following command.
+
+ant resolve
+
 HELP
 Osmosis documentation is available at:
 http://wiki.openstreetmap.org/index.php/Osmosis

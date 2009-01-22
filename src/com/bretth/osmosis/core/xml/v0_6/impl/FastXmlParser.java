@@ -6,8 +6,7 @@ import java.util.logging.Logger;
 import javax.xml.stream.Location;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
-
-import org.codehaus.stax2.XMLStreamReader2;
+import javax.xml.stream.XMLStreamReader;
 
 import com.bretth.osmosis.core.OsmosisRuntimeException;
 import com.bretth.osmosis.core.container.v0_6.BoundContainer;
@@ -65,14 +64,13 @@ public class FastXmlParser {
 	private static final String ATTRIBUTE_NAME_ORIGIN = "origin";
 	
 	private static final Logger log = Logger.getLogger(FastXmlParser.class.getName());
-	
-	
+		
 	private NodeBuilder nodeBuilder;
 	private WayBuilder wayBuilder;
 	private RelationBuilder relationBuilder;
 	
 	
-	public FastXmlParser(Sink sink, XMLStreamReader2 reader, boolean enableDateParsing) {
+	public FastXmlParser(Sink sink, XMLStreamReader reader, boolean enableDateParsing) {
 		this.sink = sink;
 		this.enableDateParsing = enableDateParsing;
 		this.reader = reader;
@@ -94,7 +92,7 @@ public class FastXmlParser {
 		memberTypeParser = new MemberTypeParser();
 	}
 	
-	private final XMLStreamReader2 reader;
+	private final XMLStreamReader reader;
 	private final Sink sink;
 	private final boolean enableDateParsing;
 	private final MemberTypeParser memberTypeParser;

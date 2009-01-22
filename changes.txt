@@ -1,6 +1,7 @@
 0.31
 Added a --remove-tags task.
 Added JPF plugin support.
+Updated the build scripts to use Ivy dependency management.
 
 0.30
 Added 0.6 support.

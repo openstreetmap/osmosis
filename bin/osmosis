@@ -38,10 +38,13 @@ MYAPP_HOME=`dirname "$PRG"`/..
 MYAPP_HOME=`cd "$MYAPP_HOME" && pwd`
 cd "$saveddir"
 
-#echo "myapp is installed in $MYAPP_HOME"
+# Build up the classpath of required jar files.
+MYAPP_CLASSPATH=$MYAPP_HOME/osmosis.jar
+for FILE in `ls $MYAPP_HOME/lib/default/`; do
+  MYAPP_CLASSPATH=$MYAPP_CLASSPATH:$MYAPP_HOME/lib/default/$FILE
+done
 
 MAINCLASS=com.bretth.osmosis.core.Osmosis
-EXEC="$JAVACMD $JAVACMD_OPTIONS -cp $MYAPP_HOME/osmosis.jar:$MYAPP_HOME/lib/commons-logging.jar:$MYAPP_HOME/lib/mysql-connector-java-5.0.7-bin.jar:$MYAPP_HOME/lib/postgresql-8.3-603.jdbc4.jar:$MYAPP_HOME/lib/postgis_1.3.2.jar $MAINCLASS $OSMOSIS_OPTIONS $@"
+EXEC="$JAVACMD $JAVACMD_OPTIONS -cp $MYAPP_CLASSPATH $MAINCLASS $OSMOSIS_OPTIONS $@"
 
-#echo $EXEC
 exec $EXEC

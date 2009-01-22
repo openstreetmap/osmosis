@@ -6,11 +6,19 @@
 	
 	<!-- set global properties for this build -->
 	<property name="project.name" value="osmosis"/>
-	<property name="project.version" value="0.30.1"/>
+	<property name="project.version" value="0.30.2"/>
+	
+	<import file="build-ivy.xml"/>
 	
 	<!-- Define a classpath containing all lib jars. -->
-	<path id="libclasspath">
-		<fileset dir="lib" includes="**/*.jar"/>
+	<path id="classpath.compile">
+		<fileset dir="lib/compile" includes="**/*.jar"/>
+	</path>
+	<path id="classpath.default">
+		<fileset dir="lib/default" includes="**/*.jar"/>
+	</path>
+	<path id="classpath.test">
+		<fileset dir="lib/test" includes="**/*.jar"/>
 	</path>
 	
 	<target name="init" description="Perform initialisation required by all other build steps.">
@@ -30,7 +38,7 @@
 		<mkdir dir="build"/>
 		<mkdir dir="build/src"/>
 		<!-- Compile the java code from src into build/src -->
-		<javac srcdir="src" destdir="build/src" debug="on" debuglevel="lines,vars,source" classpathref="libclasspath"/>
+		<javac srcdir="src" destdir="build/src" debug="on" debuglevel="lines,vars,source" classpathref="classpath.compile"/>
 		<!-- Copy all resource files from src into build/src -->
 		<copy todir="build/src">
 			<fileset dir="src">
@@ -55,7 +63,7 @@
 		<!-- Compile the java test code with the main project classes as a dependency. -->
 		<javac srcdir="test" destdir="build/test" debug="on" debuglevel="lines,vars,source">
 			<classpath>
-				<path refid="libclasspath"/>
+				<path refid="classpath.test"/>
 				<path location="build/src"/>
 			</classpath>
 		</javac>
@@ -96,7 +104,7 @@
 	
 	<!-- Produces javadoc output from the source code. -->
 	<target name="javadoc" depends="init" description="Products javadoc documentation from the source code.">
-		<javadoc packagenames="*" sourcepath="src" destdir="doc/api" classpathref="libclasspath"/>
+		<javadoc packagenames="*" sourcepath="src" destdir="doc/api" classpathref="classpath.compile"/>
 	</target>
 	
 	<target name="dist" depends="build_binary,javadoc" description="Generate the distribution.">
@@ -124,10 +132,10 @@
 	
 	<!-- Runs all of the unit tests in the application. -->
 	<target name="test" depends="build_test" description="Run automated test cases.">
-		<junit fork="yes" maxmemory="512m" printsummary="on" haltonerror="on" haltonfailure="on" filtertrace="on">
+		<junit fork="no" maxmemory="512m" printsummary="on" haltonerror="on" haltonfailure="on" filtertrace="on">
 			<formatter type="plain" usefile="true"/>
 			<classpath>
-				<path refid="libclasspath"/>
+				<path refid="classpath.test"/>
 				<path location="build/src"/>
 				<path location="build/test"/>
 			</classpath>
