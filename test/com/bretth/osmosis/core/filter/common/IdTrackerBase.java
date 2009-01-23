@@ -10,9 +10,9 @@ import org.junit.Test;
 
 public abstract class IdTrackerBase {
 
-	private static final int testVal1 = Integer.MIN_VALUE;
+	private static final int testVal1 = -100;
 	private static final int testVal2 = 0;
-	private static final int testVal3 = Integer.MAX_VALUE;
+	private static final int testVal3 = 100;
 
 	protected IdTracker idt;
 
