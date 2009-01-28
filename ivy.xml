@@ -26,5 +26,6 @@
         <dependency org="mysql" name="mysql-connector-java" rev="latest.integration" conf="default->default"/>
         
         <dependency org="junit" name="junit" rev="latest.integration" conf="test->default"/>
+    	<dependency org="checkstyle" name="checkstyle" rev="5.0-beta01" conf="test->default"/>
     </dependencies>
 </ivy-module>

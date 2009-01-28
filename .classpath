@@ -3,12 +3,19 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/test/checkstyle-all-5.0-beta01.jar"/>
+	<classpathentry kind="lib" path="lib/test/antlr-2.7.6.jar"/>
+	<classpathentry kind="lib" path="lib/test/checkstyle-5.0-beta01.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-beanutils-core-1.7.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-cli-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-collections-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="lib" path="lib/test/google-collect-snapshot-20080321.jar"/>
+	<classpathentry kind="lib" path="lib/test/jpf-1.5.jar"/>
 	<classpathentry kind="lib" path="lib/test/junit-4.4.jar"/>
 	<classpathentry kind="lib" path="lib/test/mysql-connector-java-5.1.6.jar"/>
 	<classpathentry kind="lib" path="lib/test/postgis_1.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/test/postgresql-8.3-603.jdbc4.jar"/>
 	<classpathentry kind="lib" path="lib/test/wstx-lgpl-3.2.8.jar"/>
-	<classpathentry kind="lib" path="lib/test/commons-logging-1.0.4.jar"/>
-	<classpathentry kind="lib" path="lib/test/jpf-1.5.jar"/>
 	<classpathentry kind="output" path="eclipse"/>
 </classpath>

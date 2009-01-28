@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="Osmosis" default="all" basedir=".">
+<project name="Osmosis" default="all" basedir="."
+	xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
+	
 	<description>
 		Builds the Osmosis data replication library.
 	</description>
@@ -10,7 +12,7 @@
 	
 	<import file="build-ivy.xml"/>
 	
-	<!-- Define a classpath containing all lib jars. -->
+	<!-- Define classpaths for each of the lib directories. -->
 	<path id="classpath.compile">
 		<fileset dir="lib/compile" includes="**/*.jar"/>
 	</path>
@@ -128,6 +130,17 @@
 				<exclude name="eclipse/"/>
 			</tarfileset>
 		</tar>
+	</target>
+	
+	<!-- Performs checkstyle analysis of all source files in the project. -->
+	<target name="checkstyle">
+		<taskdef uri="antlib:com.puppycrawl.tools.checkstyle" resource="checkstyletask.properties" classpathref="classpath.test" />
+		
+		<cs:checkstyle config="config/osmosis_checks.xml">
+			<fileset dir="src" includes="**/*.java"/>
+			<fileset dir="test" includes="**/*.java"/>
+			<formatter type="plain"/>
+		</cs:checkstyle>
 	</target>
 	
 	<!-- Runs all of the unit tests in the application. -->
