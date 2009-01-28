@@ -32,7 +32,7 @@
 		<!-- Update the version number in the main class. -->
 		<replaceregexp
 			byline="true"
-			file="src/com/bretth/osmosis/core/OsmosisConstants.java"
+			file="src/org/openstreetmap/osmosis/core/OsmosisConstants.java"
 			match="static final String VERSION = &quot;(.*)&quot;"
 			replace="static final String VERSION = &quot;${project.version}&quot;"
 		/>
@@ -83,7 +83,7 @@
 		
 		<!-- Create a manifest for the jar file. -->
 		<manifest file="build/binary/jar.txt">
-			<attribute name="Main-Class" value="com.bretth.osmosis.core.Osmosis"/>
+			<attribute name="Main-Class" value="org.openstreetmap.osmosis.core.Osmosis"/>
 			<attribute name="Built-By" value="${user.name}"/>
 			<attribute name="Implementation-Title" value="Osmosis Library"/>
 			<attribute name="Implementation-Version" value="${project.version} (${TODAY})"/> 

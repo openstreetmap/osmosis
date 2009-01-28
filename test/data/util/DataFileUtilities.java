@@ -12,7 +12,7 @@ import java.util.zip.GZIPOutputStream;
 
 import org.junit.Assert;
 
-import com.bretth.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 
 
 /**
