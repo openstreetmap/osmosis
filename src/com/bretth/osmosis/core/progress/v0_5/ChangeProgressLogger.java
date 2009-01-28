@@ -20,7 +20,7 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 	
 	private static final Logger log = Logger.getLogger(ChangeProgressLogger.class.getName());
 	
-	private ChangeSink sink;
+	private ChangeSink changeSink;
 	private int interval;
 	private boolean initialized;
 	private Date lastUpdateTimestamp;
@@ -84,7 +84,7 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 			log.info("Processing " + entity.getType() + " " + entity.getId() + " with action " + action + ".");
 		}
 		
-		sink.process(changeContainer);
+		changeSink.process(changeContainer);
 	}
 	
 	
@@ -94,7 +94,7 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 	public void complete() {
 		log.info("Processing completion steps.");
 		
-		sink.complete();
+		changeSink.complete();
 		
 		log.info("Processing complete.");
 	}
@@ -104,14 +104,14 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 	 * {@inheritDoc}
 	 */
 	public void release() {
-		sink.release();
+		changeSink.release();
 	}
 	
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setChangeSink(ChangeSink sink) {
-		this.sink = sink;
+	public void setChangeSink(ChangeSink changeSink) {
+		this.changeSink = changeSink;
 	}
 }

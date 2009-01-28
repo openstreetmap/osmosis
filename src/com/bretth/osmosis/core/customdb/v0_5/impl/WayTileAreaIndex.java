@@ -89,7 +89,7 @@ public class WayTileAreaIndex implements Completable {
 		try {
 			List<IndexStoreReader<Integer, IntegerLongIndexElement>> indexReaders;
 			
-			indexReaders = new ArrayList<IndexStoreReader<Integer,IntegerLongIndexElement>>(masks.length);
+			indexReaders = new ArrayList<IndexStoreReader<Integer, IntegerLongIndexElement>>(masks.length);
 			for (IndexStore<Integer, IntegerLongIndexElement> index : indexes) {
 				indexReaders.add(releasableContainer.add(index.createReader()));
 			}

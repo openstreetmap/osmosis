@@ -176,6 +176,7 @@ public class Bound extends Entity implements Comparable<Bound> {
 	 * @return Bound Resultant intersection of the two bound object
 	 */
 	public Bound intersect(Bound intersectingBound) {
+		String newOrigin;
 		double newRight = 0.0, newLeft = 0.0, newTop, newBottom;
 
 		boolean intersect180, this180; // flags to indicate bound cross antimeridian
@@ -242,11 +243,16 @@ public class Bound extends Entity implements Comparable<Bound> {
 		if (Double.compare(newRight, newLeft) == 0) {
 			return null;
 		}
+		
 		// Keep the origin string from this if it's not blank, otherwise use the origin string from
 		// the intersecting Bound
-		return new Bound(newRight, newLeft, newTop, newBottom, this.getOrigin() != ""
-		        ? this.getOrigin()
-		        : intersectingBound.getOrigin());
+		if (origin != "") {
+			newOrigin = origin;
+		} else {
+			newOrigin = intersectingBound.origin;
+		}
+		
+		return new Bound(newRight, newLeft, newTop, newBottom, newOrigin);
 	}
 
 

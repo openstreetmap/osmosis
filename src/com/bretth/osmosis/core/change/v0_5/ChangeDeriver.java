@@ -108,7 +108,9 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 			timestampChangeSetter = new TimestampChangeSetter(changeSink, ChangeAction.Delete);
 			
 			// We continue in the comparison loop while both sources still have data.
-			while ((fromEntityContainer != null || fromPostbox.hasNext()) && (toEntityContainer != null || toPostbox.hasNext())) {
+			while (
+					(fromEntityContainer != null || fromPostbox.hasNext()) &&
+					(toEntityContainer != null || toPostbox.hasNext())) {
 				int comparisonResult;
 				
 				// Get the next input data where required.

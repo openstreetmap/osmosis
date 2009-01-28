@@ -168,7 +168,8 @@ public class WayBuilder extends EntityBuilder<Way> {
 	 * @return This object allowing method chaining.
 	 */
 	@Override
-	public WayBuilder initialize(long newId, int newVersion, TimestampContainer newTimestampContainer, OsmUser newUser) {
+	public WayBuilder initialize(
+			long newId, int newVersion, TimestampContainer newTimestampContainer, OsmUser newUser) {
 		super.initialize(newId, newVersion, newTimestampContainer, newUser);
 		initializeLocal();
 		

@@ -64,7 +64,7 @@ public class DatabasePreferences {
 	 * @param allowIncorrectSchemaVersion
 	 *            The new allowIncorrectSchemaVersion value.
 	 */
-	public void setAllowIncorrectVersion(boolean allowIncorrectSchemaVersion) {
+	public void setAllowIncorrectSchemaVersion(boolean allowIncorrectSchemaVersion) {
 		this.allowIncorrectSchemaVersion = allowIncorrectSchemaVersion;
 	}
 }

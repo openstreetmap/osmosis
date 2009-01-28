@@ -90,7 +90,20 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	 *            If true a tile index is created for ways, otherwise a node-way
 	 *            index is used.
 	 */
-	public DatasetStoreReader(RandomAccessObjectStoreReader<Node> nodeObjectReader, IndexStoreReader<Long, LongLongIndexElement> nodeObjectOffsetIndexReader, RandomAccessObjectStoreReader<Way> wayObjectReader, IndexStoreReader<Long, LongLongIndexElement> wayObjectOffsetIndexReader, RandomAccessObjectStoreReader<Relation> relationObjectReader, IndexStoreReader<Long, LongLongIndexElement> relationObjectOffsetIndexReader, TileCalculator tileCalculator, Comparator<Integer> tileOrdering, IndexStoreReader<Integer, IntegerLongIndexElement> nodeTileIndexReader, WayTileAreaIndexReader wayTileIndexReader, IndexStoreReader<Long, LongLongIndexElement> nodeWayIndexReader, IndexStoreReader<Long, LongLongIndexElement> nodeRelationIndexReader, IndexStoreReader<Long, LongLongIndexElement> wayRelationIndexReader, IndexStoreReader<Long, LongLongIndexElement> relationRelationIndexReader, boolean enableWayTileIndex) {
+	public DatasetStoreReader(
+			RandomAccessObjectStoreReader<Node> nodeObjectReader,
+			IndexStoreReader<Long, LongLongIndexElement> nodeObjectOffsetIndexReader,
+			RandomAccessObjectStoreReader<Way> wayObjectReader,
+			IndexStoreReader<Long, LongLongIndexElement> wayObjectOffsetIndexReader,
+			RandomAccessObjectStoreReader<Relation> relationObjectReader,
+			IndexStoreReader<Long, LongLongIndexElement> relationObjectOffsetIndexReader,
+			TileCalculator tileCalculator, Comparator<Integer> tileOrdering,
+			IndexStoreReader<Integer, IntegerLongIndexElement> nodeTileIndexReader,
+			WayTileAreaIndexReader wayTileIndexReader,
+			IndexStoreReader<Long, LongLongIndexElement> nodeWayIndexReader,
+			IndexStoreReader<Long, LongLongIndexElement> nodeRelationIndexReader,
+			IndexStoreReader<Long, LongLongIndexElement> wayRelationIndexReader,
+			IndexStoreReader<Long, LongLongIndexElement> relationRelationIndexReader, boolean enableWayTileIndex) {
 		this.nodeObjectReader = nodeObjectReader;
 		this.nodeObjectOffsetIndexReader = nodeObjectOffsetIndexReader;
 		this.wayObjectReader = wayObjectReader;
@@ -214,9 +227,21 @@ public class DatasetStoreReader extends BaseDatasetReader {
 		
 		sources = new ArrayList<ReleasableIterator<EntityContainer>>();
 		
-		sources.add(new UpcastIterator<EntityContainer, NodeContainer>(new NodeContainerIterator(new ReleasableAdaptorForIterator<Node>(nodeObjectReader.iterate()))));
-		sources.add(new UpcastIterator<EntityContainer, WayContainer>(new WayContainerIterator(new ReleasableAdaptorForIterator<Way>(wayObjectReader.iterate()))));
-		sources.add(new UpcastIterator<EntityContainer, RelationContainer>(new RelationContainerIterator(new ReleasableAdaptorForIterator<Relation>(relationObjectReader.iterate()))));
+		sources.add(
+				new UpcastIterator<EntityContainer, NodeContainer>(
+						new NodeContainerIterator(
+								new ReleasableAdaptorForIterator<Node>(
+										nodeObjectReader.iterate()))));
+		sources.add(
+				new UpcastIterator<EntityContainer, WayContainer>(
+						new WayContainerIterator(
+								new ReleasableAdaptorForIterator<Way>(
+										wayObjectReader.iterate()))));
+		sources.add(
+				new UpcastIterator<EntityContainer, RelationContainer>(
+						new RelationContainerIterator(
+								new ReleasableAdaptorForIterator<Relation>(
+										relationObjectReader.iterate()))));
 		
 		return new MultipleSourceIterator<EntityContainer>(sources);
 	}

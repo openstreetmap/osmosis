@@ -65,15 +65,18 @@ public abstract class BaseObjectReader implements ObjectReader {
 			return (Storeable) constructor.newInstance(new Object[] {storeReader, storeClassRegister});
 			
 		} catch (IllegalAccessException e) {
-			throw new OsmosisRuntimeException("The class " + constructor.getDeclaringClass().getName() + " could not be instantiated.", e);
+			throw new OsmosisRuntimeException(
+					"The class " + constructor.getDeclaringClass().getName() + " could not be instantiated.", e);
 		} catch (InvocationTargetException e) {
 			Throwable cause = e.getCause();
 			if (cause instanceof EndOfStoreException) {
 				throw (EndOfStoreException) cause; 
 			}
-			throw new OsmosisRuntimeException("The class " + constructor.getDeclaringClass().getName() + " could not be instantiated.", e);
+			throw new OsmosisRuntimeException(
+					"The class " + constructor.getDeclaringClass().getName() + " could not be instantiated.", e);
 		} catch (InstantiationException e) {
-			throw new OsmosisRuntimeException("The class " + constructor.getDeclaringClass().getName() + " could not be instantiated.", e);
+			throw new OsmosisRuntimeException(
+					"The class " + constructor.getDeclaringClass().getName() + " could not be instantiated.", e);
 		}
 	}
 }

@@ -23,7 +23,7 @@ public interface DatasetReader extends Releasable {
 	 *            The id of the node.
 	 * @return The node.
 	 */
-	public Node getNode(long id);
+	Node getNode(long id);
 	
 	
 	/**
@@ -33,7 +33,7 @@ public interface DatasetReader extends Releasable {
 	 *            The id of the way.
 	 * @return The way.
 	 */
-	public Way getWay(long id);
+	Way getWay(long id);
 	
 	
 	/**
@@ -43,7 +43,7 @@ public interface DatasetReader extends Releasable {
 	 *            The id of the relation.
 	 * @return The relation.
 	 */
-	public Relation getRelation(long id);
+	Relation getRelation(long id);
 	
 	
 	/**
@@ -51,7 +51,7 @@ public interface DatasetReader extends Releasable {
 	 * 
 	 * @return An iterator pointing to the start of the collection.
 	 */
-	public ReleasableIterator<EntityContainer> iterate();
+	ReleasableIterator<EntityContainer> iterate();
 	
 	
 	/**
@@ -70,5 +70,6 @@ public interface DatasetReader extends Releasable {
 	 *            they lie outside the box.
 	 * @return An iterator pointing to the start of the result data.
 	 */
-	public ReleasableIterator<EntityContainer> iterateBoundingBox(double left, double right, double top, double bottom, boolean completeWays);
+	ReleasableIterator<EntityContainer> iterateBoundingBox(
+			double left, double right, double top, double bottom, boolean completeWays);
 }

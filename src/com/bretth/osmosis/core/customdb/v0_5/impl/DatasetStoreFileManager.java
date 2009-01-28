@@ -17,7 +17,7 @@ public interface DatasetStoreFileManager extends Releasable {
 	 * 
 	 * @return The node object file.
 	 */
-	public File getNodeObjectFile();
+	File getNodeObjectFile();
 	
 	
 	/**
@@ -26,7 +26,7 @@ public interface DatasetStoreFileManager extends Releasable {
 	 * 
 	 * @return The node object offset index file.
 	 */
-	public File getNodeObjectOffsetIndexFile();
+	File getNodeObjectOffsetIndexFile();
 	
 	
 	/**
@@ -34,7 +34,7 @@ public interface DatasetStoreFileManager extends Releasable {
 	 * 
 	 * @return The node tile index file.
 	 */
-	public File getNodeTileIndexFile();
+	File getNodeTileIndexFile();
 	
 	
 	/**
@@ -42,7 +42,7 @@ public interface DatasetStoreFileManager extends Releasable {
 	 * 
 	 * @return The way object file.
 	 */
-	public File getWayObjectFile();
+	File getWayObjectFile();
 	
 	
 	/**
@@ -51,7 +51,7 @@ public interface DatasetStoreFileManager extends Releasable {
 	 * 
 	 * @return The way object offset index file.
 	 */
-	public File getWayObjectOffsetIndexFile();
+	File getWayObjectOffsetIndexFile();
 	
 	
 	/**
@@ -63,7 +63,7 @@ public interface DatasetStoreFileManager extends Releasable {
 	 *            The index file number.
 	 * @return The way tile index file.
 	 */
-	public File getWayTileIndexFile(int instance);
+	File getWayTileIndexFile(int instance);
 	
 	
 	/**
@@ -72,7 +72,7 @@ public interface DatasetStoreFileManager extends Releasable {
 	 * 
 	 * @return The node way index file.
 	 */
-	public File getNodeWayIndexFile();
+	File getNodeWayIndexFile();
 	
 	
 	/**
@@ -80,7 +80,7 @@ public interface DatasetStoreFileManager extends Releasable {
 	 * 
 	 * @return The relation object file.
 	 */
-	public File getRelationObjectFile();
+	File getRelationObjectFile();
 	
 	
 	/**
@@ -89,7 +89,7 @@ public interface DatasetStoreFileManager extends Releasable {
 	 * 
 	 * @return The relation object offset index file.
 	 */
-	public File getRelationObjectOffsetIndexFile();
+	File getRelationObjectOffsetIndexFile();
 	
 	
 	/**
@@ -98,7 +98,7 @@ public interface DatasetStoreFileManager extends Releasable {
 	 * 
 	 * @return The node relation index file.
 	 */
-	public File getNodeRelationIndexFile();
+	File getNodeRelationIndexFile();
 	
 	
 	/**
@@ -107,7 +107,7 @@ public interface DatasetStoreFileManager extends Releasable {
 	 * 
 	 * @return The way relation index file.
 	 */
-	public File getWayRelationIndexFile();
+	File getWayRelationIndexFile();
 	
 	
 	/**
@@ -116,5 +116,5 @@ public interface DatasetStoreFileManager extends Releasable {
 	 * 
 	 * @return The relation relation index file.
 	 */
-	public File getRelationRelationIndexFile();
+	File getRelationRelationIndexFile();
 }

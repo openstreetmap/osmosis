@@ -127,7 +127,7 @@ public abstract class DatabaseTaskManagerFactory extends TaskManagerFactory {
 				preferences.getValidateSchemaVersion()
 			)
 		);
-		preferences.setAllowIncorrectVersion(
+		preferences.setAllowIncorrectSchemaVersion(
 			getBooleanArgument(
 				taskConfig,
 				DatabaseConstants.TASK_ARG_ALLOW_INCORRECT_SCHEMA_VERSION,

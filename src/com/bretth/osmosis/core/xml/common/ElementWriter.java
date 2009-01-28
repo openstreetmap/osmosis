@@ -25,7 +25,7 @@ public class ElementWriter {
 	/**
 	 * Defines the characters that must be replaced by an encoded string when writing to XML.
 	 */
-	private final static Map<Character, String> xmlEncoding;
+	private static final Map<Character, String> xmlEncoding;
 	
 	static {
 		// Define all the characters and their encodings.

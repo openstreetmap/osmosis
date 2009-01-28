@@ -44,7 +44,8 @@ public class ChangeSorterFactory extends TaskManagerFactory {
 	 *            If true, this will be set to be the default comparator if no
 	 *            comparator is specified.
 	 */
-	public void registerComparator(String comparatorType, Comparator<ChangeContainer> comparator, boolean setAsDefault) {
+	public void registerComparator(
+			String comparatorType, Comparator<ChangeContainer> comparator, boolean setAsDefault) {
 		if (comparatorMap.containsKey(comparatorType)) {
 			throw new OsmosisRuntimeException("Comparator type \"" + comparatorType + "\" already exists.");
 		}

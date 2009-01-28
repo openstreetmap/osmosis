@@ -76,7 +76,8 @@ public class TagSorter implements SinkSource, EntityProcessor {
 		
 		oldBound = boundContainer.getEntity();
 		
-		newBound = new Bound(oldBound.getRight(), oldBound.getLeft(), oldBound.getTop(), oldBound.getBottom(), oldBound.getOrigin());
+		newBound = new Bound(
+				oldBound.getRight(), oldBound.getLeft(), oldBound.getTop(), oldBound.getBottom(), oldBound.getOrigin());
 		
 		sink.process(new BoundContainer(newBound));
 	}

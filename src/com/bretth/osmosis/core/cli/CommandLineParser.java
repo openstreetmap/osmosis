@@ -104,7 +104,8 @@ public class CommandLineParser {
 			} else if (isArgumentForOption(OPTION_PLUGIN_SHORT, OPTION_PLUGIN_LONG, globalOption.name)) {
 				plugins.add(parseOptionString(globalOption));
 			} else {
-				throw new OsmosisRuntimeException("Argument " + (globalOption.offset + 1) + " specifies an unrecognised option.");
+				throw new OsmosisRuntimeException(
+						"Argument " + (globalOption.offset + 1) + " specifies an unrecognised option.");
 			}
 		}
 	}
@@ -169,7 +170,8 @@ public class CommandLineParser {
 		
 		// An integer option may only have one parameter.
 		if (globalOption.parameters.size() > 1) {
-			throw new OsmosisRuntimeException("Expected argument " + (globalOption.offset + 1) + " to have no more than one parameter.");
+			throw new OsmosisRuntimeException(
+					"Expected argument " + (globalOption.offset + 1) + " to have no more than one parameter.");
 		}
 		
 		// Parse the option.
@@ -177,7 +179,8 @@ public class CommandLineParser {
 			result = Integer.parseInt(globalOption.parameters.get(0));
 			
 		} catch (NumberFormatException e) {
-			throw new OsmosisRuntimeException("Expected argument " + (globalOption.offset + 2) + " to contain an integer value.");
+			throw new OsmosisRuntimeException(
+					"Expected argument " + (globalOption.offset + 2) + " to contain an integer value.");
 		}
 		
 		return result;
@@ -193,7 +196,8 @@ public class CommandLineParser {
 	private String parseOptionString(GlobalOptionConfiguration globalOption) {
 		// A string option must have one parameter.
 		if (globalOption.parameters.size() != 1) {
-			throw new OsmosisRuntimeException("Expected argument " + (globalOption.offset + 1) + " to have one parameter.");
+			throw new OsmosisRuntimeException(
+					"Expected argument " + (globalOption.offset + 1) + " to have one parameter.");
 		}
 		
 		return globalOption.parameters.get(0);
@@ -282,12 +286,14 @@ public class CommandLineParser {
 			if (equalsIndex >= 0) {
 				// Check if the name component of the argument exists.
 				if (equalsIndex == 0) {
-					throw new OsmosisRuntimeException("Argument " + (i + 1) + " doesn't contain a name before the '=' (ie. name=value).");
+					throw new OsmosisRuntimeException(
+							"Argument " + (i + 1) + " doesn't contain a name before the '=' (ie. name=value).");
 				}
 				
 				// Check if the value component of the argument exists.
 				if (equalsIndex >= (arg.length() - 1)) {
-					throw new OsmosisRuntimeException("Argument " + (i + 1) + " doesn't contain a value after the '=' (ie. name=value).");
+					throw new OsmosisRuntimeException(
+							"Argument " + (i + 1) + " doesn't contain a value after the '=' (ie. name=value).");
 				}
 				
 				// Split the argument into name and value.
@@ -296,7 +302,11 @@ public class CommandLineParser {
 				
 				// Add pipeline arguments to pipeArgs, all other arguments to taskArgs.
 				// A pipeline arg is inPipe, inPipe.x, outPipe or outPipe.x.
-				if (PipelineConstants.IN_PIPE_ARGUMENT_PREFIX.equals(argName) || argName.indexOf(PipelineConstants.IN_PIPE_ARGUMENT_PREFIX + ".") == 0 || PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX.equals(argName) || argName.indexOf(PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX + ".") == 0) {
+				if (
+						PipelineConstants.IN_PIPE_ARGUMENT_PREFIX.equals(argName) ||
+						argName.indexOf(PipelineConstants.IN_PIPE_ARGUMENT_PREFIX + ".") == 0 ||
+						PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX.equals(argName) ||
+						argName.indexOf(PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX + ".") == 0) {
 					pipeArgs.put(argName, argValue);
 				} else {
 					taskArgs.put(argName, argValue);
@@ -304,7 +314,9 @@ public class CommandLineParser {
 				
 			} else {
 				if (defaultArgIndex >= 0) {
-					throw new OsmosisRuntimeException("Only one default (un-named) argument can exist per task.  Arguments " + (i + 1) + " and " + (defaultArgIndex + 1) + " have no name.");
+					throw new OsmosisRuntimeException(
+							"Only one default (un-named) argument can exist per task.  Arguments " +
+							(i + 1) + " and " + (defaultArgIndex + 1) + " have no name.");
 				}
 				
 				defaultArg = arg;

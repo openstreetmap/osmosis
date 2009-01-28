@@ -34,7 +34,8 @@ public class DatabaseLoginCredentials {
 	 *            If true, profile logging will be enabled on the database
 	 *            connection causing all queries to be logged to stderr.
 	 */
-	public DatabaseLoginCredentials(String host, String database, String user, String password, boolean forceUtf8, boolean profileSql) {
+	public DatabaseLoginCredentials(
+			String host, String database, String user, String password, boolean forceUtf8, boolean profileSql) {
 		this.host = host;
 		this.database = database;
 		this.user = user;

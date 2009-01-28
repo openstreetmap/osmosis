@@ -16,7 +16,7 @@ public interface EntityProcessor {
 	 * @param bound
 	 *            The bound to be processed.
 	 */
-	public void process(BoundContainer bound);
+	void process(BoundContainer bound);
 	
 	/**
 	 * Process the node.
@@ -24,7 +24,7 @@ public interface EntityProcessor {
 	 * @param node
 	 *            The node to be processed.
 	 */
-	public void process(NodeContainer node);
+	void process(NodeContainer node);
 
 	/**
 	 * Process the way.
@@ -32,7 +32,7 @@ public interface EntityProcessor {
 	 * @param way
 	 *            The way to be processed.
 	 */
-	public void process(WayContainer way);
+	void process(WayContainer way);
 	
 	/**
 	 * Process the relation.
@@ -40,5 +40,5 @@ public interface EntityProcessor {
 	 * @param relation
 	 *            The relation to be processed.
 	 */
-	public void process(RelationContainer relation);
+	void process(RelationContainer relation);
 }

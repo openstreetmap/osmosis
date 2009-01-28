@@ -32,10 +32,10 @@ import com.bretth.osmosis.core.task.v0_5.Sink;
  */
 public class EntityReporter implements Sink {
 	
-	private final static int COLUMN_WIDTH_USER_NAME = 50;
-	private final static int COLUMN_WIDTH_NODE_COUNT = 7;
-	private final static int COLUMN_WIDTH_WAY_COUNT = 7;
-	private final static int COLUMN_WIDTH_RELATION_COUNT = 7;
+	private static final int COLUMN_WIDTH_USER_NAME = 50;
+	private static final int COLUMN_WIDTH_NODE_COUNT = 7;
+	private static final int COLUMN_WIDTH_WAY_COUNT = 7;
+	private static final int COLUMN_WIDTH_RELATION_COUNT = 7;
 	
 	private Logger log = Logger.getLogger(EntityReporter.class.getName());
 	

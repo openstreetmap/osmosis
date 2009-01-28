@@ -95,7 +95,7 @@ public class Osmosis {
 	/**
 	 * Configures logging to write all output to the console.
 	 */
-	private static final void configureLoggingConsole() {
+	private static void configureLoggingConsole() {
 		Logger rootLogger;
 		Handler consoleHandler;
 		
@@ -119,7 +119,7 @@ public class Osmosis {
 	 * @param level
 	 *            The new logging level to apply.
 	 */
-	private static final void configureLoggingLevel(Level level) {
+	private static void configureLoggingLevel(Level level) {
 		Logger rootLogger;
 		
 		rootLogger = Logger.getLogger("");

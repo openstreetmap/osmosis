@@ -256,7 +256,7 @@ public class AreaFilterTest {
 		simpleAreaFilter.complete();
 
 		compareNode = entityInspector.getLastEntityContainer().getEntity();
-		assertTrue(compareNode instanceof Node && inAreaNode.compareTo((Node)compareNode) == 0);
+		assertTrue(compareNode instanceof Node && inAreaNode.compareTo((Node) compareNode) == 0);
 	}
 
 
@@ -284,9 +284,9 @@ public class AreaFilterTest {
 		simpleAreaFilter.complete();
 
 		ecIterator = entityInspector.getProcessedEntities().iterator();
-		assertTrue(inAreaWayNode1.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && inAreaWayNode2.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && inAreaWay.compareTo((Way)ecIterator.next().getEntity()) == 0
+		assertTrue(inAreaWayNode1.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && inAreaWayNode2.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && inAreaWay.compareTo((Way) ecIterator.next().getEntity()) == 0
 		        && !ecIterator.hasNext());
 	}
 
@@ -322,9 +322,9 @@ public class AreaFilterTest {
 		simpleAreaFilter.complete();
 
 		ecIterator = entityInspector.getProcessedEntities().iterator();
-		assertTrue(inAreaWayNode1.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && inAreaWayNode2.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && mangledInOutWay1.compareTo((Way)ecIterator.next().getEntity()) == 0
+		assertTrue(inAreaWayNode1.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && inAreaWayNode2.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && mangledInOutWay1.compareTo((Way) ecIterator.next().getEntity()) == 0
 		        && !ecIterator.hasNext());
 	}
 
@@ -342,9 +342,9 @@ public class AreaFilterTest {
 		simpleCompleteWayFilter.complete();
 
 		ecIterator = entityInspector.getProcessedEntities().iterator();
-		assertTrue(inAreaWayNode1.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && inAreaWayNode2.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && inAreaWay.compareTo((Way)ecIterator.next().getEntity()) == 0
+		assertTrue(inAreaWayNode1.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && inAreaWayNode2.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && inAreaWay.compareTo((Way) ecIterator.next().getEntity()) == 0
 		        && !ecIterator.hasNext());
 	}
 
@@ -380,11 +380,11 @@ public class AreaFilterTest {
 		simpleCompleteWayFilter.complete();
 
 		ecIterator = entityInspector.getProcessedEntities().iterator();
-		assertTrue(inAreaWayNode1.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && inAreaWayNode2.compareTo((Node)ecIterator.next().getEntity()) == 0);
-		assertTrue(outOfAreaWayNode1.compareTo((Node)ecIterator.next().getEntity()) == 0);
-		assertTrue(outOfAreaWayNode2.compareTo((Node)ecIterator.next().getEntity()) == 0);
-		assertTrue(inOutWay.compareTo((Way)ecIterator.next().getEntity()) == 0
+		assertTrue(inAreaWayNode1.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && inAreaWayNode2.compareTo((Node) ecIterator.next().getEntity()) == 0);
+		assertTrue(outOfAreaWayNode1.compareTo((Node) ecIterator.next().getEntity()) == 0);
+		assertTrue(outOfAreaWayNode2.compareTo((Node) ecIterator.next().getEntity()) == 0);
+		assertTrue(inOutWay.compareTo((Way) ecIterator.next().getEntity()) == 0
 		        && !ecIterator.hasNext());
 	}
 
@@ -404,10 +404,10 @@ public class AreaFilterTest {
 		simpleAreaFilter.complete();
 
 		ecIterator = entityInspector.getProcessedEntities().iterator();
-		assertTrue(inAreaWayNode1.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && inAreaWayNode2.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && inAreaWay.compareTo((Way)ecIterator.next().getEntity()) == 0
-		        && inAreaRelation.compareTo((Relation)ecIterator.next().getEntity()) == 0
+		assertTrue(inAreaWayNode1.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && inAreaWayNode2.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && inAreaWay.compareTo((Way) ecIterator.next().getEntity()) == 0
+		        && inAreaRelation.compareTo((Relation) ecIterator.next().getEntity()) == 0
 		        && !ecIterator.hasNext());
 	}
 
@@ -446,11 +446,11 @@ public class AreaFilterTest {
 		simpleAreaFilter.complete();
 
 		ecIterator = entityInspector.getProcessedEntities().iterator();
-		assertTrue(inAreaWayNode1.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && inAreaWayNode2.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && mangledInOutWay1.compareTo((Way)ecIterator.next().getEntity()) == 0
-		        && mangledInOutRelation1.compareTo((Relation)ecIterator.next().getEntity()) == 0
-		        && mangledInOutRelation2.compareTo((Relation)ecIterator.next().getEntity()) == 0
+		assertTrue(inAreaWayNode1.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && inAreaWayNode2.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && mangledInOutWay1.compareTo((Way) ecIterator.next().getEntity()) == 0
+		        && mangledInOutRelation1.compareTo((Relation) ecIterator.next().getEntity()) == 0
+		        && mangledInOutRelation2.compareTo((Relation) ecIterator.next().getEntity()) == 0
 		        && !ecIterator.hasNext());
 	}
 
@@ -470,10 +470,10 @@ public class AreaFilterTest {
 		simpleCompleteRelationFilter.complete();
 
 		ecIterator = entityInspector.getProcessedEntities().iterator();
-		assertTrue(inAreaWayNode1.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && inAreaWayNode2.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && inAreaWay.compareTo((Way)ecIterator.next().getEntity()) == 0
-		        && inAreaRelation.compareTo((Relation)ecIterator.next().getEntity()) == 0
+		assertTrue(inAreaWayNode1.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && inAreaWayNode2.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && inAreaWay.compareTo((Way) ecIterator.next().getEntity()) == 0
+		        && inAreaRelation.compareTo((Relation) ecIterator.next().getEntity()) == 0
 		        && !ecIterator.hasNext());
 	}
 
@@ -512,11 +512,11 @@ public class AreaFilterTest {
 		simpleCompleteRelationFilter.complete();
 
 		ecIterator = entityInspector.getProcessedEntities().iterator();
-		assertTrue(inAreaWayNode1.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && inAreaWayNode2.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && mangledInOutWay1.compareTo((Way)ecIterator.next().getEntity()) == 0
-		        && mangledCompleteInOutRelation1.compareTo((Relation)ecIterator.next().getEntity()) == 0
-		        && mangledInOutRelation2.compareTo((Relation)ecIterator.next().getEntity()) == 0
+		assertTrue(inAreaWayNode1.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && inAreaWayNode2.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && mangledInOutWay1.compareTo((Way) ecIterator.next().getEntity()) == 0
+		        && mangledCompleteInOutRelation1.compareTo((Relation) ecIterator.next().getEntity()) == 0
+		        && mangledInOutRelation2.compareTo((Relation) ecIterator.next().getEntity()) == 0
 		        && !ecIterator.hasNext());
 	}
 
@@ -539,13 +539,13 @@ public class AreaFilterTest {
 		simpleCompleteWayRelationFilter.complete();
 
 		ecIterator = entityInspector.getProcessedEntities().iterator();
-		assertTrue(inAreaWayNode1.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && inAreaWayNode2.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && outOfAreaWayNode1.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && outOfAreaWayNode2.compareTo((Node)ecIterator.next().getEntity()) == 0
-		        && inOutWay.compareTo((Way)ecIterator.next().getEntity()) == 0
-		        && inOutRelation1.compareTo((Relation)ecIterator.next().getEntity()) == 0
-		        && inOutRelation2.compareTo((Relation)ecIterator.next().getEntity()) == 0
+		assertTrue(inAreaWayNode1.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && inAreaWayNode2.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && outOfAreaWayNode1.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && outOfAreaWayNode2.compareTo((Node) ecIterator.next().getEntity()) == 0
+		        && inOutWay.compareTo((Way) ecIterator.next().getEntity()) == 0
+		        && inOutRelation1.compareTo((Relation) ecIterator.next().getEntity()) == 0
+		        && inOutRelation2.compareTo((Relation) ecIterator.next().getEntity()) == 0
 		        && !ecIterator.hasNext());
 	}
 }

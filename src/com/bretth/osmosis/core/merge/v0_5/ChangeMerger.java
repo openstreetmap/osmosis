@@ -121,7 +121,9 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 			comparator = new EntityByTypeThenIdComparator();
 			
 			// We continue in the comparison loop while both sources still have data.
-			while ((changeContainer0 != null || postbox0.hasNext()) && (changeContainer1 != null || postbox1.hasNext())) {
+			while (
+					(changeContainer0 != null || postbox0.hasNext()) &&
+					(changeContainer1 != null || postbox1.hasNext())) {
 				long comparisonResult;
 				
 				// Get the next input data where required.
@@ -133,7 +135,8 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 				}
 				
 				// Compare the two entities.
-				comparisonResult = comparator.compare(changeContainer0.getEntityContainer(), changeContainer1.getEntityContainer());
+				comparisonResult =
+					comparator.compare(changeContainer0.getEntityContainer(), changeContainer1.getEntityContainer());
 				
 				if (comparisonResult < 0) {
 					// Entity 0 doesn't exist on the other source and can be
@@ -150,7 +153,9 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 					if (conflictResolutionMethod.equals(ConflictResolutionMethod.Timestamp)) {
 						int timestampComparisonResult;
 						
-						timestampComparisonResult = changeContainer0.getEntityContainer().getEntity().getTimestamp().compareTo(changeContainer1.getEntityContainer().getEntity().getTimestamp());
+						timestampComparisonResult =
+							changeContainer0.getEntityContainer().getEntity().getTimestamp()
+							.compareTo(changeContainer1.getEntityContainer().getEntity().getTimestamp());
 						
 						if (timestampComparisonResult < 0) {
 							changeSink.process(changeContainer1);

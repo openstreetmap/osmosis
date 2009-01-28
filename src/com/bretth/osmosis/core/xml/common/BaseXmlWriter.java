@@ -113,8 +113,7 @@ public abstract class BaseXmlWriter {
 				OutputStreamWriter outStreamWriter;
 				
 				// make "-" an alias for /dev/stdout
-				if(file.getName().equals("-"))
-				{
+				if(file.getName().equals("-")) {
 					outStream = System.out;
 				} else {
 					outStream = new FileOutputStream(file);

@@ -40,7 +40,7 @@ public class OsmHandler extends DefaultHandler {
 	 * Provides location information about the current position in the file
 	 * which is useful for reporting errors.
 	 */
-	private Locator locator;
+	private Locator documentLocator;
 	
 	
 	/**
@@ -118,8 +118,8 @@ public class OsmHandler extends DefaultHandler {
 	 * file when errors occur.
 	 */
 	@Override
-	public void setDocumentLocator(Locator locator) {
-		this.locator = locator;
+	public void setDocumentLocator(Locator documentLocator) {
+		this.documentLocator = documentLocator;
 	}
 	
 	
@@ -130,10 +130,10 @@ public class OsmHandler extends DefaultHandler {
 	@Override
 	public void error(SAXParseException e) throws SAXException {
 		log.severe(
-			"Unable to parse xml file.  publicId=(" + locator.getPublicId()
-			+ "), systemId=(" + locator.getSystemId()
-			+ "), lineNumber=" + locator.getLineNumber()
-			+ ", columnNumber=" + locator.getColumnNumber() + ".");
+			"Unable to parse xml file.  publicId=(" + documentLocator.getPublicId()
+			+ "), systemId=(" + documentLocator.getSystemId()
+			+ "), lineNumber=" + documentLocator.getLineNumber()
+			+ ", columnNumber=" + documentLocator.getColumnNumber() + ".");
 		
 		super.error(e);
 	}

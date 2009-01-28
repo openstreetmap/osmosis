@@ -178,14 +178,14 @@ public class PolygonFileReader {
 	 */
 	private Area loadSectionPolygon(BufferedReader bufferedReader) throws IOException {
 		Path2D.Double polygonPath;
-		double beginPoint[] = null;
+		double[] beginPoint = null;
 		
 		// Create a new path to represent this polygon.
 		polygonPath = new Path2D.Double();
 		
 		while (true) {
 			String sectionLine;
-			double coordinates[];
+			double[] coordinates;
 			
 			// Read until a non-empty line is obtained.
 			do {
@@ -238,8 +238,8 @@ public class PolygonFileReader {
 	 *         latitude.
 	 */
 	private double[] parseCoordinates(String coordinateLine) {
-		String rawTokens[];
-		double results[];
+		String[] rawTokens;
+		double[] results;
 		int tokenCount;
 		
 		// Split the line into its sub strings separated by whitespace.
@@ -261,7 +261,8 @@ public class PolygonFileReader {
 				try {
 					results[tokenCount++] = Double.parseDouble(rawTokens[i]);
 				} catch (NumberFormatException e) {
-					throw new OsmosisRuntimeException("Unable to parse " + rawTokens[i] + " into a double precision number.");
+					throw new OsmosisRuntimeException(
+							"Unable to parse " + rawTokens[i] + " into a double precision number.");
 				}
 			}
 		}

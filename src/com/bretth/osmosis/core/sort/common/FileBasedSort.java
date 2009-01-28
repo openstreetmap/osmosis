@@ -68,7 +68,8 @@ public class FileBasedSort<T extends Storeable> implements Releasable {
 	 * @param useCompression
 	 *            If true, the storage files will be compressed.
 	 */
-	public FileBasedSort(ObjectSerializationFactory serializationFactory, Comparator<T> comparator, boolean useCompression) {
+	public FileBasedSort(
+			ObjectSerializationFactory serializationFactory, Comparator<T> comparator, boolean useCompression) {
 		this.serializationFactory = serializationFactory;
 		this.comparator = comparator;
 		this.useCompression = useCompression;
@@ -222,14 +223,20 @@ public class FileBasedSort<T extends Storeable> implements Releasable {
 				// this function.
 				maxChunkIndex = beginChunkIndex + chunkCount;
 				
-				for (long subFirstChunk = beginChunkIndex; subFirstChunk < maxChunkIndex; subFirstChunk += subChunkCount) {
+				for (
+						long subFirstChunk = beginChunkIndex;
+						subFirstChunk < maxChunkIndex;
+						subFirstChunk += subChunkCount) {
+					
 					// The chunk count passed to the nested function should not
 					// make the nested function exceed this function's boundaries.
 					if (subFirstChunk + subChunkCount > maxChunkIndex) {
 						subChunkCount = maxChunkIndex - subFirstChunk;
 					}
 					
-					// Either call the persistent or standard version of the recursive iterate based on whether this nesting level requires persistence.
+					// Either call the persistent or standard version of the
+					// recursive iterate based on whether this nesting level
+					// requires persistence.
 					if (((nestLevel + 1) % MAX_MEMORY_SORT_DEPTH) == 0) {
 						sources.add(
 							iteratePersisted(nestLevel + 1, subFirstChunk, subChunkCount)

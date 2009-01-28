@@ -62,13 +62,16 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		availableNodes = IdTrackerFactory.createInstance(idTrackerType);
 		if (completeWays) {
 			requiredNodes = IdTrackerFactory.createInstance(idTrackerType);
-			allNodes = new SimpleObjectStore<NodeContainer>(new SingleClassObjectSerializationFactory(NodeContainer.class), "afnd", true);
-			allWays = new SimpleObjectStore<WayContainer>(new SingleClassObjectSerializationFactory(WayContainer.class), "afwy", true);
+			allNodes = new SimpleObjectStore<NodeContainer>(
+					new SingleClassObjectSerializationFactory(NodeContainer.class), "afnd", true);
+			allWays = new SimpleObjectStore<WayContainer>(
+					new SingleClassObjectSerializationFactory(WayContainer.class), "afwy", true);
 		}
 		availableWays = IdTrackerFactory.createInstance(idTrackerType);
 		availableRelations = IdTrackerFactory.createInstance(idTrackerType);
 		if (this.completeRelations || this.completeWays) {
-			allRelations = new SimpleObjectStore<RelationContainer>(new SingleClassObjectSerializationFactory(RelationContainer.class), "afrl", true);
+			allRelations = new SimpleObjectStore<RelationContainer>(
+					new SingleClassObjectSerializationFactory(RelationContainer.class), "afrl", true);
 		}
 	}
 	
@@ -266,7 +269,8 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 					filteredRelation.addMember(member);
 				}
 			} else {
-				throw new OsmosisRuntimeException("Unsupported member type + " + memberType + " for relation " + relation.getId() + ".");
+				throw new OsmosisRuntimeException(
+						"Unsupported member type + " + memberType + " for relation " + relation.getId() + ".");
 			}
 		}
 		

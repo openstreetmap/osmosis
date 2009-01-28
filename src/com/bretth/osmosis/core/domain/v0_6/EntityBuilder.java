@@ -142,7 +142,8 @@ public abstract class EntityBuilder<T extends Entity> implements Storeable {
 	 *            The user that last modified this entity.
 	 * @return This object allowing method chaining.
 	 */
-	protected EntityBuilder<T> initialize(long newId, int newVersion, TimestampContainer newTimestampContainer, OsmUser newUser) {
+	protected EntityBuilder<T> initialize(
+			long newId, int newVersion, TimestampContainer newTimestampContainer, OsmUser newUser) {
 		this.id = LongAsInt.longToInt(newId);
 		this.timestampContainer = newTimestampContainer;
 		this.user = newUser;

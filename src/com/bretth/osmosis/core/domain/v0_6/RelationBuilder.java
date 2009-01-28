@@ -166,7 +166,8 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	 *            The user that last modified this entity.
 	 */
 	@Override
-	public RelationBuilder initialize(long newId, int newVersion, TimestampContainer newTimestampContainer, OsmUser newUser) {
+	public RelationBuilder initialize(
+			long newId, int newVersion, TimestampContainer newTimestampContainer, OsmUser newUser) {
 		super.initialize(newId, newVersion, newTimestampContainer, newUser);
 		initializeLocal();
 		

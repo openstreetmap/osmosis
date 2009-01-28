@@ -80,7 +80,9 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	 * @param longitude
 	 *            The longitude of the entity.
 	 */
-	public NodeBuilder(long id, int version, TimestampContainer timestampContainer, OsmUser user, double latitude, double longitude) {
+	public NodeBuilder(
+			long id, int version, TimestampContainer timestampContainer, OsmUser user, double latitude,
+			double longitude) {
 		this();
 		
 		initialize(id, version, timestampContainer, user, latitude, longitude);
@@ -156,7 +158,8 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	 *            The longitude of the node.
 	 * @return This object allowing method chaining.
 	 */
-	public NodeBuilder initialize(long newId, int newVersion, Date newTimestamp, OsmUser newUser, double newLatitude, double newLongitude) {
+	public NodeBuilder initialize(
+			long newId, int newVersion, Date newTimestamp, OsmUser newUser, double newLatitude, double newLongitude) {
 		super.initialize(newId, newVersion, newTimestamp, newUser);
 		initializeLocal(newLatitude, newLongitude);
 		
@@ -182,7 +185,9 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	 *            The longitude of the node.
 	 * @return This object allowing method chaining.
 	 */
-	public NodeBuilder initialize(long newId, int newVersion, TimestampContainer newTimestampContainer, OsmUser newUser, double newLatitude, double newLongitude) {
+	public NodeBuilder initialize(
+			long newId, int newVersion, TimestampContainer newTimestampContainer, OsmUser newUser, double newLatitude,
+			double newLongitude) {
 		super.initialize(newId, newVersion, newTimestampContainer, newUser);
 		initializeLocal(newLatitude, newLongitude);
 		

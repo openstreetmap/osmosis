@@ -19,7 +19,7 @@ import com.bretth.osmosis.core.task.v0_5.ChangeSinkChangeSource;
  */
 public class ChangeSorter implements ChangeSinkChangeSource {
 	private FileBasedSort<ChangeContainer> fileBasedSort;
-	private ChangeSink sink;
+	private ChangeSink changeSink;
 	
 	
 	/**
@@ -29,7 +29,9 @@ public class ChangeSorter implements ChangeSinkChangeSource {
 	 *            The comparator to use for sorting.
 	 */
 	public ChangeSorter(Comparator<ChangeContainer> comparator) {
-		fileBasedSort = new FileBasedSort<ChangeContainer>(new SingleClassObjectSerializationFactory(ChangeContainer.class), comparator, true);
+		fileBasedSort =
+			new FileBasedSort<ChangeContainer>(
+					new SingleClassObjectSerializationFactory(ChangeContainer.class), comparator, true);
 	}
 	
 	
@@ -44,8 +46,8 @@ public class ChangeSorter implements ChangeSinkChangeSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setChangeSink(ChangeSink sink) {
-		this.sink = sink;
+	public void setChangeSink(ChangeSink changeSink) {
+		this.changeSink = changeSink;
 	}
 	
 	
@@ -59,10 +61,10 @@ public class ChangeSorter implements ChangeSinkChangeSource {
 			iterator = fileBasedSort.iterate();
 			
 			while (iterator.hasNext()) {
-				sink.process(iterator.next());
+				changeSink.process(iterator.next());
 			}
 			
-			sink.complete();
+			changeSink.complete();
 		} finally {
 			if (iterator != null) {
 				iterator.release();
@@ -76,6 +78,6 @@ public class ChangeSorter implements ChangeSinkChangeSource {
 	 */
 	public void release() {
 		fileBasedSort.release();
-		sink.release();
+		changeSink.release();
 	}
 }
