@@ -45,7 +45,8 @@ public class IntervalExtractor {
 	 *            Specifies if full version history should be returned, or just
 	 *            a single change per entity for the interval.
 	 */
-	public IntervalExtractor(Configuration config, File baseDirectory, Date intervalBegin, Date intervalEnd, boolean fullHistory) {
+	public IntervalExtractor(
+			Configuration config, File baseDirectory, Date intervalBegin, Date intervalEnd, boolean fullHistory) {
 		this.baseDirectory = baseDirectory;
 		this.config = config;
 		this.intervalBegin = intervalBegin;

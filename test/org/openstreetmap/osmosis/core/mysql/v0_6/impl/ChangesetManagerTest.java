@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.mysql.v0_6.impl;
 
 import org.junit.Assert;
@@ -69,8 +70,12 @@ public class ChangesetManagerTest {
 			changesetIdUser2Current = manager.obtainChangesetId(user2);
 			
 			if (i > 1) {
-				Assert.assertEquals("User 1 changeset id should not be re-used.", changesetIdUser1Previous, changesetIdUser1Current);
-				Assert.assertEquals("User 2 changeset id should not be re-used.", changesetIdUser2Previous, changesetIdUser2Current);
+				Assert.assertEquals(
+						"User 1 changeset id should not be re-used.",
+						changesetIdUser1Previous, changesetIdUser1Current);
+				Assert.assertEquals(
+						"User 2 changeset id should not be re-used.",
+						changesetIdUser2Previous, changesetIdUser2Current);
 			}
 			
 			changesetIdUser1Previous = changesetIdUser1Current;
@@ -80,8 +85,12 @@ public class ChangesetManagerTest {
 		// The next changeset ids should change because we've reached the maximum.
 		changesetIdUser1Current = manager.obtainChangesetId(user1);
 		changesetIdUser2Current = manager.obtainChangesetId(user2);
-		Assert.assertFalse("User 1 changeset id should change after the maximum number of entities has been reached.", changesetIdUser1Previous == changesetIdUser1Current);
-		Assert.assertFalse("User 2 changeset id should change after the maximum number of entities has been reached.", changesetIdUser2Previous == changesetIdUser2Current);
+		Assert.assertFalse(
+				"User 1 changeset id should change after the maximum number of entities has been reached.",
+				changesetIdUser1Previous == changesetIdUser1Current);
+		Assert.assertFalse(
+				"User 2 changeset id should change after the maximum number of entities has been reached.",
+				changesetIdUser2Previous == changesetIdUser2Current);
 		
 		manager.release();
 		dbCtx.release();

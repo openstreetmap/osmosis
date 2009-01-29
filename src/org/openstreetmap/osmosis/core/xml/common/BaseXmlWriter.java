@@ -52,10 +52,10 @@ public abstract class BaseXmlWriter {
 	/**
 	 * Sets the writer on the element writer used for this implementation.
 	 * 
-	 * @param writer
+	 * @param resultWriter
 	 *            The writer receiving xml data.
 	 */
-	protected abstract void setWriterOnElementWriter(BufferedWriter writer);
+	protected abstract void setWriterOnElementWriter(BufferedWriter resultWriter);
 	
 	
 	/**

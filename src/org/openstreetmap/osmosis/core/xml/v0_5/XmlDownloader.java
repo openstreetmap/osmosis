@@ -95,20 +95,20 @@ public class XmlDownloader implements RunnableSource {
     private InputStream responseStream;
 
     /**
- *      * Creates a new instance with the specified geographical coordinates.
- *           *
- *                * @param left
- *                     *            The longitude marking the left edge of the bounding box.
- *                          * @param right
- *                               *            The longitude marking the right edge of the bounding box.
- *                                    * @param top
- *                                         *            The latitude marking the top edge of the bounding box.
- *                                              * @param bottom
- *                                                   *            The latitude marking the bottom edge of the bounding box.
- *                                                        * @param baseUrl
- *                                                             *            (optional) The base url of the server (eg.
- *                                                                  *            http://www.openstreetmap.org/api/0.5).
- *                                                                       */
+	 * Creates a new instance with the specified geographical coordinates.
+	 * 
+	 * @param left
+	 *            The longitude marking the left edge of the bounding box.
+	 * @param right
+	 *            The longitude marking the right edge of the bounding box.
+	 * @param top
+	 *            The latitude marking the top edge of the bounding box.
+	 * @param bottom
+	 *            The latitude marking the bottom edge of the bounding box.
+	 * @param baseUrl
+	 *            (optional) The base url of the server (eg.
+	 *            http://www.openstreetmap.org/api/0.5).
+	 */
     public XmlDownloader(final double left,
                          final double right,
                          final double top,
@@ -177,8 +177,9 @@ public class XmlDownloader implements RunnableSource {
  *           */
     public void run() {
         try {
-            SAXParser    parser = createParser();
-            InputStream  inputStream = getInputStream(myBaseUrl + "/map?bbox=" + myLeft + "," + myBottom + "," + myRight + "," + myTop);
+            SAXParser parser = createParser();
+            InputStream inputStream =
+            	getInputStream(myBaseUrl + "/map?bbox=" + myLeft + "," + myBottom + "," + myRight + "," + myTop);
 
             // First send the Bound down the pipeline
             mySink.process(new BoundContainer(new Bound(myRight, myLeft, myTop, myBottom, myBaseUrl)));

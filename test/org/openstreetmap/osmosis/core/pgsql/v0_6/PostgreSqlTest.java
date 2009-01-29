@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.pgsql.v0_6;
 
 import java.io.File;
@@ -12,6 +13,7 @@ import data.util.DataFileUtilities;
 
 /**
  * Tests for PostgreSQL tasks.
+ * 
  * @author Brett Henderson
  */
 public class PostgreSqlTest {

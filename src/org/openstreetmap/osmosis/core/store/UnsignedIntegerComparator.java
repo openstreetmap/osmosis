@@ -22,8 +22,8 @@ public class UnsignedIntegerComparator implements Comparator<Integer> {
 		
 		// Convert the two integers to longs using an unsigned conversion and
 		// perform the comparison on those.
-		value1 = o1.intValue() & 0xFFFFFFFFl;
-		value2 = o2.intValue() & 0xFFFFFFFFl;
+		value1 = o1.intValue() & 0xFFFFFFFFL;
+		value2 = o2.intValue() & 0xFFFFFFFFL;
 		
 		comparison = value1 - value2;
 		

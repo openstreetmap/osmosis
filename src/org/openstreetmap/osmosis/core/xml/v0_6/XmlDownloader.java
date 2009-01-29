@@ -177,8 +177,9 @@ public class XmlDownloader implements RunnableSource {
      */
     public void run() {
         try {
-            SAXParser    parser = createParser();
-            InputStream  inputStream = getInputStream(myBaseUrl + "/map?bbox=" + myLeft + "," + myBottom + "," + myRight + "," + myTop);
+            SAXParser parser = createParser();
+            InputStream inputStream =
+            	getInputStream(myBaseUrl + "/map?bbox=" + myLeft + "," + myBottom + "," + myRight + "," + myTop);
 
             // First send the Bound down the pipeline
             mySink.process(new BoundContainer(new Bound(myRight, myLeft, myTop, myBottom, myBaseUrl)));

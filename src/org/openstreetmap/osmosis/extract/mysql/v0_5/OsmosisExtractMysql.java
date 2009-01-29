@@ -157,7 +157,7 @@ public class OsmosisExtractMysql {
 	 *            The current argument index.
 	 * @return The parsed date.
 	 */
-	private Date getDateArgument(String args[], int argIndex) {
+	private Date getDateArgument(String[] args, int argIndex) {
 		// Verify that the argument is available.
 		if (args.length <= argIndex) {
 			throw new OsmosisRuntimeException("A date argument is required at argument " + (argIndex + 1) + ".");
@@ -199,7 +199,7 @@ public class OsmosisExtractMysql {
 	 * @param initialArgIndex
 	 *            The current offset into the arguments.
 	 */
-	private void initializeCommand(String args[], int initialArgIndex) {
+	private void initializeCommand(String[] args, int initialArgIndex) {
 		int currentArgIndex;
 		Date initialExtractDate;
 		ResourceFileManager resourceFileManager;

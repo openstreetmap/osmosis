@@ -48,7 +48,11 @@ public class ChunkedObjectStore<T extends Storeable> implements Completable {
 	 * @param useCompression
 	 *            If true, the storage file will be compressed.
 	 */
-	public ChunkedObjectStore(ObjectSerializationFactory serializationFactory, String storageFilePrefix, String indexFilePrefix, boolean useCompression) {
+	public ChunkedObjectStore(
+			ObjectSerializationFactory serializationFactory,
+			String storageFilePrefix,
+			String indexFilePrefix,
+			boolean useCompression) {
 		objectStore = new SegmentedObjectStore<T>(serializationFactory, storageFilePrefix, useCompression);
 		
 		indexStore = new IndexStore<Long, LongLongIndexElement>(

@@ -65,7 +65,8 @@ public class CompressionActivator {
 			throw new OsmosisRuntimeException("Compression method " + compressionMethod + " is not recognized.");
 			
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to instantiate a " + compressionMethod + " compression stream.", e);
+			throw new OsmosisRuntimeException(
+					"Unable to instantiate a " + compressionMethod + " compression stream.", e);
 		}
 	}
 	
@@ -106,7 +107,8 @@ public class CompressionActivator {
 			throw new OsmosisRuntimeException("Compression method " + compressionMethod + " is not recognized.");
 			
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to instantiate a " + compressionMethod + " compression stream.", e);
+			throw new OsmosisRuntimeException(
+					"Unable to instantiate a " + compressionMethod + " compression stream.", e);
 		}
 	}
 }

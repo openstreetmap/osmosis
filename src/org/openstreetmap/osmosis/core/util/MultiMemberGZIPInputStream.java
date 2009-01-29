@@ -30,7 +30,11 @@ public class MultiMemberGZIPInputStream extends GZIPInputStream {
 			throws IOException {
 		super(parent.in);
 		this.size = -1;
-		this.parent = parent.parent == null ? parent : parent.parent;
+		if (parent.parent == null) {
+			this.parent = parent;
+		} else {
+			this.parent = parent.parent;
+		}
 		this.parent.child = this;
 	}
 
@@ -38,7 +42,11 @@ public class MultiMemberGZIPInputStream extends GZIPInputStream {
 			int size) throws IOException {
 		super(parent.in, size);
 		this.size = size;
-		this.parent = parent.parent == null ? parent : parent.parent;
+		if (parent.parent == null) {
+			this.parent = parent;
+		} else {
+			this.parent = parent.parent;
+		}
 		this.parent.child = this;
 	}
 

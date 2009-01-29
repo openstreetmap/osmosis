@@ -104,7 +104,8 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 				stage = StorageStage.Add;
 				
 			} catch (IOException e) {
-				throw new OsmosisRuntimeException("Unable to create object stream writing to file " + storageFile + ".", e);
+				throw new OsmosisRuntimeException(
+						"Unable to create object stream writing to file " + storageFile + ".", e);
 			} finally {
 				if (fileStream != null) {
 					try {
@@ -150,7 +151,8 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 		}
 		
 		if (stage.equals(StorageStage.Add)) {
-			throw new OsmosisRuntimeException("Cannot begin reading in " + StorageStage.Add + " stage, must call complete first.");
+			throw new OsmosisRuntimeException(
+					"Cannot begin reading in " + StorageStage.Add + " stage, must call complete first.");
 		}
 		
 		// If we haven't reached the reading stage yet, configure for output
@@ -183,11 +185,14 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 			
 			return new RandomAccessObjectStoreReader<T>(
 				randomFileReader,
-				serializationFactory.createObjectReader(new DataInputStoreReader(new DataInputStream(randomFileReader)), storeClassRegister)
+				serializationFactory.createObjectReader(
+						new DataInputStoreReader(
+								new DataInputStream(randomFileReader)), storeClassRegister)
 			);
 			
 		} catch (FileNotFoundException e) {
-			throw new OsmosisRuntimeException("Unable to create object stream reading from file " + storageFile + ".", e);
+			throw new OsmosisRuntimeException(
+					"Unable to create object stream reading from file " + storageFile + ".", e);
 		}
 	}
 	

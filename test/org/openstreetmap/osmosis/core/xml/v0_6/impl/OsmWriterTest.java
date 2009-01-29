@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.xml.v0_6.impl;
 
 import static org.junit.Assert.*;
@@ -78,7 +79,10 @@ public class OsmWriterTest {
 	 */
 	@Test
 	public final void testProcess3() {
-		testOsmWriter.process(new NodeContainer(new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), new ArrayList<Tag>(), 20, 20)));
+		testOsmWriter.process(
+				new NodeContainer(
+						new Node(
+								1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), new ArrayList<Tag>(), 20, 20)));
 		// Nothing to assert; just expect no exception
 	}
 
@@ -88,7 +92,9 @@ public class OsmWriterTest {
 	 */
 	@Test(expected=OsmosisRuntimeException.class)
 	public final void testProcess4() {
-		testOsmWriter.process(new NodeContainer(new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), new ArrayList<Tag>(), 20, 20)));
+		testOsmWriter.process(
+				new NodeContainer(
+						new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), new ArrayList<Tag>(), 20, 20)));
 		testOsmWriter.process(new BoundContainer(new Bound("source")));
 		fail("Expected to throw an exception.");
 	}

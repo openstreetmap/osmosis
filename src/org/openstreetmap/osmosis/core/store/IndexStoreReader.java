@@ -71,7 +71,8 @@ public class IndexStoreReader<K, T extends IndexElement<K>> implements Releasabl
 		// Determine how many levels of a binary tree must be traversed to reach a result.
 		binarySearchDepth = 0;
 		binarySearchElementCount = 1;
-		while (binarySearchElementCount < (elementCount + 1)) { // Must add 1 here because we search from offset -1 to elementCount
+		// Must add 1 here because we search from offset -1 to elementCount
+		while (binarySearchElementCount < (elementCount + 1)) {
 			binarySearchDepth++;
 			binarySearchElementCount *= 2;
 		}

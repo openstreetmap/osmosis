@@ -19,5 +19,5 @@ public interface ChangeSink extends Task, Completable {
 	 * @param change
 	 *            The change to be processed.
 	 */
-	public void process(ChangeContainer change);
+	void process(ChangeContainer change);
 }

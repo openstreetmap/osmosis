@@ -54,8 +54,6 @@ public class AreaFilterTest {
 
 
 	private void setUpFilters() {
-		// TODO: Might want to create an inspection interface for entityInspector and then use a
-		// factory to create the instance
 		entityInspector = new SinkEntityInspector();
 		// simpleAreaFilter doesn't cross antimeridian; no complete ways or relations
 		simpleAreaFilter = new BoundingBoxFilter(

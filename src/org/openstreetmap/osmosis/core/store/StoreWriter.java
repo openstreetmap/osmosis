@@ -15,7 +15,7 @@ public interface StoreWriter {
 	 * @param value
 	 *            The value to be written.
 	 */
-	public void writeBoolean(boolean value);
+	void writeBoolean(boolean value);
 	
 	
 	/**
@@ -24,7 +24,7 @@ public interface StoreWriter {
 	 * @param value
 	 *            The value to be written.
 	 */
-	public void writeByte(byte value);
+	void writeByte(byte value);
 	
 	
 	/**
@@ -33,7 +33,7 @@ public interface StoreWriter {
 	 * @param value
 	 *            The value to be written.
 	 */
-	public void writeCharacter(char value);
+	void writeCharacter(char value);
 	
 	
 	/**
@@ -42,7 +42,7 @@ public interface StoreWriter {
 	 * @param value
 	 *            The value to be written.
 	 */
-	public void writeInteger(int value);
+	void writeInteger(int value);
 	
 	
 	/**
@@ -51,7 +51,7 @@ public interface StoreWriter {
 	 * @param value
 	 *            The value to be written.
 	 */
-	public void writeLong(long value);
+	void writeLong(long value);
 	
 	
 	/**
@@ -60,7 +60,7 @@ public interface StoreWriter {
 	 * @param value
 	 *            The value to be written.
 	 */
-	public void writeDouble(double value);
+	void writeDouble(double value);
 	
 	
 	/**
@@ -69,5 +69,5 @@ public interface StoreWriter {
 	 * @param value
 	 *            The value to be written.
 	 */
-	public void writeString(String value);
+	void writeString(String value);
 }

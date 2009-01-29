@@ -18,7 +18,7 @@ public interface MultiChangeSink {
 	 *            The index of the change sink to be returned.
 	 * @return The change sink.
 	 */
-	public ChangeSink getChangeSink(int instance);
+	ChangeSink getChangeSink(int instance);
 
 
 	/**
@@ -26,5 +26,5 @@ public interface MultiChangeSink {
 	 * 
 	 * @return The number of change sinks.
 	 */
-	public int getChangeSinkCount();
+	int getChangeSinkCount();
 }

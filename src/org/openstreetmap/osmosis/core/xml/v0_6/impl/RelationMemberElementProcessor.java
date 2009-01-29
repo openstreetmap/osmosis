@@ -31,7 +31,8 @@ public class RelationMemberElementProcessor extends BaseElementProcessor {
 	 * @param relationMemberListener
 	 *            The relation member listener for receiving created tags.
 	 */
-	public RelationMemberElementProcessor(BaseElementProcessor parentProcessor, RelationMemberListener relationMemberListener) {
+	public RelationMemberElementProcessor(
+			BaseElementProcessor parentProcessor, RelationMemberListener relationMemberListener) {
 		super(parentProcessor, true);
 		
 		this.relationMemberListener = relationMemberListener;

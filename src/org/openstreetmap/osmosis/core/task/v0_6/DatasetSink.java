@@ -21,5 +21,5 @@ public interface DatasetSink extends Task, Releasable {
 	 * @param dataset
 	 *            The dataset to be processed.
 	 */
-	public void process(Dataset dataset);
+	void process(Dataset dataset);
 }

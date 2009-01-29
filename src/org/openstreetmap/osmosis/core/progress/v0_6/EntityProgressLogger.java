@@ -43,7 +43,9 @@ public class EntityProgressLogger implements SinkSource {
 		entity = entityContainer.getEntity();
 		
 		if (progressTracker.updateRequired()) {
-			log.info("Processing " + entity.getType() + " " + entity.getId() + ", " + progressTracker.getObjectsPerSecond() + " objects/second.");
+			log.info(
+					"Processing " + entity.getType() + " " + entity.getId() + ", "
+					+ progressTracker.getObjectsPerSecond() + " objects/second.");
 		}
 		
 		sink.process(entityContainer);

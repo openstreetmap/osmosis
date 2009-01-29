@@ -40,7 +40,8 @@ public class ChangeSourceElementProcessor extends BaseElementProcessor {
 	 *            If true, dates will be parsed from xml data, else the current
 	 *            date will be used thus saving parsing time.
 	 */
-	public ChangeSourceElementProcessor(BaseElementProcessor parentProcessor, ChangeSink changeSink, boolean enableDateParsing) {
+	public ChangeSourceElementProcessor(
+			BaseElementProcessor parentProcessor, ChangeSink changeSink, boolean enableDateParsing) {
 		super(parentProcessor, enableDateParsing);
 		
 		createElementProcessor =

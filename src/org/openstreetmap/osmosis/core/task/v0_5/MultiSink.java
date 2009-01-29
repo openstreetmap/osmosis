@@ -18,7 +18,7 @@ public interface MultiSink {
 	 *            The index of the sink to be returned.
 	 * @return The sink.
 	 */
-	public Sink getSink(int instance);
+	Sink getSink(int instance);
 
 
 	/**
@@ -26,5 +26,5 @@ public interface MultiSink {
 	 * 
 	 * @return The number of sinks.
 	 */
-	public int getSinkCount();
+	int getSinkCount();
 }

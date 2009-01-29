@@ -25,7 +25,8 @@ public class SingleClassObjectWriter extends BaseObjectWriter {
 	 * @param storeableType
 	 *            The type of class to be stored.
 	 */
-	protected SingleClassObjectWriter(StoreWriter storeWriter, StoreClassRegister storeClassRegister, Class<?> storeableType) {
+	protected SingleClassObjectWriter(
+			StoreWriter storeWriter, StoreClassRegister storeClassRegister, Class<?> storeableType) {
 		super(storeWriter, storeClassRegister);
 		
 		this.storeableType = storeableType;
@@ -40,7 +41,8 @@ public class SingleClassObjectWriter extends BaseObjectWriter {
 		// We don't need to write anything, we just need to verify that the
 		// class is of the correct type.
 		if (!storeableType.equals(clazz)) {
-			throw new OsmosisRuntimeException("Received class " + clazz.getName() + ", expected class " + storeableType.getName() + ".");
+			throw new OsmosisRuntimeException(
+					"Received class " + clazz.getName() + ", expected class " + storeableType.getName() + ".");
 		}
 	}
 }

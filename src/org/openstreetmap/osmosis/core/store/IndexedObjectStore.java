@@ -47,7 +47,8 @@ public class IndexedObjectStore<T extends Storeable> implements Completable {
 	 * @param indexStorageFile
 	 *            The storage file to use for the index.
 	 */
-	public IndexedObjectStore(ObjectSerializationFactory serializationFactory, File objectStorageFile, File indexStorageFile) {
+	public IndexedObjectStore(
+			ObjectSerializationFactory serializationFactory, File objectStorageFile, File indexStorageFile) {
 		objectStore = new RandomAccessObjectStore<T>(serializationFactory, objectStorageFile);
 		indexStore = new IndexStore<Long, LongLongIndexElement>(
 			LongLongIndexElement.class,

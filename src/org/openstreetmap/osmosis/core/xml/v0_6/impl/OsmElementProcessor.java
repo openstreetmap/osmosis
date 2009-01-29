@@ -49,7 +49,8 @@ public class OsmElementProcessor extends SourceElementProcessor {
 	 *            date will be used thus saving parsing time.
 	 *            @param validateVersion If true, a version attribute will be checked and validated.
 	 */
-	public OsmElementProcessor(BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing, boolean validateVersion) {
+	public OsmElementProcessor(
+			BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing, boolean validateVersion) {
 		super(parentProcessor, sink, enableDateParsing);
 		
 		this.validateVersion = validateVersion;

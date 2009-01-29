@@ -16,7 +16,7 @@ public interface StoreReader {
 	 * 
 	 * @return The loaded value.
 	 */
-	public boolean readBoolean();
+	boolean readBoolean();
 	
 	
 	/**
@@ -24,7 +24,7 @@ public interface StoreReader {
 	 * 
 	 * @return The loaded value.
 	 */
-	public byte readByte();
+	byte readByte();
 	
 	
 	/**
@@ -32,7 +32,7 @@ public interface StoreReader {
 	 * 
 	 * @return The loaded value.
 	 */
-	public char readCharacter();
+	char readCharacter();
 	
 	
 	/**
@@ -40,7 +40,7 @@ public interface StoreReader {
 	 * 
 	 * @return The loaded value.
 	 */
-	public int readInteger();
+	int readInteger();
 	
 	
 	/**
@@ -48,7 +48,7 @@ public interface StoreReader {
 	 * 
 	 * @return The loaded value.
 	 */
-	public long readLong();
+	long readLong();
 	
 	
 	/**
@@ -56,7 +56,7 @@ public interface StoreReader {
 	 * 
 	 * @return The loaded value.
 	 */
-	public double readDouble();
+	double readDouble();
 	
 	
 	/**
@@ -64,5 +64,5 @@ public interface StoreReader {
 	 * 
 	 * @return The loaded value.
 	 */
-	public String readString();
+	String readString();
 }

@@ -19,7 +19,7 @@ public interface ObjectSerializationFactory {
 	 *            The register for class to identifier mappings.
 	 * @return The newly created object reader.
 	 */
-	public ObjectReader createObjectReader(StoreReader storeReader, StoreClassRegister storeClassRegister);
+	ObjectReader createObjectReader(StoreReader storeReader, StoreClassRegister storeClassRegister);
 	
 	
 	/**
@@ -31,5 +31,5 @@ public interface ObjectSerializationFactory {
 	 *            The register for class to identifier mappings.
 	 * @return The newly created object writer.
 	 */
-	public ObjectWriter createObjectWriter(StoreWriter storeWriter, StoreClassRegister storeClassRegister);
+	ObjectWriter createObjectWriter(StoreWriter storeWriter, StoreClassRegister storeClassRegister);
 }

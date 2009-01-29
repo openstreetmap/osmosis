@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.cli;
 
 import java.util.Arrays;
@@ -65,7 +66,9 @@ public class CommandLineParserTest {
 		
 		commandLineParser = new CommandLineParser();
 		commandLineParser.parse(new String [] {"-v", "3"});
-		Assert.assertEquals("Incorrect very very very verbose log level.", Level.FINEST, commandLineParser.getLogLevel());
+		Assert.assertEquals(
+				"Incorrect very very very verbose log level.",
+				Level.FINEST, commandLineParser.getLogLevel());
 	}
 	
 	
@@ -103,7 +106,10 @@ public class CommandLineParserTest {
 		
 		commandLineParser = new CommandLineParser();
 		commandLineParser.parse(new String [] {"-p", "plugin1", "-p", "plugin2"});
-		Assert.assertEquals("Incorrect plugin list.", Arrays.asList("plugin1", "plugin2"), commandLineParser.getPlugins());
+		Assert.assertEquals(
+				"Incorrect plugin list.",
+				Arrays.asList("plugin1", "plugin2"),
+				commandLineParser.getPlugins());
 	}
 	
 	

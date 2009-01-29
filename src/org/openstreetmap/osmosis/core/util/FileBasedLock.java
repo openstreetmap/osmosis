@@ -77,7 +77,8 @@ public class FileBasedLock implements Releasable {
 			}
 			
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("An error occurred while trying to obtain an exclusive lock on file " + lockFile + ".");
+			throw new OsmosisRuntimeException(
+					"An error occurred while trying to obtain an exclusive lock on file " + lockFile + ".");
 		}
 	}
 	

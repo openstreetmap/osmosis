@@ -28,7 +28,9 @@ public class IndexedObjectStoreReader<T> implements Releasable {
 	 * @param indexStoreReader
 	 *            Provides access to the index data.
 	 */
-	public IndexedObjectStoreReader(RandomAccessObjectStoreReader<T> objectStoreReader, IndexStoreReader<Long, LongLongIndexElement> indexStoreReader) {
+	public IndexedObjectStoreReader(
+			RandomAccessObjectStoreReader<T> objectStoreReader,
+			IndexStoreReader<Long, LongLongIndexElement> indexStoreReader) {
 		this.objectStoreReader = objectStoreReader;
 		this.indexStoreReader = indexStoreReader;
 	}

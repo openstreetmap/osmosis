@@ -93,7 +93,7 @@ public class DataFileUtilities {
 	public void compressFile(File inputFile, File outputFile) throws IOException {
 		BufferedInputStream inStream;
 		BufferedOutputStream outStream;
-		byte buffer[];
+		byte[] buffer;
 		int bytesRead;
 		
 		inStream = new BufferedInputStream(new FileInputStream(inputFile));

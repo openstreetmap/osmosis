@@ -82,7 +82,8 @@ public class StoreClassRegister {
 		idObj = Byte.valueOf(classId);
 		
 		if (!byteToClassMap.containsKey(idObj)) {
-			throw new OsmosisRuntimeException("Byte " + classId + " is not a recognised class identifier, the data stream may be corrupt.");
+			throw new OsmosisRuntimeException(
+					"Byte " + classId + " is not a recognised class identifier, the data stream may be corrupt.");
 		}
 		
 		return byteToClassMap.get(idObj);

@@ -19,5 +19,5 @@ public interface Sink extends Task, Completable {
 	 * @param entityContainer
 	 *            The entity to be processed.
 	 */
-	public void process(EntityContainer entityContainer);
+	void process(EntityContainer entityContainer);
 }

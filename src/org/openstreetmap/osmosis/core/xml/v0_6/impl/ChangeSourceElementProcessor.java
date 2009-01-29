@@ -40,15 +40,19 @@ public class ChangeSourceElementProcessor extends BaseElementProcessor {
 	 *            If true, dates will be parsed from xml data, else the current
 	 *            date will be used thus saving parsing time.
 	 */
-	public ChangeSourceElementProcessor(BaseElementProcessor parentProcessor, ChangeSink changeSink, boolean enableDateParsing) {
+	public ChangeSourceElementProcessor(
+			BaseElementProcessor parentProcessor, ChangeSink changeSink, boolean enableDateParsing) {
 		super(parentProcessor, enableDateParsing);
 		
 		createElementProcessor =
-			new OsmElementProcessor(this, new ChangeSinkAdapter(changeSink, ChangeAction.Create), enableDateParsing, false);
+			new OsmElementProcessor(
+					this, new ChangeSinkAdapter(changeSink, ChangeAction.Create), enableDateParsing, false);
 		modifyElementProcessor =
-			new OsmElementProcessor(this, new ChangeSinkAdapter(changeSink, ChangeAction.Modify), enableDateParsing, false);
+			new OsmElementProcessor(
+					this, new ChangeSinkAdapter(changeSink, ChangeAction.Modify), enableDateParsing, false);
 		deleteElementProcessor =
-			new OsmElementProcessor(this, new ChangeSinkAdapter(changeSink, ChangeAction.Delete), enableDateParsing, false);
+			new OsmElementProcessor(
+					this, new ChangeSinkAdapter(changeSink, ChangeAction.Delete), enableDateParsing, false);
 	}
 	
 	

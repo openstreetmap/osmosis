@@ -69,8 +69,6 @@ public class AreaFilterTest {
 
 
 	private void setUpFilters() {
-		// TODO: Might want to create an inspection interface for entityInspector and then use a
-		// factory to create the instance
 		entityInspector = new SinkEntityInspector();
 		// simpleAreaFilter doesn't cross antimeridian; no complete ways or relations
 		simpleAreaFilter = new BoundingBoxFilter(
@@ -214,20 +212,29 @@ public class AreaFilterTest {
 			.addMember(new RelationMember(inOutRelation2.getId(), EntityType.Relation, "relation1"))
 			.addTag(new Tag("test_key4", "test_value4"))
 			.buildEntity();
-		mangledInOutRelation1 = relationBuilder
-			.initialize(inOutRelation1.getId(), inOutRelation1.getVersion(), inOutRelation1.getTimestamp(), inOutRelation1.getUser())
+		mangledInOutRelation1 = relationBuilder.initialize(
+				inOutRelation1.getId(),
+				inOutRelation1.getVersion(),
+				inOutRelation1.getTimestamp(),
+				inOutRelation1.getUser())
 			.addMember(new RelationMember(inAreaWayNode1.getId(), EntityType.Node, "node1"))
 			.addMember(new RelationMember(inOutWay.getId(), EntityType.Way, "way1"))
 			.setTags(inOutRelation1.getTags())
 			.buildEntity();
-		mangledInOutRelation2 = relationBuilder
-			.initialize(inOutRelation2.getId(), inOutRelation2.getVersion(), inOutRelation2.getTimestamp(), inOutRelation2.getUser())
+		mangledInOutRelation2 = relationBuilder.initialize(
+				inOutRelation2.getId(),
+				inOutRelation2.getVersion(),
+				inOutRelation2.getTimestamp(),
+				inOutRelation2.getUser())
 			.addMember(new RelationMember(inAreaWayNode2.getId(), EntityType.Node, "node1"))
 			.addMember(new RelationMember(inOutWay.getId(), EntityType.Way, "way1"))
 			.setTags(inOutRelation2.getTags())
 			.buildEntity();
-		mangledCompleteInOutRelation1 = relationBuilder
-			.initialize(inOutRelation1.getId(), inOutRelation1.getVersion(), inOutRelation1.getTimestamp(), inOutRelation1.getUser())
+		mangledCompleteInOutRelation1 = relationBuilder.initialize(
+				inOutRelation1.getId(),
+				inOutRelation1.getVersion(),
+				inOutRelation1.getTimestamp(),
+				inOutRelation1.getUser())
 			.addMember(new RelationMember(inAreaWayNode1.getId(), EntityType.Node, "node1"))
 			.addMember(new RelationMember(inOutWay.getId(), EntityType.Way, "way1"))
 			.addMember(new RelationMember(inOutRelation2.getId(), EntityType.Relation, "relation1"))

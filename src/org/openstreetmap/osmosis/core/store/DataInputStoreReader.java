@@ -36,7 +36,8 @@ public class DataInputStoreReader implements StoreReader {
 		try {
 			return input.readBoolean();
 		} catch (EOFException e) {
-			throw new EndOfStoreException("End of stream was reached while attempting to read a boolean from the store.", e);
+			throw new EndOfStoreException(
+					"End of stream was reached while attempting to read a boolean from the store.", e);
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to read a boolean from the store.", e);
 		}
@@ -51,9 +52,11 @@ public class DataInputStoreReader implements StoreReader {
 		try {
 			return input.readByte();
 		} catch (EOFException e) {
-			throw new EndOfStoreException("End of stream was reached while attempting to read a byte from the store.", e);
+			throw new EndOfStoreException(
+					"End of stream was reached while attempting to read a byte from the store.", e);
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to read a byte from the store.", e);
+			throw new OsmosisRuntimeException(
+					"Unable to read a byte from the store.", e);
 		}
 	}
 	
@@ -66,9 +69,11 @@ public class DataInputStoreReader implements StoreReader {
 		try {
 			return input.readChar();
 		} catch (EOFException e) {
-			throw new EndOfStoreException("End of stream was reached while attempting to read a character from the store.", e);
+			throw new EndOfStoreException(
+					"End of stream was reached while attempting to read a character from the store.", e);
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to read a character from the store.", e);
+			throw new OsmosisRuntimeException(
+					"Unable to read a character from the store.", e);
 		}
 	}
 	
@@ -81,9 +86,11 @@ public class DataInputStoreReader implements StoreReader {
 		try {
 			return input.readInt();
 		} catch (EOFException e) {
-			throw new EndOfStoreException("End of stream was reached while attempting to read an integer from the store.", e);
+			throw new EndOfStoreException(
+					"End of stream was reached while attempting to read an integer from the store.", e);
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to read an integer from the store.", e);
+			throw new OsmosisRuntimeException(
+					"Unable to read an integer from the store.", e);
 		}
 	}
 	
@@ -96,9 +103,11 @@ public class DataInputStoreReader implements StoreReader {
 		try {
 			return input.readLong();
 		} catch (EOFException e) {
-			throw new EndOfStoreException("End of stream was reached while attempting to read a long from the store.", e);
+			throw new EndOfStoreException(
+					"End of stream was reached while attempting to read a long from the store.", e);
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to read a long from the store.", e);
+			throw new OsmosisRuntimeException(
+					"Unable to read a long from the store.", e);
 		}
 	}
 	
@@ -111,9 +120,11 @@ public class DataInputStoreReader implements StoreReader {
 		try {
 			return input.readDouble();
 		} catch (EOFException e) {
-			throw new EndOfStoreException("End of stream was reached while attempting to read a double from the store.", e);
+			throw new EndOfStoreException(
+					"End of stream was reached while attempting to read a double from the store.", e);
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to read a double from the store.", e);
+			throw new OsmosisRuntimeException(
+					"Unable to read a double from the store.", e);
 		}
 	}
 	
@@ -126,9 +137,11 @@ public class DataInputStoreReader implements StoreReader {
 		try {
 			return input.readUTF();
 		} catch (EOFException e) {
-			throw new EndOfStoreException("End of stream was reached while attempting to read a String from the store.", e);
+			throw new EndOfStoreException(
+					"End of stream was reached while attempting to read a String from the store.", e);
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to read a String from the store.", e);
+			throw new OsmosisRuntimeException(
+					"Unable to read a String from the store.", e);
 		}
 	}
 }

@@ -46,7 +46,9 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 		action = changeContainer.getAction();
 		
 		if (progressTracker.updateRequired()) {
-			log.info("Processing " + entity.getType() + " " + entity.getId() + " with action " + action + ", " + progressTracker.getObjectsPerSecond() + " objects/second.");
+			log.info(
+					"Processing " + entity.getType() + " " + entity.getId() + " with action " + action+ ", "
+					+ progressTracker.getObjectsPerSecond() + " objects/second.");
 		}
 		
 		changeSink.process(changeContainer);

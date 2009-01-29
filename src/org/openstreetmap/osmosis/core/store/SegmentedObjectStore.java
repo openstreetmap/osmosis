@@ -61,7 +61,8 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 	 * @param useCompression
 	 *            If true, the storage file will be compressed.
 	 */
-	public SegmentedObjectStore(ObjectSerializationFactory serializationFactory, String storageFilePrefix, boolean useCompression) {
+	public SegmentedObjectStore(
+			ObjectSerializationFactory serializationFactory, String storageFilePrefix, boolean useCompression) {
 		this.serializationFactory = serializationFactory;
 		this.storageFilePrefix = storageFilePrefix;
 		this.useCompression = useCompression;
@@ -107,12 +108,15 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 				arrayOutStream = new ByteArrayOutputStream();
 				
 				if (useCompression) {
-					dataOutStream = new DataOutputStream(new BufferedOutputStream(new GZIPOutputStream(arrayOutStream), 65536));
+					dataOutStream = new DataOutputStream(
+							new BufferedOutputStream(
+									new GZIPOutputStream(arrayOutStream), 65536));
 				} else {
 					dataOutStream = new DataOutputStream(new BufferedOutputStream(arrayOutStream, 65536));
 				}
 				
-				objectWriter = serializationFactory.createObjectWriter(new DataOutputStoreWriter(dataOutStream), storeClassRegister);
+				objectWriter = serializationFactory.createObjectWriter(
+						new DataOutputStoreWriter(dataOutStream), storeClassRegister);
 				
 				chunkActive = true;
 				
@@ -267,7 +271,9 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 			// Create the object input stream.
 			try {
 				if (useCompression) {
-					dataInStream = new DataInputStream(new BufferedInputStream(new MultiMemberGZIPInputStream(fileStream), 65536));
+					dataInStream = new DataInputStream(
+							new BufferedInputStream(
+									new MultiMemberGZIPInputStream(fileStream), 65536));
 				} else {
 					dataInStream = new DataInputStream(new BufferedInputStream(fileStream, 65536));
 				}
@@ -280,7 +286,8 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 			// the reference now so it isn't closed on method exit.
 			fileStream = null;
 			
-			objectReader = serializationFactory.createObjectReader(new DataInputStoreReader(dataInStream), storeClassRegister);
+			objectReader = serializationFactory.createObjectReader(
+					new DataInputStoreReader(dataInStream), storeClassRegister);
 			
 			if (maxObjectCount >= 0) {
 				return new SubObjectStreamIterator<T>(dataInStream, objectReader, maxObjectCount);

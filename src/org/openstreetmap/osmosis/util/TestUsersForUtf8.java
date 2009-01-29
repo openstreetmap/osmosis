@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.util;
 
 import java.io.BufferedReader;
@@ -60,7 +61,8 @@ public class TestUsersForUtf8 {
 		argIndex = 0;
 		
 		// Initialise database credentials.
-		credentials = new DatabaseLoginCredentials(args[argIndex++], args[argIndex++], args[argIndex++], args[argIndex++], false, false);
+		credentials = new DatabaseLoginCredentials(
+				args[argIndex++], args[argIndex++], args[argIndex++], args[argIndex++], false, false);
 		
 		// Determine which file to write the results to.
 		resultFile = new File(args[argIndex++]);

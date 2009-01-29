@@ -70,7 +70,8 @@ public class TimestampTracker {
 		
 		// Rename the new file to the existing file.
 		if (!newTimestampFile.renameTo(timestampFile)) {
-			throw new OsmosisRuntimeException("Unable to rename file " + newTimestampFile + " to " + timestampFile + ".");
+			throw new OsmosisRuntimeException(
+					"Unable to rename file " + newTimestampFile + " to " + timestampFile + ".");
 		}
 	}
 	
@@ -133,7 +134,8 @@ public class TimestampTracker {
 			renameNewFileToCurrent();
 			
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to write the time to temporary file " + newTimestampFile + ".", e);
+			throw new OsmosisRuntimeException(
+					"Unable to write the time to temporary file " + newTimestampFile + ".", e);
 		} finally {
 			if (fileWriter != null) {
 				try {

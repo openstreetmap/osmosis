@@ -99,7 +99,11 @@ public class NodeWriterTest {
 	 */
 	@Test
 	public final void testProcessNodeNoTags() {
-		testNodeWriter.process(new Node(1234, 2, timestamp, new OsmUser(23, "someuser"), new ArrayList<Tag>(), 20.12345678, -21.98765432));
+		testNodeWriter.process(
+				new Node(
+						1234, 2, timestamp,
+						new OsmUser(23, "someuser"),
+						new ArrayList<Tag>(), 20.12345678, -21.98765432));
 		try {
 			testBufferedWriter.flush();
 		} catch (IOException e) {

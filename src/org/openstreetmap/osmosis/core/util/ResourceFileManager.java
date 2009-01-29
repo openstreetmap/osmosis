@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.util;
 
 import java.io.File;
@@ -36,7 +37,7 @@ public class ResourceFileManager {
 		OutputStream os = null;
 		
 		try {
-			byte buffer[];
+			byte[] buffer;
 			int bytesRead;
 			
 			buffer = new byte[4096];
@@ -59,7 +60,8 @@ public class ResourceFileManager {
 			os.close();
 			
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to copy resource " + sourceResource + " to file " + destinationFile);
+			throw new OsmosisRuntimeException(
+					"Unable to copy resource " + sourceResource + " to file " + destinationFile);
 		} finally {
 			if (is != null) {
 				try {

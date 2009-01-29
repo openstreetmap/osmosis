@@ -39,7 +39,12 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 	 *             if the file cannot be opened.
 	 */
 	public BufferedRandomAccessFileInputStream(File file) throws FileNotFoundException {
-		this(file, DEFAULT_BUFFER_COUNT, DEFAULT_INITIAL_BUFFER_SIZE, DEFAULT_MAXIMUM_BUFFER_SIZE, DEFAULT_BUFFER_INCREASE_FACTOR);
+		this(
+				file,
+				DEFAULT_BUFFER_COUNT,
+				DEFAULT_INITIAL_BUFFER_SIZE,
+				DEFAULT_MAXIMUM_BUFFER_SIZE,
+				DEFAULT_BUFFER_INCREASE_FACTOR);
 	}
 
 
@@ -66,7 +71,9 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 	 * @throws FileNotFoundException
 	 *             if the file cannot be opened.
 	 */
-	public BufferedRandomAccessFileInputStream(File file, int bufferCount, int initialBufferSize, int maxBufferSize, float bufferIncreaseFactor) throws FileNotFoundException {
+	public BufferedRandomAccessFileInputStream(
+			File file, int bufferCount, int initialBufferSize,
+			int maxBufferSize, float bufferIncreaseFactor) throws FileNotFoundException {
 		this.bufferCount = bufferCount;
 		
 		randomFile = new RandomAccessFile(file, "r");
@@ -208,7 +215,9 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 		 * @throws FileNotFoundException
 		 *             if the file cannot be opened.
 		 */
-		public BufferedReader(RandomAccessFile randomFile, int initialBufferSize, int maxBufferSize, float bufferIncreaseFactor) {
+		public BufferedReader(
+				RandomAccessFile randomFile, int initialBufferSize,
+				int maxBufferSize, float bufferIncreaseFactor) {
 			this.randomFile = randomFile;
 			this.initialBufferSize = initialBufferSize;
 			this.maxBufferSize = maxBufferSize;

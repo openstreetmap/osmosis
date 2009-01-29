@@ -23,7 +23,8 @@ public class SingleClassObjectReader extends BaseObjectReader {
 	 * @param storeableType
 	 *            The type of class to be stored.
 	 */
-	protected SingleClassObjectReader(StoreReader storeReader, StoreClassRegister storeClassRegister, Class<?> storeableType) {
+	protected SingleClassObjectReader(
+			StoreReader storeReader, StoreClassRegister storeClassRegister, Class<?> storeableType) {
 		super(storeReader, storeClassRegister);
 		
 		this.storeableType = storeableType;
