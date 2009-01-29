@@ -119,6 +119,23 @@
 				<exclude name="eclipse/"/>
 			</zipfileset>
 		</zip>
+		<zip destfile="dist/${project.name}-${project.version}-bin.zip">
+			<zipfileset prefix="${project.name}-${project.version}" dir=".">
+				<exclude name="build/"/>
+				<exclude name="dist/"/>
+				<exclude name="eclipse/"/>
+				<exclude name="src/"/>
+				<exclude name="test/"/>
+				<exclude name="config/"/>
+				<exclude name="ivy/"/>
+				<exclude name="lib/compile/"/>
+				<exclude name="lib/test/"/>
+				<exclude name="repo/"/>
+				<exclude name="build*.xml"/>
+				<exclude name="ivy.xml"/>
+				<exclude name=".*"/>
+			</zipfileset>
+		</zip>
 		<tar destfile="dist/${project.name}-${project.version}.tar.gz" compression="gzip">
 			<tarfileset prefix="${project.name}-${project.version}" dir="." mode="755">
 				<include name="bin/*"/>
@@ -128,6 +145,27 @@
 				<exclude name="build/"/>
 				<exclude name="dist/"/>
 				<exclude name="eclipse/"/>
+			</tarfileset>
+		</tar>
+		<tar destfile="dist/${project.name}-${project.version}-bin.tar.gz" compression="gzip">
+			<tarfileset prefix="${project.name}-${project.version}" dir="." mode="755">
+				<include name="bin/*"/>
+			</tarfileset>
+			<tarfileset prefix="${project.name}-${project.version}" dir=".">
+				<exclude name="bin/*"/>
+				<exclude name="build/"/>
+				<exclude name="dist/"/>
+				<exclude name="eclipse/"/>
+				<exclude name="src/"/>
+				<exclude name="test/"/>
+				<exclude name="config/"/>
+				<exclude name="ivy/"/>
+				<exclude name="lib/compile/"/>
+				<exclude name="lib/test/"/>
+				<exclude name="repo/"/>
+				<exclude name="build*.xml"/>
+				<exclude name="ivy.xml"/>
+				<exclude name=".*"/>
 			</tarfileset>
 		</tar>
 	</target>
