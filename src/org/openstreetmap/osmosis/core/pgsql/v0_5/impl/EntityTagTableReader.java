@@ -66,7 +66,9 @@ public class EntityTagTableReader extends BaseTableReader<DBEntityTag> {
 		
 		this.tableName = tableName;
 		
-		sql = SELECT_SQL_1 + idColumnName + SELECT_SQL_2 + tableName + SELECT_SQL_3 + "INNER JOIN " + constraintTable + " c ON t." + idColumnName + "=c.id" + SELECT_SQL_4 + idColumnName;
+		sql =
+			SELECT_SQL_1 + idColumnName + SELECT_SQL_2 + tableName + SELECT_SQL_3
+			+ "INNER JOIN " + constraintTable + " c ON t." + idColumnName + "=c.id" + SELECT_SQL_4 + idColumnName;
 	}
 	
 	

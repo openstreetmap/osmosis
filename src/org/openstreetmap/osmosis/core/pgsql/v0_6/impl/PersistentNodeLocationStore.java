@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.pgsql.v0_6.impl;
 
 import java.io.BufferedOutputStream;
@@ -71,7 +72,8 @@ public class PersistentNodeLocationStore implements NodeLocationStore {
 				stage = StorageStage.Add;
 				
 			} catch (IOException e) {
-				throw new OsmosisRuntimeException("Unable to create object stream writing to temporary file " + nodeStorageFile + ".", e);
+				throw new OsmosisRuntimeException(
+						"Unable to create object stream writing to temporary file " + nodeStorageFile + ".", e);
 			}
 		}
 	}

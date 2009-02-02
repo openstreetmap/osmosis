@@ -25,9 +25,12 @@ import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
  * @author Brett Henderson
  */
 public class RelationDao implements Releasable {
-	private static final String SQL_SELECT_SINGLE_RELATION = "SELECT id, tstamp, user_name FROM relations WHERE id=?";
-	private static final String SQL_SELECT_SINGLE_RELATION_TAG = "SELECT relation_id AS entity_id, k, v FROM relation_tags WHERE relation_id=?";
-	private static final String SQL_SELECT_SINGLE_RELATION_MEMBER = "SELECT relation_id, member_id, member_role, member_type FROM relation_members WHERE relation_id=?";
+	private static final String SQL_SELECT_SINGLE_RELATION =
+		"SELECT id, tstamp, user_name FROM relations WHERE id=?";
+	private static final String SQL_SELECT_SINGLE_RELATION_TAG =
+		"SELECT relation_id AS entity_id, k, v FROM relation_tags WHERE relation_id=?";
+	private static final String SQL_SELECT_SINGLE_RELATION_MEMBER =
+		"SELECT relation_id, member_id, member_role, member_type FROM relation_members WHERE relation_id=?";
 	
 	private DatabaseContext dbCtx;
 	private PreparedStatement singleRelationStatement;
@@ -221,7 +224,8 @@ public class RelationDao implements Releasable {
 	 *            they lie outside the box.
 	 * @return An iterator pointing to the start of the result data.
 	 */
-	public ReleasableIterator<Relation> iterateBoundingBox(double left, double right, double top, double bottom, boolean completeRelations) {
+	public ReleasableIterator<Relation> iterateBoundingBox(
+			double left, double right, double top, double bottom, boolean completeRelations) {
 		return null;
 	}
 	

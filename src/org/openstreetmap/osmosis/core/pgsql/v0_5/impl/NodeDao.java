@@ -24,8 +24,10 @@ import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
  * @author Brett Henderson
  */
 public class NodeDao implements Releasable {
-	private static final String SQL_SELECT_SINGLE_NODE = "SELECT id, tstamp, user_id, user_name, geom FROM nodes WHERE id=?";
-	private static final String SQL_SELECT_SINGLE_NODE_TAG = "SELECT node_id AS entity_id, k, v FROM node_tags WHERE node_id=?";
+	private static final String SQL_SELECT_SINGLE_NODE =
+		"SELECT id, tstamp, user_id, user_name, geom FROM nodes WHERE id=?";
+	private static final String SQL_SELECT_SINGLE_NODE_TAG =
+		"SELECT node_id AS entity_id, k, v FROM node_tags WHERE node_id=?";
 	
 	private DatabaseContext dbCtx;
 	private PreparedStatement singleNodeStatement;

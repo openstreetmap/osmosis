@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.pgsql.v0_6.impl;
 
 
@@ -8,7 +9,8 @@ package org.openstreetmap.osmosis.core.pgsql.v0_6.impl;
  */
 public enum NodeLocationStoreType {
 	/**
-	 * An in-memory node location store holds all information in memory.  This typically requires a very large JVM heap space.
+	 * An in-memory node location store holds all information in memory. This
+	 * typically requires a very large JVM heap space.
 	 */
 	InMemory,
 	

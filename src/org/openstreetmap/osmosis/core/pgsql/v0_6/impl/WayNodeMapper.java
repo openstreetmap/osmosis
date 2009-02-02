@@ -127,7 +127,8 @@ public class WayNodeMapper extends EntityFeatureMapper<DbOrderedFeature<WayNode>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int populateEntityParameters(PreparedStatement statement, int initialIndex, DbOrderedFeature<WayNode> entityFeature) {
+	public int populateEntityParameters(
+			PreparedStatement statement, int initialIndex, DbOrderedFeature<WayNode> entityFeature) {
 		try {
 			int prmIndex;
 			WayNode wayNode;

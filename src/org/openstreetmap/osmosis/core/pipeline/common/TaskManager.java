@@ -128,7 +128,8 @@ public abstract class TaskManager {
 				
 				// Ensure that there aren't two pipes with the same index.
 				if (pipes.containsKey(pipeIndex)) {
-					throw new OsmosisRuntimeException("Task " + taskId + " has a duplicate " + pipeType + " pipe with index " + pipeIndex + ".");
+					throw new OsmosisRuntimeException(
+							"Task " + taskId + " has a duplicate " + pipeType + " pipe with index " + pipeIndex + ".");
 				}
 				
 				// The pipe is valid, so add it to the pipe map keyed by its index.

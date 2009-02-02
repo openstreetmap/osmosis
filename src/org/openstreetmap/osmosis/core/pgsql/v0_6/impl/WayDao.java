@@ -32,7 +32,8 @@ public class WayDao extends EntityDao<Way, WayBuilder> {
 	private static final String SQL_UPDATE_WAY_LINESTRING =
 		"UPDATE ways w SET linestring = (" +
 		" SELECT MakeLine(c.geom) AS way_line FROM (" +
-		" SELECT n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id" +
+		" SELECT n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id" +
+		" WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id" +
 		" ) c" +
 		" )" +
 		" WHERE w.id  = ?";

@@ -53,7 +53,8 @@ public class EntityFeatureTableReader<Tef extends Storeable, Tdb extends DbFeatu
 	 *            The table containing a column named id defining the list of
 	 *            entities to be returned.
 	 */
-	public EntityFeatureTableReader(DatabaseContext dbCtx, EntityFeatureMapper<Tdb> entityFeatureBuilder, String constraintTable) {
+	public EntityFeatureTableReader(
+			DatabaseContext dbCtx, EntityFeatureMapper<Tdb> entityFeatureBuilder, String constraintTable) {
 		super(dbCtx);
 		
 		this.entityFeatureBuilder = entityFeatureBuilder;

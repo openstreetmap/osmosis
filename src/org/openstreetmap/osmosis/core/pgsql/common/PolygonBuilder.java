@@ -20,7 +20,7 @@ public class PolygonBuilder {
 	 *            The points to build a polygon from.
 	 * @return The Polygon object.
 	 */
-	public Polygon createPolygon(Point points[]) {
+	public Polygon createPolygon(Point[] points) {
 		Polygon result;
 		
 		result = new Polygon(new LinearRing[] {new LinearRing(points)});

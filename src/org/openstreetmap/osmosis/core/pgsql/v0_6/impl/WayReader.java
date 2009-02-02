@@ -53,7 +53,8 @@ public class WayReader extends EntityReader<Way, WayBuilder> {
 		super(dbCtx, new WayMapper(), constraintTable);
 		
 		wayNodeReader = new PeekableIterator<DbOrderedFeature<WayNode>>(
-			new EntityFeatureTableReader<WayNode, DbOrderedFeature<WayNode>>(dbCtx, new WayNodeMapper(), constraintTable)
+			new EntityFeatureTableReader<WayNode, DbOrderedFeature<WayNode>>(
+					dbCtx, new WayNodeMapper(), constraintTable)
 		);
 	}
 	

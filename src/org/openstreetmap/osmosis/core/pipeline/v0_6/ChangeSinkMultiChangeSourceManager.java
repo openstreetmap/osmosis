@@ -32,7 +32,8 @@ public class ChangeSinkMultiChangeSourceManager extends PassiveTaskManager {
 	 *            pipes are a logical concept for identifying how the tasks are
 	 *            connected together.
 	 */
-	public ChangeSinkMultiChangeSourceManager(String taskId, ChangeSinkMultiChangeSource task, Map<String, String> pipeArgs) {
+	public ChangeSinkMultiChangeSourceManager(
+			String taskId, ChangeSinkMultiChangeSource task, Map<String, String> pipeArgs) {
 		super(taskId, pipeArgs);
 		
 		this.task = task;

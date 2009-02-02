@@ -108,10 +108,13 @@ public class NodeMapper extends EntityMapper<Node, NodeBuilder> {
 		
 		try {
 			// Set the node level parameters.
-			statement.setObject(prmIndex++, new PGgeometry(pointBuilder.createPoint(node.getLatitude(), node.getLongitude())));
+			statement.setObject(
+					prmIndex++,
+					new PGgeometry(pointBuilder.createPoint(node.getLatitude(), node.getLongitude())));
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for node " + node.getId() + ".", e);
+			throw new OsmosisRuntimeException(
+					"Unable to set a prepared statement parameter for node " + node.getId() + ".", e);
 		}
 		
 		return prmIndex;

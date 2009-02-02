@@ -32,7 +32,8 @@ public class MultiSinkRunnableChangeSourceManager extends ActiveTaskManager {
 	 *            pipes are a logical concept for identifying how the tasks are
 	 *            connected together.
 	 */
-	public MultiSinkRunnableChangeSourceManager(String taskId, MultiSinkRunnableChangeSource task, Map<String, String> pipeArgs) {
+	public MultiSinkRunnableChangeSourceManager(
+			String taskId, MultiSinkRunnableChangeSource task, Map<String, String> pipeArgs) {
 		super(taskId, pipeArgs);
 		
 		this.task = task;

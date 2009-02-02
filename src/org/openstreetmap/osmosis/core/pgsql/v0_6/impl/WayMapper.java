@@ -138,7 +138,8 @@ public class WayMapper extends EntityMapper<Way, WayBuilder> {
 	 *            The geometries to store against the way.
 	 * @return The current parameter offset.
 	 */
-	public int populateEntityParameters(PreparedStatement statement, int initialIndex, Way way, List<Geometry> geometries) {
+	public int populateEntityParameters(
+			PreparedStatement statement, int initialIndex, Way way, List<Geometry> geometries) {
 		int prmIndex;
 		
 		prmIndex = populateEntityParameters(statement, initialIndex, way);

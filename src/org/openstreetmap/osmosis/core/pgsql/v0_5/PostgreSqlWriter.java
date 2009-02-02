@@ -47,7 +47,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private static final Logger log = Logger.getLogger(PostgreSqlWriter.class.getName());
 	
 	
-	private static final String PRE_LOAD_SQL[] = {
+	private static final String[] PRE_LOAD_SQL = {
 		"ALTER TABLE nodes DROP CONSTRAINT pk_nodes",
 		"ALTER TABLE ways DROP CONSTRAINT pk_ways",
 		"ALTER TABLE way_nodes DROP CONSTRAINT pk_way_nodes",
@@ -60,7 +60,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"DROP INDEX idx_way_nodes_node_id"
 	};
 	
-	private static final String POST_LOAD_SQL[] = {
+	private static final String[] POST_LOAD_SQL = {
 		"ALTER TABLE ONLY nodes ADD CONSTRAINT pk_nodes PRIMARY KEY (id)",
 		"ALTER TABLE ONLY ways ADD CONSTRAINT pk_ways PRIMARY KEY (id)",
 		"ALTER TABLE ONLY way_nodes ADD CONSTRAINT pk_way_nodes PRIMARY KEY (way_id, sequence_id)",
@@ -69,7 +69,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"CREATE INDEX idx_nodes_geom ON nodes USING gist (geom)",
 		"CREATE INDEX idx_way_tags_way_id ON way_tags USING btree (way_id)",
 		"CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id)",
-		"UPDATE ways SET bbox = (SELECT Envelope(Collect(geom)) FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id WHERE way_nodes.way_id = ways.id)",
+		"UPDATE ways SET bbox = (SELECT Envelope(Collect(geom))" +
+			" FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id WHERE way_nodes.way_id = ways.id)",
 		"CREATE INDEX idx_ways_bbox ON ways USING gist (bbox)",
 		"CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id)"
 	};
@@ -206,9 +207,11 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		INSERT_SQL_BULK_RELATION =
 			buildSqlInsertStatement(INSERT_SQL_RELATION, INSERT_PRM_COUNT_RELATION, INSERT_BULK_ROW_COUNT_RELATION);
 		INSERT_SQL_BULK_RELATION_TAG =
-			buildSqlInsertStatement(INSERT_SQL_RELATION_TAG, INSERT_PRM_COUNT_RELATION_TAG, INSERT_BULK_ROW_COUNT_RELATION_TAG);
+			buildSqlInsertStatement(INSERT_SQL_RELATION_TAG, INSERT_PRM_COUNT_RELATION_TAG,
+					INSERT_BULK_ROW_COUNT_RELATION_TAG);
 		INSERT_SQL_BULK_RELATION_MEMBER =
-			buildSqlInsertStatement(INSERT_SQL_RELATION_MEMBER, INSERT_PRM_COUNT_RELATION_MEMBER, INSERT_BULK_ROW_COUNT_RELATION_MEMBER);
+			buildSqlInsertStatement(INSERT_SQL_RELATION_MEMBER, INSERT_PRM_COUNT_RELATION_MEMBER,
+					INSERT_BULK_ROW_COUNT_RELATION_MEMBER);
 	}
 	
 	
@@ -347,7 +350,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		
 		// We can't write an entity with a null timestamp.
 		if (entity.getTimestamp() == null) {
-			throw new OsmosisRuntimeException("Entity(" + entity.getType() + ") " + entity.getId() + " does not have a timestamp set.");
+			throw new OsmosisRuntimeException(
+					"Entity(" + entity.getType() + ") " + entity.getId() + " does not have a timestamp set.");
 		}
 		
 		try {
@@ -418,10 +422,13 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		
 		try {
 			// Set the node level parameters.
-			statement.setObject(prmIndex++, new PGgeometry(pointBuilder.createPoint(node.getLatitude(), node.getLongitude())));
+			statement.setObject(
+					prmIndex++,
+					new PGgeometry(pointBuilder.createPoint(node.getLatitude(), node.getLongitude())));
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for node " + node.getId() + ".", e);
+			throw new OsmosisRuntimeException(
+					"Unable to set a prepared statement parameter for node " + node.getId() + ".", e);
 		}
 		
 		return prmIndex;
@@ -451,7 +458,9 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			statement.setInt(prmIndex++, dbWayNode.getSequenceId());
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for way node with wayId=" + dbWayNode.getWayId() + " and nodeId=" + dbWayNode.getWayNode().getNodeId() + ".", e);
+			throw new OsmosisRuntimeException(
+					"Unable to set a prepared statement parameter for way node with wayId="
+					+ dbWayNode.getWayId() + " and nodeId=" + dbWayNode.getWayNode().getNodeId() + ".", e);
 		}
 		
 		return prmIndex;
@@ -469,7 +478,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 *            The database relation member containing the data to be inserted.
 	 * @return The current parameter offset.
 	 */
-	private int populateRelationMemberParameters(PreparedStatement statement, int initialIndex, DBRelationMember dbRelationMember) {
+	private int populateRelationMemberParameters(
+			PreparedStatement statement, int initialIndex, DBRelationMember dbRelationMember) {
 		int prmIndex;
 		
 		prmIndex = initialIndex;
@@ -478,11 +488,16 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			// statement parameters.
 			statement.setLong(prmIndex++, dbRelationMember.getRelationId());
 			statement.setLong(prmIndex++, dbRelationMember.getRelationMember().getMemberId());
-			statement.setByte(prmIndex++, memberTypeValueMapper.getMemberType(dbRelationMember.getRelationMember().getMemberType()));
+			statement.setByte(
+					prmIndex++,
+					memberTypeValueMapper.getMemberType(dbRelationMember.getRelationMember().getMemberType()));
 			statement.setString(prmIndex++, dbRelationMember.getRelationMember().getMemberRole());
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for relation member with relationId=" + dbRelationMember.getRelationId() + " and memberId=" + dbRelationMember.getRelationMember().getMemberId() + ".", e);
+			throw new OsmosisRuntimeException(
+					"Unable to set a prepared statement parameter for relation member with relationId="
+					+ dbRelationMember.getRelationId() + " and memberId="
+					+ dbRelationMember.getRelationMember().getMemberId() + ".", e);
 		}
 		
 		return prmIndex;
@@ -940,7 +955,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			
 			prmIndex = 1;
 			for (int i = 0; i < INSERT_BULK_ROW_COUNT_RELATION_MEMBER; i++) {
-				prmIndex = populateRelationMemberParameters(bulkRelationMemberStatement, prmIndex, relationMemberBuffer.remove(0));
+				prmIndex = populateRelationMemberParameters(
+						bulkRelationMemberStatement, prmIndex, relationMemberBuffer.remove(0));
 			}
 			
 			try {

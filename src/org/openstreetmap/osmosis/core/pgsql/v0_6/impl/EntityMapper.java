@@ -122,7 +122,7 @@ public abstract class EntityMapper<Te extends Entity,  Tb extends EntityBuilder<
 	 * @return The SQL string.
 	 */
 	public String getSqlInsert(int rowCount) {
-		String typeSpecificFieldNames[];
+		String[] typeSpecificFieldNames;
 		StringBuilder resultSql;
 		
 		typeSpecificFieldNames = getTypeSpecificFieldNames();
@@ -161,7 +161,8 @@ public abstract class EntityMapper<Te extends Entity,  Tb extends EntityBuilder<
 		StringBuilder resultSql;
 		
 		resultSql = new StringBuilder();
-		resultSql.append("UPDATE ").append(getEntityName()).append("s SET id = ?, version = ?, user_id = ?, tstamp = ?");
+		resultSql.append("UPDATE ").append(getEntityName())
+				.append("s SET id = ?, version = ?, user_id = ?, tstamp = ?");
 		for (String fieldName : Arrays.asList(getTypeSpecificFieldNames())) {
 			resultSql.append(", ").append(fieldName).append(" = ?");
 		}
@@ -253,7 +254,8 @@ public abstract class EntityMapper<Te extends Entity,  Tb extends EntityBuilder<
 		
 		// We can't write an entity with a null timestamp.
 		if (entity.getTimestamp() == null) {
-			throw new OsmosisRuntimeException("Entity(" + entity.getType() + ") " + entity.getId() + " does not have a timestamp set.");
+			throw new OsmosisRuntimeException(
+					"Entity(" + entity.getType() + ") " + entity.getId() + " does not have a timestamp set.");
 		}
 		
 		try {

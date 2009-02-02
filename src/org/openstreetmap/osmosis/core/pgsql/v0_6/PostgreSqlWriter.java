@@ -56,7 +56,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private static final Logger log = Logger.getLogger(PostgreSqlWriter.class.getName());
 	
 	
-	private static final String PRE_LOAD_SQL[] = {
+	private static final String[] PRE_LOAD_SQL = {
 		"ALTER TABLE users DROP CONSTRAINT pk_users",
 		"ALTER TABLE nodes DROP CONSTRAINT pk_nodes",
 		"ALTER TABLE ways DROP CONSTRAINT pk_ways",
@@ -68,14 +68,14 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"DROP INDEX idx_relation_tags_relation_id",
 		"DROP INDEX idx_way_nodes_node_id"
 	};
-	private static final String PRE_LOAD_SQL_WAY_BBOX[] = {
+	private static final String[] PRE_LOAD_SQL_WAY_BBOX = {
 		"DROP INDEX idx_ways_bbox"
 	};
-	private static final String PRE_LOAD_SQL_WAY_LINESTRING[] = {
+	private static final String[] PRE_LOAD_SQL_WAY_LINESTRING = {
 		"DROP INDEX idx_ways_linestring"
 	};
 	
-	private static final String POST_LOAD_SQL[] = {
+	private static final String[] POST_LOAD_SQL = {
 		"ALTER TABLE ONLY users ADD CONSTRAINT pk_users PRIMARY KEY (id)",
 		"ALTER TABLE ONLY nodes ADD CONSTRAINT pk_nodes PRIMARY KEY (id)",
 		"ALTER TABLE ONLY ways ADD CONSTRAINT pk_ways PRIMARY KEY (id)",
@@ -87,20 +87,22 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id)",
 		"CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id)"
 	};
-	private static final String POST_LOAD_SQL_WAY_BBOX[] = {
+	private static final String[] POST_LOAD_SQL_WAY_BBOX = {
 		"CREATE INDEX idx_ways_bbox ON ways USING gist (bbox)"
 	};
-	private static final String POST_LOAD_SQL_WAY_LINESTRING[] = {
+	private static final String[] POST_LOAD_SQL_WAY_LINESTRING = {
 		"CREATE INDEX idx_ways_linestring ON ways USING gist (linestring)"
 	};
 	private static final String POST_LOAD_SQL_POPULATE_WAY_BBOX =
 		"UPDATE ways SET bbox = (" +
-		"SELECT Envelope(Collect(geom)) FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id WHERE way_nodes.way_id = ways.id" +
+		"SELECT Envelope(Collect(geom)) FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id" +
+		" WHERE way_nodes.way_id = ways.id" +
 		")";
 	private static final String POST_LOAD_SQL_POPULATE_WAY_LINESTRING =
 		"UPDATE ways w SET linestring = (" +
 		"SELECT MakeLine(c.geom) AS way_line FROM (" +
-		"SELECT n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id" +
+		"SELECT n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id" +
+		" WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id" +
 		") c" +
 		")";
 	
@@ -187,7 +189,9 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 * @param storeType
 	 *            The node location storage type used by the geometry builders.
 	 */
-	public PostgreSqlWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean enableBboxBuilder, boolean enableLinestringBuilder, NodeLocationStoreType storeType) {
+	public PostgreSqlWriter(
+			DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
+			boolean enableBboxBuilder, boolean enableLinestringBuilder, NodeLocationStoreType storeType) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		
 		this.enableBboxBuilder = enableBboxBuilder;
@@ -237,22 +241,38 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		if (!initialized) {
 			schemaVersionValidator.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
 			
-			bulkNodeStatement = statementContainer.add(dbCtx.prepareStatement(nodeBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_NODE)));
-			singleNodeStatement = statementContainer.add(dbCtx.prepareStatement(nodeBuilder.getSqlInsert(1)));
-			bulkNodeTagStatement = statementContainer.add(dbCtx.prepareStatement(nodeTagBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_NODE_TAG)));
-			singleNodeTagStatement = statementContainer.add(dbCtx.prepareStatement(nodeTagBuilder.getSqlInsert(1)));
-			bulkWayStatement = statementContainer.add(dbCtx.prepareStatement(wayBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_WAY)));
-			singleWayStatement = statementContainer.add(dbCtx.prepareStatement(wayBuilder.getSqlInsert(1)));
-			bulkWayTagStatement = statementContainer.add(dbCtx.prepareStatement(wayTagBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_WAY_TAG)));
-			singleWayTagStatement = statementContainer.add(dbCtx.prepareStatement(wayTagBuilder.getSqlInsert(1)));
-			bulkWayNodeStatement = statementContainer.add(dbCtx.prepareStatement(wayNodeBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_WAY_NODE)));
-			singleWayNodeStatement = statementContainer.add(dbCtx.prepareStatement(wayNodeBuilder.getSqlInsert(1)));
-			bulkRelationStatement = statementContainer.add(dbCtx.prepareStatement(relationBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_RELATION)));
-			singleRelationStatement = statementContainer.add(dbCtx.prepareStatement(relationBuilder.getSqlInsert(1)));
-			bulkRelationTagStatement = statementContainer.add(dbCtx.prepareStatement(relationTagBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_RELATION_TAG)));
-			singleRelationTagStatement = statementContainer.add(dbCtx.prepareStatement(relationTagBuilder.getSqlInsert(1)));
-			bulkRelationMemberStatement = statementContainer.add(dbCtx.prepareStatement(relationMemberBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_RELATION_MEMBER)));
-			singleRelationMemberStatement = statementContainer.add(dbCtx.prepareStatement(relationMemberBuilder.getSqlInsert(1)));
+			bulkNodeStatement = statementContainer.add(
+					dbCtx.prepareStatement(nodeBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_NODE)));
+			singleNodeStatement = statementContainer.add(
+					dbCtx.prepareStatement(nodeBuilder.getSqlInsert(1)));
+			bulkNodeTagStatement = statementContainer.add(
+					dbCtx.prepareStatement(nodeTagBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_NODE_TAG)));
+			singleNodeTagStatement = statementContainer.add(
+					dbCtx.prepareStatement(nodeTagBuilder.getSqlInsert(1)));
+			bulkWayStatement = statementContainer.add(
+					dbCtx.prepareStatement(wayBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_WAY)));
+			singleWayStatement = statementContainer.add(
+					dbCtx.prepareStatement(wayBuilder.getSqlInsert(1)));
+			bulkWayTagStatement = statementContainer.add(
+					dbCtx.prepareStatement(wayTagBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_WAY_TAG)));
+			singleWayTagStatement = statementContainer.add(
+					dbCtx.prepareStatement(wayTagBuilder.getSqlInsert(1)));
+			bulkWayNodeStatement = statementContainer.add(
+					dbCtx.prepareStatement(wayNodeBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_WAY_NODE)));
+			singleWayNodeStatement = statementContainer.add(
+					dbCtx.prepareStatement(wayNodeBuilder.getSqlInsert(1)));
+			bulkRelationStatement = statementContainer.add(
+					dbCtx.prepareStatement(relationBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_RELATION)));
+			singleRelationStatement = statementContainer.add(
+					dbCtx.prepareStatement(relationBuilder.getSqlInsert(1)));
+			bulkRelationTagStatement = statementContainer.add(
+					dbCtx.prepareStatement(relationTagBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_RELATION_TAG)));
+			singleRelationTagStatement = statementContainer.add(
+					dbCtx.prepareStatement(relationTagBuilder.getSqlInsert(1)));
+			bulkRelationMemberStatement = statementContainer.add(
+					dbCtx.prepareStatement(relationMemberBuilder.getSqlInsert(INSERT_BULK_ROW_COUNT_RELATION_MEMBER)));
+			singleRelationMemberStatement = statementContainer.add(
+					dbCtx.prepareStatement(relationMemberBuilder.getSqlInsert(1)));
 			
 			// Drop all constraints and indexes.
 			log.fine("Running pre-load SQL statements.");
@@ -411,7 +431,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			
 			prmIndex = 1;
 			for (int i = 0; i < INSERT_BULK_ROW_COUNT_NODE_TAG; i++) {
-				prmIndex = nodeTagBuilder.populateEntityParameters(bulkNodeTagStatement, prmIndex, nodeTagBuffer.remove(0));
+				prmIndex = nodeTagBuilder.populateEntityParameters(
+						bulkNodeTagStatement, prmIndex, nodeTagBuffer.remove(0));
 			}
 			
 			try {
@@ -566,7 +587,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			
 			prmIndex = 1;
 			for (int i = 0; i < INSERT_BULK_ROW_COUNT_WAY_TAG; i++) {
-				prmIndex = wayTagBuilder.populateEntityParameters(bulkWayTagStatement, prmIndex, wayTagBuffer.remove(0));
+				prmIndex = wayTagBuilder.populateEntityParameters(
+						bulkWayTagStatement, prmIndex, wayTagBuffer.remove(0));
 			}
 			
 			try {
@@ -606,7 +628,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			
 			prmIndex = 1;
 			for (int i = 0; i < INSERT_BULK_ROW_COUNT_WAY_NODE; i++) {
-				prmIndex = wayNodeBuilder.populateEntityParameters(bulkWayNodeStatement, prmIndex, wayNodeBuffer.remove(0));
+				prmIndex = wayNodeBuilder.populateEntityParameters(
+						bulkWayNodeStatement, prmIndex, wayNodeBuffer.remove(0));
 			}
 			
 			try {
@@ -722,7 +745,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		
 		sequenceId = 0;
 		for (RelationMember relationMember : relation.getMembers()) {
-			relationMemberBuffer.add(new DbOrderedFeature<RelationMember>(relation.getId(), relationMember, sequenceId++));
+			relationMemberBuffer.add(
+					new DbOrderedFeature<RelationMember>(relation.getId(), relationMember, sequenceId++));
 		}
 		
 		flushRelationMembers(false);
@@ -745,7 +769,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			
 			prmIndex = 1;
 			for (int i = 0; i < INSERT_BULK_ROW_COUNT_RELATION_TAG; i++) {
-				prmIndex = relationTagBuilder.populateEntityParameters(bulkRelationTagStatement, prmIndex, relationTagBuffer.remove(0));
+				prmIndex = relationTagBuilder.populateEntityParameters(
+						bulkRelationTagStatement, prmIndex, relationTagBuffer.remove(0));
 			}
 			
 			try {
@@ -785,7 +810,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			
 			prmIndex = 1;
 			for (int i = 0; i < INSERT_BULK_ROW_COUNT_RELATION_MEMBER; i++) {
-				prmIndex = relationMemberBuilder.populateEntityParameters(bulkRelationMemberStatement, prmIndex, relationMemberBuffer.remove(0));
+				prmIndex = relationMemberBuilder.populateEntityParameters(
+						bulkRelationMemberStatement, prmIndex, relationMemberBuffer.remove(0));
 			}
 			
 			try {
@@ -797,7 +823,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		
 		if (complete) {
 			while (relationMemberBuffer.size() > 0) {
-				relationMemberBuilder.populateEntityParameters(singleRelationMemberStatement, 1, relationMemberBuffer.remove(0));
+				relationMemberBuilder.populateEntityParameters(
+						singleRelationMemberStatement, 1, relationMemberBuffer.remove(0));
 				
 				try {
 					singleRelationMemberStatement.executeUpdate();

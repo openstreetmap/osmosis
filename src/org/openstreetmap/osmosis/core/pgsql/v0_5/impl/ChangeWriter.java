@@ -130,7 +130,8 @@ public class ChangeWriter {
 		
 		// We can't write an entity with a null timestamp.
 		if (entity.getTimestamp() == null) {
-			throw new OsmosisRuntimeException("Entity(" + entity.getType() + ") " + entity.getId() + " does not have a timestamp set.");
+			throw new OsmosisRuntimeException(
+					"Entity(" + entity.getType() + ") " + entity.getId() + " does not have a timestamp set.");
 		}
 		
 		try {
@@ -224,7 +225,8 @@ public class ChangeWriter {
 		if (ChangeAction.Create.equals(action) || ChangeAction.Modify.equals(action)) {
 			prmIndex = populateEntityParameters(insertNodeStatement, node);
 			try {
-				insertNodeStatement.setObject(prmIndex++, new PGgeometry(pointBuilder.createPoint(node.getLatitude(), node.getLongitude())));
+				insertNodeStatement.setObject(
+						prmIndex++, new PGgeometry(pointBuilder.createPoint(node.getLatitude(), node.getLongitude())));
 				insertNodeStatement.executeUpdate();
 			} catch (SQLException e) {
 				throw new OsmosisRuntimeException("Unable to insert node " + node.getId() + ".", e);
@@ -237,7 +239,8 @@ public class ChangeWriter {
 				updateNodeWayPreparedStatement.setLong(prmIndex++, node.getId());
 				updateNodeWayPreparedStatement.executeUpdate();
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to update way bboxes related to node " + node.getId() + ".", e);
+				throw new OsmosisRuntimeException(
+						"Unable to update way bboxes related to node " + node.getId() + ".", e);
 			}
 		}
 	}
@@ -378,7 +381,8 @@ public class ChangeWriter {
 			deleteRelationMemberStatement.setLong(prmIndex++, relation.getId());
 			deleteRelationMemberStatement.executeUpdate();
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to delete relation members for relation " + relation.getId() + ".", e);
+			throw new OsmosisRuntimeException(
+					"Unable to delete relation members for relation " + relation.getId() + ".", e);
 		}
 		prmIndex = 1;
 		try {
@@ -406,10 +410,14 @@ public class ChangeWriter {
 				member = memberList.get(i);
 				try {
 					prmIndex = 1;
-					insertRelationMemberStatement.setLong(prmIndex++, relation.getId());
-					insertRelationMemberStatement.setLong(prmIndex++, member.getMemberId());
-					insertRelationMemberStatement.setByte(prmIndex++, memberTypeValueMapper.getMemberType(member.getMemberType()));
-					insertRelationMemberStatement.setString(prmIndex++, member.getMemberRole());
+					insertRelationMemberStatement.setLong(
+							prmIndex++, relation.getId());
+					insertRelationMemberStatement.setLong(
+							prmIndex++, member.getMemberId());
+					insertRelationMemberStatement.setByte(
+							prmIndex++, memberTypeValueMapper.getMemberType(member.getMemberType()));
+					insertRelationMemberStatement.setString(
+							prmIndex++, member.getMemberRole());
 					
 					insertRelationMemberStatement.executeUpdate();
 					

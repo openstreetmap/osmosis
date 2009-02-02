@@ -144,7 +144,7 @@ public class CopyFileWriter implements Completable {
 	 */
 	private String escapeString(String data) {
 		StringBuilder result;
-		char dataArray[];
+		char[] dataArray;
 		
 		if (data == null) {
 			return "\\N";
@@ -280,7 +280,8 @@ public class CopyFileWriter implements Completable {
 			try {
 				outStream = new FileOutputStream(file);
 				
-				writer = new BufferedWriter(new OutputStreamWriter(new BufferedOutputStream(outStream, 65536), "UTF-8"));
+				writer = new BufferedWriter(
+						new OutputStreamWriter(new BufferedOutputStream(outStream, 65536), "UTF-8"));
 				
 				outStream = null;
 				

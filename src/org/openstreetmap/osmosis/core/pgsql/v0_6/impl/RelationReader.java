@@ -34,7 +34,8 @@ public class RelationReader  extends EntityReader<Relation, RelationBuilder> {
 		super(dbCtx, new RelationMapper());
 		
 		relationMemberReader = new PeekableIterator<DbOrderedFeature<RelationMember>>(
-			new EntityFeatureTableReader<RelationMember, DbOrderedFeature<RelationMember>>(dbCtx, new RelationMemberMapper())
+			new EntityFeatureTableReader<RelationMember, DbOrderedFeature<RelationMember>>(
+					dbCtx, new RelationMemberMapper())
 		);
 	}
 	
@@ -52,7 +53,8 @@ public class RelationReader  extends EntityReader<Relation, RelationBuilder> {
 		super(dbCtx, new RelationMapper(), constraintTable);
 		
 		relationMemberReader = new PeekableIterator<DbOrderedFeature<RelationMember>>(
-			new EntityFeatureTableReader<RelationMember, DbOrderedFeature<RelationMember>>(dbCtx, new RelationMemberMapper(), constraintTable)
+			new EntityFeatureTableReader<RelationMember, DbOrderedFeature<RelationMember>>(
+					dbCtx, new RelationMemberMapper(), constraintTable)
 		);
 	}
 	

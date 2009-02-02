@@ -11,5 +11,5 @@ public interface PostgreSqlVersionConstants {
 	/**
 	 * Defines the schema version number currently supported.
 	 */
-	static final int SCHEMA_VERSION = 2;
+	int SCHEMA_VERSION = 2;
 }

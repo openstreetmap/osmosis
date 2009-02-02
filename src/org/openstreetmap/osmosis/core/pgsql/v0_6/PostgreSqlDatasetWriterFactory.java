@@ -38,8 +38,11 @@ public class PostgreSqlDatasetWriterFactory extends DatabaseTaskManagerFactory {
 		loginCredentials = getDatabaseLoginCredentials(taskConfig);
 		preferences = getDatabasePreferences(taskConfig);
 		enableBboxBuilder = getBooleanArgument(taskConfig, ARG_ENABLE_BBOX_BUILDER, DEFAULT_ENABLE_BBOX_BUILDER);
-		enableLinestringBuilder = getBooleanArgument(taskConfig, ARG_ENABLE_LINESTRING_BUILDER, DEFAULT_ENABLE_LINESTRING_BUILDER);
-		storeType = Enum.valueOf(NodeLocationStoreType.class, getStringArgument(taskConfig, ARG_NODE_LOCATION_STORE_TYPE, DEFAULT_NODE_LOCATION_STORE_TYPE));
+		enableLinestringBuilder = getBooleanArgument(
+				taskConfig, ARG_ENABLE_LINESTRING_BUILDER, DEFAULT_ENABLE_LINESTRING_BUILDER);
+		storeType = Enum.valueOf(
+				NodeLocationStoreType.class,
+				getStringArgument(taskConfig, ARG_NODE_LOCATION_STORE_TYPE, DEFAULT_NODE_LOCATION_STORE_TYPE));
 		
 		return new SinkManager(
 			taskConfig.getId(),

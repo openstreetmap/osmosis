@@ -96,7 +96,8 @@ public class UserManager implements Releasable {
 			return result;
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to check if user with id " + user.getId() + " exists in the database.", e);
+			throw new OsmosisRuntimeException(
+					"Unable to check if user with id " + user.getId() + " exists in the database.", e);
 		} finally {
 			if (resultSet != null) {
 				try {
@@ -117,23 +118,34 @@ public class UserManager implements Releasable {
 	 */
 	private void insertUser(OsmUser user) {
 		int prmIndex;
+		String userName;
+		int dataPublic;
 		
 		if (statementInsert == null) {
 			statementInsert = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_USER));
+		}
+		
+		if (OsmUser.NONE.equals(user)) {
+			userName = "Osmosis Anonymous";
+			dataPublic = 0;
+		} else {
+			userName = user.getName();
+			dataPublic = 1;
 		}
 		
 		try {
 			prmIndex = 1;
 			statementInsert.setInt(prmIndex++, user.getId());
 			statementInsert.setString(prmIndex++, "osmosis_user_" + user.getId() + "@example.com");
-			statementInsert.setString(prmIndex++, OsmUser.NONE.equals(user) ? "Osmosis Anonymous" : user.getName());
-			statementInsert.setInt(prmIndex++, OsmUser.NONE.equals(user) ? 0 : 1);
-			statementInsert.setString(prmIndex++, OsmUser.NONE.equals(user) ? "Osmosis Anonymous" : user.getName());
+			statementInsert.setString(prmIndex++, userName);
+			statementInsert.setInt(prmIndex++, dataPublic);
+			statementInsert.setString(prmIndex++, userName);
 			
 			statementInsert.executeUpdate();
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to insert user with id " + user.getId() + " into the database.", e);
+			throw new OsmosisRuntimeException(
+					"Unable to insert user with id " + user.getId() + " into the database.", e);
 		}
 	}
 	

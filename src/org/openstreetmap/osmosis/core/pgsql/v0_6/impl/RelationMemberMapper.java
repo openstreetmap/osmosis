@@ -140,7 +140,8 @@ public class RelationMemberMapper extends EntityFeatureMapper<DbOrderedFeature<R
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int populateEntityParameters(PreparedStatement statement, int initialIndex, DbOrderedFeature<RelationMember> entityFeature) {
+	public int populateEntityParameters(
+			PreparedStatement statement, int initialIndex, DbOrderedFeature<RelationMember> entityFeature) {
 		try {
 			int prmIndex;
 			RelationMember relationMember;

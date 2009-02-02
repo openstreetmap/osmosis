@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.pgsql.v0_6.impl;
 
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class WayGeometryBuilder implements Releasable {
 	
 	
 	private Geometry createWayBbox(double left, double right, double bottom, double top) {
-		Point points[];
+		Point[] points;
 		LinearRing ring;
 		Polygon bbox;
 		

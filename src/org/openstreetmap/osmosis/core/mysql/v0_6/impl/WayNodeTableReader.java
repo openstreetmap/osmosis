@@ -66,7 +66,8 @@ public class WayNodeTableReader extends BaseTableReader<DbFeatureHistory<DbOrder
 		
 		return new ReadResult<DbFeatureHistory<DbOrderedFeature<WayNode>>>(
 			true,
-			new DbFeatureHistory<DbOrderedFeature<WayNode>>(new DbOrderedFeature<WayNode>(wayId, new WayNode(nodeId), sequenceId), version)
+			new DbFeatureHistory<DbOrderedFeature<WayNode>>(
+					new DbOrderedFeature<WayNode>(wayId, new WayNode(nodeId), sequenceId), version)
 		);
 	}
 }

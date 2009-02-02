@@ -47,7 +47,8 @@ public class WayHistoryReader extends BaseEntityReader<EntityHistory<WayBuilder>
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public WayHistoryReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+	public WayHistoryReader(
+			DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
 		super(loginCredentials, readAllUsers);
 		
 		this.intervalBegin = intervalBegin;

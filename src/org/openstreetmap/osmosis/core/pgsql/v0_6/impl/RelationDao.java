@@ -33,7 +33,8 @@ public class RelationDao extends EntityDao<Relation, RelationBuilder> {
 	public RelationDao(DatabaseContext dbCtx, ActionDao actionDao) {
 		super(dbCtx, new RelationMapper(), actionDao);
 		
-		relationMemberDao = new EntityFeatureDao<RelationMember, DbOrderedFeature<RelationMember>>(dbCtx, new RelationMemberMapper());
+		relationMemberDao = new EntityFeatureDao<RelationMember, DbOrderedFeature<RelationMember>>(
+				dbCtx, new RelationMemberMapper());
 	}
 	
 	

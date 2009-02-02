@@ -75,7 +75,8 @@ public class PipeTasks {
 		defaultTasks.push(task);
 		
 		if (log.isLoggable(Level.FINE)) {
-			log.fine("Task \"" + taskId + "\" produced unnamed pipe stored at level " + defaultTasks.size() + " in the default pipe stack.");
+			log.fine("Task \"" + taskId + "\" produced unnamed pipe stored at level "
+					+ defaultTasks.size() + " in the default pipe stack.");
 		}
 	}
 	
@@ -110,14 +111,16 @@ public class PipeTasks {
 		Task task;
 		
 		if (!namedTasks.containsKey(pipeName)) {
-			throw new OsmosisRuntimeException("No pipe named " + pipeName + " is available as input for task " + taskId + ".");
+			throw new OsmosisRuntimeException(
+					"No pipe named " + pipeName + " is available as input for task " + taskId + ".");
 		}
 		
 		task = namedTasks.remove(pipeName);
 		
 		// Ensure the task is of the correct type.
 		if (!verifyPipeType(requiredTaskType, task)) {
-			throw new OsmosisRuntimeException("Task " + taskId + " does not support data provided by input pipe " + pipeName + ".");
+			throw new OsmosisRuntimeException(
+					"Task " + taskId + " does not support data provided by input pipe " + pipeName + ".");
 		}
 		
 		if (log.isLoggable(Level.FINE)) {
@@ -151,11 +154,14 @@ public class PipeTasks {
 		
 		// Ensure the task is of the correct type.
 		if (!verifyPipeType(requiredTaskType, task)) {
-			throw new OsmosisRuntimeException("Task " + taskId + " does not support data provided by default pipe stored at level " + (defaultTasks.size() + 1) + " in the default pipe stack.");
+			throw new OsmosisRuntimeException(
+					"Task " + taskId + " does not support data provided by default pipe stored at level "
+					+ (defaultTasks.size() + 1) + " in the default pipe stack.");
 		}
 		
 		if (log.isLoggable(Level.FINE)) {
-			log.fine("Task \"" + taskId + "\" consumed unnamed pipe stored at level " + defaultTaskCount + " in the default pipe stack.");
+			log.fine("Task \"" + taskId + "\" consumed unnamed pipe stored at level "
+					+ defaultTaskCount + " in the default pipe stack.");
 		}
 		
 		return task;

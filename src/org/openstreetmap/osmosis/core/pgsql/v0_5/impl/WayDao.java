@@ -24,9 +24,12 @@ import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
  * @author Brett Henderson
  */
 public class WayDao implements Releasable {
-	private static final String SQL_SELECT_SINGLE_WAY = "SELECT id, tstamp, user_name FROM ways WHERE id=?";
-	private static final String SQL_SELECT_SINGLE_WAY_TAG = "SELECT way_id AS entity_id, k, v FROM way_tags WHERE way_id=?";
-	private static final String SQL_SELECT_SINGLE_WAY_NODE = "SELECT way_id, node_id, sequence_id FROM way_nodes WHERE way_id=? ORDER BY sequence_id";
+	private static final String SQL_SELECT_SINGLE_WAY =
+		"SELECT id, tstamp, user_name FROM ways WHERE id=?";
+	private static final String SQL_SELECT_SINGLE_WAY_TAG =
+		"SELECT way_id AS entity_id, k, v FROM way_tags WHERE way_id=?";
+	private static final String SQL_SELECT_SINGLE_WAY_NODE =
+		"SELECT way_id, node_id, sequence_id FROM way_nodes WHERE way_id=? ORDER BY sequence_id";
 	
 	private DatabaseContext dbCtx;
 	private PreparedStatement singleWayStatement;
@@ -213,7 +216,8 @@ public class WayDao implements Releasable {
 	 *            they lie outside the box.
 	 * @return An iterator pointing to the start of the result data.
 	 */
-	public ReleasableIterator<Way> iterateBoundingBox(double left, double right, double top, double bottom, boolean completeWays) {
+	public ReleasableIterator<Way> iterateBoundingBox(
+			double left, double right, double top, double bottom, boolean completeWays) {
 		return null;
 	}
 	

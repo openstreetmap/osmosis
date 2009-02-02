@@ -91,7 +91,8 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			
 			dbCtx = new DatabaseContext(loginCredentials);
 			
-			new SchemaVersionValidator(loginCredentials, preferences).validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
+			new SchemaVersionValidator(loginCredentials, preferences).validateVersion(
+					PostgreSqlVersionConstants.SCHEMA_VERSION);
 			
 			actionDao = new ActionDao(dbCtx);
 			
@@ -162,10 +163,14 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 		
 		sources = new ArrayList<ReleasableIterator<EntityContainer>>();
 		
-		sources.add(new UpcastIterator<EntityContainer, BoundContainer>(new BoundContainerIterator(new IteratorReleasableIterator<Bound>(bounds.iterator()))));
-		sources.add(new UpcastIterator<EntityContainer, NodeContainer>(new NodeContainerIterator(nodeDao.iterate())));
-		sources.add(new UpcastIterator<EntityContainer, WayContainer>(new WayContainerIterator(wayDao.iterate())));
-		sources.add(new UpcastIterator<EntityContainer, RelationContainer>(new RelationContainerIterator(relationDao.iterate())));
+		sources.add(new UpcastIterator<EntityContainer, BoundContainer>(
+				new BoundContainerIterator(new IteratorReleasableIterator<Bound>(bounds.iterator()))));
+		sources.add(new UpcastIterator<EntityContainer, NodeContainer>(
+				new NodeContainerIterator(nodeDao.iterate())));
+		sources.add(new UpcastIterator<EntityContainer, WayContainer>(
+				new WayContainerIterator(wayDao.iterate())));
+		sources.add(new UpcastIterator<EntityContainer, RelationContainer>(
+				new RelationContainerIterator(relationDao.iterate())));
 		
 		return new MultipleSourceIterator<EntityContainer>(sources);
 	}
@@ -208,7 +213,10 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			
 			// Build a polygon representing the bounding box.
 			// Sample box for query testing may be:
-			// GeomFromText('POLYGON((144.93912192855174 -37.82981987499741, 144.93912192855174 -37.79310006709244, 144.98188026000003 -37.79310006709244, 144.98188026000003 -37.82981987499741, 144.93912192855174 -37.82981987499741))', -1)
+			// GeomFromText('POLYGON((144.93912192855174 -37.82981987499741,
+			// 144.93912192855174 -37.79310006709244, 144.98188026000003
+			// -37.79310006709244, 144.98188026000003 -37.82981987499741,
+			// 144.93912192855174 -37.82981987499741))', -1)
 			bboxPoints = new Point[5];
 			bboxPoints[0] = new Point(left, bottom);
 			bboxPoints[1] = new Point(left, top);
@@ -223,7 +231,8 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			
 			// Select all nodes inside the box into the node temp table.
 			log.finer("Selecting all node ids inside bounding box.");
-			preparedStatement = dbCtx.prepareStatement("INSERT INTO box_node_list SELECT id FROM nodes WHERE (geom && ?)");
+			preparedStatement = dbCtx.prepareStatement(
+					"INSERT INTO box_node_list SELECT id FROM nodes WHERE (geom && ?)");
 			prmIndex = 1;
 			preparedStatement.setObject(prmIndex++, new PGgeometry(bboxPolygon));
 			rowCount = preparedStatement.executeUpdate();
@@ -244,7 +253,8 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 				preparedStatement.setObject(prmIndex++, new PGgeometry(bboxPolygon));
 				
 			} else if (capabilityChecker.isWayBboxSupported()) {
-				log.finer("Selecting all way ids inside bounding box using dynamically built way linestring with way bbox indexing.");
+				log.finer("Selecting all way ids inside bounding box using dynamically built" +
+						" way linestring with way bbox indexing.");
 				// The inner query selects the way id and node coordinates for
 				// all ways constrained by the way bounding box which is
 				// indexed.
@@ -257,7 +267,8 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 					"INSERT INTO box_way_list " +
 					"SELECT way_id FROM (" +
 					"SELECT c.way_id AS way_id, MakeLine(c.geom) AS way_line FROM (" +
-					"SELECT w.id AS way_id, n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id INNER JOIN ways w ON wn.way_id = w.id WHERE (w.bbox && ?) ORDER BY wn.way_id, wn.sequence_id" +
+					"SELECT w.id AS way_id, n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id" +
+					" INNER JOIN ways w ON wn.way_id = w.id WHERE (w.bbox && ?) ORDER BY wn.way_id, wn.sequence_id" +
 					") c " +
 					"GROUP BY c.way_id" +
 					") w " +
@@ -273,7 +284,8 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 				// the selected nodes.
 				preparedStatement = dbCtx.prepareStatement(
 					"INSERT INTO box_way_list " +
-					"SELECT wn.way_id FROM way_nodes wn INNER JOIN box_node_list n ON wn.node_id = n.id GROUP BY wn.way_id"
+					"SELECT wn.way_id FROM way_nodes wn INNER JOIN box_node_list n ON wn.node_id = n.id" +
+					" GROUP BY wn.way_id"
 				);
 			}
 			rowCount = preparedStatement.executeUpdate();
@@ -285,9 +297,11 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			log.finer("Selecting all relation ids containing selected nodes or ways.");
 			preparedStatement = dbCtx.prepareStatement(
 				"INSERT INTO box_relation_list (" +
-				"SELECT rm.relation_id AS relation_id FROM relation_members rm INNER JOIN box_node_list n ON rm.member_id = n.id WHERE rm.member_type = ? " +
+				"SELECT rm.relation_id AS relation_id FROM relation_members rm" +
+				" INNER JOIN box_node_list n ON rm.member_id = n.id WHERE rm.member_type = ? " +
 				"UNION " +
-				"SELECT rm.relation_id AS relation_id FROM relation_members rm INNER JOIN box_way_list w ON rm.member_id = w.id WHERE rm.member_type = ?" +
+				"SELECT rm.relation_id AS relation_id FROM relation_members rm" +
+				" INNER JOIN box_way_list w ON rm.member_id = w.id WHERE rm.member_type = ?" +
 				")"
 			);
 			prmIndex = 1;
@@ -304,7 +318,8 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 				log.finer("Selecting parent relations of selected relations.");
 				preparedStatement = dbCtx.prepareStatement(
 					"INSERT INTO box_relation_list " +
-					"SELECT rm.relation_id AS relation_id FROM relation_members rm INNER JOIN box_relation_list r ON rm.member_id = r.id WHERE rm.member_type = ? " +
+					"SELECT rm.relation_id AS relation_id FROM relation_members rm" +
+					" INNER JOIN box_relation_list r ON rm.member_id = r.id WHERE rm.member_type = ? " +
 					"EXCEPT " +
 					"SELECT id AS relation_id FROM box_relation_list"
 				);
@@ -335,10 +350,18 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			// Create iterators for the selected records for each of the entity types.
 			log.finer("Iterating over results.");
 			resultSets = new ArrayList<ReleasableIterator<EntityContainer>>();
-			resultSets.add(new UpcastIterator<EntityContainer, BoundContainer>(new BoundContainerIterator(new IteratorReleasableIterator<Bound>(bounds.iterator()))));
-			resultSets.add(new UpcastIterator<EntityContainer, NodeContainer>(new NodeContainerIterator(new NodeReader(dbCtx, "box_node_list"))));
-			resultSets.add(new UpcastIterator<EntityContainer, WayContainer>(new WayContainerIterator(new WayReader(dbCtx, "box_way_list"))));
-			resultSets.add(new UpcastIterator<EntityContainer, RelationContainer>(new RelationContainerIterator(new RelationReader(dbCtx, "box_relation_list"))));
+			resultSets.add(
+					new UpcastIterator<EntityContainer, BoundContainer>(
+							new BoundContainerIterator(new IteratorReleasableIterator<Bound>(bounds.iterator()))));
+			resultSets.add(
+					new UpcastIterator<EntityContainer, NodeContainer>(
+							new NodeContainerIterator(new NodeReader(dbCtx, "box_node_list"))));
+			resultSets.add(
+					new UpcastIterator<EntityContainer, WayContainer>(
+							new WayContainerIterator(new WayReader(dbCtx, "box_way_list"))));
+			resultSets.add(
+					new UpcastIterator<EntityContainer, RelationContainer>(
+							new RelationContainerIterator(new RelationReader(dbCtx, "box_relation_list"))));
 			
 			// Merge all readers into a single result iterator and return.			
 			return new MultipleSourceIterator<EntityContainer>(resultSets);

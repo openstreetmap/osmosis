@@ -22,7 +22,7 @@ import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
  */
 public class DatabaseContext {
 	private static final Logger log = Logger.getLogger(DatabaseContext.class.getName());
-	private static boolean driverLoaded;
+	private static volatile boolean driverLoaded;
 	
 	private DatabaseLoginCredentials loginCredentials;
 	private Connection connection;

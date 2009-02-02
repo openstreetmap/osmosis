@@ -82,7 +82,9 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 	 * @param storeType
 	 *            The node location storage type used by the geometry builders.
 	 */
-	public PostgreSqlDatasetDumpWriter(File filePrefix, boolean enableBboxBuilder, boolean enableLinestringBuilder, NodeLocationStoreType storeType) {
+	public PostgreSqlDatasetDumpWriter(
+			File filePrefix, boolean enableBboxBuilder,
+			boolean enableLinestringBuilder, NodeLocationStoreType storeType) {
 		this.enableBboxBuilder = enableBboxBuilder;
 		this.enableLinestringBuilder = enableLinestringBuilder;
 		

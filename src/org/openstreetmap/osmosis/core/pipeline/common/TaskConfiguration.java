@@ -27,7 +27,8 @@ public class TaskConfiguration {
 	 * @param configArgs The configuration arguments for the task.
 	 * @param defaultArg The default argument for the task.
 	 */
-	public TaskConfiguration(String id, String type, Map<String, String> pipeArgs, Map<String, String> configArgs, String defaultArg) {
+	public TaskConfiguration(
+			String id, String type, Map<String, String> pipeArgs, Map<String, String> configArgs, String defaultArg) {
 		this.id = id;
 		this.type = type;
 		this.pipeArgs = Collections.unmodifiableMap(pipeArgs);

@@ -38,10 +38,15 @@ public class PostgreSqlDatasetDumpWriterFactory extends TaskManagerFactory {
 		NodeLocationStoreType storeType;
 		
 		// Get the task arguments.
-		filePrefixString = getStringArgument(taskConfig, ARG_FILE_NAME, DEFAULT_FILE_PREFIX);
-		enableBboxBuilder = getBooleanArgument(taskConfig, ARG_ENABLE_BBOX_BUILDER, DEFAULT_ENABLE_BBOX_BUILDER);
-		enableLinestringBuilder = getBooleanArgument(taskConfig, ARG_ENABLE_LINESTRING_BUILDER, DEFAULT_ENABLE_LINESTRING_BUILDER);
-		storeType = Enum.valueOf(NodeLocationStoreType.class, getStringArgument(taskConfig, ARG_NODE_LOCATION_STORE_TYPE, DEFAULT_NODE_LOCATION_STORE_TYPE));
+		filePrefixString = getStringArgument(
+				taskConfig, ARG_FILE_NAME, DEFAULT_FILE_PREFIX);
+		enableBboxBuilder = getBooleanArgument(
+				taskConfig, ARG_ENABLE_BBOX_BUILDER, DEFAULT_ENABLE_BBOX_BUILDER);
+		enableLinestringBuilder = getBooleanArgument(
+				taskConfig, ARG_ENABLE_LINESTRING_BUILDER, DEFAULT_ENABLE_LINESTRING_BUILDER);
+		storeType = Enum.valueOf(
+				NodeLocationStoreType.class,
+				getStringArgument(taskConfig, ARG_NODE_LOCATION_STORE_TYPE, DEFAULT_NODE_LOCATION_STORE_TYPE));
 		
 		// Create a file object representing the directory from the file name provided.
 		filePrefix = new File(filePrefixString);

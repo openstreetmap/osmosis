@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.pgsql.v0_6.impl;
 
 import java.text.DecimalFormat;
@@ -82,7 +83,7 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 	 * @param initialOffset
 	 *            The buffer offset to begin writing at.
 	 */
-	private void writeIntToBuffer(int value, byte buffer[], int initialOffset) {
+	private void writeIntToBuffer(int value, byte[] buffer, int initialOffset) {
 		int offset;
 		
 		offset = initialOffset;
@@ -103,7 +104,7 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 	 *            The buffer offset to begin reading from.
 	 * @return The integer.
 	 */
-	private int readIntFromBuffer(byte buffer[], int initialOffset) {
+	private int readIntFromBuffer(byte[] buffer, int initialOffset) {
 		int offset;
 		
 		offset = initialOffset;
@@ -122,7 +123,7 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 	@Override
 	public void addLocation(long nodeId, NodeLocation nodeLocation) {
 		int bufferIndex;
-		byte buffer[];
+		byte[] buffer;
 		int bufferOffset;
 		
 		bufferIndex = (int)(nodeId / BUFFER_ELEMENT_COUNT);
@@ -140,9 +141,11 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 		bufferOffset = (int) ((nodeId - (bufferIndex * BUFFER_ELEMENT_COUNT)) * NODE_DATA_SIZE);
 		
 		buffer[bufferOffset++] = 1;
-		writeIntToBuffer(FixedPrecisionCoordinateConvertor.convertToFixed(nodeLocation.getLongitude()), buffer, bufferOffset);
+		writeIntToBuffer(
+				FixedPrecisionCoordinateConvertor.convertToFixed(nodeLocation.getLongitude()), buffer, bufferOffset);
 		bufferOffset += 4;
-		writeIntToBuffer(FixedPrecisionCoordinateConvertor.convertToFixed(nodeLocation.getLatitude()), buffer, bufferOffset);
+		writeIntToBuffer(
+				FixedPrecisionCoordinateConvertor.convertToFixed(nodeLocation.getLatitude()), buffer, bufferOffset);
 		bufferOffset += 4;
 	}
 	
@@ -160,7 +163,7 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 		bufferIndex = (int)(nodeId / BUFFER_ELEMENT_COUNT);
 		
 		if (bufferIndex < buffers.size()) {
-			byte buffer[];
+			byte[] buffer;
 			int bufferOffset;
 			byte validFlag;
 			

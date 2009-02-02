@@ -86,7 +86,8 @@ public class EntityReader<Te extends Entity,  Tb extends EntityBuilder<Te>> impl
 		entityTagReader = new PeekableIterator<DbFeature<Tag>>(
 			new PersistentIterator<DbFeature<Tag>>(
 				new SingleClassObjectSerializationFactory(DbFeature.class),
-				new EntityFeatureTableReader<Tag, DbFeature<Tag>>(dbCtx, new TagMapper(entityMapper.getEntityName()), constraintTable),
+				new EntityFeatureTableReader<Tag, DbFeature<Tag>>(
+						dbCtx, new TagMapper(entityMapper.getEntityName()), constraintTable),
 				"enttag",
 				true
 			)
