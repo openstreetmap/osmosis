@@ -1,6 +1,7 @@
 package org.openstreetmap.osmosis.core.migrate.impl;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
@@ -29,19 +30,24 @@ public class EntityMigrater {
 		}
 	}
 	
-	
+    /**
+     * By using a LinkedHashMap as a temporary tag storage, this method ensures that there
+     * are no duplicate keys (which would break processing down the line if you e.g.
+     * insert into MySQL).
+     *
+     * FIXME duplicate keys may warrant a warning message.
+     */
 	private List<Tag> migrateTags(org.openstreetmap.osmosis.core.domain.v0_5.Entity entity) {
 		List<org.openstreetmap.osmosis.core.domain.v0_5.Tag> oldTags;
-		List<Tag> newTags;
+		LinkedHashMap<String, Tag> newTags = new LinkedHashMap<String,Tag>();
 		
 		oldTags = entity.getTagList();
-		newTags = new ArrayList<Tag>(oldTags.size());
 		
 		for (org.openstreetmap.osmosis.core.domain.v0_5.Tag oldTag : oldTags) {
-			newTags.add(new Tag(oldTag.getKey(), oldTag.getValue()));
+			newTags.put(oldTag.getKey(), new Tag(oldTag.getKey(), oldTag.getValue()));
 		}
 		
-		return newTags;
+		return new ArrayList<Tag>(newTags.values());
 	}
 	
 	
