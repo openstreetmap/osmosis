@@ -7,6 +7,9 @@
   <node id="2" version="1" timestamp="2008-01-02T03:04:05Z" uid="20" user="user20" lat="-3" lon="-4">
     <tag k="created_by" v="Me2"/>
   </node>
+  <node id="3" version="1" timestamp="2008-01-02T03:04:05Z" uid="20" user="user20" lat="-3" lon="-4">
+    <tag k="Duplicate_tag" v="value2"/>
+  </node>
   <way id="1" version="1" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10">
     <nd ref="1"/>
     <nd ref="2"/>

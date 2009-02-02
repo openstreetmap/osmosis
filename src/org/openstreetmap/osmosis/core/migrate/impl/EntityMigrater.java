@@ -36,6 +36,9 @@ public class EntityMigrater {
      * insert into MySQL).
      *
      * FIXME duplicate keys may warrant a warning message.
+     * FIXME we use "toLowerCase" to achieve case-insensitivity. MySQL uses whatever collation
+     * has been set to detect whether or not two keys are in conflict. There are possibly cases
+     * where both methods yield different results.
      */
 	private List<Tag> migrateTags(org.openstreetmap.osmosis.core.domain.v0_5.Entity entity) {
 		List<org.openstreetmap.osmosis.core.domain.v0_5.Tag> oldTags;
@@ -44,7 +47,7 @@ public class EntityMigrater {
 		oldTags = entity.getTagList();
 		
 		for (org.openstreetmap.osmosis.core.domain.v0_5.Tag oldTag : oldTags) {
-			newTags.put(oldTag.getKey(), new Tag(oldTag.getKey(), oldTag.getValue()));
+			newTags.put(oldTag.getKey().toLowerCase(), new Tag(oldTag.getKey(), oldTag.getValue()));
 		}
 		
 		return new ArrayList<Tag>(newTags.values());
