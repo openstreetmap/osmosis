@@ -37,7 +37,8 @@ public class PolygonFilter extends AreaFilter {
 	 *            Include all relations referenced by other relations which have members inside
 	 *            the filtered area.
 	 */
-	public PolygonFilter(IdTrackerType idTrackerType, File polygonFile, boolean completeWays, boolean completeRelations) {
+	public PolygonFilter(
+			IdTrackerType idTrackerType, File polygonFile, boolean completeWays, boolean completeRelations) {
 	    	super(idTrackerType, completeWays, completeRelations);
 		this.polygonFile = polygonFile;
 		

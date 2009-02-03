@@ -65,7 +65,9 @@ public class Way extends Entity implements Comparable<Way> {
 	 * @param wayNodes
 	 *            The way nodes to apply to the object
 	 */
-	public Way(long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags, List<WayNode> wayNodes) {
+	public Way(
+			long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags,
+			List<WayNode> wayNodes) {
 		super(id, timestampContainer, user, version, tags);
 		
 		this.wayNodes = Collections.unmodifiableList(new ArrayList<WayNode>(wayNodes));
@@ -236,7 +238,7 @@ public class Way extends Entity implements Comparable<Way> {
      *
      * @return True or false
      */
-    public Boolean isClosed() {
+    public boolean isClosed() {
         return wayNodes.get(0).getNodeId() == wayNodes.get(wayNodes.size()-1).getNodeId();
     }
 

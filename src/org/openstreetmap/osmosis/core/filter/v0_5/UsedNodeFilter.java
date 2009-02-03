@@ -41,9 +41,12 @@ public class UsedNodeFilter implements SinkSource, EntityProcessor {
 	 *            Defines the id tracker implementation to use.
 	 */
 	public UsedNodeFilter(IdTrackerType idTrackerType) {
-		allNodes = new SimpleObjectStore<NodeContainer>(new SingleClassObjectSerializationFactory(NodeContainer.class), "afnd", true);
-		allWays = new SimpleObjectStore<WayContainer>(new SingleClassObjectSerializationFactory(WayContainer.class), "afwy", true);
-		allRelations = new SimpleObjectStore<RelationContainer>(new SingleClassObjectSerializationFactory(RelationContainer.class), "afrl", true);
+		allNodes = new SimpleObjectStore<NodeContainer>(
+				new SingleClassObjectSerializationFactory(NodeContainer.class), "afnd", true);
+		allWays = new SimpleObjectStore<WayContainer>(
+				new SingleClassObjectSerializationFactory(WayContainer.class), "afwy", true);
+		allRelations = new SimpleObjectStore<RelationContainer>(
+				new SingleClassObjectSerializationFactory(RelationContainer.class), "afrl", true);
 
 		requiredNodes = IdTrackerFactory.createInstance(idTrackerType);
 	}
