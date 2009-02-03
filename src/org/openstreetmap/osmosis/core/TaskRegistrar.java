@@ -392,6 +392,10 @@ public class TaskRegistrar {
 		
 		// Register all located plugins.
 		log.fine("Registering the extension plugins.");
+		if (locations.size() == 0) {
+			// There are no plugins available so stop processing here.
+		   return;
+		}
 		registerJpfPlugins(pluginManager, locations);
 		
 		// Initialise all of the plugins that have been registered.
