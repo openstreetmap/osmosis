@@ -76,7 +76,7 @@ public class WayGeometryBuilder implements Releasable {
 	}
 	
 	
-	private Geometry createLinestring(List<Point> points) {
+	protected Geometry createLinestring(List<Point> points) {
 		LineString lineString;
 		
 		lineString = new LineString(points.toArray(new Point[]{}));
