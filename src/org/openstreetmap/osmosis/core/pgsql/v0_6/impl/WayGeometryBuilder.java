@@ -24,7 +24,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  * @author Brett Henderson
  */
 public class WayGeometryBuilder implements Releasable {
-	private NodeLocationStore locationStore;
+	protected NodeLocationStore locationStore;
 	
 	
 	/**
