@@ -55,7 +55,9 @@ public class EntityTagHistoryReader extends BaseTableReader<DbFeatureHistory<DbF
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public EntityTagHistoryReader(DatabaseLoginCredentials loginCredentials, String parentTableName, String tagTableName, Date intervalBegin, Date intervalEnd) {
+	public EntityTagHistoryReader(
+			DatabaseLoginCredentials loginCredentials, String parentTableName,
+			String tagTableName, Date intervalBegin, Date intervalEnd) {
 		super(loginCredentials);
 		
 		this.parentTableName = parentTableName;
@@ -82,7 +84,9 @@ public class EntityTagHistoryReader extends BaseTableReader<DbFeatureHistory<DbF
 			return statement.executeQuery();
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to read entity tag fields from tables " + parentTableName + " and " + tagTableName + ".", e);
+			throw new OsmosisRuntimeException(
+					"Unable to read entity tag fields from tables " + parentTableName
+					+ " and " + tagTableName + ".", e);
 		}
 	}
 	

@@ -45,7 +45,8 @@ public class WayChangeReader {
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public WayChangeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+	public WayChangeReader(
+			DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
 		wayHistoryReader =
 			new PeekableIterator<EntityHistory<Way>>(
 				new PersistentIterator<EntityHistory<Way>>(

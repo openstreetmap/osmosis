@@ -42,7 +42,8 @@ public class RelationChangeReader {
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public RelationChangeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+	public RelationChangeReader(
+			DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
 		relationHistoryReader =
 			new PeekableIterator<EntityHistory<Relation>>(
 				new PersistentIterator<EntityHistory<Relation>>(
@@ -65,7 +66,12 @@ public class RelationChangeReader {
 			new PeekableIterator<EntityHistory<DBEntityTag>>(
 				new PersistentIterator<EntityHistory<DBEntityTag>>(
 					new SingleClassObjectSerializationFactory(EntityHistory.class),
-					new EntityTagHistoryReader(loginCredentials, "relations", "relation_tags", intervalBegin, intervalEnd),
+					new EntityTagHistoryReader(
+							loginCredentials,
+							"relations",
+							"relation_tags",
+							intervalBegin,
+							intervalEnd),
 					"reltag",
 					true
 				)

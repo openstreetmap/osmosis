@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.migrate;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
@@ -11,7 +12,7 @@ import org.openstreetmap.osmosis.core.migrate.impl.EntityContainerMigrater;
  */
 public class MigrateChangeV05ToV06 implements ChangeSink05ChangeSource06 {
 	
-	private org.openstreetmap.osmosis.core.task.v0_6.ChangeSink sink;
+	private org.openstreetmap.osmosis.core.task.v0_6.ChangeSink changeSink;
 	private EntityContainerMigrater migrater;
 	
 	
@@ -28,7 +29,10 @@ public class MigrateChangeV05ToV06 implements ChangeSink05ChangeSource06 {
 	 */
 	@Override
 	public void process(org.openstreetmap.osmosis.core.container.v0_5.ChangeContainer changeContainer) {
-		sink.process(new ChangeContainer(migrater.migrate(changeContainer.getEntityContainer()), changeContainer.getAction()));
+		changeSink.process(
+				new ChangeContainer(
+						migrater.migrate(changeContainer.getEntityContainer()),
+						changeContainer.getAction()));
 	}
 	
 	
@@ -37,7 +41,7 @@ public class MigrateChangeV05ToV06 implements ChangeSink05ChangeSource06 {
 	 */
 	@Override
 	public void complete() {
-		sink.complete();
+		changeSink.complete();
 	}
 	
 	
@@ -46,7 +50,7 @@ public class MigrateChangeV05ToV06 implements ChangeSink05ChangeSource06 {
 	 */
 	@Override
 	public void release() {
-		sink.release();
+		changeSink.release();
 	}
 	
 	
@@ -54,7 +58,7 @@ public class MigrateChangeV05ToV06 implements ChangeSink05ChangeSource06 {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setChangeSink(org.openstreetmap.osmosis.core.task.v0_6.ChangeSink sink) {
-		this.sink = sink;
+	public void setChangeSink(org.openstreetmap.osmosis.core.task.v0_6.ChangeSink changeSink) {
+		this.changeSink = changeSink;
 	}
 }

@@ -31,7 +31,8 @@ public class ChangeSink05ChangeSource06Manager extends PassiveTaskManager {
 	 *            pipes are a logical concept for identifying how the tasks are
 	 *            connected together.
 	 */
-	public ChangeSink05ChangeSource06Manager(String taskId, ChangeSink05ChangeSource06 task, Map<String, String> pipeArgs) {
+	public ChangeSink05ChangeSource06Manager(
+			String taskId, ChangeSink05ChangeSource06 task, Map<String, String> pipeArgs) {
 		super(taskId, pipeArgs);
 		
 		this.task = task;

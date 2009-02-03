@@ -93,8 +93,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	// These SQL statements will be invoked after loading history tables to
 	// populate the current tables.
 	private static final int LOAD_CURRENT_NODE_ROW_COUNT = 1000000;
-	private static final int LOAD_CURRENT_WAY_ROW_COUNT = 100000; // There are many node and tag records per way.
-	private static final int LOAD_CURRENT_RELATION_ROW_COUNT = 100000; // There are many member and tag records per relation.
+	private static final int LOAD_CURRENT_WAY_ROW_COUNT = 100000;
+	private static final int LOAD_CURRENT_RELATION_ROW_COUNT = 100000;
 	private static final String LOAD_CURRENT_NODES =
 		"INSERT INTO current_nodes SELECT * FROM nodes WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_WAYS =
@@ -108,7 +108,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	private static final String LOAD_CURRENT_RELATION_TAGS =
 		"INSERT INTO current_relation_tags SELECT id, k, v FROM relation_tags WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_RELATION_MEMBERS =
-		"INSERT INTO current_relation_members SELECT id, member_type, member_id, member_role FROM relation_members WHERE id >= ? AND id < ?";
+		"INSERT INTO current_relation_members SELECT id, member_type, member_id, member_role FROM relation_members"
+		+ " WHERE id >= ? AND id < ?";
 	
 	// These SQL statements will be invoked to lock and unlock tables.
 	private static final String INVOKE_LOCK_TABLES =
@@ -210,11 +211,13 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		INSERT_SQL_SINGLE_RELATION_TAG =
 			buildSqlInsertStatement(INSERT_SQL_RELATION_TAG, INSERT_PRM_COUNT_RELATION_TAG, 1);
 		INSERT_SQL_BULK_RELATION_TAG =
-			buildSqlInsertStatement(INSERT_SQL_RELATION_TAG, INSERT_PRM_COUNT_RELATION_TAG, INSERT_BULK_ROW_COUNT_RELATION_TAG);
+			buildSqlInsertStatement(
+					INSERT_SQL_RELATION_TAG, INSERT_PRM_COUNT_RELATION_TAG, INSERT_BULK_ROW_COUNT_RELATION_TAG);
 		INSERT_SQL_SINGLE_RELATION_MEMBER =
 			buildSqlInsertStatement(INSERT_SQL_RELATION_MEMBER, INSERT_PRM_COUNT_RELATION_MEMBER, 1);
 		INSERT_SQL_BULK_RELATION_MEMBER =
-			buildSqlInsertStatement(INSERT_SQL_RELATION_MEMBER, INSERT_PRM_COUNT_RELATION_MEMBER, INSERT_BULK_ROW_COUNT_RELATION_MEMBER);
+			buildSqlInsertStatement(INSERT_SQL_RELATION_MEMBER,
+				INSERT_PRM_COUNT_RELATION_MEMBER, INSERT_BULK_ROW_COUNT_RELATION_MEMBER);
 	}
 	
 	
@@ -273,7 +276,9 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 *            If true, the current tables will be populated as well as
 	 *            history tables.
 	 */
-	public MysqlWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean lockTables, boolean populateCurrentTables) {
+	public MysqlWriter(
+			DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean lockTables,
+			boolean populateCurrentTables) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		
 		userIdManager = new UserIdManager(dbCtx);
@@ -519,7 +524,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * @param dbRelationMember
 	 *            The relation member containing the data to be inserted.
 	 */
-	private void populateRelationMemberParameters(PreparedStatement statement, int initialIndex, DBRelationMember dbRelationMember) {
+	private void populateRelationMemberParameters(
+			PreparedStatement statement, int initialIndex, DBRelationMember dbRelationMember) {
 		int prmIndex;
 		RelationMember relationMember;
 		

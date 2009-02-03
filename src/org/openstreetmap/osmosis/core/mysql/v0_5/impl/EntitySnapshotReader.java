@@ -43,7 +43,9 @@ public class EntitySnapshotReader<T extends Entity> implements ReleasableIterato
 	 *            This provides a way of sorting the history records for a
 	 *            single entity, it may be null if no sorting is required.
 	 */
-	public EntitySnapshotReader(PeekableIterator<EntityHistory<T>> entityIterator, Date snapshotInstant, Comparator<EntityHistory<T>> resultOrdering) {
+	public EntitySnapshotReader(
+			PeekableIterator<EntityHistory<T>> entityIterator, Date snapshotInstant,
+			Comparator<EntityHistory<T>> resultOrdering) {
 		this.entityIterator = entityIterator;
 		this.snapshotInstant = snapshotInstant;
 		this.resultOrdering = resultOrdering;

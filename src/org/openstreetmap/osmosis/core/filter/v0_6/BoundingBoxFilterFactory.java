@@ -88,7 +88,8 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 		right = getDoubleArgument(taskConfig, ARG_RIGHT, DEFAULT_RIGHT);
 		top = getDoubleArgument(taskConfig, ARG_TOP, DEFAULT_TOP);
 		bottom = getDoubleArgument(taskConfig, ARG_BOTTOM, DEFAULT_BOTTOM);
-		clipIncompleteEntities = getBooleanArgument(taskConfig, ARG_CLIP_INCOMPLETE_ENTITIES, DEFAULT_CLIP_INCOMPLETE_ENTITIES);
+		clipIncompleteEntities = getBooleanArgument(
+				taskConfig, ARG_CLIP_INCOMPLETE_ENTITIES, DEFAULT_CLIP_INCOMPLETE_ENTITIES);
 		completeWays = getBooleanArgument(taskConfig, ARG_COMPLETE_WAYS, DEFAULT_COMPLETE_WAYS);
 		completeRelations = getBooleanArgument(taskConfig, ARG_COMPLETE_RELATIONS, DEFAULT_COMPLETE_RELATIONS);
 		
@@ -106,7 +107,8 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 		
 		return new SinkSourceManager(
 			taskConfig.getId(),
-			new BoundingBoxFilter(idTrackerType, left, right, top, bottom, clipIncompleteEntities, completeWays, completeRelations),
+			new BoundingBoxFilter(idTrackerType, left, right, top, bottom, clipIncompleteEntities, completeWays,
+					completeRelations),
 			taskConfig.getPipeArgs()
 		);
 	}

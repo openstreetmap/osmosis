@@ -39,7 +39,8 @@ public class NodeChangeReader {
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public NodeChangeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+	public NodeChangeReader(
+			DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
 		this.intervalBegin = intervalBegin;
 		
 		nodeHistoryReader = new PeekableIterator<EntityHistory<Node>>(

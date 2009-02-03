@@ -31,7 +31,8 @@ public class MysqlChangeWriterFactory extends DatabaseTaskManagerFactory {
 		// Get the task arguments.
 		loginCredentials = getDatabaseLoginCredentials(taskConfig);
 		preferences = getDatabasePreferences(taskConfig);
-		populateCurrentTables = getBooleanArgument(taskConfig, ARG_POPULATE_CURRENT_TABLES, DEFAULT_POPULATE_CURRENT_TABLES);
+		populateCurrentTables = getBooleanArgument(
+				taskConfig, ARG_POPULATE_CURRENT_TABLES, DEFAULT_POPULATE_CURRENT_TABLES);
 		
 		return new ChangeSinkManager(
 			taskConfig.getId(),

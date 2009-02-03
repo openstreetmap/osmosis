@@ -105,7 +105,10 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 			}
 			
 			// Load all tags matching this version of the relation.
-			while (relationTagReader.hasNext() && relationTagReader.peekNext().getDbFeature().getEntityId() == relationId && relationTagReader.peekNext().getVersion() == relationVersion) {
+			while (
+					relationTagReader.hasNext()
+					&& relationTagReader.peekNext().getDbFeature().getEntityId() == relationId
+					&& relationTagReader.peekNext().getVersion() == relationVersion) {
 				relation.addTag(relationTagReader.next().getDbFeature().getFeature());
 			}
 			
@@ -132,7 +135,10 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 
 			// Load all nodes matching this version of the way.
 			relationMembers = new ArrayList<DbOrderedFeature<RelationMember>>();
-			while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getDbFeature().getEntityId() == relationId && relationMemberReader.peekNext().getVersion() == relationVersion) {
+			while (
+					relationMemberReader.hasNext()
+					&& relationMemberReader.peekNext().getDbFeature().getEntityId() == relationId
+					&& relationMemberReader.peekNext().getVersion() == relationVersion) {
 				relationMembers.add(relationMemberReader.next().getDbFeature());
 			}
 			// The underlying query sorts node references by way id but not

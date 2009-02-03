@@ -103,7 +103,10 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 			}
 			
 			// Load all tags matching this version of the way.
-			while (wayTagReader.hasNext() && wayTagReader.peekNext().getEntity().getEntityId() == wayId && wayTagReader.peekNext().getVersion() == wayVersion) {
+			while (
+					wayTagReader.hasNext()
+					&& wayTagReader.peekNext().getEntity().getEntityId() == wayId
+					&& wayTagReader.peekNext().getVersion() == wayVersion) {
 				way.addTag(wayTagReader.next().getEntity().getTag());
 			}
 			
@@ -130,7 +133,10 @@ public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 			
 			// Load all nodes matching this version of the way.
 			wayNodes = new ArrayList<DBWayNode>();
-			while (wayNodeReader.hasNext() && wayNodeReader.peekNext().getEntity().getWayId() == wayId && wayNodeReader.peekNext().getVersion() == wayVersion) {
+			while (
+					wayNodeReader.hasNext()
+					&& wayNodeReader.peekNext().getEntity().getWayId() == wayId
+					&& wayNodeReader.peekNext().getVersion() == wayVersion) {
 				wayNodes.add(wayNodeReader.next().getEntity());
 			}
 			// The underlying query sorts node references by way id but not

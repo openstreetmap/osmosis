@@ -21,7 +21,8 @@ import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  */
 public class NodeTableReader extends BaseEntityReader<EntityHistory<NodeBuilder>> {
 	private static final String SELECT_SQL =
-		"SELECT n.id, n.version, n.timestamp, n.visible, u.data_public, u.id AS user_id, u.display_name, n.latitude, n.longitude"
+		"SELECT n.id, n.version, n.timestamp, n.visible, u.data_public,"
+		+ " u.id AS user_id, u.display_name, n.latitude, n.longitude"
 		+ " FROM nodes n"
 		+ " LEFT OUTER JOIN changesets c ON n.changeset_id = c.id"
 		+ " LEFT OUTER JOIN users u ON c.user_id = u.id"

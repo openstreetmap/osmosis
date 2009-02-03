@@ -22,7 +22,8 @@ import org.openstreetmap.osmosis.core.mysql.common.DatabaseContext;
  */
 public class WayHistoryReader extends BaseEntityReader<EntityHistory<Way>> {
 	private static final String SELECT_SQL =
-		"SELECT w.id AS id, w.timestamp AS timestamp, u.data_public, u.id AS user_id, u.display_name, w.version AS version, w.visible AS visible" +
+		"SELECT w.id AS id, w.timestamp AS timestamp, u.data_public, u.id AS user_id, u.display_name,"
+		+ " w.version AS version, w.visible AS visible" +
 		" FROM ways w" +
 		" LEFT OUTER JOIN users u ON w.user_id = u.id" +
 		" WHERE w.timestamp > ? AND w.timestamp <= ?" +
@@ -46,7 +47,8 @@ public class WayHistoryReader extends BaseEntityReader<EntityHistory<Way>> {
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public WayHistoryReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+	public WayHistoryReader(
+			DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
 		super(loginCredentials, readAllUsers);
 		
 		this.intervalBegin = intervalBegin;

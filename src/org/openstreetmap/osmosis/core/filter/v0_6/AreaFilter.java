@@ -64,7 +64,9 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	 *            Include all relations referenced by other relations which have
 	 *            members inside the filtered area.
 	 */
-	public AreaFilter(IdTrackerType idTrackerType, boolean clipIncompleteEntities, boolean completeWays, boolean completeRelations) {
+	public AreaFilter(
+			IdTrackerType idTrackerType, boolean clipIncompleteEntities, boolean completeWays,
+			boolean completeRelations) {
 		this.clipIncompleteEntities = clipIncompleteEntities;
 		this.completeWays = completeWays;
 		this.completeRelations = completeRelations;
@@ -72,13 +74,17 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		availableNodes = IdTrackerFactory.createInstance(idTrackerType);
 		if (completeWays) {
 			requiredNodes = IdTrackerFactory.createInstance(idTrackerType);
-			allNodes = new SimpleObjectStore<NodeContainer>(new SingleClassObjectSerializationFactory(NodeContainer.class), "afnd", true);
-			allWays = new SimpleObjectStore<WayContainer>(new SingleClassObjectSerializationFactory(WayContainer.class), "afwy", true);
+			allNodes = new SimpleObjectStore<NodeContainer>(
+					new SingleClassObjectSerializationFactory(NodeContainer.class), "afnd", true);
+			allWays = new SimpleObjectStore<WayContainer>(
+					new SingleClassObjectSerializationFactory(WayContainer.class), "afwy", true);
 		}
 		availableWays = IdTrackerFactory.createInstance(idTrackerType);
 		availableRelations = IdTrackerFactory.createInstance(idTrackerType);
 		if (this.completeRelations || this.completeWays) {
-			allRelations = new SimpleObjectStore<RelationContainer>(new SingleClassObjectSerializationFactory(RelationContainer.class), "afrl", true);
+			allRelations =
+				new SimpleObjectStore<RelationContainer>(
+						new SingleClassObjectSerializationFactory(RelationContainer.class), "afrl", true);
 		}
 		
 		wayBuilder = new WayBuilder();
@@ -281,7 +287,8 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 						relationBuilder.addMember(member);
 					}
 				} else {
-					throw new OsmosisRuntimeException("Unsupported member type + " + memberType + " for relation " + relation.getId() + ".");
+					throw new OsmosisRuntimeException(
+							"Unsupported member type + " + memberType + " for relation " + relation.getId() + ".");
 				}
 			}
 			

@@ -121,7 +121,9 @@ public class EntityMerger implements MultiSinkRunnableSource {
 			comparator = new EntityByTypeThenIdComparator();
 			
 			// We continue in the comparison loop while both sources still have data.
-			while ((entityContainer0 != null || postbox0.hasNext()) && (entityContainer1 != null || postbox1.hasNext())) {
+			while (
+					(entityContainer0 != null || postbox0.hasNext())
+					&& (entityContainer1 != null || postbox1.hasNext())) {
 				long comparisonResult;
 				
 				// Get the next input data where required.
@@ -150,7 +152,9 @@ public class EntityMerger implements MultiSinkRunnableSource {
 					if (conflictResolutionMethod.equals(ConflictResolutionMethod.Timestamp)) {
 						int timestampComparisonResult;
 						
-						timestampComparisonResult = entityContainer0.getEntity().getTimestamp().compareTo(entityContainer1.getEntity().getTimestamp());
+						timestampComparisonResult =
+							entityContainer0.getEntity().getTimestamp()
+								.compareTo(entityContainer1.getEntity().getTimestamp());
 						
 						if (timestampComparisonResult < 0) {
 							sink.process(entityContainer1);

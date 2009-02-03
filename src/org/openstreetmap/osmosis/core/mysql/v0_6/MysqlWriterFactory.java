@@ -35,7 +35,8 @@ public class MysqlWriterFactory extends DatabaseTaskManagerFactory {
 		loginCredentials = getDatabaseLoginCredentials(taskConfig);
 		preferences = getDatabasePreferences(taskConfig);
 		lockTables = getBooleanArgument(taskConfig, ARG_LOCK_TABLES, DEFAULT_LOCK_TABLES);
-		populateCurrentTables = getBooleanArgument(taskConfig, ARG_POPULATE_CURRENT_TABLES, DEFAULT_POPULATE_CURRENT_TABLES);
+		populateCurrentTables = getBooleanArgument(
+				taskConfig, ARG_POPULATE_CURRENT_TABLES, DEFAULT_POPULATE_CURRENT_TABLES);
 		
 		return new SinkManager(
 			taskConfig.getId(),

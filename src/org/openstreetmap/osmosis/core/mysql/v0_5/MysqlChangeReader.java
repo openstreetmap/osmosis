@@ -45,7 +45,9 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public MysqlChangeReader(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+	public MysqlChangeReader(
+			DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean readAllUsers,
+			Date intervalBegin, Date intervalEnd) {
 		this.loginCredentials = loginCredentials;
 		this.preferences = preferences;
 		this.readAllUsers = readAllUsers;
@@ -100,7 +102,8 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	 * Reads all relations from the database and sends to the sink.
 	 */
 	private void processRelations() {
-		RelationChangeReader reader = new RelationChangeReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd);
+		RelationChangeReader reader =
+			new RelationChangeReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd);
 		
 		try {
 			while (reader.hasNext()) {
@@ -118,7 +121,8 @@ public class MysqlChangeReader implements RunnableChangeSource {
 	 */
 	public void run() {
 		try {
-			new SchemaVersionValidator(loginCredentials, preferences).validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
+			new SchemaVersionValidator(loginCredentials, preferences)
+					.validateVersion(MySqlVersionConstants.SCHEMA_VERSION);
 			
 			processNodes();
 			processWays();

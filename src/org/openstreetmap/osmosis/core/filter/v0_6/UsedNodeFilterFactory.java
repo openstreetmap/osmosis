@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.filter.v0_6;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
@@ -22,7 +23,6 @@ public class UsedNodeFilterFactory extends TaskManagerFactory {
 	
 	/**
 	 * Utility method that returns the IdTrackerType to use for a given taskConfig.
-	 * TODO: Copy-pasted from AreaFilterTaskManagerFactory. Is there a base class for Filters?
 	 * 
 	 * @param taskConfig
 	 *            Contains all information required to instantiate and configure

@@ -50,7 +50,8 @@ public class RelationMemberHistoryReader extends BaseTableReader<EntityHistory<D
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public RelationMemberHistoryReader(DatabaseLoginCredentials loginCredentials, Date intervalBegin, Date intervalEnd) {
+	public RelationMemberHistoryReader(
+			DatabaseLoginCredentials loginCredentials, Date intervalBegin, Date intervalEnd) {
 		super(loginCredentials);
 		
 		memberTypeParser = new MemberTypeParser();

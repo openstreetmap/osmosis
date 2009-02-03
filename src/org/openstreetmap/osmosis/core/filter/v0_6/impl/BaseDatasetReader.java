@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.filter.v0_6.impl;
 
 import java.awt.geom.Rectangle2D;
@@ -145,7 +146,8 @@ public abstract class BaseDatasetReader implements DatasetReader {
 			nodeA = nodes.get(i);
 			nodeB = nodes.get(i + 1);
 			
-			if (boundingBox.intersectsLine(nodeA.getLongitude(), nodeA.getLatitude(), nodeB.getLongitude(), nodeB.getLatitude())) {
+			if (boundingBox.intersectsLine(nodeA.getLongitude(), nodeA.getLatitude(), nodeB.getLongitude(),
+					nodeB.getLatitude())) {
 				return true;
 			}
 		}
@@ -370,7 +372,8 @@ public abstract class BaseDatasetReader implements DatasetReader {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ReleasableIterator<EntityContainer> iterateBoundingBox(double left, double right, double top, double bottom, boolean completeWays) {
+	public ReleasableIterator<EntityContainer> iterateBoundingBox(
+			double left, double right, double top, double bottom, boolean completeWays) {
 		BoundingBoxContext bboxCtx;
 		
 		log.fine("Beginning bounding box iteration.");

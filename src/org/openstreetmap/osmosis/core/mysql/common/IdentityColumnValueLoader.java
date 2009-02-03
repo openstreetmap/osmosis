@@ -1,3 +1,4 @@
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.mysql.common;
 
 import java.sql.PreparedStatement;
@@ -46,7 +47,8 @@ public class IdentityColumnValueLoader implements Releasable {
 		ResultSet lastInsertQuery;
 		
 		if (selectInsertIdStatement == null) {
-			selectInsertIdStatement = statementContainer.add(dbCtx.prepareStatementForStreaming(SQL_SELECT_LAST_INSERT_ID));
+			selectInsertIdStatement =
+				statementContainer.add(dbCtx.prepareStatementForStreaming(SQL_SELECT_LAST_INSERT_ID));
 		}
 		
 		lastInsertQuery = null;

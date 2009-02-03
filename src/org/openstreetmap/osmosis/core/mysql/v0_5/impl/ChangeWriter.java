@@ -28,9 +28,11 @@ import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  */
 public class ChangeWriter {
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO nodes (id, timestamp, latitude, longitude, tile, tags, visible, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		"INSERT INTO nodes (id, timestamp, latitude, longitude, tile, tags, visible, user_id)"
+		+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String INSERT_SQL_NODE_CURRENT =
-		"INSERT INTO current_nodes (id, timestamp, latitude, longitude, tile, tags, visible, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		"INSERT INTO current_nodes (id, timestamp, latitude, longitude, tile, tags, visible, user_id)"
+		+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String DELETE_SQL_NODE_CURRENT =
 		"DELETE FROM current_nodes WHERE id = ?";
 	private static final String INSERT_SQL_WAY =
@@ -201,7 +203,8 @@ public class ChangeWriter {
 			resultSet.close();
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("The version of relation with id=" + relationId + " could not be loaded.", e);
+			throw new OsmosisRuntimeException(
+					"The version of relation with id=" + relationId + " could not be loaded.", e);
 		}
 		
 		return result;
@@ -238,14 +241,22 @@ public class ChangeWriter {
 		// Insert the new node into the history table.
 		try {
 			prmIndex = 1;
-			insertNodeStatement.setLong(prmIndex++, node.getId());
-			insertNodeStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
-			insertNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
-			insertNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
-			insertNodeStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
-			insertNodeStatement.setString(prmIndex++, tagFormatter.format(node.getTagList()));
-			insertNodeStatement.setBoolean(prmIndex++, visible);
-			insertNodeStatement.setLong(prmIndex++, userIdManager.getUserId());
+			insertNodeStatement.setLong(
+					prmIndex++, node.getId());
+			insertNodeStatement.setTimestamp(
+					prmIndex++, new Timestamp(node.getTimestamp().getTime()));
+			insertNodeStatement.setInt(
+					prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
+			insertNodeStatement.setInt(
+					prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
+			insertNodeStatement.setLong(
+					prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
+			insertNodeStatement.setString(
+					prmIndex++, tagFormatter.format(node.getTagList()));
+			insertNodeStatement.setBoolean(
+					prmIndex++, visible);
+			insertNodeStatement.setLong(
+					prmIndex++, userIdManager.getUserId());
 			
 			insertNodeStatement.execute();
 			
@@ -267,14 +278,22 @@ public class ChangeWriter {
 			// Insert the new node into the current table.
 			try {
 				prmIndex = 1;
-				insertNodeCurrentStatement.setLong(prmIndex++, node.getId());
-				insertNodeCurrentStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
-				insertNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
-				insertNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
-				insertNodeCurrentStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
-				insertNodeCurrentStatement.setString(prmIndex++, tagFormatter.format(node.getTagList()));
-				insertNodeCurrentStatement.setBoolean(prmIndex++, visible);
-				insertNodeCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
+				insertNodeCurrentStatement.setLong(
+						prmIndex++, node.getId());
+				insertNodeCurrentStatement.setTimestamp(
+						prmIndex++, new Timestamp(node.getTimestamp().getTime()));
+				insertNodeCurrentStatement.setInt(
+						prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
+				insertNodeCurrentStatement.setInt(
+						prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
+				insertNodeCurrentStatement.setLong(
+						prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
+				insertNodeCurrentStatement.setString(
+						prmIndex++, tagFormatter.format(node.getTagList()));
+				insertNodeCurrentStatement.setBoolean(
+						prmIndex++, visible);
+				insertNodeCurrentStatement.setLong(
+						prmIndex++, userIdManager.getUserId());
 				
 				insertNodeCurrentStatement.execute();
 				
@@ -547,11 +566,16 @@ public class ChangeWriter {
 			
 			try {
 				prmIndex = 1;
-				insertRelationMemberStatement.setLong(prmIndex++, relation.getId());
-				insertRelationMemberStatement.setInt(prmIndex++, version);
-				insertRelationMemberStatement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
-				insertRelationMemberStatement.setLong(prmIndex++, relationMember.getMemberId());
-				insertRelationMemberStatement.setString(prmIndex++, relationMember.getMemberRole());
+				insertRelationMemberStatement.setLong(
+						prmIndex++, relation.getId());
+				insertRelationMemberStatement.setInt(
+						prmIndex++, version);
+				insertRelationMemberStatement.setString(
+						prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
+				insertRelationMemberStatement.setLong(
+						prmIndex++, relationMember.getMemberId());
+				insertRelationMemberStatement.setString(
+						prmIndex++, relationMember.getMemberRole());
 				
 				insertRelationMemberStatement.execute();
 				
@@ -571,7 +595,8 @@ public class ChangeWriter {
 				deleteRelationTagCurrentStatement.execute();
 				
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to delete current relation tags with id=" + relation.getId() + ".", e);
+				throw new OsmosisRuntimeException(
+						"Unable to delete current relation tags with id=" + relation.getId() + ".", e);
 			}
 			// Delete the existing relation members from the current table.
 			try {
@@ -580,7 +605,8 @@ public class ChangeWriter {
 				deleteRelationMemberCurrentStatement.execute();
 				
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to delete current relation members with id=" + relation.getId() + ".", e);
+				throw new OsmosisRuntimeException(
+						"Unable to delete current relation members with id=" + relation.getId() + ".", e);
 			}
 			// Delete the existing relation from the current table.
 			try {
@@ -589,21 +615,27 @@ public class ChangeWriter {
 				deleteRelationCurrentStatement.execute();
 				
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to delete current relation with id=" + relation.getId() + ".", e);
+				throw new OsmosisRuntimeException(
+						"Unable to delete current relation with id=" + relation.getId() + ".", e);
 			}
 			
 			// Insert the new relation into the current table.
 			try {
 				prmIndex = 1;
-				insertRelationCurrentStatement.setLong(prmIndex++, relation.getId());
-				insertRelationCurrentStatement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
-				insertRelationCurrentStatement.setBoolean(prmIndex++, visible);
-				insertRelationCurrentStatement.setLong(prmIndex++, userIdManager.getUserId());
+				insertRelationCurrentStatement.setLong(
+						prmIndex++, relation.getId());
+				insertRelationCurrentStatement.setTimestamp(
+						prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
+				insertRelationCurrentStatement.setBoolean(
+						prmIndex++, visible);
+				insertRelationCurrentStatement.setLong(
+						prmIndex++, userIdManager.getUserId());
 				
 				insertRelationCurrentStatement.execute();
 				
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to insert current relation with id=" + relation.getId() + ".", e);
+				throw new OsmosisRuntimeException(
+						"Unable to insert current relation with id=" + relation.getId() + ".", e);
 			}
 			
 			// Insert the tags of the new relation into the current table.
@@ -631,10 +663,14 @@ public class ChangeWriter {
 				
 				try {
 					prmIndex = 1;
-					insertRelationMemberCurrentStatement.setLong(prmIndex++, relation.getId());
-					insertRelationMemberCurrentStatement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
-					insertRelationMemberCurrentStatement.setLong(prmIndex++, relationMember.getMemberId());
-					insertRelationMemberCurrentStatement.setString(prmIndex++, relationMember.getMemberRole());
+					insertRelationMemberCurrentStatement.setLong(
+							prmIndex++, relation.getId());
+					insertRelationMemberCurrentStatement.setString(
+							prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
+					insertRelationMemberCurrentStatement.setLong(
+							prmIndex++, relationMember.getMemberId());
+					insertRelationMemberCurrentStatement.setString(
+							prmIndex++, relationMember.getMemberRole());
 					
 					insertRelationMemberCurrentStatement.execute();
 					

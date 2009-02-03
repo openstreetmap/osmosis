@@ -54,7 +54,9 @@ public class MysqlReader implements RunnableSource {
 	 *            If this flag is true, all users will be read from the database
 	 *            regardless of their public edits flag.
 	 */
-	public MysqlReader(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, Date snapshotInstant, boolean readAllUsers) {
+	public MysqlReader(
+			DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, Date snapshotInstant,
+			boolean readAllUsers) {
 		this.loginCredentials = loginCredentials;
 		this.preferences = preferences;
 		this.snapshotInstant = snapshotInstant;
@@ -150,7 +152,8 @@ public class MysqlReader implements RunnableSource {
 	 */
 	public void run() {
 		try {
-			new SchemaVersionValidator(loginCredentials, preferences).validateVersion(MySqlVersionConstants.SCHEMA_MIGRATIONS);
+			new SchemaVersionValidator(loginCredentials, preferences)
+					.validateVersion(MySqlVersionConstants.SCHEMA_MIGRATIONS);
 			
 			sink.process(new BoundContainer(new Bound("Osmosis " + OsmosisConstants.VERSION)));
 			processNodes();

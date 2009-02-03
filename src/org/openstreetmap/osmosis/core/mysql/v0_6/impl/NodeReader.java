@@ -91,7 +91,10 @@ public class NodeReader implements ReleasableIterator<EntityHistory<NodeBuilder>
 			}
 			
 			// Load all tags matching this version of the node.
-			while (nodeTagReader.hasNext() && nodeTagReader.peekNext().getDbFeature().getEntityId() == nodeId && nodeTagReader.peekNext().getVersion() == nodeVersion) {
+			while (
+					nodeTagReader.hasNext()
+					&& nodeTagReader.peekNext().getDbFeature().getEntityId() == nodeId
+					&& nodeTagReader.peekNext().getVersion() == nodeVersion) {
 				node.addTag(nodeTagReader.next().getDbFeature().getFeature());
 			}
 			

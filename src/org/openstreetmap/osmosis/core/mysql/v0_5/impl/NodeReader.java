@@ -20,7 +20,8 @@ import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  */
 public class NodeReader extends BaseEntityReader<EntityHistory<Node>> {
 	private static final String SELECT_SQL =
-		"SELECT n.id, n.timestamp, u.data_public, u.id AS user_id, u.display_name, n.latitude, n.longitude, n.tags, n.visible"
+		"SELECT n.id, n.timestamp, u.data_public, u.id AS user_id, u.display_name, n.latitude, n.longitude, n.tags,"
+		+ " n.visible"
 		+ " FROM nodes n"
 		+ " LEFT OUTER JOIN users u ON n.user_id = u.id"
 		+ " ORDER BY n.id";

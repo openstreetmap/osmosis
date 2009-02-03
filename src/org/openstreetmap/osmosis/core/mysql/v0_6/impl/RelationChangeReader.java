@@ -51,7 +51,9 @@ public class RelationChangeReader {
 	 *            Specifies if full version history should be returned, or just
 	 *            a single change per entity for the interval.
 	 */
-	public RelationChangeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd, boolean fullHistory) {
+	public RelationChangeReader(
+			DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin,
+			Date intervalEnd, boolean fullHistory) {
 		this.fullHistory = fullHistory;
 		
 		relationHistoryReader =
@@ -76,7 +78,12 @@ public class RelationChangeReader {
 			new PeekableIterator<DbFeatureHistory<DbFeature<Tag>>>(
 				new PersistentIterator<DbFeatureHistory<DbFeature<Tag>>>(
 					new SingleClassObjectSerializationFactory(DbFeatureHistory.class),
-					new EntityTagHistoryReader(loginCredentials, "relations", "relation_tags", intervalBegin, intervalEnd),
+					new EntityTagHistoryReader(
+							loginCredentials,
+							"relations",
+							"relation_tags",
+							intervalBegin,
+							intervalEnd),
 					"reltag",
 					true
 				)

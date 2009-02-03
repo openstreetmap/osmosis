@@ -19,5 +19,5 @@ public interface Releasable {
 	 * Releasable objects. It should be called within a finally block to ensure
 	 * it is called in exception scenarios.
 	 */
-	public void release();
+	void release();
 }

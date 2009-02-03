@@ -47,7 +47,8 @@ public class RelationHistoryReader extends BaseEntityReader<EntityHistory<Relati
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public RelationHistoryReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+	public RelationHistoryReader(
+			DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
 		super(loginCredentials, readAllUsers);
 		
 		this.intervalBegin = intervalBegin;

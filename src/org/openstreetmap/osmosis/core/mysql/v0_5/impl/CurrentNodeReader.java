@@ -20,7 +20,8 @@ import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  */
 public class CurrentNodeReader extends BaseEntityReader<Node> {
 	private static final String SELECT_SQL =
-		"SELECT n.id, n.timestamp, u.data_public, u.id as user_id, u.display_name, n.latitude, n.longitude, n.tags, n.visible"
+		"SELECT n.id, n.timestamp, u.data_public, u.id as user_id, u.display_name, n.latitude, n.longitude, n.tags,"
+		+ " n.visible"
 		+ " FROM current_nodes n"
 		+ " LEFT OUTER JOIN users u ON n.user_id = u.id"
 		+ " ORDER BY n.id";

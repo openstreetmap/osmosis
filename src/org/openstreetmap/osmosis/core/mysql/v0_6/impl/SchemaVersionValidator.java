@@ -54,7 +54,7 @@ public class SchemaVersionValidator {
 	 * @param expectedMigrations
 	 *            The expected schema migrations.
 	 */
-	public void validateVersion(String expectedMigrations[]) {
+	public void validateVersion(String[] expectedMigrations) {
 		if (!validated) {
 			validateDBVersion(expectedMigrations);
 			
@@ -69,7 +69,7 @@ public class SchemaVersionValidator {
 	 * @param expectedMigrations
 	 *            The expected schema migrations.
 	 */
-	private void validateDBVersion(String expectedMigrations[]) {
+	private void validateDBVersion(String[] expectedMigrations) {
 		if (preferences.getValidateSchemaVersion()) {
 			try {
 				ResultSet resultSet;
@@ -111,10 +111,14 @@ public class SchemaVersionValidator {
 					
 					errorMessage.append("Database version mismatch.");
 					if (expectedMigrationSet.size() > 0) {
-						errorMessage.append(" The schema is missing migrations " + expectedMigrationSet + ", may need to upgrade schema or specify validateSchemaVersion=no.");
+						errorMessage.append(
+								" The schema is missing migrations " + expectedMigrationSet
+								+ ", may need to upgrade schema or specify validateSchemaVersion=no.");
 					}
 					if (actualMigrationSet.size() > 0) {
-						errorMessage.append(" The schema contains unexpected migrations " + actualMigrationSet + ", may need to upgrade osmosis or specify validateSchemaVersion=no.");
+						errorMessage.append(
+								" The schema contains unexpected migrations " + actualMigrationSet
+								+ ", may need to upgrade osmosis or specify validateSchemaVersion=no.");
 					}
 					
 					if (preferences.getAllowIncorrectSchemaVersion()) {

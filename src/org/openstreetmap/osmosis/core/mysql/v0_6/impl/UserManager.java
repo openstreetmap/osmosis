@@ -164,8 +164,16 @@ public class UserManager implements Releasable {
 		}
 		
 		try {
+			String userName;
+			
+			if (OsmUser.NONE.equals(user)) {
+				userName = "Osmosis Anonymous";
+			} else {
+				userName = user.getName();
+			}
+			
 			prmIndex = 1;
-			statementUpdate.setString(prmIndex++, OsmUser.NONE.equals(user) ? "Osmosis Anonymous" : user.getName());
+			statementUpdate.setString(prmIndex++,  userName);
 			statementUpdate.setInt(prmIndex++, user.getId());
 			
 			statementUpdate.executeUpdate();

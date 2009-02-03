@@ -39,7 +39,8 @@ public class PolygonFilterFactory extends AreaFilterTaskManagerFactory {
 		// Get the task arguments.
 		idTrackerType = getIdTrackerType(taskConfig);
 		fileName = getStringArgument(taskConfig, ARG_FILE, DEFAULT_FILE);
-		clipIncompleteEntities = getBooleanArgument(taskConfig, ARG_CLIP_INCOMPLETE_ENTITIES, DEFAULT_CLIP_INCOMPLETE_ENTITIES);
+		clipIncompleteEntities = getBooleanArgument(
+				taskConfig, ARG_CLIP_INCOMPLETE_ENTITIES, DEFAULT_CLIP_INCOMPLETE_ENTITIES);
 		completeWays = getBooleanArgument(taskConfig, ARG_COMPLETE_WAYS, DEFAULT_COMPLETE_WAYS);
 		completeRelations = getBooleanArgument(taskConfig, ARG_COMPLETE_RELATIONS, DEFAULT_COMPLETE_RELATIONS);
 		

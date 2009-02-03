@@ -23,7 +23,8 @@ import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  */
 public class NodeHistoryReader extends BaseEntityReader<EntityHistory<NodeBuilder>> {
 	private static final String SELECT_SQL =
-		"SELECT e.id, e.version, e.timestamp, e.visible, u.data_public, u.id AS user_id, u.display_name, e.latitude, e.longitude" +
+		"SELECT e.id, e.version, e.timestamp, e.visible, u.data_public," +
+		" u.id AS user_id, u.display_name, e.latitude, e.longitude" +
 		" FROM nodes e" +
 		" LEFT OUTER JOIN changesets c ON e.changeset_id = c.id" +
 		" LEFT OUTER JOIN users u ON c.user_id = u.id" +
@@ -48,7 +49,8 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<NodeBuilde
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public NodeHistoryReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+	public NodeHistoryReader(
+			DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
 		super(loginCredentials, readAllUsers);
 		
 		this.intervalBegin = intervalBegin;

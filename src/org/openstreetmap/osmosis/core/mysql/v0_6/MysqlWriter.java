@@ -98,24 +98,28 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	// These SQL statements will be invoked after loading history tables to
 	// populate the current tables.
 	private static final int LOAD_CURRENT_NODE_ROW_COUNT = 1000000;
-	private static final int LOAD_CURRENT_WAY_ROW_COUNT = 100000; // There are many node and tag records per way.
-	private static final int LOAD_CURRENT_RELATION_ROW_COUNT = 100000; // There are many member and tag records per relation.
+	private static final int LOAD_CURRENT_WAY_ROW_COUNT = 100000;
+	private static final int LOAD_CURRENT_RELATION_ROW_COUNT = 100000;
 	private static final String LOAD_CURRENT_NODES =
-		"INSERT INTO current_nodes SELECT id, latitude, longitude, changeset_id, visible, timestamp, tile, version FROM nodes WHERE id >= ? AND id < ?";
+		"INSERT INTO current_nodes SELECT id, latitude, longitude, changeset_id, visible, timestamp, tile, version"
+		+ " FROM nodes WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_NODE_TAGS =
 		"INSERT INTO current_node_tags SELECT id, k, v FROM node_tags WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_WAYS =
-		"INSERT INTO current_ways SELECT id, changeset_id, timestamp, visible, version FROM ways WHERE id >= ? AND id < ?";
+		"INSERT INTO current_ways SELECT id, changeset_id, timestamp, visible, version FROM ways"
+		+ " WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_WAY_TAGS =
 		"INSERT INTO current_way_tags SELECT id, k, v FROM way_tags WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_WAY_NODES =
 		"INSERT INTO current_way_nodes SELECT id, node_id, sequence_id FROM way_nodes WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_RELATIONS =
-		"INSERT INTO current_relations SELECT id, changeset_id, timestamp, visible, version FROM relations WHERE id >= ? AND id < ?";
+		"INSERT INTO current_relations SELECT id, changeset_id, timestamp, visible, version"
+		+ " FROM relations WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_RELATION_TAGS =
 		"INSERT INTO current_relation_tags SELECT id, k, v FROM relation_tags WHERE id >= ? AND id < ?";
 	private static final String LOAD_CURRENT_RELATION_MEMBERS =
-		"INSERT INTO current_relation_members SELECT id, member_type, member_id, member_role, sequence_id FROM relation_members WHERE id >= ? AND id < ?";
+		"INSERT INTO current_relation_members SELECT id, member_type, member_id, member_role, sequence_id"
+		+ " FROM relation_members WHERE id >= ? AND id < ?";
 	
 	// These SQL statements will be invoked to lock and unlock tables.
 	private static final String INVOKE_LOCK_TABLES =
@@ -226,11 +230,13 @@ public class MysqlWriter implements Sink, EntityProcessor {
 		INSERT_SQL_SINGLE_RELATION_TAG =
 			buildSqlInsertStatement(INSERT_SQL_RELATION_TAG, INSERT_PRM_COUNT_RELATION_TAG, 1);
 		INSERT_SQL_BULK_RELATION_TAG =
-			buildSqlInsertStatement(INSERT_SQL_RELATION_TAG, INSERT_PRM_COUNT_RELATION_TAG, INSERT_BULK_ROW_COUNT_RELATION_TAG);
+			buildSqlInsertStatement(
+					INSERT_SQL_RELATION_TAG, INSERT_PRM_COUNT_RELATION_TAG, INSERT_BULK_ROW_COUNT_RELATION_TAG);
 		INSERT_SQL_SINGLE_RELATION_MEMBER =
 			buildSqlInsertStatement(INSERT_SQL_RELATION_MEMBER, INSERT_PRM_COUNT_RELATION_MEMBER, 1);
 		INSERT_SQL_BULK_RELATION_MEMBER =
-			buildSqlInsertStatement(INSERT_SQL_RELATION_MEMBER, INSERT_PRM_COUNT_RELATION_MEMBER, INSERT_BULK_ROW_COUNT_RELATION_MEMBER);
+			buildSqlInsertStatement(INSERT_SQL_RELATION_MEMBER,
+				INSERT_PRM_COUNT_RELATION_MEMBER, INSERT_BULK_ROW_COUNT_RELATION_MEMBER);
 	}
 	
 	
@@ -293,7 +299,9 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 *            If true, the current tables will be populated as well as
 	 *            history tables.
 	 */
-	public MysqlWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean lockTables, boolean populateCurrentTables) {
+	public MysqlWriter(
+			DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
+			boolean lockTables, boolean populateCurrentTables) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		
 		userManager = new UserManager(dbCtx);
@@ -452,7 +460,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * @param dbEntityTag
 	 *            The entity tag containing the data to be inserted.
 	 */
-	private void populateEntityTagParameters(PreparedStatement statement, int initialIndex, DbFeatureHistory<DbFeature<Tag>> dbEntityTag) {
+	private void populateEntityTagParameters(
+			PreparedStatement statement, int initialIndex, DbFeatureHistory<DbFeature<Tag>> dbEntityTag) {
 		int prmIndex;
 		Tag tag;
 		
@@ -482,7 +491,8 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * @param dbWayNode
 	 *            The way node containing the data to be inserted.
 	 */
-	private void populateWayNodeParameters(PreparedStatement statement, int initialIndex, DbFeatureHistory<DbOrderedFeature<WayNode>> dbWayNode) {
+	private void populateWayNodeParameters(
+			PreparedStatement statement, int initialIndex, DbFeatureHistory<DbOrderedFeature<WayNode>> dbWayNode) {
 		int prmIndex;
 		
 		prmIndex = initialIndex;
@@ -543,7 +553,9 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 * @param dbRelationMember
 	 *            The relation member containing the data to be inserted.
 	 */
-	private void populateRelationMemberParameters(PreparedStatement statement, int initialIndex, DbFeatureHistory<DbOrderedFeature<RelationMember>> dbRelationMember) {
+	private void populateRelationMemberParameters(
+			PreparedStatement statement, int initialIndex,
+			DbFeatureHistory<DbOrderedFeature<RelationMember>> dbRelationMember) {
 		int prmIndex;
 		RelationMember relationMember;
 		
@@ -1139,7 +1151,9 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addNodeTags(Node node) {
 		for (Tag tag: node.getTags()) {
-			nodeTagBuffer.add(new DbFeatureHistory<DbFeature<Tag>>(new DbFeature<Tag>(node.getId(), tag), node.getVersion()));
+			nodeTagBuffer.add(
+					new DbFeatureHistory<DbFeature<Tag>>(
+							new DbFeature<Tag>(node.getId(), tag), node.getVersion()));
 		}
 		
 		flushNodeTags(false);
@@ -1176,7 +1190,9 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addWayTags(Way way) {
 		for (Tag tag: way.getTags()) {
-			wayTagBuffer.add(new DbFeatureHistory<DbFeature<Tag>>(new DbFeature<Tag>(way.getId(), tag), way.getVersion()));
+			wayTagBuffer.add(
+					new DbFeatureHistory<DbFeature<Tag>>(
+							new DbFeature<Tag>(way.getId(), tag), way.getVersion()));
 		}
 		
 		flushWayTags(false);
@@ -1241,7 +1257,9 @@ public class MysqlWriter implements Sink, EntityProcessor {
 	 */
 	private void addRelationTags(Relation relation) {
 		for (Tag tag: relation.getTags()) {
-			relationTagBuffer.add(new DbFeatureHistory<DbFeature<Tag>>(new DbFeature<Tag>(relation.getId(), tag), relation.getVersion()));
+			relationTagBuffer.add(
+					new DbFeatureHistory<DbFeature<Tag>>(
+							new DbFeature<Tag>(relation.getId(), tag), relation.getVersion()));
 		}
 		
 		flushRelationTags(false);

@@ -21,11 +21,14 @@ public class EntityMergerFactory extends TaskManagerFactory {
 	private static final String ARG_CONFLICT_RESOLUTION_METHOD = "conflictResolutionMethod";
 	private static final String DEFAULT_CONFLICT_RESOLUTION_METHOD = "timestamp";
 	private static final String ALTERNATIVE_CONFLICT_RESOLUTION_METHOD_1 = "lastSource";
-	private static final Map<String, ConflictResolutionMethod> conflictResolutionMethodMap = new HashMap<String, ConflictResolutionMethod>();
+	private static final Map<String, ConflictResolutionMethod> conflictResolutionMethodMap =
+		new HashMap<String, ConflictResolutionMethod>();
 	
 	static {
-		conflictResolutionMethodMap.put(DEFAULT_CONFLICT_RESOLUTION_METHOD, ConflictResolutionMethod.Timestamp);
-		conflictResolutionMethodMap.put(ALTERNATIVE_CONFLICT_RESOLUTION_METHOD_1, ConflictResolutionMethod.LatestSource);
+		conflictResolutionMethodMap.put(
+				DEFAULT_CONFLICT_RESOLUTION_METHOD, ConflictResolutionMethod.Timestamp);
+		conflictResolutionMethodMap.put(
+				ALTERNATIVE_CONFLICT_RESOLUTION_METHOD_1, ConflictResolutionMethod.LatestSource);
 	}
 	
 	
@@ -36,7 +39,8 @@ public class EntityMergerFactory extends TaskManagerFactory {
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		String conflictResolutionMethod;
 		
-		conflictResolutionMethod = getStringArgument(taskConfig, ARG_CONFLICT_RESOLUTION_METHOD, DEFAULT_CONFLICT_RESOLUTION_METHOD);
+		conflictResolutionMethod = getStringArgument(
+				taskConfig, ARG_CONFLICT_RESOLUTION_METHOD, DEFAULT_CONFLICT_RESOLUTION_METHOD);
 		
 		if (!conflictResolutionMethodMap.containsKey(conflictResolutionMethod)) {
 			throw new OsmosisRuntimeException(

@@ -29,15 +29,19 @@ import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  */
 public class ChangeWriter {
 	private static final String INSERT_SQL_NODE =
-		"INSERT INTO nodes (id, version, timestamp, visible, changeset_id, latitude, longitude, tile) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		"INSERT INTO nodes (id, version, timestamp, visible, changeset_id, latitude, longitude, tile)"
+		+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String UPDATE_SQL_NODE =
-		"UPDATE nodes SET timestamp = ?, visible = ?, changeset_id = ?, latitude = ?, longitude = ?, tile = ? WHERE id = ? AND version = ?";
+		"UPDATE nodes SET timestamp = ?, visible = ?, changeset_id = ?, latitude = ?, longitude = ?, tile = ?"
+		+ " WHERE id = ? AND version = ?";
 	private static final String SELECT_SQL_NODE_COUNT =
 		"SELECT Count(id) AS rowCount FROM nodes WHERE id = ? AND version = ?";
 	private static final String INSERT_SQL_NODE_CURRENT =
-		"INSERT INTO current_nodes (id, version, timestamp, visible, changeset_id, latitude, longitude, tile) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		"INSERT INTO current_nodes (id, version, timestamp, visible, changeset_id, latitude, longitude, tile)"
+		+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String UPDATE_SQL_NODE_CURRENT =
-		"UPDATE current_nodes SET version = ?, timestamp = ?, visible = ?, changeset_id = ?, latitude = ?, longitude = ?, tile = ? WHERE id = ?";
+		"UPDATE current_nodes SET version = ?, timestamp = ?, visible = ?, changeset_id = ?, latitude = ?,"
+		+ " longitude = ?, tile = ? WHERE id = ?";
 	private static final String SELECT_SQL_NODE_CURRENT_COUNT =
 		"SELECT Count(id) AS rowCount FROM current_nodes WHERE id = ?";
 	private static final String INSERT_SQL_NODE_TAG =
@@ -97,11 +101,13 @@ public class ChangeWriter {
 	private static final String DELETE_SQL_RELATION_TAG_CURRENT =
 		"DELETE FROM current_relation_tags WHERE id = ?";
 	private static final String INSERT_SQL_RELATION_MEMBER =
-		"INSERT INTO relation_members (id, version, member_type, member_id, member_role, sequence_id) VALUES (?, ?, ?, ?, ?, ?)";
+		"INSERT INTO relation_members (id, version, member_type, member_id, member_role, sequence_id)"
+		+ " VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String DELETE_SQL_RELATION_MEMBER =
 		"DELETE FROM relation_members WHERE id = ? AND version = ?";
 	private static final String INSERT_SQL_RELATION_MEMBER_CURRENT =
-		"INSERT INTO current_relation_members (id, member_type, member_id, member_role, sequence_id) VALUES (?, ?, ?, ?, ?)";
+		"INSERT INTO current_relation_members (id, member_type, member_id, member_role, sequence_id)"
+		+ " VALUES (?, ?, ?, ?, ?)";
 	private static final String DELETE_SQL_RELATION_MEMBER_CURRENT =
 		"DELETE FROM current_relation_members WHERE id = ?";
 	
@@ -301,16 +307,26 @@ public class ChangeWriter {
 		
 		// Create the prepared statements for node creation if necessary.
 		if (insertNodeStatement == null) {
-			insertNodeStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_NODE));
-			updateNodeStatement = statementContainer.add(dbCtx.prepareStatement(UPDATE_SQL_NODE));
-			selectNodeCountStatement = statementContainer.add(dbCtx.prepareStatement(SELECT_SQL_NODE_COUNT));
-			insertNodeCurrentStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_NODE_CURRENT));
-			updateNodeCurrentStatement = statementContainer.add(dbCtx.prepareStatement(UPDATE_SQL_NODE_CURRENT));
-			selectNodeCurrentCountStatement = statementContainer.add(dbCtx.prepareStatement(SELECT_SQL_NODE_CURRENT_COUNT));
-			insertNodeTagStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_NODE_TAG));
-			deleteNodeTagStatement = statementContainer.add(dbCtx.prepareStatement(DELETE_SQL_NODE_TAG));
-			insertNodeTagCurrentStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_NODE_TAG_CURRENT));
-			deleteNodeTagCurrentStatement = statementContainer.add(dbCtx.prepareStatement(DELETE_SQL_NODE_TAG_CURRENT));
+			insertNodeStatement = statementContainer.add(
+					dbCtx.prepareStatement(INSERT_SQL_NODE));
+			updateNodeStatement = statementContainer.add(
+					dbCtx.prepareStatement(UPDATE_SQL_NODE));
+			selectNodeCountStatement = statementContainer.add(
+					dbCtx.prepareStatement(SELECT_SQL_NODE_COUNT));
+			insertNodeCurrentStatement = statementContainer.add(
+					dbCtx.prepareStatement(INSERT_SQL_NODE_CURRENT));
+			updateNodeCurrentStatement = statementContainer.add(
+					dbCtx.prepareStatement(UPDATE_SQL_NODE_CURRENT));
+			selectNodeCurrentCountStatement = statementContainer.add(
+					dbCtx.prepareStatement(SELECT_SQL_NODE_CURRENT_COUNT));
+			insertNodeTagStatement = statementContainer.add(
+					dbCtx.prepareStatement(INSERT_SQL_NODE_TAG));
+			deleteNodeTagStatement = statementContainer.add(
+					dbCtx.prepareStatement(DELETE_SQL_NODE_TAG));
+			insertNodeTagCurrentStatement = statementContainer.add(
+					dbCtx.prepareStatement(INSERT_SQL_NODE_TAG_CURRENT));
+			deleteNodeTagCurrentStatement = statementContainer.add(
+					dbCtx.prepareStatement(DELETE_SQL_NODE_TAG_CURRENT));
 		}
 		
 		// Remove the existing tags of the node history item.
@@ -322,7 +338,8 @@ public class ChangeWriter {
 			deleteNodeTagStatement.execute();
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to delete node history tags for node with id=" + node.getId() + ".", e);
+			throw new OsmosisRuntimeException(
+					"Unable to delete node history tags for node with id=" + node.getId() + ".", e);
 		}
 		
 		// Update the node if it already exists in the history table, otherwise insert it.
@@ -330,20 +347,29 @@ public class ChangeWriter {
 			exists = checkIfEntityHistoryExists(selectNodeCountStatement, node.getId(), node.getVersion());
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to check if current node with id=" + node.getId() + " exists.", e);
+			throw new OsmosisRuntimeException(
+					"Unable to check if current node with id=" + node.getId() + " exists.", e);
 		}
 		if (exists) {
 			// Update the node in the history table.
 			try {
 				prmIndex = 1;
-				updateNodeStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
-				updateNodeStatement.setBoolean(prmIndex++, visible);
-				updateNodeStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(node.getUser()));
-				updateNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
-				updateNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
-				updateNodeStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
-				updateNodeStatement.setLong(prmIndex++, node.getId());
-				updateNodeStatement.setInt(prmIndex++, node.getVersion());
+				updateNodeStatement.setTimestamp(
+						prmIndex++, new Timestamp(node.getTimestamp().getTime()));
+				updateNodeStatement.setBoolean(
+						prmIndex++, visible);
+				updateNodeStatement.setLong(
+						prmIndex++, changesetManager.obtainChangesetId(node.getUser()));
+				updateNodeStatement.setInt(
+						prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
+				updateNodeStatement.setInt(
+						prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
+				updateNodeStatement.setLong(
+						prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
+				updateNodeStatement.setLong(
+						prmIndex++, node.getId());
+				updateNodeStatement.setInt(
+						prmIndex++, node.getVersion());
 				
 				updateNodeStatement.execute();
 				
@@ -354,14 +380,22 @@ public class ChangeWriter {
 			// Insert the new node into the history table.
 			try {
 				prmIndex = 1;
-				insertNodeStatement.setLong(prmIndex++, node.getId());
-				insertNodeStatement.setInt(prmIndex++, node.getVersion());
-				insertNodeStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
-				insertNodeStatement.setBoolean(prmIndex++, visible);
-				insertNodeStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(node.getUser()));
-				insertNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
-				insertNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
-				insertNodeStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
+				insertNodeStatement.setLong(
+						prmIndex++, node.getId());
+				insertNodeStatement.setInt(
+						prmIndex++, node.getVersion());
+				insertNodeStatement.setTimestamp(
+						prmIndex++, new Timestamp(node.getTimestamp().getTime()));
+				insertNodeStatement.setBoolean(
+						prmIndex++, visible);
+				insertNodeStatement.setLong(
+						prmIndex++, changesetManager.obtainChangesetId(node.getUser()));
+				insertNodeStatement.setInt(
+						prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
+				insertNodeStatement.setInt(
+						prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
+				insertNodeStatement.setLong(
+						prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
 				
 				insertNodeStatement.execute();
 				
@@ -396,7 +430,8 @@ public class ChangeWriter {
 				deleteNodeTagCurrentStatement.execute();
 				
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to delete current node tags with id=" + node.getId() + ".", e);
+				throw new OsmosisRuntimeException(
+						"Unable to delete current node tags with id=" + node.getId() + ".", e);
 			}
 			
 			// Update the node if it already exists in the current table, otherwise insert it.
@@ -404,20 +439,29 @@ public class ChangeWriter {
 				exists = checkIfEntityExists(selectNodeCurrentCountStatement, node.getId());
 				
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to check if current node with id=" + node.getId() + " exists.", e);
+				throw new OsmosisRuntimeException(
+						"Unable to check if current node with id=" + node.getId() + " exists.", e);
 			}
 			if (exists) {
 				// Update the node in the current table.
 				try {
 					prmIndex = 1;
-					updateNodeCurrentStatement.setInt(prmIndex++, node.getVersion());
-					updateNodeCurrentStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
-					updateNodeCurrentStatement.setBoolean(prmIndex++, visible);
-					updateNodeCurrentStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(node.getUser()));
-					updateNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
-					updateNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
-					updateNodeCurrentStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
-					updateNodeCurrentStatement.setLong(prmIndex++, node.getId());
+					updateNodeCurrentStatement.setInt(
+							prmIndex++, node.getVersion());
+					updateNodeCurrentStatement.setTimestamp(
+							prmIndex++, new Timestamp(node.getTimestamp().getTime()));
+					updateNodeCurrentStatement.setBoolean(
+							prmIndex++, visible);
+					updateNodeCurrentStatement.setLong(
+							prmIndex++, changesetManager.obtainChangesetId(node.getUser()));
+					updateNodeCurrentStatement.setInt(
+							prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
+					updateNodeCurrentStatement.setInt(
+							prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
+					updateNodeCurrentStatement.setLong(
+							prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
+					updateNodeCurrentStatement.setLong(
+							prmIndex++, node.getId());
 					
 					updateNodeCurrentStatement.execute();
 					
@@ -428,14 +472,22 @@ public class ChangeWriter {
 				// Insert the new node into the current table.
 				try {
 					prmIndex = 1;
-					insertNodeCurrentStatement.setLong(prmIndex++, node.getId());
-					insertNodeCurrentStatement.setInt(prmIndex++, node.getVersion());
-					insertNodeCurrentStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
-					insertNodeCurrentStatement.setBoolean(prmIndex++, visible);
-					insertNodeCurrentStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(node.getUser()));
-					insertNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
-					insertNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
-					insertNodeCurrentStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
+					insertNodeCurrentStatement.setLong(
+							prmIndex++, node.getId());
+					insertNodeCurrentStatement.setInt(
+							prmIndex++, node.getVersion());
+					insertNodeCurrentStatement.setTimestamp(
+							prmIndex++, new Timestamp(node.getTimestamp().getTime()));
+					insertNodeCurrentStatement.setBoolean(
+							prmIndex++, visible);
+					insertNodeCurrentStatement.setLong(
+							prmIndex++, changesetManager.obtainChangesetId(node.getUser()));
+					insertNodeCurrentStatement.setInt(
+							prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
+					insertNodeCurrentStatement.setInt(
+							prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
+					insertNodeCurrentStatement.setLong(
+							prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
 					
 					insertNodeCurrentStatement.execute();
 					
@@ -493,20 +545,34 @@ public class ChangeWriter {
 		
 		// Create the prepared statements for way creation if necessary.
 		if (insertWayStatement == null) {
-			insertWayStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_WAY));
-			updateWayStatement = statementContainer.add(dbCtx.prepareStatement(UPDATE_SQL_WAY));
-			selectWayCountStatement = statementContainer.add(dbCtx.prepareStatement(SELECT_SQL_WAY_COUNT));
-			insertWayCurrentStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_WAY_CURRENT));
-			updateWayCurrentStatement = statementContainer.add(dbCtx.prepareStatement(UPDATE_SQL_WAY_CURRENT));
-			selectWayCurrentCountStatement = statementContainer.add(dbCtx.prepareStatement(SELECT_SQL_WAY_CURRENT_COUNT));
-			insertWayTagStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_WAY_TAG));
-			deleteWayTagStatement = statementContainer.add(dbCtx.prepareStatement(DELETE_SQL_WAY_TAG));
-			insertWayTagCurrentStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_WAY_TAG_CURRENT));
-			deleteWayTagCurrentStatement = statementContainer.add(dbCtx.prepareStatement(DELETE_SQL_WAY_TAG_CURRENT));
-			insertWayNodeStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_WAY_NODE));
-			deleteWayNodeStatement = statementContainer.add(dbCtx.prepareStatement(DELETE_SQL_WAY_NODE));
-			insertWayNodeCurrentStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_WAY_NODE_CURRENT));
-			deleteWayNodeCurrentStatement = statementContainer.add(dbCtx.prepareStatement(DELETE_SQL_WAY_NODE_CURRENT));
+			insertWayStatement = statementContainer.add(
+					dbCtx.prepareStatement(INSERT_SQL_WAY));
+			updateWayStatement = statementContainer.add(
+					dbCtx.prepareStatement(UPDATE_SQL_WAY));
+			selectWayCountStatement = statementContainer.add(
+					dbCtx.prepareStatement(SELECT_SQL_WAY_COUNT));
+			insertWayCurrentStatement = statementContainer.add(
+					dbCtx.prepareStatement(INSERT_SQL_WAY_CURRENT));
+			updateWayCurrentStatement = statementContainer.add(
+					dbCtx.prepareStatement(UPDATE_SQL_WAY_CURRENT));
+			selectWayCurrentCountStatement = statementContainer.add(
+					dbCtx.prepareStatement(SELECT_SQL_WAY_CURRENT_COUNT));
+			insertWayTagStatement = statementContainer.add(
+					dbCtx.prepareStatement(INSERT_SQL_WAY_TAG));
+			deleteWayTagStatement = statementContainer.add(
+					dbCtx.prepareStatement(DELETE_SQL_WAY_TAG));
+			insertWayTagCurrentStatement = statementContainer.add(
+					dbCtx.prepareStatement(INSERT_SQL_WAY_TAG_CURRENT));
+			deleteWayTagCurrentStatement = statementContainer.add(
+					dbCtx.prepareStatement(DELETE_SQL_WAY_TAG_CURRENT));
+			insertWayNodeStatement = statementContainer.add(
+					dbCtx.prepareStatement(INSERT_SQL_WAY_NODE));
+			deleteWayNodeStatement = statementContainer.add(
+					dbCtx.prepareStatement(DELETE_SQL_WAY_NODE));
+			insertWayNodeCurrentStatement = statementContainer.add(
+					dbCtx.prepareStatement(INSERT_SQL_WAY_NODE_CURRENT));
+			deleteWayNodeCurrentStatement = statementContainer.add(
+					dbCtx.prepareStatement(DELETE_SQL_WAY_NODE_CURRENT));
 		}
 		
 		// Remove the existing tags of the way history item.
@@ -518,7 +584,8 @@ public class ChangeWriter {
 			deleteWayTagStatement.execute();
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to delete way history tags for way with id=" + way.getId() + ".", e);
+			throw new OsmosisRuntimeException(
+					"Unable to delete way history tags for way with id=" + way.getId() + ".", e);
 		}
 		
 		// Remove the existing way nodes of the way history item.
@@ -530,7 +597,8 @@ public class ChangeWriter {
 			deleteWayNodeStatement.execute();
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to delete way history nodes for way with id=" + way.getId() + ".", e);
+			throw new OsmosisRuntimeException(
+					"Unable to delete way history nodes for way with id=" + way.getId() + ".", e);
 		}
 		
 		// Update the way if it already exists in the history table, otherwise insert it.
@@ -637,7 +705,8 @@ public class ChangeWriter {
 				exists = checkIfEntityExists(selectWayCurrentCountStatement, way.getId());
 				
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to check if current way with id=" + way.getId() + " exists.", e);
+				throw new OsmosisRuntimeException(
+						"Unable to check if current way with id=" + way.getId() + " exists.", e);
 			}
 			if (exists) {
 				// Update the way in the current table.
@@ -741,20 +810,34 @@ public class ChangeWriter {
 		
 		// Create the prepared statements for relation creation if necessary.
 		if (insertRelationStatement == null) {
-			insertRelationStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_RELATION));
-			updateRelationStatement = statementContainer.add(dbCtx.prepareStatement(UPDATE_SQL_RELATION));
-			selectRelationCountStatement = statementContainer.add(dbCtx.prepareStatement(SELECT_SQL_RELATION_COUNT));
-			insertRelationCurrentStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_RELATION_CURRENT));
-			updateRelationCurrentStatement = statementContainer.add(dbCtx.prepareStatement(UPDATE_SQL_RELATION_CURRENT));
-			selectRelationCurrentCountStatement = statementContainer.add(dbCtx.prepareStatement(SELECT_SQL_RELATION_CURRENT_COUNT));
-			insertRelationTagStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_RELATION_TAG));
-			deleteRelationTagStatement = statementContainer.add(dbCtx.prepareStatement(DELETE_SQL_RELATION_TAG));
-			insertRelationTagCurrentStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_RELATION_TAG_CURRENT));
-			deleteRelationTagCurrentStatement = statementContainer.add(dbCtx.prepareStatement(DELETE_SQL_RELATION_TAG_CURRENT));
-			insertRelationMemberStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_RELATION_MEMBER));
-			deleteRelationMemberStatement = statementContainer.add(dbCtx.prepareStatement(DELETE_SQL_RELATION_MEMBER));
-			insertRelationMemberCurrentStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_RELATION_MEMBER_CURRENT));
-			deleteRelationMemberCurrentStatement = statementContainer.add(dbCtx.prepareStatement(DELETE_SQL_RELATION_MEMBER_CURRENT));
+			insertRelationStatement = statementContainer.add(
+					dbCtx.prepareStatement(INSERT_SQL_RELATION));
+			updateRelationStatement = statementContainer.add(
+					dbCtx.prepareStatement(UPDATE_SQL_RELATION));
+			selectRelationCountStatement = statementContainer.add(
+					dbCtx.prepareStatement(SELECT_SQL_RELATION_COUNT));
+			insertRelationCurrentStatement = statementContainer.add(
+					dbCtx.prepareStatement(INSERT_SQL_RELATION_CURRENT));
+			updateRelationCurrentStatement = statementContainer.add(
+					dbCtx.prepareStatement(UPDATE_SQL_RELATION_CURRENT));
+			selectRelationCurrentCountStatement = statementContainer.add(
+					dbCtx.prepareStatement(SELECT_SQL_RELATION_CURRENT_COUNT));
+			insertRelationTagStatement = statementContainer.add(
+					dbCtx.prepareStatement(INSERT_SQL_RELATION_TAG));
+			deleteRelationTagStatement = statementContainer.add(
+					dbCtx.prepareStatement(DELETE_SQL_RELATION_TAG));
+			insertRelationTagCurrentStatement = statementContainer.add(
+					dbCtx.prepareStatement(INSERT_SQL_RELATION_TAG_CURRENT));
+			deleteRelationTagCurrentStatement = statementContainer.add(
+					dbCtx.prepareStatement(DELETE_SQL_RELATION_TAG_CURRENT));
+			insertRelationMemberStatement = statementContainer.add(
+					dbCtx.prepareStatement(INSERT_SQL_RELATION_MEMBER));
+			deleteRelationMemberStatement = statementContainer.add(
+					dbCtx.prepareStatement(DELETE_SQL_RELATION_MEMBER));
+			insertRelationMemberCurrentStatement = statementContainer.add(
+					dbCtx.prepareStatement(INSERT_SQL_RELATION_MEMBER_CURRENT));
+			deleteRelationMemberCurrentStatement = statementContainer.add(
+					dbCtx.prepareStatement(DELETE_SQL_RELATION_MEMBER_CURRENT));
 		}
 		
 		// Remove the existing tags of the relation history item.
@@ -766,7 +849,8 @@ public class ChangeWriter {
 			deleteRelationTagStatement.execute();
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to delete relation history tags for relation with id=" + relation.getId() + ".", e);
+			throw new OsmosisRuntimeException(
+					"Unable to delete relation history tags for relation with id=" + relation.getId() + ".", e);
 		}
 		
 		// Remove the existing relation members of the relation history item.
@@ -778,7 +862,8 @@ public class ChangeWriter {
 			deleteRelationMemberStatement.execute();
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to delete relation history members for relation with id=" + relation.getId() + ".", e);
+			throw new OsmosisRuntimeException(
+					"Unable to delete relation history members for relation with id=" + relation.getId() + ".", e);
 		}
 		
 		// Update the relation if it already exists in the history table, otherwise insert it.
@@ -786,7 +871,8 @@ public class ChangeWriter {
 			exists = checkIfEntityHistoryExists(selectRelationCountStatement, relation.getId(), relation.getVersion());
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to check if current relation with id=" + relation.getId() + " exists.", e);
+			throw new OsmosisRuntimeException(
+					"Unable to check if current relation with id=" + relation.getId() + " exists.", e);
 		}
 		if (exists) {
 			// Update the relation in the history table.
@@ -801,7 +887,8 @@ public class ChangeWriter {
 				updateRelationStatement.execute();
 				
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to update history relation with id=" + relation.getId() + ".", e);
+				throw new OsmosisRuntimeException(
+						"Unable to update history relation with id=" + relation.getId() + ".", e);
 			}
 		} else {
 			// Insert the new relation into the history table.
@@ -816,7 +903,8 @@ public class ChangeWriter {
 				insertRelationStatement.execute();
 				
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to insert history relation with id=" + relation.getId() + ".", e);
+				throw new OsmosisRuntimeException(
+						"Unable to insert history relation with id=" + relation.getId() + ".", e);
 			}
 		}
 		
@@ -846,12 +934,18 @@ public class ChangeWriter {
 			
 			try {
 				prmIndex = 1;
-				insertRelationMemberStatement.setLong(prmIndex++, relation.getId());
-				insertRelationMemberStatement.setInt(prmIndex++, relation.getVersion());
-				insertRelationMemberStatement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
-				insertRelationMemberStatement.setLong(prmIndex++, relationMember.getMemberId());
-				insertRelationMemberStatement.setString(prmIndex++, relationMember.getMemberRole());
-				insertRelationMemberStatement.setInt(prmIndex++, i + 1);
+				insertRelationMemberStatement.setLong(
+						prmIndex++, relation.getId());
+				insertRelationMemberStatement.setInt(
+						prmIndex++, relation.getVersion());
+				insertRelationMemberStatement.setString(
+						prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
+				insertRelationMemberStatement.setLong(
+						prmIndex++, relationMember.getMemberId());
+				insertRelationMemberStatement.setString(
+						prmIndex++, relationMember.getMemberRole());
+				insertRelationMemberStatement.setInt(
+						prmIndex++, i + 1);
 				
 				insertRelationMemberStatement.execute();
 				
@@ -871,7 +965,8 @@ public class ChangeWriter {
 				deleteRelationTagCurrentStatement.execute();
 				
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to delete current relation tags with id=" + relation.getId() + ".", e);
+				throw new OsmosisRuntimeException(
+						"Unable to delete current relation tags with id=" + relation.getId() + ".", e);
 			}
 			// Delete the existing relation members from the current table.
 			try {
@@ -880,7 +975,8 @@ public class ChangeWriter {
 				deleteRelationMemberCurrentStatement.execute();
 				
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to delete current relation members with id=" + relation.getId() + ".", e);
+				throw new OsmosisRuntimeException(
+						"Unable to delete current relation members with id=" + relation.getId() + ".", e);
 			}
 			
 			// Update the relation if it already exists in the current table, otherwise insert it.
@@ -888,37 +984,50 @@ public class ChangeWriter {
 				exists = checkIfEntityExists(selectRelationCurrentCountStatement, relation.getId());
 				
 			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Unable to check if current relation with id=" + relation.getId() + " exists.", e);
+				throw new OsmosisRuntimeException(
+						"Unable to check if current relation with id=" + relation.getId() + " exists.", e);
 			}
 			if (exists) {
 				// Update the relation in the current table.
 				try {
 					prmIndex = 1;
-					updateRelationCurrentStatement.setInt(prmIndex++, relation.getVersion());
-					updateRelationCurrentStatement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
-					updateRelationCurrentStatement.setBoolean(prmIndex++, visible);
-					updateRelationCurrentStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(relation.getUser()));
-					updateRelationCurrentStatement.setLong(prmIndex++, relation.getId());
+					updateRelationCurrentStatement.setInt(
+							prmIndex++, relation.getVersion());
+					updateRelationCurrentStatement.setTimestamp(
+							prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
+					updateRelationCurrentStatement.setBoolean(
+							prmIndex++, visible);
+					updateRelationCurrentStatement.setLong(
+							prmIndex++, changesetManager.obtainChangesetId(relation.getUser()));
+					updateRelationCurrentStatement.setLong(
+							prmIndex++, relation.getId());
 					
 					updateRelationCurrentStatement.execute();
 					
 				} catch (SQLException e) {
-					throw new OsmosisRuntimeException("Unable to update current relation with id=" + relation.getId() + ".", e);
+					throw new OsmosisRuntimeException(
+							"Unable to update current relation with id=" + relation.getId() + ".", e);
 				}
 			} else {
 				// Insert the new node into the current table.
 				try {
 					prmIndex = 1;
-					insertRelationCurrentStatement.setLong(prmIndex++, relation.getId());
-					insertRelationCurrentStatement.setInt(prmIndex++, relation.getVersion());
-					insertRelationCurrentStatement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
-					insertRelationCurrentStatement.setBoolean(prmIndex++, visible);
-					insertRelationCurrentStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(relation.getUser()));
+					insertRelationCurrentStatement.setLong(
+							prmIndex++, relation.getId());
+					insertRelationCurrentStatement.setInt(
+							prmIndex++, relation.getVersion());
+					insertRelationCurrentStatement.setTimestamp(
+							prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
+					insertRelationCurrentStatement.setBoolean(
+							prmIndex++, visible);
+					insertRelationCurrentStatement.setLong(
+							prmIndex++, changesetManager.obtainChangesetId(relation.getUser()));
 					
 					insertRelationCurrentStatement.execute();
 					
 				} catch (SQLException e) {
-					throw new OsmosisRuntimeException("Unable to insert current relation with id=" + relation.getId() + ".", e);
+					throw new OsmosisRuntimeException(
+							"Unable to insert current relation with id=" + relation.getId() + ".", e);
 				}
 			}
 			
@@ -947,11 +1056,16 @@ public class ChangeWriter {
 				
 				try {
 					prmIndex = 1;
-					insertRelationMemberCurrentStatement.setLong(prmIndex++, relation.getId());
-					insertRelationMemberCurrentStatement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
-					insertRelationMemberCurrentStatement.setLong(prmIndex++, relationMember.getMemberId());
-					insertRelationMemberCurrentStatement.setString(prmIndex++, relationMember.getMemberRole());
-					insertRelationMemberCurrentStatement.setInt(prmIndex++, i + 1);
+					insertRelationMemberCurrentStatement.setLong(
+							prmIndex++, relation.getId());
+					insertRelationMemberCurrentStatement.setString(
+							prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
+					insertRelationMemberCurrentStatement.setLong(
+							prmIndex++, relationMember.getMemberId());
+					insertRelationMemberCurrentStatement.setString(
+							prmIndex++, relationMember.getMemberRole());
+					insertRelationMemberCurrentStatement.setInt(
+							prmIndex++, i + 1);
 					
 					insertRelationMemberCurrentStatement.execute();
 					

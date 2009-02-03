@@ -45,7 +45,9 @@ public class NodeChangeReader {
 	 *            Specifies if full version history should be returned, or just
 	 *            a single change per entity for the interval.
 	 */
-	public NodeChangeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd, boolean fullHistory) {
+	public NodeChangeReader(
+			DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin,
+			Date intervalEnd, boolean fullHistory) {
 		this.fullHistory = fullHistory;
 		
 		nodeHistoryReader =

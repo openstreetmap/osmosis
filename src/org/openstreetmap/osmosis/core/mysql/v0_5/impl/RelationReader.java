@@ -99,7 +99,10 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 			}
 			
 			// Load all tags matching this version of the relation.
-			while (relationTagReader.hasNext() && relationTagReader.peekNext().getEntity().getEntityId() == relationId && relationTagReader.peekNext().getVersion() == relationVersion) {
+			while (
+					relationTagReader.hasNext()
+					&& relationTagReader.peekNext().getEntity().getEntityId() == relationId
+					&& relationTagReader.peekNext().getVersion() == relationVersion) {
 				relation.addTag(relationTagReader.next().getEntity().getTag());
 			}
 			
@@ -125,7 +128,10 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 			}
 			
 			// Load all members matching this version of the relation.
-			while (relationMemberReader.hasNext() && relationMemberReader.peekNext().getEntity().getRelationId() == relationId && relationMemberReader.peekNext().getVersion() == relationVersion) {
+			while (
+					relationMemberReader.hasNext()
+					&& relationMemberReader.peekNext().getEntity().getRelationId() == relationId
+					&& relationMemberReader.peekNext().getVersion() == relationVersion) {
 				relation.addMember(relationMemberReader.next().getEntity().getRelationMember());
 			}
 			

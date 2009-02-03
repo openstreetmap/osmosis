@@ -43,10 +43,14 @@ public class SortedChangePipeValidator implements ChangeSinkChangeSource {
 		// If this is not the first entity in the pipeline, make sure this
 		// entity is greater than the previous.
 		if (previousChangeContainer != null) {
-			if (comparator.compare(previousChangeContainer.getEntityContainer(), changeContainer.getEntityContainer()) >= 0) {
+			if (comparator.compare(previousChangeContainer.getEntityContainer(),
+					changeContainer.getEntityContainer()) >= 0) {
 				throw new OsmosisRuntimeException(
-					"Pipeline entities are not sorted, previous entity type=" + previousChangeContainer.getEntityContainer().getEntity().getType() + ", id=" + previousChangeContainer.getEntityContainer().getEntity().getId()
-					+ " current entity type=" + changeContainer.getEntityContainer().getEntity().getType() + ", id=" + changeContainer.getEntityContainer().getEntity().getId() + "."
+					"Pipeline entities are not sorted, previous entity type="
+					+ previousChangeContainer.getEntityContainer().getEntity().getType()
+					+ ", id=" + previousChangeContainer.getEntityContainer().getEntity().getId()
+					+ " current entity type=" + changeContainer.getEntityContainer().getEntity().getType()
+					+ ", id=" + changeContainer.getEntityContainer().getEntity().getId() + "."
 				);
 			}
 		}

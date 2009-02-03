@@ -30,7 +30,8 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 	// time interval. The outer query then queries all node history items up to
 	// the end of the time interval.
 	private static final String SELECT_SQL =
-		"SELECT n.id, n.timestamp, u.data_public, u.id AS user_id, u.display_name, n.latitude, n.longitude, n.tags, n.visible" +
+		"SELECT n.id, n.timestamp, u.data_public, u.id AS user_id, u.display_name, n.latitude, n.longitude, n.tags," +
+		" n.visible" +
 		" FROM nodes n" +
 		" INNER JOIN (" +
 		"   SELECT id" +
@@ -62,7 +63,8 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 	 * @param intervalEnd
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 */
-	public NodeHistoryReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
+	public NodeHistoryReader(
+			DatabaseLoginCredentials loginCredentials, boolean readAllUsers, Date intervalBegin, Date intervalEnd) {
 		super(loginCredentials, readAllUsers);
 		
 		this.intervalBegin = intervalBegin;

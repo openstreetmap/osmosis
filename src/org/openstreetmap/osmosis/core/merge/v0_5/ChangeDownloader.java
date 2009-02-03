@@ -155,7 +155,7 @@ public class ChangeDownloader implements RunnableChangeSource {
 			BufferedInputStream source;
 			BufferedOutputStream sink;
 			File outputFile;
-			byte buffer[];
+			byte[] buffer;
 			
 			// Open an input stream for the changeset file on the server.
 			inputStream = changesetUrl.openStream();
@@ -237,7 +237,8 @@ public class ChangeDownloader implements RunnableChangeSource {
 		try {
 			baseUrl = new URL(configuration.getBaseUrl());
 		} catch (MalformedURLException e) {
-			throw new OsmosisRuntimeException("Unable to convert URL string (" + configuration.getBaseUrl() + ") into a URL.", e);
+			throw new OsmosisRuntimeException(
+					"Unable to convert URL string (" + configuration.getBaseUrl() + ") into a URL.", e);
 		}
 		
 		tmpFileList = new ArrayList<File>();
