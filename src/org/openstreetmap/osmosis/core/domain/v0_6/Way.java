@@ -229,4 +229,15 @@ public class Way extends Entity implements Comparable<Way> {
 	public List<WayNode> getWayNodes() {
 		return wayNodes;
 	}
+
+
+    /**
+     * Is this way closed? (A way is closed if the first node id equals the last node id.)
+     *
+     * @return True or false
+     */
+    public Boolean isClosed() {
+        return wayNodes.get(0).getNodeId() == wayNodes.get(wayNodes.size()-1).getNodeId();
+    }
+
 }
