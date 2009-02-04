@@ -87,7 +87,7 @@ MYAPP_HOME=`cd "$MYAPP_HOME" && pwd`
 cd "$saveddir"
 
 # Build up the classpath of required jar files.
-MYAPP_CLASSPATH=$MYAPP_HOME/osmosis.jar
+MYAPP_CLASSPATH=$MYAPP_HOME/osmosis.jar:$OSMOSIS_CLASSPATH
 for FILE in `ls $MYAPP_HOME/lib/default/`; do
   MYAPP_CLASSPATH=$MYAPP_CLASSPATH:$MYAPP_HOME/lib/default/$FILE
 done
