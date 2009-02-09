@@ -136,7 +136,7 @@
 				<exclude name=".*"/>
 			</zipfileset>
 		</zip>
-		<tar destfile="dist/${project.name}-${project.version}.tar.gz" compression="gzip">
+		<tar destfile="dist/${project.name}-${project.version}.tar.gz" compression="gzip" longfile="gnu">
 			<tarfileset prefix="${project.name}-${project.version}" dir="." mode="755">
 				<include name="bin/*"/>
 			</tarfileset>
@@ -147,7 +147,7 @@
 				<exclude name="eclipse/"/>
 			</tarfileset>
 		</tar>
-		<tar destfile="dist/${project.name}-${project.version}-bin.tar.gz" compression="gzip">
+		<tar destfile="dist/${project.name}-${project.version}-bin.tar.gz" compression="gzip" longfile="gnu">
 			<tarfileset prefix="${project.name}-${project.version}" dir="." mode="755">
 				<include name="bin/*"/>
 			</tarfileset>
