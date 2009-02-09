@@ -393,21 +393,22 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 			DatasetReader reader;
 			
 			reader = new DatasetStoreReader(
-				releasableContainer.add(nodeObjectStore.createReader()),
-				releasableContainer.add(nodeObjectOffsetIndexWriter.createReader()),
-				releasableContainer.add(wayObjectStore.createReader()),
-				releasableContainer.add(wayObjectOffsetIndexWriter.createReader()),
-				releasableContainer.add(relationObjectStore.createReader()),
-				releasableContainer.add(relationObjectOffsetIndexWriter.createReader()),
-				tileCalculator,
-				uintComparator,
-				releasableContainer.add(nodeTileIndexWriter.createReader()),
-				releasableContainer.add(wayTileIndexWriter.createReader()),
-				releasableContainer.add(nodeWayIndexWriter.createReader()),
-				releasableContainer.add(nodeRelationIndexWriter.createReader()),
-				releasableContainer.add(wayRelationIndexWriter.createReader()),
-				releasableContainer.add(relationRelationIndexWriter.createReader()),
-				enableWayTileIndex
+					new NodeStorageContainer(
+							releasableContainer.add(nodeObjectStore.createReader()),
+							releasableContainer.add(nodeObjectOffsetIndexWriter.createReader()),
+							releasableContainer.add(nodeTileIndexWriter.createReader()),
+							releasableContainer.add(nodeWayIndexWriter.createReader()),
+							releasableContainer.add(nodeRelationIndexWriter.createReader())),
+					new WayStorageContainer(
+							releasableContainer.add(wayObjectStore.createReader()),
+							releasableContainer.add(wayObjectOffsetIndexWriter.createReader()),
+							releasableContainer.add(wayTileIndexWriter.createReader()),
+							releasableContainer.add(wayRelationIndexWriter.createReader())),
+					new RelationStorageContainer(
+							releasableContainer.add(relationObjectStore.createReader()),
+							releasableContainer.add(relationObjectOffsetIndexWriter.createReader()),
+							releasableContainer.add(relationRelationIndexWriter.createReader())),
+					enableWayTileIndex
 			);
 			
 			// Stop the release of all created objects.

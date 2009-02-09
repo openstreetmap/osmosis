@@ -19,7 +19,17 @@ import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
  * @author Brett Henderson
  */
 public class DatabaseContext {
-	private static boolean driverLoaded;
+	
+	static {
+		// Register the database driver.
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			
+		} catch (ClassNotFoundException e) {
+			throw new OsmosisRuntimeException("Unable to find database driver.", e);
+		}
+	}
+	
 	
 	private DatabaseLoginCredentials loginCredentials;
 	private Connection connection;
@@ -43,30 +53,6 @@ public class DatabaseContext {
 	
 	
 	/**
-	 * Utility method for ensuring that the database driver is registered.
-	 */
-	private static void loadDatabaseDriver() {
-		if (!driverLoaded) {
-			// Lock to ensure two threads don't try to load the driver at the same time.
-			synchronized (DatabaseContext.class) {
-				// Check again to ensure another thread hasn't loaded the driver
-				// while we waited for the lock.
-				if (!driverLoaded) {
-					try {
-						Class.forName("com.mysql.jdbc.Driver");
-						
-					} catch (ClassNotFoundException e) {
-						throw new OsmosisRuntimeException("Unable to find database driver.", e);
-					}
-					
-					driverLoaded = true;
-				}
-			}
-		}
-	}
-	
-	
-	/**
 	 * If no database connection is open, a new connection is opened. The
 	 * database connection is then returned.
 	 * 
@@ -74,8 +60,6 @@ public class DatabaseContext {
 	 */
 	private Connection getConnection() {
 		if (connection == null) {
-			
-			loadDatabaseDriver();
 			
 			try {
 				String url;

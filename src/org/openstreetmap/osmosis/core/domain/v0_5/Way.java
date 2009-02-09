@@ -119,6 +119,21 @@ public class Way extends Entity implements Comparable<Way> {
 	
 	
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		/*
+		 * As per the hashCode definition, this doesn't have to be unique it
+		 * just has to return the same value for any two objects that compare
+		 * equal. Using id will provide a good distribution of values but is
+		 * simple to calculate.
+		 */
+		return (int) getId();
+	}
+	
+	
+	/**
 	 * Compares this node list to the specified node list. The comparison is
 	 * based on a direct comparison of the node ids.
 	 * 

@@ -200,13 +200,13 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	/**
 	 * Sets a new members value.
 	 * 
-	 * @param members
+	 * @param newMembers
 	 *            The new relation members.
 	 * @return This object allowing method chaining.
 	 */
-	public RelationBuilder setMembers(List<RelationMember> members) {
-		members.clear();
-		members.addAll(members);
+	public RelationBuilder setMembers(List<RelationMember> newMembers) {
+		newMembers.clear();
+		newMembers.addAll(newMembers);
 		
 		return this;
 	}

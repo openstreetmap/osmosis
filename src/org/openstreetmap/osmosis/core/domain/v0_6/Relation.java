@@ -44,7 +44,8 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 * @param members
 	 *            The members to apply to the object.
 	 */
-	public Relation(long id, int version, Date timestamp, OsmUser user, Collection<Tag> tags, List<RelationMember> members) {
+	public Relation(
+			long id, int version, Date timestamp, OsmUser user, Collection<Tag> tags, List<RelationMember> members) {
 		// Chain to the more-specific constructor
 		this(id, version, new SimpleTimestampContainer(timestamp), user, tags, members);
 	}
@@ -67,7 +68,9 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 * @param members
 	 *            The members to apply to the object.
 	 */
-	public Relation(long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags, List<RelationMember> members) {
+	public Relation(
+			long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags,
+			List<RelationMember> members) {
 		super(id, timestampContainer, user, version, tags);
 		
 		this.members = Collections.unmodifiableList(new ArrayList<RelationMember>(members));
@@ -132,6 +135,21 @@ public class Relation extends Entity implements Comparable<Relation> {
 		} else {
 			return false;
 		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		/*
+		 * As per the hashCode definition, this doesn't have to be unique it
+		 * just has to return the same value for any two objects that compare
+		 * equal. Using both id and version will provide a good distribution of
+		 * values but is simple to calculate.
+		 */
+		return (int) getId() + getVersion();
 	}
 	
 	

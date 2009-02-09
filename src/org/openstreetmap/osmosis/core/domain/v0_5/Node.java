@@ -115,6 +115,21 @@ public class Node extends Entity implements Comparable<Node> {
 			return false;
 		}
 	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		/*
+		 * As per the hashCode definition, this doesn't have to be unique it
+		 * just has to return the same value for any two objects that compare
+		 * equal. Using id will provide a good distribution of values but is
+		 * simple to calculate.
+		 */
+		return (int) getId();
+	}
 
 
 	/**

@@ -41,7 +41,9 @@ public class Node extends Entity implements Comparable<Node> {
 	 * @param longitude
 	 *            The geographic longitude.
 	 */
-	public Node(long id, int version, Date timestamp, OsmUser user, Collection<Tag> tags, double latitude, double longitude) {
+	public Node(
+			long id, int version, Date timestamp, OsmUser user, Collection<Tag> tags, double latitude,
+			double longitude) {
 		// Chain to the more-specific constructor
 		this(id, version, new SimpleTimestampContainer(timestamp), user, tags, latitude, longitude);
 	}
@@ -66,7 +68,9 @@ public class Node extends Entity implements Comparable<Node> {
 	 * @param longitude
 	 *            The geographic longitude.
 	 */
-	public Node(long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags, double latitude, double longitude) {
+	public Node(
+			long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags,
+			double latitude, double longitude) {
 		super(id, timestampContainer, user, version, tags);
 		
 		this.latitude = latitude;
@@ -122,6 +126,21 @@ public class Node extends Entity implements Comparable<Node> {
 		} else {
 			return false;
 		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		/*
+		 * As per the hashCode definition, this doesn't have to be unique it
+		 * just has to return the same value for any two objects that compare
+		 * equal. Using both id and version will provide a good distribution of
+		 * values but is simple to calculate.
+		 */
+		return (int) getId() + getVersion();
 	}
 
 

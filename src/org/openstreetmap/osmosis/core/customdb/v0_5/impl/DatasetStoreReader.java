@@ -2,7 +2,6 @@
 package org.openstreetmap.osmosis.core.customdb.v0_5.impl;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.container.v0_5.EntityContainer;
@@ -17,12 +16,7 @@ import org.openstreetmap.osmosis.core.domain.v0_5.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_5.Way;
 import org.openstreetmap.osmosis.core.filter.v0_5.impl.BaseDatasetReader;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
-import org.openstreetmap.osmosis.core.mysql.common.TileCalculator;
-import org.openstreetmap.osmosis.core.store.IndexStoreReader;
-import org.openstreetmap.osmosis.core.store.IntegerLongIndexElement;
-import org.openstreetmap.osmosis.core.store.LongLongIndexElement;
 import org.openstreetmap.osmosis.core.store.MultipleSourceIterator;
-import org.openstreetmap.osmosis.core.store.RandomAccessObjectStoreReader;
 import org.openstreetmap.osmosis.core.store.ReleasableAdaptorForIterator;
 import org.openstreetmap.osmosis.core.store.UpcastIterator;
 
@@ -38,19 +32,9 @@ import org.openstreetmap.osmosis.core.store.UpcastIterator;
  */
 public class DatasetStoreReader extends BaseDatasetReader {
 	
-	private RandomAccessObjectStoreReader<Node> nodeObjectReader;
-	private IndexStoreReader<Long, LongLongIndexElement> nodeObjectOffsetIndexReader;
-	private RandomAccessObjectStoreReader<Way> wayObjectReader;
-	private IndexStoreReader<Long, LongLongIndexElement> wayObjectOffsetIndexReader;
-	private RandomAccessObjectStoreReader<Relation> relationObjectReader;
-	private IndexStoreReader<Long, LongLongIndexElement> relationObjectOffsetIndexReader;
-	
-	private IndexStoreReader<Integer, IntegerLongIndexElement> nodeTileIndexReader;
-	private WayTileAreaIndexReader wayTileIndexReader;
-	private IndexStoreReader<Long, LongLongIndexElement> nodeWayIndexReader;
-	private IndexStoreReader<Long, LongLongIndexElement> nodeRelationIndexReader;
-	private IndexStoreReader<Long, LongLongIndexElement> wayRelationIndexReader;
-	private IndexStoreReader<Long, LongLongIndexElement> relationRelationIndexReader;
+	private NodeStorageContainer nodeStorageContainer;
+	private WayStorageContainer wayStorageContainer;
+	private RelationStorageContainer relationStorageContainer;
 	
 	private boolean enableWayTileIndex;
 	
@@ -58,65 +42,24 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param nodeObjectReader
-	 *            The raw node objects.
-	 * @param nodeObjectOffsetIndexReader
-	 *            The node object offsets.
-	 * @param wayObjectReader
-	 *            The raw way objects.
-	 * @param wayObjectOffsetIndexReader
-	 *            The way object offsets.
-	 * @param relationObjectReader
-	 *            The raw relation objects.
-	 * @param relationObjectOffsetIndexReader
-	 *            The relation object offsets.
-	 * @param tileCalculator
-	 *            The tile index value calculator.
-	 * @param tileOrdering
-	 *            The ordering of tiles within the index.
-	 * @param nodeTileIndexReader
-	 *            The tile to node index.
-	 * @param wayTileIndexReader
-	 *            The tile to way index.
-	 * @param nodeWayIndexReader
-	 *            The node to way index.
-	 * @param nodeRelationIndexReader
-	 *            The node to relation index.
-	 * @param wayRelationIndexReader
-	 *            The way to relation index.
-	 * @param relationRelationIndexReader
-	 *            The relation to relation index.
+	 * @param nodeStorageContainer
+	 *            The node storages.
+	 * @param wayStorageContainer
+	 *            The way storages.
+	 * @param relationStorageContainer
+	 *            The relation storages.
 	 * @param enableWayTileIndex
 	 *            If true a tile index is created for ways, otherwise a node-way
 	 *            index is used.
 	 */
 	public DatasetStoreReader(
-			RandomAccessObjectStoreReader<Node> nodeObjectReader,
-			IndexStoreReader<Long, LongLongIndexElement> nodeObjectOffsetIndexReader,
-			RandomAccessObjectStoreReader<Way> wayObjectReader,
-			IndexStoreReader<Long, LongLongIndexElement> wayObjectOffsetIndexReader,
-			RandomAccessObjectStoreReader<Relation> relationObjectReader,
-			IndexStoreReader<Long, LongLongIndexElement> relationObjectOffsetIndexReader,
-			TileCalculator tileCalculator, Comparator<Integer> tileOrdering,
-			IndexStoreReader<Integer, IntegerLongIndexElement> nodeTileIndexReader,
-			WayTileAreaIndexReader wayTileIndexReader,
-			IndexStoreReader<Long, LongLongIndexElement> nodeWayIndexReader,
-			IndexStoreReader<Long, LongLongIndexElement> nodeRelationIndexReader,
-			IndexStoreReader<Long, LongLongIndexElement> wayRelationIndexReader,
-			IndexStoreReader<Long, LongLongIndexElement> relationRelationIndexReader, boolean enableWayTileIndex) {
-		this.nodeObjectReader = nodeObjectReader;
-		this.nodeObjectOffsetIndexReader = nodeObjectOffsetIndexReader;
-		this.wayObjectReader = wayObjectReader;
-		this.wayObjectOffsetIndexReader = wayObjectOffsetIndexReader;
-		this.relationObjectReader = relationObjectReader;
-		this.relationObjectOffsetIndexReader = relationObjectOffsetIndexReader;
-		
-		this.nodeTileIndexReader = nodeTileIndexReader;
-		this.wayTileIndexReader = wayTileIndexReader;
-		this.nodeWayIndexReader = nodeWayIndexReader;
-		this.nodeRelationIndexReader = nodeRelationIndexReader;
-		this.wayRelationIndexReader = wayRelationIndexReader;
-		this.relationRelationIndexReader = relationRelationIndexReader;
+			NodeStorageContainer nodeStorageContainer,
+			WayStorageContainer wayStorageContainer,
+			RelationStorageContainer relationStorageContainer,
+			boolean enableWayTileIndex) {
+		this.nodeStorageContainer = nodeStorageContainer;
+		this.wayStorageContainer = wayStorageContainer;
+		this.relationStorageContainer = relationStorageContainer;
 		
 		this.enableWayTileIndex = enableWayTileIndex;
 	}
@@ -127,7 +70,8 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	 */
 	@Override
 	protected ReleasableIterator<Long> getNodeIdsForTileRange(int minimumTile, int maximumTile) {
-		return new TileIndexValueIdIterator(nodeTileIndexReader.getRange(minimumTile, maximumTile));
+		return new TileIndexValueIdIterator(
+				nodeStorageContainer.getNodeTileIndexReader().getRange(minimumTile, maximumTile));
 	}
 	
 	
@@ -136,7 +80,8 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	 */
 	@Override
 	protected ReleasableIterator<Long> getWayIdsForTileRange(int minimumTile, int maximumTile) {
-		return new ReleasableAdaptorForIterator<Long>(wayTileIndexReader.getRange(minimumTile, maximumTile));
+		return new ReleasableAdaptorForIterator<Long>(
+				wayStorageContainer.getWayTileIndexReader().getRange(minimumTile, maximumTile));
 	}
 	
 	
@@ -145,7 +90,8 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	 */
 	@Override
 	protected ReleasableIterator<Long> getWayIdsOwningNode(long nodeId) {
-		return new RelationalIndexValueIdIterator(nodeWayIndexReader.getRange(nodeId, nodeId));
+		return new RelationalIndexValueIdIterator(
+				nodeStorageContainer.getNodeWayIndexReader().getRange(nodeId, nodeId));
 	}
 	
 	
@@ -154,7 +100,8 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	 */
 	@Override
 	protected ReleasableIterator<Long> getRelationIdsOwningNode(long nodeId) {
-		return new RelationalIndexValueIdIterator(nodeRelationIndexReader.getRange(nodeId, nodeId));
+		return new RelationalIndexValueIdIterator(
+				nodeStorageContainer.getNodeRelationIndexReader().getRange(nodeId, nodeId));
 	}
 	
 	
@@ -163,7 +110,8 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	 */
 	@Override
 	protected ReleasableIterator<Long> getRelationIdsOwningWay(long wayId) {
-		return new RelationalIndexValueIdIterator(wayRelationIndexReader.getRange(wayId, wayId));
+		return new RelationalIndexValueIdIterator(
+				wayStorageContainer.getWayRelationIndexReader().getRange(wayId, wayId));
 	}
 	
 	
@@ -172,7 +120,8 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	 */
 	@Override
 	protected ReleasableIterator<Long> getRelationIdsOwningRelation(long relationId) {
-		return new RelationalIndexValueIdIterator(relationRelationIndexReader.getRange(relationId, relationId));
+		return new RelationalIndexValueIdIterator(
+				relationStorageContainer.getRelationRelationIndexReader().getRange(relationId, relationId));
 	}
 	
 	
@@ -190,8 +139,8 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	 */
 	@Override
 	public Node getNode(long id) {
-		return nodeObjectReader.get(
-			nodeObjectOffsetIndexReader.get(id).getValue()
+		return nodeStorageContainer.getNodeObjectReader().get(
+			nodeStorageContainer.getNodeObjectOffsetIndexReader().get(id).getValue()
 		);
 	}
 	
@@ -201,8 +150,8 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	 */
 	@Override
 	public Way getWay(long id) {
-		return wayObjectReader.get(
-			wayObjectOffsetIndexReader.get(id).getValue()
+		return wayStorageContainer.getWayObjectReader().get(
+			wayStorageContainer.getWayObjectOffsetIndexReader().get(id).getValue()
 		);
 	}
 	
@@ -212,8 +161,8 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	 */
 	@Override
 	public Relation getRelation(long id) {
-		return relationObjectReader.get(
-			relationObjectOffsetIndexReader.get(id).getValue()
+		return relationStorageContainer.getRelationObjectReader().get(
+			relationStorageContainer.getRelationObjectOffsetIndexReader().get(id).getValue()
 		);
 	}
 	
@@ -231,17 +180,17 @@ public class DatasetStoreReader extends BaseDatasetReader {
 				new UpcastIterator<EntityContainer, NodeContainer>(
 						new NodeContainerIterator(
 								new ReleasableAdaptorForIterator<Node>(
-										nodeObjectReader.iterate()))));
+										nodeStorageContainer.getNodeObjectReader().iterate()))));
 		sources.add(
 				new UpcastIterator<EntityContainer, WayContainer>(
 						new WayContainerIterator(
 								new ReleasableAdaptorForIterator<Way>(
-										wayObjectReader.iterate()))));
+										wayStorageContainer.getWayObjectReader().iterate()))));
 		sources.add(
 				new UpcastIterator<EntityContainer, RelationContainer>(
 						new RelationContainerIterator(
 								new ReleasableAdaptorForIterator<Relation>(
-										relationObjectReader.iterate()))));
+										relationStorageContainer.getRelationObjectReader().iterate()))));
 		
 		return new MultipleSourceIterator<EntityContainer>(sources);
 	}
@@ -252,7 +201,8 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	 */
 	@Override
 	public void release() {
-		nodeObjectReader.release();
-		nodeObjectOffsetIndexReader.release();
+		nodeStorageContainer.release();
+		wayStorageContainer.release();
+		relationStorageContainer.release();
 	}
 }

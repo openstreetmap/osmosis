@@ -230,12 +230,12 @@ public abstract class EntityBuilder<T extends Entity> implements Storeable {
 	/**
 	 * Sets a new timestamp value.
 	 * 
-	 * @param timestampContainer
+	 * @param newTimestampContainer
 	 *            The timestamp wrapped within a container.
 	 * @return This object allowing method chaining.
 	 */
-	public EntityBuilder<T> setTimestamp(TimestampContainer timestampContainer) {
-		this.timestampContainer = timestampContainer;
+	public EntityBuilder<T> setTimestamp(TimestampContainer newTimestampContainer) {
+		this.timestampContainer = newTimestampContainer;
 		
 		return this;
 	}

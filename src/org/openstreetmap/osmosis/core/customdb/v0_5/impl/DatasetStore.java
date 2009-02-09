@@ -13,6 +13,10 @@ import org.openstreetmap.osmosis.core.container.v0_5.EntityProcessor;
 import org.openstreetmap.osmosis.core.container.v0_5.NodeContainer;
 import org.openstreetmap.osmosis.core.container.v0_5.RelationContainer;
 import org.openstreetmap.osmosis.core.container.v0_5.WayContainer;
+import org.openstreetmap.osmosis.core.customdb.v0_5.impl.DatasetStoreReader;
+import org.openstreetmap.osmosis.core.customdb.v0_5.impl.NodeStorageContainer;
+import org.openstreetmap.osmosis.core.customdb.v0_5.impl.RelationStorageContainer;
+import org.openstreetmap.osmosis.core.customdb.v0_5.impl.WayStorageContainer;
 import org.openstreetmap.osmosis.core.domain.v0_5.EntityType;
 import org.openstreetmap.osmosis.core.domain.v0_5.Node;
 import org.openstreetmap.osmosis.core.domain.v0_5.Relation;
@@ -393,21 +397,22 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 			DatasetReader reader;
 			
 			reader = new DatasetStoreReader(
-				releasableContainer.add(nodeObjectStore.createReader()),
-				releasableContainer.add(nodeObjectOffsetIndexWriter.createReader()),
-				releasableContainer.add(wayObjectStore.createReader()),
-				releasableContainer.add(wayObjectOffsetIndexWriter.createReader()),
-				releasableContainer.add(relationObjectStore.createReader()),
-				releasableContainer.add(relationObjectOffsetIndexWriter.createReader()),
-				tileCalculator,
-				uintComparator,
-				releasableContainer.add(nodeTileIndexWriter.createReader()),
-				releasableContainer.add(wayTileIndexWriter.createReader()),
-				releasableContainer.add(nodeWayIndexWriter.createReader()),
-				releasableContainer.add(nodeRelationIndexWriter.createReader()),
-				releasableContainer.add(wayRelationIndexWriter.createReader()),
-				releasableContainer.add(relationRelationIndexWriter.createReader()),
-				enableWayTileIndex
+					new NodeStorageContainer(
+							releasableContainer.add(nodeObjectStore.createReader()),
+							releasableContainer.add(nodeObjectOffsetIndexWriter.createReader()),
+							releasableContainer.add(nodeTileIndexWriter.createReader()),
+							releasableContainer.add(nodeWayIndexWriter.createReader()),
+							releasableContainer.add(nodeRelationIndexWriter.createReader())),
+					new WayStorageContainer(
+							releasableContainer.add(wayObjectStore.createReader()),
+							releasableContainer.add(wayObjectOffsetIndexWriter.createReader()),
+							releasableContainer.add(wayTileIndexWriter.createReader()),
+							releasableContainer.add(wayRelationIndexWriter.createReader())),
+					new RelationStorageContainer(
+							releasableContainer.add(relationObjectStore.createReader()),
+							releasableContainer.add(relationObjectOffsetIndexWriter.createReader()),
+							releasableContainer.add(relationRelationIndexWriter.createReader())),
+					enableWayTileIndex
 			);
 			
 			// Stop the release of all created objects.

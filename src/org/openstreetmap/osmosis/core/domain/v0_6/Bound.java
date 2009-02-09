@@ -267,6 +267,7 @@ public class Bound extends Entity implements Comparable<Bound> {
 	 */
 	public Bound union(Bound unionBound) {
 		double newRight = 0.0, newLeft = 0.0, newTop, newBottom;
+		String newOrigin;
 
 		if (unionBound == null) {
 			return this; // nothing to compute a union with
@@ -358,11 +359,16 @@ public class Bound extends Entity implements Comparable<Bound> {
 		if (Double.compare(newRight, newLeft) == 0) {
 			return null;
 		}
+		
 		// Keep the origin string from this if it's not blank, otherwise use the origin string from
 		// the union Bound
-		return new Bound(newRight, newLeft, newTop, newBottom, this.getOrigin() != ""
-		        ? this.getOrigin()
-		        : unionBound.getOrigin());
+		if (this.getOrigin() != "") {
+			newOrigin = getOrigin();
+		} else {
+			newOrigin = unionBound.getOrigin();
+		}
+		
+		return new Bound(newRight, newLeft, newTop, newBottom, newOrigin);
 	}
 
 
@@ -462,5 +468,20 @@ public class Bound extends Entity implements Comparable<Bound> {
 		} else {
 			return false;
 		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		/*
+		 * As per the hashCode definition, this doesn't have to be unique it
+		 * just has to return the same value for any two objects that compare
+		 * equal. Using both id and version will provide a good distribution of
+		 * values but is simple to calculate.
+		 */
+		return (int) getId() + getVersion();
 	}
 }

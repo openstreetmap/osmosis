@@ -146,21 +146,24 @@ public class TaskRegistrar {
 		// Register factories.
 		factoryRegister.register("apply-change", new org.openstreetmap.osmosis.core.change.v0_5.ChangeApplierFactory());
 		factoryRegister.register("ac", new org.openstreetmap.osmosis.core.change.v0_5.ChangeApplierFactory());
-		factoryRegister.register("bounding-box", new org.openstreetmap.osmosis.core.filter.v0_5.BoundingBoxFilterFactory());
+		factoryRegister.register("bounding-box",
+				new org.openstreetmap.osmosis.core.filter.v0_5.BoundingBoxFilterFactory());
 		factoryRegister.register("bb", new org.openstreetmap.osmosis.core.filter.v0_5.BoundingBoxFilterFactory());
-		factoryRegister.register("derive-change", new org.openstreetmap.osmosis.core.change.v0_5.ChangeDeriverFactory());
+		factoryRegister.register("derive-change",
+				new org.openstreetmap.osmosis.core.change.v0_5.ChangeDeriverFactory());
 		factoryRegister.register("dc", new org.openstreetmap.osmosis.core.change.v0_5.ChangeDeriverFactory());
 		factoryRegister.register("read-mysql", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlReaderFactory());
 		factoryRegister.register("rm", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlReaderFactory());
-		factoryRegister
-				.register("read-mysql-change", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlChangeReaderFactory());
+		factoryRegister.register("read-mysql-change",
+				new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlChangeReaderFactory());
 		factoryRegister.register("rmc", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlChangeReaderFactory());
 		factoryRegister.register("read-mysql-current",
 				new org.openstreetmap.osmosis.core.mysql.v0_5.MySqlCurrentReaderFactory());
 		factoryRegister.register("rmcur", new org.openstreetmap.osmosis.core.mysql.v0_5.MySqlCurrentReaderFactory());
 		factoryRegister.register("read-xml", new org.openstreetmap.osmosis.core.xml.v0_5.XmlReaderFactory());
 		factoryRegister.register("rx", new org.openstreetmap.osmosis.core.xml.v0_5.XmlReaderFactory());
-		factoryRegister.register("read-xml-change", new org.openstreetmap.osmosis.core.xml.v0_5.XmlChangeReaderFactory());
+		factoryRegister.register("read-xml-change",
+				new org.openstreetmap.osmosis.core.xml.v0_5.XmlChangeReaderFactory());
 		factoryRegister.register("rxc", new org.openstreetmap.osmosis.core.xml.v0_5.XmlChangeReaderFactory());
 		factoryRegister.register("sort", entitySorterFactory05);
 		factoryRegister.register("s", entitySorterFactory05);
@@ -171,15 +174,18 @@ public class TaskRegistrar {
 		factoryRegister.register("write-mysql-change",
 				new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlChangeWriterFactory());
 		factoryRegister.register("wmc", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlChangeWriterFactory());
-		factoryRegister.register("truncate-mysql", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlTruncatorFactory());
+		factoryRegister.register("truncate-mysql",
+				new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlTruncatorFactory());
 		factoryRegister.register("tm", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlTruncatorFactory());
 		factoryRegister.register("write-xml", new org.openstreetmap.osmosis.core.xml.v0_5.XmlWriterFactory());
 		factoryRegister.register("wx", new org.openstreetmap.osmosis.core.xml.v0_5.XmlWriterFactory());
-		factoryRegister.register("write-xml-change", new org.openstreetmap.osmosis.core.xml.v0_5.XmlChangeWriterFactory());
+		factoryRegister.register("write-xml-change",
+				new org.openstreetmap.osmosis.core.xml.v0_5.XmlChangeWriterFactory());
 		factoryRegister.register("wxc", new org.openstreetmap.osmosis.core.xml.v0_5.XmlChangeWriterFactory());
 		factoryRegister.register("write-null", new org.openstreetmap.osmosis.core.misc.v0_5.NullWriterFactory());
 		factoryRegister.register("wn", new org.openstreetmap.osmosis.core.misc.v0_5.NullWriterFactory());
-		factoryRegister.register("write-null-change", new org.openstreetmap.osmosis.core.misc.v0_5.NullChangeWriterFactory());
+		factoryRegister.register("write-null-change",
+				new org.openstreetmap.osmosis.core.misc.v0_5.NullChangeWriterFactory());
 		factoryRegister.register("wnc", new org.openstreetmap.osmosis.core.misc.v0_5.NullChangeWriterFactory());
 		factoryRegister.register("buffer", new org.openstreetmap.osmosis.core.buffer.v0_5.EntityBufferFactory());
 		factoryRegister.register("b", new org.openstreetmap.osmosis.core.buffer.v0_5.EntityBufferFactory());
@@ -191,12 +197,14 @@ public class TaskRegistrar {
 		factoryRegister.register("mc", new org.openstreetmap.osmosis.core.merge.v0_5.ChangeMergerFactory());
 		factoryRegister.register("read-api", new org.openstreetmap.osmosis.core.xml.v0_5.XmlDownloaderFactory());
 		factoryRegister.register("ra", new org.openstreetmap.osmosis.core.xml.v0_5.XmlDownloaderFactory());
-		factoryRegister.register("bounding-polygon", new org.openstreetmap.osmosis.core.filter.v0_5.PolygonFilterFactory());
+		factoryRegister.register("bounding-polygon",
+				new org.openstreetmap.osmosis.core.filter.v0_5.PolygonFilterFactory());
 		factoryRegister.register("bp", new org.openstreetmap.osmosis.core.filter.v0_5.PolygonFilterFactory());
-		factoryRegister.register("report-entity", new org.openstreetmap.osmosis.core.report.v0_5.EntityReporterFactory());
+		factoryRegister.register("report-entity",
+				new org.openstreetmap.osmosis.core.report.v0_5.EntityReporterFactory());
 		factoryRegister.register("re", new org.openstreetmap.osmosis.core.report.v0_5.EntityReporterFactory());
-		factoryRegister
-				.register("report-integrity", new org.openstreetmap.osmosis.core.report.v0_5.IntegrityReporterFactory());
+		factoryRegister.register("report-integrity",
+				new org.openstreetmap.osmosis.core.report.v0_5.IntegrityReporterFactory());
 		factoryRegister.register("ri", new org.openstreetmap.osmosis.core.report.v0_5.IntegrityReporterFactory());
 		factoryRegister.register("log-progress",
 				new org.openstreetmap.osmosis.core.progress.v0_5.EntityProgressLoggerFactory());
@@ -208,25 +216,31 @@ public class TaskRegistrar {
 		factoryRegister.register("t", new org.openstreetmap.osmosis.core.tee.v0_5.EntityTeeFactory());
 		factoryRegister.register("tee-change", new org.openstreetmap.osmosis.core.tee.v0_5.ChangeTeeFactory());
 		factoryRegister.register("tc", new org.openstreetmap.osmosis.core.tee.v0_5.ChangeTeeFactory());
-		factoryRegister.register("write-customdb", new org.openstreetmap.osmosis.core.customdb.v0_5.WriteDatasetFactory());
+		factoryRegister.register("write-customdb",
+				new org.openstreetmap.osmosis.core.customdb.v0_5.WriteDatasetFactory());
 		factoryRegister.register("wc", new org.openstreetmap.osmosis.core.customdb.v0_5.WriteDatasetFactory());
 		factoryRegister.register("dataset-bounding-box",
 				new org.openstreetmap.osmosis.core.filter.v0_5.DatasetBoundingBoxFilterFactory());
-		factoryRegister.register("dbb", new org.openstreetmap.osmosis.core.filter.v0_5.DatasetBoundingBoxFilterFactory());
+		factoryRegister.register("dbb",
+				new org.openstreetmap.osmosis.core.filter.v0_5.DatasetBoundingBoxFilterFactory());
 		factoryRegister.register("dataset-dump", new org.openstreetmap.osmosis.core.customdb.v0_5.DumpDatasetFactory());
 		factoryRegister.register("dd", new org.openstreetmap.osmosis.core.customdb.v0_5.DumpDatasetFactory());
-		factoryRegister.register("read-customdb", new org.openstreetmap.osmosis.core.customdb.v0_5.ReadDatasetFactory());
+		factoryRegister.register("read-customdb",
+				new org.openstreetmap.osmosis.core.customdb.v0_5.ReadDatasetFactory());
 		factoryRegister.register("rc", new org.openstreetmap.osmosis.core.customdb.v0_5.ReadDatasetFactory());
-		factoryRegister
-				.register("write-pgsql", new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetWriterFactory());
+		factoryRegister.register("write-pgsql",
+				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetWriterFactory());
 		factoryRegister.register("wp", new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetWriterFactory());
 		factoryRegister.register("truncate-pgsql",
 				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetTruncatorFactory());
-		factoryRegister.register("tp", new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetTruncatorFactory());
+		factoryRegister.register("tp",
+				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetTruncatorFactory());
 		factoryRegister.register("write-pgsql-dump",
 				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetDumpWriterFactory());
-		factoryRegister.register("wpd", new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetDumpWriterFactory());
-		factoryRegister.register("read-pgsql", new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetReaderFactory());
+		factoryRegister.register("wpd",
+				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetDumpWriterFactory());
+		factoryRegister.register("read-pgsql",
+				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetReaderFactory());
 		factoryRegister.register("rp", new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetReaderFactory());
 		factoryRegister.register("write-pgsql-change",
 				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlChangeWriterFactory());
@@ -235,51 +249,62 @@ public class TaskRegistrar {
 		factoryRegister.register("un", new org.openstreetmap.osmosis.core.filter.v0_5.UsedNodeFilterFactory());
 		factoryRegister.register("node-key", new org.openstreetmap.osmosis.core.filter.v0_5.NodeKeyFilterFactory());
 		factoryRegister.register("nk", new org.openstreetmap.osmosis.core.filter.v0_5.NodeKeyFilterFactory());
-		factoryRegister.register("node-key-value", new org.openstreetmap.osmosis.core.filter.v0_5.NodeKeyValueFilterFactory());
+		factoryRegister.register("node-key-value",
+				new org.openstreetmap.osmosis.core.filter.v0_5.NodeKeyValueFilterFactory());
 		factoryRegister.register("nkv", new org.openstreetmap.osmosis.core.filter.v0_5.NodeKeyValueFilterFactory());
-		factoryRegister.register("way-key-value", new org.openstreetmap.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
+		factoryRegister.register("way-key-value",
+				new org.openstreetmap.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
 		factoryRegister.register("wkv", new org.openstreetmap.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
 		factoryRegister.register("read-change-interval",
 				new org.openstreetmap.osmosis.core.merge.v0_5.ChangeDownloaderFactory());
 		factoryRegister.register("rci", new org.openstreetmap.osmosis.core.merge.v0_5.ChangeDownloaderFactory());
 		factoryRegister.register("read-change-interval-init",
 				new org.openstreetmap.osmosis.core.merge.v0_5.ChangeDownloadInitializerFactory());
-		factoryRegister.register("rcii", new org.openstreetmap.osmosis.core.merge.v0_5.ChangeDownloadInitializerFactory());
+		factoryRegister.register("rcii",
+				new org.openstreetmap.osmosis.core.merge.v0_5.ChangeDownloadInitializerFactory());
 		factoryRegister.register("migrate", new MigrateV05ToV06Factory());
 		factoryRegister.register("mig", new MigrateV05ToV06Factory());
 		factoryRegister.register("migrate-change", new MigrateChangeV05ToV06Factory());
 		factoryRegister.register("migc", new MigrateChangeV05ToV06Factory());
 
-		factoryRegister.register("apply-change-0.5", new org.openstreetmap.osmosis.core.change.v0_5.ChangeApplierFactory());
-		factoryRegister
-				.register("bounding-box-0.5", new org.openstreetmap.osmosis.core.filter.v0_5.BoundingBoxFilterFactory());
-		factoryRegister.register("derive-change-0.5", new org.openstreetmap.osmosis.core.change.v0_5.ChangeDeriverFactory());
+		factoryRegister.register("apply-change-0.5",
+				new org.openstreetmap.osmosis.core.change.v0_5.ChangeApplierFactory());
+		factoryRegister.register("bounding-box-0.5",
+				new org.openstreetmap.osmosis.core.filter.v0_5.BoundingBoxFilterFactory());
+		factoryRegister.register("derive-change-0.5",
+				new org.openstreetmap.osmosis.core.change.v0_5.ChangeDeriverFactory());
 		factoryRegister.register("read-mysql-0.5", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlReaderFactory());
 		factoryRegister.register("read-mysql-change-0.5",
 				new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlChangeReaderFactory());
 		factoryRegister.register("read-mysql-current-0.5",
 				new org.openstreetmap.osmosis.core.mysql.v0_5.MySqlCurrentReaderFactory());
 		factoryRegister.register("read-xml-0.5", new org.openstreetmap.osmosis.core.xml.v0_5.XmlReaderFactory());
-		factoryRegister.register("read-xml-change-0.5", new org.openstreetmap.osmosis.core.xml.v0_5.XmlChangeReaderFactory());
+		factoryRegister.register("read-xml-change-0.5",
+				new org.openstreetmap.osmosis.core.xml.v0_5.XmlChangeReaderFactory());
 		factoryRegister.register("sort-0.5", entitySorterFactory05);
 		factoryRegister.register("sort-change-0.5", changeSorterFactory05);
 		factoryRegister.register("write-mysql-0.5", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlWriterFactory());
 		factoryRegister.register("write-mysql-change-0.5",
 				new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlChangeWriterFactory());
-		factoryRegister.register("truncate-mysql-0.5", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlTruncatorFactory());
+		factoryRegister.register("truncate-mysql-0.5",
+				new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlTruncatorFactory());
 		factoryRegister.register("write-xml-0.5", new org.openstreetmap.osmosis.core.xml.v0_5.XmlWriterFactory());
-		factoryRegister.register("write-xml-change-0.5", new org.openstreetmap.osmosis.core.xml.v0_5.XmlChangeWriterFactory());
+		factoryRegister.register("write-xml-change-0.5",
+				new org.openstreetmap.osmosis.core.xml.v0_5.XmlChangeWriterFactory());
 		factoryRegister.register("write-null-0.5", new org.openstreetmap.osmosis.core.misc.v0_5.NullWriterFactory());
 		factoryRegister.register("write-null-change-0.5",
 				new org.openstreetmap.osmosis.core.misc.v0_5.NullChangeWriterFactory());
 		factoryRegister.register("buffer-0.5", new org.openstreetmap.osmosis.core.buffer.v0_5.EntityBufferFactory());
-		factoryRegister.register("buffer-change-0.5", new org.openstreetmap.osmosis.core.buffer.v0_5.ChangeBufferFactory());
+		factoryRegister.register("buffer-change-0.5",
+				new org.openstreetmap.osmosis.core.buffer.v0_5.ChangeBufferFactory());
 		factoryRegister.register("merge-0.5", new org.openstreetmap.osmosis.core.merge.v0_5.EntityMergerFactory());
-		factoryRegister.register("merge-change-0.5", new org.openstreetmap.osmosis.core.merge.v0_5.ChangeMergerFactory());
+		factoryRegister.register("merge-change-0.5",
+				new org.openstreetmap.osmosis.core.merge.v0_5.ChangeMergerFactory());
 		factoryRegister.register("read-api-0.5", new org.openstreetmap.osmosis.core.xml.v0_5.XmlDownloaderFactory());
-		factoryRegister
-				.register("bounding-polygon-0.5", new org.openstreetmap.osmosis.core.filter.v0_5.PolygonFilterFactory());
-		factoryRegister.register("report-entity-0.5", new org.openstreetmap.osmosis.core.report.v0_5.EntityReporterFactory());
+		factoryRegister.register("bounding-polygon-0.5",
+				new org.openstreetmap.osmosis.core.filter.v0_5.PolygonFilterFactory());
+		factoryRegister.register("report-entity-0.5",
+				new org.openstreetmap.osmosis.core.report.v0_5.EntityReporterFactory());
 		factoryRegister.register("report-integrity-0.5",
 				new org.openstreetmap.osmosis.core.report.v0_5.IntegrityReporterFactory());
 		factoryRegister.register("log-progress-0.5",
@@ -288,11 +313,14 @@ public class TaskRegistrar {
 				new org.openstreetmap.osmosis.core.progress.v0_5.ChangeProgressLoggerFactory());
 		factoryRegister.register("tee-0.5", new org.openstreetmap.osmosis.core.tee.v0_5.EntityTeeFactory());
 		factoryRegister.register("tee-change-0.5", new org.openstreetmap.osmosis.core.tee.v0_5.ChangeTeeFactory());
-		factoryRegister.register("write-customdb-0.5", new org.openstreetmap.osmosis.core.customdb.v0_5.WriteDatasetFactory());
+		factoryRegister.register("write-customdb-0.5",
+				new org.openstreetmap.osmosis.core.customdb.v0_5.WriteDatasetFactory());
 		factoryRegister.register("dataset-bounding-box-0.5",
 				new org.openstreetmap.osmosis.core.filter.v0_5.DatasetBoundingBoxFilterFactory());
-		factoryRegister.register("dataset-dump-0.5", new org.openstreetmap.osmosis.core.customdb.v0_5.DumpDatasetFactory());
-		factoryRegister.register("read-customdb-0.5", new org.openstreetmap.osmosis.core.customdb.v0_5.ReadDatasetFactory());
+		factoryRegister.register("dataset-dump-0.5",
+				new org.openstreetmap.osmosis.core.customdb.v0_5.DumpDatasetFactory());
+		factoryRegister.register("read-customdb-0.5",
+				new org.openstreetmap.osmosis.core.customdb.v0_5.ReadDatasetFactory());
 		factoryRegister.register("write-pgsql-0.5",
 				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetWriterFactory());
 		factoryRegister.register("truncate-pgsql-0.5",
@@ -303,7 +331,8 @@ public class TaskRegistrar {
 				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetReaderFactory());
 		factoryRegister.register("write-pgsql-change-0.5",
 				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlChangeWriterFactory());
-		factoryRegister.register("used-node-0.5", new org.openstreetmap.osmosis.core.filter.v0_5.UsedNodeFilterFactory());
+		factoryRegister.register("used-node-0.5",
+				new org.openstreetmap.osmosis.core.filter.v0_5.UsedNodeFilterFactory());
 		factoryRegister.register("node-key-0.5", new org.openstreetmap.osmosis.core.filter.v0_5.NodeKeyFilterFactory());
 		factoryRegister.register("node-key-value-0.5",
 				new org.openstreetmap.osmosis.core.filter.v0_5.NodeKeyValueFilterFactory());
