@@ -16,5 +16,6 @@
 	<classpathentry kind="lib" path="lib/test/postgis_1.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/test/postgresql-8.3-603.jdbc4.jar"/>
 	<classpathentry kind="lib" path="lib/test/wstx-lgpl-3.2.8.jar"/>
+	<classpathentry kind="lib" path="lib/test/bzip2.jar"/>
 	<classpathentry kind="output" path="eclipse"/>
 </classpath>
