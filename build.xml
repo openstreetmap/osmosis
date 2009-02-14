@@ -200,7 +200,7 @@
 	</target>
 	
 	<!-- Executes all major build targets. -->
-	<target name="all" depends="dist, test"/>
+	<target name="all" depends="dist, checkstyle, test"/>
 	
 	<target name="clean" description="Clean up the project tree.">
 		<!-- Delete the build and dist directory trees. -->

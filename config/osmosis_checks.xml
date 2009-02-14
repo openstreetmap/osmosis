@@ -51,11 +51,17 @@
 
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
-        <!-- Osmosis.  Disabled temporarily. -->
-        <!--<module name="JavadocMethod"/>
-        <module name="JavadocType"/>
-        <module name="JavadocVariable"/>
-        <module name="JavadocStyle"/>-->
+        <!-- Osmosis.  Don't check private methods and attributes. -->
+        <module name="JavadocMethod">
+        	<property name="scope" value="package"/>
+        </module>
+        <module name="JavadocType">
+        	<property name="scope" value="package"/>
+        </module>
+        <module name="JavadocVariable">
+        	<property name="scope" value="package"/>
+        </module>
+        <module name="JavadocStyle"/>
 
 
         <!-- Checks for Naming Conventions.                  -->
