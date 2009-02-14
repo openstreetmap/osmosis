@@ -65,11 +65,16 @@
 		</copy>
 	</target>
 	
+	<target name="resolve-message" if="ivy.resolve.skip">
+		<echo>Java libraries are already available, to refresh them run "ant resolve".</echo>
+	</target>
+	
 	<target name="conditional-resolve" depends="init-ivy" description="Invokes resolve only if no libraries are available.">
 		<!-- Determine if the libraries have already been resolved. -->
 		<available property="ivy.resolve.skip" file="lib/compile" />
 		<!-- Download required libraries.  This will only execute if the ivy.resolve.skip property is not set. -->
 		<antcall target="resolve" />
+		<antcall target="resolve-message" />
 	</target>
 	
 	<target name="clean-cache" depends="init-ivy" description="Clean the ivy cache.">
