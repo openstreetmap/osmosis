@@ -4,7 +4,6 @@ package org.openstreetmap.osmosis.core.store;
 import java.io.File;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.lifecycle.Completable;
@@ -23,7 +22,6 @@ import org.openstreetmap.osmosis.core.sort.common.FileBasedSort;
  * @author Brett Henderson
  */
 public class IndexStore<K, T extends IndexElement<K>> implements Completable {
-	static final Logger log = Logger.getLogger(IndexStore.class.getName());
 	
 	private ObjectSerializationFactory serializationFactory;
 	private RandomAccessObjectStore<T> indexStore;

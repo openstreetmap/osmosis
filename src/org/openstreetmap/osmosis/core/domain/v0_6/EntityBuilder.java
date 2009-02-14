@@ -22,11 +22,25 @@ import org.openstreetmap.osmosis.core.util.LongAsInt;
  */
 public abstract class EntityBuilder<T extends Entity> implements Storeable {
 	
-	protected TimestampContainer dummyTimestampContainer;
+	/**
+	 * The unique entity identifier.
+	 */
 	protected long id;
+	/**
+	 * The current entity version.
+	 */
 	protected int version;
+	/**
+	 * The entity timestamp container.
+	 */
 	protected TimestampContainer timestampContainer;
+	/**
+	 * The user who created the entity.
+	 */
 	protected OsmUser user;
+	/**
+	 * The tags describing the entity.
+	 */
 	protected Collection<Tag> tags;
 	
 	

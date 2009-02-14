@@ -39,8 +39,11 @@ public class OsmHandlerTest {
 	private static final String OSM_SUFFIX = "</osm>";
 
 
+	/**
+	 * Performs pre-test activities.
+	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		entityInspector = new SinkEntityInspector();
 		try {
 			parser = SAXParserFactory.newInstance().newSAXParser();
@@ -77,6 +80,9 @@ public class OsmHandlerTest {
 	}
 
 
+	/**
+	 * Tests that an empty xml document can be parsed successfully.
+	 */
 	@Test
 	public final void testEmptyDocument() {
 		parseString(OSM_PREFIX + OSM_SUFFIX);

@@ -21,6 +21,9 @@ public class MigrateV05ToV06 implements Sink05Source06, EntityProcessor {
 	private EntityContainerMigrater migrater;
 	
 	
+	/**
+	 * Creates a new instance.
+	 */
 	public MigrateV05ToV06() {
 		migrater = new EntityContainerMigrater();
 	}

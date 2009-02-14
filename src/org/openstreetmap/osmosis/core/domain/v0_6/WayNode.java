@@ -57,7 +57,7 @@ public class WayNode implements Comparable<WayNode>, Storeable {
 	 * 
 	 * @param wayNode
 	 *            The way node to compare to.
-	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
+	 * @return 0 if equal, < 0 if considered "smaller", and > 0 if considered
 	 *         "bigger".
 	 */
 	public int compareTo(WayNode wayNode) {

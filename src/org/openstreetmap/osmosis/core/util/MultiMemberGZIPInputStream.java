@@ -13,6 +13,16 @@ import java.util.zip.GZIPInputStream;
  */
 public class MultiMemberGZIPInputStream extends GZIPInputStream {
 
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param in
+	 *            The input stream.
+	 * @param size
+	 *            The buffer size.
+	 * @throws IOException
+	 *             if an IO exception occurs.
+	 */
 	public MultiMemberGZIPInputStream(InputStream in, int size)
 			throws IOException {
 		// Wrap the stream in a PushbackInputStream...
@@ -20,6 +30,14 @@ public class MultiMemberGZIPInputStream extends GZIPInputStream {
 		this.size = size;
 	}
 
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param in
+	 *            The input stream.
+	 * @throws IOException
+	 *             if an IO exception occurs.
+	 */
 	public MultiMemberGZIPInputStream(InputStream in) throws IOException {
 		// Wrap the stream in a PushbackInputStream...
 		super(new PushbackInputStream(in, 1024));
@@ -55,6 +73,10 @@ public class MultiMemberGZIPInputStream extends GZIPInputStream {
 	private int size;
 	private boolean eos;
 
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int read(byte[] inputBuffer, int inputBufferOffset,
 			int inputBufferLen) throws IOException {

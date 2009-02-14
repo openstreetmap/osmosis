@@ -1,13 +1,11 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.xml.v0_6.impl;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.xml.common.ElementProcessor;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.DefaultHandler;
 
 
 /**
@@ -57,7 +55,7 @@ public class OsmChangeHandler extends DefaultHandler {
 	 *            The attributes.
 	 */
 	@Override
-	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+	public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		// Get the appropriate element processor for the element.
 		if (elementProcessor != null) {
 			// We already have an active element processor, therefore use the
@@ -91,7 +89,7 @@ public class OsmChangeHandler extends DefaultHandler {
 	 *            The qName.
 	 */
 	@Override
-	public void endElement(String uri, String localName, String qName) throws SAXException {
+	public void endElement(String uri, String localName, String qName) {
 		// Tell the currently active element processor to complete its processing.
 		elementProcessor.end();
 		

@@ -5,6 +5,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 
+/**
+ * A test suite for all area filtering tests.
+ */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
   AreaFilterTest.class,

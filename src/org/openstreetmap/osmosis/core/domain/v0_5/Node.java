@@ -139,7 +139,7 @@ public class Node extends Entity implements Comparable<Node> {
 	 * 
 	 * @param comparisonNode
 	 *            The node to compare to.
-	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
+	 * @return 0 if equal, < 0 if considered "smaller", and > 0 if considered
 	 *         "bigger".
 	 */
 	public int compareTo(Node comparisonNode) {

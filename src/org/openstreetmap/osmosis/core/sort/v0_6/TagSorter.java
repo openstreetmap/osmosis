@@ -34,6 +34,9 @@ public class TagSorter implements SinkSource, EntityProcessor {
 	private RelationBuilder relationBuilder;
 	
 	
+	/**
+	 * Creates a new instance.
+	 */
 	public TagSorter() {
 		nodeBuilder = new NodeBuilder();
 		wayBuilder = new WayBuilder();

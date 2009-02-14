@@ -3,15 +3,14 @@ package org.openstreetmap.osmosis.core.xml.v0_6.impl;
 
 import java.util.logging.Logger;
 
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.task.v0_6.Sink;
+import org.openstreetmap.osmosis.core.xml.common.ElementProcessor;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.task.v0_6.Sink;
-import org.openstreetmap.osmosis.core.xml.common.ElementProcessor;
 
 
 /**
@@ -70,7 +69,7 @@ public class OsmHandler extends DefaultHandler {
 	 *            The attributes.
 	 */
 	@Override
-	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+	public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		// Get the appropriate element processor for the element.
 		if (elementProcessor != null) {
 			// We already have an active element processor, therefore use the
@@ -104,7 +103,7 @@ public class OsmHandler extends DefaultHandler {
 	 *            The qName.
 	 */
 	@Override
-	public void endElement(String uri, String localName, String qName) throws SAXException {
+	public void endElement(String uri, String localName, String qName) {
 		// Tell the currently active element processor to complete its processing.
 		elementProcessor.end();
 		
@@ -116,6 +115,9 @@ public class OsmHandler extends DefaultHandler {
 	/**
 	 * Sets the document locator which is used to report the position in the
 	 * file when errors occur.
+	 * 
+	 * @param documentLocator
+	 *            The document locator.
 	 */
 	@Override
 	public void setDocumentLocator(Locator documentLocator) {
@@ -126,6 +128,11 @@ public class OsmHandler extends DefaultHandler {
 	/**
 	 * Called by the SAX parser when an error occurs. Used by this class to
 	 * report the current position in the file.
+	 * 
+	 * @param e
+	 *            The exception that occurred.
+	 * @throws SAXException
+	 *             if the error reporting throws an exception.
 	 */
 	@Override
 	public void error(SAXParseException e) throws SAXException {

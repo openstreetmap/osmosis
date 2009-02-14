@@ -20,9 +20,14 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.filter.common.IdTrackerType;
 import org.openstreetmap.osmosis.test.task.v0_6.SinkEntityInspector;
 
+/**
+ * Tests the polygon area filter implementation.
+ * 
+ * @author Karl Newman
+ */
 public class PolygonFilterTest {
 
-	File polygonFile;
+	private File polygonFile;
 	private SinkEntityInspector entityInspector;
 	private AreaFilter polyAreaFilter;
 	private Bound intersectingBound;
@@ -33,8 +38,11 @@ public class PolygonFilterTest {
 	private Node edgeNode;
 
 
+	/**
+	 * Performs pre-test activities.
+	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		List<Tag> tags;
 		
 		// All nodes have an empty tags list.
@@ -54,8 +62,11 @@ public class PolygonFilterTest {
 	}
 
 
+	/**
+	 * Performs post-test activities.
+	 */
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 		polyAreaFilter.release();
 	}
 

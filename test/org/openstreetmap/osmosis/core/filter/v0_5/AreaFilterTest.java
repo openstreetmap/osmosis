@@ -16,6 +16,9 @@ import org.openstreetmap.osmosis.core.filter.common.IdTrackerType;
 import org.openstreetmap.osmosis.test.task.v0_5.SinkEntityInspector;
 
 
+/**
+ * Tests the area filter implementation.
+ */
 public class AreaFilterTest {
 
 	private static final OsmUser TEST_USER = new OsmUser(10, "OsmosisTest");
@@ -44,8 +47,11 @@ public class AreaFilterTest {
 	private Relation mangledCompleteInOutRelation1;
 
 
+	/**
+	 * Performs pre-test activities.
+	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		setUpFilters();
 		setUpNodes();
 		setUpWays();
@@ -227,8 +233,11 @@ public class AreaFilterTest {
 	}
 
 
+	/**
+	 * Performs post-test activities.
+	 */
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 		simpleAreaFilter.release();
 		simpleCompleteWayFilter.release();
 		simpleCompleteRelationFilter.release();
@@ -382,7 +391,7 @@ public class AreaFilterTest {
 
 	/**
 	 * Test passing of a relation where all referenced members are strictly inside the filter area
-	 * (and completeRelations = false)
+	 * (and completeRelations = false).
 	 */
 	@Test
 	public final void testProcessRelationContainer1() {
@@ -405,7 +414,7 @@ public class AreaFilterTest {
 
 	/**
 	 * Test passing of a relation where all referenced members are strictly outside the filter area
-	 * (and completeRelations = false)
+	 * (and completeRelations = false).
 	 */
 	@Test
 	public final void testProcessRelationContainer2() {
@@ -421,7 +430,7 @@ public class AreaFilterTest {
 
 	/**
 	 * Test passing of a relation where referenced members are both inside and outside the filter
-	 * area (and completeRelations = false)
+	 * area (and completeRelations = false).
 	 */
 	@Test
 	public final void testProcessRelationContainer3() {
@@ -448,7 +457,7 @@ public class AreaFilterTest {
 
 	/**
 	 * Test passing of a relation where all referenced members are strictly inside the filter area
-	 * (and completeRelations = true)
+	 * (and completeRelations = true).
 	 */
 	@Test
 	public final void testProcessRelationContainer4() {
@@ -471,7 +480,7 @@ public class AreaFilterTest {
 
 	/**
 	 * Test passing of a relation where all referenced members are strictly outside the filter area
-	 * (and completeRelations = true)
+	 * (and completeRelations = true).
 	 */
 	@Test
 	public final void testProcessRelationContainer5() {
@@ -487,7 +496,7 @@ public class AreaFilterTest {
 
 	/**
 	 * Test passing of a relation where referenced members are both inside and outside the filter
-	 * area (and completeRelations = false)
+	 * area (and completeRelations = false).
 	 */
 	@Test
 	public final void testProcessRelationContainer6() {
@@ -514,7 +523,7 @@ public class AreaFilterTest {
 
 	/**
 	 * Test passing of a relation where referenced members are both inside and outside the filter
-	 * area (with completeWays = true and completeRelations = true)
+	 * area (with completeWays = true and completeRelations = true).
 	 */
 	@Test
 	public final void testProcessRelationContainer7() {

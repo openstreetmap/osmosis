@@ -8,8 +8,16 @@ package org.openstreetmap.osmosis.core.pipeline.common;
  * @author Brett Henderson
  */
 public class TaskRunner extends Thread {
-	/* package */ boolean successful;
-	/* package */ Throwable exception;
+	/**
+	 * Becomes false if an uncaught exception occurs within the task
+	 * implementation.
+	 */
+	private boolean successful;
+	/**
+	 * Contains the uncaught exception (if any) that has occurred within the
+	 * task implementation.
+	 */
+	private Throwable exception;
 	
 	
 	/**
@@ -28,6 +36,7 @@ public class TaskRunner extends Thread {
 		// Set an exception handler to capture the details of any failure.
 		setUncaughtExceptionHandler(
 			new UncaughtExceptionHandler() {
+				@SuppressWarnings("synthetic-access")
 				public void uncaughtException(Thread t, Throwable e) {
 					successful = false;
 					exception = e;

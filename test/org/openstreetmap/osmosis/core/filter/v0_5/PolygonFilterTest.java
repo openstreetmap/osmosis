@@ -17,10 +17,17 @@ import org.openstreetmap.osmosis.core.domain.v0_5.OsmUser;
 import org.openstreetmap.osmosis.core.filter.common.IdTrackerType;
 import org.openstreetmap.osmosis.test.task.v0_5.SinkEntityInspector;
 
+
+/**
+ * Tests the polygon area filter implementation.
+ * 
+ * @author Karl Newman
+ */
 public class PolygonFilterTest {
 
 	private static final OsmUser TEST_USER = new OsmUser(10, "OsmosisTest");
-	File polygonFile;
+	
+	private File polygonFile;
 	private SinkEntityInspector entityInspector;
 	private AreaFilter polyAreaFilter;
 	private Bound intersectingBound;
@@ -31,8 +38,11 @@ public class PolygonFilterTest {
 	private Node edgeNode;
 
 
+	/**
+	 * Performs pre-test activities.
+	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		polygonFile = new File("test/org/openstreetmap/osmosis/core/filter/v0_5/testPolygon.txt");
 		entityInspector = new SinkEntityInspector();
 		// polyAreaFilter has a notch out of the Northeast corner.
@@ -47,8 +57,11 @@ public class PolygonFilterTest {
 	}
 
 
+	/**
+	 * Performs post-test activities.
+	 */
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 		polyAreaFilter.release();
 	}
 

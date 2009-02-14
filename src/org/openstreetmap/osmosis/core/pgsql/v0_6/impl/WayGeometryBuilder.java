@@ -4,17 +4,15 @@ package org.openstreetmap.osmosis.core.pgsql.v0_6.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.postgis.Geometry;
-import org.postgis.LineString;
-import org.postgis.LinearRing;
-import org.postgis.Point;
-import org.postgis.Polygon;
-
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.postgis.LineString;
+import org.postgis.LinearRing;
+import org.postgis.Point;
+import org.postgis.Polygon;
 
 
 /**
@@ -24,6 +22,10 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  * @author Brett Henderson
  */
 public class WayGeometryBuilder implements Releasable {
+	/**
+	 * Stores the locations of nodes so that they can be used to build the way
+	 * geometries.
+	 */
 	protected NodeLocationStore locationStore;
 	
 	
@@ -55,7 +57,7 @@ public class WayGeometryBuilder implements Releasable {
 	}
 	
 	
-	private Geometry createWayBbox(double left, double right, double bottom, double top) {
+	private Polygon createWayBbox(double left, double right, double bottom, double top) {
 		Point[] points;
 		LinearRing ring;
 		Polygon bbox;
@@ -76,7 +78,14 @@ public class WayGeometryBuilder implements Releasable {
 	}
 	
 	
-	protected Geometry createLinestring(List<Point> points) {
+	/**
+	 * Creates a linestring from a list of points.
+	 * 
+	 * @param points
+	 *            The points making up the line.
+	 * @return The linestring.
+	 */
+	protected LineString createLinestring(List<Point> points) {
 		LineString lineString;
 		
 		lineString = new LineString(points.toArray(new Point[]{}));
@@ -94,7 +103,7 @@ public class WayGeometryBuilder implements Releasable {
 	 *            The way to create the bounding box for.
 	 * @return The bounding box surrounding the way.
 	 */
-	public Geometry createWayBbox(Way way) {
+	public Polygon createWayBbox(Way way) {
 		double left;
 		double right;
 		double top;
@@ -152,7 +161,7 @@ public class WayGeometryBuilder implements Releasable {
 	 *            The way to create the linestring for.
 	 * @return The linestring representing the way.
 	 */
-	public Geometry createWayLinestring(Way way) {
+	public LineString createWayLinestring(Way way) {
 		List<Point> linePoints;
 		int numValidNodes = 0;
 		

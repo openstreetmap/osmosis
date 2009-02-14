@@ -165,8 +165,10 @@ public abstract class BaseTableReader<T> implements ReleasableIterator<T> {
 		/**
 		 * Creates a new instance.
 		 * 
-		 * @param usableResult Indicates if this result should be used.
+		 * @param usableResult
+		 *            Indicates if this result should be used.
 		 * @param entity
+		 *            The entity that was read.
 		 */
 		public ReadResult(boolean usableResult, T entity) {
 			this.usableResult = usableResult;

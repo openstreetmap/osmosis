@@ -32,6 +32,8 @@ public class ProgressTracker {
 	/**
 	 * Indicates if an update is due. This should be called once per object that
 	 * is processed.
+	 * 
+	 * @return True if an update is due.
 	 */
 	public boolean updateRequired() {
 		if (!initialized) {

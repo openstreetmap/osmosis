@@ -4,6 +4,7 @@ package org.openstreetmap.osmosis.core.xml.v0_6.impl;
 import static org.junit.Assert.*;
 
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +30,10 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 
+
+/**
+ * Tests the XML osm element writer implementation.
+ */
 public class OsmWriterTest {
 
 	private StringWriter testWriter;
@@ -36,8 +41,11 @@ public class OsmWriterTest {
 	private OsmWriter testOsmWriter;
 
 
+	/**
+	 * Performs pre-test activities.
+	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		testWriter = new StringWriter();
 		testBufferedWriter = new BufferedWriter(testWriter);
 		testOsmWriter = new OsmWriter("osm", 0, true);
@@ -45,8 +53,14 @@ public class OsmWriterTest {
 	}
 
 
+	/**
+	 * Performs post-test activities.
+	 * 
+	 * @throws IOException
+	 *             if IO stream cleanup fails.
+	 */
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws IOException {
 		testBufferedWriter.close();
 		testWriter.close();
 		testOsmWriter = null;

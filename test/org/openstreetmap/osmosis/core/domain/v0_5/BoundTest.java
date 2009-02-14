@@ -6,6 +6,11 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 
+/**
+ * Tests the Bound entity class.
+ * 
+ * @author Karl Newman
+ */
 public class BoundTest {
 
 	/**
@@ -524,7 +529,7 @@ public class BoundTest {
 
 
 	/**
-	 * Test the case where the Bound is already "simple" (i.e., doesn't cross the antimeridian)
+	 * Test the case where the Bound is already "simple" (i.e., doesn't cross the antimeridian).
 	 */
 	@Test
 	public final void testToSimpleBound1() {

@@ -24,10 +24,8 @@ public class SinkEntityInspector implements Sink {
 	}
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.openstreetmap.osmosis.core.task.v0_5.Sink#complete()
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void complete() {
@@ -37,6 +35,9 @@ public class SinkEntityInspector implements Sink {
 
 	/**
 	 * Catch all passed entities and save them for later inspection.
+	 * 
+	 * @param entityContainer
+	 *            The entity to be processed.
 	 */
 	@Override
 	public void process(EntityContainer entityContainer) {
@@ -45,10 +46,8 @@ public class SinkEntityInspector implements Sink {
 	}
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.openstreetmap.osmosis.core.task.v0_5.Sink#release()
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void release() {

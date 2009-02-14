@@ -19,6 +19,10 @@ import org.openstreetmap.osmosis.core.domain.v0_6.NodeBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 
+
+/**
+ * Tests the XML node writer implementation.
+ */
 public class NodeWriterTest {
 
 	private StringWriter testWriter;
@@ -43,8 +47,11 @@ public class NodeWriterTest {
 	private final String nodeClosingMatch = "\\s*</node>\\s*$";
 	
 
+	/**
+	 * Performs pre-test activities.
+	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		testWriter = new StringWriter();
 		testBufferedWriter = new BufferedWriter(testWriter);
 		testNodeWriter = new NodeWriter("node", 2);
@@ -64,8 +71,14 @@ public class NodeWriterTest {
 	}
 
 
+	/**
+	 * Performs post-test activities.
+	 * 
+	 * @throws IOException
+	 *             if stream cleanup fails.
+	 */
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws IOException {
 		testBufferedWriter.close();
 		testWriter.close();
 	}

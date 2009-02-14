@@ -71,6 +71,17 @@ public class FastXmlParser {
 	private RelationBuilder relationBuilder;
 	
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param sink
+	 *            The sink receiving all output data.
+	 * @param reader
+	 *            The input xml reader.
+	 * @param enableDateParsing
+	 *            If true, parsing of dates in the xml will be enabled,
+	 *            otherwise the current system time will be used.
+	 */
 	public FastXmlParser(Sink sink, XMLStreamReader reader, boolean enableDateParsing) {
 		this.sink = sink;
 		this.enableDateParsing = enableDateParsing;
@@ -326,6 +337,10 @@ public class FastXmlParser {
 		return relationBuilder.buildEntity();
 	}
 
+	
+	/**
+	 * Parses the xml and sends all data to the sink.
+	 */
 	public void readOsm() {
 		
 		try {

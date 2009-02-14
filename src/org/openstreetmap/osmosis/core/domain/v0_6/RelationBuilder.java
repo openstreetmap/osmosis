@@ -129,8 +129,8 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 		
 		return this;
 	}
-	
-	
+
+
 	/**
 	 * Initializes the contents of the builder to the specified data.
 	 * 
@@ -142,6 +142,7 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	 *            The last updated timestamp.
 	 * @param newUser
 	 *            The user that last modified this entity.
+	 * @return This object allowing method chaining.
 	 */
 	@Override
 	public RelationBuilder initialize(long newId, int newVersion, Date newTimestamp, OsmUser newUser) {
@@ -164,6 +165,7 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	 *            timestamp representation.
 	 * @param newUser
 	 *            The user that last modified this entity.
+	 * @return This object allowing method chaining.
 	 */
 	@Override
 	public RelationBuilder initialize(

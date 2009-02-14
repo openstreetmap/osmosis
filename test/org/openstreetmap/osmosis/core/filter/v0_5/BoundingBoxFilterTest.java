@@ -17,8 +17,9 @@ import org.openstreetmap.osmosis.core.filter.common.IdTrackerType;
 import org.openstreetmap.osmosis.test.task.v0_5.SinkEntityInspector;
 
 /**
- * @author Karl Newman
+ * Tests the bounding box area filter implementation.
  * 
+ * @author Karl Newman
  */
 public class BoundingBoxFilterTest {
 
@@ -36,10 +37,10 @@ public class BoundingBoxFilterTest {
 
 
 	/**
-	 * @throws java.lang.Exception
+	 * Performs pre-test activities.
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		entityInspector = new SinkEntityInspector();
 		// simpleAreaFilter doesn't cross antimeridian; no complete ways or relations
 		simpleAreaFilter = new BoundingBoxFilter(
@@ -63,10 +64,10 @@ public class BoundingBoxFilterTest {
 
 
 	/**
-	 * @throws java.lang.Exception
+	 * Performs post-test activities.
 	 */
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 		simpleAreaFilter.release();
 	}
 

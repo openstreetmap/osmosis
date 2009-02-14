@@ -142,9 +142,6 @@ public class ElementWriter {
 	/**
 	 * Writes an element opening line without the final closing portion of the
 	 * tag.
-	 * 
-	 * @throws IOException
-	 *             if an error occurs.
 	 */
 	protected void beginOpenElement() {
 		try {

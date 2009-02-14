@@ -7,7 +7,6 @@ import java.io.IOException;
 import org.junit.Test;
 
 import org.openstreetmap.osmosis.core.Osmosis;
-import org.openstreetmap.osmosis.core.OsmosisException;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 
 import data.util.DataFileUtilities;
@@ -37,7 +36,7 @@ public class CustomDbTest {
 	}
 	
 	
-	private void deleteTempDirectory(File tmpDir) throws IOException {
+	private void deleteTempDirectory(File tmpDir) {
 		File[] files;
 		
 		// Delete all files in the directory.

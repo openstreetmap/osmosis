@@ -169,7 +169,7 @@ public class Bound extends Entity implements Comparable<Bound> {
 
 
 	/**
-	 * Calculate the intersected area of this with the specified bound
+	 * Calculate the intersected area of this with the specified bound.
 	 * 
 	 * @param intersectingBound
 	 *            Bound element with which to calculate the intersection
@@ -409,7 +409,7 @@ public class Bound extends Entity implements Comparable<Bound> {
 	 * 
 	 * @param comparisonBound
 	 *            The bound to compare to.
-	 * @return 0 if equal, <0 if this sorts before comparison (this is "smaller"), and >0 if this
+	 * @return 0 if equal, < 0 if this sorts before comparison (this is "smaller"), and > 0 if this
 	 *         sorts before comparison (this is "bigger")
 	 */
 	public int compareTo(Bound comparisonBound) {

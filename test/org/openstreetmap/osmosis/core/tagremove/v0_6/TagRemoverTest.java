@@ -21,6 +21,9 @@ public class TagRemoverTest {
 	
 	/**
 	 * Tests tag removal functionality using full key names.
+	 * 
+	 * @throws IOException
+	 *             if file manipulation fails.
 	 */
 	@Test
 	public void testKey() throws IOException {
@@ -55,6 +58,9 @@ public class TagRemoverTest {
 	
 	/**
 	 * Tests tag removal functionality using full key names.
+	 * 
+	 * @throws IOException
+	 *             if file manipulation fails.
 	 */
 	@Test
 	public void testKeyPrefix() throws IOException {

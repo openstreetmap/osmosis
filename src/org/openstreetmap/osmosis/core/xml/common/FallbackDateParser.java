@@ -62,9 +62,6 @@ public class FallbackDateParser {
 	 * @param date
 	 *            The date to parse.
 	 * @return The date.
-	 * @throws ParseException
-	 *             Occurs if the date does not match any of the supported date
-	 *             formats.
 	 */
 	public Date parse(String date) {
 		String correctedDate;

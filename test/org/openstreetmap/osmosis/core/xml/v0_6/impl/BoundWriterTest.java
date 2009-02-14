@@ -13,21 +13,33 @@ import org.junit.Test;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
 
+/**
+ * Tests the Bound class implementation.
+ */
 public class BoundWriterTest {
 
 	private StringWriter testWriter;
 	private BufferedWriter testBufferedWriter;
 
 
+	/**
+	 * Performs pre-test activities.
+	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		testWriter = new StringWriter();
 		testBufferedWriter = new BufferedWriter(testWriter);
 	}
 
 
+	/**
+	 * Performs post-test activities.
+	 * 
+	 * @throws IOException
+	 *             if stream cleanup fails.
+	 */
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws IOException {
 		testBufferedWriter.close();
 		testWriter.close();
 	}

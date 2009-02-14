@@ -55,8 +55,8 @@ public class OsmHandler extends DefaultHandler {
 	public OsmHandler(Sink osmSink, boolean enableDateParsing) {
 		osmElementProcessor = new OsmElementProcessor(null, osmSink, enableDateParsing);
 	}
-	
-	
+
+
 	/**
 	 * Begins processing of a new element.
 	 * 
@@ -68,6 +68,8 @@ public class OsmHandler extends DefaultHandler {
 	 *            The qName.
 	 * @param attributes
 	 *            The attributes.
+	 * @throws SAXException
+	 *             if an exception occurs during parsing.
 	 */
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -102,6 +104,8 @@ public class OsmHandler extends DefaultHandler {
 	 *            The localName.
 	 * @param qName
 	 *            The qName.
+	 * @throws SAXException
+	 *             if an exception occurs during parsing.
 	 */
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
@@ -112,20 +116,28 @@ public class OsmHandler extends DefaultHandler {
 		elementProcessor = elementProcessor.getParent();
 	}
 
-	
+
 	/**
 	 * Sets the document locator which is used to report the position in the
 	 * file when errors occur.
+	 * 
+	 * @param documentLocator
+	 *            The document locator.
 	 */
 	@Override
 	public void setDocumentLocator(Locator documentLocator) {
 		this.documentLocator = documentLocator;
 	}
-	
-	
+
+
 	/**
 	 * Called by the SAX parser when an error occurs. Used by this class to
 	 * report the current position in the file.
+	 * 
+	 * @param e
+	 *            The exception that occurred.
+	 * @throws SAXException
+	 *             if the error reporting throws an exception.
 	 */
 	@Override
 	public void error(SAXParseException e) throws SAXException {

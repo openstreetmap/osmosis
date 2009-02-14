@@ -16,7 +16,18 @@ import org.openstreetmap.osmosis.core.util.LongAsInt;
  * @author Brett Henderson
  */
 public class BitSetIdTracker implements IdTracker {
+	/**
+	 * The positive ids are stored within a bitset which cannot hold negative
+	 * values. It is not private to allow the IdIterator to access it
+	 * efficiently.
+	 */
 	/* package */ BitSet positiveSet;
+	/**
+	 * The negative ids cannot be stored in the main bitset. They are stored in
+	 * a list implementation because the number of negative values is expected
+	 * to be small. It is not private to allow the IdIterator to access it
+	 * efficiently.
+	 */
 	/* package */ ListIdTracker negativeSet;
 	
 	

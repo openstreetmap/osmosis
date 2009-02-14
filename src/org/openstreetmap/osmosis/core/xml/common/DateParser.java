@@ -1,7 +1,6 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.xml.common;
 
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -253,9 +252,6 @@ public class DateParser {
 	 * @param date
 	 *            The date to parse.
 	 * @return The date.
-	 * @throws ParseException
-	 *             Occurs if the date does not match any of the supported date
-	 *             formats.
 	 */
 	public Date parse(String date) {
 		try {

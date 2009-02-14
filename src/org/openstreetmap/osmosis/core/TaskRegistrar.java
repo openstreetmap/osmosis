@@ -486,7 +486,7 @@ public class TaskRegistrar {
 
 
 	/**
-	 * Register the given JPF-plugins with the {@link PluginManager}
+	 * Register the given JPF-plugins with the {@link PluginManager}.
 	 * 
 	 * @param locations
 	 *            the plugins found

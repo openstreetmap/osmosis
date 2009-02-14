@@ -19,6 +19,9 @@ public class EntityContainerMigrater implements EntityProcessor {
 	private ThreadLocal<EntityContainer> resultContainer;
 	
 	
+	/**
+	 * Creates a new instance.
+	 */
 	public EntityContainerMigrater() {
 		migrater = new EntityMigrater();
 		resultContainer = new ThreadLocal<EntityContainer>();

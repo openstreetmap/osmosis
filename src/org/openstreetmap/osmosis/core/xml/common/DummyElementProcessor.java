@@ -62,6 +62,8 @@ public class DummyElementProcessor extends BaseElementProcessor {
 	/**
 	 * This implementation decrements an internal counter, if the counter
 	 * reaches zero the true parent is returned, else this instance is returned.
+	 * 
+	 * @return The element processor for the parent of the current element.
 	 */
 	@Override
 	public ElementProcessor getParent() {

@@ -20,6 +20,10 @@ import org.openstreetmap.osmosis.core.domain.v0_6.RelationBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 
+
+/**
+ * Tests the XML relation writer implementation.
+ */
 public class RelationWriterTest {
 
 	private StringWriter testWriter;
@@ -54,8 +58,11 @@ public class RelationWriterTest {
 	private final String relationClosingMatch = "\\s*</relation>\\s*$";
 
 
+	/**
+	 * Performs pre-test activities.
+	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		testWriter = new StringWriter();
 		testBufferedWriter = new BufferedWriter(testWriter);
 		testRelationWriter = new RelationWriter("relation", 2);
@@ -75,8 +82,14 @@ public class RelationWriterTest {
 	}
 
 
+	/**
+	 * Performs post-test activities.
+	 * 
+	 * @throws IOException
+	 *             if stream cleanup fails.
+	 */
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws IOException {
 		testBufferedWriter.close();
 		testWriter.close();
 	}

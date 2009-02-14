@@ -72,7 +72,7 @@ public class RelationMember implements Comparable<RelationMember>, Storeable {
 	 * 
 	 * @param relationMember
 	 *            The relation member to compare to.
-	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
+	 * @return 0 if equal, < 0 if considered "smaller", and > 0 if considered
 	 *         "bigger".
 	 */
 	public int compareTo(RelationMember relationMember) {

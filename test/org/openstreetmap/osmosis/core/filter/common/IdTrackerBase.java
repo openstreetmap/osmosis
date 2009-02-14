@@ -8,19 +8,30 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+
+/**
+ * Tests an id tracker implementation.  Sub-classes provide the actual implementation to be tested.
+ */
 public abstract class IdTrackerBase {
 
 	private static final int testVal1 = -100;
 	private static final int testVal2 = 0;
 	private static final int testVal3 = 100;
 
-	protected IdTracker idt;
+	private IdTracker idt;
 
+	
+	/**
+	 * Performs pre-test activities.
+	 */
 	@Before
 	public final void setUp() {
 		idt = getImplementation();
 	}
 	
+	/**
+	 * Performs post-test activities.
+	 */
 	@After
 	public final void tearDown() {
 		idt = null;
@@ -133,6 +144,9 @@ public abstract class IdTrackerBase {
 	}
 
 
+	/**
+	 * Tests the setAll method of the id tracker.
+	 */
 	@Ignore
 	@Test
 	public final void testSetAll() {

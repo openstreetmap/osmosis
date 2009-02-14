@@ -19,6 +19,10 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 
+
+/**
+ * Tests the XML way writer implementation.
+ */
 public class WayWriterTest {
 
 	private StringWriter testWriter;
@@ -41,8 +45,11 @@ public class WayWriterTest {
 	private final String wayClosingMatch = "\\s*</way>\\s*$";
 
 
+	/**
+	 * Performs pre-test activities.
+	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		testWriter = new StringWriter();
 		testBufferedWriter = new BufferedWriter(testWriter);
 		testWayWriter = new WayWriter("way", 2);
@@ -62,8 +69,14 @@ public class WayWriterTest {
 	}
 
 
+	/**
+	 * Performs post-test activities.
+	 * 
+	 * @throws IOException
+	 *             if stream cleanup fails.
+	 */
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws IOException {
 		testBufferedWriter.close();
 		testWriter.close();
 	}

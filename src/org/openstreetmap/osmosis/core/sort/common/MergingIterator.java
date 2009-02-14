@@ -113,10 +113,7 @@ public class MergingIterator<DataType> implements ReleasableIterator<DataType> {
 	
 	
 	/**
-	 * Not supported.
-	 * 
-	 * @throws UnsupportedOperationException
-	 *                always thrown.
+	 * Not supported. An UnsupportedOperationException is always thrown.
 	 */
 	public void remove() {
 		throw new UnsupportedOperationException();

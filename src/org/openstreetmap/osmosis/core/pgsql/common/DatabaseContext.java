@@ -345,6 +345,9 @@ public class DatabaseContext {
 	 * Enforces cleanup of any remaining resources during garbage collection.
 	 * This is a safeguard and should not be required if release is called
 	 * appropriately.
+	 * 
+	 * @throws Throwable
+	 *             if an unexpected problem occurs during finalization.
 	 */
 	@Override
 	protected void finalize() throws Throwable {

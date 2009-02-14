@@ -142,7 +142,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 * 
 	 * @param comparisonMemberList
 	 *            The member list to compare to.
-	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
+	 * @return 0 if equal, < 0 if considered "smaller", and > 0 if considered
 	 *         "bigger".
 	 */
 	protected int compareMemberList(List<RelationMember> comparisonMemberList) {
@@ -171,7 +171,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 * 
 	 * @param comparisonRelation
 	 *            The relation to compare to.
-	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
+	 * @return 0 if equal, < 0 if considered "smaller", and > 0 if considered
 	 *         "bigger".
 	 */
 	public int compareTo(Relation comparisonRelation) {

@@ -38,10 +38,10 @@ public class BoundingBoxFilterTest {
 
 
 	/**
-	 * @throws java.lang.Exception
+	 * Performs pre-test activities.
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp(){
 		List<Tag> tags;
 		
 		// All nodes have an empty tags list.
@@ -71,10 +71,10 @@ public class BoundingBoxFilterTest {
 
 
 	/**
-	 * @throws java.lang.Exception
+	 * Performs post-test activities.
 	 */
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 		simpleAreaFilter.release();
 	}
 

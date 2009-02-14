@@ -127,7 +127,7 @@ public abstract class Entity implements Storeable {
 	 * 
 	 * @param comparisonTagList
 	 *            The tagList to compare to.
-	 * @return 0 if equal, <0 if considered "smaller", and >0 if considered
+	 * @return 0 if equal, < 0 if considered "smaller", and > 0 if considered
 	 *         "bigger".
 	 */
 	protected int compareTags(List<Tag> comparisonTagList) {

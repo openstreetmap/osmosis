@@ -55,6 +55,8 @@ public class OsmChangeHandler extends DefaultHandler {
 	 *            The qName.
 	 * @param attributes
 	 *            The attributes.
+	 * @throws SAXException
+	 *             if an exception occurs during parsing.
 	 */
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -89,6 +91,8 @@ public class OsmChangeHandler extends DefaultHandler {
 	 *            The localName.
 	 * @param qName
 	 *            The qName.
+	 * @throws SAXException
+	 *             if an exception occurs during parsing.
 	 */
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
