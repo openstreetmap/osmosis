@@ -243,6 +243,19 @@ public class Relation extends Entity implements Comparable<Relation> {
 	
 	
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void makeReadOnly() {
+		if (!isReadOnly()) {
+			members = Collections.unmodifiableList(members);
+		}
+		
+		super.makeReadOnly();
+	}
+	
+	
+	/**
 	 * Returns the attached list of relation members. The returned list is
 	 * read-only.
 	 * 

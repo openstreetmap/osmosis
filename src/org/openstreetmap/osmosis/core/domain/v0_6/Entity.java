@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.common.SimpleTimestampContainer;
 import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
 import org.openstreetmap.osmosis.core.domain.common.TimestampFormat;
@@ -31,6 +32,7 @@ public abstract class Entity implements Storeable {
 	private TimestampContainer timestampContainer;
 	private OsmUser user;
 	private Collection<Tag> tags;
+	private boolean readOnly;
 	
 	
 	/**
@@ -73,7 +75,7 @@ public abstract class Entity implements Storeable {
 		this.timestampContainer = timestampContainer;
 		this.user = user;
 		this.version = version;
-		this.tags = Collections.unmodifiableCollection(new ArrayList<Tag>(tags));
+		this.tags = new ArrayList<Tag>(tags);
 	}
 	
 	
@@ -177,21 +179,51 @@ public abstract class Entity implements Storeable {
 	 * @return The entity type enum value.
 	 */
 	public abstract EntityType getType();
-	
-	
+
+
 	/**
-	 * @return The id. 
+	 * Gets the identifier.
+	 * 
+	 * @return The id.
 	 */
 	public long getId() {
 		return id;
 	}
+
+
+	/**
+	 * Sets the identifier.
+	 * 
+	 * @param id
+	 *            The identifier.
+	 */
+	public void setId(long id) {
+		assertWriteable();
+		
+		this.id = LongAsInt.longToInt(id);
+	}
 	
 	
 	/**
+	 * Gets the version.
+	 * 
 	 * @return The version.
 	 */
 	public int getVersion() {
 		return version;
+	}
+
+
+	/**
+	 * Sets the version.
+	 * 
+	 * @param version
+	 *            The version.
+	 */
+	public void setVersion(int version) {
+		assertWriteable();
+		
+		this.version = version;
 	}
 	
 	
@@ -203,6 +235,19 @@ public abstract class Entity implements Storeable {
 	 */
 	public Date getTimestamp() {
 		return timestampContainer.getTimestamp();
+	}
+
+
+	/**
+	 * Sets the timestamp in date form. This is the standard method of updating a timestamp.
+	 * 
+	 * @param timestamp
+	 *            The timestamp.
+	 */
+	public void setTimestamp(Date timestamp) {
+		assertWriteable();
+		
+		timestampContainer = new SimpleTimestampContainer(timestamp);
 	}
 	
 	
@@ -216,6 +261,21 @@ public abstract class Entity implements Storeable {
 	 */
 	public TimestampContainer getTimestampContainer() {
 		return timestampContainer;
+	}
+	
+	
+	/**
+	 * Sets the timestamp container object allowing the timestamp to be held in a different format.
+	 * This should be used if a date is already held in a timestamp container, or if date parsing
+	 * can be avoided.
+	 * 
+	 * @param timestampContainer
+	 *            The timestamp container.
+	 */
+	public void setTimestampContainer(TimestampContainer timestampContainer) {
+		assertWriteable();
+		
+		this.timestampContainer = timestampContainer;
 	}
 	
 	
@@ -245,11 +305,64 @@ public abstract class Entity implements Storeable {
 	
 	
 	/**
-	 * Returns the attached tags. The returned collection is read-only.
+	 * Sets the last modification user.
+	 * 
+	 * @param user
+	 *            The user.
+	 */
+	public void setUser(OsmUser user) {
+		assertWriteable();
+		
+		this.user = user;
+	}
+
+
+	/**
+	 * Returns the attached tags. If the class is read-only, the collection will
+	 * be read-only.
 	 * 
 	 * @return The tagList.
 	 */
 	public Collection<Tag> getTags() {
 		return tags;
+	}
+
+
+	/**
+	 * Indicates if the object has been set to read-only. A read-only object
+	 * must be cloned in order to make updates. This allows objects shared
+	 * between multiple threads to be locked for thread safety.
+	 * 
+	 * @return True if the object is read-only.
+	 */
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+
+
+	/**
+	 * Ensures that the object is writeable. If not an exception will be thrown.
+	 * This is intended to be called within all update methods.
+	 */
+	protected void assertWriteable() {
+		if (readOnly) {
+			throw new OsmosisRuntimeException(
+					"The object has been marked as read-only.  It must be cloned to make changes.");
+		}
+	}
+
+
+	/**
+	 * Configures the object to be read-only. This should be called if the object is to be processed
+	 * by multiple threads concurrently. It updates the read-only status of the object, and makes
+	 * all collections unmodifiable. This must be overridden by sub-classes to make their own
+	 * collections unmodifiable.
+	 */
+	public void makeReadOnly() {
+		if (!readOnly) {
+			tags = Collections.unmodifiableCollection(tags);
+			
+			readOnly = true;
+		}
 	}
 }

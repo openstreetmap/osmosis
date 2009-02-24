@@ -63,6 +63,10 @@ public class ChangeTee implements ChangeSinkMultiChangeSource {
 	 */
 	public void process(ChangeContainer change) {
 		for (ProxyChangeSinkChangeSource sink : sinkList) {
+			// We're passing the data to multiple downstream tasks therefore should make the entity
+			// read-only to prevent multiple threads impacting each other.
+			change.getEntityContainer().getEntity().makeReadOnly();
+			
 			sink.process(change);
 		}
 	}

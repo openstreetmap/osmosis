@@ -70,7 +70,7 @@ public class Way extends Entity implements Comparable<Way> {
 			List<WayNode> wayNodes) {
 		super(id, timestampContainer, user, version, tags);
 		
-		this.wayNodes = Collections.unmodifiableList(new ArrayList<WayNode>(wayNodes));
+		this.wayNodes = new ArrayList<WayNode>(wayNodes);
 	}
 	
 	
@@ -239,6 +239,19 @@ public class Way extends Entity implements Comparable<Way> {
 	
 	
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void makeReadOnly() {
+		if (!isReadOnly()) {
+			wayNodes = Collections.unmodifiableList(wayNodes);
+		}
+		
+		super.makeReadOnly();
+	}
+
+
+	/**
 	 * Returns the attached list of way nodes. The returned list is read-only.
 	 * 
 	 * @return The wayNodeList.
@@ -256,5 +269,4 @@ public class Way extends Entity implements Comparable<Way> {
     public boolean isClosed() {
         return wayNodes.get(0).getNodeId() == wayNodes.get(wayNodes.size()-1).getNodeId();
     }
-
 }
