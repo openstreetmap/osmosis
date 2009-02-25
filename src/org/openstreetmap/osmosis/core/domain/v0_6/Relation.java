@@ -253,6 +253,19 @@ public class Relation extends Entity implements Comparable<Relation> {
 		
 		super.makeReadOnly();
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Relation getWriteableInstance() {
+		if (isReadOnly()) {
+			return new Relation(getId(), getVersion(), getTimestampContainer(), getUser(), getTags(), members);
+		} else {
+			return this;
+		}
+	}
 	
 	
 	/**

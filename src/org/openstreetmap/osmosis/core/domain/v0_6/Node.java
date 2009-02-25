@@ -244,4 +244,17 @@ public class Node extends Entity implements Comparable<Node> {
 		
 		this.longitude = longitude;
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Node getWriteableInstance() {
+		if (isReadOnly()) {
+			return new Node(getId(), getVersion(), getTimestampContainer(), getUser(), getTags(), latitude, longitude);
+		} else {
+			return this;
+		}
+	}
 }

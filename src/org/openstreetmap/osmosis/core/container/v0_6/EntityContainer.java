@@ -27,4 +27,14 @@ public abstract class EntityContainer implements Storeable {
 	 * @return The entity.
 	 */
 	public abstract Entity getEntity();
+
+
+	/**
+	 * Returns an instance containing a writeable entity. If the entity within this instance is
+	 * already writeable then "this" will be returned, otherwise a cloned entity and container will
+	 * be created.
+	 * 
+	 * @return A container holding a writeable entity.
+	 */
+	public abstract EntityContainer getWriteableInstance();
 }

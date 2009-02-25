@@ -261,6 +261,19 @@ public class Way extends Entity implements Comparable<Way> {
 	}
 
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Way getWriteableInstance() {
+		if (isReadOnly()) {
+			return new Way(getId(), getVersion(), getTimestampContainer(), getUser(), getTags(), wayNodes);
+		} else {
+			return this;
+		}
+	}
+
+
     /**
      * Is this way closed? (A way is closed if the first node id equals the last node id.)
      *

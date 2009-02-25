@@ -365,4 +365,13 @@ public abstract class Entity implements Storeable {
 			readOnly = true;
 		}
 	}
+
+
+	/**
+	 * Returns a writeable instance of this entity. If the object is read-only a clone is created,
+	 * if it is already writeable then this object is returned.
+	 * 
+	 * @return A writeable instance of this entity.
+	 */
+	public abstract Entity getWriteableInstance();
 }
