@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
-import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
@@ -20,7 +19,7 @@ import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class WayDao extends EntityDao<Way, WayBuilder> {
+public class WayDao extends EntityDao<Way> {
 	
 	private static final String SQL_UPDATE_WAY_BBOX =
 		"UPDATE ways SET bbox = (" +
@@ -64,8 +63,8 @@ public class WayDao extends EntityDao<Way, WayBuilder> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void loadFeatures(long entityId, WayBuilder entityBuilder) {
-		entityBuilder.setWayNodes(new ArrayList<WayNode>(wayNodeDao.getAllRaw(entityId)));
+	protected void loadFeatures(long entityId, Way entity) {
+		entity.getWayNodes().addAll(wayNodeDao.getAllRaw(entityId));
 	}
 
 

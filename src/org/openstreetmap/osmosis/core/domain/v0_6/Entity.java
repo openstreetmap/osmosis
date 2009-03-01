@@ -50,7 +50,7 @@ public abstract class Entity implements Storeable {
 	 */
 	public Entity(long id, int version, Date timestamp, OsmUser user) {
 		// Chain to the more specific constructor
-		this(id, new SimpleTimestampContainer(timestamp), user, version);
+		this(id, version, new SimpleTimestampContainer(timestamp), user);
 	}
 	
 	
@@ -59,15 +59,15 @@ public abstract class Entity implements Storeable {
 	 * 
 	 * @param id
 	 *            The unique identifier.
+	 * @param version
+	 *            The version of the entity.
 	 * @param timestampContainer
 	 *            The container holding the timestamp in an alternative
 	 *            timestamp representation.
 	 * @param user
 	 *            The user that last modified this entity.
-	 * @param version
-	 *            The version of the entity.
 	 */
-	public Entity(long id, TimestampContainer timestampContainer, OsmUser user, int version) {
+	public Entity(long id, int version, TimestampContainer timestampContainer, OsmUser user) {
 		init(id, timestampContainer, user, version);
 		tags = new TagCollectionImpl();
 	}
@@ -89,7 +89,7 @@ public abstract class Entity implements Storeable {
 	 */
 	public Entity(long id, int version, Date timestamp, OsmUser user, Collection<Tag> tags) {
 		// Chain to the more specific constructor
-		this(id, new SimpleTimestampContainer(timestamp), user, version, tags);
+		this(id, version, new SimpleTimestampContainer(timestamp), user, tags);
 	}
 	
 	
@@ -98,17 +98,17 @@ public abstract class Entity implements Storeable {
 	 * 
 	 * @param id
 	 *            The unique identifier.
+	 * @param version
+	 *            The version of the entity.
 	 * @param timestampContainer
 	 *            The container holding the timestamp in an alternative
 	 *            timestamp representation.
 	 * @param user
 	 *            The user that last modified this entity.
-	 * @param version
-	 *            The version of the entity.
 	 * @param tags
 	 *            The tags to apply to the object.
 	 */
-	public Entity(long id, TimestampContainer timestampContainer, OsmUser user, int version, Collection<Tag> tags) {
+	public Entity(long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags) {
 		init(id, timestampContainer, user, version);
 		this.tags = new TagCollectionImpl(tags);
 	}
@@ -156,9 +156,9 @@ public abstract class Entity implements Storeable {
 	public Entity(StoreReader sr, StoreClassRegister scr) {
 		this(
 			sr.readInteger(),
+			sr.readCharacter(),
 			readTimestampContainer(sr, scr),
 			new OsmUser(sr, scr),
-			sr.readCharacter(),
 			new TagCollectionImpl(sr, scr)
 		);
 	}

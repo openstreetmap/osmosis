@@ -8,7 +8,6 @@ import java.util.Date;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
-import org.openstreetmap.osmosis.core.domain.v0_6.RelationBuilder;
 
 
 /**
@@ -16,7 +15,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.RelationBuilder;
  * 
  * @author Brett Henderson
  */
-public class RelationMapper extends EntityMapper<Relation, RelationBuilder> {
+public class RelationMapper extends EntityMapper<Relation> {
 	
 	/**
 	 * {@inheritDoc}
@@ -40,8 +39,8 @@ public class RelationMapper extends EntityMapper<Relation, RelationBuilder> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Class<RelationBuilder> getBuilderClass() {
-		return RelationBuilder.class;
+	public Class<Relation> getEntityClass() {
+		return Relation.class;
 	}
 	
 	
@@ -58,9 +57,9 @@ public class RelationMapper extends EntityMapper<Relation, RelationBuilder> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public RelationBuilder parseRecord(ResultSet resultSet) {
+	public Relation parseRecord(ResultSet resultSet) {
 		try {
-			return new RelationBuilder(
+			return new Relation(
 				resultSet.getLong("id"),
 				resultSet.getInt("version"),
 				new Date(resultSet.getTimestamp("tstamp").getTime()),

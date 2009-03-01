@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
-import org.openstreetmap.osmosis.core.domain.v0_6.RelationBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
@@ -17,7 +16,7 @@ import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class RelationDao extends EntityDao<Relation, RelationBuilder> {
+public class RelationDao extends EntityDao<Relation> {
 	
 	private EntityFeatureDao<RelationMember, DbOrderedFeature<RelationMember>> relationMemberDao;
 	
@@ -42,8 +41,8 @@ public class RelationDao extends EntityDao<Relation, RelationBuilder> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void loadFeatures(long entityId, RelationBuilder entityBuilder) {
-		entityBuilder.setMembers(new ArrayList<RelationMember>(relationMemberDao.getAllRaw(entityId)));
+	protected void loadFeatures(long entityId, Relation entity) {
+		entity.getMembers().addAll(relationMemberDao.getAllRaw(entityId));
 	}
 	
 	

@@ -58,7 +58,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            The name of the user that last modified this entity.
 	 */
 	public Way(long id, int version, TimestampContainer timestampContainer, OsmUser user) {
-		super(id, timestampContainer, user, version);
+		super(id, version, timestampContainer, user);
 		
 		this.wayNodes = new ArrayList<WayNode>();
 	}
@@ -106,7 +106,7 @@ public class Way extends Entity implements Comparable<Way> {
 	public Way(
 			long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags,
 			List<WayNode> wayNodes) {
-		super(id, timestampContainer, user, version, tags);
+		super(id, version, timestampContainer, user, tags);
 		
 		this.wayNodes = new ArrayList<WayNode>(wayNodes);
 	}
@@ -124,16 +124,14 @@ public class Way extends Entity implements Comparable<Way> {
 	public Way(StoreReader sr, StoreClassRegister scr) {
 		super(sr, scr);
 		
-		List<WayNode> tmpWayNodes;
 		int featureCount;
 		
 		featureCount = sr.readCharacter();
 		
-		tmpWayNodes = new ArrayList<WayNode>();
+		wayNodes = new ArrayList<WayNode>();
 		for (int i = 0; i < featureCount; i++) {
-			tmpWayNodes.add(new WayNode(sr, scr));
+			wayNodes.add(new WayNode(sr, scr));
 		}
-		wayNodes = Collections.unmodifiableList(tmpWayNodes);
 	}
 	
 	

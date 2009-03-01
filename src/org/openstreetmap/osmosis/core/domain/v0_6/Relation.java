@@ -60,9 +60,9 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *            The user that last modified this entity.
 	 */
 	public Relation(long id, int version, TimestampContainer timestampContainer, OsmUser user) {
-		super(id, timestampContainer, user, version);
+		super(id, version, timestampContainer, user);
 		
-		this.members = Collections.unmodifiableList(new ArrayList<RelationMember>());
+		this.members = new ArrayList<RelationMember>();
 	}
 	
 	
@@ -109,9 +109,9 @@ public class Relation extends Entity implements Comparable<Relation> {
 	public Relation(
 			long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags,
 			List<RelationMember> members) {
-		super(id, timestampContainer, user, version, tags);
+		super(id, version, timestampContainer, user, tags);
 		
-		this.members = Collections.unmodifiableList(new ArrayList<RelationMember>(members));
+		this.members = new ArrayList<RelationMember>(members);
 	}
 	
 	
@@ -127,16 +127,14 @@ public class Relation extends Entity implements Comparable<Relation> {
 	public Relation(StoreReader sr, StoreClassRegister scr) {
 		super(sr, scr);
 		
-		List<RelationMember> tmpMembers;
 		int featureCount;
 		
 		featureCount = sr.readCharacter();
 		
-		tmpMembers = new ArrayList<RelationMember>();
+		members = new ArrayList<RelationMember>();
 		for (int i = 0; i < featureCount; i++) {
-			tmpMembers.add(new RelationMember(sr, scr));
+			members.add(new RelationMember(sr, scr));
 		}
-		members = Collections.unmodifiableList(tmpMembers);
 	}
 	
 	

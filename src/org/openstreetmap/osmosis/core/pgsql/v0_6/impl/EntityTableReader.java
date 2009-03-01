@@ -4,7 +4,6 @@ package org.openstreetmap.osmosis.core.pgsql.v0_6.impl;
 import java.sql.ResultSet;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
-import org.openstreetmap.osmosis.core.domain.v0_6.EntityBuilder;
 import org.openstreetmap.osmosis.core.pgsql.common.BaseTableReader;
 import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
 
@@ -14,13 +13,11 @@ import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
  * won't be populated with tags.
  * 
  * @author Brett Henderson
- * @param <Te>
+ * @param <T>
  *            The entity type to be supported.
- * @param <Tb>
- *            The builder type for the entity.
  */
-public class EntityTableReader<Te extends Entity,  Tb extends EntityBuilder<Te>> extends BaseTableReader<Tb> {
-	private EntityMapper<Te, Tb> entityMapper;
+public class EntityTableReader<T extends Entity> extends BaseTableReader<T> {
+	private EntityMapper<T> entityMapper;
 	private String sql;
 	
 	
@@ -32,7 +29,7 @@ public class EntityTableReader<Te extends Entity,  Tb extends EntityBuilder<Te>>
 	 * @param entityBuilder
 	 *            The entity builder implementation to utilise.
 	 */
-	public EntityTableReader(DatabaseContext dbCtx, EntityMapper<Te, Tb> entityBuilder) {
+	public EntityTableReader(DatabaseContext dbCtx, EntityMapper<T> entityBuilder) {
 		super(dbCtx);
 		
 		this.entityMapper = entityBuilder;
@@ -54,7 +51,7 @@ public class EntityTableReader<Te extends Entity,  Tb extends EntityBuilder<Te>>
 	 *            The table containing a column named id defining the list of
 	 *            entities to be returned.
 	 */
-	public EntityTableReader(DatabaseContext dbCtx, EntityMapper<Te, Tb> entityBuilder, String constraintTable) {
+	public EntityTableReader(DatabaseContext dbCtx, EntityMapper<T> entityBuilder, String constraintTable) {
 		super(dbCtx);
 		
 		this.entityMapper = entityBuilder;
@@ -79,11 +76,11 @@ public class EntityTableReader<Te extends Entity,  Tb extends EntityBuilder<Te>>
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<Tb> createNextValue(ResultSet resultSet) {
-		Tb entity;
+	protected ReadResult<T> createNextValue(ResultSet resultSet) {
+		T entity;
 		
 		entity = entityMapper.parseRecord(resultSet);
 		
-		return new ReadResult<Tb>(true, entity);
+		return new ReadResult<T>(true, entity);
 	}
 }

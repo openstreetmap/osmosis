@@ -64,7 +64,7 @@ public class Node extends Entity implements Comparable<Node> {
 	public Node(
 			long id, int version, TimestampContainer timestampContainer,
 			OsmUser user, double latitude, double longitude) {
-		super(id, timestampContainer, user, version);
+		super(id, version, timestampContainer, user);
 
 		init(latitude, longitude);
 	}
@@ -115,7 +115,7 @@ public class Node extends Entity implements Comparable<Node> {
 	 */
 	public Node(long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags,
 			double latitude, double longitude) {
-		super(id, timestampContainer, user, version, tags);
+		super(id, version, timestampContainer, user, tags);
 		
 		init(latitude, longitude);
 	}

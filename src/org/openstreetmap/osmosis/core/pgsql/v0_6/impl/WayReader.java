@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
-import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
 import org.openstreetmap.osmosis.core.mysql.v0_6.impl.DbOrderedFeatureComparator;
@@ -20,7 +19,7 @@ import org.openstreetmap.osmosis.core.store.PeekableIterator;
  * 
  * @author Brett Henderson
  */
-public class WayReader extends EntityReader<Way, WayBuilder> {
+public class WayReader extends EntityReader<Way> {
 	
 	private PeekableIterator<DbOrderedFeature<WayNode>> wayNodeReader;
 	
@@ -63,7 +62,7 @@ public class WayReader extends EntityReader<Way, WayBuilder> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void populateEntityFeatures(WayBuilder entity) {
+	protected void populateEntityFeatures(Way entity) {
 		long wayId;
 		List<DbOrderedFeature<WayNode>> wayNodes;
 		
@@ -93,7 +92,7 @@ public class WayReader extends EntityReader<Way, WayBuilder> {
 		// by their sequence number.
 		Collections.sort(wayNodes, new DbOrderedFeatureComparator<WayNode>());
 		for (DbOrderedFeature<WayNode> dbWayNode : wayNodes) {
-			entity.addWayNode(dbWayNode.getFeature());
+			entity.getWayNodes().add(dbWayNode.getFeature());
 		}
 	}
 	

@@ -9,7 +9,6 @@ import java.util.Collection;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
-import org.openstreetmap.osmosis.core.domain.v0_6.EntityBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.mysql.v0_6.impl.DbFeature;
@@ -22,16 +21,14 @@ import org.openstreetmap.osmosis.core.pgsql.common.NoSuchRecordException;
  * Provides functionality common to all top level entity daos.
  * 
  * @author Brett Henderson
- * @param <Te>
+ * @param <T>
  *            The entity type to be supported.
- * @param <Tb>
- *            The builder type for the entity.
  */
-public abstract class EntityDao<Te extends Entity, Tb extends EntityBuilder<Te>> extends BaseDao {
+public abstract class EntityDao<T extends Entity> extends BaseDao {
 	
 	private EntityFeatureDao<Tag, DbFeature<Tag>> tagDao;
 	private ActionDao actionDao;
-	private EntityMapper<Te, Tb> entityMapper;
+	private EntityMapper<T> entityMapper;
 	private PreparedStatement countStatement;
 	private PreparedStatement getStatement;
 	private PreparedStatement insertStatement;
@@ -49,7 +46,7 @@ public abstract class EntityDao<Te extends Entity, Tb extends EntityBuilder<Te>>
 	 * @param actionDao
 	 *            The dao to use for adding action records to the database.
 	 */
-	protected EntityDao(DatabaseContext dbCtx, EntityMapper<Te, Tb> entityMapper, ActionDao actionDao) {
+	protected EntityDao(DatabaseContext dbCtx, EntityMapper<T> entityMapper, ActionDao actionDao) {
 		super(dbCtx);
 		
 		this.entityMapper = entityMapper;
@@ -116,9 +113,9 @@ public abstract class EntityDao<Te extends Entity, Tb extends EntityBuilder<Te>>
 	 *            The unique identifier of the entity.
 	 * @return The loaded entity.
 	 */
-	public Te getEntity(long entityId) {
+	public T getEntity(long entityId) {
 		ResultSet resultSet = null;
-		Tb entityBuilder;
+		T entity;
 		
 		if (getStatement == null) {
 			getStatement = prepareStatement(entityMapper.getSqlSelect(true, true));
@@ -133,19 +130,19 @@ public abstract class EntityDao<Te extends Entity, Tb extends EntityBuilder<Te>>
 				throw new NoSuchRecordException(entityMapper.getEntityName()
 						+ " " + entityId + " doesn't exist.");
 			}
-			entityBuilder = entityMapper.parseRecord(resultSet);
+			entity = entityMapper.parseRecord(resultSet);
 			
 			resultSet.close();
 			resultSet = null;
 			
 			for (DbFeature<Tag> dbTag : tagDao.getAll(entityId)) {
-				entityBuilder.addTag(dbTag.getFeature());
+				entity.getTags().add(dbTag.getFeature());
 			}
 			
 			// Add the type specific features.
-			loadFeatures(entityId, entityBuilder);
+			loadFeatures(entityId, entity);
 			
-			return entityBuilder.buildEntity();
+			return entity;
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
@@ -191,10 +188,10 @@ public abstract class EntityDao<Te extends Entity, Tb extends EntityBuilder<Te>>
 	 * 
 	 * @param entityId
 	 *            The entity id.
-	 * @param entityBuilder
+	 * @param entity
 	 *            The entity requiring features to be added.
 	 */
-	protected abstract void loadFeatures(long entityId, Tb entityBuilder);
+	protected abstract void loadFeatures(long entityId, T entity);
 	
 	
 	/**
@@ -203,7 +200,7 @@ public abstract class EntityDao<Te extends Entity, Tb extends EntityBuilder<Te>>
 	 * @param entity
 	 *            The entity to add.
 	 */
-	public void addEntity(Te entity) {
+	public void addEntity(T entity) {
 		if (insertStatement == null) {
 			insertStatement = prepareStatement(entityMapper.getSqlInsert(1));
 		}
@@ -232,7 +229,7 @@ public abstract class EntityDao<Te extends Entity, Tb extends EntityBuilder<Te>>
 	 * @param entity
 	 *            The entity to update.
 	 */
-	public void modifyEntity(Te entity) {
+	public void modifyEntity(T entity) {
 		if (updateStatement == null) {
 			updateStatement = prepareStatement(entityMapper.getSqlUpdate(true));
 		}
@@ -300,5 +297,5 @@ public abstract class EntityDao<Te extends Entity, Tb extends EntityBuilder<Te>>
 	 * 
 	 * @return The entity iterator.
 	 */
-	public abstract ReleasableIterator<Te> iterate();
+	public abstract ReleasableIterator<T> iterate();
 }
