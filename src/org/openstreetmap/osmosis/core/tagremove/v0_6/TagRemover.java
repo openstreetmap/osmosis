@@ -1,7 +1,12 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.tagremove.v0_6;
 
+import java.util.HashSet;
+import java.util.Iterator;
+
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
+import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
+import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.core.task.v0_6.SinkSource;
 
@@ -14,8 +19,9 @@ import org.openstreetmap.osmosis.core.task.v0_6.SinkSource;
  * @author Brett Henderson
  */
 public class TagRemover implements SinkSource {
-	private TagRemoverBuilder dropTagsBuilder;
 	private Sink sink;
+	private HashSet<String> keysToDrop;
+	private String[] keyPrefixesToDrop;
 	
 	
 	/**
@@ -27,7 +33,15 @@ public class TagRemover implements SinkSource {
 	 *            Comma separated list of key prefixes of tags to be removed.
 	 */
 	public TagRemover(String keyList, String keyPrefixList) {
-		dropTagsBuilder = new TagRemoverBuilder(keyList, keyPrefixList);
+		keysToDrop = new HashSet<String>();
+		String[] keys = keyList.split(",");
+		for (int i = 0; i < keys.length; i++) {
+			keysToDrop.add(keys[i]);
+		}
+		keyPrefixesToDrop = keyPrefixList.split(",");
+		if (keyPrefixesToDrop[0] == "") {
+			keyPrefixesToDrop = new String[] {};
+		}
 	}
 
 
@@ -36,7 +50,6 @@ public class TagRemover implements SinkSource {
 	 */
 	public void setSink(Sink sink) {
 		this.sink = sink;
-		dropTagsBuilder.setSink(sink);
 	}
 
 
@@ -45,7 +58,30 @@ public class TagRemover implements SinkSource {
 	 */
 	@Override
 	public void process(EntityContainer entityContainer) {
-		entityContainer.process(dropTagsBuilder);
+		EntityContainer writeableContainer;
+		Entity entity;
+		
+		writeableContainer = entityContainer.getWriteableInstance();
+		entity = writeableContainer.getEntity();
+		
+		for (Iterator<Tag> i = entity.getTags().iterator(); i.hasNext();) {
+			Tag tag;
+			
+			tag = i.next();
+			
+			if (keysToDrop.contains(tag.getKey())) {
+				i.remove();
+			} else {
+				for (String prefix: keyPrefixesToDrop) {
+					if (tag.getKey().startsWith(prefix)) {
+						i.remove();
+					   	break;
+					}
+				}
+			}
+		}
+		
+		sink.process(writeableContainer);
 	}
 
 

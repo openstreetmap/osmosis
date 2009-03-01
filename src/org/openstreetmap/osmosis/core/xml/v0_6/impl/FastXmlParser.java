@@ -21,14 +21,11 @@ import org.openstreetmap.osmosis.core.domain.common.UnparsedTimestampContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
-import org.openstreetmap.osmosis.core.domain.v0_6.NodeBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
-import org.openstreetmap.osmosis.core.domain.v0_6.RelationBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
-import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.core.xml.common.XmlTimestampFormat;
@@ -65,10 +62,6 @@ public class FastXmlParser {
 	private static final String ATTRIBUTE_NAME_ORIGIN = "origin";
 	
 	private static final Logger log = Logger.getLogger(FastXmlParser.class.getName());
-		
-	private NodeBuilder nodeBuilder;
-	private WayBuilder wayBuilder;
-	private RelationBuilder relationBuilder;
 	
 	
 	/**
@@ -86,10 +79,6 @@ public class FastXmlParser {
 		this.sink = sink;
 		this.enableDateParsing = enableDateParsing;
 		this.reader = reader;
-		
-		nodeBuilder = new NodeBuilder();
-		wayBuilder = new WayBuilder();
-		relationBuilder = new RelationBuilder();
 		
 		if (enableDateParsing) {
 			timestampFormat = new XmlTimestampFormat();
@@ -223,6 +212,7 @@ public class FastXmlParser {
 		OsmUser user;
 		double latitude;
 		double longitude;
+		Node node;
 		
 		id = Long.parseLong(reader.getAttributeValue(null, ATTRIBUTE_NAME_ID));
 		version = Integer.parseInt(reader.getAttributeValue(null, ATTRIBUTE_NAME_VERSION));
@@ -234,12 +224,12 @@ public class FastXmlParser {
 		latitude = Double.parseDouble(reader.getAttributeValue(null, ATTRIBUTE_NAME_LATITUDE));
 		longitude = Double.parseDouble(reader.getAttributeValue(null, ATTRIBUTE_NAME_LONGITUDE));
 		
-		nodeBuilder.initialize(id, version, timestamp, user, latitude, longitude);
+		node = new Node(id, version, timestamp, user, latitude, longitude);
 		
 		reader.nextTag();
 		while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
 			if (reader.getLocalName().equals(ELEMENT_NAME_TAG)) {
-				nodeBuilder.addTag(readTag());
+				node.getTags().add(readTag());
 			} else {
 				readUnknownElement();
 			}
@@ -247,7 +237,7 @@ public class FastXmlParser {
 		
 		reader.nextTag();
 		
-		return nodeBuilder.buildEntity();
+		return node;
 	}
 	
 	private WayNode readWayNode() throws Exception {
@@ -263,6 +253,7 @@ public class FastXmlParser {
 		int version;
 		TimestampContainer timestamp;
 		OsmUser user;
+		Way way;
 		
 		id = Long.parseLong(reader.getAttributeValue(null, ATTRIBUTE_NAME_ID));
 		version = Integer.parseInt(reader.getAttributeValue(null, ATTRIBUTE_NAME_VERSION));
@@ -272,21 +263,21 @@ public class FastXmlParser {
 			reader.getAttributeValue(null, ATTRIBUTE_NAME_USER)
 		);
 		
-		wayBuilder.initialize(id, version, timestamp, user);
+		way = new Way(id, version, timestamp, user);
 		
 		reader.nextTag();
 		while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
 			if (reader.getLocalName().equals(ELEMENT_NAME_TAG)) {
-				wayBuilder.addTag(readTag());
+				way.getTags().add(readTag());
 			} else if (reader.getLocalName().equals(ELEMENT_NAME_NODE_REFERENCE)) {
-				wayBuilder.addWayNode(readWayNode());
+				way.getWayNodes().add(readWayNode());
 			} else {
 				readUnknownElement();
 			}
 		}
 		reader.nextTag();
 
-		return wayBuilder.buildEntity();
+		return way;
 	}
 	
 	private RelationMember readRelationMember() throws Exception {
@@ -311,6 +302,7 @@ public class FastXmlParser {
 		int version;
 		TimestampContainer timestamp;
 		OsmUser user;
+		Relation relation;
 		
 		id = Long.parseLong(reader.getAttributeValue(null, ATTRIBUTE_NAME_ID));
 		version = Integer.parseInt(reader.getAttributeValue(null, ATTRIBUTE_NAME_VERSION));
@@ -320,21 +312,21 @@ public class FastXmlParser {
 			reader.getAttributeValue(null, ATTRIBUTE_NAME_USER)
 		);
 		
-		relationBuilder.initialize(id, version, timestamp, user);
+		relation = new Relation(id, version, timestamp, user);
 		
 		reader.nextTag();
 		while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
 			if (reader.getLocalName().equals(ELEMENT_NAME_TAG)) {
-				relationBuilder.addTag(readTag());
+				relation.getTags().add(readTag());
 			} else if (reader.getLocalName().equals(ELEMENT_NAME_MEMBER)) {
-				relationBuilder.addMember(readRelationMember());
+				relation.getMembers().add(readRelationMember());
 			} else {
 				readUnknownElement();
 			}
 		}
 		reader.nextTag();
 		
-		return relationBuilder.buildEntity();
+		return relation;
 	}
 
 	

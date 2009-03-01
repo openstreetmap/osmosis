@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
-import org.openstreetmap.osmosis.core.domain.v0_6.NodeBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 
@@ -90,9 +89,8 @@ public class NodeWriterTest {
 	@Test
 	public final void testProcessNormalNode() {
 		Node node =
-			new NodeBuilder(1234, 2, timestamp, new OsmUser(23, "someuser"), 20.12345678, -21.98765432)
-			.addTag(new Tag("nodekey", "nodevalue"))
-			.buildEntity();
+			new Node(1234, 2, timestamp, new OsmUser(23, "someuser"), 20.12345678, -21.98765432);
+		node.getTags().add(new Tag("nodekey", "nodevalue"));
 		testNodeWriter.process(node);
 		try {
 			testBufferedWriter.flush();
@@ -141,10 +139,8 @@ public class NodeWriterTest {
 	 */
 	@Test
 	public final void testProcessNodeWithNoUser() {
-		Node node =
-			new NodeBuilder(1234, 2, timestamp, OsmUser.NONE, 20.12345678, -21.98765432)
-			.addTag(new Tag("nodekey", "nodevalue"))
-			.buildEntity();
+		Node node = new Node(1234, 2, timestamp, OsmUser.NONE, 20.12345678, -21.98765432);
+		node.getTags().add(new Tag("nodekey", "nodevalue"));
 		testNodeWriter.process(node);
 		try {
 			testBufferedWriter.flush();

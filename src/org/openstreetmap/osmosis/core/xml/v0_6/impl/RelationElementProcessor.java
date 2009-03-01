@@ -1,17 +1,16 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.xml.v0_6.impl;
 
-import org.xml.sax.Attributes;
-
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
-import org.openstreetmap.osmosis.core.domain.v0_6.RelationBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.core.xml.common.BaseElementProcessor;
 import org.openstreetmap.osmosis.core.xml.common.ElementProcessor;
+import org.xml.sax.Attributes;
 
 
 /**
@@ -30,7 +29,7 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 	
 	private TagElementProcessor tagElementProcessor;
 	private RelationMemberElementProcessor relationMemberElementProcessor;
-	private RelationBuilder relationBuilder;
+	private Relation relation;
 	
 	
 	/**
@@ -47,7 +46,6 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 	public RelationElementProcessor(BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing) {
 		super(parentProcessor, sink, enableDateParsing);
 		
-		relationBuilder = new RelationBuilder();
 		tagElementProcessor = new TagElementProcessor(this, this);
 		relationMemberElementProcessor = new RelationMemberElementProcessor(this, this);
 	}
@@ -72,7 +70,7 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 		
 		user = buildUser(rawUserId, rawUserName);
 		
-		relationBuilder.initialize(id, version, timestampContainer, user);
+		relation = new Relation(id, version, timestampContainer, user);
 	}
 	
 	
@@ -104,7 +102,7 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 	 * {@inheritDoc}
 	 */
 	public void end() {
-		getSink().process(new RelationContainer(relationBuilder.buildEntity()));
+		getSink().process(new RelationContainer(relation));
 	}
 	
 	
@@ -116,7 +114,7 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 	 *            The tag to be processed.
 	 */
 	public void processTag(Tag tag) {
-		relationBuilder.addTag(tag);
+		relation.getTags().add(tag);
 	}
 	
 	
@@ -128,6 +126,6 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 	 *            The wayNode to be processed.
 	 */
 	public void processRelationMember(RelationMember relationMember) {
-		relationBuilder.addMember(relationMember);
+		relation.getMembers().add(relationMember);
 	}
 }

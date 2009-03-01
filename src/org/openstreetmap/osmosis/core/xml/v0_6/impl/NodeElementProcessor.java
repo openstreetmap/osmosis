@@ -5,7 +5,7 @@ import org.xml.sax.Attributes;
 
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
-import org.openstreetmap.osmosis.core.domain.v0_6.NodeBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
@@ -29,7 +29,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	private static final String ATTRIBUTE_NAME_LONGITUDE = "lon";
 	
 	private TagElementProcessor tagElementProcessor;
-	private NodeBuilder nodeBuilder;
+	private Node node;
 	
 	
 	/**
@@ -46,7 +46,6 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	public NodeElementProcessor(BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing) {
 		super(parentProcessor, sink, enableDateParsing);
 		
-		nodeBuilder = new NodeBuilder();
 		tagElementProcessor = new TagElementProcessor(this, this);
 	}
 	
@@ -74,7 +73,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 		
 		user = buildUser(rawUserId, rawUserName);
 		
-		nodeBuilder.initialize(id, version, timestampContainer, user, latitude, longitude);
+		node = new Node(id, version, timestampContainer, user, latitude, longitude);
 	}
 	
 	
@@ -104,7 +103,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	 * {@inheritDoc}
 	 */
 	public void end() {
-		getSink().process(new NodeContainer(nodeBuilder.buildEntity()));
+		getSink().process(new NodeContainer(node));
 	}
 	
 	
@@ -116,6 +115,6 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	 *            The tag to be processed.
 	 */
 	public void processTag(Tag tag) {
-		nodeBuilder.addTag(tag);
+		node.getTags().add(tag);
 	}
 }
