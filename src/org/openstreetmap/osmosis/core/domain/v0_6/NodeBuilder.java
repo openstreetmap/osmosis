@@ -13,7 +13,10 @@ import org.openstreetmap.osmosis.core.store.StoreWriter;
  * Provides the ability to manipulate nodes.
  * 
  * @author Brett Henderson
+ * 
+ * @deprecated Builder classes are not required because entities are now writeable.
  */
+@Deprecated
 public class NodeBuilder extends EntityBuilder<Node> {
 	private double latitude;
 	private double longitude;

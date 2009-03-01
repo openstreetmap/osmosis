@@ -11,9 +11,7 @@ import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
-import org.openstreetmap.osmosis.core.domain.v0_6.NodeBuilder;
-import org.openstreetmap.osmosis.core.domain.v0_6.RelationBuilder;
-import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.mysql.v0_6.impl.EntityHistory;
 import org.openstreetmap.osmosis.core.mysql.v0_6.impl.EntityHistoryComparator;
@@ -76,19 +74,19 @@ public class MysqlReader implements RunnableSource {
 	 * Reads all nodes from the database and sends to the sink.
 	 */
 	private void processNodes() {
-		ReleasableIterator<NodeBuilder> reader;
+		ReleasableIterator<Node> reader;
 		
-		reader = new EntitySnapshotReader<NodeBuilder>(
-			new PeekableIterator<EntityHistory<NodeBuilder>>(
+		reader = new EntitySnapshotReader<Node>(
+			new PeekableIterator<EntityHistory<Node>>(
 				new NodeReader(loginCredentials, readAllUsers)
 			),
 			snapshotInstant,
-			new EntityHistoryComparator<NodeBuilder>()
+			new EntityHistoryComparator<Node>()
 		);
 		
 		try {
 			while (reader.hasNext()) {
-				sink.process(new NodeContainer(reader.next().buildEntity()));
+				sink.process(new NodeContainer(reader.next()));
 			}
 			
 		} finally {

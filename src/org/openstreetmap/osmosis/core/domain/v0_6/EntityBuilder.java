@@ -12,14 +12,18 @@ import org.openstreetmap.osmosis.core.util.LongAsInt;
 
 
 /**
- * Provides facilities to specify the contents of entity and create new
- * instances. Entities themselves are immutable to support concurrent access,
- * this class provides a means of manipulating them.
+ * Provides facilities to specify the contents of entity and create new instances. Entities
+ * themselves are immutable to support concurrent access, this class provides a means of
+ * manipulating them.
  * 
  * @author Brett Henderson
  * 
- * @param <T> The type of entity to be built.
+ * @param <T>
+ *            The type of entity to be built.
+ * 
+ * @deprecated Builder classes are not required because entities are now writeable.
  */
+@Deprecated
 public abstract class EntityBuilder<T extends Entity> implements Storeable {
 	
 	/**

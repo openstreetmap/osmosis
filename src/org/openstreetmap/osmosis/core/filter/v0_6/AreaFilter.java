@@ -1,6 +1,8 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.filter.v0_6;
 
+import java.util.Iterator;
+
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
@@ -10,12 +12,10 @@ import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
-import org.openstreetmap.osmosis.core.domain.v0_6.RelationBuilder;
-import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
-import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
-import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
+import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
+import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.filter.common.IdTracker;
 import org.openstreetmap.osmosis.core.filter.common.IdTrackerFactory;
 import org.openstreetmap.osmosis.core.filter.common.IdTrackerType;
@@ -44,8 +44,6 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	private IdTracker availableRelations;
 	private boolean completeRelations;
 	private SimpleObjectStore<RelationContainer> allRelations;
-	private WayBuilder wayBuilder;
-	private RelationBuilder relationBuilder;
 	
 	
 	/**
@@ -86,9 +84,6 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 				new SimpleObjectStore<RelationContainer>(
 						new SingleClassObjectSerializationFactory(RelationContainer.class), "afrl", true);
 		}
-		
-		wayBuilder = new WayBuilder();
-		relationBuilder = new RelationBuilder();
 	}
 	
 	
@@ -183,24 +178,22 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	 */
 	private void emitFilteredWay(Way way) {
 		if (clipIncompleteEntities) {
-			// Create a new way to contain only available nodes.
-			wayBuilder.initialize(way);
-			wayBuilder.clearWayNodes();
+			Way filteredWay;
 			
-			// Only add node references for nodes that are available.
-			for (WayNode nodeReference : way.getWayNodes()) {
-				long nodeId;
+			filteredWay = way.getWriteableInstance();
+			
+			// Remove node references for nodes that are unavailable.
+			for (Iterator<WayNode> i = filteredWay.getWayNodes().iterator(); i.hasNext(); ) {
+				WayNode nodeReference = i.next();
 				
-				nodeId = nodeReference.getNodeId();
-				
-				if (availableNodes.get(nodeId)) {
-					wayBuilder.addWayNode(nodeReference);
+				if (!availableNodes.get(nodeReference.getNodeId())) {
+					i.remove();
 				}
 			}
 			
 			// Only add ways that contain nodes.
-			if (wayBuilder.getWayNodes().size() > 0) {
-				sink.process(new WayContainer(wayBuilder.buildEntity()));
+			if (filteredWay.getWayNodes().size() > 0) {
+				sink.process(new WayContainer(filteredWay));
 			}
 			
 		} else {
@@ -262,39 +255,40 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
      */
     private void emitFilteredRelation(Relation relation) {
     	if (clipIncompleteEntities) {
-		    // Create a new relation object to contain only items within the bounding box.
-    		relationBuilder.initialize(relation);
-    		relationBuilder.clearMembers();
-			
-			// Only add members for entities that are available.
-			for (RelationMember member : relation.getMembers()) {
-				long memberId;
-				EntityType memberType;
-				
-				memberId = member.getMemberId();
-				memberType = member.getMemberType();
-				
-				if (EntityType.Node.equals(memberType)) {
-					if (availableNodes.get(memberId)) {
-						relationBuilder.addMember(member);
+    		Relation filteredRelation;
+    		
+		    filteredRelation = relation.getWriteableInstance();
+		    
+		    // Remove members for entities that are unavailable.
+		    for (Iterator<RelationMember> i = filteredRelation.getMembers().iterator(); i.hasNext(); ) {
+		    	RelationMember member = i.next();
+		    	EntityType memberType;
+		    	long memberId;
+		    	
+		    	memberType = member.getMemberType();
+		    	memberId = member.getMemberId();
+		    	
+		    	if (EntityType.Node.equals(memberType)) {
+					if (!availableNodes.get(memberId)) {
+						i.remove();
 					}
 				} else if (EntityType.Way.equals(memberType)) {
-					if (availableWays.get(memberId)) {
-						relationBuilder.addMember(member);
+					if (!availableWays.get(memberId)) {
+						i.remove();
 					}
 				} else if (EntityType.Relation.equals(memberType)) {
-					if (availableRelations.get(memberId)) {
-						relationBuilder.addMember(member);
+					if (!availableRelations.get(memberId)) {
+						i.remove();
 					}
 				} else {
 					throw new OsmosisRuntimeException(
 							"Unsupported member type + " + memberType + " for relation " + relation.getId() + ".");
 				}
-			}
+		    }
 			
 			// Only add relations that contain entities.
-			if (relationBuilder.getMembers().size() > 0) {
-				sink.process(new RelationContainer(relationBuilder.buildEntity()));
+			if (filteredRelation.getMembers().size() > 0) {
+				sink.process(new RelationContainer(filteredRelation));
 			}
 			
     	} else {

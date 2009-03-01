@@ -37,6 +37,44 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 */
+	public Way(long id, int version, Date timestamp, OsmUser user) {
+		// Chain to the more specific constructor
+		this(id, version, new SimpleTimestampContainer(timestamp), user);
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param id
+	 *            The unique identifier.
+	 * @param version
+	 *            The version of the entity.
+	 * @param timestampContainer
+	 *            The container holding the timestamp in an alternative
+	 *            timestamp representation.
+	 * @param user
+	 *            The name of the user that last modified this entity.
+	 */
+	public Way(long id, int version, TimestampContainer timestampContainer, OsmUser user) {
+		super(id, timestampContainer, user, version);
+		
+		this.wayNodes = new ArrayList<WayNode>();
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param id
+	 *            The unique identifier.
+	 * @param version
+	 *            The version of the entity.
+	 * @param timestamp
+	 *            The last updated timestamp.
+	 * @param user
+	 *            The user that last modified this entity.
 	 * @param tags
 	 *            The tags to apply to the object.
 	 * @param wayNodes

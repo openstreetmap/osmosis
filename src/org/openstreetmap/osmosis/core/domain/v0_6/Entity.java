@@ -27,12 +27,50 @@ import org.openstreetmap.osmosis.core.util.LongAsInt;
  * @author Brett Henderson
  */
 public abstract class Entity implements Storeable {
+	
 	private int id;
 	private int version;
 	private TimestampContainer timestampContainer;
 	private OsmUser user;
-	private Collection<Tag> tags;
+	private TagCollection tags;
 	private boolean readOnly;
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param id
+	 *            The unique identifier.
+	 * @param version
+	 *            The version of the entity.
+	 * @param timestamp
+	 *            The last updated timestamp.
+	 * @param user
+	 *            The user that last modified this entity.
+	 */
+	public Entity(long id, int version, Date timestamp, OsmUser user) {
+		// Chain to the more specific constructor
+		this(id, new SimpleTimestampContainer(timestamp), user, version);
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param id
+	 *            The unique identifier.
+	 * @param timestampContainer
+	 *            The container holding the timestamp in an alternative
+	 *            timestamp representation.
+	 * @param user
+	 *            The user that last modified this entity.
+	 * @param version
+	 *            The version of the entity.
+	 */
+	public Entity(long id, TimestampContainer timestampContainer, OsmUser user, int version) {
+		init(id, timestampContainer, user, version);
+		tags = new TagCollectionImpl();
+	}
 	
 	
 	/**
@@ -71,11 +109,38 @@ public abstract class Entity implements Storeable {
 	 *            The tags to apply to the object.
 	 */
 	public Entity(long id, TimestampContainer timestampContainer, OsmUser user, int version, Collection<Tag> tags) {
-		this.id = LongAsInt.longToInt(id);
-		this.timestampContainer = timestampContainer;
-		this.user = user;
-		this.version = version;
-		this.tags = new ArrayList<Tag>(tags);
+		init(id, timestampContainer, user, version);
+		this.tags = new TagCollectionImpl(tags);
+	}
+	
+	
+	/**
+	 * Initializes non-collection attributes.
+	 * 
+	 * @param newId
+	 *            The unique identifier.
+	 * @param newTimestampContainer
+	 *            The container holding the timestamp in an alternative
+	 *            timestamp representation.
+	 * @param newUser
+	 *            The user that last modified this entity.
+	 * @param newVersion
+	 *            The version of the entity.
+	 */
+	private void init(long newId, TimestampContainer newTimestampContainer, OsmUser newUser, int newVersion) {
+		this.id = LongAsInt.longToInt(newId);
+		this.timestampContainer = newTimestampContainer;
+		this.user = newUser;
+		this.version = newVersion;
+	}
+	
+	
+	private static TimestampContainer readTimestampContainer(StoreReader sr, StoreClassRegister scr) {
+		if (sr.readBoolean()) {
+			return new SimpleTimestampContainer(new Date(sr.readLong()));
+		} else {
+			return null;
+		}
 	}
 	
 	
@@ -89,25 +154,13 @@ public abstract class Entity implements Storeable {
 	 *            within the store.
 	 */
 	public Entity(StoreReader sr, StoreClassRegister scr) {
-		int tagCount;
-		Collection<Tag> tmpTags;
-		
-		id = sr.readInteger();
-		
-		version = sr.readCharacter(); // store as a character for now, may need to be an int later
-		
-		if (sr.readBoolean()) {
-			timestampContainer = new SimpleTimestampContainer(new Date(sr.readLong()));
-		}
-		
-		user = new OsmUser(sr, scr);
-		
-		tagCount = sr.readCharacter();
-		tmpTags = new ArrayList<Tag>(tagCount);
-		for (int i = 0; i < tagCount; i++) {
-			tmpTags.add(new Tag(sr, scr));
-		}
-		tags = Collections.unmodifiableCollection(tmpTags);
+		this(
+			sr.readInteger(),
+			readTimestampContainer(sr, scr),
+			new OsmUser(sr, scr),
+			sr.readCharacter(),
+			new TagCollectionImpl(sr, scr)
+		);
 	}
 	
 	
@@ -128,10 +181,7 @@ public abstract class Entity implements Storeable {
 		
 		user.store(sw, scr);
 		
-		sw.writeCharacter(IntAsChar.intToChar(tags.size()));
-		for (Tag tag : tags) {
-			tag.store(sw, scr);
-		}
+		tags.store(sw, scr);
 	}
 	
 	
@@ -360,7 +410,7 @@ public abstract class Entity implements Storeable {
 	 */
 	public void makeReadOnly() {
 		if (!readOnly) {
-			tags = Collections.unmodifiableCollection(tags);
+			tags = new UnmodifiableTagCollection(tags);
 			
 			readOnly = true;
 		}

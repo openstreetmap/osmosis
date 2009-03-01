@@ -15,7 +15,10 @@ import org.openstreetmap.osmosis.core.store.StoreWriter;
  * Provides the ability to manipulate ways.
  * 
  * @author Brett Henderson
+ * 
+ * @deprecated Builder classes are not required because entities are now writeable.
  */
+@Deprecated
 public class WayBuilder extends EntityBuilder<Way> {
 	private List<WayNode> wayNodes;
 	
