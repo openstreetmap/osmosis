@@ -19,7 +19,7 @@
         <dependency org="postgresql" name="postgresql" rev="8.3-603.jdbc4" conf="compile->default"/>
         <dependency org="net.sf.jpf" name="jpf" rev="latest.integration" conf="compile->default"/>
         
-        <dependency org="org.codehaus.woodstox" name="wstx-lgpl" rev="latest.integration" conf="default->default">
+        <dependency org="org.codehaus.woodstox" name="wstx-lgpl" rev="3.2.8" conf="default->default">
 			<!-- Stax is included in the JDK from java 1.6 onwards. -->
         	<exclude module="stax-api"/>
         </dependency>
