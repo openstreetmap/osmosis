@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
-import org.openstreetmap.osmosis.core.domain.v0_6.RelationBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
@@ -22,12 +22,12 @@ import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactor
  * 
  * @author Brett Henderson
  */
-public class RelationReader implements ReleasableIterator<EntityHistory<RelationBuilder>> {
+public class RelationReader implements ReleasableIterator<EntityHistory<Relation>> {
 	
-	private ReleasableIterator<EntityHistory<RelationBuilder>> relationReader;
+	private ReleasableIterator<EntityHistory<Relation>> relationReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> relationTagReader;
 	private PeekableIterator<DbFeatureHistory<DbOrderedFeature<RelationMember>>> relationMemberReader;
-	private EntityHistory<RelationBuilder> nextValue;
+	private EntityHistory<Relation> nextValue;
 	private boolean nextValueLoaded;
 	
 	
@@ -41,7 +41,7 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 	 *            regardless of their public edits flag.
 	 */
 	public RelationReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
-		relationReader = new PersistentIterator<EntityHistory<RelationBuilder>>(
+		relationReader = new PersistentIterator<EntityHistory<Relation>>(
 			new SingleClassObjectSerializationFactory(EntityHistory.class),
 			new RelationTableReader(loginCredentials, readAllUsers),
 			"rel",
@@ -71,10 +71,10 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 	 */
 	public boolean hasNext() {
 		if (!nextValueLoaded && relationReader.hasNext()) {
-			EntityHistory<RelationBuilder> relationHistory;
+			EntityHistory<Relation> relationHistory;
 			long relationId;
 			int relationVersion;
-			RelationBuilder relation;
+			Relation relation;
 			List<DbOrderedFeature<RelationMember>> relationMembers;
 			
 			relationHistory = relationReader.next();
@@ -109,7 +109,7 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 					relationTagReader.hasNext()
 					&& relationTagReader.peekNext().getDbFeature().getEntityId() == relationId
 					&& relationTagReader.peekNext().getVersion() == relationVersion) {
-				relation.addTag(relationTagReader.next().getDbFeature().getFeature());
+				relation.getTags().add(relationTagReader.next().getDbFeature().getFeature());
 			}
 			
 			// Skip all relation members that are from lower id or lower version of the same id.
@@ -145,7 +145,7 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 			// by their sequence number.
 			Collections.sort(relationMembers, new DbOrderedFeatureComparator<RelationMember>());
 			for (DbOrderedFeature<RelationMember> dbRelationMember : relationMembers) {
-				relation.addMember(dbRelationMember.getFeature());
+				relation.getMembers().add(dbRelationMember.getFeature());
 			}
 			
 			nextValue = relationHistory;
@@ -159,8 +159,8 @@ public class RelationReader implements ReleasableIterator<EntityHistory<Relation
 	/**
 	 * {@inheritDoc}
 	 */
-	public EntityHistory<RelationBuilder> next() {
-		EntityHistory<RelationBuilder> result;
+	public EntityHistory<Relation> next() {
+		EntityHistory<Relation> result;
 		
 		if (!hasNext()) {
 			throw new NoSuchElementException();

@@ -9,7 +9,6 @@ import java.util.NoSuchElementException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
-import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.store.PeekableIterator;
@@ -25,7 +24,7 @@ import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactor
  */
 public class CurrentWayReader implements ReleasableIterator<Way> {
 	
-	private ReleasableIterator<WayBuilder> wayReader;
+	private ReleasableIterator<Way> wayReader;
 	private PeekableIterator<DbFeature<Tag>> wayTagReader;
 	private PeekableIterator<DbOrderedFeature<WayNode>> wayNodeReader;
 	private Way nextValue;
@@ -42,8 +41,8 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 	 *            regardless of their public edits flag.
 	 */
 	public CurrentWayReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
-		wayReader = new PersistentIterator<WayBuilder>(
-			new SingleClassObjectSerializationFactory(WayBuilder.class),
+		wayReader = new PersistentIterator<Way>(
+			new SingleClassObjectSerializationFactory(Way.class),
 			new CurrentWayTableReader(loginCredentials, readAllUsers),
 			"way",
 			true
@@ -72,7 +71,7 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 	 */
 	public boolean hasNext() {
 		if (!nextValueLoaded && wayReader.hasNext()) {
-			WayBuilder way;
+			Way way;
 			long wayId;
 			List<DbOrderedFeature<WayNode>> wayNodes;
 			
@@ -95,7 +94,7 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 			
 			// Load all tags for this way.
 			while (wayTagReader.hasNext() && wayTagReader.peekNext().getEntityId() == wayId) {
-				way.addTag(wayTagReader.next().getFeature());
+				way.getTags().add(wayTagReader.next().getFeature());
 			}
 			
 			// Skip all way nodes that are from lower id way.
@@ -120,10 +119,10 @@ public class CurrentWayReader implements ReleasableIterator<Way> {
 			// by their sequence number.
 			Collections.sort(wayNodes, new DbOrderedFeatureComparator<WayNode>());
 			for (DbOrderedFeature<WayNode> dbWayNode : wayNodes) {
-				way.addWayNode(dbWayNode.getFeature());
+				way.getWayNodes().add(dbWayNode.getFeature());
 			}
 			
-			nextValue = way.buildEntity();
+			nextValue = way;
 			nextValueLoaded = true;
 		}
 		

@@ -11,7 +11,7 @@ import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
-import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.store.PeekableIterator;
 import org.openstreetmap.osmosis.core.store.PersistentIterator;
@@ -28,7 +28,7 @@ import org.openstreetmap.osmosis.core.task.common.ChangeAction;
 public class WayChangeReader {
 
 	private boolean fullHistory;
-	private PeekableIterator<EntityHistory<WayBuilder>> wayHistoryReader;
+	private PeekableIterator<EntityHistory<Way>> wayHistoryReader;
 	private PeekableIterator<DbFeatureHistory<DbOrderedFeature<WayNode>>> wayNodeHistoryReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> wayTagHistoryReader;
 	private ChangeContainer nextValue;
@@ -57,8 +57,8 @@ public class WayChangeReader {
 		this.fullHistory = fullHistory;
 		
 		wayHistoryReader =
-			new PeekableIterator<EntityHistory<WayBuilder>>(
-				new PersistentIterator<EntityHistory<WayBuilder>>(
+			new PeekableIterator<EntityHistory<Way>>(
+				new PersistentIterator<EntityHistory<Way>>(
 					new SingleClassObjectSerializationFactory(EntityHistory.class),
 					new WayHistoryReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd),
 					"way",
@@ -93,9 +93,9 @@ public class WayChangeReader {
 	 * @return A way history record where the way is fully populated with nodes
 	 *         and tags.
 	 */
-	private EntityHistory<WayBuilder> readNextWayHistory() {
-		EntityHistory<WayBuilder> wayHistory;
-		WayBuilder way;
+	private EntityHistory<Way> readNextWayHistory() {
+		EntityHistory<Way> wayHistory;
+		Way way;
 		List<DbOrderedFeature<WayNode>> wayNodes;
 		
 		wayHistory = wayHistoryReader.next();
@@ -112,14 +112,14 @@ public class WayChangeReader {
 		// by their sequence number.
 		Collections.sort(wayNodes, new DbOrderedFeatureComparator<WayNode>());
 		for (DbOrderedFeature<WayNode> dbWayNode : wayNodes) {
-			way.addWayNode(dbWayNode.getFeature());
+			way.getWayNodes().add(dbWayNode.getFeature());
 		}
 		
 		// Add all applicable tags to the way.
 		while (wayTagHistoryReader.hasNext() &&
 				wayTagHistoryReader.peekNext().getDbFeature().getEntityId() == way.getId() &&
 				wayTagHistoryReader.peekNext().getVersion() == way.getVersion()) {
-			way.addTag(wayTagHistoryReader.next().getDbFeature().getFeature());
+			way.getTags().add(wayTagHistoryReader.next().getDbFeature().getFeature());
 		}
 		
 		return wayHistory;
@@ -131,8 +131,8 @@ public class WayChangeReader {
 	 */
 	private ChangeContainer readChange() {
 		boolean createdPreviously;
-		EntityHistory<WayBuilder> mostRecentHistory;
-		WayBuilder way;
+		EntityHistory<Way> mostRecentHistory;
+		Way way;
 		WayContainer wayContainer;
 		
 		// Check the first way, if it has a version greater than 1 the way
@@ -151,7 +151,7 @@ public class WayChangeReader {
 		}
 		
 		// The way in the result must be wrapped in a container.
-		wayContainer = new WayContainer(way.buildEntity());
+		wayContainer = new WayContainer(way);
 		
 		// The entity has been modified if it is visible and was created previously.
 		// It is a create if it is visible and was NOT created previously.

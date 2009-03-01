@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
-import org.openstreetmap.osmosis.core.domain.v0_6.NodeBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.store.PeekableIterator;
@@ -21,7 +20,7 @@ import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactor
  */
 public class CurrentNodeReader implements ReleasableIterator<Node> {
 	
-	private ReleasableIterator<NodeBuilder> nodeReader;
+	private ReleasableIterator<Node> nodeReader;
 	private PeekableIterator<DbFeature<Tag>> nodeTagReader;
 	private Node nextValue;
 	private boolean nextValueLoaded;
@@ -37,8 +36,8 @@ public class CurrentNodeReader implements ReleasableIterator<Node> {
 	 *            regardless of their public edits flag.
 	 */
 	public CurrentNodeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
-		nodeReader = new PersistentIterator<NodeBuilder>(
-			new SingleClassObjectSerializationFactory(NodeBuilder.class),
+		nodeReader = new PersistentIterator<Node>(
+			new SingleClassObjectSerializationFactory(Node.class),
 			new CurrentNodeTableReader(loginCredentials, readAllUsers),
 			"nod",
 			true
@@ -59,7 +58,7 @@ public class CurrentNodeReader implements ReleasableIterator<Node> {
 	 */
 	public boolean hasNext() {
 		if (!nextValueLoaded && nodeReader.hasNext()) {
-			NodeBuilder node;
+			Node node;
 			long nodeId;
 			
 			node = nodeReader.next();
@@ -81,10 +80,10 @@ public class CurrentNodeReader implements ReleasableIterator<Node> {
 			
 			// Load all tags for this node.
 			while (nodeTagReader.hasNext() && nodeTagReader.peekNext().getEntityId() == nodeId) {
-				node.addTag(nodeTagReader.next().getFeature());
+				node.getTags().add(nodeTagReader.next().getFeature());
 			}
 			
-			nextValue = node.buildEntity();
+			nextValue = node;
 			nextValueLoaded = true;
 		}
 		

@@ -7,7 +7,7 @@ import java.util.Date;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
-import org.openstreetmap.osmosis.core.domain.v0_6.NodeBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.mysql.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
@@ -19,7 +19,7 @@ import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  * 
  * @author Brett Henderson
  */
-public class CurrentNodeTableReader extends BaseEntityReader<NodeBuilder> {
+public class CurrentNodeTableReader extends BaseEntityReader<Node> {
 	private static final String SELECT_SQL =
 		"SELECT n.id, n.version, n.timestamp, n.visible, u.data_public, u.id AS user_id,"
 		+ " u.display_name, n.latitude, n.longitude"
@@ -56,7 +56,7 @@ public class CurrentNodeTableReader extends BaseEntityReader<NodeBuilder> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<NodeBuilder> createNextValue(ResultSet resultSet) {
+	protected ReadResult<Node> createNextValue(ResultSet resultSet) {
 		long id;
 		int version;
 		Date timestamp;
@@ -83,9 +83,9 @@ public class CurrentNodeTableReader extends BaseEntityReader<NodeBuilder> {
 		}
 		
 		// Non-visible records will be ignored by the caller.
-		return new ReadResult<NodeBuilder>(
+		return new ReadResult<Node>(
 			visible,
-			new NodeBuilder(id, version, timestamp, user, latitude, longitude)
+			new Node(id, version, timestamp, user, latitude, longitude)
 		);
 	}
 }

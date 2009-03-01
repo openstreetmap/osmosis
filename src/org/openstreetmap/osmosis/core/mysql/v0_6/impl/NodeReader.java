@@ -4,7 +4,7 @@ package org.openstreetmap.osmosis.core.mysql.v0_6.impl;
 import java.util.NoSuchElementException;
 
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
-import org.openstreetmap.osmosis.core.domain.v0_6.NodeBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.store.PeekableIterator;
@@ -18,11 +18,11 @@ import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactor
  * 
  * @author Brett Henderson
  */
-public class NodeReader implements ReleasableIterator<EntityHistory<NodeBuilder>> {
+public class NodeReader implements ReleasableIterator<EntityHistory<Node>> {
 	
-	private ReleasableIterator<EntityHistory<NodeBuilder>> nodeReader;
+	private ReleasableIterator<EntityHistory<Node>> nodeReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> nodeTagReader;
-	private EntityHistory<NodeBuilder> nextValue;
+	private EntityHistory<Node> nextValue;
 	private boolean nextValueLoaded;
 	
 	
@@ -36,7 +36,7 @@ public class NodeReader implements ReleasableIterator<EntityHistory<NodeBuilder>
 	 *            regardless of their public edits flag.
 	 */
 	public NodeReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
-		nodeReader = new PersistentIterator<EntityHistory<NodeBuilder>>(
+		nodeReader = new PersistentIterator<EntityHistory<Node>>(
 			new SingleClassObjectSerializationFactory(EntityHistory.class),
 			new NodeTableReader(loginCredentials, readAllUsers),
 			"nod",
@@ -58,10 +58,10 @@ public class NodeReader implements ReleasableIterator<EntityHistory<NodeBuilder>
 	 */
 	public boolean hasNext() {
 		if (!nextValueLoaded && nodeReader.hasNext()) {
-			EntityHistory<NodeBuilder> nodeHistory;
+			EntityHistory<Node> nodeHistory;
 			long nodeId;
 			int nodeVersion;
-			NodeBuilder node;
+			Node node;
 			
 			nodeHistory = nodeReader.next();
 			
@@ -95,7 +95,7 @@ public class NodeReader implements ReleasableIterator<EntityHistory<NodeBuilder>
 					nodeTagReader.hasNext()
 					&& nodeTagReader.peekNext().getDbFeature().getEntityId() == nodeId
 					&& nodeTagReader.peekNext().getVersion() == nodeVersion) {
-				node.addTag(nodeTagReader.next().getDbFeature().getFeature());
+				node.getTags().add(nodeTagReader.next().getDbFeature().getFeature());
 			}
 			
 			nextValue = nodeHistory;
@@ -109,8 +109,8 @@ public class NodeReader implements ReleasableIterator<EntityHistory<NodeBuilder>
 	/**
 	 * {@inheritDoc}
 	 */
-	public EntityHistory<NodeBuilder> next() {
-		EntityHistory<NodeBuilder> result;
+	public EntityHistory<Node> next() {
+		EntityHistory<Node> result;
 		
 		if (!hasNext()) {
 			throw new NoSuchElementException();

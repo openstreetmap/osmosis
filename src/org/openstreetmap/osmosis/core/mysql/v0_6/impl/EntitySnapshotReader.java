@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.openstreetmap.osmosis.core.domain.v0_6.EntityBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.store.PeekableIterator;
 
@@ -21,7 +21,7 @@ import org.openstreetmap.osmosis.core.store.PeekableIterator;
  * @param <T>
  *            The data type to be read.
  */
-public class EntitySnapshotReader<T extends EntityBuilder<?>> implements ReleasableIterator<T> {
+public class EntitySnapshotReader<T extends Entity> implements ReleasableIterator<T> {
 	
 	private PeekableIterator<EntityHistory<T>> entityIterator;
 	private Date snapshotInstant;

@@ -8,7 +8,7 @@ import java.util.Date;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
-import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.mysql.common.DatabaseContext;
 
 
@@ -18,7 +18,7 @@ import org.openstreetmap.osmosis.core.mysql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class CurrentWayTableReader extends BaseEntityReader<WayBuilder> {
+public class CurrentWayTableReader extends BaseEntityReader<Way> {
 	private static final String SELECT_SQL =
 		"SELECT w.id, w.version, w.timestamp, w.visible, u.data_public, u.id AS user_id, u.display_name"
 		+ " FROM current_ways w"
@@ -54,7 +54,7 @@ public class CurrentWayTableReader extends BaseEntityReader<WayBuilder> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<WayBuilder> createNextValue(ResultSet resultSet) {
+	protected ReadResult<Way> createNextValue(ResultSet resultSet) {
 		long id;
 		int version;
 		Date timestamp;
@@ -77,9 +77,9 @@ public class CurrentWayTableReader extends BaseEntityReader<WayBuilder> {
 		}
 		
 		// Non-visible records will be ignored by the caller.
-		return new ReadResult<WayBuilder>(
+		return new ReadResult<Way>(
 			visible,
-			new WayBuilder(id, version, timestamp, user)
+			new Way(id, version, timestamp, user)
 		);
 	}
 }
