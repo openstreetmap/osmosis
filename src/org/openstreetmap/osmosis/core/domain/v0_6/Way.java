@@ -37,6 +37,44 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 */
+	public Way(long id, int version, Date timestamp, OsmUser user) {
+		// Chain to the more specific constructor
+		this(id, version, new SimpleTimestampContainer(timestamp), user);
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param id
+	 *            The unique identifier.
+	 * @param version
+	 *            The version of the entity.
+	 * @param timestampContainer
+	 *            The container holding the timestamp in an alternative
+	 *            timestamp representation.
+	 * @param user
+	 *            The name of the user that last modified this entity.
+	 */
+	public Way(long id, int version, TimestampContainer timestampContainer, OsmUser user) {
+		super(id, version, timestampContainer, user);
+		
+		this.wayNodes = new ArrayList<WayNode>();
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param id
+	 *            The unique identifier.
+	 * @param version
+	 *            The version of the entity.
+	 * @param timestamp
+	 *            The last updated timestamp.
+	 * @param user
+	 *            The user that last modified this entity.
 	 * @param tags
 	 *            The tags to apply to the object.
 	 * @param wayNodes
@@ -68,9 +106,9 @@ public class Way extends Entity implements Comparable<Way> {
 	public Way(
 			long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags,
 			List<WayNode> wayNodes) {
-		super(id, timestampContainer, user, version, tags);
+		super(id, version, timestampContainer, user, tags);
 		
-		this.wayNodes = Collections.unmodifiableList(new ArrayList<WayNode>(wayNodes));
+		this.wayNodes = new ArrayList<WayNode>(wayNodes);
 	}
 	
 	
@@ -86,16 +124,14 @@ public class Way extends Entity implements Comparable<Way> {
 	public Way(StoreReader sr, StoreClassRegister scr) {
 		super(sr, scr);
 		
-		List<WayNode> tmpWayNodes;
 		int featureCount;
 		
 		featureCount = sr.readCharacter();
 		
-		tmpWayNodes = new ArrayList<WayNode>();
+		wayNodes = new ArrayList<WayNode>();
 		for (int i = 0; i < featureCount; i++) {
-			tmpWayNodes.add(new WayNode(sr, scr));
+			wayNodes.add(new WayNode(sr, scr));
 		}
-		wayNodes = Collections.unmodifiableList(tmpWayNodes);
 	}
 	
 	
@@ -239,12 +275,38 @@ public class Way extends Entity implements Comparable<Way> {
 	
 	
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void makeReadOnly() {
+		if (!isReadOnly()) {
+			wayNodes = Collections.unmodifiableList(wayNodes);
+		}
+		
+		super.makeReadOnly();
+	}
+
+
+	/**
 	 * Returns the attached list of way nodes. The returned list is read-only.
 	 * 
 	 * @return The wayNodeList.
 	 */
 	public List<WayNode> getWayNodes() {
 		return wayNodes;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Way getWriteableInstance() {
+		if (isReadOnly()) {
+			return new Way(getId(), getVersion(), getTimestampContainer(), getUser(), getTags(), wayNodes);
+		} else {
+			return this;
+		}
 	}
 
 
@@ -256,5 +318,4 @@ public class Way extends Entity implements Comparable<Way> {
     public boolean isClosed() {
         return wayNodes.get(0).getNodeId() == wayNodes.get(wayNodes.size()-1).getNodeId();
     }
-
 }

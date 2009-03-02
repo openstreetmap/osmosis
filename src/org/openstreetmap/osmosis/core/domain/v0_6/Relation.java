@@ -39,6 +39,44 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 */
+	public Relation(long id, int version, Date timestamp, OsmUser user) {
+		// Chain to the more-specific constructor
+		this(id, version, new SimpleTimestampContainer(timestamp), user);
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param id
+	 *            The unique identifier.
+	 * @param version
+	 *            The version of the entity.
+	 * @param timestampContainer
+	 *            The container holding the timestamp in an alternative
+	 *            timestamp representation.
+	 * @param user
+	 *            The user that last modified this entity.
+	 */
+	public Relation(long id, int version, TimestampContainer timestampContainer, OsmUser user) {
+		super(id, version, timestampContainer, user);
+		
+		this.members = new ArrayList<RelationMember>();
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param id
+	 *            The unique identifier.
+	 * @param version
+	 *            The version of the entity.
+	 * @param timestamp
+	 *            The last updated timestamp.
+	 * @param user
+	 *            The user that last modified this entity.
 	 * @param tags
 	 *            The tags to apply to the object.
 	 * @param members
@@ -71,9 +109,9 @@ public class Relation extends Entity implements Comparable<Relation> {
 	public Relation(
 			long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags,
 			List<RelationMember> members) {
-		super(id, timestampContainer, user, version, tags);
+		super(id, version, timestampContainer, user, tags);
 		
-		this.members = Collections.unmodifiableList(new ArrayList<RelationMember>(members));
+		this.members = new ArrayList<RelationMember>(members);
 	}
 	
 	
@@ -89,16 +127,14 @@ public class Relation extends Entity implements Comparable<Relation> {
 	public Relation(StoreReader sr, StoreClassRegister scr) {
 		super(sr, scr);
 		
-		List<RelationMember> tmpMembers;
 		int featureCount;
 		
 		featureCount = sr.readCharacter();
 		
-		tmpMembers = new ArrayList<RelationMember>();
+		members = new ArrayList<RelationMember>();
 		for (int i = 0; i < featureCount; i++) {
-			tmpMembers.add(new RelationMember(sr, scr));
+			members.add(new RelationMember(sr, scr));
 		}
-		members = Collections.unmodifiableList(tmpMembers);
 	}
 	
 	
@@ -239,6 +275,32 @@ public class Relation extends Entity implements Comparable<Relation> {
 		}
 		
 		return compareTags(comparisonRelation.getTags());
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void makeReadOnly() {
+		if (!isReadOnly()) {
+			members = Collections.unmodifiableList(members);
+		}
+		
+		super.makeReadOnly();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Relation getWriteableInstance() {
+		if (isReadOnly()) {
+			return new Relation(getId(), getVersion(), getTimestampContainer(), getUser(), getTags(), members);
+		} else {
+			return this;
+		}
 	}
 	
 	

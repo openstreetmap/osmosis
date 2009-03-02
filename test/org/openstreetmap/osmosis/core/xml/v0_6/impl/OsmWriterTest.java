@@ -23,11 +23,9 @@ import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
-import org.openstreetmap.osmosis.core.domain.v0_6.RelationBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
-import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 
 
@@ -121,12 +119,10 @@ public class OsmWriterTest {
 	public final void testProcess6() {
 		Way testWay;
 		
-		testWay =
-			new WayBuilder(3456, 0, new Date(), new OsmUser(12, "OsmosisTest"))
-			.addWayNode(new WayNode(1234))
-			.addWayNode(new WayNode(1235))
-			.addTag(new Tag("test_key1", "test_value1"))
-			.buildEntity();
+		testWay = new Way(3456, 0, new Date(), new OsmUser(12, "OsmosisTest"));
+		testWay.getWayNodes().add(new WayNode(1234));
+		testWay.getWayNodes().add(new WayNode(1235));
+		testWay.getTags().add(new Tag("test_key1", "test_value1"));
 		
 		testOsmWriter.process(new WayContainer(testWay));
 		// Nothing to assert; just expect no exception
@@ -140,12 +136,10 @@ public class OsmWriterTest {
 	public final void testProcess7() {
 		Way testWay;
 		
-		testWay =
-			new WayBuilder(3456, 0, new Date(), new OsmUser(12, "OsmosisTest"))
-			.addWayNode(new WayNode(1234))
-			.addWayNode(new WayNode(1235))
-			.addTag(new Tag("test_key1", "test_value1"))
-			.buildEntity();
+		testWay = new Way(3456, 0, new Date(), new OsmUser(12, "OsmosisTest"));
+		testWay.getWayNodes().add(new WayNode(1234));
+		testWay.getWayNodes().add(new WayNode(1235));
+		testWay.getTags().add(new Tag("test_key1", "test_value1"));
 		
 		testOsmWriter.process(new WayContainer(testWay));
 		testOsmWriter.process(new BoundContainer(new Bound("source")));
@@ -159,11 +153,9 @@ public class OsmWriterTest {
 	public final void testProcess8() {
 		Relation testRelation;
 		
-		testRelation =
-			new RelationBuilder(3456, 0, new Date(), new OsmUser(12, "OsmosisTest"))
-			.addMember(new RelationMember(1234, EntityType.Node, "role1"))
-			.addTag(new Tag("test_key1", "test_value1"))
-			.buildEntity();
+		testRelation = new Relation(3456, 0, new Date(), new OsmUser(12, "OsmosisTest"));
+		testRelation.getMembers().add(new RelationMember(1234, EntityType.Node, "role1"));
+		testRelation.getTags().add(new Tag("test_key1", "test_value1"));
 		
 		testOsmWriter.process(new RelationContainer(testRelation));
 		// Nothing to assert; just expect no exception
@@ -177,11 +169,10 @@ public class OsmWriterTest {
 	public final void testProcess9() {
 		Relation testRelation;
 		
-		testRelation =
-			new RelationBuilder(3456, 0, new Date(), new OsmUser(12, "OsmosisTest"))
-			.addMember(new RelationMember(1234, EntityType.Node, "role1"))
-			.addTag(new Tag("test_key1", "test_value1"))
-			.buildEntity();
+		testRelation = new Relation(3456, 0, new Date(), new OsmUser(12, "OsmosisTest"));
+		testRelation.getMembers().add(new RelationMember(1234, EntityType.Node, "role1"));
+		testRelation.getTags().add(new Tag("test_key1", "test_value1"));
+		
 		testOsmWriter.process(new RelationContainer(testRelation));
 		testOsmWriter.process(new BoundContainer(new Bound("source")));
 	}

@@ -1,17 +1,16 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.xml.v0_6.impl;
 
-import org.xml.sax.Attributes;
-
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
 import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
-import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.core.xml.common.BaseElementProcessor;
 import org.openstreetmap.osmosis.core.xml.common.ElementProcessor;
+import org.xml.sax.Attributes;
 
 
 /**
@@ -30,7 +29,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 	
 	private TagElementProcessor tagElementProcessor;
 	private WayNodeElementProcessor wayNodeElementProcessor;
-	private WayBuilder wayBuilder;
+	private Way way;
 	
 	
 	/**
@@ -47,7 +46,6 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 	public WayElementProcessor(BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing) {
 		super(parentProcessor, sink, enableDateParsing);
 		
-		wayBuilder = new WayBuilder();
 		tagElementProcessor = new TagElementProcessor(this, this);
 		wayNodeElementProcessor = new WayNodeElementProcessor(this, this);
 	}
@@ -72,7 +70,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 		
 		user = buildUser(rawUserId, rawUserName);
 		
-		wayBuilder.initialize(id, version, timestampContainer, user);
+		way = new Way(id, version, timestampContainer, user);
 	}
 	
 	
@@ -104,7 +102,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 	 * {@inheritDoc}
 	 */
 	public void end() {
-		getSink().process(new WayContainer(wayBuilder.buildEntity()));
+		getSink().process(new WayContainer(way));
 	}
 	
 	
@@ -116,7 +114,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 	 *            The tag to be processed.
 	 */
 	public void processTag(Tag tag) {
-		wayBuilder.addTag(tag);
+		way.getTags().add(tag);
 	}
 	
 	
@@ -128,6 +126,6 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 	 *            The wayNode to be processed.
 	 */
 	public void processWayNode(WayNode wayNode) {
-		wayBuilder.addWayNode(wayNode);
+		way.getWayNodes().add(wayNode);
 	}
 }

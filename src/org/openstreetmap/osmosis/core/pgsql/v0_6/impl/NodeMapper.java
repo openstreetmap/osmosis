@@ -6,13 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-import org.postgis.PGgeometry;
-import org.postgis.Point;
-
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
-import org.openstreetmap.osmosis.core.domain.v0_6.NodeBuilder;
 import org.openstreetmap.osmosis.core.pgsql.common.PointBuilder;
+import org.postgis.PGgeometry;
+import org.postgis.Point;
 
 
 /**
@@ -20,7 +18,7 @@ import org.openstreetmap.osmosis.core.pgsql.common.PointBuilder;
  * 
  * @author Brett Henderson
  */
-public class NodeMapper extends EntityMapper<Node, NodeBuilder> {
+public class NodeMapper extends EntityMapper<Node> {
 	
 	private PointBuilder pointBuilder;
 	
@@ -55,8 +53,8 @@ public class NodeMapper extends EntityMapper<Node, NodeBuilder> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Class<NodeBuilder> getBuilderClass() {
-		return NodeBuilder.class;
+	public Class<Node> getEntityClass() {
+		return Node.class;
 	}
 	
 	
@@ -73,7 +71,7 @@ public class NodeMapper extends EntityMapper<Node, NodeBuilder> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public NodeBuilder parseRecord(ResultSet resultSet) {
+	public Node parseRecord(ResultSet resultSet) {
 		try {
 			PGgeometry geom;
 			Point point;
@@ -81,7 +79,7 @@ public class NodeMapper extends EntityMapper<Node, NodeBuilder> {
 			geom = (PGgeometry) resultSet.getObject("geom");
 			point = (Point) geom.getGeometry();
 			
-			return new NodeBuilder(
+			return new Node(
 				resultSet.getLong("id"),
 				resultSet.getInt("version"),
 				new Date(resultSet.getTimestamp("tstamp").getTime()),

@@ -68,4 +68,17 @@ public class WayContainer extends EntityContainer {
 	public Way getEntity() {
 		return way;
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public WayContainer getWriteableInstance() {
+		if (way.isReadOnly()) {
+			return new WayContainer(way.getWriteableInstance());
+		} else {
+			return this;
+		}
+	}
 }

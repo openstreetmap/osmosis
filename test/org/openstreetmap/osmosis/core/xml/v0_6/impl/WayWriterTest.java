@@ -1,7 +1,8 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.xml.v0_6.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -12,11 +13,9 @@ import java.util.Date;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
-import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 
 
@@ -88,11 +87,11 @@ public class WayWriterTest {
 	@Test
 	public final void testProcessNormalWay() {
 		Way way =
-			new WayBuilder(1234, 2, timestamp, new OsmUser(23, "someuser"))
-			.addWayNode(new WayNode(1235))
-			.addWayNode(new WayNode(1236))
-			.addTag(new Tag("waykey", "wayvalue"))
-			.buildEntity();
+			new Way(1234, 2, timestamp, new OsmUser(23, "someuser"));
+		way.getWayNodes().add(new WayNode(1235));
+		way.getWayNodes().add(new WayNode(1236));
+		way.getTags().add(new Tag("waykey", "wayvalue"));
+		
 		testWayWriter.process(way);
 		try {
 			testBufferedWriter.flush();
@@ -115,11 +114,11 @@ public class WayWriterTest {
 	@Test
 	public final void testProcessWayWithNoUser() {
 		Way way =
-			new WayBuilder(1234, 2, timestamp, OsmUser.NONE)
-			.addWayNode(new WayNode(1235))
-			.addWayNode(new WayNode(1236))
-			.addTag(new Tag("waykey", "wayvalue"))
-			.buildEntity();
+			new Way(1234, 2, timestamp, OsmUser.NONE);
+		way.getWayNodes().add(new WayNode(1235));
+		way.getWayNodes().add(new WayNode(1236));
+		way.getTags().add(new Tag("waykey", "wayvalue"));
+		
 		testWayWriter.process(way);
 		try {
 			testBufferedWriter.flush();
@@ -147,10 +146,10 @@ public class WayWriterTest {
 	@Test
 	public final void testProcessWayNoTags() {
 		Way way =
-			new WayBuilder(1234, 2, timestamp, new OsmUser(23, "someuser"))
-			.addWayNode(new WayNode(1235))
-			.addWayNode(new WayNode(1236))
-			.buildEntity();
+			new Way(1234, 2, timestamp, new OsmUser(23, "someuser"));
+		way.getWayNodes().add(new WayNode(1235));
+		way.getWayNodes().add(new WayNode(1236));
+		
 		testWayWriter.process(way);
 		try {
 			testBufferedWriter.flush();

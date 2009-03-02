@@ -63,6 +63,10 @@ public class EntityTee implements SinkMultiSource {
 	 */
 	public void process(EntityContainer entityContainer) {
 		for (ProxySinkSource sink : sinkList) {
+			// We're passing the data to multiple downstream tasks therefore should make the entity
+			// read-only to prevent multiple threads impacting each other.
+			entityContainer.getEntity().makeReadOnly();
+			
 			sink.process(entityContainer);
 		}
 	}

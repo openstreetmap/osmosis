@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
-import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.store.PeekableIterator;
@@ -22,12 +22,12 @@ import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactor
  * 
  * @author Brett Henderson
  */
-public class WayReader implements ReleasableIterator<EntityHistory<WayBuilder>> {
+public class WayReader implements ReleasableIterator<EntityHistory<Way>> {
 	
-	private ReleasableIterator<EntityHistory<WayBuilder>> wayReader;
+	private ReleasableIterator<EntityHistory<Way>> wayReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> wayTagReader;
 	private PeekableIterator<DbFeatureHistory<DbOrderedFeature<WayNode>>> wayNodeReader;
-	private EntityHistory<WayBuilder> nextValue;
+	private EntityHistory<Way> nextValue;
 	private boolean nextValueLoaded;
 	
 	
@@ -41,7 +41,7 @@ public class WayReader implements ReleasableIterator<EntityHistory<WayBuilder>> 
 	 *            regardless of their public edits flag.
 	 */
 	public WayReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
-		wayReader = new PersistentIterator<EntityHistory<WayBuilder>>(
+		wayReader = new PersistentIterator<EntityHistory<Way>>(
 			new SingleClassObjectSerializationFactory(EntityHistory.class),
 			new WayTableReader(loginCredentials, readAllUsers),
 			"way",
@@ -71,10 +71,10 @@ public class WayReader implements ReleasableIterator<EntityHistory<WayBuilder>> 
 	 */
 	public boolean hasNext() {
 		if (!nextValueLoaded && wayReader.hasNext()) {
-			EntityHistory<WayBuilder> wayHistory;
+			EntityHistory<Way> wayHistory;
 			long wayId;
 			int wayVersion;
-			WayBuilder way;
+			Way way;
 			List<DbOrderedFeature<WayNode>> wayNodes;
 			
 			wayHistory = wayReader.next();
@@ -109,7 +109,7 @@ public class WayReader implements ReleasableIterator<EntityHistory<WayBuilder>> 
 					wayTagReader.hasNext()
 					&& wayTagReader.peekNext().getDbFeature().getEntityId() == wayId
 					&& wayTagReader.peekNext().getVersion() == wayVersion) {
-				way.addTag(wayTagReader.next().getDbFeature().getFeature());
+				way.getTags().add(wayTagReader.next().getDbFeature().getFeature());
 			}
 			
 			// Skip all way nodes that are from lower id or lower version of the same id.
@@ -145,7 +145,7 @@ public class WayReader implements ReleasableIterator<EntityHistory<WayBuilder>> 
 			// by their sequence number.
 			Collections.sort(wayNodes, new DbOrderedFeatureComparator<WayNode>());
 			for (DbOrderedFeature<WayNode> dbWayNode : wayNodes) {
-				way.addWayNode(dbWayNode.getFeature());
+				way.getWayNodes().add(dbWayNode.getFeature());
 			}
 			
 			nextValue = wayHistory;
@@ -159,8 +159,8 @@ public class WayReader implements ReleasableIterator<EntityHistory<WayBuilder>> 
 	/**
 	 * {@inheritDoc}
 	 */
-	public EntityHistory<WayBuilder> next() {
-		EntityHistory<WayBuilder> result;
+	public EntityHistory<Way> next() {
+		EntityHistory<Way> result;
 		
 		if (!hasNext()) {
 			throw new NoSuchElementException();

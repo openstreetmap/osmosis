@@ -68,4 +68,17 @@ public class RelationContainer extends EntityContainer {
 	public Relation getEntity() {
 		return relation;
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public RelationContainer getWriteableInstance() {
+		if (relation.isReadOnly()) {
+			return new RelationContainer(relation.getWriteableInstance());
+		} else {
+			return this;
+		}
+	}
 }

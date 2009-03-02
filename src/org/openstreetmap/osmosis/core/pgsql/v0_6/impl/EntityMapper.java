@@ -9,7 +9,6 @@ import java.util.Arrays;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
-import org.openstreetmap.osmosis.core.domain.v0_6.EntityBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 
 
@@ -17,12 +16,10 @@ import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
  * Provides functionality common to all database entity builder implementations.
  * 
  * @author Brett Henderson
- * @param <Te>
+ * @param <T>
  *            The entity type to be supported.
- * @param <Tb>
- *            The builder type for the entity.
  */
-public abstract class EntityMapper<Te extends Entity,  Tb extends EntityBuilder<Te>> {
+public abstract class EntityMapper<T extends Entity> {
 	
 	/**
 	 * Returns the name of the entity to substitute into SQL statements. This is
@@ -42,11 +39,11 @@ public abstract class EntityMapper<Te extends Entity,  Tb extends EntityBuilder<
 	
 	
 	/**
-	 * Returns the class type for the entity builder.
+	 * Returns the class type for the entity.
 	 * 
-	 * @return The entity builder type class.
+	 * @return The entity type class.
 	 */
-	public abstract Class<Tb> getBuilderClass();
+	public abstract Class<T> getEntityClass();
 	
 	
 	/**
@@ -202,7 +199,7 @@ public abstract class EntityMapper<Te extends Entity,  Tb extends EntityBuilder<
 	 *            The result set to read from.
 	 * @return The newly built entity object.
 	 */
-	public abstract Tb parseRecord(ResultSet resultSet);
+	public abstract T parseRecord(ResultSet resultSet);
 	
 	
 	/**
@@ -285,5 +282,5 @@ public abstract class EntityMapper<Te extends Entity,  Tb extends EntityBuilder<
 	 *            The entity containing the data to be inserted.
 	 * @return The current parameter offset.
 	 */
-	public abstract int populateEntityParameters(PreparedStatement statement, int initialIndex, Te entity);
+	public abstract int populateEntityParameters(PreparedStatement statement, int initialIndex, T entity);
 }

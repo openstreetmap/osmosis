@@ -8,12 +8,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.postgis.Geometry;
-import org.postgis.PGgeometry;
-
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
-import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
+import org.postgis.Geometry;
+import org.postgis.PGgeometry;
 
 
 /**
@@ -21,7 +19,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
  * 
  * @author Brett Henderson
  */
-public class WayMapper extends EntityMapper<Way, WayBuilder> {
+public class WayMapper extends EntityMapper<Way> {
 	
 	private boolean supportBboxColumn;
 	private boolean supportLinestringColumn;
@@ -71,8 +69,8 @@ public class WayMapper extends EntityMapper<Way, WayBuilder> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Class<WayBuilder> getBuilderClass() {
-		return WayBuilder.class;
+	public Class<Way> getEntityClass() {
+		return Way.class;
 	}
 	
 	
@@ -100,9 +98,9 @@ public class WayMapper extends EntityMapper<Way, WayBuilder> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public WayBuilder parseRecord(ResultSet resultSet) {
+	public Way parseRecord(ResultSet resultSet) {
 		try {
-			return new WayBuilder(
+			return new Way(
 				resultSet.getLong("id"),
 				resultSet.getInt("version"),
 				new Date(resultSet.getTimestamp("tstamp").getTime()),

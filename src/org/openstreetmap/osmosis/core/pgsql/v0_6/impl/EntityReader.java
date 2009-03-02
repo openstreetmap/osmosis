@@ -4,7 +4,6 @@ package org.openstreetmap.osmosis.core.pgsql.v0_6.impl;
 import java.util.NoSuchElementException;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
-import org.openstreetmap.osmosis.core.domain.v0_6.EntityBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.mysql.v0_6.impl.DbFeature;
@@ -20,16 +19,14 @@ import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactor
  * configured entity objects.
  * 
  * @author Brett Henderson
- * @param <Te>
+ * @param <T>
  *            The entity type to be supported.
- * @param <Tb>
- *            The builder type for the entity.
  */
-public class EntityReader<Te extends Entity,  Tb extends EntityBuilder<Te>> implements ReleasableIterator<Te> {
+public class EntityReader<T extends Entity> implements ReleasableIterator<T> {
 	
-	private ReleasableIterator<Tb> entityReader;
+	private ReleasableIterator<T> entityReader;
 	private PeekableIterator<DbFeature<Tag>> entityTagReader;
-	private Te nextValue;
+	private T nextValue;
 	private boolean nextValueLoaded;
 	
 	
@@ -41,13 +38,13 @@ public class EntityReader<Te extends Entity,  Tb extends EntityBuilder<Te>> impl
 	 * @param entityMapper
 	 *            The database mapper for the entity type.
 	 */
-	public EntityReader(DatabaseContext dbCtx, EntityMapper<Te, Tb> entityMapper) {
+	public EntityReader(DatabaseContext dbCtx, EntityMapper<T> entityMapper) {
 		// The postgres jdbc driver doesn't appear to allow concurrent result
 		// sets on the same connection so only the last opened result set may be
 		// streamed. The rest of the result sets must be persisted first.
-		entityReader = new PersistentIterator<Tb>(
-			new SingleClassObjectSerializationFactory(entityMapper.getBuilderClass()),
-			new EntityTableReader<Te, Tb>(dbCtx, entityMapper),
+		entityReader = new PersistentIterator<T>(
+			new SingleClassObjectSerializationFactory(entityMapper.getEntityClass()),
+			new EntityTableReader<T>(dbCtx, entityMapper),
 			"ent",
 			true
 		);
@@ -73,13 +70,13 @@ public class EntityReader<Te extends Entity,  Tb extends EntityBuilder<Te>> impl
 	 *            The table containing a column named id defining the list of
 	 *            entities to be returned.
 	 */
-	public EntityReader(DatabaseContext dbCtx, EntityMapper<Te, Tb> entityMapper, String constraintTable) {
+	public EntityReader(DatabaseContext dbCtx, EntityMapper<T> entityMapper, String constraintTable) {
 		// The postgres jdbc driver doesn't appear to allow concurrent result
 		// sets on the same connection so only the last opened result set may be
 		// streamed. The rest of the result sets must be persisted first.
-		entityReader = new PersistentIterator<Tb>(
-			new SingleClassObjectSerializationFactory(entityMapper.getBuilderClass()),
-			new EntityTableReader<Te, Tb>(dbCtx, entityMapper, constraintTable),
+		entityReader = new PersistentIterator<T>(
+			new SingleClassObjectSerializationFactory(entityMapper.getEntityClass()),
+			new EntityTableReader<T>(dbCtx, entityMapper, constraintTable),
 			"nod",
 			true
 		);
@@ -102,7 +99,7 @@ public class EntityReader<Te extends Entity,  Tb extends EntityBuilder<Te>> impl
 	 * @param entity
 	 *            The entity to be populated.
 	 */
-	protected void populateEntityFeatures(Tb entity) {
+	protected void populateEntityFeatures(T entity) {
 		long entityId;
 		
 		entityId = entity.getId();
@@ -122,7 +119,7 @@ public class EntityReader<Te extends Entity,  Tb extends EntityBuilder<Te>> impl
 		
 		// Load all tags matching this version of the node.
 		while (entityTagReader.hasNext() && entityTagReader.peekNext().getEntityId() == entityId) {
-			entity.addTag(entityTagReader.next().getFeature());
+			entity.getTags().add(entityTagReader.next().getFeature());
 		}
 	}
 	
@@ -132,13 +129,13 @@ public class EntityReader<Te extends Entity,  Tb extends EntityBuilder<Te>> impl
 	 */
 	public boolean hasNext() {
 		if (!nextValueLoaded && entityReader.hasNext()) {
-			Tb entityBuilder;
+			T entity;
 			
-			entityBuilder = entityReader.next();
+			entity = entityReader.next();
 			
-			populateEntityFeatures(entityBuilder);
+			populateEntityFeatures(entity);
 			
-			nextValue = entityBuilder.buildEntity();
+			nextValue = entity;
 			nextValueLoaded = true;
 		}
 		
@@ -149,8 +146,8 @@ public class EntityReader<Te extends Entity,  Tb extends EntityBuilder<Te>> impl
 	/**
 	 * {@inheritDoc}
 	 */
-	public Te next() {
-		Te result;
+	public T next() {
+		T result;
 		
 		if (!hasNext()) {
 			throw new NoSuchElementException();

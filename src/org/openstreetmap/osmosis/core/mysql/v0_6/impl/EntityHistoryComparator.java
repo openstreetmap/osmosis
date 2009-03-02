@@ -3,7 +3,7 @@ package org.openstreetmap.osmosis.core.mysql.v0_6.impl;
 
 import java.util.Comparator;
 
-import org.openstreetmap.osmosis.core.domain.v0_6.EntityBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 
 
 /**
@@ -13,7 +13,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.EntityBuilder;
  * @param <T>
  *            The data type to be compared.
  */
-public class EntityHistoryComparator<T extends EntityBuilder<?>> implements Comparator<EntityHistory<T>> {
+public class EntityHistoryComparator<T extends Entity> implements Comparator<EntityHistory<T>> {
 	
 	/**
 	 * {@inheritDoc}

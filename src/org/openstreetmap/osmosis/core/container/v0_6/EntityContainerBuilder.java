@@ -8,13 +8,17 @@ import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.core.task.v0_6.Source;
 
+
 /**
- * Provides a mechanism to manipulate entities without directly manipulating and
- * instantiating their containers. This class does nothing by default,
- * sub-classes must override methods to add their own functionality
+ * Provides a mechanism to manipulate entities without directly manipulating and instantiating their
+ * containers. This class does nothing by default, sub-classes must override methods to add their
+ * own functionality
  * 
  * @author Brett Henderson
+ * 
+ * @deprecated The builder classes are not required because entities are now writeable.
  */
+@Deprecated
 public class EntityContainerBuilder implements EntityProcessor, Source {
 
 	private Sink sink;

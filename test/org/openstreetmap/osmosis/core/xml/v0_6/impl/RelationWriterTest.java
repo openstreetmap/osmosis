@@ -1,7 +1,8 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.xml.v0_6.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -12,11 +13,9 @@ import java.util.Date;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
-import org.openstreetmap.osmosis.core.domain.v0_6.RelationBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 
@@ -101,12 +100,12 @@ public class RelationWriterTest {
 	@Test
 	public final void testProcessNormalRelation() {
 		Relation relation =
-			new RelationBuilder(1234, 2, timestamp, new OsmUser(23, "someuser"))
-			.addMember(new RelationMember(2345, EntityType.Node, "noderole"))
-			.addMember(new RelationMember(3456, EntityType.Way, "wayrole"))
-			.addMember(new RelationMember(4567, EntityType.Relation, "relationrole"))
-			.addTag(new Tag("relationkey", "relationvalue"))
-			.buildEntity();
+			new Relation(1234, 2, timestamp, new OsmUser(23, "someuser"));
+		relation.getMembers().add(new RelationMember(2345, EntityType.Node, "noderole"));
+		relation.getMembers().add(new RelationMember(3456, EntityType.Way, "wayrole"));
+		relation.getMembers().add(new RelationMember(4567, EntityType.Relation, "relationrole"));
+		relation.getTags().add(new Tag("relationkey", "relationvalue"));
+		
 		testRelationWriter.process(relation);
 		try {
 			testBufferedWriter.flush();
@@ -130,12 +129,12 @@ public class RelationWriterTest {
 	@Test
 	public final void testProcessRelationWithNoUser() {
 		Relation relation =
-			new RelationBuilder(1234, 2, timestamp, OsmUser.NONE)
-			.addMember(new RelationMember(2345, EntityType.Node, "noderole"))
-			.addMember(new RelationMember(3456, EntityType.Way, "wayrole"))
-			.addMember(new RelationMember(4567, EntityType.Relation, "relationrole"))
-			.addTag(new Tag("relationkey", "relationvalue"))
-			.buildEntity();
+			new Relation(1234, 2, timestamp, OsmUser.NONE);
+		relation.getMembers().add(new RelationMember(2345, EntityType.Node, "noderole"));
+		relation.getMembers().add(new RelationMember(3456, EntityType.Way, "wayrole"));
+		relation.getMembers().add(new RelationMember(4567, EntityType.Relation, "relationrole"));
+		relation.getTags().add(new Tag("relationkey", "relationvalue"));
+		
 		testRelationWriter.process(relation);
 		try {
 			testBufferedWriter.flush();
@@ -164,11 +163,11 @@ public class RelationWriterTest {
 	@Test
 	public final void testProcessRelationNoTags() {
 		Relation relation =
-			new RelationBuilder(1234, 2, timestamp, new OsmUser(23, "someuser"))
-			.addMember(new RelationMember(2345, EntityType.Node, "noderole"))
-			.addMember(new RelationMember(3456, EntityType.Way, "wayrole"))
-			.addMember(new RelationMember(4567, EntityType.Relation, "relationrole"))
-			.buildEntity();
+			new Relation(1234, 2, timestamp, new OsmUser(23, "someuser"));
+		relation.getMembers().add(new RelationMember(2345, EntityType.Node, "noderole"));
+		relation.getMembers().add(new RelationMember(3456, EntityType.Way, "wayrole"));
+		relation.getMembers().add(new RelationMember(4567, EntityType.Relation, "relationrole"));
+		
 		testRelationWriter.process(relation);
 		try {
 			testBufferedWriter.flush();

@@ -10,7 +10,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
-import org.openstreetmap.osmosis.core.domain.v0_6.RelationBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.store.PeekableIterator;
@@ -28,7 +28,7 @@ import org.openstreetmap.osmosis.core.task.common.ChangeAction;
 public class RelationChangeReader {
 
 	private boolean fullHistory;
-	private PeekableIterator<EntityHistory<RelationBuilder>> relationHistoryReader;
+	private PeekableIterator<EntityHistory<Relation>> relationHistoryReader;
 	private PeekableIterator<DbFeatureHistory<DbOrderedFeature<RelationMember>>> relationMemberHistoryReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> relationTagHistoryReader;
 	private ChangeContainer nextValue;
@@ -57,8 +57,8 @@ public class RelationChangeReader {
 		this.fullHistory = fullHistory;
 		
 		relationHistoryReader =
-			new PeekableIterator<EntityHistory<RelationBuilder>>(
-				new PersistentIterator<EntityHistory<RelationBuilder>>(
+			new PeekableIterator<EntityHistory<Relation>>(
+				new PersistentIterator<EntityHistory<Relation>>(
 					new SingleClassObjectSerializationFactory(EntityHistory.class),
 					new RelationHistoryReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd),
 					"rel",
@@ -98,9 +98,9 @@ public class RelationChangeReader {
 	 * @return A relation history record where the relation is fully populated
 	 *         with members and tags.
 	 */
-	private EntityHistory<RelationBuilder> readNextRelationHistory() {
-		EntityHistory<RelationBuilder> relationHistory;
-		RelationBuilder relation;
+	private EntityHistory<Relation> readNextRelationHistory() {
+		EntityHistory<Relation> relationHistory;
+		Relation relation;
 		List<DbOrderedFeature<RelationMember>> relationMembers;
 		
 		relationHistory = relationHistoryReader.next();
@@ -117,14 +117,14 @@ public class RelationChangeReader {
 		// by their sequence number.
 		Collections.sort(relationMembers, new DbOrderedFeatureComparator<RelationMember>());
 		for (DbOrderedFeature<RelationMember> dbRelationMember : relationMembers) {
-			relation.addMember(dbRelationMember.getFeature());
+			relation.getMembers().add(dbRelationMember.getFeature());
 		}
 		
 		// Add all applicable tags to the relation.
 		while (relationTagHistoryReader.hasNext() &&
 				relationTagHistoryReader.peekNext().getDbFeature().getEntityId() == relation.getId() &&
 				relationTagHistoryReader.peekNext().getVersion() == relation.getVersion()) {
-			relation.addTag(relationTagHistoryReader.next().getDbFeature().getFeature());
+			relation.getTags().add(relationTagHistoryReader.next().getDbFeature().getFeature());
 		}
 		
 		return relationHistory;
@@ -136,8 +136,8 @@ public class RelationChangeReader {
 	 */
 	private ChangeContainer readChange() {
 		boolean createdPreviously;
-		EntityHistory<RelationBuilder> mostRecentHistory;
-		RelationBuilder relation;
+		EntityHistory<Relation> mostRecentHistory;
+		Relation relation;
 		RelationContainer relationContainer;
 		
 		// Check the first relation, if it has a version greater than 1 the
@@ -156,7 +156,7 @@ public class RelationChangeReader {
 		}
 		
 		// The relation in the result must be wrapped in a container.
-		relationContainer = new RelationContainer(relation.buildEntity());
+		relationContainer = new RelationContainer(relation);
 		
 		// The entity has been modified if it is visible and was created previously.
 		// It is a create if it is visible and was NOT created previously.

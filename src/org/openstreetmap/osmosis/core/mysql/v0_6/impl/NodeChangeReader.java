@@ -7,7 +7,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
-import org.openstreetmap.osmosis.core.domain.v0_6.NodeBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.store.PeekableIterator;
 import org.openstreetmap.osmosis.core.store.PersistentIterator;
@@ -24,7 +24,7 @@ import org.openstreetmap.osmosis.core.task.common.ChangeAction;
 public class NodeChangeReader {
 	
 	private boolean fullHistory;
-	private PeekableIterator<EntityHistory<NodeBuilder>> nodeHistoryReader;
+	private PeekableIterator<EntityHistory<Node>> nodeHistoryReader;
 	private PeekableIterator<DbFeatureHistory<DbFeature<Tag>>> nodeTagHistoryReader;
 	private ChangeContainer nextValue;
 
@@ -51,8 +51,8 @@ public class NodeChangeReader {
 		this.fullHistory = fullHistory;
 		
 		nodeHistoryReader =
-			new PeekableIterator<EntityHistory<NodeBuilder>>(
-				new PersistentIterator<EntityHistory<NodeBuilder>>(
+			new PeekableIterator<EntityHistory<Node>>(
+				new PersistentIterator<EntityHistory<Node>>(
 					new SingleClassObjectSerializationFactory(EntityHistory.class),
 					new NodeHistoryReader(loginCredentials, readAllUsers, intervalBegin, intervalEnd),
 					"nod",
@@ -78,9 +78,9 @@ public class NodeChangeReader {
 	 * @return A node history record where the node is fully populated with nodes
 	 *         and tags.
 	 */
-	private EntityHistory<NodeBuilder> readNextNodeHistory() {
-		EntityHistory<NodeBuilder> nodeHistory;
-		NodeBuilder node;
+	private EntityHistory<Node> readNextNodeHistory() {
+		EntityHistory<Node> nodeHistory;
+		Node node;
 		
 		nodeHistory = nodeHistoryReader.next();
 		node = nodeHistory.getEntity();
@@ -89,7 +89,7 @@ public class NodeChangeReader {
 		while (nodeTagHistoryReader.hasNext() &&
 				nodeTagHistoryReader.peekNext().getDbFeature().getEntityId() == node.getId() &&
 				nodeTagHistoryReader.peekNext().getVersion() == node.getVersion()) {
-			node.addTag(nodeTagHistoryReader.next().getDbFeature().getFeature());
+			node.getTags().add(nodeTagHistoryReader.next().getDbFeature().getFeature());
 		}
 		
 		return nodeHistory;
@@ -101,8 +101,8 @@ public class NodeChangeReader {
 	 */
 	private ChangeContainer readChange() {
 		boolean createdPreviously;
-		EntityHistory<NodeBuilder> mostRecentHistory;
-		NodeBuilder node;
+		EntityHistory<Node> mostRecentHistory;
+		Node node;
 		NodeContainer nodeContainer;
 		
 		// Check the first node, if it has a version greater than 1 the node
@@ -121,7 +121,7 @@ public class NodeChangeReader {
 		}
 		
 		// The node in the result must be wrapped in a container.
-		nodeContainer = new NodeContainer(node.buildEntity());
+		nodeContainer = new NodeContainer(node);
 		
 		// The entity has been modified if it is visible and was created previously.
 		// It is a create if it is visible and was NOT created previously.

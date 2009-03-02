@@ -484,4 +484,13 @@ public class Bound extends Entity implements Comparable<Bound> {
 		 */
 		return (int) getId() + getVersion();
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Bound getWriteableInstance() {
+		return this;
+	}
 }

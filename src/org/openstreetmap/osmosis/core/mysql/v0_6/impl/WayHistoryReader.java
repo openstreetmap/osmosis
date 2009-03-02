@@ -10,7 +10,7 @@ import java.util.Date;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
-import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.mysql.common.DatabaseContext;
 
 
@@ -20,7 +20,7 @@ import org.openstreetmap.osmosis.core.mysql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class WayHistoryReader extends BaseEntityReader<EntityHistory<WayBuilder>> {
+public class WayHistoryReader extends BaseEntityReader<EntityHistory<Way>> {
 	private static final String SELECT_SQL =
 		"SELECT e.id, e.version, e.timestamp, e.visible, u.data_public, u.id AS user_id, u.display_name" +
 		" FROM ways e" +
@@ -80,7 +80,7 @@ public class WayHistoryReader extends BaseEntityReader<EntityHistory<WayBuilder>
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<EntityHistory<WayBuilder>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<Way>> createNextValue(ResultSet resultSet) {
 		long id;
 		int version;
 		Date timestamp;
@@ -102,10 +102,10 @@ public class WayHistoryReader extends BaseEntityReader<EntityHistory<WayBuilder>
 			throw new OsmosisRuntimeException("Unable to read way fields.", e);
 		}
 		
-		return new ReadResult<EntityHistory<WayBuilder>>(
+		return new ReadResult<EntityHistory<Way>>(
 			true,
-			new EntityHistory<WayBuilder>(
-				new WayBuilder(id, version, timestamp, user), visible)
+			new EntityHistory<Way>(
+				new Way(id, version, timestamp, user), visible)
 		);
 	}
 }

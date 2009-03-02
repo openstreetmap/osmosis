@@ -2,7 +2,6 @@
 package org.openstreetmap.osmosis.core.pgsql.v0_6.impl;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
-import org.openstreetmap.osmosis.core.domain.v0_6.NodeBuilder;
 import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
 
 
@@ -12,7 +11,7 @@ import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class NodeReader extends EntityReader<Node, NodeBuilder> {
+public class NodeReader extends EntityReader<Node> {
 	
 	/**
 	 * Creates a new instance.

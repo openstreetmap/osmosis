@@ -15,7 +15,10 @@ import org.openstreetmap.osmosis.core.store.StoreWriter;
  * Provides the ability to manipulate relations.
  * 
  * @author Brett Henderson
+ * 
+ * @deprecated Builder classes are not required because entities are now writeable.
  */
+@Deprecated
 public class RelationBuilder extends EntityBuilder<Relation> {
 	private List<RelationMember> members;
 	

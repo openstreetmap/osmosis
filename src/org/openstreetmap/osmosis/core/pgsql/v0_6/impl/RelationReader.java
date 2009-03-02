@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
-import org.openstreetmap.osmosis.core.domain.v0_6.RelationBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.mysql.v0_6.impl.DbFeature;
 import org.openstreetmap.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
@@ -19,7 +18,7 @@ import org.openstreetmap.osmosis.core.store.PeekableIterator;
  * 
  * @author Brett Henderson
  */
-public class RelationReader  extends EntityReader<Relation, RelationBuilder> {
+public class RelationReader  extends EntityReader<Relation> {
 	
 	private PeekableIterator<DbOrderedFeature<RelationMember>> relationMemberReader;
 	
@@ -63,7 +62,7 @@ public class RelationReader  extends EntityReader<Relation, RelationBuilder> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void populateEntityFeatures(RelationBuilder entity) {
+	protected void populateEntityFeatures(Relation entity) {
 		long relationId;
 		List<DbFeature<RelationMember>> relationMembers;
 		
@@ -90,7 +89,7 @@ public class RelationReader  extends EntityReader<Relation, RelationBuilder> {
 			relationMembers.add(relationMemberReader.next());
 		}
 		for (DbFeature<RelationMember> dbRelationMember : relationMembers) {
-			entity.addMember(dbRelationMember.getFeature());
+			entity.getMembers().add(dbRelationMember.getFeature());
 		}
 	}
 	

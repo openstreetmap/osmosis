@@ -66,4 +66,17 @@ public class NodeContainer extends EntityContainer {
 	public Node getEntity() {
 		return node;
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public NodeContainer getWriteableInstance() {
+		if (node.isReadOnly()) {
+			return new NodeContainer(node.getWriteableInstance());
+		} else {
+			return this;
+		}
+	}
 }

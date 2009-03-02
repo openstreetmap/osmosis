@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.common.SimpleTimestampContainer;
 import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
 import org.openstreetmap.osmosis.core.domain.common.TimestampFormat;
@@ -26,11 +27,50 @@ import org.openstreetmap.osmosis.core.util.LongAsInt;
  * @author Brett Henderson
  */
 public abstract class Entity implements Storeable {
+	
 	private int id;
 	private int version;
 	private TimestampContainer timestampContainer;
 	private OsmUser user;
-	private Collection<Tag> tags;
+	private TagCollection tags;
+	private boolean readOnly;
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param id
+	 *            The unique identifier.
+	 * @param version
+	 *            The version of the entity.
+	 * @param timestamp
+	 *            The last updated timestamp.
+	 * @param user
+	 *            The user that last modified this entity.
+	 */
+	public Entity(long id, int version, Date timestamp, OsmUser user) {
+		// Chain to the more specific constructor
+		this(id, version, new SimpleTimestampContainer(timestamp), user);
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param id
+	 *            The unique identifier.
+	 * @param version
+	 *            The version of the entity.
+	 * @param timestampContainer
+	 *            The container holding the timestamp in an alternative
+	 *            timestamp representation.
+	 * @param user
+	 *            The user that last modified this entity.
+	 */
+	public Entity(long id, int version, TimestampContainer timestampContainer, OsmUser user) {
+		init(id, timestampContainer, user, version);
+		tags = new TagCollectionImpl();
+	}
 	
 	
 	/**
@@ -49,7 +89,7 @@ public abstract class Entity implements Storeable {
 	 */
 	public Entity(long id, int version, Date timestamp, OsmUser user, Collection<Tag> tags) {
 		// Chain to the more specific constructor
-		this(id, new SimpleTimestampContainer(timestamp), user, version, tags);
+		this(id, version, new SimpleTimestampContainer(timestamp), user, tags);
 	}
 	
 	
@@ -58,22 +98,49 @@ public abstract class Entity implements Storeable {
 	 * 
 	 * @param id
 	 *            The unique identifier.
+	 * @param version
+	 *            The version of the entity.
 	 * @param timestampContainer
 	 *            The container holding the timestamp in an alternative
 	 *            timestamp representation.
 	 * @param user
 	 *            The user that last modified this entity.
-	 * @param version
-	 *            The version of the entity.
 	 * @param tags
 	 *            The tags to apply to the object.
 	 */
-	public Entity(long id, TimestampContainer timestampContainer, OsmUser user, int version, Collection<Tag> tags) {
-		this.id = LongAsInt.longToInt(id);
-		this.timestampContainer = timestampContainer;
-		this.user = user;
-		this.version = version;
-		this.tags = Collections.unmodifiableCollection(new ArrayList<Tag>(tags));
+	public Entity(long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags) {
+		init(id, timestampContainer, user, version);
+		this.tags = new TagCollectionImpl(tags);
+	}
+	
+	
+	/**
+	 * Initializes non-collection attributes.
+	 * 
+	 * @param newId
+	 *            The unique identifier.
+	 * @param newTimestampContainer
+	 *            The container holding the timestamp in an alternative
+	 *            timestamp representation.
+	 * @param newUser
+	 *            The user that last modified this entity.
+	 * @param newVersion
+	 *            The version of the entity.
+	 */
+	private void init(long newId, TimestampContainer newTimestampContainer, OsmUser newUser, int newVersion) {
+		this.id = LongAsInt.longToInt(newId);
+		this.timestampContainer = newTimestampContainer;
+		this.user = newUser;
+		this.version = newVersion;
+	}
+	
+	
+	private static TimestampContainer readTimestampContainer(StoreReader sr, StoreClassRegister scr) {
+		if (sr.readBoolean()) {
+			return new SimpleTimestampContainer(new Date(sr.readLong()));
+		} else {
+			return null;
+		}
 	}
 	
 	
@@ -87,25 +154,13 @@ public abstract class Entity implements Storeable {
 	 *            within the store.
 	 */
 	public Entity(StoreReader sr, StoreClassRegister scr) {
-		int tagCount;
-		Collection<Tag> tmpTags;
-		
-		id = sr.readInteger();
-		
-		version = sr.readCharacter(); // store as a character for now, may need to be an int later
-		
-		if (sr.readBoolean()) {
-			timestampContainer = new SimpleTimestampContainer(new Date(sr.readLong()));
-		}
-		
-		user = new OsmUser(sr, scr);
-		
-		tagCount = sr.readCharacter();
-		tmpTags = new ArrayList<Tag>(tagCount);
-		for (int i = 0; i < tagCount; i++) {
-			tmpTags.add(new Tag(sr, scr));
-		}
-		tags = Collections.unmodifiableCollection(tmpTags);
+		this(
+			sr.readInteger(),
+			sr.readCharacter(),
+			readTimestampContainer(sr, scr),
+			new OsmUser(sr, scr),
+			new TagCollectionImpl(sr, scr)
+		);
 	}
 	
 	
@@ -126,10 +181,7 @@ public abstract class Entity implements Storeable {
 		
 		user.store(sw, scr);
 		
-		sw.writeCharacter(IntAsChar.intToChar(tags.size()));
-		for (Tag tag : tags) {
-			tag.store(sw, scr);
-		}
+		tags.store(sw, scr);
 	}
 	
 	
@@ -177,21 +229,51 @@ public abstract class Entity implements Storeable {
 	 * @return The entity type enum value.
 	 */
 	public abstract EntityType getType();
-	
-	
+
+
 	/**
-	 * @return The id. 
+	 * Gets the identifier.
+	 * 
+	 * @return The id.
 	 */
 	public long getId() {
 		return id;
 	}
+
+
+	/**
+	 * Sets the identifier.
+	 * 
+	 * @param id
+	 *            The identifier.
+	 */
+	public void setId(long id) {
+		assertWriteable();
+		
+		this.id = LongAsInt.longToInt(id);
+	}
 	
 	
 	/**
+	 * Gets the version.
+	 * 
 	 * @return The version.
 	 */
 	public int getVersion() {
 		return version;
+	}
+
+
+	/**
+	 * Sets the version.
+	 * 
+	 * @param version
+	 *            The version.
+	 */
+	public void setVersion(int version) {
+		assertWriteable();
+		
+		this.version = version;
 	}
 	
 	
@@ -203,6 +285,19 @@ public abstract class Entity implements Storeable {
 	 */
 	public Date getTimestamp() {
 		return timestampContainer.getTimestamp();
+	}
+
+
+	/**
+	 * Sets the timestamp in date form. This is the standard method of updating a timestamp.
+	 * 
+	 * @param timestamp
+	 *            The timestamp.
+	 */
+	public void setTimestamp(Date timestamp) {
+		assertWriteable();
+		
+		timestampContainer = new SimpleTimestampContainer(timestamp);
 	}
 	
 	
@@ -216,6 +311,21 @@ public abstract class Entity implements Storeable {
 	 */
 	public TimestampContainer getTimestampContainer() {
 		return timestampContainer;
+	}
+	
+	
+	/**
+	 * Sets the timestamp container object allowing the timestamp to be held in a different format.
+	 * This should be used if a date is already held in a timestamp container, or if date parsing
+	 * can be avoided.
+	 * 
+	 * @param timestampContainer
+	 *            The timestamp container.
+	 */
+	public void setTimestampContainer(TimestampContainer timestampContainer) {
+		assertWriteable();
+		
+		this.timestampContainer = timestampContainer;
 	}
 	
 	
@@ -245,11 +355,73 @@ public abstract class Entity implements Storeable {
 	
 	
 	/**
-	 * Returns the attached tags. The returned collection is read-only.
+	 * Sets the last modification user.
+	 * 
+	 * @param user
+	 *            The user.
+	 */
+	public void setUser(OsmUser user) {
+		assertWriteable();
+		
+		this.user = user;
+	}
+
+
+	/**
+	 * Returns the attached tags. If the class is read-only, the collection will
+	 * be read-only.
 	 * 
 	 * @return The tagList.
 	 */
 	public Collection<Tag> getTags() {
 		return tags;
 	}
+
+
+	/**
+	 * Indicates if the object has been set to read-only. A read-only object
+	 * must be cloned in order to make updates. This allows objects shared
+	 * between multiple threads to be locked for thread safety.
+	 * 
+	 * @return True if the object is read-only.
+	 */
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+
+
+	/**
+	 * Ensures that the object is writeable. If not an exception will be thrown.
+	 * This is intended to be called within all update methods.
+	 */
+	protected void assertWriteable() {
+		if (readOnly) {
+			throw new OsmosisRuntimeException(
+					"The object has been marked as read-only.  It must be cloned to make changes.");
+		}
+	}
+
+
+	/**
+	 * Configures the object to be read-only. This should be called if the object is to be processed
+	 * by multiple threads concurrently. It updates the read-only status of the object, and makes
+	 * all collections unmodifiable. This must be overridden by sub-classes to make their own
+	 * collections unmodifiable.
+	 */
+	public void makeReadOnly() {
+		if (!readOnly) {
+			tags = new UnmodifiableTagCollection(tags);
+			
+			readOnly = true;
+		}
+	}
+
+
+	/**
+	 * Returns a writeable instance of this entity. If the object is read-only a clone is created,
+	 * if it is already writeable then this object is returned.
+	 * 
+	 * @return A writeable instance of this entity.
+	 */
+	public abstract Entity getWriteableInstance();
 }

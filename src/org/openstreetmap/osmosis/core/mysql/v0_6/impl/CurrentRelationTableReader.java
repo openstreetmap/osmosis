@@ -8,7 +8,7 @@ import java.util.Date;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
-import org.openstreetmap.osmosis.core.domain.v0_6.RelationBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.mysql.common.DatabaseContext;
 
 
@@ -18,7 +18,7 @@ import org.openstreetmap.osmosis.core.mysql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class CurrentRelationTableReader extends BaseEntityReader<RelationBuilder> {
+public class CurrentRelationTableReader extends BaseEntityReader<Relation> {
 	private static final String SELECT_SQL =
 		"SELECT r.id, r.version, r.timestamp, r.visible, u.data_public, u.id AS user_id, u.display_name"
 		+ " FROM current_relations r"
@@ -54,7 +54,7 @@ public class CurrentRelationTableReader extends BaseEntityReader<RelationBuilder
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<RelationBuilder> createNextValue(ResultSet resultSet) {
+	protected ReadResult<Relation> createNextValue(ResultSet resultSet) {
 		long id;
 		int version;
 		Date timestamp;
@@ -77,9 +77,9 @@ public class CurrentRelationTableReader extends BaseEntityReader<RelationBuilder
 		}
 		
 		// Non-visible records will be ignored by the caller.
-		return new ReadResult<RelationBuilder>(
+		return new ReadResult<Relation>(
 			visible,
-			new RelationBuilder(id, version, timestamp, user)
+			new Relation(id, version, timestamp, user)
 		);
 	}
 }

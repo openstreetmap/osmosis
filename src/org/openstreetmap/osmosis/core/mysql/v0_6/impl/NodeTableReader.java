@@ -7,7 +7,7 @@ import java.util.Date;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
-import org.openstreetmap.osmosis.core.domain.v0_6.NodeBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.mysql.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
@@ -19,7 +19,7 @@ import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  * 
  * @author Brett Henderson
  */
-public class NodeTableReader extends BaseEntityReader<EntityHistory<NodeBuilder>> {
+public class NodeTableReader extends BaseEntityReader<EntityHistory<Node>> {
 	private static final String SELECT_SQL =
 		"SELECT n.id, n.version, n.timestamp, n.visible, u.data_public,"
 		+ " u.id AS user_id, u.display_name, n.latitude, n.longitude"
@@ -56,7 +56,7 @@ public class NodeTableReader extends BaseEntityReader<EntityHistory<NodeBuilder>
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected ReadResult<EntityHistory<NodeBuilder>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<Node>> createNextValue(ResultSet resultSet) {
 		long id;
 		int version;
 		Date timestamp;
@@ -82,9 +82,9 @@ public class NodeTableReader extends BaseEntityReader<EntityHistory<NodeBuilder>
 			throw new OsmosisRuntimeException("Unable to read node fields.", e);
 		}
 		
-		return new ReadResult<EntityHistory<NodeBuilder>>(
+		return new ReadResult<EntityHistory<Node>>(
 			true,
-			new EntityHistory<NodeBuilder>(new NodeBuilder(id, version, timestamp, user, latitude, longitude), visible)
+			new EntityHistory<Node>(new Node(id, version, timestamp, user, latitude, longitude), visible)
 		);
 	}
 }

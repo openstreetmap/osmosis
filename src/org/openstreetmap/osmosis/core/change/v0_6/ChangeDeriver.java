@@ -1,10 +1,10 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.change.v0_6;
 
-import org.openstreetmap.osmosis.core.change.v0_6.impl.TimestampChangeSetter;
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.change.v0_6.impl.TimestampSetter;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
 import org.openstreetmap.osmosis.core.store.DataPostbox;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
@@ -99,13 +99,13 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 			EntityByTypeThenIdComparator comparator;
 			EntityContainer fromEntityContainer = null;
 			EntityContainer toEntityContainer = null;
-			TimestampChangeSetter timestampChangeSetter;
+			TimestampSetter timestampSetter;
 			
 			// Create a comparator for comparing two entities by type and identifier.
 			comparator = new EntityByTypeThenIdComparator();
 			
 			// Create an object for setting the current timestamp on entities being deleted.
-			timestampChangeSetter = new TimestampChangeSetter(changeSink, ChangeAction.Delete);
+			timestampSetter = new TimestampSetter();
 			
 			// We continue in the comparison loop while both sources still have data.
 			while (
@@ -128,7 +128,10 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 					// The from entity doesn't exist on the to source therefore
 					// has been deleted. We don't know when the entity was
 					// deleted so set the delete time to the current time.
-					fromEntityContainer.process(timestampChangeSetter);
+					changeSink.process(
+							new ChangeContainer(
+									timestampSetter.updateTimestamp(fromEntityContainer),
+									ChangeAction.Delete));
 					fromEntityContainer = null;
 				} else if (comparisonResult > 0) {
 					// The to entity doesn't exist on the from source therefore has
@@ -157,7 +160,10 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 				// The from entity doesn't exist on the to source therefore
 				// has been deleted. We don't know when the entity was
 				// deleted so set the delete time to the current time.
-				fromEntityContainer.process(timestampChangeSetter);
+				changeSink.process(
+						new ChangeContainer(
+								timestampSetter.updateTimestamp(fromEntityContainer),
+								ChangeAction.Delete));
 				fromEntityContainer = null;
 			}
 			// Any remaining "to" entities are creates.

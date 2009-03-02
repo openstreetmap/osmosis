@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
-import org.openstreetmap.osmosis.core.domain.v0_6.NodeBuilder;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
 
@@ -16,7 +15,7 @@ import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
  * 
  * @author Brett Henderson
  */
-public class NodeDao extends EntityDao<Node, NodeBuilder> {
+public class NodeDao extends EntityDao<Node> {
 	private static final String SQL_UPDATE_WAY_BBOX =
 		"UPDATE ways w SET bbox = (" +
 		" SELECT Envelope(Collect(n.geom))" +
@@ -62,7 +61,7 @@ public class NodeDao extends EntityDao<Node, NodeBuilder> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void loadFeatures(long entityId, NodeBuilder entityBuilder) {
+	protected void loadFeatures(long entityId, Node entity) {
 		// Nodes have no additional features.
 	}
 	

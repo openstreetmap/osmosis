@@ -40,15 +40,6 @@ public class BoundContainer extends EntityContainer {
 	public BoundContainer(StoreReader sr, StoreClassRegister scr) {
 		bound = new Bound(sr, scr);
 	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Bound getEntity() {
-		return bound;
-	}
 
 
 	/**
@@ -66,5 +57,27 @@ public class BoundContainer extends EntityContainer {
 	@Override
 	public void process(EntityProcessor processor) {
 		processor.process(this);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Bound getEntity() {
+		return bound;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public BoundContainer getWriteableInstance() {
+		if (bound.isReadOnly()) {
+			return new BoundContainer(bound.getWriteableInstance());
+		} else {
+			return this;
+		}
 	}
 }

@@ -11,9 +11,9 @@ import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
-import org.openstreetmap.osmosis.core.domain.v0_6.NodeBuilder;
-import org.openstreetmap.osmosis.core.domain.v0_6.RelationBuilder;
-import org.openstreetmap.osmosis.core.domain.v0_6.WayBuilder;
+import org.openstreetmap.osmosis.core.domain.v0_6.Node;
+import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
+import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.mysql.v0_6.impl.EntityHistory;
 import org.openstreetmap.osmosis.core.mysql.v0_6.impl.EntityHistoryComparator;
@@ -76,19 +76,19 @@ public class MysqlReader implements RunnableSource {
 	 * Reads all nodes from the database and sends to the sink.
 	 */
 	private void processNodes() {
-		ReleasableIterator<NodeBuilder> reader;
+		ReleasableIterator<Node> reader;
 		
-		reader = new EntitySnapshotReader<NodeBuilder>(
-			new PeekableIterator<EntityHistory<NodeBuilder>>(
+		reader = new EntitySnapshotReader<Node>(
+			new PeekableIterator<EntityHistory<Node>>(
 				new NodeReader(loginCredentials, readAllUsers)
 			),
 			snapshotInstant,
-			new EntityHistoryComparator<NodeBuilder>()
+			new EntityHistoryComparator<Node>()
 		);
 		
 		try {
 			while (reader.hasNext()) {
-				sink.process(new NodeContainer(reader.next().buildEntity()));
+				sink.process(new NodeContainer(reader.next()));
 			}
 			
 		} finally {
@@ -101,19 +101,19 @@ public class MysqlReader implements RunnableSource {
 	 * Reads all ways from the database and sends to the sink.
 	 */
 	private void processWays() {
-		ReleasableIterator<WayBuilder> reader;
+		ReleasableIterator<Way> reader;
 		
-		reader = new EntitySnapshotReader<WayBuilder>(
-			new PeekableIterator<EntityHistory<WayBuilder>>(
+		reader = new EntitySnapshotReader<Way>(
+			new PeekableIterator<EntityHistory<Way>>(
 				new WayReader(loginCredentials, readAllUsers)
 			),
 			snapshotInstant,
-			new EntityHistoryComparator<WayBuilder>()
+			new EntityHistoryComparator<Way>()
 		);
 		
 		try {
 			while (reader.hasNext()) {
-				sink.process(new WayContainer(reader.next().buildEntity()));
+				sink.process(new WayContainer(reader.next()));
 			}
 			
 		} finally {
@@ -126,19 +126,19 @@ public class MysqlReader implements RunnableSource {
 	 * Reads all relations from the database and sends to the sink.
 	 */
 	private void processRelations() {
-		ReleasableIterator<RelationBuilder> reader;
+		ReleasableIterator<Relation> reader;
 		
-		reader = new EntitySnapshotReader<RelationBuilder>(
-			new PeekableIterator<EntityHistory<RelationBuilder>>(
+		reader = new EntitySnapshotReader<Relation>(
+			new PeekableIterator<EntityHistory<Relation>>(
 				new RelationReader(loginCredentials, readAllUsers)
 			),
 			snapshotInstant,
-			new EntityHistoryComparator<RelationBuilder>()
+			new EntityHistoryComparator<Relation>()
 		);
 		
 		try {
 			while (reader.hasNext()) {
-				sink.process(new RelationContainer(reader.next().buildEntity()));
+				sink.process(new RelationContainer(reader.next()));
 			}
 			
 		} finally {

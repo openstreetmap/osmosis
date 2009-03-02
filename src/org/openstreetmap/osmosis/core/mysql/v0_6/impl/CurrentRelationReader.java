@@ -8,7 +8,6 @@ import java.util.NoSuchElementException;
 
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
-import org.openstreetmap.osmosis.core.domain.v0_6.RelationBuilder;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
@@ -26,7 +25,7 @@ import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactor
  */
 public class CurrentRelationReader implements ReleasableIterator<Relation> {
 	
-	private ReleasableIterator<RelationBuilder> relationReader;
+	private ReleasableIterator<Relation> relationReader;
 	private PeekableIterator<DbFeature<Tag>> relationTagReader;
 	private PeekableIterator<DbOrderedFeature<RelationMember>> relationMemberReader;
 	private Relation nextValue;
@@ -43,8 +42,8 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 	 *            regardless of their public edits flag.
 	 */
 	public CurrentRelationReader(DatabaseLoginCredentials loginCredentials, boolean readAllUsers) {
-		relationReader = new PersistentIterator<RelationBuilder>(
-			new SingleClassObjectSerializationFactory(RelationBuilder.class),
+		relationReader = new PersistentIterator<Relation>(
+			new SingleClassObjectSerializationFactory(Relation.class),
 			new CurrentRelationTableReader(loginCredentials, readAllUsers),
 			"rel",
 			true
@@ -73,7 +72,7 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 	 */
 	public boolean hasNext() {
 		if (!nextValueLoaded && relationReader.hasNext()) {
-			RelationBuilder relation;
+			Relation relation;
 			long relationId;
 			List<DbOrderedFeature<RelationMember>> relationMembers;
 			
@@ -96,7 +95,7 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 			
 			// Load all tags for this relation.
 			while (relationTagReader.hasNext() && relationTagReader.peekNext().getEntityId() == relationId) {
-				relation.addTag(relationTagReader.next().getFeature());
+				relation.getTags().add(relationTagReader.next().getFeature());
 			}
 			
 			// Skip all relation members that are from lower id relation.
@@ -121,10 +120,10 @@ public class CurrentRelationReader implements ReleasableIterator<Relation> {
 			// by their sequence number.
 			Collections.sort(relationMembers, new DbOrderedFeatureComparator<RelationMember>());
 			for (DbOrderedFeature<RelationMember> dbRelationMember : relationMembers) {
-				relation.addMember(dbRelationMember.getFeature());
+				relation.getMembers().add(dbRelationMember.getFeature());
 			}
 			
-			nextValue = relation.buildEntity();
+			nextValue = relation;
 			nextValueLoaded = true;
 		}
 		
