@@ -1,0 +1,21 @@
+Source: openstreetmap-osmosis
+Section: utils
+Priority: optional
+Maintainer: Joerg Ostertag <debian@ostertag.name>
+Build-Depends: debhelper (>> 3.7.2),
+	pkg-config,
+	ant, ant-optional,
+	sun-java6-jdk
+Standards-Version: 3.6.1
+
+Package: openstreetmap-osmosis
+Architecture: any
+Depends: postgresql-client,
+	java6-runtime|sun-java6-jre|sun-java6-jdk|openjdk-6-jre|openjdk-6-jdk|ia32-sun-java6-bin
+Recommends: gpsdrive,
+	mapnik
+Conflicts: gpsdrive-scripts,
+	osm2pgsql
+Description: OpenStreetmap Utils
+ This Package contains some of the most usefull Utils
+ for working with OpenStreetMap
