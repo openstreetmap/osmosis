@@ -36,16 +36,11 @@ REVERSE="${ESC}[07m"
 NORMAL="${ESC}[0m"
 
 echo "copying Files to '$dst_path'"
-package_name=openstreetmap
-dst_path=${dst_path%/}
-platform=`uname -m`
 
-perl_path="$dst_path/usr/share/perl5"
 bin_path="$dst_path/usr/bin"
 lib_path="$dst_path/usr/lib"
-share_path="$dst_path/usr/share/$package_name"
+share_path="$dst_path/usr/share/openstreetmap"
 man1_path="$dst_path/usr/man/man1"
-mkdir -p "$perl_path"
 mkdir -p "$bin_path"
 mkdir -p "$lib_path"
 mkdir -p "$share_path"
@@ -55,22 +50,19 @@ mkdir -p "$man1_path"
 # #######################################################
 # Osmosis
 # #######################################################
-echo "${BLUE}----------> applications/utils/osmosis/trunk Osmosis${NORMAL}"
+echo "${BLUE}----------> Osmosis${NORMAL}"
 
 
-#ant clean >build.log 2>build.err
-#ant dist >>build.log 2>>build.err
-ant clean
-ant dist 
+ant clean >build.log 2>build.err
+ant dist >>build.log 2>>build.err
 if [ "$?" -ne "0" ] ; then
     echo "${RED}!!!!!! ERROR compiling  Osmosis ${NORMAL}"
     exit -1
 fi
-cd ../..
 
 osmosis_dir="$dst_path/usr/local/share/osmosis/"
 mkdir -p $osmosis_dir
-cp osmosis/trunk/build/binary/osmosis.jar $osmosis_dir
+cp build/binary/osmosis.jar $osmosis_dir
 if [ "$?" -ne "0" ] ; then
     echo "${RED}!!!!!! ERROR cannot find resulting osmosis.jar ${NORMAL}"
     exit -1
@@ -78,21 +70,22 @@ fi
 
     # copy needed libs
 mkdir -p $osmosis_dir/lib/
-cp osmosis/trunk/lib/default/*.jar $osmosis_dir/lib/
+cp lib/default/*.jar $osmosis_dir/lib/
 if [ "$?" -ne "0" ] ; then
     echo "${RED}!!!!!! ERROR cannot copy needed libs for osmosis${NORMAL}"
     exit -1
 fi
 
-    # Osmosis script
-src_fn="osmosis/trunk/bin/osmosis"
+# Osmosis script
+src_fn="bin/osmosis"
 man1_fn="$man1_path/osmosis.1"
 if grep -q -e "--help" "$src_fn"; then
     echo "Create Man Page from Help '$man1_fn'"
-    perl $src_fn --help >"$man1_fn"
+    $src_fn --help >"$man1_fn"
 else
     echo "!!!! No idea how to create Man Page for $src_fn"
 fi
+
 mkdir -p $osmosis_dir/bin
 cp $src_fn "$osmosis_dir/bin/osmosis"
 if [ "$?" -ne "0" ] ; then
@@ -100,4 +93,6 @@ if [ "$?" -ne "0" ] ; then
     exit -1
 fi
 
-ln -sf /usr/local/share/osmosis/bin/osmosis $bin_path/osmosis
+cd $dst_path
+mkdir -p usr/bin
+ln -sf usr/local/share/osmosis/bin/osmosis usr/bin/osmosis
