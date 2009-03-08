@@ -4,25 +4,52 @@ package org.openstreetmap.osmosis.core.container.v0_6;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Completable;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 
 
 /**
- * Provides access to data within a Dataset. Every thread must access a Dataset
- * through its own reader. A reader must be released after use.
+ * Provides access to data within a Dataset. Every thread must access a Dataset through its own
+ * reader. A reader must be released after use. It must be completed in order to ensure changes are
+ * committed.
  * 
  * @author Brett Henderson
  */
-public interface DatasetReader extends Releasable {
+public interface DatasetContext extends Completable {
 	
+	/**
+	 * Returns the manager for manipulating node instances.
+	 * 
+	 * @return The node manager.
+	 */
+	EntityManager<Node> getNodeManager();
+	
+	
+	/**
+	 * Returns the manager for manipulating way instances.
+	 * 
+	 * @return The way manager.
+	 */
+	EntityManager<Way> getWayManager();
+	
+	
+	/**
+	 * Returns the manager for manipulating relation instances.
+	 * 
+	 * @return The relation manager.
+	 */
+	EntityManager<Relation> getRelationManager();
+
+
 	/**
 	 * Retrieves a specific node by its identifier.
 	 * 
 	 * @param id
 	 *            The id of the node.
 	 * @return The node.
+	 * @deprecated The node manager should be used instead.
 	 */
+	@Deprecated
 	Node getNode(long id);
 	
 	
@@ -32,7 +59,9 @@ public interface DatasetReader extends Releasable {
 	 * @param id
 	 *            The id of the way.
 	 * @return The way.
+	 * @deprecated The node manager should be used instead.
 	 */
+	@Deprecated
 	Way getWay(long id);
 	
 	
@@ -42,7 +71,9 @@ public interface DatasetReader extends Releasable {
 	 * @param id
 	 *            The id of the relation.
 	 * @return The relation.
+	 * @deprecated The node manager should be used instead.
 	 */
+	@Deprecated
 	Relation getRelation(long id);
 	
 	

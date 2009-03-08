@@ -60,7 +60,7 @@ public class TagMapper extends EntityFeatureMapper<DbFeature<Tag>> {
 		resultSql.append("SELECT ").append(parentEntityName).append("_id AS entity_id, k, v FROM ");
 		resultSql.append(parentEntityName).append("_tags f");
 		if (filterByEntityId) {
-			resultSql.append(" WHERE entity_id = ?");
+			resultSql.append(" WHERE ").append(parentEntityName).append("_id = ?");
 		}
 		if (orderBy) {
 			resultSql.append(getSqlDefaultOrderBy());

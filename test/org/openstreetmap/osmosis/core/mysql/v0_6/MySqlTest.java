@@ -178,7 +178,7 @@ public class MySqlTest {
 		authFile = fileUtils.getDataFile("v0_6/mysql-authfile.txt");
 		snapshotFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
 		changesetFile = fileUtils.getDataFile("v0_6/db-changeset.osc");
-		expectedResultFile = fileUtils.getDataFile("v0_6/db-expected.osm");
+		expectedResultFile = fileUtils.getDataFile("v0_6/db-changeset-expected.osm");
 		actualResultFile = File.createTempFile("test", ".osm");
 		
 		// Remove all existing data from the database.

@@ -17,5 +17,5 @@ public interface Dataset {
 	 * 
 	 * @return A new dataset reader.
 	 */
-	DatasetReader createReader();
+	DatasetContext createReader();
 }

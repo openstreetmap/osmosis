@@ -2,16 +2,16 @@
 package org.openstreetmap.osmosis.core.pgsql.v0_6;
 
 import org.openstreetmap.osmosis.core.container.v0_6.Dataset;
-import org.openstreetmap.osmosis.core.container.v0_6.DatasetReader;
+import org.openstreetmap.osmosis.core.container.v0_6.DatasetContext;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
-import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.PostgreSqlDatasetReader;
+import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.PostgreSqlDatasetContext;
 import org.openstreetmap.osmosis.core.task.v0_6.DatasetSink;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableDatasetSource;
 
 
 /**
- * An OSM dataset source exposing read-only access to a custom PostgreSQL database.
+ * An OSM dataset source exposing generic access to a custom PostgreSQL database.
  * 
  * @author Brett Henderson
  */
@@ -62,7 +62,7 @@ public class PostgreSqlReader implements RunnableDatasetSource, Dataset {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DatasetReader createReader() {
-		return new PostgreSqlDatasetReader(loginCredentials, preferences);
+	public DatasetContext createReader() {
+		return new PostgreSqlDatasetContext(loginCredentials, preferences);
 	}
 }

@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.Dataset;
-import org.openstreetmap.osmosis.core.container.v0_6.DatasetReader;
+import org.openstreetmap.osmosis.core.container.v0_6.DatasetContext;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityProcessor;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
@@ -386,11 +386,11 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DatasetReader createReader() {
+	public DatasetContext createReader() {
 		ReleasableContainer releasableContainer = new ReleasableContainer();
 		
 		try {
-			DatasetReader reader;
+			DatasetContext reader;
 			
 			reader = new DatasetStoreReader(
 					new NodeStorageContainer(

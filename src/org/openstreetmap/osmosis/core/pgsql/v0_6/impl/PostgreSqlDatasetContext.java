@@ -15,8 +15,9 @@ import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainerIterator;
-import org.openstreetmap.osmosis.core.container.v0_6.DatasetReader;
+import org.openstreetmap.osmosis.core.container.v0_6.DatasetContext;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
+import org.openstreetmap.osmosis.core.container.v0_6.EntityManager;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainerIterator;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
@@ -30,6 +31,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
+import org.openstreetmap.osmosis.core.lifecycle.ReleasableContainer;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.pgsql.common.PolygonBuilder;
@@ -48,9 +50,9 @@ import org.openstreetmap.osmosis.core.store.UpcastIterator;
  * 
  * @author Brett Henderson
  */
-public class PostgreSqlDatasetReader implements DatasetReader {
+public class PostgreSqlDatasetContext implements DatasetContext {
 	
-	private static final Logger log = Logger.getLogger(PostgreSqlDatasetReader.class.getName());
+	private static final Logger log = Logger.getLogger(PostgreSqlDatasetContext.class.getName());
 	
 	
 	private DatabaseLoginCredentials loginCredentials;
@@ -58,10 +60,15 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	private DatabaseCapabilityChecker capabilityChecker;
 	private boolean initialized;
 	private DatabaseContext dbCtx;
+	private UserDao userDao;
 	private NodeDao nodeDao;
 	private WayDao wayDao;
 	private RelationDao relationDao;
+	private PostgresSqlEntityManager<Node> nodeManager;
+	private PostgresSqlEntityManager<Way> wayManager;
+	private PostgresSqlEntityManager<Relation> relationManager;
 	private PolygonBuilder polygonBuilder;
+	private ReleasableContainer releasableContainer;
 	
 	
 	/**
@@ -72,11 +79,13 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	 * @param preferences
 	 *            Contains preferences configuring database behaviour.
 	 */
-	public PostgreSqlDatasetReader(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
+	public PostgreSqlDatasetContext(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
 		this.loginCredentials = loginCredentials;
 		this.preferences = preferences;
 		
 		polygonBuilder = new PolygonBuilder();
+		
+		releasableContainer = new ReleasableContainer();
 		
 		initialized = false;
 	}
@@ -94,12 +103,17 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			new SchemaVersionValidator(loginCredentials, preferences).validateVersion(
 					PostgreSqlVersionConstants.SCHEMA_VERSION);
 			
-			actionDao = new ActionDao(dbCtx);
-			
 			capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
-			nodeDao = new NodeDao(dbCtx, actionDao);
-			wayDao = new WayDao(dbCtx, actionDao);
-			relationDao = new RelationDao(dbCtx, actionDao);
+			
+			actionDao = releasableContainer.add(new ActionDao(dbCtx));
+			userDao = releasableContainer.add(new UserDao(dbCtx, actionDao));
+			nodeDao = releasableContainer.add(new NodeDao(dbCtx, actionDao));
+			wayDao = releasableContainer.add(new WayDao(dbCtx, actionDao));
+			relationDao = releasableContainer.add(new RelationDao(dbCtx, actionDao));
+			
+			nodeManager = new PostgresSqlEntityManager<Node>(nodeDao, userDao);
+			wayManager = new PostgresSqlEntityManager<Way>(wayDao, userDao);
+			relationManager = new PostgresSqlEntityManager<Relation>(relationDao, userDao);
 		}
 		
 		initialized = true;
@@ -111,11 +125,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	 */
 	@Override
 	public Node getNode(long id) {
-		if (!initialized) {
-			initialize();
-		}
-		
-		return nodeDao.getEntity(id);
+		return getNodeManager().getEntity(id);
 	}
 	
 	
@@ -124,11 +134,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	 */
 	@Override
 	public Way getWay(long id) {
-		if (!initialized) {
-			initialize();
-		}
-		
-		return wayDao.getEntity(id);
+		return getWayManager().getEntity(id);
 	}
 	
 	
@@ -137,11 +143,46 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	 */
 	@Override
 	public Relation getRelation(long id) {
+		return getRelationManager().getEntity(id);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public EntityManager<Node> getNodeManager() {
 		if (!initialized) {
 			initialize();
 		}
 		
-		return relationDao.getEntity(id);
+		return nodeManager;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public EntityManager<Way> getWayManager() {
+		if (!initialized) {
+			initialize();
+		}
+		
+		return wayManager;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public EntityManager<Relation> getRelationManager() {
+		if (!initialized) {
+			initialize();
+		}
+		
+		return relationManager;
 	}
 	
 	
@@ -378,6 +419,17 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 			}
 		}
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void complete() {
+		if (dbCtx != null) {
+			dbCtx.commit();
+		}
+	}
 	
 	
 	/**
@@ -385,15 +437,9 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	 */
 	@Override
 	public void release() {
-		if (nodeDao != null) {
-			nodeDao.release();
-		}
-		if (wayDao != null) {
-			wayDao.release();
-		}
-		if (relationDao != null) {
-			relationDao.release();
-		}
+		releasableContainer.release();
+		releasableContainer.clear();
+		
 		if (dbCtx != null) {
 			dbCtx.release();
 			

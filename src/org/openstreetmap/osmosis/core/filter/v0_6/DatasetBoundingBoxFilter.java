@@ -3,7 +3,7 @@ package org.openstreetmap.osmosis.core.filter.v0_6;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.Dataset;
-import org.openstreetmap.osmosis.core.container.v0_6.DatasetReader;
+import org.openstreetmap.osmosis.core.container.v0_6.DatasetContext;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.task.v0_6.DatasetSinkSource;
@@ -23,7 +23,7 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 	private double top;
 	private double bottom;
 	private boolean completeWays;
-	private DatasetReader datasetReader;
+	private DatasetContext datasetReader;
 	
 	
 	/**

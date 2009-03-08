@@ -83,7 +83,7 @@ public class EntityFeatureDao<Tef extends Storeable, Tdb extends DbFeature<Tef>>
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Query failed for "
-					+ entityFeatureBuilder.getEntityName() + " " + entityId + ".");
+					+ entityFeatureBuilder.getEntityName() + " " + entityId + ".", e);
 		} finally {
 			if (resultSet != null) {
 				try {
