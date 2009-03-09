@@ -6,6 +6,9 @@ Build-Depends: debhelper (>> 3.7.2),
 	pkg-config,
 	ant, ant-optional,
 	sun-java6-jdk
+Build-Conflicts: openjdk-6-jre, openjdk-6-jre-headless, openjdk-6-jre-lib,
+		 ca-certificates-java, cacao-oj6-jre-headless, cacao-oj6-jre-lib,
+		 java-gcj-compat-headless
 Standards-Version: 3.6.1
 
 Package: openstreetmap-osmosis

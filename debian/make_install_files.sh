@@ -17,22 +17,7 @@ fi
 ESC=`echo -e "\033"`
 RED="${ESC}[91m"
 GREEN="${ESC}[92m"
-YELLOW="${ESC}[93m"
 BLUE="${ESC}[94m"
-MAGENTA="${ESC}[95m"
-CYAN="${ESC}[96m"
-WHITE="${ESC}[97m"
-BG_RED="${ESC}[41m"
-BG_GREEN="${ESC}[42m"
-BG_YELLOW="${ESC}[43m"
-BG_BLUE="${ESC}[44m"
-BG_MAGENTA="${ESC}[45m"
-BG_CYAN="${ESC}[46m"
-BG_WHITE="${ESC}[47m"
-BRIGHT="${ESC}[01m"
-UNDERLINE="${ESC}[04m"
-BLINK="${ESC}[05m"
-REVERSE="${ESC}[07m"
 NORMAL="${ESC}[0m"
 
 echo "copying Files to '$dst_path'"
@@ -52,8 +37,17 @@ mkdir -p "$man1_path"
 # #######################################################
 echo "${BLUE}----------> Osmosis${NORMAL}"
 
+# Strange is that it doesn't work with all java compilers ..
+if ! javac -version 2>&1 | grep -q -e 1.6 ; then
+    javac -version
+    echo "!!!!! ERROR: Wrong JavaC Version. Need 1.6*"
+    exit -1 
+fi
 
 ant clean >build.log 2>build.err
+
+ant resolve >build.log 2>build.err
+
 ant dist >>build.log 2>>build.err
 if [ "$?" -ne "0" ] ; then
     echo "${RED}!!!!!! ERROR compiling  Osmosis ${NORMAL}"
