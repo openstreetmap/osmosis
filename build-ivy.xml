@@ -38,31 +38,16 @@
 		</path>
 		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant"
 			classpathref="ivy.lib.path" />
+		
+		<!-- Override the shared repo location to point at the svn-based ivy repo. -->
+		<property name="ivy.shared.default.root" location="repo"/>
+		<ivy:configure />
 	</target>
 	
 	<target name="resolve" depends="init-ivy" unless="ivy.resolve.skip" description="Downloads all program dependencies using ivy.">
-		<ivy:configure />
-		
 		<ivy:resolve file="${ivy.dep.file}" conf="${ivy.configurations}" />
 		
 		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact]-[revision].[ext]" sync="true" conf="${ivy.configurations}" />
-		
-		<!-- Copy all locally managed libraries into the library directories. -->
-		<copy todir="lib/compile">
-			<fileset dir="repo">
-				<include name="*.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="lib/default">
-			<fileset dir="repo">
-				<include name="*.jar"/>
-			</fileset>
-		</copy>
-		<copy todir="lib/test">
-			<fileset dir="repo">
-				<include name="*.jar"/>
-			</fileset>
-		</copy>
 	</target>
 	
 	<target name="resolve-message" if="ivy.resolve.skip">
