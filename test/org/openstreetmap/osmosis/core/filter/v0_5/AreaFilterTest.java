@@ -1,7 +1,8 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.filter.v0_5;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -9,9 +10,19 @@ import java.util.Iterator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import org.openstreetmap.osmosis.core.container.v0_5.*;
-import org.openstreetmap.osmosis.core.domain.v0_5.*;
+import org.openstreetmap.osmosis.core.container.v0_5.EntityContainer;
+import org.openstreetmap.osmosis.core.container.v0_5.NodeContainer;
+import org.openstreetmap.osmosis.core.container.v0_5.RelationContainer;
+import org.openstreetmap.osmosis.core.container.v0_5.WayContainer;
+import org.openstreetmap.osmosis.core.domain.v0_5.Entity;
+import org.openstreetmap.osmosis.core.domain.v0_5.EntityType;
+import org.openstreetmap.osmosis.core.domain.v0_5.Node;
+import org.openstreetmap.osmosis.core.domain.v0_5.OsmUser;
+import org.openstreetmap.osmosis.core.domain.v0_5.Relation;
+import org.openstreetmap.osmosis.core.domain.v0_5.RelationMember;
+import org.openstreetmap.osmosis.core.domain.v0_5.Tag;
+import org.openstreetmap.osmosis.core.domain.v0_5.Way;
+import org.openstreetmap.osmosis.core.domain.v0_5.WayNode;
 import org.openstreetmap.osmosis.core.filter.common.IdTrackerType;
 import org.openstreetmap.osmosis.test.task.v0_5.SinkEntityInspector;
 
