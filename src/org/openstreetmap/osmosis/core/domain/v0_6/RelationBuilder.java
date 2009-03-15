@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.core.domain.v0_6;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -238,4 +239,23 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	public Relation buildEntity() {
 		return new Relation(id, version, timestampContainer, user, tags, members);
 	}
+
+    /** 
+     * ${@inheritDoc}.
+     */
+    @Override
+    public String toString() {
+        String type = null;
+        Collection<Tag> tags = getTags();
+        for (Tag tag : tags) {
+            if (tag.getKey() != null && tag.getKey().equalsIgnoreCase("type")) {
+                type = tag.getValue();
+                break;
+            }
+        }
+        if (type != null) {
+            return "RelationBuilder(id=" + getId() + ", #tags=" +  getTags().size()+ ", type='" + type + "')";
+        }
+        return "RelationBuilder(id=" + getId() + ", #tags=" +  getTags().size()+ ")";
+    }
 }

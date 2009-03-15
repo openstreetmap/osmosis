@@ -317,4 +317,23 @@ public class Node extends Entity implements Comparable<Node> {
 			return this;
 		}
 	}
+
+    /** 
+     * ${@inheritDoc}.
+     */
+    @Override
+    public String toString() {
+        String name = null;
+        Collection<Tag> tags = getTags();
+        for (Tag tag : tags) {
+            if (tag.getKey() != null && tag.getKey().equalsIgnoreCase("name")) {
+                name = tag.getValue();
+                break;
+            }
+        }
+        if (name != null) {
+            return "Node(id=" + getId() + ", #tags=" +  getTags().size()+ ", name='" + name + "')";
+        }
+        return "Node(id=" + getId() + ", #tags=" +  getTags().size()+ ")";
+    }
 }

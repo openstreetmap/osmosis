@@ -313,4 +313,23 @@ public class Relation extends Entity implements Comparable<Relation> {
 	public List<RelationMember> getMembers() {
 		return members;
 	}
+
+    /** 
+     * ${@inheritDoc}.
+     */
+    @Override
+    public String toString() {
+        String type = null;
+        Collection<Tag> tags = getTags();
+        for (Tag tag : tags) {
+            if (tag.getKey() != null && tag.getKey().equalsIgnoreCase("type")) {
+                type = tag.getValue();
+                break;
+            }
+        }
+        if (type != null) {
+            return "Relation(id=" + getId() + ", #tags=" +  getTags().size()+ ", type='" + type + "')";
+        }
+        return "Relation(id=" + getId() + ", #tags=" +  getTags().size()+ ")";
+    }
 }

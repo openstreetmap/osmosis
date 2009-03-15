@@ -493,4 +493,12 @@ public class Bound extends Entity implements Comparable<Bound> {
 	public Bound getWriteableInstance() {
 		return this;
 	}
+
+    /** 
+     * ${@inheritDoc}.
+     */
+    @Override
+    public String toString() {
+        return "Bound(top=" + getTop() + ", bottom=" +  getBottom() + ", left=" + getLeft() + ", right=" +  getRight() + ")";
+    }
 }

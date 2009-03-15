@@ -7,6 +7,8 @@ import org.openstreetmap.osmosis.core.store.StoreWriter;
 import org.openstreetmap.osmosis.core.store.Storeable;
 import org.openstreetmap.osmosis.core.util.LongAsInt;
 
+import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
+
 
 /**
  * A data class representing a single member within a relation entity.
@@ -135,4 +137,12 @@ public class RelationMember implements Comparable<RelationMember>, Storeable {
 	public String getMemberRole() {
 		return memberRole;
 	}
+
+    /** 
+     * ${@inheritDoc}.
+     */
+    @Override
+    public String toString() {
+        return "RelationMember(" + getMemberType() + " with id " + getMemberId() + " in the role '" + getMemberRole()+ "')";
+    }
 }

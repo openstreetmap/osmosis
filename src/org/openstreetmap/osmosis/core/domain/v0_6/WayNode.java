@@ -1,6 +1,8 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.domain.v0_6;
 
+import java.util.Collection;
+
 import org.openstreetmap.osmosis.core.store.StoreClassRegister;
 import org.openstreetmap.osmosis.core.store.StoreReader;
 import org.openstreetmap.osmosis.core.store.StoreWriter;
@@ -81,4 +83,12 @@ public class WayNode implements Comparable<WayNode>, Storeable {
 	public long getNodeId() {
 		return nodeId;
 	}
+
+    /** 
+     * ${@inheritDoc}.
+     */
+    @Override
+    public String toString() {
+        return "WayNode(nodeID=" + getNodeId()+ ")";
+    }
 }

@@ -318,4 +318,23 @@ public class Way extends Entity implements Comparable<Way> {
     public boolean isClosed() {
         return wayNodes.get(0).getNodeId() == wayNodes.get(wayNodes.size()-1).getNodeId();
     }
+
+    /** 
+     * ${@inheritDoc}.
+     */
+    @Override
+    public String toString() {
+        String name = null;
+        Collection<Tag> tags = getTags();
+        for (Tag tag : tags) {
+            if (tag.getKey() != null && tag.getKey().equalsIgnoreCase("name")) {
+                name = tag.getValue();
+                break;
+            }
+        }
+        if (name != null) {
+            return "Way(id=" + getId() + ", #tags=" +  getTags().size()+ ", name='" + name + "')";
+        }
+        return "Way(id=" + getId() + ", #tags=" +  getTags().size()+ ")";
+    }
 }

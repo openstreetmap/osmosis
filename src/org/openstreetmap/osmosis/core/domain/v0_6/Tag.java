@@ -13,8 +13,14 @@ import org.openstreetmap.osmosis.core.store.Storeable;
  * @author Brett Henderson
  */
 public class Tag implements Comparable<Tag>, Storeable {
-	
+
+    /**
+     * The key identifying the tag.
+     */
 	private String key;
+	/**
+	 * The value associated with the tag.
+	 */
 	private String value;
 	
 	
@@ -91,4 +97,13 @@ public class Tag implements Comparable<Tag>, Storeable {
 	public String getValue() {
 		return value;
 	}
+  
+    /** 
+     * ${@inheritDoc}.
+     */
+    @Override
+    public String toString() {
+        return "Tag('" + getKey() + "'='" + getValue() + "')";
+    }
+
 }
