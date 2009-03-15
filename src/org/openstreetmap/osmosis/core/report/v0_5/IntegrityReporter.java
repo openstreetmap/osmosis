@@ -35,7 +35,7 @@ import org.openstreetmap.osmosis.core.task.v0_5.Sink;
  */
 public class IntegrityReporter implements Sink, EntityProcessor {
 	
-	private static final Logger log = Logger.getLogger(IntegrityReporter.class.getName());
+	private static final Logger LOG = Logger.getLogger(IntegrityReporter.class.getName());
 	
 	private File file;
 	private boolean initialized;
@@ -112,7 +112,7 @@ public class IntegrityReporter implements Sink, EntityProcessor {
 					try {
 						outStream.close();
 					} catch (Exception e) {
-						log.log(Level.SEVERE, "Unable to close output stream for file " + file + ".", e);
+						LOG.log(Level.SEVERE, "Unable to close output stream for file " + file + ".", e);
 					}
 					outStream = null;
 				}
@@ -231,7 +231,7 @@ public class IntegrityReporter implements Sink, EntityProcessor {
 					writer.close();
 				}
 			} catch(Exception e) {
-				log.log(Level.SEVERE, "Unable to close writer.", e);
+				LOG.log(Level.SEVERE, "Unable to close writer.", e);
 			}
 		} finally {
 			initialized = false;

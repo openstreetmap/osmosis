@@ -20,7 +20,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author Brett Henderson
  */
 public class OsmHandler extends DefaultHandler {
-	private static final Logger log = Logger.getLogger(OsmHandler.class.getName());
+	private static final Logger LOG = Logger.getLogger(OsmHandler.class.getName());
 	private static final String ELEMENT_NAME_OSM = "osm";
 	
 	/**
@@ -136,7 +136,7 @@ public class OsmHandler extends DefaultHandler {
 	 */
 	@Override
 	public void error(SAXParseException e) throws SAXException {
-		log.severe(
+		LOG.severe(
 			"Unable to parse xml file.  publicId=(" + documentLocator.getPublicId()
 			+ "), systemId=(" + documentLocator.getSystemId()
 			+ "), lineNumber=" + documentLocator.getLineNumber()

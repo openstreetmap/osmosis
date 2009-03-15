@@ -17,7 +17,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class Pipeline {
-	private static final Logger log = Logger.getLogger(Pipeline.class.getName());
+	private static final Logger LOG = Logger.getLogger(Pipeline.class.getName());
 	
 	private TaskManagerFactoryRegister factoryRegister;
 	private List<TaskManager> taskManagers;
@@ -51,8 +51,8 @@ public class Pipeline {
 				factoryRegister.getInstance(taskConfig.getType()).createTaskManager(taskConfig)
 			);
 			
-			if (log.isLoggable(Level.FINE)) {
-				log.fine("Created task \"" + taskConfig.getId() + "\"");
+			if (LOG.isLoggable(Level.FINE)) {
+				LOG.fine("Created task \"" + taskConfig.getId() + "\"");
 			}
 		}
 	}
@@ -73,8 +73,8 @@ public class Pipeline {
 		for (TaskManager taskManager : taskManagers) {
 			taskManager.connect(pipeTasks);
 			
-			if (log.isLoggable(Level.FINE)) {
-				log.fine("Connected task \"" + taskManager.getTaskId() + "\"");
+			if (LOG.isLoggable(Level.FINE)) {
+				LOG.fine("Connected task \"" + taskManager.getTaskId() + "\"");
 			}
 		}
 		
@@ -108,11 +108,11 @@ public class Pipeline {
 	 */
 	public void prepare(List<TaskConfiguration> taskInfoList) {
 		// Process the command line arguments to build all tasks in the pipeline.
-		log.fine("Building tasks.");
+		LOG.fine("Building tasks.");
 		buildTasks(taskInfoList);
 		
 		// Connect the nodes in the pipeline.
-		log.fine("Connecting tasks.");
+		LOG.fine("Connecting tasks.");
 		connectTasks();
 	}
 	

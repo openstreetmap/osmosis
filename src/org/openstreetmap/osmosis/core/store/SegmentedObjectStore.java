@@ -35,7 +35,7 @@ import org.openstreetmap.osmosis.core.util.MultiMemberGZIPInputStream;
  */
 public class SegmentedObjectStore<T extends Storeable> implements Completable {
 	
-	private static final Logger log = Logger.getLogger(SegmentedObjectStore.class.getName());
+	private static final Logger LOG = Logger.getLogger(SegmentedObjectStore.class.getName());
 	
 	private ObjectSerializationFactory serializationFactory;
 	private StorageStage stage;
@@ -331,7 +331,7 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 		
 		if (file != null) {
 			if (!file.delete()) {
-				log.warning("Unable to delete file " + file);
+				LOG.warning("Unable to delete file " + file);
 			}
 			file = null;
 		}

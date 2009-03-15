@@ -12,7 +12,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 
 
 /**
- * Handles a number of different date formats encountered in OSM. This is built
+ * Handles a number of different date FORMATS encountered in OSM. This is built
  * based on similar code in JOSM. This class is not threadsafe, a separate
  * instance must be created per thread.
  * 
@@ -20,7 +20,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  */
 public class FallbackDateParser {
 	
-	private static final String[] formats = {
+	private static final String[] FORMATS = {
 	    "yyyy-MM-dd'T'HH:mm:ss'Z'",
 		"yyyy-MM-dd'T'HH:mm:ssZ",
 		"yyyy-MM-dd'T'HH:mm:ss",
@@ -46,9 +46,9 @@ public class FallbackDateParser {
 	 */
 	public FallbackDateParser() {
 		// Build a list of candidate date parsers.
-		dateParsers = new ArrayList<DateFormat>(formats.length);
-		for (int i = 0; i < formats.length; i++) {
-			dateParsers.add(new SimpleDateFormat(formats[i]));
+		dateParsers = new ArrayList<DateFormat>(FORMATS.length);
+		for (int i = 0; i < FORMATS.length; i++) {
+			dateParsers.add(new SimpleDateFormat(FORMATS[i]));
 		}
 		
 		// We haven't selected a date parser yet.

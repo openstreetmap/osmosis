@@ -57,7 +57,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  */
 public class PolygonFileReader {
 	
-	private static final Logger log = Logger.getLogger(PolygonFileReader.class.getName());
+	private static final Logger LOG = Logger.getLogger(PolygonFileReader.class.getName());
 	
 	
 	private File polygonFile;
@@ -83,7 +83,7 @@ public class PolygonFileReader {
 			try {
 				fileReader.close();
 			} catch (Exception e) {
-				log.log(Level.SEVERE, "Unable to close polygon file reader.", e);
+				LOG.log(Level.SEVERE, "Unable to close polygon file reader.", e);
 			} finally {
 				fileReader = null;
 			}

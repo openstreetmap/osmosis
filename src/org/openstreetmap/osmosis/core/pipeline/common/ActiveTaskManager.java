@@ -15,7 +15,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public abstract class ActiveTaskManager extends TaskManager {
-	private static final Logger log = Logger.getLogger(ActiveTaskManager.class.getName());
+	private static final Logger LOG = Logger.getLogger(ActiveTaskManager.class.getName());
 	
 	private TaskRunner thread;
 	
@@ -49,7 +49,7 @@ public abstract class ActiveTaskManager extends TaskManager {
 	 */
 	@Override
 	public void execute() {
-		log.fine("Launching task " + getTaskId() + " in a new thread.");
+		LOG.fine("Launching task " + getTaskId() + " in a new thread.");
 		
 		if (thread != null) {
 			throw new OsmosisRuntimeException("Task " + getTaskId()
@@ -67,7 +67,7 @@ public abstract class ActiveTaskManager extends TaskManager {
 	 */
 	@Override
 	public boolean waitForCompletion() {
-		log.fine("Waiting for task " + getTaskId() + " to complete.");
+		LOG.fine("Waiting for task " + getTaskId() + " to complete.");
 		if (thread != null) {
 			boolean successful;
 			
@@ -80,7 +80,7 @@ public abstract class ActiveTaskManager extends TaskManager {
 			successful = thread.isSuccessful();
 			
 			if (!successful) {
-				log.log(Level.SEVERE, "Thread for task " + getTaskId() + " failed", thread.getException());
+				LOG.log(Level.SEVERE, "Thread for task " + getTaskId() + " failed", thread.getException());
 			}
 			
 			thread = null;

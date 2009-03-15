@@ -18,7 +18,7 @@ import org.openstreetmap.osmosis.core.task.v0_5.ChangeSinkChangeSource;
  */
 public class ChangeProgressLogger implements ChangeSinkChangeSource {
 	
-	private static final Logger log = Logger.getLogger(ChangeProgressLogger.class.getName());
+	private static final Logger LOG = Logger.getLogger(ChangeProgressLogger.class.getName());
 	
 	private ChangeSink changeSink;
 	private int interval;
@@ -81,7 +81,7 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 		action = changeContainer.getAction();
 		
 		if (updateRequired()) {
-			log.info("Processing " + entity.getType() + " " + entity.getId() + " with action " + action + ".");
+			LOG.info("Processing " + entity.getType() + " " + entity.getId() + " with action " + action + ".");
 		}
 		
 		changeSink.process(changeContainer);
@@ -92,11 +92,11 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 	 * {@inheritDoc}
 	 */
 	public void complete() {
-		log.info("Processing completion steps.");
+		LOG.info("Processing completion steps.");
 		
 		changeSink.complete();
 		
-		log.info("Processing complete.");
+		LOG.info("Processing complete.");
 	}
 	
 	

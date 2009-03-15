@@ -26,7 +26,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  */
 public class AuthenticationPropertiesLoader {
 	
-	private static final Logger log = Logger.getLogger(AuthenticationPropertiesLoader.class.getName());
+	private static final Logger LOG = Logger.getLogger(AuthenticationPropertiesLoader.class.getName());
 	
 	private static final String KEY_HOST = "host";
 	private static final String KEY_DATABASE = "database";
@@ -67,7 +67,7 @@ public class AuthenticationPropertiesLoader {
 				try {
 					fileInputStream.close();
 				} catch (IOException e) {
-					log.log(Level.WARNING, "Unable to close input stream for properties file " + configFile + ".", e);
+					LOG.log(Level.WARNING, "Unable to close input stream for properties file " + configFile + ".", e);
 				}
 			}
 		}

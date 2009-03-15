@@ -53,7 +53,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
  */
 public class PostgreSqlWriter implements Sink, EntityProcessor {
 	
-	private static final Logger log = Logger.getLogger(PostgreSqlWriter.class.getName());
+	private static final Logger LOG = Logger.getLogger(PostgreSqlWriter.class.getName());
 	
 	
 	private static final String[] PRE_LOAD_SQL = {
@@ -275,27 +275,27 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 					dbCtx.prepareStatement(relationMemberBuilder.getSqlInsert(1)));
 			
 			// Drop all constraints and indexes.
-			log.fine("Running pre-load SQL statements.");
+			LOG.fine("Running pre-load SQL statements.");
 			for (int i = 0; i < PRE_LOAD_SQL.length; i++) {
-				log.finer("SQL: " + PRE_LOAD_SQL[i]);
+				LOG.finer("SQL: " + PRE_LOAD_SQL[i]);
 				dbCtx.executeStatement(PRE_LOAD_SQL[i]);
 			}
 			if (capabilityChecker.isWayBboxSupported()) {
-				log.fine("Running pre-load bbox SQL statements.");
+				LOG.fine("Running pre-load bbox SQL statements.");
 				for (int i = 0; i < PRE_LOAD_SQL_WAY_BBOX.length; i++) {
-					log.finer("SQL: " + PRE_LOAD_SQL_WAY_BBOX[i]);
+					LOG.finer("SQL: " + PRE_LOAD_SQL_WAY_BBOX[i]);
 					dbCtx.executeStatement(PRE_LOAD_SQL_WAY_BBOX[i]);
 				}
 			}
 			if (capabilityChecker.isWayLinestringSupported()) {
-				log.fine("Running pre-load linestring SQL statements.");
+				LOG.fine("Running pre-load linestring SQL statements.");
 				for (int i = 0; i < PRE_LOAD_SQL_WAY_LINESTRING.length; i++) {
-					log.finer("SQL: " + PRE_LOAD_SQL_WAY_LINESTRING[i]);
+					LOG.finer("SQL: " + PRE_LOAD_SQL_WAY_LINESTRING[i]);
 					dbCtx.executeStatement(PRE_LOAD_SQL_WAY_LINESTRING[i]);
 				}
 			}
-			log.fine("Pre-load SQL statements complete.");
-			log.fine("Loading data.");
+			LOG.fine("Pre-load SQL statements complete.");
+			LOG.fine("Loading data.");
 			
 			initialized = true;
 		}
@@ -842,7 +842,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	public void complete() {
 		initialize();
 		
-		log.fine("Flushing buffers.");
+		LOG.fine("Flushing buffers.");
 		
 		flushNodes(true);
 		flushNodeTags(true);
@@ -853,45 +853,45 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		flushRelationTags(true);
 		flushRelationMembers(true);
 		
-		log.fine("Data load complete.");
+		LOG.fine("Data load complete.");
 		
 		// Add all constraints and indexes.
-		log.fine("Running post-load SQL.");
+		LOG.fine("Running post-load SQL.");
 		for (int i = 0; i < POST_LOAD_SQL.length; i++) {
-			log.finer("SQL: " + POST_LOAD_SQL[i]);
+			LOG.finer("SQL: " + POST_LOAD_SQL[i]);
 			dbCtx.executeStatement(POST_LOAD_SQL[i]);
 		}
 		if (capabilityChecker.isWayBboxSupported()) {
-			log.fine("Running post-load bbox SQL statements.");
+			LOG.fine("Running post-load bbox SQL statements.");
 			if (!enableBboxBuilder) {
-				log.finer("SQL: " + POST_LOAD_SQL_POPULATE_WAY_BBOX);
+				LOG.finer("SQL: " + POST_LOAD_SQL_POPULATE_WAY_BBOX);
 				dbCtx.executeStatement(POST_LOAD_SQL_POPULATE_WAY_BBOX);
 			}
 			for (int i = 0; i < POST_LOAD_SQL_WAY_BBOX.length; i++) {
-				log.finer("SQL: " + POST_LOAD_SQL_WAY_BBOX[i]);
+				LOG.finer("SQL: " + POST_LOAD_SQL_WAY_BBOX[i]);
 				dbCtx.executeStatement(POST_LOAD_SQL_WAY_BBOX[i]);
 			}
 		}
 		if (capabilityChecker.isWayLinestringSupported()) {
-			log.fine("Running post-load linestring SQL statements.");
+			LOG.fine("Running post-load linestring SQL statements.");
 			if (!enableLinestringBuilder) {
-				log.finer("SQL: " + POST_LOAD_SQL_POPULATE_WAY_LINESTRING);
+				LOG.finer("SQL: " + POST_LOAD_SQL_POPULATE_WAY_LINESTRING);
 				dbCtx.executeStatement(POST_LOAD_SQL_POPULATE_WAY_LINESTRING);
 			}
 			for (int i = 0; i < POST_LOAD_SQL_WAY_LINESTRING.length; i++) {
-				log.finer("SQL: " + POST_LOAD_SQL_WAY_LINESTRING[i]);
+				LOG.finer("SQL: " + POST_LOAD_SQL_WAY_LINESTRING[i]);
 				dbCtx.executeStatement(POST_LOAD_SQL_WAY_LINESTRING[i]);
 			}
 		}
 		
-		log.fine("Committing changes.");
+		LOG.fine("Committing changes.");
 		dbCtx.commit();
 		
-		log.fine("Vacuuming database.");
+		LOG.fine("Vacuuming database.");
 		dbCtx.setAutoCommit(true);
 		dbCtx.executeStatement("VACUUM ANALYZE");
 		
-		log.fine("Complete.");
+		LOG.fine("Complete.");
 	}
 	
 	

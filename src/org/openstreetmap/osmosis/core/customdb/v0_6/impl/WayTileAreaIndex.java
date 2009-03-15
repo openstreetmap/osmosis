@@ -18,7 +18,7 @@ import org.openstreetmap.osmosis.core.store.UnsignedIntegerComparator;
  * different sized tiles for different sized ways.
  */
 public class WayTileAreaIndex implements Completable {
-	private static final int[] masks = {0xFFFFFFFF, 0xFFFFFFF0, 0xFFFFFF00, 0xFFFF0000, 0xFF000000, 0x00000000};
+	private static final int[] MASKS = {0xFFFFFFFF, 0xFFFFFFF0, 0xFFFFFF00, 0xFFFF0000, 0xFF000000, 0x00000000};
 	private List<IndexStore<Integer, IntegerLongIndexElement>> indexes;
 	
 	
@@ -29,9 +29,9 @@ public class WayTileAreaIndex implements Completable {
 	 *            Manages and provides files for writing indexes to.
 	 */
 	public WayTileAreaIndex(DatasetStoreFileManager fileManager) {
-		indexes = new ArrayList<IndexStore<Integer, IntegerLongIndexElement>>(masks.length);
+		indexes = new ArrayList<IndexStore<Integer, IntegerLongIndexElement>>(MASKS.length);
 		
-		for (int i = 0; i < masks.length; i++) {
+		for (int i = 0; i < MASKS.length; i++) {
 			indexes.add(
 				new IndexStore<Integer, IntegerLongIndexElement>(
 					IntegerLongIndexElement.class,
@@ -56,12 +56,12 @@ public class WayTileAreaIndex implements Completable {
 	public void write(long wayId, int minimumTile, int maximumTile) {
 		// Write a new index element for the tile to the tile index that matches
 		// the granularity of the way.
-		for (int i = 0; i < masks.length; i++) {
+		for (int i = 0; i < MASKS.length; i++) {
 			int mask;
 			int maskedMinimum;
 			int maskedMaximum;
 			
-			mask = masks[i];
+			mask = MASKS[i];
 			maskedMinimum = mask & minimumTile;
 			maskedMaximum = mask & maximumTile;
 			
@@ -89,14 +89,14 @@ public class WayTileAreaIndex implements Completable {
 		try {
 			List<IndexStoreReader<Integer, IntegerLongIndexElement>> indexReaders;
 			
-			indexReaders = new ArrayList<IndexStoreReader<Integer, IntegerLongIndexElement>>(masks.length);
+			indexReaders = new ArrayList<IndexStoreReader<Integer, IntegerLongIndexElement>>(MASKS.length);
 			for (IndexStore<Integer, IntegerLongIndexElement> index : indexes) {
 				indexReaders.add(releasableContainer.add(index.createReader()));
 			}
 			
 			releasableContainer.clear();
 			
-			return new WayTileAreaIndexReader(masks, indexReaders);
+			return new WayTileAreaIndexReader(MASKS, indexReaders);
 			
 		} finally {
 			releasableContainer.release();

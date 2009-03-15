@@ -43,7 +43,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
  */
 public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	
-	private static final Logger log = Logger.getLogger(DatasetStore.class.getName());
+	private static final Logger LOG = Logger.getLogger(DatasetStore.class.getName());
 	
 	
 	private SortedEntityPipeValidator sortedPipeValidator;
@@ -309,8 +309,8 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 				
 			} catch (NoSuchIndexElementException e) {
 				// Ignore any referential integrity problems.
-				if (log.isLoggable(Level.FINER)) {
-					log.finest(
+				if (LOG.isLoggable(Level.FINER)) {
+					LOG.finest(
 						"Ignoring referential integrity problem where way " + wayId +
 						" refers to non-existent node " + nodeId + "."
 					);

@@ -52,7 +52,7 @@ import org.openstreetmap.osmosis.core.store.UpcastIterator;
  */
 public class PostgreSqlDatasetContext implements DatasetContext {
 	
-	private static final Logger log = Logger.getLogger(PostgreSqlDatasetContext.class.getName());
+	private static final Logger LOG = Logger.getLogger(PostgreSqlDatasetContext.class.getName());
 	
 	
 	private DatabaseLoginCredentials loginCredentials;
@@ -243,13 +243,13 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 		try {
 			dbCtx.executeStatement("SET enable_hashjoin = false");
 			// Create a temporary table capable of holding node ids.
-			log.finer("Creating node id temp table.");
+			LOG.finer("Creating node id temp table.");
 			dbCtx.executeStatement("CREATE TEMPORARY TABLE box_node_list (id bigint PRIMARY KEY) ON COMMIT DROP");
 			// Create a temporary table capable of holding way ids.
-			log.finer("Creating way id temp table.");
+			LOG.finer("Creating way id temp table.");
 			dbCtx.executeStatement("CREATE TEMPORARY TABLE box_way_list (id bigint PRIMARY KEY) ON COMMIT DROP");
 			// Create a temporary table capable of holding relation ids.
-			log.finer("Creating relation id temp table.");
+			LOG.finer("Creating relation id temp table.");
 			dbCtx.executeStatement("CREATE TEMPORARY TABLE box_relation_list (id bigint PRIMARY KEY) ON COMMIT DROP");
 			
 			// Build a polygon representing the bounding box.
@@ -271,7 +271,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			memberTypeValueMapper = new MemberTypeValueMapper();
 			
 			// Select all nodes inside the box into the node temp table.
-			log.finer("Selecting all node ids inside bounding box.");
+			LOG.finer("Selecting all node ids inside bounding box.");
 			preparedStatement = dbCtx.prepareStatement(
 					"INSERT INTO box_node_list SELECT id FROM nodes WHERE (geom && ?)");
 			prmIndex = 1;
@@ -279,11 +279,11 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			rowCount = preparedStatement.executeUpdate();
 			preparedStatement.close();
 			preparedStatement = null;
-			log.finer(rowCount + " rows affected.");
+			LOG.finer(rowCount + " rows affected.");
 			
 			// Select all ways inside the bounding box into the way temp table.
 			if (capabilityChecker.isWayLinestringSupported()) {
-				log.finer("Selecting all way ids inside bounding box using way linestring geometry.");
+				LOG.finer("Selecting all way ids inside bounding box using way linestring geometry.");
 				// We have full way geometry available so select ways
 				// overlapping the requested bounding box.
 				preparedStatement = dbCtx.prepareStatement(
@@ -294,7 +294,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 				preparedStatement.setObject(prmIndex++, new PGgeometry(bboxPolygon));
 				
 			} else if (capabilityChecker.isWayBboxSupported()) {
-				log.finer("Selecting all way ids inside bounding box using dynamically built" +
+				LOG.finer("Selecting all way ids inside bounding box using dynamically built" +
 						" way linestring with way bbox indexing.");
 				// The inner query selects the way id and node coordinates for
 				// all ways constrained by the way bounding box which is
@@ -320,7 +320,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 				preparedStatement.setObject(prmIndex++, new PGgeometry(bboxPolygon));
 				
 			} else {
-				log.finer("Selecting all way ids inside bounding box using already selected nodes.");
+				LOG.finer("Selecting all way ids inside bounding box using already selected nodes.");
 				// No way bbox support is available so select ways containing
 				// the selected nodes.
 				preparedStatement = dbCtx.prepareStatement(
@@ -332,10 +332,10 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			rowCount = preparedStatement.executeUpdate();
 			preparedStatement.close();
 			preparedStatement = null;
-			log.finer(rowCount + " rows affected.");
+			LOG.finer(rowCount + " rows affected.");
 			
 			// Select all relations containing the nodes or ways into the relation table.
-			log.finer("Selecting all relation ids containing selected nodes or ways.");
+			LOG.finer("Selecting all relation ids containing selected nodes or ways.");
 			preparedStatement = dbCtx.prepareStatement(
 				"INSERT INTO box_relation_list (" +
 				"SELECT rm.relation_id AS relation_id FROM relation_members rm" +
@@ -351,12 +351,12 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			rowCount = preparedStatement.executeUpdate();
 			preparedStatement.close();
 			preparedStatement = null;
-			log.finer(rowCount + " rows affected.");
+			LOG.finer(rowCount + " rows affected.");
 			
 			// Include all relations containing the current relations into the
 			// relation table and repeat until no more inclusions occur.
 			do {
-				log.finer("Selecting parent relations of selected relations.");
+				LOG.finer("Selecting parent relations of selected relations.");
 				preparedStatement = dbCtx.prepareStatement(
 					"INSERT INTO box_relation_list " +
 					"SELECT rm.relation_id AS relation_id FROM relation_members rm" +
@@ -369,12 +369,12 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 				rowCount = preparedStatement.executeUpdate();
 				preparedStatement.close();
 				preparedStatement = null;
-				log.finer(rowCount + " rows affected.");
+				LOG.finer(rowCount + " rows affected.");
 			} while (rowCount > 0);
 			
 			// If complete ways is set, select all nodes contained by the ways into the node temp table.
 			if (completeWays) {
-				log.finer("Selecting all node ids for selected ways.");
+				LOG.finer("Selecting all node ids for selected ways.");
 				preparedStatement = dbCtx.prepareStatement(
 					"INSERT INTO box_node_list " +
 					"SELECT wn.node_id AS id FROM way_nodes wn INNER JOIN box_way_list bw ON wn.way_id = bw.id " +
@@ -385,11 +385,11 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 				rowCount = preparedStatement.executeUpdate();
 				preparedStatement.close();
 				preparedStatement = null;
-				log.finer(rowCount + " rows affected.");
+				LOG.finer(rowCount + " rows affected.");
 			}
 			
 			// Create iterators for the selected records for each of the entity types.
-			log.finer("Iterating over results.");
+			LOG.finer("Iterating over results.");
 			resultSets = new ArrayList<ReleasableIterator<EntityContainer>>();
 			resultSets.add(
 					new UpcastIterator<EntityContainer, BoundContainer>(

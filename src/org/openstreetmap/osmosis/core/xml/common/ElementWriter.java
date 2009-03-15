@@ -25,20 +25,20 @@ public class ElementWriter {
 	/**
 	 * Defines the characters that must be replaced by an encoded string when writing to XML.
 	 */
-	private static final Map<Character, String> xmlEncoding;
+	private static final Map<Character, String> XML_ENCODING;
 	
 	static {
 		// Define all the characters and their encodings.
-		xmlEncoding = new HashMap<Character, String>();
+		XML_ENCODING = new HashMap<Character, String>();
 		
-		xmlEncoding.put(new Character('<'), "&lt;");
-		xmlEncoding.put(new Character('>'), "&gt;");
-		xmlEncoding.put(new Character('"'), "&quot;");
-		xmlEncoding.put(new Character('\''), "&apos;");
-		xmlEncoding.put(new Character('&'), "&amp;");
-		xmlEncoding.put(new Character('\n'), "&#xA;");
-		xmlEncoding.put(new Character('\r'), "&#xD;");
-		xmlEncoding.put(new Character('\t'), "&#x9;");
+		XML_ENCODING.put(new Character('<'), "&lt;");
+		XML_ENCODING.put(new Character('>'), "&gt;");
+		XML_ENCODING.put(new Character('"'), "&quot;");
+		XML_ENCODING.put(new Character('\''), "&apos;");
+		XML_ENCODING.put(new Character('&'), "&amp;");
+		XML_ENCODING.put(new Character('\n'), "&#xA;");
+		XML_ENCODING.put(new Character('\r'), "&#xD;");
+		XML_ENCODING.put(new Character('\t'), "&#x9;");
 	}
 	
 	
@@ -110,7 +110,7 @@ public class ElementWriter {
 		StringBuffer buffer = null;
 		
 		for (int i = 0; i < data.length(); ++i) {
-			String replacement = xmlEncoding.get(new Character(data.charAt(i)));
+			String replacement = XML_ENCODING.get(new Character(data.charAt(i)));
 			
 			if (replacement != null) {
 				if (buffer == null)

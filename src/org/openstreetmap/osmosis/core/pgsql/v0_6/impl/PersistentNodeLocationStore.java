@@ -23,7 +23,7 @@ import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  */
 public class PersistentNodeLocationStore implements NodeLocationStore {
 	
-	private static final Logger log = Logger.getLogger(PersistentNodeLocationStore.class.getName());
+	private static final Logger LOG = Logger.getLogger(PersistentNodeLocationStore.class.getName());
 	private static final int ZERO_BUFFER_SIZE = 1024 * 1024;
 	private static final int NODE_DATA_SIZE = 9;
 	
@@ -237,7 +237,7 @@ public class PersistentNodeLocationStore implements NodeLocationStore {
 		
 		if (nodeStorageFile != null) {
 			if (!nodeStorageFile.delete()) {
-				log.warning("Unable to delete file " + nodeStorageFile);
+				LOG.warning("Unable to delete file " + nodeStorageFile);
 			}
 			nodeStorageFile = null;
 		}

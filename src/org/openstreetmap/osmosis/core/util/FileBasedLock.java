@@ -20,7 +20,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  */
 public class FileBasedLock implements Releasable {
 	
-	private static final Logger log = Logger.getLogger(FileBasedLock.class.getName());
+	private static final Logger LOG = Logger.getLogger(FileBasedLock.class.getName());
 	
 	private File lockFile;
 	private FileOutputStream outputStream;
@@ -105,7 +105,7 @@ public class FileBasedLock implements Releasable {
 			try {
 				outputStream.close();
 			} catch (Exception e) {
-				log.warning("Unable to close lock stream on file " + lockFile + ".");
+				LOG.warning("Unable to close lock stream on file " + lockFile + ".");
 			} finally {
 				outputStream = null;
 				fileChannel= null;

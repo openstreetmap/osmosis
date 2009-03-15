@@ -16,7 +16,7 @@ import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  * @author Brett Henderson
  */
 public class InMemoryNodeLocationStore implements NodeLocationStore {
-	private static final Logger log = Logger.getLogger(InMemoryNodeLocationStore.class.getName());
+	private static final Logger LOG = Logger.getLogger(InMemoryNodeLocationStore.class.getName());
 	
 	private static final int NODE_DATA_SIZE = 9;
 	private static final int BUFFER_ELEMENT_COUNT = 131072;
@@ -44,7 +44,7 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 	 *            The logging level to write the summary at.
 	 */
 	private void logMemoryConsumption(Level level) {
-		if (log.isLoggable(level)) {
+		if (LOG.isLoggable(level)) {
 			Runtime runtime;
 			long totalUsed;
 			double percentageUsed;
@@ -59,12 +59,12 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 			totalUsed = ((long) buffers.size()) * BUFFER_SIZE / 1048576;
 			maxMemory = runtime.maxMemory() / 1048576;
 			
-			log.log(
+			LOG.log(
 				level,
 				"The store contains " + buffers.size() +
 				" buffers of " + (BUFFER_SIZE / 1024) + "KB, total " +
 				totalUsed + "MB.");
-			log.log(
+			LOG.log(
 				level,
 				"The JVM is using " + percentageFormat.format(percentageUsed) +
 				"% of the maximum " + maxMemory +

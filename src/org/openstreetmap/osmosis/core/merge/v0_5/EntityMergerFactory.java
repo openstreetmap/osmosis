@@ -21,13 +21,13 @@ public class EntityMergerFactory extends TaskManagerFactory {
 	private static final String ARG_CONFLICT_RESOLUTION_METHOD = "conflictResolutionMethod";
 	private static final String DEFAULT_CONFLICT_RESOLUTION_METHOD = "timestamp";
 	private static final String ALTERNATIVE_CONFLICT_RESOLUTION_METHOD_1 = "lastSource";
-	private static final Map<String, ConflictResolutionMethod> conflictResolutionMethodMap =
+	private static final Map<String, ConflictResolutionMethod> CONFLICT_RESOLUTION_METHOD_MAP =
 		new HashMap<String, ConflictResolutionMethod>();
 	
 	static {
-		conflictResolutionMethodMap.put(
+		CONFLICT_RESOLUTION_METHOD_MAP.put(
 				DEFAULT_CONFLICT_RESOLUTION_METHOD, ConflictResolutionMethod.Timestamp);
-		conflictResolutionMethodMap.put(
+		CONFLICT_RESOLUTION_METHOD_MAP.put(
 				ALTERNATIVE_CONFLICT_RESOLUTION_METHOD_1, ConflictResolutionMethod.LatestSource);
 	}
 	
@@ -42,7 +42,7 @@ public class EntityMergerFactory extends TaskManagerFactory {
 		conflictResolutionMethod = getStringArgument(
 				taskConfig, ARG_CONFLICT_RESOLUTION_METHOD, DEFAULT_CONFLICT_RESOLUTION_METHOD);
 		
-		if (!conflictResolutionMethodMap.containsKey(conflictResolutionMethod)) {
+		if (!CONFLICT_RESOLUTION_METHOD_MAP.containsKey(conflictResolutionMethod)) {
 			throw new OsmosisRuntimeException(
 					"Argument " + ARG_CONFLICT_RESOLUTION_METHOD + " for task " + taskConfig.getId() +
 					" has value \"" + conflictResolutionMethod + "\" which is unrecognised.");
@@ -50,7 +50,7 @@ public class EntityMergerFactory extends TaskManagerFactory {
 		
 		return new MultiSinkRunnableSourceManager(
 			taskConfig.getId(),
-			new EntityMerger(conflictResolutionMethodMap.get(conflictResolutionMethod), 10),
+			new EntityMerger(CONFLICT_RESOLUTION_METHOD_MAP.get(conflictResolutionMethod), 10),
 			taskConfig.getPipeArgs()
 		);
 	}

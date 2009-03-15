@@ -43,7 +43,7 @@ import org.openstreetmap.osmosis.core.store.UpcastIterator;
  */
 public class DatasetStoreReader implements DatasetContext {
 	
-	private static final Logger log = Logger.getLogger(DatasetStoreReader.class.getName());
+	private static final Logger LOG = Logger.getLogger(DatasetStoreReader.class.getName());
 	
 	private NodeStorageContainer nodeStorageContainer;
 	private WayStorageContainer wayStorageContainer;
@@ -344,8 +344,8 @@ public class DatasetStoreReader implements DatasetContext {
 						nodes.add(getNode(wayNode.getNodeId()));
 					} catch (NoSuchIndexElementException e) {
 						// Ignore any referential integrity problems.
-						if (log.isLoggable(Level.FINER)) {
-							log.finest(
+						if (LOG.isLoggable(Level.FINER)) {
+							LOG.finest(
 								"Ignoring referential integrity problem where way " + wayId +
 								" refers to non-existent node " + wayNode.getNodeId() + "."
 							);
@@ -493,7 +493,7 @@ public class DatasetStoreReader implements DatasetContext {
 			double left, double right, double top, double bottom, boolean completeWays) {
 		BoundingBoxContext bboxCtx;
 		
-		log.fine("Beginning bounding box iteration.");
+		LOG.fine("Beginning bounding box iteration.");
 		
 		// Create the bounding box context to manage the data associated with
 		// this call.
@@ -502,28 +502,28 @@ public class DatasetStoreReader implements DatasetContext {
 		// Verify that the input coordinates create a positive box, if not just
 		// return an empty result set.
 		if (left > right || bottom > top) {
-			log.fine("Bounding box is zero size, returning an empty iterator.");
+			LOG.fine("Bounding box is zero size, returning an empty iterator.");
 			return new EmptyIterator<EntityContainer>();
 		}
 		
-		log.fine("Populating node ids.");
+		LOG.fine("Populating node ids.");
 		populateNodeIds(bboxCtx);
 		
 		if (isTileWayIndexAvailable()) {
-			log.fine("Populating way ids using tile-way index.");
+			LOG.fine("Populating way ids using tile-way index.");
 			populateWayIdsUsingTileWayIndex(bboxCtx, completeWays);
 		} else {
-			log.fine("Populating way ids using node-way index.");
+			LOG.fine("Populating way ids using node-way index.");
 			populateWayIdsUsingNodeWayIndex(bboxCtx, completeWays);
 		}
 		
-		log.fine("Populating relation ids.");
+		LOG.fine("Populating relation ids.");
 		populateRelationIds(bboxCtx);
 		
 		// Now we need to add any external nodes that might have been included outside the bounding box.
 		bboxCtx.nodeIdTracker.setAll(bboxCtx.externalNodeIdTracker);
 		
-		log.fine("Iterating all entities matching result ids.");
+		LOG.fine("Iterating all entities matching result ids.");
 		return new ResultIterator(bboxCtx.nodeIdTracker, bboxCtx.wayIdTracker, bboxCtx.relationIdTracker);
 	}
 	

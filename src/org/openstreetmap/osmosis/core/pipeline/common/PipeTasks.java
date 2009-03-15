@@ -20,7 +20,7 @@ import org.openstreetmap.osmosis.core.task.common.Task;
  * @author Brett Henderson
  */
 public class PipeTasks {
-	private static final Logger log = Logger.getLogger(PipeTasks.class.getName());
+	private static final Logger LOG = Logger.getLogger(PipeTasks.class.getName());
 	
 	private Map<String, Task> namedTasks;
 	private Deque<Task> defaultTasks;
@@ -55,8 +55,8 @@ public class PipeTasks {
 		
 		namedTasks.put(pipeName, task);
 		
-		if (log.isLoggable(Level.FINE)) {
-			log.fine("Task \"" + taskId + "\" produced pipe \"" + pipeName + "\"");
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Task \"" + taskId + "\" produced pipe \"" + pipeName + "\"");
 		}
 	}
 	
@@ -74,8 +74,8 @@ public class PipeTasks {
 		// Push the new task onto the top of the default pipe stack.
 		defaultTasks.push(task);
 		
-		if (log.isLoggable(Level.FINE)) {
-			log.fine("Task \"" + taskId + "\" produced unnamed pipe stored at level "
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Task \"" + taskId + "\" produced unnamed pipe stored at level "
 					+ defaultTasks.size() + " in the default pipe stack.");
 		}
 	}
@@ -123,8 +123,8 @@ public class PipeTasks {
 					"Task " + taskId + " does not support data provided by input pipe " + pipeName + ".");
 		}
 		
-		if (log.isLoggable(Level.FINE)) {
-			log.fine("Task \"" + taskId + "\" consumed pipe \"" + pipeName + "\"");
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Task \"" + taskId + "\" consumed pipe \"" + pipeName + "\"");
 		}
 		
 		return task;
@@ -159,8 +159,8 @@ public class PipeTasks {
 					+ (defaultTasks.size() + 1) + " in the default pipe stack.");
 		}
 		
-		if (log.isLoggable(Level.FINE)) {
-			log.fine("Task \"" + taskId + "\" consumed unnamed pipe stored at level "
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Task \"" + taskId + "\" consumed unnamed pipe stored at level "
 					+ defaultTaskCount + " in the default pipe stack.");
 		}
 		

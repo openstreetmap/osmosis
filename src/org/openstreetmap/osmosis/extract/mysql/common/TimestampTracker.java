@@ -24,7 +24,7 @@ import org.openstreetmap.osmosis.core.xml.common.DateParser;
  */
 public class TimestampTracker {
 	
-	private static final Logger log = Logger.getLogger(TimestampTracker.class.getName());
+	private static final Logger LOG = Logger.getLogger(TimestampTracker.class.getName());
 	
 	
 	private File timestampFile;
@@ -105,7 +105,7 @@ public class TimestampTracker {
 				try {
 				fileReader.close();
 				} catch (Exception e) {
-					log.log(Level.WARNING, "Unable to close time file " + timestampFile + ".", e);
+					LOG.log(Level.WARNING, "Unable to close time file " + timestampFile + ".", e);
 				}
 			}
 		}
@@ -141,7 +141,7 @@ public class TimestampTracker {
 				try {
 					fileWriter.close();
 				} catch (Exception e) {
-					log.log(Level.WARNING, "Unable to close temporary time file " + newTimestampFile + ".", e);
+					LOG.log(Level.WARNING, "Unable to close temporary time file " + newTimestampFile + ".", e);
 				}
 			}
 		}

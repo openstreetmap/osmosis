@@ -89,7 +89,7 @@ public class TaskRegistrar {
 	/**
 	 * Out logger for debug and error -output.
 	 */
-	private static final Logger log = Logger.getLogger(TaskRegistrar.class.getName());
+	private static final Logger LOG = Logger.getLogger(TaskRegistrar.class.getName());
 
 	/**
 	 * The register containing all known task manager factories.
@@ -206,10 +206,10 @@ public class TaskRegistrar {
 		factoryRegister.register("report-integrity",
 				new org.openstreetmap.osmosis.core.report.v0_5.IntegrityReporterFactory());
 		factoryRegister.register("ri", new org.openstreetmap.osmosis.core.report.v0_5.IntegrityReporterFactory());
-		factoryRegister.register("log-progress",
+		factoryRegister.register("LOG-progress",
 				new org.openstreetmap.osmosis.core.progress.v0_5.EntityProgressLoggerFactory());
 		factoryRegister.register("lp", new org.openstreetmap.osmosis.core.progress.v0_5.EntityProgressLoggerFactory());
-		factoryRegister.register("log-progress-change",
+		factoryRegister.register("LOG-progress-change",
 				new org.openstreetmap.osmosis.core.progress.v0_5.ChangeProgressLoggerFactory());
 		factoryRegister.register("lpc", new org.openstreetmap.osmosis.core.progress.v0_5.ChangeProgressLoggerFactory());
 		factoryRegister.register("tee", new org.openstreetmap.osmosis.core.tee.v0_5.EntityTeeFactory());
@@ -307,9 +307,9 @@ public class TaskRegistrar {
 				new org.openstreetmap.osmosis.core.report.v0_5.EntityReporterFactory());
 		factoryRegister.register("report-integrity-0.5",
 				new org.openstreetmap.osmosis.core.report.v0_5.IntegrityReporterFactory());
-		factoryRegister.register("log-progress-0.5",
+		factoryRegister.register("LOG-progress-0.5",
 				new org.openstreetmap.osmosis.core.progress.v0_5.EntityProgressLoggerFactory());
-		factoryRegister.register("log-change-progress-0.5",
+		factoryRegister.register("LOG-change-progress-0.5",
 				new org.openstreetmap.osmosis.core.progress.v0_5.ChangeProgressLoggerFactory());
 		factoryRegister.register("tee-0.5", new org.openstreetmap.osmosis.core.tee.v0_5.EntityTeeFactory());
 		factoryRegister.register("tee-change-0.5", new org.openstreetmap.osmosis.core.tee.v0_5.ChangeTeeFactory());
@@ -369,8 +369,8 @@ public class TaskRegistrar {
 		factoryRegister.register("bounding-polygon-0.6", new PolygonFilterFactory());
 		factoryRegister.register("report-entity-0.6", new EntityReporterFactory());
 		factoryRegister.register("report-integrity-0.6", new IntegrityReporterFactory());
-		factoryRegister.register("log-progress-0.6", new EntityProgressLoggerFactory());
-		factoryRegister.register("log-change-progress-0.6", new ChangeProgressLoggerFactory());
+		factoryRegister.register("LOG-progress-0.6", new EntityProgressLoggerFactory());
+		factoryRegister.register("LOG-change-progress-0.6", new ChangeProgressLoggerFactory());
 		factoryRegister.register("tee-0.6", new EntityTeeFactory());
 		factoryRegister.register("tee-change-0.6", new ChangeTeeFactory());
 		factoryRegister.register("write-customdb-0.6", new WriteDatasetFactory());
@@ -412,15 +412,15 @@ public class TaskRegistrar {
 		pluginManager = ObjectFactory.newInstance().createManager();
 		
 		// Search known locations for plugin files.
-		log.fine("Searching for JPF plugins.");
+		LOG.fine("Searching for JPF plugins.");
 		List<PluginLocation> locations = gatherJpfPlugins();
 		
 		// Register the core plugin.
-		log.fine("Registering the core plugin.");
+		LOG.fine("Registering the core plugin.");
 		registerCorePlugin(pluginManager);
 		
 		// Register all located plugins.
-		log.fine("Registering the extension plugins.");
+		LOG.fine("Registering the extension plugins.");
 		if (locations.size() == 0) {
 			// There are no plugins available so stop processing here.
 		   return;
@@ -428,7 +428,7 @@ public class TaskRegistrar {
 		registerJpfPlugins(pluginManager, locations);
 		
 		// Initialise all of the plugins that have been registered.
-		log.fine("Activating the plugins.");
+		LOG.fine("Activating the plugins.");
 		// load plugins for the task-extension-point
 		PluginDescriptor core = pluginManager.getRegistry()
 				.getPluginDescriptor("org.openstreetmap.osmosis.core.plugin.Core");
@@ -464,7 +464,7 @@ public class TaskRegistrar {
 			
 			// Get the plugin configuration file.
 			core = getClass().getResource("/org/openstreetmap/osmosis/core/plugin/plugin.xml");
-			log.finest("Plugin URL: " + core);
+			LOG.finest("Plugin URL: " + core);
 			
 			// Register the core plugin in the plugin registry.
 			pluginManager.getRegistry().register(new URL[] { core });
@@ -532,14 +532,14 @@ public class TaskRegistrar {
 		};
 		List<PluginLocation> locations = new LinkedList<PluginLocation>();
 		for (File pluginDir : pluginsDirs) {
-			log.finer("Loading plugins in " + pluginDir.getAbsolutePath());
+			LOG.finer("Loading plugins in " + pluginDir.getAbsolutePath());
 			if (!pluginDir.exists()) {
 				continue;
 			}
 			File[] plugins = pluginDir.listFiles(pluginFileNameFilter);
 			try {
 				for (int i = 0; i < plugins.length; i++) {
-					log.finest("Found plugin " + plugins[i].getAbsolutePath());
+					LOG.finest("Found plugin " + plugins[i].getAbsolutePath());
 					locations.add(StandardPluginLocation.create(plugins[i]));
 				}
 			} catch (MalformedURLException e) {

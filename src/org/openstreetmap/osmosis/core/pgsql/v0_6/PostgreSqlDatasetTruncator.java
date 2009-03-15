@@ -18,7 +18,7 @@ import org.openstreetmap.osmosis.core.task.common.RunnableTask;
  */
 public class PostgreSqlDatasetTruncator implements RunnableTask {
 	
-	private static final Logger log = Logger.getLogger(PostgreSqlDatasetTruncator.class.getName());
+	private static final Logger LOG = Logger.getLogger(PostgreSqlDatasetTruncator.class.getName());
 	
 	
 	// These tables will be truncated.
@@ -57,23 +57,23 @@ public class PostgreSqlDatasetTruncator implements RunnableTask {
 		try {
 			schemaVersionValidator.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
 			
-			log.fine("Truncating tables.");
+			LOG.fine("Truncating tables.");
 			for (int i = 0; i < SQL_TABLE_NAMES.length; i++) {
 				if (dbCtx.doesTableExist(SQL_TABLE_NAMES[i])) {
-					log.finer("Truncating table " + SQL_TABLE_NAMES[i] + ".");
+					LOG.finer("Truncating table " + SQL_TABLE_NAMES[i] + ".");
 					dbCtx.executeStatement("TRUNCATE " + SQL_TABLE_NAMES[i]);
 				} else {
-					log.finer("Skipping table " + SQL_TABLE_NAMES[i] + " which doesn't exist in the current schema.");
+					LOG.finer("Skipping table " + SQL_TABLE_NAMES[i] + " which doesn't exist in the current schema.");
 				}
 			}
 			
-			log.fine("Committing changes.");
+			LOG.fine("Committing changes.");
 			dbCtx.commit();
 			
-			log.fine("Vacuuming database.");
+			LOG.fine("Vacuuming database.");
 			dbCtx.setAutoCommit(true);
 			dbCtx.executeStatement("VACUUM ANALYZE");
-			log.fine("Complete.");
+			LOG.fine("Complete.");
 			
 		} finally {
 			dbCtx.release();

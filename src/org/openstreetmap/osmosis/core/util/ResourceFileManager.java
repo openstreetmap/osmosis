@@ -18,7 +18,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  */
 public class ResourceFileManager {
 	
-	private static final Logger log = Logger.getLogger(ResourceFileManager.class.getName());
+	private static final Logger LOG = Logger.getLogger(ResourceFileManager.class.getName());
 	
 	
 	/**
@@ -67,14 +67,14 @@ public class ResourceFileManager {
 				try {
 					is.close();
 				} catch (Exception e) {
-					log.warning("Unable to close input stream for resource " + sourceResource);
+					LOG.warning("Unable to close input stream for resource " + sourceResource);
 				}
 			}
 			if (os != null) {
 				try {
 					os.close();
 				} catch (Exception e) {
-					log.warning("Unable to close output stream for file " + destinationFile);
+					LOG.warning("Unable to close output stream for file " + destinationFile);
 				}
 			}
 		}

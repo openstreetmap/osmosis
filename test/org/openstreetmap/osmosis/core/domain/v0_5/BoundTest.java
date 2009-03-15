@@ -509,20 +509,20 @@ public class BoundTest {
 		final double left2 = 145.0;
 		final double top2 = 45.0;
 		final double bottom2 = 25.0;
-		final double MIN_LONGITUDE = -180.0;
-		final double MAX_LONGITUDE = 180.0;
+		final double minLongitude = -180.0;
+		final double maxLongitude = 180.0;
 
 		Bound b1 = new Bound(right1, left1, top1, bottom1, "");
 		Bound b2 = new Bound(right2, left2, top2, bottom2, "");
 		Bound b = b1.union(b2);
-		assertTrue(Double.compare(b.getRight(), MAX_LONGITUDE) == 0
-		        && Double.compare(b.getLeft(), MIN_LONGITUDE) == 0
+		assertTrue(Double.compare(b.getRight(), maxLongitude) == 0
+		        && Double.compare(b.getLeft(), minLongitude) == 0
 		        && Double.compare(b.getTop(), top2) == 0
 		        && Double.compare(b.getBottom(), bottom2) == 0);
 		// Test it with arguments swapped
 		b = b2.union(b1);
-		assertTrue(Double.compare(b.getRight(), MAX_LONGITUDE) == 0
-		        && Double.compare(b.getLeft(), MIN_LONGITUDE) == 0
+		assertTrue(Double.compare(b.getRight(), maxLongitude) == 0
+		        && Double.compare(b.getLeft(), minLongitude) == 0
 		        && Double.compare(b.getTop(), top2) == 0
 		        && Double.compare(b.getBottom(), bottom2) == 0);
 	}
@@ -565,12 +565,12 @@ public class BoundTest {
 		final double right = -179.0;
 		final double top = 1.0;
 		final double bottom = -1.0;
-		final double MIN_LONGITUDE = -180.0;
-		final double MAX_LONGITUDE = 180.0;
+		final double minLongitude = -180.0;
+		final double maxLongitude = 180.0;
 		boolean expected1found = false, expected2found = false;
 		int cnt = 0;
-		Bound expected1 = new Bound(MAX_LONGITUDE, left, top, bottom, "");
-		Bound expected2 = new Bound(right, MIN_LONGITUDE, top, bottom, "");
+		Bound expected1 = new Bound(maxLongitude, left, top, bottom, "");
+		Bound expected2 = new Bound(right, minLongitude, top, bottom, "");
 
 		for (Bound b : new Bound(right, left, top, bottom, "").toSimpleBound()) {
 			cnt++;

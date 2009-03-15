@@ -14,9 +14,9 @@ import org.junit.Test;
  */
 public abstract class IdTrackerBase {
 
-	private static final int testVal1 = -100;
-	private static final int testVal2 = 0;
-	private static final int testVal3 = 100;
+	private static final int TEST_VAL_1 = -100;
+	private static final int TEST_VAL_2 = 0;
+	private static final int TEST_VAL_3 = 100;
 
 	private IdTracker idt;
 
@@ -49,8 +49,8 @@ public abstract class IdTrackerBase {
 	 */
 	@Test
 	public final void testSet1() {
-		idt.set(testVal1);
-		assertTrue(idt.get(testVal1));
+		idt.set(TEST_VAL_1);
+		assertTrue(idt.get(TEST_VAL_1));
 	}
 
 
@@ -59,12 +59,12 @@ public abstract class IdTrackerBase {
 	 */
 	@Test
 	public final void testSet2() {
-		idt.set(testVal1);
-		idt.set(testVal2);
-		idt.set(testVal3);
-		assertTrue(idt.get(testVal1));
-		assertTrue(idt.get(testVal2));
-		assertTrue(idt.get(testVal3));
+		idt.set(TEST_VAL_1);
+		idt.set(TEST_VAL_2);
+		idt.set(TEST_VAL_3);
+		assertTrue(idt.get(TEST_VAL_1));
+		assertTrue(idt.get(TEST_VAL_2));
+		assertTrue(idt.get(TEST_VAL_3));
 	}
 
 
@@ -73,12 +73,12 @@ public abstract class IdTrackerBase {
 	 */
 	@Test
 	public final void testSet3() {
-		idt.set(testVal3);
-		idt.set(testVal2);
-		idt.set(testVal1);
-		assertTrue(idt.get(testVal1));
-		assertTrue(idt.get(testVal2));
-		assertTrue(idt.get(testVal3));
+		idt.set(TEST_VAL_3);
+		idt.set(TEST_VAL_2);
+		idt.set(TEST_VAL_1);
+		assertTrue(idt.get(TEST_VAL_1));
+		assertTrue(idt.get(TEST_VAL_2));
+		assertTrue(idt.get(TEST_VAL_3));
 	}
 
 
@@ -87,12 +87,12 @@ public abstract class IdTrackerBase {
 	 */
 	@Test
 	public final void testSet4() {
-		idt.set(testVal2);
-		idt.set(testVal3);
-		idt.set(testVal1);
-		assertTrue(idt.get(testVal1));
-		assertTrue(idt.get(testVal2));
-		assertTrue(idt.get(testVal3));
+		idt.set(TEST_VAL_2);
+		idt.set(TEST_VAL_3);
+		idt.set(TEST_VAL_1);
+		assertTrue(idt.get(TEST_VAL_1));
+		assertTrue(idt.get(TEST_VAL_2));
+		assertTrue(idt.get(TEST_VAL_3));
 	}
 
 
@@ -101,13 +101,13 @@ public abstract class IdTrackerBase {
 	 */
 	@Test
 	public final void testSet5() {
-		idt.set(testVal1);
-		idt.set(testVal2);
-		idt.set(testVal3);
-		idt.set(testVal1);
-		assertTrue(idt.get(testVal1));
-		assertTrue(idt.get(testVal2));
-		assertTrue(idt.get(testVal3));
+		idt.set(TEST_VAL_1);
+		idt.set(TEST_VAL_2);
+		idt.set(TEST_VAL_3);
+		idt.set(TEST_VAL_1);
+		assertTrue(idt.get(TEST_VAL_1));
+		assertTrue(idt.get(TEST_VAL_2));
+		assertTrue(idt.get(TEST_VAL_3));
 	}
 
 
@@ -116,13 +116,13 @@ public abstract class IdTrackerBase {
 	 */
 	@Test
 	public final void testSet6() {
-		idt.set(testVal2);
-		assertTrue(idt.get(testVal2));
-		idt.set(testVal1);
-		idt.set(testVal3);
-		assertTrue(idt.get(testVal1));
-		assertTrue(idt.get(testVal2));
-		assertTrue(idt.get(testVal3));
+		idt.set(TEST_VAL_2);
+		assertTrue(idt.get(TEST_VAL_2));
+		idt.set(TEST_VAL_1);
+		idt.set(TEST_VAL_3);
+		assertTrue(idt.get(TEST_VAL_1));
+		assertTrue(idt.get(TEST_VAL_2));
+		assertTrue(idt.get(TEST_VAL_3));
 	}
 
 
@@ -136,8 +136,8 @@ public abstract class IdTrackerBase {
 			idt.set(i);
 		}
 		// This one should trigger the list growth
-		idt.set(testVal3);
-		assertTrue(idt.get(testVal3));
+		idt.set(TEST_VAL_3);
+		assertTrue(idt.get(TEST_VAL_3));
 		for (int i = 0; i < listSize; i++) {
 			assertTrue(idt.get(i));
 		}

@@ -21,7 +21,7 @@ import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
  * @author Brett Henderson
  */
 public class DatabaseContext {
-	private static final Logger log = Logger.getLogger(DatabaseContext.class.getName());
+	private static final Logger LOG = Logger.getLogger(DatabaseContext.class.getName());
 	
 	
 	static {
@@ -63,7 +63,7 @@ public class DatabaseContext {
 	private Connection getConnection() {
 		if (connection == null) {
 			try {
-				log.finer("Creating a new database connection.");
+				LOG.finer("Creating a new database connection.");
 				
 				connection = DriverManager.getConnection(
 					"jdbc:postgresql://" + loginCredentials.getHost() + "/"
@@ -91,7 +91,7 @@ public class DatabaseContext {
 	 */
 	public void executeStatement(String sql) {
 		try {
-			log.finest("Executing statement {" + sql + "}");
+			LOG.finest("Executing statement {" + sql + "}");
 			
 			if (statement != null) {
 				statement.close();
@@ -118,7 +118,7 @@ public class DatabaseContext {
 		try {
 			PreparedStatement preparedStatement;
 			
-			log.finest("Creating prepared statement {" + sql + "}");
+			LOG.finest("Creating prepared statement {" + sql + "}");
 			
 			preparedStatement = getConnection().prepareStatement(sql);
 			
@@ -141,7 +141,7 @@ public class DatabaseContext {
 		try {
 			CallableStatement callableStatement;
 			
-			log.finest("Creating callable statement {" + sql + "}");
+			LOG.finest("Creating callable statement {" + sql + "}");
 			
 			callableStatement = getConnection().prepareCall(sql);
 			
@@ -162,7 +162,7 @@ public class DatabaseContext {
 		try {
 			Statement resultStatement;
 			
-			log.finest("Creating a new statement.");
+			LOG.finest("Creating a new statement.");
 			
 			resultStatement = getConnection().createStatement();
 			
@@ -186,7 +186,7 @@ public class DatabaseContext {
 		try {
 			ResultSet resultSet;
 			
-			log.finest("Executing query {" + sql + "}");
+			LOG.finest("Executing query {" + sql + "}");
 			
 			if (statement != null) {
 				statement.close();
@@ -220,7 +220,7 @@ public class DatabaseContext {
 		boolean result;
 		
 		try {
-			log.finest("Checking if column {" + columnName + "} in table {" + tableName + "} exists.");
+			LOG.finest("Checking if column {" + columnName + "} in table {" + tableName + "} exists.");
 			
 			resultSet = getConnection().getMetaData().getColumns(null, null, tableName, columnName);
 			result = resultSet.next();
@@ -257,7 +257,7 @@ public class DatabaseContext {
 		boolean result;
 		
 		try {
-			log.finest("Checking if table {" + tableName + "} exists.");
+			LOG.finest("Checking if table {" + tableName + "} exists.");
 			
 			resultSet = getConnection().getMetaData().getTables(null, null, tableName, new String[]{"TABLE"});
 			result = resultSet.next();
@@ -292,7 +292,7 @@ public class DatabaseContext {
 	public void setAutoCommit(boolean autoCommit) {
 		if (connection != null) {
 			try {
-				log.finest("Setting auto commit to " + autoCommit + ".");
+				LOG.finest("Setting auto commit to " + autoCommit + ".");
 				
 				connection.setAutoCommit(autoCommit);
 			} catch (SQLException e) {
@@ -309,7 +309,7 @@ public class DatabaseContext {
 	public void commit() {
 		if (connection != null) {
 			try {
-				log.finest("Committing changes.");
+				LOG.finest("Committing changes.");
 				
 				connection.commit();
 				
@@ -328,7 +328,7 @@ public class DatabaseContext {
 	public void release() {
 		if (connection != null) {
 			try {
-				log.finest("Closing the database connection.");
+				LOG.finest("Closing the database connection.");
 				
 				connection.close();
 				

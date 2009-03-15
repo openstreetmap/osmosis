@@ -61,7 +61,7 @@ public class FastXmlParser {
 	private static final String ATTRIBUTE_NAME_BOX = "box";
 	private static final String ATTRIBUTE_NAME_ORIGIN = "origin";
 	
-	private static final Logger log = Logger.getLogger(FastXmlParser.class.getName());
+	private static final Logger LOG = Logger.getLogger(FastXmlParser.class.getName());
 	
 	
 	/**
@@ -113,7 +113,7 @@ public class FastXmlParser {
 		int level = 0;
 
 		Location l = reader.getLocation();
-		log.warning(String.format(
+		LOG.warning(String.format(
 				"Unknown xml element %s. publicId=(%s), systemId=(%s), " + 
 				"lineNumber=%d, columnNumber=%d", 
 				reader.getName(), l.getPublicId(), l.getSystemId(), l.getLineNumber(), l.getColumnNumber()));
@@ -344,7 +344,7 @@ public class FastXmlParser {
 				fileVersion = reader.getAttributeValue(null, ATTRIBUTE_NAME_VERSION);
 
 				if (!XmlConstants.OSM_VERSION.equals(fileVersion)) {
-					log.warning(
+					LOG.warning(
 							"Expected version " + XmlConstants.OSM_VERSION
 							+ " but received " + fileVersion + "."
 					);

@@ -17,7 +17,7 @@ import org.openstreetmap.osmosis.core.task.v0_5.SinkSource;
  */
 public class EntityProgressLogger implements SinkSource {
 	
-	private static final Logger log = Logger.getLogger(EntityProgressLogger.class.getName());
+	private static final Logger LOG = Logger.getLogger(EntityProgressLogger.class.getName());
 	
 	private Sink sink;
 	private int interval;
@@ -78,7 +78,7 @@ public class EntityProgressLogger implements SinkSource {
 		entity = entityContainer.getEntity();
 		
 		if (updateRequired()) {
-			log.info("Processing " + entity.getType() + " " + entity.getId() + ".");
+			LOG.info("Processing " + entity.getType() + " " + entity.getId() + ".");
 		}
 		
 		sink.process(entityContainer);
@@ -89,11 +89,11 @@ public class EntityProgressLogger implements SinkSource {
 	 * {@inheritDoc}
 	 */
 	public void complete() {
-		log.info("Processing completion steps.");
+		LOG.info("Processing completion steps.");
 		
 		sink.complete();
 		
-		log.info("Processing complete.");
+		LOG.info("Processing complete.");
 	}
 	
 	

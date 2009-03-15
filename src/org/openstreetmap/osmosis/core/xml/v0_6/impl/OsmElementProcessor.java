@@ -18,7 +18,7 @@ import org.openstreetmap.osmosis.core.xml.common.ElementProcessor;
  */
 public class OsmElementProcessor extends SourceElementProcessor {
 	
-	private static final Logger log = Logger.getLogger(OsmElementProcessor.class.getName());
+	private static final Logger LOG = Logger.getLogger(OsmElementProcessor.class.getName());
 	
 	private static final String ELEMENT_NAME_BOUND = "bound";
 	private static final String ELEMENT_NAME_NODE = "node";
@@ -72,7 +72,7 @@ public class OsmElementProcessor extends SourceElementProcessor {
 			fileVersion = attributes.getValue(ATTRIBUTE_NAME_VERSION);
 			
 			if (!XmlConstants.OSM_VERSION.equals(fileVersion)) {
-				log.warning(
+				LOG.warning(
 					"Expected version " + XmlConstants.OSM_VERSION
 					+ " but received " + fileVersion + "."
 				);

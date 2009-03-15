@@ -44,7 +44,7 @@ import org.openstreetmap.osmosis.core.task.v0_5.Sink;
  */
 public class PostgreSqlWriter implements Sink, EntityProcessor {
 	
-	private static final Logger log = Logger.getLogger(PostgreSqlWriter.class.getName());
+	private static final Logger LOG = Logger.getLogger(PostgreSqlWriter.class.getName());
 	
 	
 	private static final String[] PRE_LOAD_SQL = {
@@ -304,13 +304,13 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 			singleRelationMemberStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_RELATION_MEMBER);
 			
 			// Drop all constraints and indexes.
-			log.fine("Running pre-load SQL statements.");
+			LOG.fine("Running pre-load SQL statements.");
 			for (int i = 0; i < PRE_LOAD_SQL.length; i++) {
-				log.finer("SQL: " + PRE_LOAD_SQL[i]);
+				LOG.finer("SQL: " + PRE_LOAD_SQL[i]);
 				dbCtx.executeStatement(PRE_LOAD_SQL[i]);
 			}
-			log.fine("Pre-load SQL statements complete.");
-			log.fine("Loading data.");
+			LOG.fine("Pre-load SQL statements complete.");
+			LOG.fine("Loading data.");
 			
 			initialized = true;
 		}
@@ -986,7 +986,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	public void complete() {
 		initialize();
 		
-		log.fine("Flushing buffers.");
+		LOG.fine("Flushing buffers.");
 		
 		flushNodes(true);
 		flushNodeTags(true);
@@ -997,19 +997,19 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		flushRelationTags(true);
 		flushRelationMembers(true);
 		
-		log.fine("Data load complete.");
+		LOG.fine("Data load complete.");
 		
 		// Add all constraints and indexes.
-		log.fine("Running post-load SQL.");
+		LOG.fine("Running post-load SQL.");
 		for (int i = 0; i < POST_LOAD_SQL.length; i++) {
-			log.finer("SQL: " + POST_LOAD_SQL[i]);
+			LOG.finer("SQL: " + POST_LOAD_SQL[i]);
 			dbCtx.executeStatement(POST_LOAD_SQL[i]);
 		}
-		log.fine("Post-load SQL complete.");
+		LOG.fine("Post-load SQL complete.");
 		
 		dbCtx.commit();
 		
-		log.fine("Commit complete");
+		LOG.fine("Commit complete");
 	}
 	
 	

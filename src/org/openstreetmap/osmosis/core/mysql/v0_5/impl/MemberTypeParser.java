@@ -16,12 +16,12 @@ import org.openstreetmap.osmosis.core.domain.v0_5.EntityType;
  */
 public class MemberTypeParser {
 	
-	private static final Map<String, EntityType> memberTypeMap = new HashMap<String, EntityType>();
+	private static final Map<String, EntityType> MEMBER_TYPE_MAP = new HashMap<String, EntityType>();
 	
 	static {
-		memberTypeMap.put("node", EntityType.Node);
-		memberTypeMap.put("way", EntityType.Way);
-		memberTypeMap.put("relation", EntityType.Relation);
+		MEMBER_TYPE_MAP.put("node", EntityType.Node);
+		MEMBER_TYPE_MAP.put("way", EntityType.Way);
+		MEMBER_TYPE_MAP.put("relation", EntityType.Relation);
 	}
 	
 	
@@ -34,8 +34,8 @@ public class MemberTypeParser {
 	 * @return A strongly typed entity type.
 	 */
 	public EntityType parse(String memberType) {
-		if (memberTypeMap.containsKey(memberType)) {
-			return memberTypeMap.get(memberType);
+		if (MEMBER_TYPE_MAP.containsKey(memberType)) {
+			return MEMBER_TYPE_MAP.get(memberType);
 		} else {
 			throw new OsmosisRuntimeException("The member type " + memberType + " is not recognised.");
 		}

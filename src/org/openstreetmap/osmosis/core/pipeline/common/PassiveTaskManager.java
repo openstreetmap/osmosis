@@ -12,7 +12,7 @@ import java.util.logging.Logger;
  * @author Brett Henderson
  */
 public abstract class PassiveTaskManager extends TaskManager {
-	private static final Logger log = Logger.getLogger(PassiveTaskManager.class.getName());
+	private static final Logger LOG = Logger.getLogger(PassiveTaskManager.class.getName());
 	
 	
 	/**
@@ -37,7 +37,7 @@ public abstract class PassiveTaskManager extends TaskManager {
 	@Override
 	public void execute() {
 		// Nothing to do for a sink because it passively receives data.
-		log.fine("Task " + getTaskId() + " is passive, no execution required.");
+		LOG.fine("Task " + getTaskId() + " is passive, no execution required.");
 	}
 	
 	
@@ -47,7 +47,7 @@ public abstract class PassiveTaskManager extends TaskManager {
 	@Override
 	public boolean waitForCompletion() {
 		// Nothing to do for a sink because it passively receives data.
-		log.fine("Task " + getTaskId() + " is passive, no completion wait required.");
+		LOG.fine("Task " + getTaskId() + " is passive, no completion wait required.");
 		
 		return true;
 	}

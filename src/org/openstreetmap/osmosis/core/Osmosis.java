@@ -16,7 +16,7 @@ import org.openstreetmap.osmosis.core.pipeline.common.Pipeline;
  * @author Brett Henderson
  */
 public class Osmosis {
-	private static final Logger log = Logger.getLogger(Osmosis.class.getName());
+	private static final Logger LOG = Logger.getLogger(Osmosis.class.getName());
 	
 	
 	/**
@@ -32,7 +32,7 @@ public class Osmosis {
 			System.exit(0);
 			
 		} catch (Throwable t) {
-			log.log(Level.SEVERE, "Execution aborted.", t);
+			LOG.log(Level.SEVERE, "Execution aborted.", t);
 		}
 		
 		System.exit(1);
@@ -69,26 +69,26 @@ public class Osmosis {
 		// Configure the new logging level.
 		configureLoggingLevel(commandLineParser.getLogLevel());
 		
-		log.info("Osmosis Version " + OsmosisConstants.VERSION);
+		LOG.info("Osmosis Version " + OsmosisConstants.VERSION);
 		taskRegistrar = new TaskRegistrar();
 		taskRegistrar.initialize(commandLineParser.getPlugins());
 		
 		pipeline = new Pipeline(taskRegistrar.getFactoryRegister());
 		
-		log.info("Preparing pipeline.");
+		LOG.info("Preparing pipeline.");
 		pipeline.prepare(commandLineParser.getTaskInfoList());
 		
-		log.info("Launching pipeline execution.");
+		LOG.info("Launching pipeline execution.");
 		pipeline.execute();
 		
-		log.info("Pipeline executing, waiting for completion.");
+		LOG.info("Pipeline executing, waiting for completion.");
 		pipeline.waitForCompletion();
 		
-		log.info("Pipeline complete.");
+		LOG.info("Pipeline complete.");
 		
 		finishTime = System.currentTimeMillis();
 		
-		log.info("Total execution time: " + (finishTime - startTime) + " milliseconds.");
+		LOG.info("Total execution time: " + (finishTime - startTime) + " milliseconds.");
 	}
 	
 	

@@ -41,7 +41,7 @@ import org.openstreetmap.osmosis.extract.mysql.common.TimestampTracker;
  */
 public class ChangeDownloader implements RunnableChangeSource {
 	
-	private static final Logger log = Logger.getLogger(ChangeDownloader.class.getName());
+	private static final Logger LOG = Logger.getLogger(ChangeDownloader.class.getName());
 	
 	
 	private static final String LOCK_FILE = "download.lock";
@@ -326,7 +326,7 @@ public class ChangeDownloader implements RunnableChangeSource {
 				
 				taskRunner = taskRunners.get(i);
 				
-				log.fine("Launching changeset worker + " + i + " in a new thread.");
+				LOG.fine("Launching changeset worker + " + i + " in a new thread.");
 				
 				taskRunner.start();
 			}
@@ -338,7 +338,7 @@ public class ChangeDownloader implements RunnableChangeSource {
 				
 				taskRunner = taskRunners.get(i);
 				
-				log.fine("Waiting for changeset worker " + i + " to complete.");
+				LOG.fine("Waiting for changeset worker " + i + " to complete.");
 				
 				try {
 					taskRunner.join();
@@ -347,7 +347,7 @@ public class ChangeDownloader implements RunnableChangeSource {
 				}
 				
 				if (!taskRunner.isSuccessful()) {
-					log.log(Level.SEVERE, "Changeset worker " + i + " failed", taskRunner.getException());
+					LOG.log(Level.SEVERE, "Changeset worker " + i + " failed", taskRunner.getException());
 					
 					tasksSuccessful = false;
 				}
@@ -361,7 +361,7 @@ public class ChangeDownloader implements RunnableChangeSource {
 		// Remove the temporary files.
 		for (File tmpFile : tmpFileList) {
 			if (!tmpFile.delete()) {
-				log.warning("Unable to delete file " + tmpFile.getName());
+				LOG.warning("Unable to delete file " + tmpFile.getName());
 			}
 		}
 		

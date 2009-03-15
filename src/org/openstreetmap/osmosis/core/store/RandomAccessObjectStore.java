@@ -24,7 +24,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Completable;
  */
 public class RandomAccessObjectStore<T extends Storeable> implements Completable {
 	
-	private static final Logger log = Logger.getLogger(RandomAccessObjectStore.class.getName());
+	private static final Logger LOG = Logger.getLogger(RandomAccessObjectStore.class.getName());
 	
 	private ObjectSerializationFactory serializationFactory;
 	private StorageStage stage;
@@ -237,7 +237,7 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 		
 		if (tempFile != null) {
 			if (!tempFile.delete()) {
-				log.warning("Unable to delete file " + tempFile);
+				LOG.warning("Unable to delete file " + tempFile);
 			}
 			tempFile = null;
 		}

@@ -67,7 +67,7 @@
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
         <!-- Osmosis.  Disabled temporarily. -->
-        <!--<module name="ConstantName"/>
+        <module name="ConstantName"/>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
         <module name="MemberName"/>
@@ -75,7 +75,7 @@
         <module name="PackageName"/>
         <module name="ParameterName"/>
         <module name="StaticVariableName"/>
-        <module name="TypeName"/>-->
+        <module name="TypeName"/>
 
 
         <!-- Checks for Headers                                -->

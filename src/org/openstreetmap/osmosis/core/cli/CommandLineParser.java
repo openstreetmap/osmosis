@@ -33,7 +33,7 @@ public class CommandLineParser {
 	/**
 	 * Defines the log levels supported from the command line.
 	 */
-	private static final Level [] logLevels = {
+	private static final Level [] LOG_LEVELS = {
 		Level.OFF,
 		Level.SEVERE,
 		Level.WARNING,
@@ -45,9 +45,9 @@ public class CommandLineParser {
 	
 	
 	/**
-	 * The index into the logLevels array for the default log level.
+	 * The index into the LOG_LEVELS array for the default log level.
 	 */
-	private static final int defaultLogLevelIndex = 3;
+	private static final int DEFAULT_LOG_LEVEL_INDEX = 3;
 	
 	
 	private List<TaskConfiguration> taskConfigList;
@@ -356,16 +356,16 @@ public class CommandLineParser {
 	public Level getLogLevel() {
 		int logLevelIndex;
 		
-		logLevelIndex = defaultLogLevelIndex + verboseValue - quietValue;
+		logLevelIndex = DEFAULT_LOG_LEVEL_INDEX + verboseValue - quietValue;
 		
 		if (logLevelIndex < 0) {
 			logLevelIndex = 0;
 		}
-		if (logLevelIndex >= logLevels.length) {
-			logLevelIndex = logLevels.length - 1;
+		if (logLevelIndex >= LOG_LEVELS.length) {
+			logLevelIndex = LOG_LEVELS.length - 1;
 		}
 		
-		return logLevels[logLevelIndex];
+		return LOG_LEVELS[logLevelIndex];
 	}
 	
 	
