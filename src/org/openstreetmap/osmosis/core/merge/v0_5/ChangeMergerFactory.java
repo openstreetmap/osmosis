@@ -44,8 +44,8 @@ public class ChangeMergerFactory extends TaskManagerFactory {
 		
 		if (!CONFLICT_RESOLUTION_METHOD_MAP.containsKey(conflictResolutionMethod)) {
 			throw new OsmosisRuntimeException(
-					"Argument " + ARG_CONFLICT_RESOLUTION_METHOD + " for task " + taskConfig.getId() +
-					" has value \"" + conflictResolutionMethod + "\" which is unrecognised.");
+					"Argument " + ARG_CONFLICT_RESOLUTION_METHOD + " for task " + taskConfig.getId()
+					+ " has value \"" + conflictResolutionMethod + "\" which is unrecognised.");
 		}
 		
 		return new MultiChangeSinkRunnableChangeSourceManager(

@@ -147,12 +147,10 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 		// lenient with error checking.
 		// It is also possible that a delete will come through for a
 		// previously deleted item which can be ignored.
-		if (
-				changeContainer.getAction().equals(ChangeAction.Create) ||
-				changeContainer.getAction().equals(ChangeAction.Modify)) {
+		if (changeContainer.getAction().equals(ChangeAction.Create)
+				|| changeContainer.getAction().equals(ChangeAction.Modify)) {
+			
 			sink.process(changeContainer.getEntityContainer());
-		} else {
-			// We don't need to do anything for delete.
 		}
 	}
 	
@@ -168,13 +166,10 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 		// The same entity exists in both sources therefore we are
 		// expecting a modify or delete. However a create is possible if the
 		// data is being re-applied so we need to be lenient.
-		if (
-				changeContainer.getAction().equals(ChangeAction.Create) ||
-				changeContainer.getAction().equals(ChangeAction.Modify)) {
-			sink.process(changeContainer.getEntityContainer());
+		if (changeContainer.getAction().equals(ChangeAction.Create)
+				|| changeContainer.getAction().equals(ChangeAction.Modify)) {
 			
-		} else if (changeContainer.getAction().equals(ChangeAction.Delete)) {
-			// We don't need to do anything for delete.
+			sink.process(changeContainer.getEntityContainer());
 		}
 	}
 

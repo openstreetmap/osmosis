@@ -60,8 +60,7 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 			destinationPostbox = postbox1;
 			break;
 		default:
-			throw new OsmosisRuntimeException("Sink instance " + instance
-					+ " is not valid.");
+			throw new OsmosisRuntimeException("Sink instance " + instance + " is not valid.");
 		}
 		
 		// Create a changesink pointing to the postbox.
@@ -122,8 +121,8 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 			
 			// We continue in the comparison loop while both sources still have data.
 			while (
-					(changeContainer0 != null || postbox0.hasNext()) &&
-					(changeContainer1 != null || postbox1.hasNext())) {
+					(changeContainer0 != null || postbox0.hasNext())
+					&& (changeContainer1 != null || postbox1.hasNext())) {
 				long comparisonResult;
 				
 				// Get the next input data where required.

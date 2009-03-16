@@ -90,8 +90,8 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
-				"Count query failed for " +
-				entityMapper.getEntityName() + " " + entityId + ".",
+				"Count query failed for "
+					+ entityMapper.getEntityName() + " " + entityId + ".",
 				e
 			);
 		} finally {
@@ -146,8 +146,8 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
-				"Query failed for " +
-				entityMapper.getEntityName() + " " + entityId + ".",
+				"Query failed for "
+					+ entityMapper.getEntityName() + " " + entityId + ".",
 				e
 			);
 		} finally {
@@ -211,8 +211,8 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
-				"Insert failed for " + entityMapper.getEntityName() +
-				" " + entity.getId() + ".",
+				"Insert failed for " + entityMapper.getEntityName()
+				+ " " + entity.getId() + ".",
 				e
 			);
 		}
@@ -245,9 +245,9 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
-				"Update failed for " +
-				entityMapper.getEntityName() + " " +
-				entity.getId() + ".",
+				"Update failed for "
+					+ entityMapper.getEntityName() + " "
+					+ entity.getId() + ".",
 				e
 			);
 		}
@@ -281,9 +281,9 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
-				"Delete failed for " +
-				entityMapper.getEntityName() + " "
-				+ entityId + ".",
+				"Delete failed for "
+					+ entityMapper.getEntityName() + " "
+					+ entityId + ".",
 				e
 			);
 		}

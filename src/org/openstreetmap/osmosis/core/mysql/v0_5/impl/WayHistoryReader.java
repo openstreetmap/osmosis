@@ -23,11 +23,11 @@ import org.openstreetmap.osmosis.core.mysql.common.DatabaseContext;
 public class WayHistoryReader extends BaseEntityReader<EntityHistory<Way>> {
 	private static final String SELECT_SQL =
 		"SELECT w.id AS id, w.timestamp AS timestamp, u.data_public, u.id AS user_id, u.display_name,"
-		+ " w.version AS version, w.visible AS visible" +
-		" FROM ways w" +
-		" LEFT OUTER JOIN users u ON w.user_id = u.id" +
-		" WHERE w.timestamp > ? AND w.timestamp <= ?" +
-		" ORDER BY w.id, w.version";
+		+ " w.version AS version, w.visible AS visible"
+		+ " FROM ways w"
+		+ " LEFT OUTER JOIN users u ON w.user_id = u.id"
+		+ " WHERE w.timestamp > ? AND w.timestamp <= ?"
+		+ " ORDER BY w.id, w.version";
 	
 	private Date intervalBegin;
 	private Date intervalEnd;

@@ -35,9 +35,9 @@ public class NodeTableReader extends BaseTableReader<Node> {
 		super(dbCtx);
 		
 		sql =
-			"SELECT n.id, n.user_id, n.user_name, n.tstamp, n.geom" +
-			" FROM nodes n" +
-			" ORDER BY n.id";
+			"SELECT n.id, n.user_id, n.user_name, n.tstamp, n.geom"
+			+ " FROM nodes n"
+			+ " ORDER BY n.id";
 	}
 	
 	
@@ -54,10 +54,10 @@ public class NodeTableReader extends BaseTableReader<Node> {
 		super(dbCtx);
 		
 		sql =
-			"SELECT n.id, n.user_name, n.tstamp, n.geom" +
-			" FROM nodes n" +
-			" INNER JOIN " + constraintTable + " c ON n.id = c.id" +
-			" ORDER BY n.id";
+			"SELECT n.id, n.user_name, n.tstamp, n.geom"
+			+ " FROM nodes n"
+			+ " INNER JOIN " + constraintTable + " c ON n.id = c.id"
+			+ " ORDER BY n.id";
 	}
 	
 	

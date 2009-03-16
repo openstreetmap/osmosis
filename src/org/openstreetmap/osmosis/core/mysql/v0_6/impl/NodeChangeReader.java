@@ -86,9 +86,9 @@ public class NodeChangeReader {
 		node = nodeHistory.getEntity();
 		
 		// Add all applicable tags to the node.
-		while (nodeTagHistoryReader.hasNext() &&
-				nodeTagHistoryReader.peekNext().getDbFeature().getEntityId() == node.getId() &&
-				nodeTagHistoryReader.peekNext().getVersion() == node.getVersion()) {
+		while (nodeTagHistoryReader.hasNext()
+				&& nodeTagHistoryReader.peekNext().getDbFeature().getEntityId() == node.getId()
+				&& nodeTagHistoryReader.peekNext().getVersion() == node.getVersion()) {
 			node.getTags().add(nodeTagHistoryReader.next().getDbFeature().getFeature());
 		}
 		
@@ -114,8 +114,8 @@ public class NodeChangeReader {
 		
 		// Skip over intermediate objects unless full history is required.
 		if (!fullHistory) {
-			while (nodeHistoryReader.hasNext() &&
-					(nodeHistoryReader.peekNext().getEntity().getId() == node.getId())) {
+			while (nodeHistoryReader.hasNext()
+					&& (nodeHistoryReader.peekNext().getEntity().getId() == node.getId())) {
 				mostRecentHistory = readNextNodeHistory();
 			}
 		}

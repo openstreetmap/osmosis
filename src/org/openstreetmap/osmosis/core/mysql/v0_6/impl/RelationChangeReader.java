@@ -108,9 +108,9 @@ public class RelationChangeReader {
 
 		// Add all applicable members to the relation.
 		relationMembers = new ArrayList<DbOrderedFeature<RelationMember>>();
-		while (relationMemberHistoryReader.hasNext() &&
-				relationMemberHistoryReader.peekNext().getDbFeature().getEntityId() == relation.getId() &&
-				relationMemberHistoryReader.peekNext().getVersion() == relation.getVersion()) {
+		while (relationMemberHistoryReader.hasNext()
+				&& relationMemberHistoryReader.peekNext().getDbFeature().getEntityId() == relation.getId()
+				&& relationMemberHistoryReader.peekNext().getVersion() == relation.getVersion()) {
 			relationMembers.add(relationMemberHistoryReader.next().getDbFeature());
 		}
 		// The underlying query sorts member references by relation id but not
@@ -121,9 +121,9 @@ public class RelationChangeReader {
 		}
 		
 		// Add all applicable tags to the relation.
-		while (relationTagHistoryReader.hasNext() &&
-				relationTagHistoryReader.peekNext().getDbFeature().getEntityId() == relation.getId() &&
-				relationTagHistoryReader.peekNext().getVersion() == relation.getVersion()) {
+		while (relationTagHistoryReader.hasNext()
+				&& relationTagHistoryReader.peekNext().getDbFeature().getEntityId() == relation.getId()
+				&& relationTagHistoryReader.peekNext().getVersion() == relation.getVersion()) {
 			relation.getTags().add(relationTagHistoryReader.next().getDbFeature().getFeature());
 		}
 		
@@ -149,8 +149,8 @@ public class RelationChangeReader {
 
 		// Skip over intermediate objects unless full history is required.
 		if (!fullHistory) {
-			while (relationHistoryReader.hasNext() &&
-					(relationHistoryReader.peekNext().getEntity().getId() == relation.getId())) {
+			while (relationHistoryReader.hasNext()
+					&& (relationHistoryReader.peekNext().getEntity().getId() == relation.getId())) {
 				mostRecentHistory = readNextRelationHistory();
 			}
 		}

@@ -35,8 +35,8 @@ public class EntityTableReader<T extends Entity> extends BaseTableReader<T> {
 		this.entityMapper = entityBuilder;
 		
 		sql =
-			entityBuilder.getSqlSelect(false, false) +
-			" ORDER BY e.id";
+			entityBuilder.getSqlSelect(false, false)
+			+ " ORDER BY e.id";
 	}
 	
 	
@@ -57,9 +57,9 @@ public class EntityTableReader<T extends Entity> extends BaseTableReader<T> {
 		this.entityMapper = entityBuilder;
 		
 		sql =
-			entityBuilder.getSqlSelect(false, false) +
-			" INNER JOIN " + constraintTable + " c ON e.id = c.id" +
-			" ORDER BY e.id";
+			entityBuilder.getSqlSelect(false, false)
+			+ " INNER JOIN " + constraintTable + " c ON e.id = c.id"
+			+ " ORDER BY e.id";
 	}
 	
 	

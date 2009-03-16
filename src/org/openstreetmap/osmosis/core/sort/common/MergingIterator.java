@@ -44,7 +44,7 @@ public class MergingIterator<DataType> implements ReleasableIterator<DataType> {
 		if (sourceData == null) {
 			// Get the first entity from each source.  Delete any empty sources.
 			sourceData = new ArrayList<DataType>(sources.size());
-			for (int sourceIndex = 0; sourceIndex < sources.size(); ) {
+			for (int sourceIndex = 0; sourceIndex < sources.size();) {
 				ReleasableIterator<DataType> source;
 				
 				source = sources.get(sourceIndex);

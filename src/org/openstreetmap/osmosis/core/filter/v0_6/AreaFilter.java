@@ -183,7 +183,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			filteredWay = way.getWriteableInstance();
 			
 			// Remove node references for nodes that are unavailable.
-			for (Iterator<WayNode> i = filteredWay.getWayNodes().iterator(); i.hasNext(); ) {
+			for (Iterator<WayNode> i = filteredWay.getWayNodes().iterator(); i.hasNext();) {
 				WayNode nodeReference = i.next();
 				
 				if (!availableNodes.get(nodeReference.getNodeId())) {
@@ -260,7 +260,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		    filteredRelation = relation.getWriteableInstance();
 		    
 		    // Remove members for entities that are unavailable.
-		    for (Iterator<RelationMember> i = filteredRelation.getMembers().iterator(); i.hasNext(); ) {
+		    for (Iterator<RelationMember> i = filteredRelation.getMembers().iterator(); i.hasNext();) {
 		    	RelationMember member = i.next();
 		    	EntityType memberType;
 		    	long memberId;

@@ -22,17 +22,17 @@ import org.openstreetmap.osmosis.core.mysql.common.DatabaseContext;
  */
 public class EntityTagHistoryReader extends BaseTableReader<EntityHistory<DBEntityTag>> {
 	private static final String SELECT_SQL_1 =
-		"SELECT et.id AS entity_id, et.k, et.v, et.version" +
-		" FROM ";
+		"SELECT et.id AS entity_id, et.k, et.v, et.version"
+		+ " FROM ";
 	private static final String SELECT_SQL_2 =
-		" et" +
-		" INNER JOIN (" +
-		"   SELECT id, MAX(version) as version" +
-		"   FROM ";
+		" et"
+		+ " INNER JOIN ("
+		+ "   SELECT id, MAX(version) as version"
+		+ "   FROM ";
 	private static final String SELECT_SQL_3 =
-		"   WHERE timestamp > ? AND timestamp <= ?" +
-		"   GROUP BY id" +
-		" ) entityList ON et.id = entityList.id AND et.version = entityList.version";
+		"   WHERE timestamp > ? AND timestamp <= ?"
+		+ "   GROUP BY id"
+		+ " ) entityList ON et.id = entityList.id AND et.version = entityList.version";
 	
 	private String parentTableName;
 	private String tagTableName;

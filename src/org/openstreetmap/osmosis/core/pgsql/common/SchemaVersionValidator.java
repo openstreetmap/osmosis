@@ -80,8 +80,8 @@ public class SchemaVersionValidator {
 				
 				if (dbVersion != expectedVersion) {
 					throw new OsmosisRuntimeException(
-						"The database schema version of " + dbVersion +
-						" does not match the expected version of " + expectedVersion + "."
+						"The database schema version of " + dbVersion
+						+ " does not match the expected version of " + expectedVersion + "."
 					);
 				}
 				

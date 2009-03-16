@@ -103,9 +103,9 @@ public class WayChangeReader {
 		
 		// Add all applicable node references to the way.
 		wayNodes = new ArrayList<DbOrderedFeature<WayNode>>();
-		while (wayNodeHistoryReader.hasNext() &&
-				wayNodeHistoryReader.peekNext().getDbFeature().getEntityId() == way.getId() &&
-				wayNodeHistoryReader.peekNext().getVersion() == way.getVersion()) {
+		while (wayNodeHistoryReader.hasNext()
+				&& wayNodeHistoryReader.peekNext().getDbFeature().getEntityId() == way.getId()
+				&& wayNodeHistoryReader.peekNext().getVersion() == way.getVersion()) {
 			wayNodes.add(wayNodeHistoryReader.next().getDbFeature());
 		}
 		// The underlying query sorts node references by way id but not
@@ -116,9 +116,9 @@ public class WayChangeReader {
 		}
 		
 		// Add all applicable tags to the way.
-		while (wayTagHistoryReader.hasNext() &&
-				wayTagHistoryReader.peekNext().getDbFeature().getEntityId() == way.getId() &&
-				wayTagHistoryReader.peekNext().getVersion() == way.getVersion()) {
+		while (wayTagHistoryReader.hasNext()
+				&& wayTagHistoryReader.peekNext().getDbFeature().getEntityId() == way.getId()
+				&& wayTagHistoryReader.peekNext().getVersion() == way.getVersion()) {
 			way.getTags().add(wayTagHistoryReader.next().getDbFeature().getFeature());
 		}
 		
@@ -144,8 +144,8 @@ public class WayChangeReader {
 
 		// Skip over intermediate objects unless full history is required.
 		if (!fullHistory) {
-			while (wayHistoryReader.hasNext() &&
-					(wayHistoryReader.peekNext().getEntity().getId() == way.getId())) {
+			while (wayHistoryReader.hasNext()
+					&& (wayHistoryReader.peekNext().getEntity().getId() == way.getId())) {
 				mostRecentHistory = readNextWayHistory();
 			}
 		}

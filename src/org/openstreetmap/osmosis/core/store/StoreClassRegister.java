@@ -49,8 +49,8 @@ public class StoreClassRegister {
 			
 			if (idSequence >= Byte.MAX_VALUE) {
 				throw new OsmosisRuntimeException(
-					"This serialisation implementation only supports " +
-					Byte.MAX_VALUE + " classes within a single stream."
+					"This serialisation implementation only supports "
+						+ Byte.MAX_VALUE + " classes within a single stream."
 				);
 			}
 			

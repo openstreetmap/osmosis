@@ -17,24 +17,24 @@ import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
  */
 public class NodeDao extends EntityDao<Node> {
 	private static final String SQL_UPDATE_WAY_BBOX =
-		"UPDATE ways w SET bbox = (" +
-		" SELECT Envelope(Collect(n.geom))" +
-		" FROM nodes n INNER JOIN way_nodes wn ON wn.node_id = n.id" +
-		" WHERE wn.way_id = w.id" +
-		" )" +
-		" WHERE w.id IN (" +
-		" SELECT w.id FROM ways w INNER JOIN way_nodes wn ON w.id = wn.way_id WHERE wn.node_id = ? GROUP BY w.id" +
-		" )";
+		"UPDATE ways w SET bbox = ("
+		+ " SELECT Envelope(Collect(n.geom))"
+		+ " FROM nodes n INNER JOIN way_nodes wn ON wn.node_id = n.id"
+		+ " WHERE wn.way_id = w.id"
+		+ " )"
+		+ " WHERE w.id IN ("
+		+ " SELECT w.id FROM ways w INNER JOIN way_nodes wn ON w.id = wn.way_id WHERE wn.node_id = ? GROUP BY w.id"
+		+ " )";
 	private static final String SQL_UPDATE_WAY_LINESTRING =
-		"UPDATE ways w SET linestring = (" +
-		" SELECT MakeLine(c.geom) AS way_line FROM (" +
-		" SELECT n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id" +
-		" WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id" +
-		" ) c" +
-		" )" +
-		" WHERE w.id IN (" +
-		" SELECT w.id FROM ways w INNER JOIN way_nodes wn ON w.id = wn.way_id WHERE wn.node_id = ? GROUP BY w.id" +
-		" )";
+		"UPDATE ways w SET linestring = ("
+		+ " SELECT MakeLine(c.geom) AS way_line FROM ("
+		+ " SELECT n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id"
+		+ " WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id"
+		+ " ) c"
+		+ " )"
+		+ " WHERE w.id IN ("
+		+ " SELECT w.id FROM ways w INNER JOIN way_nodes wn ON w.id = wn.way_id WHERE wn.node_id = ? GROUP BY w.id"
+		+ " )";
 	
 	
 	private DatabaseCapabilityChecker capabilityChecker;

@@ -94,16 +94,16 @@ public class RelationChangeReader {
 		relation = relationHistory.getEntity();
 
 		// Add all applicable member references to the relation.
-		while (relationMemberHistoryReader.hasNext() &&
-				relationMemberHistoryReader.peekNext().getEntity().getRelationId() == relation.getId() &&
-				relationMemberHistoryReader.peekNext().getVersion() == relationHistory.getVersion()) {
+		while (relationMemberHistoryReader.hasNext()
+				&& relationMemberHistoryReader.peekNext().getEntity().getRelationId() == relation.getId()
+				&& relationMemberHistoryReader.peekNext().getVersion() == relationHistory.getVersion()) {
 			relation.addMember(relationMemberHistoryReader.next().getEntity().getRelationMember());
 		}
 		
 		// Add all applicable tags to the relation.
-		while (relationTagHistoryReader.hasNext() &&
-				relationTagHistoryReader.peekNext().getEntity().getEntityId() == relation.getId() &&
-				relationTagHistoryReader.peekNext().getVersion() == relationHistory.getVersion()) {
+		while (relationTagHistoryReader.hasNext()
+				&& relationTagHistoryReader.peekNext().getEntity().getEntityId() == relation.getId()
+				&& relationTagHistoryReader.peekNext().getVersion() == relationHistory.getVersion()) {
 			relation.addTag(relationTagHistoryReader.next().getEntity().getTag());
 		}
 		
@@ -125,8 +125,8 @@ public class RelationChangeReader {
 		mostRecentHistory = readNextRelationHistory();
 		createdPreviously = (mostRecentHistory.getVersion() > 1);
 		
-		while (relationHistoryReader.hasNext() &&
-				(relationHistoryReader.peekNext().getEntity().getId() == mostRecentHistory.getEntity().getId())) {
+		while (relationHistoryReader.hasNext()
+				&& (relationHistoryReader.peekNext().getEntity().getId() == mostRecentHistory.getEntity().getId())) {
 			mostRecentHistory = readNextRelationHistory();
 		}
 		

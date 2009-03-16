@@ -133,9 +133,9 @@ public class PersistentNodeLocationStore implements NodeLocationStore {
 		// We can only add nodes in sorted order.
 		if (nodeId <= lastNodeId) {
 			throw new OsmosisRuntimeException(
-				"The node id of " + nodeId +
-				" must be greater than the previous id of " +
-				lastNodeId + "."
+				"The node id of " + nodeId
+				+ " must be greater than the previous id of "
+				+ lastNodeId + "."
 			);
 		}
 		lastNodeId = nodeId;
@@ -167,8 +167,8 @@ public class PersistentNodeLocationStore implements NodeLocationStore {
 			
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException(
-				"Unable to write node location data to node storage file " +
-				nodeStorageFile + ".",
+				"Unable to write node location data to node storage file "
+					+ nodeStorageFile + ".",
 				e
 			);
 		}

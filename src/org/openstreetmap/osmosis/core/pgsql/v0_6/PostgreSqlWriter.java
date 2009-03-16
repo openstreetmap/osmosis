@@ -94,17 +94,17 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"CREATE INDEX idx_ways_linestring ON ways USING gist (linestring)"
 	};
 	private static final String POST_LOAD_SQL_POPULATE_WAY_BBOX =
-		"UPDATE ways SET bbox = (" +
-		"SELECT Envelope(Collect(geom)) FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id" +
-		" WHERE way_nodes.way_id = ways.id" +
-		")";
+		"UPDATE ways SET bbox = ("
+		+ "SELECT Envelope(Collect(geom)) FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id"
+		+ " WHERE way_nodes.way_id = ways.id"
+		+ ")";
 	private static final String POST_LOAD_SQL_POPULATE_WAY_LINESTRING =
-		"UPDATE ways w SET linestring = (" +
-		"SELECT MakeLine(c.geom) AS way_line FROM (" +
-		"SELECT n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id" +
-		" WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id" +
-		") c" +
-		")";
+		"UPDATE ways w SET linestring = ("
+		+ "SELECT MakeLine(c.geom) AS way_line FROM ("
+		+ "SELECT n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id"
+		+ " WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id"
+		+ ") c"
+		+ ")";
 	
 	// These constants define how many rows of each data type will be inserted
 	// with single insert statements.

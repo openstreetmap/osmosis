@@ -81,7 +81,7 @@ public class CommandLineParser {
 		globalOptions = new ArrayList<GlobalOptionConfiguration>();
 		
 		// Process the command line arguments to build all nodes in the pipeline.
-		for (int i = 0; i < programArgs.length; ) {
+		for (int i = 0; i < programArgs.length;) {
 			String arg;
 			
 			arg = programArgs[i];
@@ -303,10 +303,10 @@ public class CommandLineParser {
 				// Add pipeline arguments to pipeArgs, all other arguments to taskArgs.
 				// A pipeline arg is inPipe, inPipe.x, outPipe or outPipe.x.
 				if (
-						PipelineConstants.IN_PIPE_ARGUMENT_PREFIX.equals(argName) ||
-						argName.indexOf(PipelineConstants.IN_PIPE_ARGUMENT_PREFIX + ".") == 0 ||
-						PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX.equals(argName) ||
-						argName.indexOf(PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX + ".") == 0) {
+						PipelineConstants.IN_PIPE_ARGUMENT_PREFIX.equals(argName)
+						|| argName.indexOf(PipelineConstants.IN_PIPE_ARGUMENT_PREFIX + ".") == 0
+						|| PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX.equals(argName)
+						|| argName.indexOf(PipelineConstants.OUT_PIPE_ARGUMENT_PREFIX + ".") == 0) {
 					pipeArgs.put(argName, argValue);
 				} else {
 					taskArgs.put(argName, argValue);
@@ -315,8 +315,8 @@ public class CommandLineParser {
 			} else {
 				if (defaultArgIndex >= 0) {
 					throw new OsmosisRuntimeException(
-							"Only one default (un-named) argument can exist per task.  Arguments " +
-							(i + 1) + " and " + (defaultArgIndex + 1) + " have no name.");
+							"Only one default (un-named) argument can exist per task.  Arguments "
+							+ (i + 1) + " and " + (defaultArgIndex + 1) + " have no name.");
 				}
 				
 				defaultArg = arg;

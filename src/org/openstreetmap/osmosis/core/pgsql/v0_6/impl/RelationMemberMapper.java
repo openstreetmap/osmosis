@@ -160,8 +160,8 @@ public class RelationMemberMapper extends EntityFeatureMapper<DbOrderedFeature<R
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
-				"Unable to populate relation member parameters for relation " +
-				entityFeature.getEntityId() + ".",
+				"Unable to populate relation member parameters for relation "
+					+ entityFeature.getEntityId() + ".",
 				e
 			);
 		}

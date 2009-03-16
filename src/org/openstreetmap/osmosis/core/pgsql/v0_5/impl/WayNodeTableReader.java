@@ -31,9 +31,9 @@ public class WayNodeTableReader extends BaseTableReader<DBWayNode> {
 		super(dbCtx);
 		
 		sql =
-			"SELECT wn.way_id, wn.node_id, wn.sequence_id" +
-			" FROM way_nodes wn" +
-			" ORDER BY wn.way_id";
+			"SELECT wn.way_id, wn.node_id, wn.sequence_id"
+			+ " FROM way_nodes wn"
+			+ " ORDER BY wn.way_id";
 	}
 	
 	
@@ -50,10 +50,10 @@ public class WayNodeTableReader extends BaseTableReader<DBWayNode> {
 		super(dbCtx);
 		
 		sql =
-			"SELECT wn.way_id, wn.node_id, wn.sequence_id" +
-			" FROM way_nodes wn" +
-			" INNER JOIN " + constraintTable + " c ON wn.way_id = c.id" +
-			" ORDER BY wn.way_id";
+			"SELECT wn.way_id, wn.node_id, wn.sequence_id"
+			+ " FROM way_nodes wn"
+			+ " INNER JOIN " + constraintTable + " c ON wn.way_id = c.id"
+			+ " ORDER BY wn.way_id";
 	}
 	
 	

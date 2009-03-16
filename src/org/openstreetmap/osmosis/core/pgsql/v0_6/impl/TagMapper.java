@@ -149,8 +149,8 @@ public class TagMapper extends EntityFeatureMapper<DbFeature<Tag>> {
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
-				"Unable to populate tag parameters for entity " +
-				parentEntityName + " " + entityFeature.getEntityId() + "."
+				"Unable to populate tag parameters for entity "
+					+ parentEntityName + " " + entityFeature.getEntityId() + "."
 			);
 		}
 	}

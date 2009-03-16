@@ -346,8 +346,8 @@ public class DatasetStoreReader implements DatasetContext {
 						// Ignore any referential integrity problems.
 						if (LOG.isLoggable(Level.FINER)) {
 							LOG.finest(
-								"Ignoring referential integrity problem where way " + wayId +
-								" refers to non-existent node " + wayNode.getNodeId() + "."
+								"Ignoring referential integrity problem where way " + wayId
+								+ " refers to non-existent node " + wayNode.getNodeId() + "."
 							);
 						}
 					}
@@ -458,7 +458,7 @@ public class DatasetStoreReader implements DatasetContext {
 				relationIdIterator.release();
 			}
 		}
-		for (boolean moreParents = true; moreParents; ) {
+		for (boolean moreParents = true; moreParents;) {
 			// If parents of current relations are found, this flag will be set
 			// triggering another round of searching.
 			moreParents = false;

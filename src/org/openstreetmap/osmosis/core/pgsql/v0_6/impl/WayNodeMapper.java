@@ -145,8 +145,8 @@ public class WayNodeMapper extends EntityFeatureMapper<DbOrderedFeature<WayNode>
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
-				"Unable to populate way node parameters for way " +
-				entityFeature.getEntityId() + ".",
+				"Unable to populate way node parameters for way "
+					+ entityFeature.getEntityId() + ".",
 				e
 			);
 		}

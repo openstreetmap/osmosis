@@ -114,8 +114,8 @@ public class FastXmlParser {
 
 		Location l = reader.getLocation();
 		LOG.warning(String.format(
-				"Unknown xml element %s. publicId=(%s), systemId=(%s), " + 
-				"lineNumber=%d, columnNumber=%d", 
+				"Unknown xml element %s. publicId=(%s), systemId=(%s), "
+				+ "lineNumber=%d, columnNumber=%d", 
 				reader.getName(), l.getPublicId(), l.getSystemId(), l.getLineNumber(), l.getColumnNumber()));
 		
 		do {

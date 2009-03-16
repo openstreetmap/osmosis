@@ -23,16 +23,16 @@ public class UserManager implements Releasable {
 	private static final String SELECT_SQL_USER_EXISTS =
 		"SELECT Count(id) AS userCount FROM users WHERE id = ?";
 	private static final String INSERT_SQL_USER =
-		"INSERT INTO users (" +
-		"id, email, active, pass_crypt," +
-		" creation_time, display_name, data_public," +
-		" description, home_lat, home_lon, home_zoom," +
-		" nearby, pass_salt" +
-		") VALUES (" +
-		"?, ?, 1, '00000000000000000000000000000000'," +
-		" NOW(), ?, ?," +
-		" ?, 0, 0, 3," +
-		" 50, '00000000')";
+		"INSERT INTO users ("
+		+ "id, email, active, pass_crypt,"
+		+ " creation_time, display_name, data_public,"
+		+ " description, home_lat, home_lon, home_zoom,"
+		+ " nearby, pass_salt"
+		+ ") VALUES ("
+		+ "?, ?, 1, '00000000000000000000000000000000',"
+		+ " NOW(), ?, ?,"
+		+ " ?, 0, 0, 3,"
+		+ " 50, '00000000')";
 	private static final String UPDATE_SQL_USER =
 		"UPDATE users SET display_name = ? WHERE id = ?";
 	

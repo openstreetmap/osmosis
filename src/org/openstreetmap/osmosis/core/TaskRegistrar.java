@@ -444,8 +444,8 @@ public class TaskRegistrar {
 				ClassLoader classLoader = pluginManager.getPluginClassLoader(descr);
 				loadPluginClass(ext.getParameter("class").valueAsString(), classLoader);
 			} catch (PluginLifecycleException e) {
-				throw new OsmosisRuntimeException("Cannot load JPF-plugin '" + ext.getId() + "' for extensionpoint '"
-						+ ext.getExtendedPointId() + "'", e);
+				throw new OsmosisRuntimeException("Cannot load JPF-plugin '" + ext.getId()
+						+ "' for extensionpoint '" + ext.getExtendedPointId() + "'", e);
 			}
 		}
 	}
@@ -467,7 +467,7 @@ public class TaskRegistrar {
 			LOG.finest("Plugin URL: " + core);
 			
 			// Register the core plugin in the plugin registry.
-			pluginManager.getRegistry().register(new URL[] { core });
+			pluginManager.getRegistry().register(new URL[] {core});
 			
 			// Get the plugin descriptor from the registry.
 			coreDescriptor = pluginManager.getRegistry().getPluginDescriptor(

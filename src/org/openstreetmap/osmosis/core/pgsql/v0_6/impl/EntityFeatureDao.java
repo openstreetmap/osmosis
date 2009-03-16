@@ -163,9 +163,9 @@ public class EntityFeatureDao<Tef extends Storeable, Tdb extends DbFeature<Tef>>
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
-				"Delete failed for " +
-				entityFeatureBuilder.getEntityName() + " "
-				+ entityId + "."
+				"Delete failed for "
+					+ entityFeatureBuilder.getEntityName() + " "
+					+ entityId + "."
 			);
 		}
 	}

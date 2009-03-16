@@ -287,15 +287,15 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 				// We have full way geometry available so select ways
 				// overlapping the requested bounding box.
 				preparedStatement = dbCtx.prepareStatement(
-					"INSERT INTO box_way_list " +
-					"SELECT id FROM ways w where w.linestring && ?"
+					"INSERT INTO box_way_list "
+						+ "SELECT id FROM ways w where w.linestring && ?"
 				);
 				prmIndex = 1;
 				preparedStatement.setObject(prmIndex++, new PGgeometry(bboxPolygon));
 				
 			} else if (capabilityChecker.isWayBboxSupported()) {
-				LOG.finer("Selecting all way ids inside bounding box using dynamically built" +
-						" way linestring with way bbox indexing.");
+				LOG.finer("Selecting all way ids inside bounding box using dynamically built"
+						+ " way linestring with way bbox indexing.");
 				// The inner query selects the way id and node coordinates for
 				// all ways constrained by the way bounding box which is
 				// indexed.
@@ -305,15 +305,17 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 				// inside the bounding box. These aren't indexed but the inner
 				// query way bbox constraint will minimise the unnecessary data.
 				preparedStatement = dbCtx.prepareStatement(
-					"INSERT INTO box_way_list " +
-					"SELECT way_id FROM (" +
-					"SELECT c.way_id AS way_id, MakeLine(c.geom) AS way_line FROM (" +
-					"SELECT w.id AS way_id, n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id" +
-					" INNER JOIN ways w ON wn.way_id = w.id WHERE (w.bbox && ?) ORDER BY wn.way_id, wn.sequence_id" +
-					") c " +
-					"GROUP BY c.way_id" +
-					") w " +
-					"WHERE (w.way_line && ?)"
+					"INSERT INTO box_way_list "
+						+ "SELECT way_id FROM ("
+						+ "SELECT c.way_id AS way_id, MakeLine(c.geom) AS way_line FROM ("
+						+ "SELECT w.id AS way_id, n.geom AS geom FROM nodes n"
+						+ " INNER JOIN way_nodes wn ON n.id = wn.node_id"
+						+ " INNER JOIN ways w ON wn.way_id = w.id"
+						+ " WHERE (w.bbox && ?) ORDER BY wn.way_id, wn.sequence_id"
+						+ ") c "
+						+ "GROUP BY c.way_id"
+						+ ") w "
+						+ "WHERE (w.way_line && ?)"
 				);
 				prmIndex = 1;
 				preparedStatement.setObject(prmIndex++, new PGgeometry(bboxPolygon));
@@ -324,9 +326,9 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 				// No way bbox support is available so select ways containing
 				// the selected nodes.
 				preparedStatement = dbCtx.prepareStatement(
-					"INSERT INTO box_way_list " +
-					"SELECT wn.way_id FROM way_nodes wn INNER JOIN box_node_list n ON wn.node_id = n.id" +
-					" GROUP BY wn.way_id"
+					"INSERT INTO box_way_list "
+						+ "SELECT wn.way_id FROM way_nodes wn INNER JOIN box_node_list n ON wn.node_id = n.id"
+						+ " GROUP BY wn.way_id"
 				);
 			}
 			rowCount = preparedStatement.executeUpdate();
@@ -337,13 +339,13 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			// Select all relations containing the nodes or ways into the relation table.
 			LOG.finer("Selecting all relation ids containing selected nodes or ways.");
 			preparedStatement = dbCtx.prepareStatement(
-				"INSERT INTO box_relation_list (" +
-				"SELECT rm.relation_id AS relation_id FROM relation_members rm" +
-				" INNER JOIN box_node_list n ON rm.member_id = n.id WHERE rm.member_type = ? " +
-				"UNION " +
-				"SELECT rm.relation_id AS relation_id FROM relation_members rm" +
-				" INNER JOIN box_way_list w ON rm.member_id = w.id WHERE rm.member_type = ?" +
-				")"
+				"INSERT INTO box_relation_list ("
+					+ "SELECT rm.relation_id AS relation_id FROM relation_members rm"
+					+ " INNER JOIN box_node_list n ON rm.member_id = n.id WHERE rm.member_type = ? "
+					+ "UNION "
+					+ "SELECT rm.relation_id AS relation_id FROM relation_members rm"
+					+ " INNER JOIN box_way_list w ON rm.member_id = w.id WHERE rm.member_type = ?"
+					+ ")"
 			);
 			prmIndex = 1;
 			preparedStatement.setString(prmIndex++, memberTypeValueMapper.getMemberType(EntityType.Node));
@@ -358,11 +360,11 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			do {
 				LOG.finer("Selecting parent relations of selected relations.");
 				preparedStatement = dbCtx.prepareStatement(
-					"INSERT INTO box_relation_list " +
-					"SELECT rm.relation_id AS relation_id FROM relation_members rm" +
-					" INNER JOIN box_relation_list r ON rm.member_id = r.id WHERE rm.member_type = ? " +
-					"EXCEPT " +
-					"SELECT id AS relation_id FROM box_relation_list"
+					"INSERT INTO box_relation_list "
+						+ "SELECT rm.relation_id AS relation_id FROM relation_members rm"
+						+ " INNER JOIN box_relation_list r ON rm.member_id = r.id WHERE rm.member_type = ? "
+						+ "EXCEPT "
+						+ "SELECT id AS relation_id FROM box_relation_list"
 				);
 				prmIndex = 1;
 				preparedStatement.setString(prmIndex++, memberTypeValueMapper.getMemberType(EntityType.Relation));
@@ -376,10 +378,10 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			if (completeWays) {
 				LOG.finer("Selecting all node ids for selected ways.");
 				preparedStatement = dbCtx.prepareStatement(
-					"INSERT INTO box_node_list " +
-					"SELECT wn.node_id AS id FROM way_nodes wn INNER JOIN box_way_list bw ON wn.way_id = bw.id " +
-					"EXCEPT " +
-					"SELECT id AS node_id FROM box_node_list"
+					"INSERT INTO box_node_list "
+						+ "SELECT wn.node_id AS id FROM way_nodes wn INNER JOIN box_way_list bw ON wn.way_id = bw.id "
+						+ "EXCEPT "
+						+ "SELECT id AS node_id FROM box_node_list"
 				);
 				prmIndex = 1;
 				rowCount = preparedStatement.executeUpdate();

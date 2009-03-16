@@ -69,8 +69,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		"CREATE INDEX idx_nodes_geom ON nodes USING gist (geom)",
 		"CREATE INDEX idx_way_tags_way_id ON way_tags USING btree (way_id)",
 		"CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id)",
-		"UPDATE ways SET bbox = (SELECT Envelope(Collect(geom))" +
-			" FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id WHERE way_nodes.way_id = ways.id)",
+		"UPDATE ways SET bbox = (SELECT Envelope(Collect(geom))"
+		+ " FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id WHERE way_nodes.way_id = ways.id)",
 		"CREATE INDEX idx_ways_bbox ON ways USING gist (bbox)",
 		"CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id)"
 	};

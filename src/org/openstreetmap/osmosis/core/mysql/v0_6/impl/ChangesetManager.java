@@ -33,21 +33,21 @@ public class ChangesetManager implements Releasable {
 	
 	
 	private static final String SQL_INSERT_CHANGESET =
-		"INSERT INTO changesets" +
-		" (user_id, created_at, min_lat, max_lat, min_lon, max_lon, closed_at, num_changes)" +
-		" VALUES" +
-		" (?, NOW(), " +
-		FixedPrecisionCoordinateConvertor.convertToFixed(-90) + ", " +
-		FixedPrecisionCoordinateConvertor.convertToFixed(90) + ", " +
-		FixedPrecisionCoordinateConvertor.convertToFixed(-180) + ", " +
-		FixedPrecisionCoordinateConvertor.convertToFixed(180) +
-		", NOW(), 0)";
+		"INSERT INTO changesets"
+		+ " (user_id, created_at, min_lat, max_lat, min_lon, max_lon, closed_at, num_changes)"
+		+ " VALUES"
+		+ " (?, NOW(), "
+		+ FixedPrecisionCoordinateConvertor.convertToFixed(-90) + ", "
+		+ FixedPrecisionCoordinateConvertor.convertToFixed(90) + ", "
+		+ FixedPrecisionCoordinateConvertor.convertToFixed(-180) + ", "
+		+ FixedPrecisionCoordinateConvertor.convertToFixed(180)
+		+ ", NOW(), 0)";
 	
 	private static final String SQL_INSERT_CHANGESET_TAG =
-		"INSERT INTO changeset_tags (id, k, v)" +
-		" VALUES (?, 'created_by', 'Osmosis " +
-		OsmosisConstants.VERSION +
-		"'), (?, 'replication', 'true')";
+		"INSERT INTO changeset_tags (id, k, v)"
+		+ " VALUES (?, 'created_by', 'Osmosis "
+		+ OsmosisConstants.VERSION
+		+ "'), (?, 'replication', 'true')";
 	
 	private DatabaseContext dbCtx;
 	private Map<Integer, ActiveChangeset> userToChangesetMap;

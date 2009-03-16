@@ -37,14 +37,14 @@ public class ChangeWriter {
 	private static final String DELETE_SQL_NODE_TAG =
 		"DELETE FROM node_tags WHERE node_id = ?";
 	private static final String UPDATE_NODE_WAY_BBOX =
-		"UPDATE ways w SET bbox = (" +
-		" SELECT Envelope(Collect(n.geom))" +
-		" FROM nodes n INNER JOIN way_nodes wn ON wn.node_id = n.id" +
-		" WHERE wn.way_id = w.id" +
-		" )" +
-		" WHERE w.id IN (" +
-		" SELECT w.id FROM ways w INNER JOIN way_nodes wn ON w.id = wn.way_id WHERE wn.node_id = ? GROUP BY w.id" +
-		" )";
+		"UPDATE ways w SET bbox = ("
+		+ " SELECT Envelope(Collect(n.geom))"
+		+ " FROM nodes n INNER JOIN way_nodes wn ON wn.node_id = n.id"
+		+ " WHERE wn.way_id = w.id"
+		+ " )"
+		+ " WHERE w.id IN ("
+		+ " SELECT w.id FROM ways w INNER JOIN way_nodes wn ON w.id = wn.way_id WHERE wn.node_id = ? GROUP BY w.id"
+		+ " )";
 	private static final String INSERT_SQL_WAY =
 		"INSERT INTO ways (id, user_id, user_name, tstamp) VALUES (?, ?, ?, ?)";
 	private static final String DELETE_SQL_WAY =
@@ -58,12 +58,12 @@ public class ChangeWriter {
 	private static final String DELETE_SQL_WAY_NODE =
 		"DELETE FROM way_nodes WHERE way_id = ?";
 	private static final String UPDATE_WAY_BBOX =
-		"UPDATE ways SET bbox = (" +
-		" SELECT Envelope(Collect(geom))" +
-		" FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id" +
-		" WHERE way_nodes.way_id = ways.id" +
-		" )" +
-		" WHERE ways.id = ?";
+		"UPDATE ways SET bbox = ("
+		+ " SELECT Envelope(Collect(geom))"
+		+ " FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id"
+		+ " WHERE way_nodes.way_id = ways.id"
+		+ " )"
+		+ " WHERE ways.id = ?";
 	private static final String INSERT_SQL_RELATION =
 		"INSERT INTO relations (id, user_id, user_name, tstamp) VALUES (?, ?, ?, ?)";
 	private static final String DELETE_SQL_RELATION =

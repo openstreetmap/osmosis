@@ -92,9 +92,9 @@ public class Pipeline {
 			}
 			
 			throw new OsmosisRuntimeException(
-				"The following named pipes (" + namedPipes + ") and " +
-				pipeTasks.defaultTaskSize() +
-				" default pipes have not been terminated with appropriate output sinks."
+				"The following named pipes (" + namedPipes + ") and "
+				+ pipeTasks.defaultTaskSize()
+				+ " default pipes have not been terminated with appropriate output sinks."
 			);
 		}
 	}

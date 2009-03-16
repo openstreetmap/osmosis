@@ -22,20 +22,20 @@ import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
 public class WayDao extends EntityDao<Way> {
 	
 	private static final String SQL_UPDATE_WAY_BBOX =
-		"UPDATE ways SET bbox = (" +
-		" SELECT Envelope(Collect(geom))" +
-		" FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id" +
-		" WHERE way_nodes.way_id = ways.id" +
-		" )" +
-		" WHERE ways.id = ?";
+		"UPDATE ways SET bbox = ("
+		+ " SELECT Envelope(Collect(geom))"
+		+ " FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id"
+		+ " WHERE way_nodes.way_id = ways.id"
+		+ " )"
+		+ " WHERE ways.id = ?";
 	private static final String SQL_UPDATE_WAY_LINESTRING =
-		"UPDATE ways w SET linestring = (" +
-		" SELECT MakeLine(c.geom) AS way_line FROM (" +
-		" SELECT n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id" +
-		" WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id" +
-		" ) c" +
-		" )" +
-		" WHERE w.id  = ?";
+		"UPDATE ways w SET linestring = ("
+		+ " SELECT MakeLine(c.geom) AS way_line FROM ("
+		+ " SELECT n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id"
+		+ " WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id"
+		+ " ) c"
+		+ " )"
+		+ " WHERE w.id  = ?";
 	
 	private DatabaseCapabilityChecker capabilityChecker;
 	private EntityFeatureDao<WayNode, DbOrderedFeature<WayNode>> wayNodeDao;

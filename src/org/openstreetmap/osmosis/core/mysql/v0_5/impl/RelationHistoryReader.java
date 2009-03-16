@@ -23,11 +23,11 @@ import org.openstreetmap.osmosis.core.mysql.common.DatabaseContext;
 public class RelationHistoryReader extends BaseEntityReader<EntityHistory<Relation>> {
 	private static final String SELECT_SQL =
 		"SELECT r.id AS id, r.timestamp AS timestamp, u.data_public, u.id AS user_id, u.display_name,"
-		+ " r.version AS version, r.visible AS visible" +
-		" FROM relations r" +
-		" LEFT OUTER JOIN users u ON r.user_id = u.id" +
-		" WHERE r.timestamp > ? AND r.timestamp <= ?" +
-		" ORDER BY r.id, r.version";
+		+ " r.version AS version, r.visible AS visible"
+		+ " FROM relations r"
+		+ " LEFT OUTER JOIN users u ON r.user_id = u.id"
+		+ " WHERE r.timestamp > ? AND r.timestamp <= ?"
+		+ " ORDER BY r.id, r.version";
 	
 	private Date intervalBegin;
 	private Date intervalEnd;

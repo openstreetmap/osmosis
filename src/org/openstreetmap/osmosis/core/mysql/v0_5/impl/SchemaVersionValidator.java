@@ -82,9 +82,9 @@ public class SchemaVersionValidator {
 					String message;
 					
 					message =
-						"The database schema version of " + dbVersion +
-						" does not match the expected version of " +
-						expectedVersion + ".";
+						"The database schema version of " + dbVersion
+						+ " does not match the expected version of "
+						+ expectedVersion + ".";
 					
 					if (preferences.getAllowIncorrectSchemaVersion()) {
 						log.warning(message);

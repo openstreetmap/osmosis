@@ -66,8 +66,8 @@ public class NodeChangeReader {
 			if (mostRecentHistory.getEntity().getTimestamp().compareTo(intervalBegin) < 0) {
 				createdPreviously = true;
 			}
-		} while (nodeHistoryReader.hasNext() &&
-				(nodeHistoryReader.peekNext().getEntity().getId() == mostRecentHistory.getEntity().getId()));
+		} while (nodeHistoryReader.hasNext()
+				&& (nodeHistoryReader.peekNext().getEntity().getId() == mostRecentHistory.getEntity().getId()));
 		
 		// The node in the result must be wrapped in a container.
 		nodeContainer = new NodeContainer(mostRecentHistory.getEntity());

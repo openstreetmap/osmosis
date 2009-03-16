@@ -23,13 +23,13 @@ import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  */
 public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 	private static final String SELECT_SQL =
-		"SELECT e.id, e.version, e.timestamp, e.visible, u.data_public," +
-		" u.id AS user_id, u.display_name, e.latitude, e.longitude" +
-		" FROM nodes e" +
-		" LEFT OUTER JOIN changesets c ON e.changeset_id = c.id" +
-		" LEFT OUTER JOIN users u ON c.user_id = u.id" +
-		" WHERE e.timestamp > ? AND e.timestamp <= ?" +
-		" ORDER BY e.id, e.version";
+		"SELECT e.id, e.version, e.timestamp, e.visible, u.data_public,"
+		+ " u.id AS user_id, u.display_name, e.latitude, e.longitude"
+		+ " FROM nodes e"
+		+ " LEFT OUTER JOIN changesets c ON e.changeset_id = c.id"
+		+ " LEFT OUTER JOIN users u ON c.user_id = u.id"
+		+ " WHERE e.timestamp > ? AND e.timestamp <= ?"
+		+ " ORDER BY e.id, e.version";
 	
 	private Date intervalBegin;
 	private Date intervalEnd;

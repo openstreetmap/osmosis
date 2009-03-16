@@ -50,10 +50,10 @@ public class ChangesetFileNameFormatter {
 		String fileName;
 		
 		fileName =
-			beginDateFormat.format(intervalBegin) +
-			"-" +
-			endDateFormat.format(intervalEnd) +
-			".osc.gz";
+			beginDateFormat.format(intervalBegin)
+			+ "-"
+			+ endDateFormat.format(intervalEnd)
+			+ ".osc.gz";
 		
 		return fileName;
 	}

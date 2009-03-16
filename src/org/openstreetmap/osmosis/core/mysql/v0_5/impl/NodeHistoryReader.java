@@ -30,18 +30,18 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 	// time interval. The outer query then queries all node history items up to
 	// the end of the time interval.
 	private static final String SELECT_SQL =
-		"SELECT n.id, n.timestamp, u.data_public, u.id AS user_id, u.display_name, n.latitude, n.longitude, n.tags," +
-		" n.visible" +
-		" FROM nodes n" +
-		" INNER JOIN (" +
-		"   SELECT id" +
-		"   FROM nodes" +
-		"   WHERE timestamp > ? AND timestamp <= ?" +
-		"   GROUP BY id" +
-		" ) idList ON n.id = idList.id" +
-		" LEFT OUTER JOIN users u ON n.user_id = u.id" +
-		" WHERE n.timestamp <= ?" +
-		" ORDER BY n.id, n.timestamp";
+		"SELECT n.id, n.timestamp, u.data_public, u.id AS user_id, u.display_name, n.latitude, n.longitude, n.tags,"
+		+ " n.visible"
+		+ " FROM nodes n"
+		+ " INNER JOIN ("
+		+ "   SELECT id"
+		+ "   FROM nodes"
+		+ "   WHERE timestamp > ? AND timestamp <= ?"
+		+ "   GROUP BY id"
+		+ " ) idList ON n.id = idList.id"
+		+ " LEFT OUTER JOIN users u ON n.user_id = u.id"
+		+ " WHERE n.timestamp <= ?"
+		+ " ORDER BY n.id, n.timestamp";
 	
 	
 	private EmbeddedTagProcessor tagParser;

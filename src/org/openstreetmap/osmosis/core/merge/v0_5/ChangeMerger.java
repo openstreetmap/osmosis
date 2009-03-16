@@ -122,8 +122,8 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 			
 			// We continue in the comparison loop while both sources still have data.
 			while (
-					(changeContainer0 != null || postbox0.hasNext()) &&
-					(changeContainer1 != null || postbox1.hasNext())) {
+					(changeContainer0 != null || postbox0.hasNext())
+					&& (changeContainer1 != null || postbox1.hasNext())) {
 				long comparisonResult;
 				
 				// Get the next input data where required.

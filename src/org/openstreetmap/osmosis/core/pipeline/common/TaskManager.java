@@ -61,8 +61,8 @@ public abstract class TaskManager {
 			// Validate that the suffix begins with a '.' character.
 			if (pipeArgNameSuffix.indexOf('.') != 0) {
 				throw new OsmosisRuntimeException(
-					"Task " + taskId +
-					" contains a pipe definition without '.' between prefix and suffix."
+					"Task " + taskId
+					+ " contains a pipe definition without '.' between prefix and suffix."
 				);
 			}
 			
@@ -72,8 +72,8 @@ public abstract class TaskManager {
 			// Ensure the index exists.
 			if (indexString.length() <= 0) {
 				throw new OsmosisRuntimeException(
-					"Task " + taskId +
-					" contains a pipe definition without an index after the '.'."
+					"Task " + taskId
+					+ " contains a pipe definition without an index after the '.'."
 				);
 			}
 			

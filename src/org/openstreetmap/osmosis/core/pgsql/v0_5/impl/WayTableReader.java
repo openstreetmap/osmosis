@@ -32,9 +32,9 @@ public class WayTableReader extends BaseTableReader<Way> {
 		super(dbCtx);
 		
 		sql =
-			"SELECT w.id, w.user_name, w.tstamp" +
-			" FROM ways w" +
-			" ORDER BY w.id";
+			"SELECT w.id, w.user_name, w.tstamp"
+			+ " FROM ways w"
+			+ " ORDER BY w.id";
 	}
 	
 	
@@ -51,10 +51,10 @@ public class WayTableReader extends BaseTableReader<Way> {
 		super(dbCtx);
 		
 		sql =
-			"SELECT w.id, w.user_name, w.tstamp" +
-			" FROM ways w" +
-			" INNER JOIN " + constraintTable + " c ON w.id = c.id" +
-			" ORDER BY w.id";
+			"SELECT w.id, w.user_name, w.tstamp"
+			+ " FROM ways w"
+			+ " INNER JOIN " + constraintTable + " c ON w.id = c.id"
+			+ " ORDER BY w.id";
 	}
 	
 	

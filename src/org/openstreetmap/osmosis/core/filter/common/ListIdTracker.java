@@ -149,7 +149,7 @@ public class ListIdTracker implements IdTracker {
 		intervalBegin = 0;
 		intervalEnd = idOffset;
 		idFound = false;
-		for (boolean searchComplete = false; !searchComplete; ) {
+		for (boolean searchComplete = false; !searchComplete;) {
 			int intervalSize;
 			
 			// Calculate the interval size.

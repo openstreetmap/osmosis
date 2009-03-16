@@ -109,8 +109,8 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 			
 			// We continue in the comparison loop while both sources still have data.
 			while (
-					(fromEntityContainer != null || fromPostbox.hasNext()) &&
-					(toEntityContainer != null || toPostbox.hasNext())) {
+					(fromEntityContainer != null || fromPostbox.hasNext())
+					&& (toEntityContainer != null || toPostbox.hasNext())) {
 				int comparisonResult;
 				
 				// Get the next input data where required.

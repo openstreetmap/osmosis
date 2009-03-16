@@ -61,14 +61,14 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 			
 			LOG.log(
 				level,
-				"The store contains " + buffers.size() +
-				" buffers of " + (BUFFER_SIZE / 1024) + "KB, total " +
-				totalUsed + "MB.");
+				"The store contains " + buffers.size()
+				+ " buffers of " + (BUFFER_SIZE / 1024) + "KB, total "
+				+ totalUsed + "MB.");
 			LOG.log(
 				level,
-				"The JVM is using " + percentageFormat.format(percentageUsed) +
-				"% of the maximum " + maxMemory +
-				"MB of memory.");
+				"The JVM is using " + percentageFormat.format(percentageUsed)
+				+ "% of the maximum " + maxMemory
+				+ "MB of memory.");
 		}
 	}
 	
@@ -110,10 +110,10 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 		offset = initialOffset;
 		
 		return (
-			buffer[offset++] << 24) +
-			((buffer[offset++] & 0xFF) << 16) +
-			((buffer[offset++] & 0xFF) << 8) +
-			(buffer[offset++] & 0xFF);
+			buffer[offset++] << 24)
+			+ ((buffer[offset++] & 0xFF) << 16)
+			+ ((buffer[offset++] & 0xFF) << 8)
+			+ (buffer[offset++] & 0xFF);
 	}
 	
 	

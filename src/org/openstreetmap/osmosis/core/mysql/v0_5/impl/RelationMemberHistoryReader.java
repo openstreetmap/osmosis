@@ -23,14 +23,14 @@ import org.openstreetmap.osmosis.core.mysql.common.DatabaseContext;
  */
 public class RelationMemberHistoryReader extends BaseTableReader<EntityHistory<DBRelationMember>> {
 	private static final String SELECT_SQL =
-		"SELECT rm.id AS relation_id, rm.member_type, rm.member_id, rm.member_role, rm.version" +
-		" FROM relation_members rm" +
-		" INNER JOIN (" +
-		"   SELECT id, MAX(version) as version" +
-		"   FROM relations" +
-		"   WHERE timestamp > ? AND timestamp <= ?" +
-		"   GROUP BY id" +
-		" ) relationList ON rm.id = relationList.id AND rm.version = relationList.version";
+		"SELECT rm.id AS relation_id, rm.member_type, rm.member_id, rm.member_role, rm.version"
+		+ " FROM relation_members rm"
+		+ " INNER JOIN ("
+		+ "   SELECT id, MAX(version) as version"
+		+ "   FROM relations"
+		+ "   WHERE timestamp > ? AND timestamp <= ?"
+		+ "   GROUP BY id"
+		+ " ) relationList ON rm.id = relationList.id AND rm.version = relationList.version";
 	
 	private MemberTypeParser memberTypeParser;
 	

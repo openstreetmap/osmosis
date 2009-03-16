@@ -94,9 +94,9 @@ public class WayChangeReader {
 
 		// Add all applicable node references to the way.
 		wayNodes = new ArrayList<DBWayNode>();
-		while (wayNodeHistoryReader.hasNext() &&
-				wayNodeHistoryReader.peekNext().getEntity().getWayId() == way.getId() &&
-				wayNodeHistoryReader.peekNext().getVersion() == wayHistory.getVersion()) {
+		while (wayNodeHistoryReader.hasNext()
+				&& wayNodeHistoryReader.peekNext().getEntity().getWayId() == way.getId()
+				&& wayNodeHistoryReader.peekNext().getVersion() == wayHistory.getVersion()) {
 			wayNodes.add(wayNodeHistoryReader.next().getEntity());
 		}
 		// The underlying query sorts node references by way id but not
@@ -107,9 +107,9 @@ public class WayChangeReader {
 		}
 		
 		// Add all applicable tags to the way.
-		while (wayTagHistoryReader.hasNext() &&
-				wayTagHistoryReader.peekNext().getEntity().getEntityId() == way.getId() &&
-				wayTagHistoryReader.peekNext().getVersion() == wayHistory.getVersion()) {
+		while (wayTagHistoryReader.hasNext()
+				&& wayTagHistoryReader.peekNext().getEntity().getEntityId() == way.getId()
+				&& wayTagHistoryReader.peekNext().getVersion() == wayHistory.getVersion()) {
 			way.addTag(wayTagHistoryReader.next().getEntity().getTag());
 		}
 		
@@ -131,8 +131,8 @@ public class WayChangeReader {
 		mostRecentHistory = readNextWayHistory();
 		createdPreviously = (mostRecentHistory.getVersion() > 1);
 		
-		while (wayHistoryReader.hasNext() &&
-				(wayHistoryReader.peekNext().getEntity().getId() == mostRecentHistory.getEntity().getId())) {
+		while (wayHistoryReader.hasNext()
+				&& (wayHistoryReader.peekNext().getEntity().getId() == mostRecentHistory.getEntity().getId())) {
 			mostRecentHistory = readNextWayHistory();
 		}
 		

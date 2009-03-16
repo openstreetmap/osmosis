@@ -60,9 +60,10 @@ public class EntityFeatureTableReader<Tef extends Storeable, Tdb extends DbFeatu
 		this.entityFeatureBuilder = entityFeatureBuilder;
 		
 		sql =
-			entityFeatureBuilder.getSqlSelect(false, false) +
-			" INNER JOIN " + constraintTable + " c ON f." + entityFeatureBuilder.getParentEntityName() + "_id = c.id" +
-			entityFeatureBuilder.getSqlDefaultOrderBy();
+			entityFeatureBuilder.getSqlSelect(false, false)
+			+ " INNER JOIN " + constraintTable
+			+ " c ON f." + entityFeatureBuilder.getParentEntityName() + "_id = c.id"
+			+ entityFeatureBuilder.getSqlDefaultOrderBy();
 	}
 	
 	
