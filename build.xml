@@ -39,8 +39,8 @@
 		<replaceregexp
 					byline="true"
 					file="src/org/openstreetmap/osmosis/core/plugin/plugin.xml"
-					match="version=&quot;(.*)&quot;"
-					replace="version=&quot;${project.version}&quot;"
+					match="id=&quot;org.openstreetmap.osmosis.core.plugin.Core&quot; version=&quot;(.*)&quot;"
+					replace="id=&quot;org.openstreetmap.osmosis.core.plugin.Core&quot; version=&quot;${project.version}&quot;"
 				/>
 		<!-- Create the build directory structure. -->
 		<mkdir dir="build"/>
@@ -189,7 +189,7 @@
 	
 	<!-- Runs all of the unit tests in the application. -->
 	<target name="test" depends="build_test" description="Run automated test cases.">
-		<!--	<junit fork="no" maxmemory="512m" printsummary="on" haltonerror="on" haltonfailure="on" filtertrace="on">
+		<junit fork="no" maxmemory="512m" printsummary="on" haltonerror="on" haltonfailure="on" filtertrace="on">
 			<formatter type="plain" usefile="true"/>
 			<classpath>
 				<path refid="classpath.test"/>
@@ -202,7 +202,7 @@
 					<exclude name="**/*TestSuite*.class"/>
 				</fileset>
 			</batchtest>
-		</junit>-->
+		</junit>
 	</target>
 	
 	<!-- Executes all major build targets. -->
