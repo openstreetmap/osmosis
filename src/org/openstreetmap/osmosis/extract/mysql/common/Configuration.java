@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 
@@ -15,6 +17,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class Configuration {
+	private static final Logger LOG = Logger.getLogger(Configuration.class.getName());
 	private static final String KEY_HOST = "host";
 	private static final String KEY_DATABASE = "database";
 	private static final String KEY_USER = "user";
@@ -60,7 +63,8 @@ public class Configuration {
 				try {
 					fileInputStream.close();
 				} catch (IOException e) {
-					// Ignore errors.
+					// We are already in an error condition so log and continue.
+					LOG.log(Level.WARNING, "Unable to close file input stream.", e);
 				}
 			}
 		}

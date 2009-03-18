@@ -66,7 +66,6 @@
 
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
-        <!-- Osmosis.  Disabled temporarily. -->
         <module name="ConstantName"/>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
@@ -142,12 +141,11 @@
 
         <!-- Checks for blocks. You know, those {}'s         -->
         <!-- See http://checkstyle.sf.net/config_blocks.html -->
-        <!-- Osmosis.  Disabled temporarily. -->
-        <!--<module name="AvoidNestedBlocks"/>
+        <module name="AvoidNestedBlocks"/>
         <module name="EmptyBlock"/>
         <module name="LeftCurly"/>
         <module name="NeedBraces"/>
-        <module name="RightCurly"/>-->
+        <module name="RightCurly"/>
 
 
         <!-- Checks for common coding problems               -->

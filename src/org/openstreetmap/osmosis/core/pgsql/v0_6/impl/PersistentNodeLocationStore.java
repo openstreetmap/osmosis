@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
@@ -221,7 +222,8 @@ public class PersistentNodeLocationStore implements NodeLocationStore {
 			try {
 				fileOutStream.close();
 			} catch (Exception e) {
-				// Do nothing.
+				// We cannot throw an exception within a release method.
+				LOG.log(Level.WARNING, "Unable to close file output stream.", e);
 			}
 			fileOutStream = null;
 		}
@@ -230,13 +232,15 @@ public class PersistentNodeLocationStore implements NodeLocationStore {
 			try {
 				fileInStream.close();
 			} catch (Exception e) {
-				// Do nothing.
+				// We cannot throw an exception within a release method.
+				LOG.log(Level.WARNING, "Unable to close file input stream.", e);
 			}
 			fileInStream = null;
 		}
 		
 		if (nodeStorageFile != null) {
 			if (!nodeStorageFile.delete()) {
+				// We cannot throw an exception within a release method.
 				LOG.warning("Unable to delete file " + nodeStorageFile);
 			}
 			nodeStorageFile = null;

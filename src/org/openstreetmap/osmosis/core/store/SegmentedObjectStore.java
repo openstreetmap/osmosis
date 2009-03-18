@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
@@ -299,8 +300,9 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 			if (fileStream != null) {
 				try {
 					fileStream.close();
-				} catch (Exception e) {
-					// Do nothing.
+				} catch (IOException e) {
+					// We are already in an error condition so log and continue.
+					LOG.log(Level.WARNING, "Unable to close result set.", e);
 				}
 			}
 		}
@@ -324,7 +326,8 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 			try {
 				fileOutStream.close();
 			} catch (Exception e) {
-				// Do nothing.
+				// We cannot throw an exception within a release statement.
+				LOG.log(Level.WARNING, "Unable to file output stream.", e);
 			}
 			fileOutStream = null;
 		}

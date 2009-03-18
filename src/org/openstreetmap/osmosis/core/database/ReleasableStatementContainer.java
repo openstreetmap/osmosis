@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.lifecycle.Releasable;
 
@@ -17,6 +19,8 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  * @author Brett Henderson
  */
 public class ReleasableStatementContainer implements Releasable {
+	private static final Logger LOG = Logger.getLogger(ReleasableStatementContainer.class.getName());
+	
 	private List<Statement> objects;
 	
 	
@@ -62,7 +66,8 @@ public class ReleasableStatementContainer implements Releasable {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				// Do nothing.
+				// We're inside a release method therefore can't throw an exception.
+				LOG.log(Level.WARNING, "Unable to close database connection.", e);
 			}
 		}
 	}

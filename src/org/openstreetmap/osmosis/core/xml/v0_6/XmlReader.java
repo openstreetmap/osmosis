@@ -92,8 +92,7 @@ public class XmlReader implements RunnableSource {
 			SAXParser parser;
 			
 			// make "-" an alias for /dev/stdin
-			if(file.getName().equals("-"))
-			{
+			if(file.getName().equals("-")) {
 				inputStream = System.in;
 			} else {
 				inputStream = new FileInputStream(file);

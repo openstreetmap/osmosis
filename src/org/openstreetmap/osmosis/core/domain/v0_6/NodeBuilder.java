@@ -1,7 +1,6 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.domain.v0_6;
 
-import java.util.Collection;
 import java.util.Date;
 
 import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
@@ -261,7 +260,6 @@ public class NodeBuilder extends EntityBuilder<Node> {
     @Override
     public String toString() {
         String name = null;
-        Collection<Tag> tags = getTags();
         for (Tag tag : tags) {
             if (tag.getKey() != null && tag.getKey().equalsIgnoreCase("name")) {
                 name = tag.getValue();

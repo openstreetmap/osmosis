@@ -3,6 +3,8 @@ package org.openstreetmap.osmosis.core.store;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.lifecycle.Releasable;
@@ -20,6 +22,8 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  * @author Brett Henderson
  */
 public class RandomAccessObjectStoreReader<T> implements Releasable {
+	private static final Logger LOG = Logger.getLogger(RandomAccessObjectStoreReader.class.getName());
+	
 	private BufferedRandomAccessFileInputStream randomFile;
 	private ObjectReader objectReader;
 	
@@ -130,8 +134,9 @@ public class RandomAccessObjectStoreReader<T> implements Releasable {
 		if (randomFile != null) {
 			try {
 				randomFile.close();
-			} catch (Exception e) {
-				// Do nothing.
+			} catch (IOException e) {
+				// We cannot throw an exception within a release statement.
+				LOG.log(Level.WARNING, "Unable to close random access file.", e);
 			}
 			randomFile = null;
 		}

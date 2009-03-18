@@ -64,8 +64,9 @@ public class SinkEntityInspector implements Sink {
 		initialize();
 		if (processedEntities.isEmpty()) {
 			return null;
-		} else
+		} else {
 			return processedEntities.get(processedEntities.size() - 1);
+		}
 	}
 
 

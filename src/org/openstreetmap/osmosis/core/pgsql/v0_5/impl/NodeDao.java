@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.postgresql.geometric.PGpoint;
 
@@ -24,6 +26,7 @@ import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
  * @author Brett Henderson
  */
 public class NodeDao implements Releasable {
+	private static final Logger LOG = Logger.getLogger(NodeDao.class.getName());
 	private static final String SQL_SELECT_SINGLE_NODE =
 		"SELECT id, tstamp, user_id, user_name, geom FROM nodes WHERE id=?";
 	private static final String SQL_SELECT_SINGLE_NODE_TAG =
@@ -150,7 +153,8 @@ public class NodeDao implements Releasable {
 				try {
 					resultSet.close();
 				} catch (SQLException e) {
-					// Do nothing.
+					// We are already in an error condition so log and continue.
+					LOG.log(Level.WARNING, "Unable to close result set.", e);
 				}
 			}
 		}
@@ -176,7 +180,8 @@ public class NodeDao implements Releasable {
 			try {
 				singleNodeStatement.close();
 			} catch (SQLException e) {
-				// Do nothing.
+				// We cannot throw an exception within a release method.
+				LOG.log(Level.WARNING, "Unable to close node statement.", e);
 			}
 			
 			singleNodeStatement = null;
@@ -185,7 +190,8 @@ public class NodeDao implements Releasable {
 			try {
 				singleNodeTagStatement.close();
 			} catch (SQLException e) {
-				// Do nothing.
+				// We cannot throw an exception within a release block.
+				LOG.log(Level.WARNING, "Unable to close node tag statement.", e);
 			}
 			
 			singleNodeTagStatement = null;

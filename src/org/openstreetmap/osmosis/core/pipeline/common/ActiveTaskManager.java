@@ -74,7 +74,8 @@ public abstract class ActiveTaskManager extends TaskManager {
 			try {
 				thread.join();
 			} catch (InterruptedException e) {
-				// Do nothing.
+				// We are already in an error condition so log and continue.
+				LOG.log(Level.WARNING, "The wait for task completion was interrupted.", e);
 			}
 			
 			successful = thread.isSuccessful();

@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
@@ -20,6 +22,7 @@ import org.openstreetmap.osmosis.core.mysql.common.DatabaseContext;
  * @author Brett Henderson
  */
 public class UserManager implements Releasable {
+	private static final Logger LOG = Logger.getLogger(UserManager.class.getName());
 	private static final String SELECT_SQL_USER_EXISTS =
 		"SELECT Count(id) AS userCount FROM users WHERE id = ?";
 	private static final String INSERT_SQL_USER =
@@ -103,7 +106,8 @@ public class UserManager implements Releasable {
 				try {
 					resultSet.close();
 				} catch (SQLException e) {
-					// Do nothing.
+					// We are already in an error condition so log and continue.
+					LOG.log(Level.WARNING, "Unable to close existing user result set.", e);
 				}
 			}
 		}

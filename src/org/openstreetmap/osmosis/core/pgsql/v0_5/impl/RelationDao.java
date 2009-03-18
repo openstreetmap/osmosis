@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_5.EntityType;
@@ -25,6 +27,7 @@ import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
  * @author Brett Henderson
  */
 public class RelationDao implements Releasable {
+	private static final Logger LOG = Logger.getLogger(RelationDao.class.getName());
 	private static final String SQL_SELECT_SINGLE_RELATION =
 		"SELECT id, tstamp, user_name FROM relations WHERE id=?";
 	private static final String SQL_SELECT_SINGLE_RELATION_TAG =
@@ -191,7 +194,8 @@ public class RelationDao implements Releasable {
 				try {
 					resultSet.close();
 				} catch (SQLException e) {
-					// Do nothing.
+					// We are already in an error condition so log and continue.
+					LOG.log(Level.WARNING, "Unable to close result set.", e);
 				}
 			}
 		}
@@ -239,7 +243,8 @@ public class RelationDao implements Releasable {
 			try {
 				singleRelationStatement.close();
 			} catch (SQLException e) {
-				// Do nothing.
+				// We cannot throw an exception within a release method.
+				LOG.log(Level.WARNING, "Unable to close relation result set.", e);
 			}
 			
 			singleRelationStatement = null;
@@ -248,7 +253,8 @@ public class RelationDao implements Releasable {
 			try {
 				singleRelationTagStatement.close();
 			} catch (SQLException e) {
-				// Do nothing.
+				// We cannot throw an exception within a release method.
+				LOG.log(Level.WARNING, "Unable to close relation tag result set.", e);
 			}
 			
 			singleRelationTagStatement = null;

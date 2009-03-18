@@ -124,7 +124,8 @@ public class ChangeDownloader implements RunnableChangeSource {
 					timestampStream.close();
 				}
 			} catch (IOException e) {
-				// Do nothing.
+				// We are already in an error condition so log and continue.
+				LOG.log(Level.WARNING, "Unable to close timestamp stream.", e);
 			}
 		}
 	}
@@ -191,14 +192,16 @@ public class ChangeDownloader implements RunnableChangeSource {
 					inputStream.close();
 				}
 			} catch (IOException e) {
-				// Do nothing.
+				// We are already in an error condition so log and continue.
+				LOG.log(Level.WARNING, "Unable to changeset download stream.", e);
 			}
 			try {
 				if (outputStream != null) {
 					outputStream.close();
 				}
 			} catch (IOException e) {
-				// Do nothing.
+				// We are already in an error condition so log and continue.
+				LOG.log(Level.WARNING, "Unable to changeset output stream.", e);
 			}
 		}
 	}
@@ -343,7 +346,8 @@ public class ChangeDownloader implements RunnableChangeSource {
 				try {
 					taskRunner.join();
 				} catch (InterruptedException e) {
-					// Do nothing.
+					// We are already in an error condition so log and continue.
+					LOG.log(Level.WARNING, "The wait for task completion was interrupted.", e);
 				}
 				
 				if (!taskRunner.isSuccessful()) {

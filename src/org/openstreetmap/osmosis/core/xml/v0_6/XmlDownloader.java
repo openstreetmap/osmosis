@@ -118,8 +118,9 @@ public class XmlDownloader implements RunnableSource {
         this.myRight = Math.max(left, right);
         this.myTop = Math.max(top, bottom);
         this.myBottom = Math.min(top, bottom);
-        if (baseUrl != null)
+        if (baseUrl != null) {
             this.myBaseUrl = baseUrl;
+        }
     }
 
 

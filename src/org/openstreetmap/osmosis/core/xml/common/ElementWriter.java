@@ -113,12 +113,14 @@ public class ElementWriter {
 			String replacement = XML_ENCODING.get(new Character(data.charAt(i)));
 			
 			if (replacement != null) {
-				if (buffer == null)
+				if (buffer == null) {
 					buffer = new StringBuffer(data.substring(0, i));
+				}
 				buffer.append(replacement);
 				
-			} else if (buffer != null)
+			} else if (buffer != null) {
 				buffer.append(data.charAt(i));
+			}
 		}
 		
 		if (buffer == null) {

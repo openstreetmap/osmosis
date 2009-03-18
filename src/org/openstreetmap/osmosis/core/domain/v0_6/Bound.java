@@ -499,6 +499,7 @@ public class Bound extends Entity implements Comparable<Bound> {
      */
     @Override
     public String toString() {
-        return "Bound(top=" + getTop() + ", bottom=" +  getBottom() + ", left=" + getLeft() + ", right=" +  getRight() + ")";
+        return "Bound(top=" + getTop() + ", bottom=" + getBottom() + ", left=" + getLeft() + ", right=" + getRight()
+				+ ")";
     }
 }

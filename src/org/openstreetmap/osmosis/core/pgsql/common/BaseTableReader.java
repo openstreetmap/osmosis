@@ -4,6 +4,8 @@ package org.openstreetmap.osmosis.core.pgsql.common;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
@@ -18,7 +20,7 @@ import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
  *            The type of entity to retrieved.
  */
 public abstract class BaseTableReader<T> implements ReleasableIterator<T> {
-	
+	private static final Logger LOG = Logger.getLogger(BaseTableReader.class.getName());
 	private DatabaseContext dbCtx;
 	private ResultSet resultSet;
 	private T nextValue;
@@ -139,7 +141,8 @@ public abstract class BaseTableReader<T> implements ReleasableIterator<T> {
 			try {
 				resultSet.close();
 			} catch (SQLException e) {
-				// Do nothing.
+				// We cannot throw an exception within a release method.
+				LOG.log(Level.WARNING, "Unable to close result set.", e);
 			}
 			
 			resultSet = null;

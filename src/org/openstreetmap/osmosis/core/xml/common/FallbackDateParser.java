@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 
@@ -19,6 +21,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class FallbackDateParser {
+	private static final Logger LOG = Logger.getLogger(FallbackDateParser.class.getName());
 	
 	private static final String[] FORMATS = {
 	    "yyyy-MM-dd'T'HH:mm:ss'Z'",
@@ -101,7 +104,8 @@ public class FallbackDateParser {
 				
 				return result;
 				
-			} catch (ParseException pe) {
+			} catch (ParseException e) {
+				LOG.log(Level.FINER, "Pattern " + i + " could not parse the date.", e);
 				// Ignore parsing errors and try the next pattern.
 			}
 		}

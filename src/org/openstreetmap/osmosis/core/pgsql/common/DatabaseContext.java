@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
@@ -239,7 +240,8 @@ public class DatabaseContext {
 				try {
 					resultSet.close();
 				} catch (SQLException e) {
-					// Do nothing.
+					// We are already in an error condition so log and continue.
+					LOG.log(Level.WARNING, "Unable to close column existence result set.", e);
 				}
 			}
 		}
@@ -276,7 +278,8 @@ public class DatabaseContext {
 				try {
 					resultSet.close();
 				} catch (SQLException e) {
-					// Do nothing.
+					// We are already in an error condition so log and continue.
+					LOG.log(Level.WARNING, "Unable to close table existence result set.", e);
 				}
 			}
 		}
@@ -333,7 +336,8 @@ public class DatabaseContext {
 				connection.close();
 				
 			} catch (SQLException e) {
-				// Do nothing.
+				// We cannot throw an exception within a release statement.
+				LOG.log(Level.WARNING, "Unable to close result set.", e);
 			}
 			
 			connection = null;

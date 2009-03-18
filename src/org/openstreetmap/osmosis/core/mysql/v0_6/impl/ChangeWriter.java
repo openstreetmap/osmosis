@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
@@ -28,6 +30,7 @@ import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  * @author Brett Henderson
  */
 public class ChangeWriter {
+	private static final Logger LOG = Logger.getLogger(ChangeWriter.class.getName());
 	private static final String INSERT_SQL_NODE =
 		"INSERT INTO nodes (id, version, timestamp, visible, changeset_id, latitude, longitude, tile)"
 		+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -223,7 +226,8 @@ public class ChangeWriter {
 				try {
 					resultSet.close();
 				} catch (SQLException e) {
-					// Do nothing.
+					// We are already in an error condition so log and continue.
+					LOG.log(Level.WARNING, "Unable to close entity existence check result set.", e);
 				}
 			}
 		}
@@ -274,7 +278,8 @@ public class ChangeWriter {
 				try {
 					resultSet.close();
 				} catch (SQLException e) {
-					// Do nothing.
+					// We are already in an error condition so log and continue.
+					LOG.log(Level.WARNING, "Unable to close entity history existence result set.", e);
 				}
 			}
 		}

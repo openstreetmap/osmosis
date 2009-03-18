@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
@@ -26,7 +28,7 @@ import org.openstreetmap.osmosis.core.store.Storeable;
  *            The entity feature database wrapper type to be used.
  */
 public class EntityFeatureDao<Tef extends Storeable, Tdb extends DbFeature<Tef>> extends BaseDao {
-	
+	private static final Logger LOG = Logger.getLogger(EntityFeatureDao.class.getName());
 	/**
 	 * Provides jdbc mapping functionality for this entity feature type.
 	 */
@@ -89,7 +91,8 @@ public class EntityFeatureDao<Tef extends Storeable, Tdb extends DbFeature<Tef>>
 				try {
 					resultSet.close();
 				} catch (SQLException e) {
-					// Do nothing.
+					// We are already in an error condition so log and continue.
+					LOG.log(Level.WARNING, "Unable to close result set.", e);
 				}
 			}
 		}

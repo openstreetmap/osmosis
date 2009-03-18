@@ -2,6 +2,9 @@
 package org.openstreetmap.osmosis.core.store;
 
 import java.io.DataInputStream;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 
@@ -15,6 +18,7 @@ import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
  * @author Brett Henderson
  */
 public class ObjectStreamIterator<T> extends ObjectDataInputIterator<T> implements ReleasableIterator<T> {
+	private static final Logger LOG = Logger.getLogger(ObjectStreamIterator.class.getName());
 	
 	private DataInputStream inStream;
 	
@@ -41,8 +45,9 @@ public class ObjectStreamIterator<T> extends ObjectDataInputIterator<T> implemen
 		if (inStream != null) {
 			try {
 				inStream.close();
-			} catch (Exception e) {
-				// Do nothing.
+			} catch (IOException e) {
+				// We cannot throw an exception within a release method.
+				LOG.log(Level.WARNING, "Unable to close input stream.", e);
 			}
 			
 			inStream = null;

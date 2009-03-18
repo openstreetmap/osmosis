@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
@@ -19,6 +21,8 @@ import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
  * @author Brett Henderson
  */
 public class DatabaseContext {
+	
+	private static final Logger LOG = Logger.getLogger(DatabaseContext.class.getName());
 	
 	static {
 		// Register the database driver.
@@ -179,12 +183,11 @@ public class DatabaseContext {
 			if (streamingStatement != null) {
 				try {
 					streamingStatement.close();
+					streamingStatement = null;
 					
 				} catch (SQLException e) {
-					// Do nothing.
+					throw new OsmosisRuntimeException("Unable to close existing streaming statement.", e);
 				}
-				
-				streamingStatement = null;
 			}
 			
 			// Create a statement for returning streaming results.
@@ -229,7 +232,8 @@ public class DatabaseContext {
 				streamingStatement.close();
 				
 			} catch (SQLException e) {
-				// Do nothing.
+				// We cannot throw an exception within a release statement.
+				LOG.log(Level.WARNING, "Unable to close existing streaming statement.", e);
 			}
 			
 			streamingStatement = null;
@@ -239,7 +243,8 @@ public class DatabaseContext {
 				connection.close();
 				
 			} catch (SQLException e) {
-				// Do nothing.
+				// We cannot throw an exception within a release statement.
+				LOG.log(Level.WARNING, "Unable to close database connection.", e);
 			}
 			
 			connection = null;

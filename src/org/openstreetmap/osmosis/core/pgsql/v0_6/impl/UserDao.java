@@ -4,6 +4,8 @@ package org.openstreetmap.osmosis.core.pgsql.v0_6.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
@@ -18,6 +20,7 @@ import org.openstreetmap.osmosis.core.pgsql.common.NoSuchRecordException;
  * @author Brett Henderson
  */
 public class UserDao extends BaseDao {
+	private static final Logger LOG = Logger.getLogger(UserDao.class.getName());
 	private static final String SELECT_USER = "SELECT id, name FROM users WHERE id = ?";
 	private static final String INSERT_USER = "INSERT INTO users(id, name) VALUES(?, ?)";
 	private static final String UPDATE_USER = "UPDATE users SET name = ? WHERE id = ?";
@@ -100,7 +103,8 @@ public class UserDao extends BaseDao {
 				try {
 					resultSet.close();
 				} catch (SQLException e) {
-					// Do nothing.
+					// We are already in an error condition so log and continue.
+					LOG.log(Level.WARNING, "Unable to close the result set.", e);
 				}
 			}
 		}

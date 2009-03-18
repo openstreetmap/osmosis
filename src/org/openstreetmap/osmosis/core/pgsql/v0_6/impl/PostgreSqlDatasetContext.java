@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.postgis.PGgeometry;
@@ -416,7 +417,8 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 				try {
 					preparedStatement.close();
 				} catch (SQLException e) {
-					// Do nothing.
+					// We are already in an error condition so log and continue.
+					LOG.log(Level.WARNING, "Unable to close prepared statement.", e);
 				}
 			}
 		}

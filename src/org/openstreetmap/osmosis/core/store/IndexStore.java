@@ -117,12 +117,13 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 		
 		elementCount++;
 		
-		// Calculate and verify the element size.
-		if (elementCount < 2) {
-			// Can't do anything yet.
-		} else if (elementCount == 2) {
+		// Calculate and verify the element size. This index requires all keys to be the same length
+		// to allow sorting and searching to occur. The first element has a file offset of 0 so we
+		// ignore that one. The second element offset will tell us the size of the first element.
+		// From that point on we verify that all elements have the same size.
+		if (elementCount == 2) {
 			elementSize = fileOffset;
-		} else {
+		} else if (elementCount > 2) {
 			long expectedOffset;
 			
 			expectedOffset = (elementCount - 1) * elementSize;
@@ -131,7 +132,7 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 				throw new OsmosisRuntimeException(
 					"Inconsistent element sizes, new file offset=" + fileOffset
 					+ ", expected offset=" + expectedOffset
-					+ ", element size="+ elementSize
+					+ ", element size=" + elementSize
 					+ ", element count=" + elementCount
 				);
 			}

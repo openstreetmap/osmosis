@@ -45,8 +45,7 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 	    return Math.log(Math.tan(lat) + 1 / Math.cos(lat));
 	}
 	
-	private double projectMercToLat(double y)
-	{
+	private double projectMercToLat(double y) {
 	    return(Math.toDegrees(Math.atan(Math.sinh(y))));
 	}
 	

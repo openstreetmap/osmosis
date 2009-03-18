@@ -4,6 +4,8 @@ package org.openstreetmap.osmosis.core.mysql.common;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
@@ -16,6 +18,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  * @author Brett Henderson
  */
 public class IdentityColumnValueLoader implements Releasable {
+	private static final Logger LOG = Logger.getLogger(IdentityColumnValueLoader.class.getName());
 	private static final String SQL_SELECT_LAST_INSERT_ID =
 		"SELECT LAST_INSERT_ID() AS lastInsertId FROM DUAL";
 	
@@ -75,7 +78,8 @@ public class IdentityColumnValueLoader implements Releasable {
 				try {
 					lastInsertQuery.close();
 				} catch (SQLException e) {
-					// Do nothing.
+					// We are already in an error condition so log and continue.
+					LOG.log(Level.WARNING, "Unable to close last insert query.", e);
 				}
 			}
 		}

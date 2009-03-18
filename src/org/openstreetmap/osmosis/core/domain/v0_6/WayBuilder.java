@@ -2,7 +2,6 @@
 package org.openstreetmap.osmosis.core.domain.v0_6;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -246,7 +245,6 @@ public class WayBuilder extends EntityBuilder<Way> {
     @Override
     public String toString() {
         String name = null;
-        Collection<Tag> tags = getTags();
         for (Tag tag : tags) {
             if (tag.getKey() != null && tag.getKey().equalsIgnoreCase("name")) {
                 name = tag.getValue();

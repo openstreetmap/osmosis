@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
@@ -111,7 +112,8 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 					try {
 						fileStream.close();
 					} catch (IOException e) {
-						// Do nothing.
+						// We are already in an error condition so log and continue.
+						LOG.log(Level.WARNING, "Unable to close file stream.", e);
 					}
 				}
 			}
@@ -230,13 +232,15 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 			try {
 				offsetTrackingStream.close();
 			} catch (Exception e) {
-				// Do nothing.
+				// We cannot throw an exception within a release statement.
+				LOG.log(Level.WARNING, "Unable to close offset tracking output stream.", e);
 			}
 			offsetTrackingStream = null;
 		}
 		
 		if (tempFile != null) {
 			if (!tempFile.delete()) {
+				// We cannot throw an exception within a release statement.
 				LOG.warning("Unable to delete file " + tempFile);
 			}
 			tempFile = null;
