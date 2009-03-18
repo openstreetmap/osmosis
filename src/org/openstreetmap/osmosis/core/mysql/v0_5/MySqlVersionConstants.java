@@ -11,5 +11,5 @@ public interface MySqlVersionConstants {
 	/**
 	 * Defines the schema version number currently supported.
 	 */
-	 int SCHEMA_VERSION = 17;
+	 int SCHEMA_VERSION = 18;
 }
