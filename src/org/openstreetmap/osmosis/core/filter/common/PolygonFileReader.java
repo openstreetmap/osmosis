@@ -7,6 +7,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,11 +61,16 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 public class PolygonFileReader {
 	
 	private static final Logger LOG = Logger.getLogger(PolygonFileReader.class.getName());
-	
-	
-	private File polygonFile;
-	private FileReader fileReader;
-	
+
+	/**
+	 * Where we read from.
+	 */
+	private Reader fileReader;
+
+	/**
+	 * The filename for error-messages.
+	 */
+	private String polygonFile;
 	
 	/**
 	 * Creates a new instance.
@@ -70,8 +78,24 @@ public class PolygonFileReader {
 	 * @param polygonFile
 	 *            The file to read polygon units from.
 	 */
-	public PolygonFileReader(File polygonFile) {
-		this.polygonFile = polygonFile;
+	public PolygonFileReader(final InputStream polygonFile, final String name) {
+		this.polygonFile = name;
+		this.fileReader = new InputStreamReader(polygonFile);
+	}
+
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param polygonFile
+	 *            The file to read polygon units from.
+	 */
+	public PolygonFileReader(final File polygonFile) {
+		try {
+			this.polygonFile = polygonFile.getName();
+			this.fileReader = new FileReader(polygonFile);
+		} catch (IOException e) {
+			throw new OsmosisRuntimeException("Unable to read from polygon file " + polygonFile + ".", e);
+		}
 	}
 	
 	
@@ -107,7 +131,6 @@ public class PolygonFileReader {
 			resultArea = new Area();
 			
 			// Open the polygon file.
-			fileReader = new FileReader(polygonFile);
 			bufferedReader = new BufferedReader(fileReader);
 			
 			// Read the file header.
