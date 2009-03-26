@@ -60,6 +60,9 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  */
 public class PolygonFileReader {
 
+	/**
+	 * Our logger for debug and error -output.
+	 */
     private static final Logger LOG = Logger.getLogger(PolygonFileReader.class.getName());
 
 	/**
@@ -71,6 +74,11 @@ public class PolygonFileReader {
 	 * The filename for error-messages.
 	 */
 	private String polygonFile;
+
+	/**
+	 * The name of the polygon as stated in the file-header.
+	 */
+	private String myPolygonName;
 
 	/**
 	 * Creates a new instance.
@@ -126,20 +134,18 @@ public class PolygonFileReader {
 		try {
 			Area resultArea;
 			BufferedReader bufferedReader;
-			String fileHeader;
-			
 			// Create a new area.
 			resultArea = new Area();
-			
-			// Open the polygon file.
-			bufferedReader = new BufferedReader(fileReader);
-			
-			// Read the file header.
-			fileHeader = bufferedReader.readLine();
-			if (fileHeader == null || fileHeader.trim().length() == 0) {
-				throw new OsmosisRuntimeException("The file must begin with a header naming the polygon file.");
-			}
-			
+
+            // Open the polygon file.
+            bufferedReader = new BufferedReader(fileReader);
+
+            // Read the file header.
+            myPolygonName = bufferedReader.readLine();
+            if (myPolygonName == null || myPolygonName.trim().length() == 0) {
+                 throw new OsmosisRuntimeException("The file must begin with a header naming the polygon file.");
+            }
+
 			// We now loop until no more sections are available.
 			while (true) {
 				String sectionHeader;
@@ -297,5 +303,13 @@ public class PolygonFileReader {
 		}
 		
 		return results;
+	}
+
+	/**
+	 * This method must only be called after {@link #loadPolygon()}.
+	 * @return The name of the polygon as stated in the file-header.
+	 */
+	public String getPolygonName() {
+		return myPolygonName;
 	}
 }
