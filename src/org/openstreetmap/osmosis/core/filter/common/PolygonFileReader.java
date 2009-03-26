@@ -77,6 +77,7 @@ public class PolygonFileReader {
 	 * 
 	 * @param polygonFile
 	 *            The file to read polygon units from.
+	 * @param filename to report in debug output
 	 */
 	public PolygonFileReader(final InputStream polygonFile, final String name) {
 		this.polygonFile = name;
