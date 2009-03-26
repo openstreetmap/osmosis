@@ -59,8 +59,8 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class PolygonFileReader {
-	
-	private static final Logger LOG = Logger.getLogger(PolygonFileReader.class.getName());
+
+    private static final Logger LOG = Logger.getLogger(PolygonFileReader.class.getName());
 
 	/**
 	 * Where we read from.
@@ -71,13 +71,13 @@ public class PolygonFileReader {
 	 * The filename for error-messages.
 	 */
 	private String polygonFile;
-	
+
 	/**
 	 * Creates a new instance.
 	 * 
 	 * @param polygonFile
 	 *            The file to read polygon units from.
-	 * @param filename to report in debug output
+	 * @param name to report in debug output
 	 */
 	public PolygonFileReader(final InputStream polygonFile, final String name) {
 		this.polygonFile = name;
