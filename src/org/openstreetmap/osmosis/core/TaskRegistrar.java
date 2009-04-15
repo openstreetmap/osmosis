@@ -22,6 +22,12 @@ import org.java.plugin.registry.ExtensionPoint;
 import org.java.plugin.registry.ManifestProcessingException;
 import org.java.plugin.registry.PluginDescriptor;
 import org.java.plugin.standard.StandardPluginLocation;
+import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbChangeReaderFactory;
+import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbChangeWriterFactory;
+import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbCurrentReaderFactory;
+import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbReaderFactory;
+import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbTruncatorFactory;
+import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbWriterFactory;
 import org.openstreetmap.osmosis.core.buffer.v0_6.ChangeBufferFactory;
 import org.openstreetmap.osmosis.core.buffer.v0_6.EntityBufferFactory;
 import org.openstreetmap.osmosis.core.change.v0_6.ChangeApplierFactory;
@@ -392,6 +398,12 @@ public class TaskRegistrar {
 		factoryRegister.register("mig-0.6", new MigrateV05ToV06Factory());
 		factoryRegister.register("tag-sort-0.6", new TagSorterFactory());
 		factoryRegister.register("remove-tags-0.6", new TagRemoverFactory());
+		factoryRegister.register("read-apidb-0.6", new ApidbReaderFactory());
+		factoryRegister.register("read-apidb-change-0.6", new ApidbChangeReaderFactory());
+		factoryRegister.register("read-apidb-current-0.6", new ApidbCurrentReaderFactory());
+		factoryRegister.register("write-apidb-0.6", new ApidbWriterFactory());
+		factoryRegister.register("write-apidb-change-0.6", new ApidbChangeWriterFactory());
+		factoryRegister.register("truncate-apidb-0.6", new ApidbTruncatorFactory());
 
 		// Register the plugins.
 		for (String plugin : plugins) {

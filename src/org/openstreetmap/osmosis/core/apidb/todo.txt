@@ -1,0 +1,9 @@
+DONE. Duplicate all mysql 0.6 code as apidb 0.6.
+Duplicate existing mysql 0.6 tests for the new apidb tasks.
+Modify the apidb tasks to use a postgres DatabaseContext class instead of the mysql DatabaseContext.
+Get all apidb tasks working against a postgres api 0.6 database.
+Duplicate the existing OsmosisExtractMysql application and create an OsmosisExtractApidb application.
+
+Future tasks:
+Get the Apidb tasks working on both postgres and mysql.
+Get the OsmosisExtractApidb application working on both postgres and mysql.
