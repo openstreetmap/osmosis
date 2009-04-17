@@ -60,8 +60,7 @@ public class ApiDbTest {
         outputFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
-        // Osmosis.run(new String[] { "-q", "--truncate-apidb-0.6", "authFile=" + authFile.getPath()
-        // });
+        Osmosis.run(new String[] { "-q", "--truncate-apidb-0.6", "authFile=" + authFile.getPath() });
 
         // Load the database with a dataset.
         Osmosis.run(new String[] { "-q", "--read-xml-0.6", inputFile.getPath(), "--write-apidb-0.6",
@@ -135,8 +134,7 @@ public class ApiDbTest {
         actualResultFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
-        // Osmosis.run(new String[] { "-q", "--truncate-apidb-0.6", "authFile=" + authFile.getPath()
-        // });
+        Osmosis.run(new String[] { "-q", "--truncate-apidb-0.6", "authFile=" + authFile.getPath() });
 
         // Load the database with the snapshot file.
         Osmosis.run(new String[] { "-q", "--read-xml-0.6", snapshotFile.getPath(), "--write-apidb-0.6",
@@ -225,8 +223,7 @@ public class ApiDbTest {
         actualResultFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
-        // Osmosis.run(new String[] { "-q", "--truncate-apidb-0.6", "authFile=" + authFile.getPath()
-        // });
+        Osmosis.run(new String[] { "-q", "--truncate-apidb-0.6", "authFile=" + authFile.getPath() });
 
         // Load the database with the snapshot file.
         Osmosis.run(new String[] { "-q", "--read-xml-0.6", snapshotFile.getPath(), "--write-apidb-0.6",
