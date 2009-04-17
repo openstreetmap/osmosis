@@ -1,0 +1,5 @@
+host=localhost
+database=osm6_test
+user=osm
+password=password
+db=postgresql
