@@ -7,11 +7,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
+
 
 /**
  * This class manages the lifecycle of JDBC objects to minimise the risk of connection leaks and to
@@ -55,8 +57,7 @@ public class DatabaseContext {
                 Class.forName("com.mysql.jdbc.Driver");
                 break;
             default:
-            	throw new OsmosisRuntimeException("The database type " + loginCredentials.getDbType()
-						+ " is not recognized.");
+                throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
             }
 
         } catch (ClassNotFoundException e) {
@@ -81,7 +82,7 @@ public class DatabaseContext {
                 connection = getMysqlConnection();
                 break;
             default:
-                throw new OsmosisRuntimeException("Unable to detect database type.");
+                throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
             }
         }
         
@@ -137,6 +138,85 @@ public class DatabaseContext {
 
         return newConnection;
     }
+	
+	
+    /**
+	 * Truncates the contents of the specified tables.
+	 * 
+	 * @param tables
+	 *            The tables to be truncated.
+	 */
+	public void truncateTables(List<String> tables) {
+		switch (loginCredentials.getDbType()) {
+        case POSTGRESQL:
+        	StringBuilder statementBuilder = new StringBuilder();
+    		
+			for (String table : tables) {
+				if (statementBuilder.length() == 0) {
+					statementBuilder.append("TRUNCATE ");
+				} else {
+					statementBuilder.append(", ");
+				}
+				
+				statementBuilder.append(table);
+			}
+			
+			executeStatement(statementBuilder.toString());
+			break;
+        case MYSQL:
+			for (String table : tables) {
+				executeStatement("TRUNCATE " + table);
+			}
+			break;
+		default:
+			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+		}
+	}
+	
+	
+    /**
+	 * Disables the indexes of the specified tables.
+	 * 
+	 * @param tables
+	 *            The tables to disable indexes on.
+	 */
+	public void disableIndexes(List<String> tables) {
+		switch (loginCredentials.getDbType()) {
+        case POSTGRESQL:
+			// There is no way to automatically disable all indexes for a table.
+			break;
+        case MYSQL:
+        	for (String table : tables) {
+        		executeStatement("ALTER TABLE " + table + " DISABLE KEYS");
+			}
+			break;
+		default:
+			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+		}
+	}
+	
+	
+    /**
+	 * Enables the indexes of the specified tables.
+	 * 
+	 * @param tables
+	 *            The tables to enable indexes on.
+	 */
+	public void enableIndexes(List<String> tables) {
+		switch (loginCredentials.getDbType()) {
+        case POSTGRESQL:
+			// There is no way to automatically disable all indexes for a table.
+			break;
+        case MYSQL:
+        	for (String table : tables) {
+        		executeStatement("ALTER TABLE " + table + " ENABLE KEYS");
+			}
+			break;
+		default:
+			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+		}
+	}
+    
 
     /**
      * Executes a sql statement against the database.

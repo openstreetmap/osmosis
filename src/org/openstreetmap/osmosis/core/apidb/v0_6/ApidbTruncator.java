@@ -1,6 +1,9 @@
 // License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.apidb.v0_6;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.openstreetmap.osmosis.core.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.apidb.v0_6.impl.SchemaVersionValidator;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
@@ -16,13 +19,14 @@ import org.openstreetmap.osmosis.core.task.common.RunnableTask;
  */
 public class ApidbTruncator implements RunnableTask {
 
-	// These SQL statements will be invoked to truncate each table.
-	private static final String[] SQL_STATEMENTS = {"TRUNCATE current_relation_members",
-			"TRUNCATE current_relation_tags", "TRUNCATE current_relations", "TRUNCATE current_way_nodes",
-			"TRUNCATE current_way_tags", "TRUNCATE current_ways", "TRUNCATE current_node_tags",
-			"TRUNCATE current_nodes", "TRUNCATE relation_members", "TRUNCATE relation_tags", "TRUNCATE relations",
-			"TRUNCATE way_nodes", "TRUNCATE way_tags", "TRUNCATE ways", "TRUNCATE node_tags", "TRUNCATE nodes",
-			"TRUNCATE changeset_tags", "TRUNCATE changesets", "TRUNCATE users" };
+	// These tables will be truncated by the sql query.
+	private static final List<String> TRUNCATE_TABLES = Arrays.asList(new String[] {
+		"current_relation_members",
+			"current_relation_tags", "current_relations", "current_way_nodes",
+			"current_way_tags", "current_ways", "current_node_tags",
+			"current_nodes", "relation_members", "relation_tags", "relations",
+			"way_nodes", "way_tags", "ways", "node_tags", "nodes",
+			"changeset_tags", "changesets", "users"});
 
 	private final DatabaseContext dbCtx;
 
@@ -51,9 +55,7 @@ public class ApidbTruncator implements RunnableTask {
 		try {
 			schemaVersionValidator.validateVersion(ApidbVersionConstants.SCHEMA_MIGRATIONS);
 
-			for (String element : SQL_STATEMENTS) {
-				dbCtx.executeStatement(element);
-			}
+			dbCtx.truncateTables(TRUNCATE_TABLES);
 
 		} finally {
 			dbCtx.release();

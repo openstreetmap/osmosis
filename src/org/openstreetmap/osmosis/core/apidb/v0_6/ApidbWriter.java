@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
@@ -79,19 +80,11 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
     private static final int INSERT_PRM_COUNT_RELATION_MEMBER = 6;
 
-    // These SQL statements will be invoked prior to loading data to disable
-    // indexes.
-    private static final String[] INVOKE_DISABLE_KEYS = {"ALTER TABLE nodes DISABLE KEYS",
-            "ALTER TABLE node_tags DISABLE KEYS", "ALTER TABLE ways DISABLE KEYS", "ALTER TABLE way_tags DISABLE KEYS",
-            "ALTER TABLE way_nodes DISABLE KEYS", "ALTER TABLE relations DISABLE KEYS",
-            "ALTER TABLE relation_tags DISABLE KEYS", "ALTER TABLE relation_members DISABLE KEYS" };
-
-    // These SQL statements will be invoked after loading data to re-enable
-    // indexes.
-    private static final String[] INVOKE_ENABLE_KEYS = {"ALTER TABLE nodes ENABLE KEYS",
-            "ALTER TABLE node_tags ENABLE KEYS", "ALTER TABLE ways ENABLE KEYS", "ALTER TABLE way_tags ENABLE KEYS",
-            "ALTER TABLE way_nodes ENABLE KEYS", "ALTER TABLE relations ENABLE KEYS",
-            "ALTER TABLE relation_tags ENABLE KEYS", "ALTER TABLE relation_members ENABLE KEYS" };
+    // These tables will have indexes disabled during loading data.
+    private static final List<String> DISABLE_KEY_TABLES = Arrays.asList(new String[] {"nodes",
+            "node_tags", "ways", "way_tags",
+            "way_nodes", "relations",
+            "relation_tags", "relation_members"});
 
     // These SQL statements will be invoked after loading history tables to
     // populate the current tables.
@@ -416,9 +409,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
             loadCurrentRelationMembersStatement = dbCtx.prepareStatement(LOAD_CURRENT_RELATION_MEMBERS);
 
             // Disable indexes to improve load performance.
-            for (String element : INVOKE_DISABLE_KEYS) {
-                dbCtx.executeStatement(element);
-            }
+            dbCtx.disableIndexes(DISABLE_KEY_TABLES);
 
             // Lock tables if required to improve load performance.
             if (lockTables) {
@@ -979,9 +970,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
         flushRelationMembers(true);
 
         // Re-enable indexes now that the load has completed.
-        for (int i = 0; i < INVOKE_DISABLE_KEYS.length; i++) {
-            dbCtx.executeStatement(INVOKE_ENABLE_KEYS[i]);
-        }
+        dbCtx.enableIndexes(DISABLE_KEY_TABLES);
 
         if (populateCurrentTables) {
             // Copy data into the current node tables.
