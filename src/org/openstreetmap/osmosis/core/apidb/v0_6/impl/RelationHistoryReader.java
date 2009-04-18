@@ -20,7 +20,8 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
  */
 public class RelationHistoryReader extends BaseEntityReader<EntityHistory<Relation>> {
 
-    private static final String SELECT_SQL = "SELECT e.id, e.version, e.timestamp, e.visible, u.data_public, u.id AS user_id, u.display_name"
+    private static final String SELECT_SQL =
+    	"SELECT e.id, e.version, e.timestamp, e.visible, u.data_public, u.id AS user_id, u.display_name"
             + " FROM relations e"
             + " LEFT OUTER JOIN changesets c ON e.changeset_id = c.id"
             + " LEFT OUTER JOIN users u ON c.user_id = u.id"

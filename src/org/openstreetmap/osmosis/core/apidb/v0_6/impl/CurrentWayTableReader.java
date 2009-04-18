@@ -19,7 +19,8 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Way;
  */
 public class CurrentWayTableReader extends BaseEntityReader<Way> {
 
-    private static final String SELECT_SQL = "SELECT w.id, w.version, w.timestamp, w.visible, u.data_public, u.id AS user_id, u.display_name"
+    private static final String SELECT_SQL =
+    	"SELECT w.id, w.version, w.timestamp, w.visible, u.data_public, u.id AS user_id, u.display_name"
             + " FROM current_ways w"
             + " LEFT OUTER JOIN changesets c ON w.changeset_id = c.id"
             + " LEFT OUTER JOIN users u ON c.user_id = u.id" + " ORDER BY w.id";

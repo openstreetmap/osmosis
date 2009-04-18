@@ -1,5 +1,5 @@
 host=localhost
-database=osm6_test
+database=api06_test
 user=osm
 password=password
-db=postgresql
+db=mysql

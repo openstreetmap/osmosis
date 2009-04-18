@@ -22,7 +22,8 @@ import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
  */
 public class RelationMemberHistoryReader extends BaseTableReader<DbFeatureHistory<DbOrderedFeature<RelationMember>>> {
 
-    private static final String SELECT_SQL = "SELECT rm.id AS relation_id, rm.member_type, rm.member_id, rm.member_role, rm.sequence_id, rm.version"
+    private static final String SELECT_SQL =
+    	"SELECT rm.id AS relation_id, rm.member_type, rm.member_id, rm.member_role, rm.sequence_id, rm.version"
             + " FROM relation_members rm"
             + " INNER JOIN ("
             + "   SELECT id, MAX(version) as version"
@@ -44,14 +45,15 @@ public class RelationMemberHistoryReader extends BaseTableReader<DbFeatureHistor
      * @param intervalBegin Marks the beginning (inclusive) of the time interval to be checked.
      * @param intervalEnd Marks the end (exclusive) of the time interval to be checked.
      */
-    public RelationMemberHistoryReader(DatabaseLoginCredentials loginCredentials, Date intervalBegin, Date intervalEnd) {
-        super(loginCredentials);
+    public RelationMemberHistoryReader(
+    		DatabaseLoginCredentials loginCredentials, Date intervalBegin, Date intervalEnd) {
+		super(loginCredentials);
 
-        memberTypeParser = new MemberTypeParser();
+		memberTypeParser = new MemberTypeParser();
 
-        this.intervalBegin = intervalBegin;
-        this.intervalEnd = intervalEnd;
-    }
+		this.intervalBegin = intervalBegin;
+		this.intervalEnd = intervalEnd;
+	}
 
     /**
      * {@inheritDoc}

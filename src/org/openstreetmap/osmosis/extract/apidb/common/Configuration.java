@@ -132,7 +132,7 @@ public class Configuration {
     }
 
     /**
-     * Returns the database type
+     * Returns the database type.
      * 
      * @return The database type
      */

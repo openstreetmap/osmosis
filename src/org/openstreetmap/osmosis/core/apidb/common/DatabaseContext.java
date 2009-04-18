@@ -50,8 +50,13 @@ public class DatabaseContext {
             switch (loginCredentials.getDbType()) {
             case POSTGRESQL:
                 Class.forName("org.postgresql.Driver");
+                break;
             case MYSQL:
                 Class.forName("com.mysql.jdbc.Driver");
+                break;
+            default:
+            	throw new OsmosisRuntimeException("The database type " + loginCredentials.getDbType()
+						+ " is not recognized.");
             }
 
         } catch (ClassNotFoundException e) {
@@ -79,6 +84,7 @@ public class DatabaseContext {
                 throw new OsmosisRuntimeException("Unable to detect database type.");
             }
         }
+        
         return connection;
     }
 
@@ -86,28 +92,28 @@ public class DatabaseContext {
      * @return postgres connection
      */
     private Connection getPostgresConnection() {
-        Connection connection = null;
+        Connection newConnection = null;
         try {
             LOG.finer("Creating a new database connection.");
 
-            connection = DriverManager.getConnection("jdbc:postgresql://" + loginCredentials.getHost() + "/"
+            newConnection = DriverManager.getConnection("jdbc:postgresql://" + loginCredentials.getHost() + "/"
                     + loginCredentials.getDatabase() + "?user=" + loginCredentials.getUser() + "&password="
                     + loginCredentials.getPassword()// + "&logLevel=2"
             );
 
-            connection.setAutoCommit(autoCommit);
+            newConnection.setAutoCommit(autoCommit);
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to establish a database connection.", e);
         }
-        return connection;
+        return newConnection;
     }
 
     /**
      * @return The mysql database connection.
      */
     private Connection getMysqlConnection() {
-        Connection connection = null;
+        Connection newConnection = null;
         try {
             String url;
 
@@ -121,15 +127,15 @@ public class DatabaseContext {
                 url += "&profileSql=true";
             }
 
-            connection = DriverManager.getConnection(url);
+            newConnection = DriverManager.getConnection(url);
 
-            connection.setAutoCommit(autoCommit);
+            newConnection.setAutoCommit(autoCommit);
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to establish a database connection.", e);
         }
 
-        return connection;
+        return newConnection;
     }
 
     /**
@@ -172,26 +178,28 @@ public class DatabaseContext {
     }
 
     /**
-     * Creates a new database statement that is configured so that any result sets created using it
-     * will stream data from the database instead of returning all records at once and storing in
-     * memory.
-     * <p>
-     * If no input parameters need to be set on the statement, use the executeStreamingQuery method
-     * instead.
-     * 
-     * @param sql The statement to be created. This must be a select statement.
-     * @return The newly created statement.
-     */
+	 * Creates a new database statement that is configured so that any result sets created using it
+	 * will stream data from the database instead of returning all records at once and storing in
+	 * memory.
+	 * <p>
+	 * If no input parameters need to be set on the statement, use the executeStreamingQuery method
+	 * instead.
+	 * 
+	 * @param sql
+	 *            The statement to be created. This must be a select statement.
+	 * @return The newly created statement.
+	 */
     public PreparedStatement prepareStatementForStreaming(String sql) {
         try {
-            PreparedStatement statement;
+            PreparedStatement newStatement;
 
             // Create a statement for returning streaming results.
-            statement = getConnection().prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+			newStatement = getConnection().prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY,
+					ResultSet.CONCUR_READ_ONLY);
 
-            statement.setFetchSize(Integer.MIN_VALUE);
+            newStatement.setFetchSize(Integer.MIN_VALUE);
 
-            return statement;
+            return newStatement;
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to create streaming resultset statement.", e);
@@ -372,7 +380,7 @@ public class DatabaseContext {
         try {
             LOG.finest("Checking if table {" + tableName + "} exists.");
 
-            resultSet = getConnection().getMetaData().getTables(null, null, tableName, new String[] { "TABLE" });
+            resultSet = getConnection().getMetaData().getTables(null, null, tableName, new String[] {"TABLE"});
             result = resultSet.next();
             resultSet.close();
             resultSet = null;

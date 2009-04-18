@@ -19,9 +19,9 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.mysql.common.DatabaseContext;
-import org.openstreetmap.osmosis.core.mysql.common.TileCalculator;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
 import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
+import org.openstreetmap.osmosis.core.util.TileCalculator;
 
 
 /**

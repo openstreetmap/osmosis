@@ -23,7 +23,6 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.mysql.common.DatabaseContext;
-import org.openstreetmap.osmosis.core.mysql.common.TileCalculator;
 import org.openstreetmap.osmosis.core.mysql.v0_6.impl.SchemaVersionValidator;
 import org.openstreetmap.osmosis.core.mysql.v0_6.impl.ChangesetManager;
 import org.openstreetmap.osmosis.core.mysql.v0_6.impl.DbFeature;
@@ -33,6 +32,7 @@ import org.openstreetmap.osmosis.core.mysql.v0_6.impl.MemberTypeRenderer;
 import org.openstreetmap.osmosis.core.mysql.v0_6.impl.UserManager;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
+import org.openstreetmap.osmosis.core.util.TileCalculator;
 
 
 /**

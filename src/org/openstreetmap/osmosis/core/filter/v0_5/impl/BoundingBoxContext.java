@@ -6,8 +6,8 @@ import java.util.Comparator;
 
 import org.openstreetmap.osmosis.core.filter.common.BitSetIdTracker;
 import org.openstreetmap.osmosis.core.filter.common.IdTracker;
-import org.openstreetmap.osmosis.core.mysql.common.TileCalculator;
 import org.openstreetmap.osmosis.core.store.UnsignedIntegerComparator;
+import org.openstreetmap.osmosis.core.util.TileCalculator;
 
 
 /**

@@ -3,6 +3,7 @@ package org.openstreetmap.osmosis.core.mysql.common;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.openstreetmap.osmosis.core.util.TileCalculator;
 
 
 /**

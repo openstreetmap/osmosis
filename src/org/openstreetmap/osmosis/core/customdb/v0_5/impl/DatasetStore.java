@@ -22,7 +22,6 @@ import org.openstreetmap.osmosis.core.domain.v0_5.WayNode;
 import org.openstreetmap.osmosis.core.lifecycle.CompletableContainer;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableContainer;
 import org.openstreetmap.osmosis.core.merge.v0_5.impl.SortedEntityPipeValidator;
-import org.openstreetmap.osmosis.core.mysql.common.TileCalculator;
 import org.openstreetmap.osmosis.core.store.ComparableComparator;
 import org.openstreetmap.osmosis.core.store.IndexStore;
 import org.openstreetmap.osmosis.core.store.IndexStoreReader;
@@ -34,6 +33,7 @@ import org.openstreetmap.osmosis.core.store.RandomAccessObjectStoreReader;
 import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactory;
 import org.openstreetmap.osmosis.core.store.UnsignedIntegerComparator;
 import org.openstreetmap.osmosis.core.task.v0_5.Sink;
+import org.openstreetmap.osmosis.core.util.TileCalculator;
 
 
 /**

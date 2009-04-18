@@ -60,15 +60,30 @@ public class ApiDbTest {
         outputFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
-        Osmosis.run(new String[] { "-q", "--truncate-apidb-0.6", "authFile=" + authFile.getPath() });
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--truncate-apidb-0.6",
+        		"authFile=" + authFile.getPath()
+        		});
 
         // Load the database with a dataset.
-        Osmosis.run(new String[] { "-q", "--read-xml-0.6", inputFile.getPath(), "--write-apidb-0.6",
-                "authFile=" + authFile.getPath() });
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--read-xml-0.6",
+        		inputFile.getPath(),
+        		"--write-apidb-0.6",
+                "authFile=" + authFile.getPath()
+                });
 
         // Dump the database to an osm file.
-        Osmosis.run(new String[] { "-q", "--read-apidb-0.6", "authFile=" + authFile.getPath(), "--tag-sort-0.6",
-                "--write-xml-0.6", outputFile.getPath() });
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--read-apidb-0.6",
+        		"authFile=" + authFile.getPath(),
+        		"--tag-sort-0.6",
+                "--write-xml-0.6",
+                outputFile.getPath()
+                });
 
         // Validate that the output file matches the input file.
         fileUtils.compareFiles(inputFile, outputFile);
@@ -95,14 +110,26 @@ public class ApiDbTest {
         outputFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
-        Osmosis.run(new String[] { "-q", "--truncate-apidb-0.6", "authFile=" + authFile.getPath() });
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--truncate-apidb-0.6",
+        		"authFile=" + authFile.getPath()
+        		});
 
         // Load the database with a dataset.
-        Osmosis.run(new String[] { "-q", "--read-xml-0.6", inputFile.getPath(), "--write-apidb-0.6",
-                "authFile=" + authFile.getPath() });
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--read-xml-0.6",
+        		inputFile.getPath(),
+        		"--write-apidb-0.6",
+                "authFile=" + authFile.getPath()
+                });
 
         // Dump the database to an osm file.
-        Osmosis.run(new String[] { "-q", "--read-apidb-current-0.6", "authFile=" + authFile.getPath(),
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--read-apidb-current-0.6",
+        		"authFile=" + authFile.getPath(),
                 "--tag-sort-0.6", "--write-xml-0.6", outputFile.getPath() });
 
         // Validate that the output file matches the input file.
@@ -134,18 +161,34 @@ public class ApiDbTest {
         actualResultFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
-        Osmosis.run(new String[] { "-q", "--truncate-apidb-0.6", "authFile=" + authFile.getPath() });
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--truncate-apidb-0.6",
+        		"authFile=" + authFile.getPath()
+        		});
 
         // Load the database with the snapshot file.
-        Osmosis.run(new String[] { "-q", "--read-xml-0.6", snapshotFile.getPath(), "--write-apidb-0.6",
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--read-xml-0.6",
+        		snapshotFile.getPath(),
+        		"--write-apidb-0.6",
                 "authFile=" + authFile.getPath() });
 
         // Apply the changeset file to the database.
-        Osmosis.run(new String[] { "-q", "--read-xml-change-0.6", changesetFile.getPath(), "--write-apidb-change-0.6",
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--read-xml-change-0.6",
+        		changesetFile.getPath(),
+        		"--write-apidb-change-0.6",
                 "authFile=" + authFile.getPath() });
 
         // Dump the database to an osm file.
-        Osmosis.run(new String[] { "-q", "--read-apidb-0.6", "authFile=" + authFile.getPath(), "--tag-sort-0.6",
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--read-apidb-0.6",
+        		"authFile=" + authFile.getPath(),
+        		"--tag-sort-0.6",
                 "--write-xml-0.6", actualResultFile.getPath() });
 
         // Validate that the dumped file matches the expected result.
@@ -178,20 +221,39 @@ public class ApiDbTest {
         actualResultFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
-        Osmosis.run(new String[] { "-q", "--truncate-apidb-0.6", "authFile=" + authFile.getPath() });
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--truncate-apidb-0.6",
+        		"authFile=" + authFile.getPath()
+        		});
 
         // Load the database with the snapshot file.
-        Osmosis.run(new String[] { "-q", "--read-xml-0.6", snapshotFile.getPath(), "--write-apidb-0.6",
-                "authFile=" + authFile.getPath() });
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--read-xml-0.6",
+        		snapshotFile.getPath(),
+        		"--write-apidb-0.6",
+                "authFile=" + authFile.getPath()
+                });
 
         // Apply the changeset file to the database.
-        Osmosis.run(new String[] { "-q", "--read-xml-change-0.6", changesetFile.getPath(), "--write-apidb-change-0.6",
-                "authFile=" + authFile.getPath() });
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--read-xml-change-0.6",
+        		changesetFile.getPath(),
+        		"--write-apidb-change-0.6",
+                "authFile=" + authFile.getPath()
+                });
 
         // Dump the database to an osm file.
-        Osmosis.run(new String[] { "-q", "--read-apidb-0.6",
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--read-apidb-0.6",
                 "snapshotInstant=" + convertUTCTimeToLocalTime("2008-01-03_00:00:00"),
-                "authFile=" + authFile.getPath(), "--tag-sort-0.6", "--write-xml-0.6", actualResultFile.getPath() });
+                "authFile=" + authFile.getPath(),
+                "--tag-sort-0.6",
+                "--write-xml-0.6",
+                actualResultFile.getPath() });
 
         // Validate that the dumped file matches the expected result.
         fileUtils.compareFiles(expectedResultFile, actualResultFile);
@@ -223,21 +285,39 @@ public class ApiDbTest {
         actualResultFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
-        Osmosis.run(new String[] { "-q", "--truncate-apidb-0.6", "authFile=" + authFile.getPath() });
+		Osmosis.run(new String[] {
+				"-q",
+				"--truncate-apidb-0.6",
+				"authFile=" + authFile.getPath()
+				});
 
         // Load the database with the snapshot file.
-        Osmosis.run(new String[] { "-q", "--read-xml-0.6", snapshotFile.getPath(), "--write-apidb-0.6",
-                "authFile=" + authFile.getPath() });
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--read-xml-0.6",
+        		snapshotFile.getPath(),
+        		"--write-apidb-0.6",
+                "authFile=" + authFile.getPath()
+                });
 
         // Apply the changeset file to the database.
-        Osmosis.run(new String[] { "-q", "--read-xml-change-0.6", changesetFile.getPath(), "--write-apidb-change-0.6",
-                "authFile=" + authFile.getPath() });
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--read-xml-change-0.6",
+        		changesetFile.getPath(),
+        		"--write-apidb-change-0.6",
+                "authFile=" + authFile.getPath()
+                });
 
         // Dump the database to an osm file.
-        Osmosis.run(new String[] { "-q", "--read-apidb-change-0.6",
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--read-apidb-change-0.6",
                 "intervalBegin=" + convertUTCTimeToLocalTime("2008-01-03_00:00:00"),
-                "intervalEnd=" + convertUTCTimeToLocalTime("2008-01-04_00:00:00"), "authFile=" + authFile.getPath(),
-                "--write-xml-change-0.6", actualResultFile.getPath() });
+                "intervalEnd=" + convertUTCTimeToLocalTime("2008-01-04_00:00:00"),
+                "authFile=" + authFile.getPath(),
+                "--write-xml-change-0.6", actualResultFile.getPath()
+                });
 
         // Validate that the dumped file matches the expected result.
         fileUtils.compareFiles(expectedResultFile, actualResultFile);

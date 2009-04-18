@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.apidb.common.DatabaseContext;
-import org.openstreetmap.osmosis.core.apidb.common.TileCalculator;
 import org.openstreetmap.osmosis.core.apidb.v0_6.impl.ChangesetManager;
 import org.openstreetmap.osmosis.core.apidb.v0_6.impl.DbFeature;
 import org.openstreetmap.osmosis.core.apidb.v0_6.impl.DbFeatureHistory;
@@ -33,6 +32,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
+import org.openstreetmap.osmosis.core.util.TileCalculator;
 
 /**
  * An OSM data sink for storing all data to a database. This task is intended for writing to an
@@ -44,7 +44,8 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
     // These SQL strings are the prefix to statements that will be built based
     // on how many rows of data are to be inserted at a time.
-    private static final String INSERT_SQL_NODE = "INSERT INTO nodes(id, timestamp, version, visible, changeset_id, latitude, longitude, tile)";
+	private static final String INSERT_SQL_NODE =
+		"INSERT INTO nodes(id, timestamp, version, visible, changeset_id, latitude, longitude, tile)";
 
     private static final int INSERT_PRM_COUNT_NODE = 8;
 
@@ -64,7 +65,8 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
     private static final int INSERT_PRM_COUNT_WAY_NODE = 4;
 
-    private static final String INSERT_SQL_RELATION = "INSERT INTO relations (id, timestamp, version, visible, changeset_id)";
+    private static final String INSERT_SQL_RELATION =
+    	"INSERT INTO relations (id, timestamp, version, visible, changeset_id)";
 
     private static final int INSERT_PRM_COUNT_RELATION = 5;
 
@@ -72,20 +74,21 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
     private static final int INSERT_PRM_COUNT_RELATION_TAG = 4;
 
-    private static final String INSERT_SQL_RELATION_MEMBER = "INSERT INTO relation_members (id, member_type, member_id, sequence_id, member_role, version)";
+    private static final String INSERT_SQL_RELATION_MEMBER =
+    	"INSERT INTO relation_members (id, member_type, member_id, sequence_id, member_role, version)";
 
     private static final int INSERT_PRM_COUNT_RELATION_MEMBER = 6;
 
     // These SQL statements will be invoked prior to loading data to disable
     // indexes.
-    private static final String[] INVOKE_DISABLE_KEYS = { "ALTER TABLE nodes DISABLE KEYS",
+    private static final String[] INVOKE_DISABLE_KEYS = {"ALTER TABLE nodes DISABLE KEYS",
             "ALTER TABLE node_tags DISABLE KEYS", "ALTER TABLE ways DISABLE KEYS", "ALTER TABLE way_tags DISABLE KEYS",
             "ALTER TABLE way_nodes DISABLE KEYS", "ALTER TABLE relations DISABLE KEYS",
             "ALTER TABLE relation_tags DISABLE KEYS", "ALTER TABLE relation_members DISABLE KEYS" };
 
     // These SQL statements will be invoked after loading data to re-enable
     // indexes.
-    private static final String[] INVOKE_ENABLE_KEYS = { "ALTER TABLE nodes ENABLE KEYS",
+    private static final String[] INVOKE_ENABLE_KEYS = {"ALTER TABLE nodes ENABLE KEYS",
             "ALTER TABLE node_tags ENABLE KEYS", "ALTER TABLE ways ENABLE KEYS", "ALTER TABLE way_tags ENABLE KEYS",
             "ALTER TABLE way_nodes ENABLE KEYS", "ALTER TABLE relations ENABLE KEYS",
             "ALTER TABLE relation_tags ENABLE KEYS", "ALTER TABLE relation_members ENABLE KEYS" };
@@ -98,24 +101,32 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
     private static final int LOAD_CURRENT_RELATION_ROW_COUNT = 100000;
 
-    private static final String LOAD_CURRENT_NODES = "INSERT INTO current_nodes SELECT id, latitude, longitude, changeset_id, visible, timestamp, tile, version"
+    private static final String LOAD_CURRENT_NODES =
+    	"INSERT INTO current_nodes SELECT id, latitude, longitude, changeset_id, visible, timestamp, tile, version"
             + " FROM nodes WHERE id >= ? AND id < ?";
 
-    private static final String LOAD_CURRENT_NODE_TAGS = "INSERT INTO current_node_tags SELECT id, k, v FROM node_tags WHERE id >= ? AND id < ?";
+    private static final String LOAD_CURRENT_NODE_TAGS =
+    	"INSERT INTO current_node_tags SELECT id, k, v FROM node_tags WHERE id >= ? AND id < ?";
 
-    private static final String LOAD_CURRENT_WAYS = "INSERT INTO current_ways SELECT id, changeset_id, timestamp, visible, version FROM ways"
+    private static final String LOAD_CURRENT_WAYS =
+    	"INSERT INTO current_ways SELECT id, changeset_id, timestamp, visible, version FROM ways"
             + " WHERE id >= ? AND id < ?";
 
-    private static final String LOAD_CURRENT_WAY_TAGS = "INSERT INTO current_way_tags SELECT id, k, v FROM way_tags WHERE id >= ? AND id < ?";
+    private static final String LOAD_CURRENT_WAY_TAGS =
+    	"INSERT INTO current_way_tags SELECT id, k, v FROM way_tags WHERE id >= ? AND id < ?";
 
-    private static final String LOAD_CURRENT_WAY_NODES = "INSERT INTO current_way_nodes SELECT id, node_id, sequence_id FROM way_nodes WHERE id >= ? AND id < ?";
+    private static final String LOAD_CURRENT_WAY_NODES =
+    	"INSERT INTO current_way_nodes SELECT id, node_id, sequence_id FROM way_nodes WHERE id >= ? AND id < ?";
 
-    private static final String LOAD_CURRENT_RELATIONS = "INSERT INTO current_relations SELECT id, changeset_id, timestamp, visible, version"
+    private static final String LOAD_CURRENT_RELATIONS =
+    	"INSERT INTO current_relations SELECT id, changeset_id, timestamp, visible, version"
             + " FROM relations WHERE id >= ? AND id < ?";
 
-    private static final String LOAD_CURRENT_RELATION_TAGS = "INSERT INTO current_relation_tags SELECT id, k, v FROM relation_tags WHERE id >= ? AND id < ?";
+    private static final String LOAD_CURRENT_RELATION_TAGS =
+    	"INSERT INTO current_relation_tags SELECT id, k, v FROM relation_tags WHERE id >= ? AND id < ?";
 
-    private static final String LOAD_CURRENT_RELATION_MEMBERS = "INSERT INTO current_relation_members SELECT id, member_type, member_id, member_role, sequence_id"
+    private static final String LOAD_CURRENT_RELATION_MEMBERS =
+    	"INSERT INTO current_relation_members SELECT id, member_type, member_id, member_role, sequence_id"
             + " FROM relation_members WHERE id >= ? AND id < ?";
 
     // These SQL statements will be invoked to lock and unlock tables.

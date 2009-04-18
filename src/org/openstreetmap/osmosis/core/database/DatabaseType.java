@@ -1,16 +1,37 @@
-/**
- * 
- */
+// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
 package org.openstreetmap.osmosis.core.database;
 
-public enum DatabaseType {
-    POSTGRESQL, MYSQL, UNKNOWN;
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 
-    public static DatabaseType fromString(String property) {
-        if (POSTGRESQL.toString().equalsIgnoreCase(property))
+/**
+ * Represents the different database types.
+ */
+public enum DatabaseType {
+	/**
+	 * The PostgreSQL database.
+	 */
+	POSTGRESQL,
+
+	/**
+	 * The MySQL database.
+	 */
+	MYSQL;
+	
+
+	/**
+	 * Gets a database type value based on a string name.
+	 * 
+	 * @param name
+	 *            The database type string.
+	 * @return The strongly typed database type.
+	 */
+    public static DatabaseType fromString(String name) {
+        if (POSTGRESQL.toString().equalsIgnoreCase(name)) {
             return POSTGRESQL;
-        if (MYSQL.toString().equalsIgnoreCase(property))
+        } else if (MYSQL.toString().equalsIgnoreCase(name)) {
             return MYSQL;
-        return UNKNOWN;
+        } else {
+        	throw new OsmosisRuntimeException("The database type name " + name + " is not recognized.");
+        }
     }
 }

@@ -18,7 +18,8 @@ import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
  */
 public class RelationMemberTableReader extends BaseTableReader<DbFeatureHistory<DbOrderedFeature<RelationMember>>> {
 
-    private static final String SELECT_SQL = "SELECT id as relation_id, version, member_type, member_id, member_role, sequence_id"
+    private static final String SELECT_SQL =
+    	"SELECT id as relation_id, version, member_type, member_id, member_role, sequence_id"
             + " FROM relation_members" + " ORDER BY id, version";
 
     private final MemberTypeParser memberTypeParser;

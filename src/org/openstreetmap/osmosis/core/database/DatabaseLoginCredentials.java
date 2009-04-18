@@ -23,18 +23,25 @@ public class DatabaseLoginCredentials {
     private DatabaseType dbType;
 
     /**
-     * Creates a new instance.
-     * 
-     * @param host The server hosting the database.
-     * @param database The database instance.
-     * @param user The user name for authentication.
-     * @param password The password for authentication.
-     * @param forceUtf8 If true, the database connection will be forced to use utf-8 instead of the
-     *        database default.
-     * @param profileSql If true, profile logging will be enabled on the database connection causing
-     *        all queries to be logged to stderr.
-     * @param dbType
-     */
+	 * Creates a new instance.
+	 * 
+	 * @param host
+	 *            The server hosting the database.
+	 * @param database
+	 *            The database instance.
+	 * @param user
+	 *            The user name for authentication.
+	 * @param password
+	 *            The password for authentication.
+	 * @param forceUtf8
+	 *            If true, the database connection will be forced to use utf-8 instead of the
+	 *            database default.
+	 * @param profileSql
+	 *            If true, profile logging will be enabled on the database connection causing all
+	 *            queries to be logged to stderr.
+	 * @param dbType
+	 *            The database type.
+	 */
     public DatabaseLoginCredentials(String host, String database, String user, String password, boolean forceUtf8,
             boolean profileSql, DatabaseType dbType) {
         this.host = host;
@@ -155,7 +162,7 @@ public class DatabaseLoginCredentials {
     }
 
     /**
-     * Return database type
+     * Return database type.
      * 
      * @return database type
      */
@@ -164,7 +171,7 @@ public class DatabaseLoginCredentials {
     }
 
     /**
-     * Updates database type
+     * Updates database type.
      * 
      * @param dbType database type
      */
@@ -172,8 +179,14 @@ public class DatabaseLoginCredentials {
         this.dbType = dbType;
     }
 
+    
+    /**
+	 * Updates the database type.
+	 * 
+	 * @param property
+	 *            The database type property.
+	 */
     public void setDbType(String property) {
         this.dbType = DatabaseType.fromString(property);
-
     }
 }

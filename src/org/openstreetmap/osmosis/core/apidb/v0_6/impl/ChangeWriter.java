@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.apidb.common.DatabaseContext;
-import org.openstreetmap.osmosis.core.apidb.common.TileCalculator;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
@@ -22,6 +21,8 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
 import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
+import org.openstreetmap.osmosis.core.util.TileCalculator;
+
 
 /**
  * Writes changes to a database.
@@ -32,41 +33,54 @@ public class ChangeWriter {
 
     private static final Logger LOG = Logger.getLogger(ChangeWriter.class.getName());
 
-    private static final String INSERT_SQL_NODE = "INSERT INTO nodes (id, version, timestamp, visible, changeset_id, latitude, longitude, tile)"
+    private static final String INSERT_SQL_NODE =
+    	"INSERT INTO nodes (id, version, timestamp, visible, changeset_id, latitude, longitude, tile)"
             + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private static final String UPDATE_SQL_NODE = "UPDATE nodes SET timestamp = ?, visible = ?, changeset_id = ?, latitude = ?, longitude = ?, tile = ?"
+    private static final String UPDATE_SQL_NODE =
+    	"UPDATE nodes SET timestamp = ?, visible = ?, changeset_id = ?, latitude = ?, longitude = ?, tile = ?"
             + " WHERE id = ? AND version = ?";
 
-    private static final String SELECT_SQL_NODE_COUNT = "SELECT Count(id) AS rowCount FROM nodes WHERE id = ? AND version = ?";
+    private static final String SELECT_SQL_NODE_COUNT =
+    	"SELECT Count(id) AS rowCount FROM nodes WHERE id = ? AND version = ?";
 
-    private static final String INSERT_SQL_NODE_CURRENT = "INSERT INTO current_nodes (id, version, timestamp, visible, changeset_id, latitude, longitude, tile)"
+    private static final String INSERT_SQL_NODE_CURRENT =
+    	"INSERT INTO current_nodes (id, version, timestamp, visible, changeset_id, latitude, longitude, tile)"
             + " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private static final String UPDATE_SQL_NODE_CURRENT = "UPDATE current_nodes SET version = ?, timestamp = ?, visible = ?, changeset_id = ?, latitude = ?,"
+    private static final String UPDATE_SQL_NODE_CURRENT =
+    	"UPDATE current_nodes SET version = ?, timestamp = ?, visible = ?, changeset_id = ?, latitude = ?,"
             + " longitude = ?, tile = ? WHERE id = ?";
 
-    private static final String SELECT_SQL_NODE_CURRENT_COUNT = "SELECT Count(id) AS rowCount FROM current_nodes WHERE id = ?";
+    private static final String SELECT_SQL_NODE_CURRENT_COUNT =
+    	"SELECT Count(id) AS rowCount FROM current_nodes WHERE id = ?";
 
     private static final String INSERT_SQL_NODE_TAG = "INSERT INTO node_tags (id, version, k, v) VALUES (?, ?, ?, ?)";
 
     private static final String DELETE_SQL_NODE_TAG = "DELETE FROM node_tags WHERE id = ? AND version = ?";
 
-    private static final String INSERT_SQL_NODE_TAG_CURRENT = "INSERT INTO current_node_tags (id, k, v) VALUES (?, ?, ?)";
+    private static final String INSERT_SQL_NODE_TAG_CURRENT =
+    	"INSERT INTO current_node_tags (id, k, v) VALUES (?, ?, ?)";
 
     private static final String DELETE_SQL_NODE_TAG_CURRENT = "DELETE FROM current_node_tags WHERE id = ?";
 
-    private static final String INSERT_SQL_WAY = "INSERT INTO ways (id, version, timestamp, visible, changeset_id) VALUES (?, ?, ?, ?, ?)";
+    private static final String INSERT_SQL_WAY =
+    	"INSERT INTO ways (id, version, timestamp, visible, changeset_id) VALUES (?, ?, ?, ?, ?)";
 
-    private static final String UPDATE_SQL_WAY = "UPDATE current_ways SET timestamp = ?, visible = ?, changeset_id = ? WHERE id = ? AND version = ?";
+    private static final String UPDATE_SQL_WAY =
+    	"UPDATE current_ways SET timestamp = ?, visible = ?, changeset_id = ? WHERE id = ? AND version = ?";
 
-    private static final String SELECT_SQL_WAY_COUNT = "SELECT Count(id) AS rowCount FROM ways WHERE id = ? AND version = ?";
+    private static final String SELECT_SQL_WAY_COUNT =
+    	"SELECT Count(id) AS rowCount FROM ways WHERE id = ? AND version = ?";
 
-    private static final String INSERT_SQL_WAY_CURRENT = "INSERT INTO current_ways (id, version, timestamp, visible, changeset_id) VALUES (?, ?, ?, ?, ?)";
+    private static final String INSERT_SQL_WAY_CURRENT =
+    	"INSERT INTO current_ways (id, version, timestamp, visible, changeset_id) VALUES (?, ?, ?, ?, ?)";
 
-    private static final String UPDATE_SQL_WAY_CURRENT = "UPDATE current_ways SET version = ?, timestamp = ?, visible = ?, changeset_id = ? WHERE id = ?";
+    private static final String UPDATE_SQL_WAY_CURRENT =
+    	"UPDATE current_ways SET version = ?, timestamp = ?, visible = ?, changeset_id = ? WHERE id = ?";
 
-    private static final String SELECT_SQL_WAY_CURRENT_COUNT = "SELECT Count(id) AS rowCount FROM current_ways WHERE id = ?";
+    private static final String SELECT_SQL_WAY_CURRENT_COUNT =
+    	"SELECT Count(id) AS rowCount FROM current_ways WHERE id = ?";
 
     private static final String INSERT_SQL_WAY_TAG = "INSERT INTO way_tags (id, version, k, v) VALUES (?, ?, ?, ?)";
 
@@ -76,43 +90,58 @@ public class ChangeWriter {
 
     private static final String DELETE_SQL_WAY_TAG_CURRENT = "DELETE FROM current_way_tags WHERE id = ?";
 
-    private static final String INSERT_SQL_WAY_NODE = "INSERT INTO way_nodes (id, version, node_id, sequence_id) VALUES (?, ?, ?, ?)";
+    private static final String INSERT_SQL_WAY_NODE =
+    	"INSERT INTO way_nodes (id, version, node_id, sequence_id) VALUES (?, ?, ?, ?)";
 
     private static final String DELETE_SQL_WAY_NODE = "DELETE FROM way_nodes WHERE id = ? AND version = ?";
 
-    private static final String INSERT_SQL_WAY_NODE_CURRENT = "INSERT INTO current_way_nodes (id, node_id, sequence_id) VALUES (?, ?, ?)";
+    private static final String INSERT_SQL_WAY_NODE_CURRENT =
+    	"INSERT INTO current_way_nodes (id, node_id, sequence_id) VALUES (?, ?, ?)";
 
     private static final String DELETE_SQL_WAY_NODE_CURRENT = "DELETE FROM current_way_nodes WHERE id = ?";
 
-    private static final String INSERT_SQL_RELATION = "INSERT INTO relations (id, version, timestamp, visible, changeset_id) VALUES (?, ?, ?, ?, ?)";
+    private static final String INSERT_SQL_RELATION =
+    	"INSERT INTO relations (id, version, timestamp, visible, changeset_id) VALUES (?, ?, ?, ?, ?)";
 
-    private static final String UPDATE_SQL_RELATION = "UPDATE relations SET timestamp = ?, visible = ?, changeset_id = ? WHERE id = ? AND version = ?";
+    private static final String UPDATE_SQL_RELATION =
+    	"UPDATE relations SET timestamp = ?, visible = ?, changeset_id = ? WHERE id = ? AND version = ?";
 
-    private static final String SELECT_SQL_RELATION_COUNT = "SELECT Count(id) AS rowCount FROM current_relations WHERE id = ? AND version = ?";
+    private static final String SELECT_SQL_RELATION_COUNT =
+    	"SELECT Count(id) AS rowCount FROM current_relations WHERE id = ? AND version = ?";
 
-    private static final String INSERT_SQL_RELATION_CURRENT = "INSERT INTO current_relations (id, version, timestamp, visible, changeset_id) VALUES (?, ?, ?, ?, ?)";
+    private static final String INSERT_SQL_RELATION_CURRENT =
+    	"INSERT INTO current_relations (id, version, timestamp, visible, changeset_id) VALUES (?, ?, ?, ?, ?)";
 
-    private static final String UPDATE_SQL_RELATION_CURRENT = "UPDATE current_relations SET version = ?, timestamp = ?, visible = ?, changeset_id = ? WHERE id = ?";
+    private static final String UPDATE_SQL_RELATION_CURRENT =
+    	"UPDATE current_relations SET version = ?, timestamp = ?, visible = ?, changeset_id = ? WHERE id = ?";
 
-    private static final String SELECT_SQL_RELATION_CURRENT_COUNT = "SELECT Count(id) AS rowCount FROM current_relations WHERE id = ?";
+    private static final String SELECT_SQL_RELATION_CURRENT_COUNT =
+    	"SELECT Count(id) AS rowCount FROM current_relations WHERE id = ?";
 
-    private static final String INSERT_SQL_RELATION_TAG = "INSERT INTO relation_tags (id, version, k, v) VALUES (?, ?, ?, ?)";
+    private static final String INSERT_SQL_RELATION_TAG =
+    	"INSERT INTO relation_tags (id, version, k, v) VALUES (?, ?, ?, ?)";
 
     private static final String DELETE_SQL_RELATION_TAG = "DELETE FROM relation_tags WHERE id = ? AND version = ?";
 
-    private static final String INSERT_SQL_RELATION_TAG_CURRENT = "INSERT INTO current_relation_tags (id, k, v) VALUES (?, ?, ?)";
+    private static final String INSERT_SQL_RELATION_TAG_CURRENT =
+    	"INSERT INTO current_relation_tags (id, k, v) VALUES (?, ?, ?)";
 
-    private static final String DELETE_SQL_RELATION_TAG_CURRENT = "DELETE FROM current_relation_tags WHERE id = ?";
+    private static final String DELETE_SQL_RELATION_TAG_CURRENT =
+    	"DELETE FROM current_relation_tags WHERE id = ?";
 
-    private static final String INSERT_SQL_RELATION_MEMBER = "INSERT INTO relation_members (id, version, member_type, member_id, member_role, sequence_id)"
+    private static final String INSERT_SQL_RELATION_MEMBER =
+    	"INSERT INTO relation_members (id, version, member_type, member_id, member_role, sequence_id)"
             + " VALUES (?, ?, ?, ?, ?, ?)";
 
-    private static final String DELETE_SQL_RELATION_MEMBER = "DELETE FROM relation_members WHERE id = ? AND version = ?";
+    private static final String DELETE_SQL_RELATION_MEMBER =
+    	"DELETE FROM relation_members WHERE id = ? AND version = ?";
 
-    private static final String INSERT_SQL_RELATION_MEMBER_CURRENT = "INSERT INTO current_relation_members (id, member_type, member_id, member_role, sequence_id)"
+    private static final String INSERT_SQL_RELATION_MEMBER_CURRENT =
+    	"INSERT INTO current_relation_members (id, member_type, member_id, member_role, sequence_id)"
             + " VALUES (?, ?, ?, ?, ?)";
 
-    private static final String DELETE_SQL_RELATION_MEMBER_CURRENT = "DELETE FROM current_relation_members WHERE id = ?";
+    private static final String DELETE_SQL_RELATION_MEMBER_CURRENT =
+    	"DELETE FROM current_relation_members WHERE id = ?";
 
     private final DatabaseContext dbCtx;
 
@@ -369,7 +398,8 @@ public class ChangeWriter {
             exists = checkIfEntityHistoryExists(selectNodeCountStatement, node.getId(), node.getVersion());
 
         } catch (SQLException e) {
-            throw new OsmosisRuntimeException("Unable to check if current node with id=" + node.getId() + " exists.", e);
+            throw new OsmosisRuntimeException(
+            		"Unable to check if current node with id=" + node.getId() + " exists.", e);
         }
         if (exists) {
             // Update the node in the history table.
@@ -440,7 +470,8 @@ public class ChangeWriter {
                 deleteNodeTagCurrentStatement.execute();
 
             } catch (SQLException e) {
-                throw new OsmosisRuntimeException("Unable to delete current node tags with id=" + node.getId() + ".", e);
+                throw new OsmosisRuntimeException(
+                		"Unable to delete current node tags with id=" + node.getId() + ".", e);
             }
 
             // Update the node if it already exists in the current table, otherwise insert it.

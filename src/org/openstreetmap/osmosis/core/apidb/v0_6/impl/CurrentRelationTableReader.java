@@ -19,7 +19,8 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
  */
 public class CurrentRelationTableReader extends BaseEntityReader<Relation> {
 
-    private static final String SELECT_SQL = "SELECT r.id, r.version, r.timestamp, r.visible, u.data_public, u.id AS user_id, u.display_name"
+    private static final String SELECT_SQL =
+    	"SELECT r.id, r.version, r.timestamp, r.visible, u.data_public, u.id AS user_id, u.display_name"
             + " FROM current_relations r"
             + " LEFT OUTER JOIN changesets c ON r.changeset_id = c.id"
             + " LEFT OUTER JOIN users u ON c.user_id = u.id" + " ORDER BY r.id";
