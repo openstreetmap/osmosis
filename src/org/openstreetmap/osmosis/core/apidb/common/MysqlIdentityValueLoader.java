@@ -9,16 +9,15 @@ import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
 
 
 /**
- * A utility class for retrieving the last inserted identity column value.
+ * Mysql implementation of an identity value loader.
  * 
  * @author Brett Henderson
  */
-public class IdentityColumnValueLoader implements Releasable {
-	private static final Logger LOG = Logger.getLogger(IdentityColumnValueLoader.class.getName());
+public class MysqlIdentityValueLoader implements IdentityValueLoader {
+	private static final Logger LOG = Logger.getLogger(MysqlIdentityValueLoader.class.getName());
 	private static final String SQL_SELECT_LAST_INSERT_ID =
 		"SELECT LAST_INSERT_ID() AS lastInsertId FROM DUAL";
 	
@@ -33,7 +32,7 @@ public class IdentityColumnValueLoader implements Releasable {
 	 * @param dbCtx
 	 *            The database context to use for all database access.
 	 */
-	public IdentityColumnValueLoader(DatabaseContext dbCtx) {
+	public MysqlIdentityValueLoader(DatabaseContext dbCtx) {
 		this.dbCtx = dbCtx;
 		
 		statementContainer = new ReleasableStatementContainer();

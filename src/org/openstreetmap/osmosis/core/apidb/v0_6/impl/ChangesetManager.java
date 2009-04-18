@@ -9,7 +9,6 @@ import java.util.Map;
 import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.apidb.common.DatabaseContext;
-import org.openstreetmap.osmosis.core.apidb.common.IdentityColumnValueLoader;
 import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.lifecycle.Releasable;
@@ -51,8 +50,6 @@ public class ChangesetManager implements Releasable {
 
     private PreparedStatement insertTagStatement;
 
-    private final IdentityColumnValueLoader identityLoader;
-
     /**
      * Creates a new instance.
      * 
@@ -64,10 +61,8 @@ public class ChangesetManager implements Releasable {
         userToChangesetMap = new HashMap<Integer, ActiveChangeset>();
         releasableContainer = new ReleasableContainer();
         statementContainer = new ReleasableStatementContainer();
-        identityLoader = new IdentityColumnValueLoader(dbCtx);
 
         releasableContainer.add(statementContainer);
-        releasableContainer.add(identityLoader);
     }
 
     private long insertChangeset(int userId) {
@@ -85,7 +80,7 @@ public class ChangesetManager implements Releasable {
             insertStatement.setInt(prmIndex++, userId);
             insertStatement.executeUpdate();
 
-            changesetId = identityLoader.getLastInsertId();
+            changesetId = dbCtx.getLastInsertId();
 
             // Insert the changeset tags.
             prmIndex = 1;
@@ -93,7 +88,7 @@ public class ChangesetManager implements Releasable {
             insertTagStatement.setLong(prmIndex++, changesetId);
             insertTagStatement.executeUpdate();
 
-            return identityLoader.getLastInsertId();
+            return changesetId;
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to insert a new changeset for user with id " + userId + ".", e);

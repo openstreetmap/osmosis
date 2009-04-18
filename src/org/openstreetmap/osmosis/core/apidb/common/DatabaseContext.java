@@ -35,6 +35,8 @@ public class DatabaseContext {
 	 * cleanup. It will be closed during release or if a new statement is created.
 	 */
     private Statement statement;
+    
+    private IdentityValueLoader identityValueLoader;
 
     private boolean autoCommit;
 
@@ -50,9 +52,11 @@ public class DatabaseContext {
             switch (loginCredentials.getDbType()) {
             case POSTGRESQL:
                 Class.forName("org.postgresql.Driver");
+                identityValueLoader = new PostgresqlIdentityValueLoader(this);
                 break;
             case MYSQL:
                 Class.forName("com.mysql.jdbc.Driver");
+                identityValueLoader = new MysqlIdentityValueLoader(this);
                 break;
             default:
                 throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
@@ -266,7 +270,18 @@ public class DatabaseContext {
 			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
 		}
 	}
-    
+
+
+	/**
+	 * Gets the last inserted identity column value. This is a global value and may not work
+	 * correctly if the database uses triggers.
+	 * 
+	 * @return The last inserted identity column value.
+	 */
+	public long getLastInsertId() {
+		return identityValueLoader.getLastInsertId();
+	}
+
 
     /**
      * Executes a sql statement against the database.
@@ -405,6 +420,8 @@ public class DatabaseContext {
      * should always be called in a finally block whenever this class is used.
      */
     public void release() {
+    	identityValueLoader.release();
+    	
         if (statement != null) {
             try {
             	statement.close();
