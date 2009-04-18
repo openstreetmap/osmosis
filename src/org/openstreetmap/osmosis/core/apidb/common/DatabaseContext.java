@@ -29,16 +29,14 @@ public class DatabaseContext {
 
     private Connection connection;
 
-    /**
-     * This statement is used by streaming result sets. It is stored globally here to allow it to
-     * remain open after a method return. It will be closed during release or if a new streaming
-     * result set is created.
-     */
-    private Statement streamingStatement;
+	/**
+	 * This statement is used in cases where the statement isn't exposed to the client. It is stored
+	 * globally here to allow it to remain open after a method return and to simplify resource
+	 * cleanup. It will be closed during release or if a new statement is created.
+	 */
+    private Statement statement;
 
     private boolean autoCommit;
-
-    private Statement statement;
 
     /**
      * Creates a new instance.
@@ -216,6 +214,58 @@ public class DatabaseContext {
 			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
 		}
 	}
+	
+	
+    /**
+	 * Locks the specified tables for exclusive access.
+	 * 
+	 * @param tables
+	 *            The tables to lock.
+	 */
+	public void lockTables(List<String> tables) {
+		switch (loginCredentials.getDbType()) {
+        case POSTGRESQL:
+			// Locking tables is not supported.
+			break;
+        case MYSQL:
+        	StringBuilder statementBuilder = new StringBuilder();
+        	
+        	for (String table : tables) {
+        		if (statementBuilder.length() == 0) {
+        			statementBuilder.append("LOCK TABLES ");
+        		} else {
+        			statementBuilder.append(", ");
+        		}
+        		statementBuilder.append(table);
+        		statementBuilder.append(" WRITE");
+			}
+        	
+        	executeStatement(statementBuilder.toString());
+			break;
+		default:
+			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+		}
+	}
+	
+	
+    /**
+	 * Unlocks the specified tables.
+	 * 
+	 * @param tables
+	 *            The tables to unlock.
+	 */
+	public void unlockTables(List<String> tables) {
+		switch (loginCredentials.getDbType()) {
+        case POSTGRESQL:
+			// Locking tables is not supported.
+			break;
+        case MYSQL:
+        	executeStatement("UNLOCK TABLES");
+			break;
+		default:
+			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+		}
+	}
     
 
     /**
@@ -238,12 +288,14 @@ public class DatabaseContext {
         }
     }
 
+    
     /**
-     * Creates a new database prepared statement.
-     * 
-     * @param sql The statement to be created.
-     * @return The newly created statement.
-     */
+	 * Creates a new database prepared statement.
+	 * 
+	 * @param sql
+	 *            The statement to be created.
+	 * @return The newly created statement.
+	 */
     public PreparedStatement prepareStatement(String sql) {
         try {
             PreparedStatement preparedStatement;
@@ -256,6 +308,25 @@ public class DatabaseContext {
             throw new OsmosisRuntimeException("Unable to create database prepared statement.", e);
         }
     }
+    
+    
+    private void setStatementFetchSizeForStreaming(Statement streamingStatement) {
+    	try {
+	    	switch (loginCredentials.getDbType()) {
+	        case POSTGRESQL:
+	        	streamingStatement.setFetchSize(10000);
+				break;
+	        case MYSQL:
+	        	streamingStatement.setFetchSize(Integer.MIN_VALUE);
+				break;
+			default:
+				throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+			}
+    	} catch (SQLException e) {
+    		throw new OsmosisRuntimeException("Unable to update statement fetch size.", e);
+    	}
+    }
+    
 
     /**
 	 * Creates a new database statement that is configured so that any result sets created using it
@@ -277,7 +348,7 @@ public class DatabaseContext {
 			newStatement = getConnection().prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY,
 					ResultSet.CONCUR_READ_ONLY);
 
-            newStatement.setFetchSize(Integer.MIN_VALUE);
+			setStatementFetchSizeForStreaming(newStatement);
 
             return newStatement;
 
@@ -304,7 +375,8 @@ public class DatabaseContext {
             }
 
             statement = getConnection().createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-            statement.setFetchSize(10000);
+            
+            setStatementFetchSizeForStreaming(statement);
 
             resultSet = statement.executeQuery(sql);
 
@@ -312,42 +384,6 @@ public class DatabaseContext {
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to create resultset.", e);
-        }
-    }
-
-    /**
-     * Creates a result set that is configured to stream results from the database.
-     * 
-     * @param sql The query to invoke.
-     * @return The result set.
-     */
-    public ResultSet executeStreamingQuery(String sql) {
-        try {
-            ResultSet resultSet;
-
-            // Close any existing streaming statement.
-            if (streamingStatement != null) {
-                try {
-                    streamingStatement.close();
-                    streamingStatement = null;
-
-                } catch (SQLException e) {
-                    throw new OsmosisRuntimeException("Unable to close existing streaming statement.", e);
-                }
-            }
-
-            // Create a statement for returning streaming results.
-            streamingStatement = getConnection().createStatement(ResultSet.TYPE_FORWARD_ONLY,
-                    ResultSet.CONCUR_READ_ONLY);
-
-            streamingStatement.setFetchSize(Integer.MIN_VALUE);
-
-            resultSet = streamingStatement.executeQuery(sql);
-
-            return resultSet;
-
-        } catch (SQLException e) {
-            throw new OsmosisRuntimeException("Unable to create streaming resultset.", e);
         }
     }
 
@@ -369,16 +405,16 @@ public class DatabaseContext {
      * should always be called in a finally block whenever this class is used.
      */
     public void release() {
-        if (streamingStatement != null) {
+        if (statement != null) {
             try {
-                streamingStatement.close();
+            	statement.close();
 
             } catch (SQLException e) {
                 // We cannot throw an exception within a release statement.
-                LOG.log(Level.WARNING, "Unable to close existing streaming statement.", e);
+                LOG.log(Level.WARNING, "Unable to close existing statement.", e);
             }
 
-            streamingStatement = null;
+            statement = null;
         }
         if (connection != null) {
             try {

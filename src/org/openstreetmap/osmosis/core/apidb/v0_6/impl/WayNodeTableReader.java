@@ -34,7 +34,7 @@ public class WayNodeTableReader extends BaseTableReader<DbFeatureHistory<DbOrder
      */
     @Override
     protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-        return queryDbCtx.executeStreamingQuery(SELECT_SQL);
+        return queryDbCtx.executeQuery(SELECT_SQL);
     }
 
     /**

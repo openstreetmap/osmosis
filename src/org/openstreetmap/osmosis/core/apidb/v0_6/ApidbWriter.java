@@ -122,16 +122,11 @@ public class ApidbWriter implements Sink, EntityProcessor {
     	"INSERT INTO current_relation_members SELECT id, member_type, member_id, member_role, sequence_id"
             + " FROM relation_members WHERE id >= ? AND id < ?";
 
-    // These SQL statements will be invoked to lock and unlock tables.
-    private static final String INVOKE_LOCK_TABLES = "LOCK TABLES" + " nodes WRITE, node_tags WRITE,"
-            + " ways WRITE, way_tags WRITE, way_nodes WRITE,"
-            + " relations WRITE, relation_tags WRITE, relation_members WRITE,"
-            + " current_nodes WRITE, current_node_tags WRITE,"
-            + " current_ways WRITE, current_way_tags WRITE, current_way_nodes WRITE,"
-            + " current_relations WRITE, current_relation_tags WRITE, current_relation_members WRITE,"
-            + " users WRITE, changesets WRITE, changeset_tags WRITE";
-
-    private static final String INVOKE_UNLOCK_TABLES = "UNLOCK TABLES";
+    // These tables will be locked for exclusive access while loading data.
+	private static final List<String> LOCK_TABLES = Arrays.asList(new String[] {"nodes", "node_tags", "ways",
+			"way_tags", "way_nodes", "relations", "relation_tags", "relation_members", "current_nodes",
+			"current_node_tags", "current_ways", "current_way_tags", "current_way_nodes", "current_relations",
+			"current_relation_tags", "current_relation_members", "users", "changesets", "changeset_tags" });
 
     // These constants define how many rows of each data type will be inserted
     // with single insert statements.
@@ -413,7 +408,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
             // Lock tables if required to improve load performance.
             if (lockTables) {
-                dbCtx.executeStatement(INVOKE_LOCK_TABLES);
+            	dbCtx.lockTables(LOCK_TABLES);
             }
 
             initialized = true;
@@ -1075,7 +1070,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
         // Unlock tables (if they were locked) now that we have completed.
         if (lockTables) {
-            dbCtx.executeStatement(INVOKE_UNLOCK_TABLES);
+        	dbCtx.unlockTables(LOCK_TABLES);
         }
 
         dbCtx.commit();

@@ -40,7 +40,7 @@ public class RelationMemberTableReader extends BaseTableReader<DbFeatureHistory<
      */
     @Override
     protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-        return queryDbCtx.executeStreamingQuery(SELECT_SQL);
+        return queryDbCtx.executeQuery(SELECT_SQL);
     }
 
     /**

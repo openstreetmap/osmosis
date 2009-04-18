@@ -44,7 +44,7 @@ public class CurrentNodeTableReader extends BaseEntityReader<Node> {
      */
     @Override
     protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-        return queryDbCtx.executeStreamingQuery(SELECT_SQL);
+        return queryDbCtx.executeQuery(SELECT_SQL);
     }
 
     /**

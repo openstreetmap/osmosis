@@ -41,7 +41,7 @@ public class CurrentEntityTagTableReader extends BaseTableReader<DbFeature<Tag>>
      */
     @Override
     protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-        return queryDbCtx.executeStreamingQuery(SELECT_SQL_1 + tableName + SELECT_SQL_2);
+        return queryDbCtx.executeQuery(SELECT_SQL_1 + tableName + SELECT_SQL_2);
     }
 
     /**

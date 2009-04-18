@@ -40,7 +40,7 @@ public class CurrentRelationMemberTableReader extends BaseTableReader<DbOrderedF
      */
     @Override
     protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
-        return queryDbCtx.executeStreamingQuery(SELECT_SQL);
+        return queryDbCtx.executeQuery(SELECT_SQL);
     }
 
     /**

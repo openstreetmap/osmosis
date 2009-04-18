@@ -115,7 +115,7 @@ public class UserManager implements Releasable {
     private void insertUser(OsmUser user) {
         int prmIndex;
         String userName;
-        int dataPublic;
+        boolean dataPublic;
 
         if (statementInsert == null) {
             statementInsert = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_USER));
@@ -123,10 +123,10 @@ public class UserManager implements Releasable {
 
         if (OsmUser.NONE.equals(user)) {
             userName = "Osmosis Anonymous";
-            dataPublic = 0;
+            dataPublic = false;
         } else {
             userName = user.getName();
-            dataPublic = 1;
+            dataPublic = true;
         }
 
         try {
@@ -134,7 +134,7 @@ public class UserManager implements Releasable {
             statementInsert.setInt(prmIndex++, user.getId());
             statementInsert.setString(prmIndex++, "osmosis_user_" + user.getId() + "@example.com");
             statementInsert.setString(prmIndex++, userName);
-            statementInsert.setInt(prmIndex++, dataPublic);
+            statementInsert.setBoolean(prmIndex++, dataPublic);
             statementInsert.setString(prmIndex++, userName);
 
             statementInsert.executeUpdate();
