@@ -19,9 +19,9 @@ public class MemberTypeParser {
 	private static final Map<String, EntityType> MEMBER_TYPE_MAP = new HashMap<String, EntityType>();
 	
 	static {
-		MEMBER_TYPE_MAP.put("node", EntityType.Node);
-		MEMBER_TYPE_MAP.put("way", EntityType.Way);
-		MEMBER_TYPE_MAP.put("relation", EntityType.Relation);
+		MEMBER_TYPE_MAP.put("Node", EntityType.Node);
+		MEMBER_TYPE_MAP.put("Way", EntityType.Way);
+		MEMBER_TYPE_MAP.put("Relation", EntityType.Relation);
 	}
 	
 	

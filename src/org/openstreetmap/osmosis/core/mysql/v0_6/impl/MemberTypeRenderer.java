@@ -18,9 +18,9 @@ public class MemberTypeRenderer {
 	private static final Map<EntityType, String> MEMBER_TYPE_MAP = new HashMap<EntityType, String>();
 	
 	static {
-		MEMBER_TYPE_MAP.put(EntityType.Node, "node");
-		MEMBER_TYPE_MAP.put(EntityType.Way, "way");
-		MEMBER_TYPE_MAP.put(EntityType.Relation, "relation");
+		MEMBER_TYPE_MAP.put(EntityType.Node, "Node");
+		MEMBER_TYPE_MAP.put(EntityType.Way, "Way");
+		MEMBER_TYPE_MAP.put(EntityType.Relation, "Relation");
 	}
 	
 	

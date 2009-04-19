@@ -309,7 +309,7 @@ public class ApiDbTest {
                 "authFile=" + authFile.getPath()
                 });
 
-        // Dump the database to an osm file.
+        // Dump the changeset to an osm file.
         Osmosis.run(new String[] {
         		"-q",
         		"--read-apidb-change-0.6",
