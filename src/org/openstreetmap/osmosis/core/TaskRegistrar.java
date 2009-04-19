@@ -150,128 +150,110 @@ public class TaskRegistrar {
 		changeSorterFactory06.registerComparator("seekable", new ChangeForSeekableApplierComparator(), false);
 
 		// Register factories.
-		factoryRegister.register("apply-change", new org.openstreetmap.osmosis.core.change.v0_5.ChangeApplierFactory());
-		factoryRegister.register("ac", new org.openstreetmap.osmosis.core.change.v0_5.ChangeApplierFactory());
-		factoryRegister.register("bounding-box",
-				new org.openstreetmap.osmosis.core.filter.v0_5.BoundingBoxFilterFactory());
-		factoryRegister.register("bb", new org.openstreetmap.osmosis.core.filter.v0_5.BoundingBoxFilterFactory());
-		factoryRegister.register("derive-change",
-				new org.openstreetmap.osmosis.core.change.v0_5.ChangeDeriverFactory());
-		factoryRegister.register("dc", new org.openstreetmap.osmosis.core.change.v0_5.ChangeDeriverFactory());
-		factoryRegister.register("read-mysql", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlReaderFactory());
-		factoryRegister.register("rm", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlReaderFactory());
-		factoryRegister.register("read-mysql-change",
-				new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlChangeReaderFactory());
-		factoryRegister.register("rmc", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlChangeReaderFactory());
-		factoryRegister.register("read-mysql-current",
-				new org.openstreetmap.osmosis.core.mysql.v0_5.MySqlCurrentReaderFactory());
-		factoryRegister.register("rmcur", new org.openstreetmap.osmosis.core.mysql.v0_5.MySqlCurrentReaderFactory());
-		factoryRegister.register("read-xml", new org.openstreetmap.osmosis.core.xml.v0_5.XmlReaderFactory());
-		factoryRegister.register("rx", new org.openstreetmap.osmosis.core.xml.v0_5.XmlReaderFactory());
-		factoryRegister.register("read-xml-change",
-				new org.openstreetmap.osmosis.core.xml.v0_5.XmlChangeReaderFactory());
-		factoryRegister.register("rxc", new org.openstreetmap.osmosis.core.xml.v0_5.XmlChangeReaderFactory());
+		factoryRegister.register("apply-change", new ChangeApplierFactory());
+		factoryRegister.register("ac", new ChangeApplierFactory());
+		factoryRegister.register("bounding-box", new BoundingBoxFilterFactory());
+		factoryRegister.register("bb", new BoundingBoxFilterFactory());
+		factoryRegister.register("derive-change", new ChangeDeriverFactory());
+		factoryRegister.register("dc", new ChangeDeriverFactory());
+		factoryRegister.register("read-mysql", new MysqlReaderFactory());
+		factoryRegister.register("rm", new MysqlReaderFactory());
+		factoryRegister.register("read-mysql-change", new MysqlChangeReaderFactory());
+		factoryRegister.register("rmc", new MysqlChangeReaderFactory());
+		factoryRegister.register("read-mysql-current", new MySqlCurrentReaderFactory());
+		factoryRegister.register("rmcur", new MySqlCurrentReaderFactory());
+		factoryRegister.register("read-xml", new XmlReaderFactory());
+		factoryRegister.register("rx", new XmlReaderFactory());
+		factoryRegister.register("read-xml-change", new XmlChangeReaderFactory());
+		factoryRegister.register("rxc", new XmlChangeReaderFactory());
 		factoryRegister.register("sort", entitySorterFactory05);
 		factoryRegister.register("s", entitySorterFactory05);
 		factoryRegister.register("sort-change", changeSorterFactory05);
 		factoryRegister.register("sc", changeSorterFactory05);
-		factoryRegister.register("write-mysql", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlWriterFactory());
-		factoryRegister.register("wm", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlWriterFactory());
-		factoryRegister.register("write-mysql-change",
-				new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlChangeWriterFactory());
-		factoryRegister.register("wmc", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlChangeWriterFactory());
-		factoryRegister.register("truncate-mysql",
-				new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlTruncatorFactory());
-		factoryRegister.register("tm", new org.openstreetmap.osmosis.core.mysql.v0_5.MysqlTruncatorFactory());
-		factoryRegister.register("write-xml", new org.openstreetmap.osmosis.core.xml.v0_5.XmlWriterFactory());
-		factoryRegister.register("wx", new org.openstreetmap.osmosis.core.xml.v0_5.XmlWriterFactory());
-		factoryRegister.register("write-xml-change",
-				new org.openstreetmap.osmosis.core.xml.v0_5.XmlChangeWriterFactory());
-		factoryRegister.register("wxc", new org.openstreetmap.osmosis.core.xml.v0_5.XmlChangeWriterFactory());
-		factoryRegister.register("write-null", new org.openstreetmap.osmosis.core.misc.v0_5.NullWriterFactory());
-		factoryRegister.register("wn", new org.openstreetmap.osmosis.core.misc.v0_5.NullWriterFactory());
-		factoryRegister.register("write-null-change",
-				new org.openstreetmap.osmosis.core.misc.v0_5.NullChangeWriterFactory());
-		factoryRegister.register("wnc", new org.openstreetmap.osmosis.core.misc.v0_5.NullChangeWriterFactory());
-		factoryRegister.register("buffer", new org.openstreetmap.osmosis.core.buffer.v0_5.EntityBufferFactory());
-		factoryRegister.register("b", new org.openstreetmap.osmosis.core.buffer.v0_5.EntityBufferFactory());
-		factoryRegister.register("buffer-change", new org.openstreetmap.osmosis.core.buffer.v0_5.ChangeBufferFactory());
-		factoryRegister.register("bc", new org.openstreetmap.osmosis.core.buffer.v0_5.ChangeBufferFactory());
-		factoryRegister.register("merge", new org.openstreetmap.osmosis.core.merge.v0_5.EntityMergerFactory());
-		factoryRegister.register("m", new org.openstreetmap.osmosis.core.merge.v0_5.EntityMergerFactory());
-		factoryRegister.register("merge-change", new org.openstreetmap.osmosis.core.merge.v0_5.ChangeMergerFactory());
-		factoryRegister.register("mc", new org.openstreetmap.osmosis.core.merge.v0_5.ChangeMergerFactory());
-		factoryRegister.register("read-api", new org.openstreetmap.osmosis.core.xml.v0_5.XmlDownloaderFactory());
-		factoryRegister.register("ra", new org.openstreetmap.osmosis.core.xml.v0_5.XmlDownloaderFactory());
-		factoryRegister.register("bounding-polygon",
-				new org.openstreetmap.osmosis.core.filter.v0_5.PolygonFilterFactory());
-		factoryRegister.register("bp", new org.openstreetmap.osmosis.core.filter.v0_5.PolygonFilterFactory());
-		factoryRegister.register("report-entity",
-				new org.openstreetmap.osmosis.core.report.v0_5.EntityReporterFactory());
-		factoryRegister.register("re", new org.openstreetmap.osmosis.core.report.v0_5.EntityReporterFactory());
-		factoryRegister.register("report-integrity",
-				new org.openstreetmap.osmosis.core.report.v0_5.IntegrityReporterFactory());
-		factoryRegister.register("ri", new org.openstreetmap.osmosis.core.report.v0_5.IntegrityReporterFactory());
-		factoryRegister.register("LOG-progress",
-				new org.openstreetmap.osmosis.core.progress.v0_5.EntityProgressLoggerFactory());
-		factoryRegister.register("lp", new org.openstreetmap.osmosis.core.progress.v0_5.EntityProgressLoggerFactory());
-		factoryRegister.register("LOG-progress-change",
-				new org.openstreetmap.osmosis.core.progress.v0_5.ChangeProgressLoggerFactory());
-		factoryRegister.register("lpc", new org.openstreetmap.osmosis.core.progress.v0_5.ChangeProgressLoggerFactory());
-		factoryRegister.register("tee", new org.openstreetmap.osmosis.core.tee.v0_5.EntityTeeFactory());
-		factoryRegister.register("t", new org.openstreetmap.osmosis.core.tee.v0_5.EntityTeeFactory());
-		factoryRegister.register("tee-change", new org.openstreetmap.osmosis.core.tee.v0_5.ChangeTeeFactory());
-		factoryRegister.register("tc", new org.openstreetmap.osmosis.core.tee.v0_5.ChangeTeeFactory());
-		factoryRegister.register("write-customdb",
-				new org.openstreetmap.osmosis.core.customdb.v0_5.WriteDatasetFactory());
-		factoryRegister.register("wc", new org.openstreetmap.osmosis.core.customdb.v0_5.WriteDatasetFactory());
-		factoryRegister.register("dataset-bounding-box",
-				new org.openstreetmap.osmosis.core.filter.v0_5.DatasetBoundingBoxFilterFactory());
-		factoryRegister.register("dbb",
-				new org.openstreetmap.osmosis.core.filter.v0_5.DatasetBoundingBoxFilterFactory());
-		factoryRegister.register("dataset-dump", new org.openstreetmap.osmosis.core.customdb.v0_5.DumpDatasetFactory());
-		factoryRegister.register("dd", new org.openstreetmap.osmosis.core.customdb.v0_5.DumpDatasetFactory());
-		factoryRegister.register("read-customdb",
-				new org.openstreetmap.osmosis.core.customdb.v0_5.ReadDatasetFactory());
-		factoryRegister.register("rc", new org.openstreetmap.osmosis.core.customdb.v0_5.ReadDatasetFactory());
-		factoryRegister.register("write-pgsql",
-				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetWriterFactory());
-		factoryRegister.register("wp", new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetWriterFactory());
-		factoryRegister.register("truncate-pgsql",
-				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetTruncatorFactory());
-		factoryRegister.register("tp",
-				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetTruncatorFactory());
-		factoryRegister.register("write-pgsql-dump",
-				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetDumpWriterFactory());
-		factoryRegister.register("wpd",
-				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetDumpWriterFactory());
-		factoryRegister.register("read-pgsql",
-				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetReaderFactory());
-		factoryRegister.register("rp", new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlDatasetReaderFactory());
-		factoryRegister.register("write-pgsql-change",
-				new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlChangeWriterFactory());
-		factoryRegister.register("wpc", new org.openstreetmap.osmosis.core.pgsql.v0_5.PostgreSqlChangeWriterFactory());
-		factoryRegister.register("used-node", new org.openstreetmap.osmosis.core.filter.v0_5.UsedNodeFilterFactory());
-		factoryRegister.register("un", new org.openstreetmap.osmosis.core.filter.v0_5.UsedNodeFilterFactory());
-		factoryRegister.register("node-key", new org.openstreetmap.osmosis.core.filter.v0_5.NodeKeyFilterFactory());
-		factoryRegister.register("nk", new org.openstreetmap.osmosis.core.filter.v0_5.NodeKeyFilterFactory());
-		factoryRegister.register("node-key-value",
-				new org.openstreetmap.osmosis.core.filter.v0_5.NodeKeyValueFilterFactory());
-		factoryRegister.register("nkv", new org.openstreetmap.osmosis.core.filter.v0_5.NodeKeyValueFilterFactory());
-		factoryRegister.register("way-key-value",
-				new org.openstreetmap.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
-		factoryRegister.register("wkv", new org.openstreetmap.osmosis.core.filter.v0_5.WayKeyValueFilterFactory());
-		factoryRegister.register("read-change-interval",
-				new org.openstreetmap.osmosis.core.merge.v0_5.ChangeDownloaderFactory());
-		factoryRegister.register("rci", new org.openstreetmap.osmosis.core.merge.v0_5.ChangeDownloaderFactory());
-		factoryRegister.register("read-change-interval-init",
-				new org.openstreetmap.osmosis.core.merge.v0_5.ChangeDownloadInitializerFactory());
-		factoryRegister.register("rcii",
-				new org.openstreetmap.osmosis.core.merge.v0_5.ChangeDownloadInitializerFactory());
+		factoryRegister.register("write-mysql", new MysqlWriterFactory());
+		factoryRegister.register("wm", new MysqlWriterFactory());
+		factoryRegister.register("write-mysql-change", new MysqlChangeWriterFactory());
+		factoryRegister.register("wmc", new MysqlChangeWriterFactory());
+		factoryRegister.register("truncate-mysql", new MysqlTruncatorFactory());
+		factoryRegister.register("tm", new MysqlTruncatorFactory());
+		factoryRegister.register("write-xml", new XmlWriterFactory());
+		factoryRegister.register("wx", new XmlWriterFactory());
+		factoryRegister.register("write-xml-change", new XmlChangeWriterFactory());
+		factoryRegister.register("wxc", new XmlChangeWriterFactory());
+		factoryRegister.register("write-null", new NullWriterFactory());
+		factoryRegister.register("wn", new NullWriterFactory());
+		factoryRegister.register("write-null-change", new NullChangeWriterFactory());
+		factoryRegister.register("wnc", new NullChangeWriterFactory());
+		factoryRegister.register("buffer", new EntityBufferFactory());
+		factoryRegister.register("b", new EntityBufferFactory());
+		factoryRegister.register("buffer-change", new ChangeBufferFactory());
+		factoryRegister.register("bc", new ChangeBufferFactory());
+		factoryRegister.register("merge", new EntityMergerFactory());
+		factoryRegister.register("m", new EntityMergerFactory());
+		factoryRegister.register("merge-change", new ChangeMergerFactory());
+		factoryRegister.register("mc", new ChangeMergerFactory());
+		factoryRegister.register("read-api", new XmlDownloaderFactory());
+		factoryRegister.register("ra", new XmlDownloaderFactory());
+		factoryRegister.register("bounding-polygon", new PolygonFilterFactory());
+		factoryRegister.register("bp", new PolygonFilterFactory());
+		factoryRegister.register("report-entity", new EntityReporterFactory());
+		factoryRegister.register("re", new EntityReporterFactory());
+		factoryRegister.register("report-integrity", new IntegrityReporterFactory());
+		factoryRegister.register("ri", new IntegrityReporterFactory());
+		factoryRegister.register("log-progress", new EntityProgressLoggerFactory());
+		factoryRegister.register("lp", new EntityProgressLoggerFactory());
+		factoryRegister.register("log-progress-change", new ChangeProgressLoggerFactory());
+		factoryRegister.register("lpc", new ChangeProgressLoggerFactory());
+		factoryRegister.register("tee", new EntityTeeFactory());
+		factoryRegister.register("t", new EntityTeeFactory());
+		factoryRegister.register("tee-change", new ChangeTeeFactory());
+		factoryRegister.register("tc", new ChangeTeeFactory());
+		factoryRegister.register("write-customdb", new WriteDatasetFactory());
+		factoryRegister.register("wc", new WriteDatasetFactory());
+		factoryRegister.register("dataset-bounding-box", new DatasetBoundingBoxFilterFactory());
+		factoryRegister.register("dbb", new DatasetBoundingBoxFilterFactory());
+		factoryRegister.register("dataset-dump", new DumpDatasetFactory());
+		factoryRegister.register("dd", new DumpDatasetFactory());
+		factoryRegister.register("read-customdb", new ReadDatasetFactory());
+		factoryRegister.register("rc", new ReadDatasetFactory());
+		factoryRegister.register("write-pgsql", new PostgreSqlDatasetWriterFactory());
+		factoryRegister.register("wp", new PostgreSqlDatasetWriterFactory());
+		factoryRegister.register("truncate-pgsql", new PostgreSqlDatasetTruncatorFactory());
+		factoryRegister.register("tp", new PostgreSqlDatasetTruncatorFactory());
+		factoryRegister.register("write-pgsql-dump", new PostgreSqlDatasetDumpWriterFactory());
+		factoryRegister.register("wpd", new PostgreSqlDatasetDumpWriterFactory());
+		factoryRegister.register("read-pgsql", new PostgreSqlDatasetReaderFactory());
+		factoryRegister.register("rp", new PostgreSqlDatasetReaderFactory());
+		factoryRegister.register("write-pgsql-change", new PostgreSqlChangeWriterFactory());
+		factoryRegister.register("wpc", new PostgreSqlChangeWriterFactory());
+		factoryRegister.register("used-node", new UsedNodeFilterFactory());
+		factoryRegister.register("un", new UsedNodeFilterFactory());
+		factoryRegister.register("node-key", new NodeKeyFilterFactory());
+		factoryRegister.register("nk", new NodeKeyFilterFactory());
+		factoryRegister.register("node-key-value", new NodeKeyValueFilterFactory());
+		factoryRegister.register("nkv", new NodeKeyValueFilterFactory());
+		factoryRegister.register("way-key-value", new WayKeyValueFilterFactory());
+		factoryRegister.register("wkv", new WayKeyValueFilterFactory());
+		factoryRegister.register("read-change-interval", new ChangeDownloaderFactory());
+		factoryRegister.register("rci", new ChangeDownloaderFactory());
+		factoryRegister.register("read-change-interval-init", new ChangeDownloadInitializerFactory());
+		factoryRegister.register("rcii", new ChangeDownloadInitializerFactory());
 		factoryRegister.register("migrate", new MigrateV05ToV06Factory());
 		factoryRegister.register("mig", new MigrateV05ToV06Factory());
 		factoryRegister.register("migrate-change", new MigrateChangeV05ToV06Factory());
 		factoryRegister.register("migc", new MigrateChangeV05ToV06Factory());
+		factoryRegister.register("read-apidb", new ApidbReaderFactory());
+		factoryRegister.register("rd", new ApidbReaderFactory());
+		factoryRegister.register("read-apidb-change", new ApidbChangeReaderFactory());
+		factoryRegister.register("rdc", new ApidbChangeReaderFactory());
+		factoryRegister.register("read-apidb-current", new ApidbCurrentReaderFactory());
+		factoryRegister.register("rdcur", new ApidbCurrentReaderFactory());
+		factoryRegister.register("write-apidb", new ApidbWriterFactory());
+		factoryRegister.register("wd", new ApidbWriterFactory());
+		factoryRegister.register("write-apidb-change", new ApidbChangeWriterFactory());
+		factoryRegister.register("wdc", new ApidbChangeWriterFactory());
+		factoryRegister.register("truncate-apidb", new ApidbTruncatorFactory());
+		factoryRegister.register("td", new ApidbTruncatorFactory());
 
 		factoryRegister.register("apply-change-0.5",
 				new org.openstreetmap.osmosis.core.change.v0_5.ChangeApplierFactory());
@@ -375,8 +357,8 @@ public class TaskRegistrar {
 		factoryRegister.register("bounding-polygon-0.6", new PolygonFilterFactory());
 		factoryRegister.register("report-entity-0.6", new EntityReporterFactory());
 		factoryRegister.register("report-integrity-0.6", new IntegrityReporterFactory());
-		factoryRegister.register("LOG-progress-0.6", new EntityProgressLoggerFactory());
-		factoryRegister.register("LOG-change-progress-0.6", new ChangeProgressLoggerFactory());
+		factoryRegister.register("log-progress-0.6", new EntityProgressLoggerFactory());
+		factoryRegister.register("log-change-progress-0.6", new ChangeProgressLoggerFactory());
 		factoryRegister.register("tee-0.6", new EntityTeeFactory());
 		factoryRegister.register("tee-change-0.6", new ChangeTeeFactory());
 		factoryRegister.register("write-customdb-0.6", new WriteDatasetFactory());

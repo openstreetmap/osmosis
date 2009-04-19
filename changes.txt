@@ -4,6 +4,7 @@ Added JPF plugin support.
 Updated the build scripts to use Ivy dependency management.
 Added mutable entity support.
 Added writeable dataset support.
+Added apidb tasks that support both mysql and postgresql api databases.
 
 0.30
 Added 0.6 support.
