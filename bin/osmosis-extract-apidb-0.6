@@ -48,7 +48,7 @@ for FILE in `ls $MYAPP_HOME/lib/default/`; do
   MYAPP_CLASSPATH=$MYAPP_CLASSPATH:$MYAPP_HOME/lib/default/$FILE
 done
 
-MAINCLASS=org.openstreetmap.osmosis.extract.mysql.v0_6.OsmosisExtractMysql
+MAINCLASS=org.openstreetmap.osmosis.extract.apidb.v0_6.OsmosisExtractApiDb
 EXEC="$JAVACMD $JAVACMD_OPTIONS -cp $MYAPP_CLASSPATH $MAINCLASS $@"
 
 exec $EXEC

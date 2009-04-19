@@ -16,7 +16,7 @@ import org.openstreetmap.osmosis.extract.apidb.common.Configuration;
 import org.openstreetmap.osmosis.extract.apidb.common.TimestampTracker;
 
 /**
- * The main entry point for the mysql change extraction application.
+ * The main entry point for the apidb change extraction application.
  * 
  * @author Brett Henderson
  */

@@ -21,7 +21,7 @@ fi
 ## resolve links - $0 may be a link to application
 PRG="$0"
 
-# if started without absolute path, but fom PATH environment
+# if started without absolute path, but from PATH environment
 if [ ! -s "$PRG" ] ; then
     PRG=`which $PRG`
 fi
