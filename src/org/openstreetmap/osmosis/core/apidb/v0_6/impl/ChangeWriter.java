@@ -129,108 +129,72 @@ public class ChangeWriter {
     private static final String DELETE_SQL_RELATION_TAG_CURRENT =
     	"DELETE FROM current_relation_tags WHERE id = ?";
 
-    private static final String INSERT_SQL_RELATION_MEMBER =
+    private static final String INSERT_SQL_RELATION_MEMBER_MYSQL =
     	"INSERT INTO relation_members (id, version, member_type, member_id, member_role, sequence_id)"
             + " VALUES (?, ?, ?, ?, ?, ?)";
+
+    private static final String INSERT_SQL_RELATION_MEMBER_PGSQL =
+    	"INSERT INTO relation_members (id, version, member_type, member_id, member_role, sequence_id)"
+            + " VALUES (?, ?, ?::nwr_enum, ?, ?, ?)";
 
     private static final String DELETE_SQL_RELATION_MEMBER =
     	"DELETE FROM relation_members WHERE id = ? AND version = ?";
 
-    private static final String INSERT_SQL_RELATION_MEMBER_CURRENT =
+    private static final String INSERT_SQL_RELATION_MEMBER_CURRENT_MYSQL =
     	"INSERT INTO current_relation_members (id, member_type, member_id, member_role, sequence_id)"
             + " VALUES (?, ?, ?, ?, ?)";
+
+    private static final String INSERT_SQL_RELATION_MEMBER_CURRENT_PGSQL =
+    	"INSERT INTO current_relation_members (id, member_type, member_id, member_role, sequence_id)"
+            + " VALUES (?, ?::nwr_enum, ?, ?, ?)";
 
     private static final String DELETE_SQL_RELATION_MEMBER_CURRENT =
     	"DELETE FROM current_relation_members WHERE id = ?";
 
     private final DatabaseContext dbCtx;
-
     private final UserManager userManager;
-
     private final ChangesetManager changesetManager;
-
     private final boolean populateCurrentTables;
-
     private final ReleasableStatementContainer statementContainer;
-
     private PreparedStatement insertNodeStatement;
-
     private PreparedStatement updateNodeStatement;
-
     private PreparedStatement selectNodeCountStatement;
-
     private PreparedStatement insertNodeCurrentStatement;
-
     private PreparedStatement updateNodeCurrentStatement;
-
     private PreparedStatement selectNodeCurrentCountStatement;
-
     private PreparedStatement insertNodeTagStatement;
-
     private PreparedStatement deleteNodeTagStatement;
-
     private PreparedStatement insertNodeTagCurrentStatement;
-
     private PreparedStatement deleteNodeTagCurrentStatement;
-
     private PreparedStatement insertWayStatement;
-
     private PreparedStatement updateWayStatement;
-
     private PreparedStatement selectWayCountStatement;
-
     private PreparedStatement insertWayCurrentStatement;
-
     private PreparedStatement updateWayCurrentStatement;
-
     private PreparedStatement selectWayCurrentCountStatement;
-
     private PreparedStatement insertWayTagStatement;
-
     private PreparedStatement deleteWayTagStatement;
-
     private PreparedStatement insertWayTagCurrentStatement;
-
     private PreparedStatement deleteWayTagCurrentStatement;
-
     private PreparedStatement insertWayNodeStatement;
-
     private PreparedStatement deleteWayNodeStatement;
-
     private PreparedStatement insertWayNodeCurrentStatement;
-
     private PreparedStatement deleteWayNodeCurrentStatement;
-
     private PreparedStatement insertRelationStatement;
-
     private PreparedStatement updateRelationStatement;
-
     private PreparedStatement selectRelationCountStatement;
-
     private PreparedStatement insertRelationCurrentStatement;
-
     private PreparedStatement updateRelationCurrentStatement;
-
     private PreparedStatement selectRelationCurrentCountStatement;
-
     private PreparedStatement insertRelationTagStatement;
-
     private PreparedStatement deleteRelationTagStatement;
-
     private PreparedStatement insertRelationTagCurrentStatement;
-
     private PreparedStatement deleteRelationTagCurrentStatement;
-
     private PreparedStatement insertRelationMemberStatement;
-
     private PreparedStatement deleteRelationMemberStatement;
-
     private PreparedStatement insertRelationMemberCurrentStatement;
-
     private PreparedStatement deleteRelationMemberCurrentStatement;
-
     private final MemberTypeRenderer memberTypeRenderer;
-
     private final TileCalculator tileCalculator;
 
     /**
@@ -831,10 +795,31 @@ public class ChangeWriter {
                     .prepareStatement(INSERT_SQL_RELATION_TAG_CURRENT));
             deleteRelationTagCurrentStatement = statementContainer.add(dbCtx
                     .prepareStatement(DELETE_SQL_RELATION_TAG_CURRENT));
-            insertRelationMemberStatement = statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_RELATION_MEMBER));
+            switch (dbCtx.getDatabaseType()) {
+            case POSTGRESQL:
+            	insertRelationMemberStatement =
+            		statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_RELATION_MEMBER_PGSQL));
+                break;
+            case MYSQL:
+            	insertRelationMemberStatement =
+            		statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_RELATION_MEMBER_MYSQL));
+                break;
+            default:
+                throw new OsmosisRuntimeException("Unknown database type " + dbCtx.getDatabaseType() + ".");
+            }
             deleteRelationMemberStatement = statementContainer.add(dbCtx.prepareStatement(DELETE_SQL_RELATION_MEMBER));
-            insertRelationMemberCurrentStatement = statementContainer.add(dbCtx
-                    .prepareStatement(INSERT_SQL_RELATION_MEMBER_CURRENT));
+            switch (dbCtx.getDatabaseType()) {
+            case POSTGRESQL:
+            	insertRelationMemberCurrentStatement =
+            		statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_RELATION_MEMBER_CURRENT_PGSQL));
+                break;
+            case MYSQL:
+            	insertRelationMemberCurrentStatement =
+            		statementContainer.add(dbCtx.prepareStatement(INSERT_SQL_RELATION_MEMBER_CURRENT_MYSQL));
+                break;
+            default:
+                throw new OsmosisRuntimeException("Unknown database type " + dbCtx.getDatabaseType() + ".");
+            }
             deleteRelationMemberCurrentStatement = statementContainer.add(dbCtx
                     .prepareStatement(DELETE_SQL_RELATION_MEMBER_CURRENT));
         }

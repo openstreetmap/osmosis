@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
+import org.openstreetmap.osmosis.core.database.DatabaseType;
 
 
 /**
@@ -139,6 +140,17 @@ public class DatabaseContext {
         }
 
         return newConnection;
+    }
+
+
+	/**
+	 * Returns the database type currently in use. This should only be used when it is not possible
+	 * to write database agnostic statements.
+	 * 
+	 * @return The database type.
+	 */
+    public DatabaseType getDatabaseType() {
+    	return loginCredentials.getDbType();
     }
 	
 	

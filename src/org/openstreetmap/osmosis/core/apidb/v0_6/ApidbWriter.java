@@ -45,40 +45,46 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
     // These SQL strings are the prefix to statements that will be built based
     // on how many rows of data are to be inserted at a time.
-	private static final String INSERT_SQL_NODE =
+	private static final String INSERT_SQL_NODE_COLUMNS =
 		"INSERT INTO nodes(id, timestamp, version, visible, changeset_id, latitude, longitude, tile)";
+	private static final String INSERT_SQL_NODE_PARAMS = "?, ?, ?, ?, ?, ?, ?, ?";
+	private static final int INSERT_PRM_COUNT_NODE = 8;
 
-    private static final int INSERT_PRM_COUNT_NODE = 8;
+    private static final String INSERT_SQL_NODE_TAG_COLUMNS = "INSERT INTO node_tags (id, k, v, version)";
+    private static final String INSERT_SQL_NODE_TAG_PARAMS = "?, ?, ?, ?";
+	private static final int INSERT_PRM_COUNT_NODE_TAG = 4;
 
-    private static final String INSERT_SQL_NODE_TAG = "INSERT INTO node_tags (id, k, v, version)";
+    private static final String INSERT_SQL_WAY_COLUMNS =
+    	"INSERT INTO ways (id, timestamp, version, visible, changeset_id)";
+    private static final String INSERT_SQL_WAY_PARAMS = "?, ?, ?, ?, ?";
+	private static final int INSERT_PRM_COUNT_WAY = 5;
 
-    private static final int INSERT_PRM_COUNT_NODE_TAG = 4;
+    private static final String INSERT_SQL_WAY_TAG_COLUMNS = "INSERT INTO way_tags (id, k, v, version)";
+    private static final String INSERT_SQL_WAY_TAG_PARAMS = "?, ?, ?, ?";
+	private static final int INSERT_PRM_COUNT_WAY_TAG = 4;
 
-    private static final String INSERT_SQL_WAY = "INSERT INTO ways (id, timestamp, version, visible, changeset_id)";
+    private static final String INSERT_SQL_WAY_NODE_COLUMNS =
+    	"INSERT INTO way_nodes (id, node_id, sequence_id, version)";
+    private static final String INSERT_SQL_WAY_NODE_PARAMS = "?, ?, ?, ?";
+	private static final int INSERT_PRM_COUNT_WAY_NODE = 4;
 
-    private static final int INSERT_PRM_COUNT_WAY = 5;
-
-    private static final String INSERT_SQL_WAY_TAG = "INSERT INTO way_tags (id, k, v, version)";
-
-    private static final int INSERT_PRM_COUNT_WAY_TAG = 4;
-
-    private static final String INSERT_SQL_WAY_NODE = "INSERT INTO way_nodes (id, node_id, sequence_id, version)";
-
-    private static final int INSERT_PRM_COUNT_WAY_NODE = 4;
-
-    private static final String INSERT_SQL_RELATION =
+    private static final String INSERT_SQL_RELATION_COLUMNS =
     	"INSERT INTO relations (id, timestamp, version, visible, changeset_id)";
+    private static final String INSERT_SQL_RELATION_PARAMS =
+    	"?, ?, ?, ?, ?";
+	private static final int INSERT_PRM_COUNT_RELATION = 5;
 
-    private static final int INSERT_PRM_COUNT_RELATION = 5;
+    private static final String INSERT_SQL_RELATION_TAG_COLUMNS = "INSERT INTO relation_tags (id, k, v, version)";
+    private static final String INSERT_SQL_RELATION_TAG_PARAMS = "?, ?, ?, ?";
+	private static final int INSERT_PRM_COUNT_RELATION_TAG = 4;
 
-    private static final String INSERT_SQL_RELATION_TAG = "INSERT INTO relation_tags (id, k, v, version)";
-
-    private static final int INSERT_PRM_COUNT_RELATION_TAG = 4;
-
-    private static final String INSERT_SQL_RELATION_MEMBER =
+    private static final String INSERT_SQL_RELATION_MEMBER_COLUMNS =
     	"INSERT INTO relation_members (id, member_type, member_id, sequence_id, member_role, version)";
-
-    private static final int INSERT_PRM_COUNT_RELATION_MEMBER = 6;
+    private static final String INSERT_SQL_RELATION_MEMBER_PARAMS_MYSQL =
+    	"?, ?, ?, ?, ?, ?";
+    private static final String INSERT_SQL_RELATION_MEMBER_PARAMS_PGSQL =
+    	"?, ?::nwr_enum, ?, ?, ?, ?";
+	private static final int INSERT_PRM_COUNT_RELATION_MEMBER = 6;
 
     // These tables will have indexes disabled during loading data.
     private static final List<String> DISABLE_KEY_TABLES = Arrays.asList(new String[] {"nodes",
@@ -119,7 +125,8 @@ public class ApidbWriter implements Sink, EntityProcessor {
     	"INSERT INTO current_relation_tags SELECT id, k, v FROM relation_tags WHERE id >= ? AND id < ?";
 
     private static final String LOAD_CURRENT_RELATION_MEMBERS =
-    	"INSERT INTO current_relation_members SELECT id, member_type, member_id, member_role, sequence_id"
+    	"INSERT INTO current_relation_members (id, member_id, member_role, member_type, sequence_id)"
+    		+ " SELECT id, member_id, member_role, member_type, sequence_id"
             + " FROM relation_members WHERE id >= ? AND id < ?";
 
     // These tables will be locked for exclusive access while loading data.
@@ -131,204 +138,106 @@ public class ApidbWriter implements Sink, EntityProcessor {
     // These constants define how many rows of each data type will be inserted
     // with single insert statements.
     private static final int INSERT_BULK_ROW_COUNT_NODE = 100;
-
     private static final int INSERT_BULK_ROW_COUNT_NODE_TAG = 100;
-
     private static final int INSERT_BULK_ROW_COUNT_WAY = 100;
-
     private static final int INSERT_BULK_ROW_COUNT_WAY_TAG = 100;
-
     private static final int INSERT_BULK_ROW_COUNT_WAY_NODE = 100;
-
     private static final int INSERT_BULK_ROW_COUNT_RELATION = 100;
-
     private static final int INSERT_BULK_ROW_COUNT_RELATION_TAG = 100;
-
     private static final int INSERT_BULK_ROW_COUNT_RELATION_MEMBER = 100;
 
-    // These constants will be configured by a static code block.
-    private static final String INSERT_SQL_SINGLE_NODE;
-
-    private static final String INSERT_SQL_BULK_NODE;
-
-    private static final String INSERT_SQL_SINGLE_NODE_TAG;
-
-    private static final String INSERT_SQL_BULK_NODE_TAG;
-
-    private static final String INSERT_SQL_SINGLE_WAY;
-
-    private static final String INSERT_SQL_BULK_WAY;
-
-    private static final String INSERT_SQL_SINGLE_WAY_TAG;
-
-    private static final String INSERT_SQL_BULK_WAY_TAG;
-
-    private static final String INSERT_SQL_SINGLE_WAY_NODE;
-
-    private static final String INSERT_SQL_BULK_WAY_NODE;
-
-    private static final String INSERT_SQL_SINGLE_RELATION;
-
-    private static final String INSERT_SQL_BULK_RELATION;
-
-    private static final String INSERT_SQL_SINGLE_RELATION_TAG;
-
-    private static final String INSERT_SQL_BULK_RELATION_TAG;
-
-    private static final String INSERT_SQL_SINGLE_RELATION_MEMBER;
-
-    private static final String INSERT_SQL_BULK_RELATION_MEMBER;
-
     /**
-     * Builds a multi-row SQL insert statement.
-     * 
-     * @param baseSql The basic query without value bind variables.
-     * @param parameterCount The number of parameters to be inserted.
-     * @param rowCount The number of rows to insert in a single query.
-     * @return The generated SQL statement.
-     */
-    private static String buildSqlInsertStatement(String baseSql, int parameterCount, int rowCount) {
+	 * Builds a multi-row SQL insert statement.
+	 * 
+	 * @param columnSql
+	 *            The basic query without value bind variables.
+	 * @param parametersSql
+	 *            The SQL parameters portion of the query.
+	 * @param rowCount
+	 *            The number of rows to insert in a single query.
+	 * @return The generated SQL statement.
+	 */
+    private static String buildSqlInsertStatement(String columnSql, String parametersSql, int rowCount) {
         StringBuilder buffer;
 
         buffer = new StringBuilder();
 
-        buffer.append(baseSql).append(" VALUES ");
+        buffer.append(columnSql).append(" VALUES ");
 
         for (int i = 0; i < rowCount; i++) {
             if (i > 0) {
                 buffer.append(", ");
             }
+            
             buffer.append("(");
-
-            for (int j = 0; j < parameterCount; j++) {
-                if (j > 0) {
-                    buffer.append(", ");
-                }
-
-                buffer.append("?");
-            }
-
+            buffer.append(parametersSql);
             buffer.append(")");
         }
 
         return buffer.toString();
     }
 
-    static {
-        INSERT_SQL_SINGLE_NODE = buildSqlInsertStatement(INSERT_SQL_NODE, INSERT_PRM_COUNT_NODE, 1);
-        INSERT_SQL_BULK_NODE = buildSqlInsertStatement(INSERT_SQL_NODE, INSERT_PRM_COUNT_NODE,
-                INSERT_BULK_ROW_COUNT_NODE);
-        INSERT_SQL_SINGLE_NODE_TAG = buildSqlInsertStatement(INSERT_SQL_NODE_TAG, INSERT_PRM_COUNT_NODE_TAG, 1);
-        INSERT_SQL_BULK_NODE_TAG = buildSqlInsertStatement(INSERT_SQL_NODE_TAG, INSERT_PRM_COUNT_NODE_TAG,
-                INSERT_BULK_ROW_COUNT_NODE_TAG);
-        INSERT_SQL_SINGLE_WAY = buildSqlInsertStatement(INSERT_SQL_WAY, INSERT_PRM_COUNT_WAY, 1);
-        INSERT_SQL_BULK_WAY = buildSqlInsertStatement(INSERT_SQL_WAY, INSERT_PRM_COUNT_WAY, INSERT_BULK_ROW_COUNT_WAY);
-        INSERT_SQL_SINGLE_WAY_TAG = buildSqlInsertStatement(INSERT_SQL_WAY_TAG, INSERT_PRM_COUNT_WAY_TAG, 1);
-        INSERT_SQL_BULK_WAY_TAG = buildSqlInsertStatement(INSERT_SQL_WAY_TAG, INSERT_PRM_COUNT_WAY_TAG,
-                INSERT_BULK_ROW_COUNT_WAY_TAG);
-        INSERT_SQL_SINGLE_WAY_NODE = buildSqlInsertStatement(INSERT_SQL_WAY_NODE, INSERT_PRM_COUNT_WAY_NODE, 1);
-        INSERT_SQL_BULK_WAY_NODE = buildSqlInsertStatement(INSERT_SQL_WAY_NODE, INSERT_PRM_COUNT_WAY_NODE,
-                INSERT_BULK_ROW_COUNT_WAY_NODE);
-        INSERT_SQL_SINGLE_RELATION = buildSqlInsertStatement(INSERT_SQL_RELATION, INSERT_PRM_COUNT_RELATION, 1);
-        INSERT_SQL_BULK_RELATION = buildSqlInsertStatement(INSERT_SQL_RELATION, INSERT_PRM_COUNT_RELATION,
-                INSERT_BULK_ROW_COUNT_RELATION);
-        INSERT_SQL_SINGLE_RELATION_TAG = buildSqlInsertStatement(INSERT_SQL_RELATION_TAG,
-                INSERT_PRM_COUNT_RELATION_TAG, 1);
-        INSERT_SQL_BULK_RELATION_TAG = buildSqlInsertStatement(INSERT_SQL_RELATION_TAG, INSERT_PRM_COUNT_RELATION_TAG,
-                INSERT_BULK_ROW_COUNT_RELATION_TAG);
-        INSERT_SQL_SINGLE_RELATION_MEMBER = buildSqlInsertStatement(INSERT_SQL_RELATION_MEMBER,
-                INSERT_PRM_COUNT_RELATION_MEMBER, 1);
-        INSERT_SQL_BULK_RELATION_MEMBER = buildSqlInsertStatement(INSERT_SQL_RELATION_MEMBER,
-                INSERT_PRM_COUNT_RELATION_MEMBER, INSERT_BULK_ROW_COUNT_RELATION_MEMBER);
-    }
-
+    
+    private String insertSqlSingleNode;
+    private String insertSqlBulkNode;
+    private String insertSqlSingleNodeTag;
+    private String insertSqlBulkNodeTag;
+    private String insertSqlSingleWay;
+    private String insertSqlBulkWay;
+    private String insertSqlSingleWayTag;
+    private String insertSqlBulkWayTag;
+    private String insertSqlSingleWayNode;
+    private String insertSqlBulkWayNode;
+    private String insertSqlSingleRelation;
+    private String insertSqlBulkRelation;
+    private String insertSqlSingleRelationTag;
+    private String insertSqlBulkRelationTag;
+    private String insertSqlSingleRelationMember;
+    private String insertSqlBulkRelationMember;
     private final DatabaseContext dbCtx;
-
     private final UserManager userManager;
-
     private final ChangesetManager changesetManager;
-
     private final SchemaVersionValidator schemaVersionValidator;
-
     private final boolean lockTables;
-
     private final boolean populateCurrentTables;
-
     private final List<Node> nodeBuffer;
-
     private final List<DbFeatureHistory<DbFeature<Tag>>> nodeTagBuffer;
-
     private final List<Way> wayBuffer;
-
     private final List<DbFeatureHistory<DbFeature<Tag>>> wayTagBuffer;
-
     private final List<DbFeatureHistory<DbOrderedFeature<WayNode>>> wayNodeBuffer;
-
     private final List<Relation> relationBuffer;
-
     private final List<DbFeatureHistory<DbFeature<Tag>>> relationTagBuffer;
-
     private final List<DbFeatureHistory<DbOrderedFeature<RelationMember>>> relationMemberBuffer;
-
     private long maxNodeId;
-
     private long maxWayId;
-
     private long maxRelationId;
-
     private final TileCalculator tileCalculator;
-
     private final MemberTypeRenderer memberTypeRenderer;
-
     private boolean initialized;
-
     private PreparedStatement singleNodeStatement;
-
     private PreparedStatement bulkNodeStatement;
-
     private PreparedStatement singleNodeTagStatement;
-
     private PreparedStatement bulkNodeTagStatement;
-
     private PreparedStatement singleWayStatement;
-
     private PreparedStatement bulkWayStatement;
-
     private PreparedStatement singleWayTagStatement;
-
     private PreparedStatement bulkWayTagStatement;
-
     private PreparedStatement singleWayNodeStatement;
-
     private PreparedStatement bulkWayNodeStatement;
-
     private PreparedStatement singleRelationStatement;
-
     private PreparedStatement bulkRelationStatement;
-
     private PreparedStatement singleRelationTagStatement;
-
     private PreparedStatement bulkRelationTagStatement;
-
     private PreparedStatement singleRelationMemberStatement;
-
     private PreparedStatement bulkRelationMemberStatement;
-
     private PreparedStatement loadCurrentNodesStatement;
-
     private PreparedStatement loadCurrentNodeTagsStatement;
-
     private PreparedStatement loadCurrentWaysStatement;
-
     private PreparedStatement loadCurrentWayTagsStatement;
-
-    private PreparedStatement loadCurrentWayNodesStatement;
-
-    private PreparedStatement loadCurrentRelationsStatement;
-
-    private PreparedStatement loadCurrentRelationTagsStatement;
-
-    private PreparedStatement loadCurrentRelationMembersStatement;
+	private PreparedStatement loadCurrentWayNodesStatement;
+	private PreparedStatement loadCurrentRelationsStatement;
+	private PreparedStatement loadCurrentRelationTagsStatement;
+	private PreparedStatement loadCurrentRelationMembersStatement;
 
     /**
      * Creates a new instance.
@@ -342,7 +251,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
     public ApidbWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean lockTables,
             boolean populateCurrentTables) {
         dbCtx = new DatabaseContext(loginCredentials);
-
+        
         userManager = new UserManager(dbCtx);
         changesetManager = new ChangesetManager(dbCtx);
 
@@ -376,23 +285,65 @@ public class ApidbWriter implements Sink, EntityProcessor {
     private void initialize() {
         if (!initialized) {
             schemaVersionValidator.validateVersion(ApidbVersionConstants.SCHEMA_MIGRATIONS);
+            
+            insertSqlSingleNode = buildSqlInsertStatement(INSERT_SQL_NODE_COLUMNS, INSERT_SQL_NODE_PARAMS, 1);
+			insertSqlBulkNode = buildSqlInsertStatement(INSERT_SQL_NODE_COLUMNS, INSERT_SQL_NODE_PARAMS,
+					INSERT_BULK_ROW_COUNT_NODE);
+			insertSqlSingleNodeTag = buildSqlInsertStatement(
+					INSERT_SQL_NODE_TAG_COLUMNS, INSERT_SQL_NODE_TAG_PARAMS, 1);
+			insertSqlBulkNodeTag = buildSqlInsertStatement(INSERT_SQL_NODE_TAG_COLUMNS, INSERT_SQL_NODE_TAG_PARAMS,
+					INSERT_BULK_ROW_COUNT_NODE_TAG);
+			insertSqlSingleWay = buildSqlInsertStatement(INSERT_SQL_WAY_COLUMNS, INSERT_SQL_WAY_PARAMS, 1);
+			insertSqlBulkWay = buildSqlInsertStatement(INSERT_SQL_WAY_COLUMNS, INSERT_SQL_WAY_PARAMS,
+					INSERT_BULK_ROW_COUNT_WAY);
+			insertSqlSingleWayTag = buildSqlInsertStatement(INSERT_SQL_WAY_TAG_COLUMNS, INSERT_SQL_WAY_TAG_PARAMS, 1);
+			insertSqlBulkWayTag = buildSqlInsertStatement(INSERT_SQL_WAY_TAG_COLUMNS, INSERT_SQL_WAY_TAG_PARAMS,
+					INSERT_BULK_ROW_COUNT_WAY_TAG);
+			insertSqlSingleWayNode = buildSqlInsertStatement(
+					INSERT_SQL_WAY_NODE_COLUMNS, INSERT_SQL_WAY_NODE_PARAMS, 1);
+			insertSqlBulkWayNode = buildSqlInsertStatement(INSERT_SQL_WAY_NODE_COLUMNS, INSERT_SQL_WAY_NODE_PARAMS,
+					INSERT_BULK_ROW_COUNT_WAY_NODE);
+			insertSqlSingleRelation = buildSqlInsertStatement(INSERT_SQL_RELATION_COLUMNS, INSERT_SQL_RELATION_PARAMS,
+					1);
+			insertSqlBulkRelation = buildSqlInsertStatement(INSERT_SQL_RELATION_COLUMNS, INSERT_SQL_RELATION_PARAMS,
+					INSERT_BULK_ROW_COUNT_RELATION);
+        	insertSqlSingleRelationTag = buildSqlInsertStatement(INSERT_SQL_RELATION_TAG_COLUMNS,
+					INSERT_SQL_RELATION_TAG_PARAMS, 1);
+			insertSqlBulkRelationTag = buildSqlInsertStatement(INSERT_SQL_RELATION_TAG_COLUMNS,
+					INSERT_SQL_RELATION_TAG_PARAMS, INSERT_BULK_ROW_COUNT_RELATION_TAG);
+            switch (dbCtx.getDatabaseType()) {
+            case POSTGRESQL:
+    			insertSqlSingleRelationMember = buildSqlInsertStatement(INSERT_SQL_RELATION_MEMBER_COLUMNS,
+    					INSERT_SQL_RELATION_MEMBER_PARAMS_PGSQL, 1);
+    			insertSqlBulkRelationMember = buildSqlInsertStatement(INSERT_SQL_RELATION_MEMBER_COLUMNS,
+    					INSERT_SQL_RELATION_MEMBER_PARAMS_PGSQL, INSERT_BULK_ROW_COUNT_RELATION_MEMBER);
+                break;
+            case MYSQL:
+    			insertSqlSingleRelationMember = buildSqlInsertStatement(INSERT_SQL_RELATION_MEMBER_COLUMNS,
+    					INSERT_SQL_RELATION_MEMBER_PARAMS_MYSQL, 1);
+    			insertSqlBulkRelationMember = buildSqlInsertStatement(INSERT_SQL_RELATION_MEMBER_COLUMNS,
+    					INSERT_SQL_RELATION_MEMBER_PARAMS_MYSQL, INSERT_BULK_ROW_COUNT_RELATION_MEMBER);
+                break;
+            default:
+                throw new OsmosisRuntimeException("Unknown database type " + dbCtx.getDatabaseType() + ".");
+            }
 
-            bulkNodeStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_NODE);
-            singleNodeStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_NODE);
-            bulkNodeTagStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_NODE_TAG);
-            singleNodeTagStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_NODE_TAG);
-            bulkWayStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_WAY);
-            singleWayStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_WAY);
-            bulkWayTagStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_WAY_TAG);
-            singleWayTagStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_WAY_TAG);
-            bulkWayNodeStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_WAY_NODE);
-            singleWayNodeStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_WAY_NODE);
-            bulkRelationStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_RELATION);
-            singleRelationStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_RELATION);
-            bulkRelationTagStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_RELATION_TAG);
-            singleRelationTagStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_RELATION_TAG);
-            bulkRelationMemberStatement = dbCtx.prepareStatement(INSERT_SQL_BULK_RELATION_MEMBER);
-            singleRelationMemberStatement = dbCtx.prepareStatement(INSERT_SQL_SINGLE_RELATION_MEMBER);
+            bulkNodeStatement = dbCtx.prepareStatement(insertSqlBulkNode);
+            singleNodeStatement = dbCtx.prepareStatement(insertSqlSingleNode);
+            bulkNodeTagStatement = dbCtx.prepareStatement(insertSqlBulkNodeTag);
+            singleNodeTagStatement = dbCtx.prepareStatement(insertSqlSingleNodeTag);
+            bulkWayStatement = dbCtx.prepareStatement(insertSqlBulkWay);
+            singleWayStatement = dbCtx.prepareStatement(insertSqlSingleWay);
+            bulkWayTagStatement = dbCtx.prepareStatement(insertSqlBulkWayTag);
+            singleWayTagStatement = dbCtx.prepareStatement(insertSqlSingleWayTag);
+            bulkWayNodeStatement = dbCtx.prepareStatement(insertSqlBulkWayNode);
+            singleWayNodeStatement = dbCtx.prepareStatement(insertSqlSingleWayNode);
+            bulkRelationStatement = dbCtx.prepareStatement(insertSqlBulkRelation);
+            singleRelationStatement = dbCtx.prepareStatement(insertSqlSingleRelation);
+            bulkRelationTagStatement = dbCtx.prepareStatement(insertSqlBulkRelationTag);
+            singleRelationTagStatement = dbCtx.prepareStatement(insertSqlSingleRelationTag);
+            bulkRelationMemberStatement = dbCtx.prepareStatement(insertSqlBulkRelationMember);
+            singleRelationMemberStatement = dbCtx.prepareStatement(insertSqlSingleRelationMember);
 
             loadCurrentNodesStatement = dbCtx.prepareStatement(LOAD_CURRENT_NODES);
             loadCurrentNodeTagsStatement = dbCtx.prepareStatement(LOAD_CURRENT_NODE_TAGS);

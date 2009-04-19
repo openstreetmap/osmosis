@@ -56,6 +56,8 @@ public class ApidbTruncator implements RunnableTask {
 			schemaVersionValidator.validateVersion(ApidbVersionConstants.SCHEMA_MIGRATIONS);
 
 			dbCtx.truncateTables(TRUNCATE_TABLES);
+			
+			dbCtx.commit();
 
 		} finally {
 			dbCtx.release();
