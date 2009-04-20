@@ -189,7 +189,8 @@
 	
 	<!-- Runs all of the unit tests in the application. -->
 	<target name="test" depends="build_test" description="Run automated test cases.">
-		<junit fork="no" maxmemory="512m" printsummary="on" haltonerror="on" haltonfailure="on" filtertrace="on">
+		<mkdir dir="report/test"/>
+		<junit fork="no" maxmemory="512m" printsummary="on" haltonerror="off" haltonfailure="off" filtertrace="on" failureproperty="test.failure">
 			<formatter type="plain" usefile="true"/>
 			<formatter type="xml" usefile="true"/>
 			<classpath>
@@ -197,21 +198,24 @@
 				<path location="build/src"/>
 				<path location="build/test"/>
 			</classpath>
-			<batchtest todir="build/test">
+			<batchtest todir="report/test">
 				<fileset dir="build/test">
 					<include name="**/*Test*.class"/>
 					<exclude name="**/*TestSuite*.class"/>
 				</fileset>
 			</batchtest>
 		</junit>
+
+		<fail message="One or more junit tests failed." if="test.failure" />
 	</target>
 	
 	<!-- Executes all major build targets. -->
 	<target name="all" depends="dist, checkstyle, test"/>
 	
 	<target name="clean" description="Clean up the project tree.">
-		<!-- Delete the build and dist directory trees. -->
+		<!-- Delete the build, report and dist directory trees. -->
 		<delete dir="build"/>
+		<delete dir="report"/>
 		<delete dir="dist"/>
 		<!-- Delete the doc/api directory tree. -->
 		<delete dir="doc/api"/>
