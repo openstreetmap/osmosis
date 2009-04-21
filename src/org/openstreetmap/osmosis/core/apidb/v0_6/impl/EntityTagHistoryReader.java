@@ -27,7 +27,7 @@ public class EntityTagHistoryReader extends BaseTableReader<DbFeatureHistory<DbF
             + "   FROM ";
 
     private static final String SELECT_SQL_3 = "   WHERE timestamp > ? AND timestamp <= ?" + "   GROUP BY id"
-            + " ) entityList ON et.id = entityList.id AND et.version = entityList.version";
+            + " ) entityList ON et.id = entityList.id AND et.version = entityList.version ORDER BY entity_id";
 
     private final String parentTableName;
 

@@ -24,7 +24,7 @@ public class WayNodeHistoryReader extends BaseTableReader<DbFeatureHistory<DbOrd
     private static final String SELECT_SQL = "SELECT wn.id AS way_id, wn.node_id, wn.sequence_id, wn.version"
             + " FROM way_nodes wn" + " INNER JOIN (" + "   SELECT id, MAX(version) as version" + "   FROM ways"
             + "   WHERE timestamp > ? AND timestamp <= ?" + "   GROUP BY id"
-            + " ) wayList ON wn.id = wayList.id AND wn.version = wayList.version";
+            + " ) wayList ON wn.id = wayList.id AND wn.version = wayList.version ORDER BY way_id";
 
     private final Date intervalBegin;
 

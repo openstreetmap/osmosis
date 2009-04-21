@@ -30,7 +30,7 @@ public class RelationMemberHistoryReader extends BaseTableReader<DbFeatureHistor
             + "   FROM relations"
             + "   WHERE timestamp > ? AND timestamp <= ?"
             + "   GROUP BY id"
-            + " ) relationList ON rm.id = relationList.id AND rm.version = relationList.version";
+            + " ) relationList ON rm.id = relationList.id AND rm.version = relationList.version ORDER BY relation_id";
 
     private final MemberTypeParser memberTypeParser;
 
