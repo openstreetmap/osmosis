@@ -15,6 +15,7 @@ import org.openstreetmap.osmosis.core.util.ResourceFileManager;
 import org.openstreetmap.osmosis.extract.apidb.common.Configuration;
 import org.openstreetmap.osmosis.extract.apidb.common.TimestampTracker;
 
+
 /**
  * The main entry point for the apidb change extraction application.
  * 
@@ -22,277 +23,281 @@ import org.openstreetmap.osmosis.extract.apidb.common.TimestampTracker;
  */
 public class OsmosisExtractApiDb {
 
-    private static final File LOCK_FILE = new File("osmosis-extract-apidb.lock");
+	private static final File LOCK_FILE = new File("osmosis-extract-apidb.lock");
+	private static final File CONFIG_FILE = new File("osmosis-extract-apidb.conf");
+	private static final File DATA_DIR = new File("data");
+	private static final File TSTAMP_FILE = new File("timestamp.txt");
+	private static final File TSTAMP_NEW_FILE = new File("timestampnew.txt");
+	private static final File DATA_TSTAMP_FILE = new File("data/timestamp.txt");
+	private static final File DATA_TSTAMP_NEW_FILE = new File("data/timestampnew.txt");
+	private static final String CONFIG_RESOURCE = "osmosis-extract-apidb.conf";
+	private static final String COMMAND_HELP = "help";
+	private static final String COMMAND_INITIALIZE = "initialize";
+	private static final String COMMAND_INFO = "info";
+	private static final String COMMAND_EXTRACT = "extract";
+	private static final String COMMAND_LINE_DATE_FORMAT = "yyyy-MM-dd_HH:mm:ss";
+	private static final Locale COMMAND_LINE_DATE_LOCALE = Locale.US;
+	private static final TimeZone COMMAND_LINE_DATE_TIMEZONE = TimeZone.getTimeZone("UTC");
+	private final String[] programArgs;
 
-    private static final File CONFIG_FILE = new File("osmosis-extract-apidb.conf");
 
-    private static final File DATA_DIR = new File("data");
+	/**
+	 * The entry point to the application.
+	 * 
+	 * @param args
+	 *            The command line arguments.
+	 */
+	public static void main(String[] args) {
+		FileBasedLock fileLock = new FileBasedLock(LOCK_FILE);
+		boolean success = false;
 
-    private static final File TSTAMP_FILE = new File("timestamp.txt");
+		try {
+			fileLock.lock();
 
-    private static final File TSTAMP_NEW_FILE = new File("timestampnew.txt");
+			new OsmosisExtractApiDb(args).run();
 
-    private static final File DATA_TSTAMP_FILE = new File("data/timestamp.txt");
+			fileLock.unlock();
 
-    private static final File DATA_TSTAMP_NEW_FILE = new File("data/timestampnew.txt");
+			success = true;
 
-    private static final String CONFIG_RESOURCE = "osmosis-extract-apidb.conf";
+		} finally {
+			fileLock.release();
+		}
 
-    private static final String COMMAND_HELP = "help";
+		// Indicate success or otherwise.
+		if (success) {
+			System.exit(0);
+		} else {
+			System.exit(1);
+		}
+	}
 
-    private static final String COMMAND_INITIALIZE = "initialize";
 
-    private static final String COMMAND_INFO = "info";
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param programArgs
+	 *            The command line arguments.
+	 */
+	public OsmosisExtractApiDb(String[] programArgs) {
+		this.programArgs = programArgs;
+	}
 
-    private static final String COMMAND_EXTRACT = "extract";
 
-    private static final String COMMAND_LINE_DATE_FORMAT = "yyyy-MM-dd_HH:mm:ss";
+	/**
+	 * Launches program execution.
+	 */
+	public void run() {
+		int argIndex;
+		String command;
 
-    private static final Locale COMMAND_LINE_DATE_LOCALE = Locale.US;
+		if (programArgs.length == 0) {
+			helpCommand();
+		} else {
+			argIndex = 0;
+			command = programArgs[argIndex++];
 
-    private static final TimeZone COMMAND_LINE_DATE_TIMEZONE = TimeZone.getTimeZone("UTC");
+			if (COMMAND_HELP.equals(command)) {
+				helpCommand();
+			} else if (COMMAND_INITIALIZE.equals(command)) {
+				initializeCommand(programArgs, argIndex);
+			} else if (COMMAND_INFO.equals(command)) {
+				infoCommand();
+			} else if (COMMAND_EXTRACT.equals(command)) {
+				extractCommand();
+			} else {
+				System.out.println("Command " + command + " is not recognised.");
+			}
+		}
+	}
 
-    private final String[] programArgs;
 
-    /**
-     * The entry point to the application.
-     * 
-     * @param args The command line arguments.
-     */
-    public static void main(String[] args) {
-        FileBasedLock fileLock = new FileBasedLock(LOCK_FILE);
-        boolean success = false;
+	/**
+	 * Creates a configuration object.
+	 * 
+	 * @return The configuration.
+	 */
+	private Configuration getConfiguration() {
+		return new Configuration(CONFIG_FILE);
+	}
 
-        try {
-            fileLock.lock();
 
-            new OsmosisExtractApiDb(args).run();
+	/**
+	 * Creates a timestamp tracker object for persisting the currently extracted timestamp.
+	 * 
+	 * @return The timestamp tracker.
+	 */
+	private TimestampTracker getTimestampTracker() {
+		return new TimestampTracker(TSTAMP_FILE, TSTAMP_NEW_FILE);
+	}
 
-            fileLock.unlock();
 
-            success = true;
+	/**
+	 * Creates a timestamp tracker object for persisting the currently extracted timestamp into the
+	 * data directory for consumers to download.
+	 * 
+	 * @return The timestamp tracker.
+	 */
+	private TimestampTracker getDataTimestampSetter() {
+		return new TimestampTracker(DATA_TSTAMP_FILE, DATA_TSTAMP_NEW_FILE);
+	}
 
-        } finally {
-            fileLock.release();
-        }
 
-        // Indicate success or otherwise.
-        if (success) {
-            System.exit(0);
-        } else {
-            System.exit(1);
-        }
-    }
+	/**
+	 * Gets a date argument from the program arguments.
+	 * 
+	 * @param args
+	 *            The program arguments.
+	 * @param argIndex
+	 *            The current argument index.
+	 * @return The parsed date.
+	 */
+	private Date getDateArgument(String[] args, int argIndex) {
+		// Verify that the argument is available.
+		if (args.length <= argIndex) {
+			throw new OsmosisRuntimeException("A date argument is required at argument " + (argIndex + 1) + ".");
+		}
 
-    /**
-     * Creates a new instance.
-     * 
-     * @param programArgs The command line arguments.
-     */
-    public OsmosisExtractApiDb(String[] programArgs) {
-        this.programArgs = programArgs;
-    }
+		try {
+			SimpleDateFormat dateFormat;
 
-    /**
-     * Launches program execution.
-     */
-    public void run() {
-        int argIndex;
-        String command;
+			dateFormat = new SimpleDateFormat(COMMAND_LINE_DATE_FORMAT, COMMAND_LINE_DATE_LOCALE);
+			dateFormat.setTimeZone(COMMAND_LINE_DATE_TIMEZONE);
 
-        if (programArgs.length == 0) {
-            helpCommand();
-        } else {
-            argIndex = 0;
-            command = programArgs[argIndex++];
+			return dateFormat.parse(args[argIndex]);
 
-            if (COMMAND_HELP.equals(command)) {
-                helpCommand();
-            } else if (COMMAND_INITIALIZE.equals(command)) {
-                initializeCommand(programArgs, argIndex);
-            } else if (COMMAND_INFO.equals(command)) {
-                infoCommand();
-            } else if (COMMAND_EXTRACT.equals(command)) {
-                extractCommand();
-            } else {
-                System.out.println("Command " + command + " is not recognised.");
-            }
-        }
-    }
+		} catch (ParseException e) {
+			throw new OsmosisRuntimeException("Argument " + (argIndex + 1) + " must be a date in format "
+					+ COMMAND_LINE_DATE_FORMAT + ".", e);
+		}
+	}
 
-    /**
-     * Creates a configuration object.
-     * 
-     * @return The configuration.
-     */
-    private Configuration getConfiguration() {
-        return new Configuration(CONFIG_FILE);
-    }
 
-    /**
-     * Creates a timestamp tracker object for persisting the currently extracted timestamp.
-     * 
-     * @return The timestamp tracker.
-     */
-    private TimestampTracker getTimestampTracker() {
-        return new TimestampTracker(TSTAMP_FILE, TSTAMP_NEW_FILE);
-    }
+	/**
+	 * Prints usage information to the console.
+	 */
+	private void helpCommand() {
+		System.out.println("Osmosis Extract ApiDb Version " + OsmosisConstants.VERSION);
+		System.out.println("Usage: osmosis-apidb-extract <command> <options>");
+		System.out.println("Commands:");
+		System.out.println("\t" + COMMAND_INITIALIZE + " <" + COMMAND_LINE_DATE_FORMAT + ">");
+		System.out.println("\t" + COMMAND_INFO);
+		System.out.println("\t" + COMMAND_EXTRACT);
+	}
 
-    /**
-     * Creates a timestamp tracker object for persisting the currently extracted timestamp into the
-     * data directory for consumers to download.
-     * 
-     * @return The timestamp tracker.
-     */
-    private TimestampTracker getDataTimestampSetter() {
-        return new TimestampTracker(DATA_TSTAMP_FILE, DATA_TSTAMP_NEW_FILE);
-    }
 
-    /**
-     * Gets a date argument from the program arguments.
-     * 
-     * @param args The program arguments.
-     * @param argIndex The current argument index.
-     * @return The parsed date.
-     */
-    private Date getDateArgument(String[] args, int argIndex) {
-        // Verify that the argument is available.
-        if (args.length <= argIndex) {
-            throw new OsmosisRuntimeException("A date argument is required at argument " + (argIndex + 1) + ".");
-        }
+	/**
+	 * Initialises the current working directory.
+	 * 
+	 * @param args
+	 *            The input arguments.
+	 * @param initialArgIndex
+	 *            The current offset into the arguments.
+	 */
+	private void initializeCommand(String[] args, int initialArgIndex) {
+		int currentArgIndex;
+		Date initialExtractDate;
+		ResourceFileManager resourceFileManager;
 
-        try {
-            SimpleDateFormat dateFormat;
+		// Get the command line arguments.
+		currentArgIndex = initialArgIndex;
+		initialExtractDate = getDateArgument(args, currentArgIndex++);
 
-            dateFormat = new SimpleDateFormat(COMMAND_LINE_DATE_FORMAT, COMMAND_LINE_DATE_LOCALE);
-            dateFormat.setTimeZone(COMMAND_LINE_DATE_TIMEZONE);
+		if (CONFIG_FILE.exists()) {
+			throw new OsmosisRuntimeException("Config file " + CONFIG_FILE + " already exists.");
+		}
+		resourceFileManager = new ResourceFileManager();
+		resourceFileManager.copyResourceToFile(getClass(), CONFIG_RESOURCE, CONFIG_FILE);
 
-            return dateFormat.parse(args[argIndex]);
+		if (!DATA_DIR.exists()) {
+			if (!DATA_DIR.mkdir()) {
+				throw new OsmosisRuntimeException("Unable to create directory " + DATA_DIR);
+			}
+		}
 
-        } catch (ParseException e) {
-            throw new OsmosisRuntimeException("Argument " + (argIndex + 1) + " must be a date in format "
-                    + COMMAND_LINE_DATE_FORMAT + ".", e);
-        }
-    }
+		if (TSTAMP_FILE.exists()) {
+			throw new OsmosisRuntimeException("Extract timestamp file " + TSTAMP_FILE + " already exists.");
+		}
+		getTimestampTracker().setTime(initialExtractDate);
+	}
 
-    /**
-     * Prints usage information to the console.
-     */
-    private void helpCommand() {
-        System.out.println("Osmosis Extract ApiDb Version " + OsmosisConstants.VERSION);
-        System.out.println("Usage: osmosis-apidb-extract <command> <options>");
-        System.out.println("Commands:");
-        System.out.println("\t" + COMMAND_INITIALIZE + " <" + COMMAND_LINE_DATE_FORMAT + ">");
-        System.out.println("\t" + COMMAND_INFO);
-        System.out.println("\t" + COMMAND_EXTRACT);
-    }
 
-    /**
-     * Initialises the current working directory.
-     * 
-     * @param args The input arguments.
-     * @param initialArgIndex The current offset into the arguments.
-     */
-    private void initializeCommand(String[] args, int initialArgIndex) {
-        int currentArgIndex;
-        Date initialExtractDate;
-        ResourceFileManager resourceFileManager;
+	/**
+	 * Provides information about the state of the current working directory.
+	 */
+	private void infoCommand() {
+		Configuration configuration;
+		TimestampTracker timestampTracker;
 
-        // Get the command line arguments.
-        currentArgIndex = initialArgIndex;
-        initialExtractDate = getDateArgument(args, currentArgIndex++);
+		configuration = getConfiguration();
+		timestampTracker = getTimestampTracker();
 
-        if (CONFIG_FILE.exists()) {
-            throw new OsmosisRuntimeException("Config file " + CONFIG_FILE + " already exists.");
-        }
-        resourceFileManager = new ResourceFileManager();
-        resourceFileManager.copyResourceToFile(getClass(), CONFIG_RESOURCE, CONFIG_FILE);
+		System.out.println("Configuration");
+		System.out.println("\thost: " + configuration.getHost());
+		System.out.println("\tdatabase: " + configuration.getDatabase());
+		System.out.println("\tuser: " + configuration.getUser());
+		System.out.println("\tpassword: " + configuration.getPassword());
+		System.out.println("\tdb: " + configuration.getDbType());
+		System.out.println("\tintervalLength: " + configuration.getIntervalLength());
+		System.out.println("\tlagLength: " + configuration.getLagLength());
+		System.out.println("\tchangeSetBeginFormat: " + configuration.getChangeFileBeginFormat());
+		System.out.println("\tchangeSetEndFormat: " + configuration.getChangeFileEndFormat());
+		System.out.println();
+		System.out.println("Data");
+		System.out.println("\tCurrent Timestamp: " + timestampTracker.getTime());
+	}
 
-        if (!DATA_DIR.exists()) {
-            if (!DATA_DIR.mkdir()) {
-                throw new OsmosisRuntimeException("Unable to create directory " + DATA_DIR);
-            }
-        }
 
-        if (TSTAMP_FILE.exists()) {
-            throw new OsmosisRuntimeException("Extract timestamp file " + TSTAMP_FILE + " already exists.");
-        }
-        getTimestampTracker().setTime(initialExtractDate);
-    }
+	/**
+	 * Performs the extraction process.
+	 */
+	private void extractCommand() {
+		Configuration configuration;
+		DatabaseTimeLoader timeLoader;
+		boolean fullHistory;
+		TimestampTracker timestampTracker;
+		TimestampTracker dataTimestampSetter;
+		long extractTime;
+		long maximumExtractTime;
+		long nextExtractTime;
 
-    /**
-     * Provides information about the state of the current working directory.
-     */
-    private void infoCommand() {
-        Configuration configuration;
-        TimestampTracker timestampTracker;
+		configuration = getConfiguration();
+		timeLoader = new DatabaseTimeLoader(configuration.getDatabaseLoginCredentials());
+		fullHistory = configuration.getReadFullHistory();
+		timestampTracker = getTimestampTracker();
+		dataTimestampSetter = getDataTimestampSetter();
 
-        configuration = getConfiguration();
-        timestampTracker = getTimestampTracker();
+		// Determine the last extraction time.
+		extractTime = timestampTracker.getTime().getTime();
 
-        System.out.println("Configuration");
-        System.out.println("\thost: " + configuration.getHost());
-        System.out.println("\tdatabase: " + configuration.getDatabase());
-        System.out.println("\tuser: " + configuration.getUser());
-        System.out.println("\tpassword: " + configuration.getPassword());
-        System.out.println("\tdb: " + configuration.getDbType());
-        System.out.println("\tintervalLength: " + configuration.getIntervalLength());
-        System.out.println("\tlagLength: " + configuration.getLagLength());
-        System.out.println("\tchangeSetBeginFormat: " + configuration.getChangeFileBeginFormat());
-        System.out.println("\tchangeSetEndFormat: " + configuration.getChangeFileEndFormat());
-        System.out.println();
-        System.out.println("Data");
-        System.out.println("\tCurrent Timestamp: " + timestampTracker.getTime());
-    }
+		// Determine the maximum extraction time. It is the current time minus the lag length.
+		maximumExtractTime = timeLoader.getDatabaseTime().getTime() - configuration.getLagLength();
 
-    /**
-     * Performs the extraction process.
-     */
-    private void extractCommand() {
-        Configuration configuration;
-        boolean fullHistory;
-        TimestampTracker timestampTracker;
-        TimestampTracker dataTimestampSetter;
-        long extractTime;
-        long maximumExtractTime;
-        long nextExtractTime;
+		while (true) {
+			Date intervalBegin;
+			Date intervalEnd;
+			IntervalExtractor extractor;
 
-        configuration = getConfiguration();
-        fullHistory = configuration.getReadFullHistory();
-        timestampTracker = getTimestampTracker();
-        dataTimestampSetter = getDataTimestampSetter();
+			nextExtractTime = extractTime + configuration.getIntervalLength();
 
-        // Determine the last extraction time.
-        extractTime = timestampTracker.getTime().getTime();
+			// Stop when the maximum extraction time is passed.
+			if (nextExtractTime > maximumExtractTime) {
+				break;
+			}
 
-        // Determine the maximum extraction time. It is the current time minus the lag length.
-        maximumExtractTime = new Date().getTime() - configuration.getLagLength();
+			// Calculate the beginning and end of the next changeset interval.
+			intervalBegin = new Date(extractTime);
+			intervalEnd = new Date(nextExtractTime);
 
-        while (true) {
-            Date intervalBegin;
-            Date intervalEnd;
-            IntervalExtractor extractor;
+			// Extract a changeset for the current interval.
+			extractor = new IntervalExtractor(configuration, DATA_DIR, intervalBegin, intervalEnd, fullHistory);
+			extractor.run();
 
-            nextExtractTime = extractTime + configuration.getIntervalLength();
-
-            // Stop when the maximum extraction time is passed.
-            if (nextExtractTime > maximumExtractTime) {
-                break;
-            }
-
-            // Calculate the beginning and end of the next changeset interval.
-            intervalBegin = new Date(extractTime);
-            intervalEnd = new Date(nextExtractTime);
-
-            // Extract a changeset for the current interval.
-            extractor = new IntervalExtractor(configuration, DATA_DIR, intervalBegin, intervalEnd, fullHistory);
-            extractor.run();
-
-            // Update and persist the latest extract timestamp to both the
-            // working directory and the output data directory.
-            extractTime = nextExtractTime;
-            timestampTracker.setTime(new Date(extractTime));
-            dataTimestampSetter.setTime(new Date(extractTime));
-        }
-    }
+			// Update and persist the latest extract timestamp to both the
+			// working directory and the output data directory.
+			extractTime = nextExtractTime;
+			timestampTracker.setTime(new Date(extractTime));
+			dataTimestampSetter.setTime(new Date(extractTime));
+		}
+	}
 }
