@@ -270,15 +270,15 @@ public class OsmosisExtractApiDb {
 		// Determine the last extraction time.
 		extractTime = timestampTracker.getTime().getTime();
 
-		// Determine the maximum extraction time. It is the current time minus the lag length.
-		maximumExtractTime = timeLoader.getDatabaseTime().getTime() - configuration.getLagLength();
-
 		while (true) {
 			Date intervalBegin;
 			Date intervalEnd;
 			IntervalExtractor extractor;
 
 			nextExtractTime = extractTime + configuration.getIntervalLength();
+
+			// Determine the maximum extraction time. It is the current time minus the lag length.
+			maximumExtractTime = timeLoader.getDatabaseTime().getTime() - configuration.getLagLength();
 
 			// Stop when the maximum extraction time is passed.
 			if (nextExtractTime > maximumExtractTime) {
