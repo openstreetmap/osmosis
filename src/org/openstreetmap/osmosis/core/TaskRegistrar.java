@@ -295,9 +295,9 @@ public class TaskRegistrar {
 				new org.openstreetmap.osmosis.core.report.v0_5.EntityReporterFactory());
 		factoryRegister.register("report-integrity-0.5",
 				new org.openstreetmap.osmosis.core.report.v0_5.IntegrityReporterFactory());
-		factoryRegister.register("LOG-progress-0.5",
+		factoryRegister.register("log-progress-0.5",
 				new org.openstreetmap.osmosis.core.progress.v0_5.EntityProgressLoggerFactory());
-		factoryRegister.register("LOG-change-progress-0.5",
+		factoryRegister.register("log-change-progress-0.5",
 				new org.openstreetmap.osmosis.core.progress.v0_5.ChangeProgressLoggerFactory());
 		factoryRegister.register("tee-0.5", new org.openstreetmap.osmosis.core.tee.v0_5.EntityTeeFactory());
 		factoryRegister.register("tee-change-0.5", new org.openstreetmap.osmosis.core.tee.v0_5.ChangeTeeFactory());

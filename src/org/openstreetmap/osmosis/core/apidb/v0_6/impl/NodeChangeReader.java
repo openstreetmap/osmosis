@@ -117,6 +117,7 @@ public class NodeChangeReader {
 			while (nodeHistoryReader.hasNext()
 					&& (nodeHistoryReader.peekNext().getEntity().getId() == node.getId())) {
 				mostRecentHistory = readNextNodeHistory();
+				node = mostRecentHistory.getEntity();
 			}
 		}
 		

@@ -147,6 +147,7 @@ public class WayChangeReader {
 			while (wayHistoryReader.hasNext()
 					&& (wayHistoryReader.peekNext().getEntity().getId() == way.getId())) {
 				mostRecentHistory = readNextWayHistory();
+				way = mostRecentHistory.getEntity();
 			}
 		}
 		

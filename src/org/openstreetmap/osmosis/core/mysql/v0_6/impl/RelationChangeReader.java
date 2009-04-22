@@ -152,6 +152,7 @@ public class RelationChangeReader {
 			while (relationHistoryReader.hasNext()
 					&& (relationHistoryReader.peekNext().getEntity().getId() == relation.getId())) {
 				mostRecentHistory = readNextRelationHistory();
+				relation = mostRecentHistory.getEntity();
 			}
 		}
 		
