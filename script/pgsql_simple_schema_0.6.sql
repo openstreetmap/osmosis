@@ -62,7 +62,7 @@ CREATE TABLE ways (
 CREATE TABLE way_nodes (
     way_id bigint NOT NULL,
     node_id bigint NOT NULL,
-    sequence_id smallint NOT NULL
+    sequence_id int NOT NULL
 );
 
 
@@ -88,7 +88,7 @@ CREATE TABLE relation_members (
     member_id bigint NOT NULL,
     member_type character(1) NOT NULL,
     member_role text NOT NULL,
-    sequence_id smallint NOT NULL
+    sequence_id int NOT NULL
 );
 
 
