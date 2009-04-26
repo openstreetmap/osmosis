@@ -24,7 +24,7 @@
         	<exclude module="stax-api"/>
         </dependency>
         <dependency org="mysql" name="mysql-connector-java" rev="latest.integration" conf="default->default"/>
-        <dependency org="org.apache.tools" name="bzip2" rev="0.1" conf="compile->default"/>
+        <dependency org="org.apache.tools" name="bzip2" rev="20090327" conf="compile->default"/>
         <dependency org="org.postgis" name="postgis" rev="1.3.2" conf="compile->default"/>
         
         <dependency org="junit" name="junit" rev="latest.integration" conf="test->default"/>
