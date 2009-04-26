@@ -9,3 +9,8 @@ intervalLength=3600
 # Change file begin format
 changeFileBeginFormat=yyyyMMddHH
 changeFileEndFormat=yyyyMMddHH
+
+# Defines the maximum number of files to download in a single invocation.
+# There will be approximately two threads created for every downloaded file.
+# Setting this to 0 disables this feature.
+maxDownloadCount = 20

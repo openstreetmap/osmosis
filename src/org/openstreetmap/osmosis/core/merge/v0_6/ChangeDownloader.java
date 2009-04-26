@@ -185,7 +185,7 @@ public class ChangeDownloader implements RunnableChangeSource {
 			return outputFile;
 			
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to read the changeset file from the server.", e);
+			throw new OsmosisRuntimeException("Unable to read the changeset file " + fileName + " from the server.", e);
 		} finally {
 			try {
 				if (inputStream != null) {
@@ -218,6 +218,8 @@ public class ChangeDownloader implements RunnableChangeSource {
 		Date currentTime;
 		Date maximumTime;
 		URL baseUrl;
+		int maxDownloadCount;
+		int downloadCount;
 		ArrayList<File> tmpFileList;
 		ArrayList<RunnableChangeSource> tasks;
 		ArrayList<TaskRunner> taskRunners;
@@ -251,7 +253,9 @@ public class ChangeDownloader implements RunnableChangeSource {
 		maximumTime = getServerTimestamp(baseUrl);
 		
 		// Process until all files have been retrieved from the server.
-		while (currentTime.before(maximumTime)) {
+		maxDownloadCount = configuration.getMaxDownloadCount();
+		downloadCount = 0;
+		while ((maxDownloadCount == 0 || downloadCount < maxDownloadCount) && currentTime.before(maximumTime)) {
 			Date nextTime;
 			String downloadFileName;
 			
@@ -266,6 +270,9 @@ public class ChangeDownloader implements RunnableChangeSource {
 			
 			// Move the current time to the next interval.
 			currentTime = nextTime;
+			
+			// Increment the current download count.
+			downloadCount++;
 		}
 		
 		// Generate a set of tasks for loading the change files and merge them
