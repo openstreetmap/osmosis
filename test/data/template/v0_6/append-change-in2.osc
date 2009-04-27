@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osmChange version="0.6" generator="Osmosis %VERSION%">
+  <modify>
+    <node id="1" version="3" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" lat="-1" lon="-2">
+      <tag k="created_by" v="Me1"/>
+    </node>
+    <node id="1" version="4" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" lat="-1" lon="-2">
+      <tag k="created_by" v="Me1"/>
+    </node>
+    <way id="1" version="3" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10">
+      <nd ref="1"/>
+      <tag k="created_by" v="Me1"/>
+    </way>
+    <way id="1" version="4" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10">
+      <nd ref="1"/>
+      <tag k="created_by" v="Me1"/>
+    </way>
+    <relation id="1" version="3" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10">
+      <member type="node" ref="1" role="noderole"/>
+      <member type="way" ref="1" role="wayrole"/>
+      <tag k="created_by" v="Me1"/>
+    </relation>
+    <relation id="1" version="4" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10">
+      <member type="node" ref="1" role="noderole"/>
+      <member type="way" ref="1" role="wayrole"/>
+      <tag k="created_by" v="Me1"/>
+    </relation>
+  </modify>
+</osmChange>

@@ -4,6 +4,7 @@ package org.openstreetmap.osmosis.core.merge.v0_6;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
+import org.openstreetmap.osmosis.core.merge.v0_6.impl.DataPostboxChangeSink;
 import org.openstreetmap.osmosis.core.merge.v0_6.impl.SortedChangePipeValidator;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
 import org.openstreetmap.osmosis.core.store.DataPostbox;
@@ -64,19 +65,7 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 		}
 		
 		// Create a changesink pointing to the postbox.
-		postboxChangeSink = new ChangeSink() {
-			private DataPostbox<ChangeContainer> postbox = destinationPostbox;
-
-			public void process(ChangeContainer change) {
-				postbox.put(change);
-			}
-			public void complete() {
-				postbox.complete();
-			}
-			public void release() {
-				postbox.release();
-			}
-		};
+		postboxChangeSink = new DataPostboxChangeSink(destinationPostbox);
 		
 		// Create a validation class to verify that all incoming data is sorted
 		// and connect its output to the postbox changesink.

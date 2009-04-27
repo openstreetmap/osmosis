@@ -42,6 +42,7 @@ import org.openstreetmap.osmosis.core.filter.v0_6.NodeKeyValueFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.PolygonFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.UsedNodeFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyValueFilterFactory;
+import org.openstreetmap.osmosis.core.merge.v0_6.ChangeAppenderFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.ChangeDownloadInitializerFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.ChangeDownloaderFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.ChangeMergerFactory;
@@ -254,7 +255,9 @@ public class TaskRegistrar {
 		factoryRegister.register("wdc", new ApidbChangeWriterFactory());
 		factoryRegister.register("truncate-apidb", new ApidbTruncatorFactory());
 		factoryRegister.register("td", new ApidbTruncatorFactory());
-
+		factoryRegister.register("append-change", new ChangeAppenderFactory());
+		factoryRegister.register("apc", new ChangeAppenderFactory());
+		
 		factoryRegister.register("apply-change-0.5",
 				new org.openstreetmap.osmosis.core.change.v0_5.ChangeApplierFactory());
 		factoryRegister.register("bounding-box-0.5",
@@ -386,6 +389,7 @@ public class TaskRegistrar {
 		factoryRegister.register("write-apidb-0.6", new ApidbWriterFactory());
 		factoryRegister.register("write-apidb-change-0.6", new ApidbChangeWriterFactory());
 		factoryRegister.register("truncate-apidb-0.6", new ApidbTruncatorFactory());
+		factoryRegister.register("append-change-0.6", new ChangeAppenderFactory());
 
 		// Register the plugins.
 		for (String plugin : plugins) {
