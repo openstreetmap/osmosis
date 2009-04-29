@@ -21,7 +21,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 public class RelationHistoryReader extends BaseEntityReader<EntityHistory<Relation>> {
 
     private static final String SELECT_SQL =
-    	"SELECT e.id, e.version, e.timestamp, e.visible, u.data_public, u.id AS user_id, u.display_name"
+    	"SELECT e.id, e.version, e.timestamp, e.visible, u.data_public, u.id AS user_id, u.display_name, e.changeset_id"
             + " FROM relations e"
             + " LEFT OUTER JOIN changesets c ON e.changeset_id = c.id"
             + " LEFT OUTER JOIN users u ON c.user_id = u.id"
@@ -78,6 +78,7 @@ public class RelationHistoryReader extends BaseEntityReader<EntityHistory<Relati
         Date timestamp;
         boolean visible;
         OsmUser user;
+        long changesetId;
 
         try {
             id = resultSet.getLong("id");
@@ -86,12 +87,13 @@ public class RelationHistoryReader extends BaseEntityReader<EntityHistory<Relati
             visible = resultSet.getBoolean("visible");
             user = readUserField(resultSet.getBoolean("data_public"), resultSet.getInt("user_id"), resultSet
                     .getString("display_name"));
+            changesetId = resultSet.getLong("changeset_id");
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to read relation fields.", e);
         }
 
         return new ReadResult<EntityHistory<Relation>>(true, new EntityHistory<Relation>(new Relation(id, version,
-                timestamp, user), visible));
+                timestamp, user, changesetId), visible));
     }
 }

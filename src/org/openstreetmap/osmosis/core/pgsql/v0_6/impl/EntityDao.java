@@ -10,10 +10,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.apidb.v0_6.impl.DbFeature;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
-import org.openstreetmap.osmosis.core.mysql.v0_6.impl.DbFeature;
 import org.openstreetmap.osmosis.core.pgsql.common.BaseDao;
 import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.pgsql.common.NoSuchRecordException;

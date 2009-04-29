@@ -20,7 +20,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
 
     private static final String SELECT_SQL =
-    	"SELECT w.id, w.version, w.timestamp, w.visible, u.data_public, u.id AS user_id, u.display_name"
+    	"SELECT w.id, w.version, w.timestamp, w.visible, u.data_public, u.id AS user_id, u.display_name, w.changeset_id"
             + " FROM ways w"
             + " LEFT OUTER JOIN changesets c ON w.changeset_id = c.id"
             + " LEFT OUTER JOIN users u ON c.user_id = u.id" + " ORDER BY w.id, w.version";
@@ -54,6 +54,7 @@ public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
         Date timestamp;
         boolean visible;
         OsmUser user;
+        long changesetId;
 
         try {
             id = resultSet.getLong("id");
@@ -62,12 +63,13 @@ public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
             visible = resultSet.getBoolean("visible");
             user = readUserField(resultSet.getBoolean("data_public"), resultSet.getInt("user_id"), resultSet
                     .getString("display_name"));
+            changesetId = resultSet.getLong("changeset_id");
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to read way fields.", e);
         }
 
-        return new ReadResult<EntityHistory<Way>>(true, new EntityHistory<Way>(new Way(id, version, timestamp, user),
-                visible));
+        return new ReadResult<EntityHistory<Way>>(true, new EntityHistory<Way>(new Way(id, version, timestamp, user,
+				changesetId), visible));
     }
 }

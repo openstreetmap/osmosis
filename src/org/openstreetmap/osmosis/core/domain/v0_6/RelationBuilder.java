@@ -57,11 +57,13 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	public RelationBuilder(long id, int version, Date timestamp, OsmUser user) {
+	public RelationBuilder(long id, int version, Date timestamp, OsmUser user, long changesetId) {
 		this();
 		
-		initialize(id, version, timestamp, user);
+		initialize(id, version, timestamp, user, changesetId);
 	}
 	
 	
@@ -77,11 +79,14 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	 *            timestamp representation.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	public RelationBuilder(long id, TimestampContainer timestampContainer, OsmUser user, int version) {
+	public RelationBuilder(
+			long id, TimestampContainer timestampContainer, OsmUser user, int version, long changesetId) {
 		this();
 		
-		initialize(id, version, timestampContainer, user);
+		initialize(id, version, timestampContainer, user, changesetId);
 	}
 	
 	
@@ -145,11 +150,14 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	 *            The last updated timestamp.
 	 * @param newUser
 	 *            The user that last modified this entity.
+	 * @param newChangesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @return This object allowing method chaining.
 	 */
 	@Override
-	public RelationBuilder initialize(long newId, int newVersion, Date newTimestamp, OsmUser newUser) {
-		super.initialize(newId, newVersion, newTimestamp, newUser);
+	public RelationBuilder initialize(long newId, int newVersion, Date newTimestamp, OsmUser newUser,
+			long newChangesetId) {
+		super.initialize(newId, newVersion, newTimestamp, newUser, newChangesetId);
 		initializeLocal();
 		
 		return this;
@@ -168,12 +176,14 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	 *            timestamp representation.
 	 * @param newUser
 	 *            The user that last modified this entity.
+	 * @param newChangesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @return This object allowing method chaining.
 	 */
 	@Override
-	public RelationBuilder initialize(
-			long newId, int newVersion, TimestampContainer newTimestampContainer, OsmUser newUser) {
-		super.initialize(newId, newVersion, newTimestampContainer, newUser);
+	public RelationBuilder initialize(long newId, int newVersion, TimestampContainer newTimestampContainer,
+			OsmUser newUser, long newChangesetId) {
+		super.initialize(newId, newVersion, newTimestampContainer, newUser, newChangesetId);
 		initializeLocal();
 		
 		return this;
@@ -236,7 +246,7 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	 */
 	@Override
 	public Relation buildEntity() {
-		return new Relation(id, version, timestampContainer, user, tags, members);
+		return new Relation(id, version, timestampContainer, user, changesetId, tags, members);
 	}
 
     /** 

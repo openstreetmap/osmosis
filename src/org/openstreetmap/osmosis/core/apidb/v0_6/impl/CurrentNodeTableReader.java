@@ -22,7 +22,7 @@ public class CurrentNodeTableReader extends BaseEntityReader<Node> {
 
     private static final String SELECT_SQL =
     	"SELECT n.id, n.version, n.timestamp, n.visible, u.data_public, u.id AS user_id,"
-            + " u.display_name, n.latitude, n.longitude"
+            + " u.display_name, n.changeset_id, n.latitude, n.longitude"
             + " FROM current_nodes n"
             + " LEFT OUTER JOIN changesets c ON n.changeset_id = c.id"
             + " LEFT OUTER JOIN users u ON c.user_id = u.id"
@@ -57,6 +57,7 @@ public class CurrentNodeTableReader extends BaseEntityReader<Node> {
         Date timestamp;
         boolean visible;
         OsmUser user;
+        long changesetId;
         double latitude;
         double longitude;
 
@@ -67,6 +68,7 @@ public class CurrentNodeTableReader extends BaseEntityReader<Node> {
             visible = resultSet.getBoolean("visible");
             user = readUserField(resultSet.getBoolean("data_public"), resultSet.getInt("user_id"), resultSet
                     .getString("display_name"));
+            changesetId = resultSet.getLong("changeset_id");
             latitude = FixedPrecisionCoordinateConvertor.convertToDouble(resultSet.getInt("latitude"));
             longitude = FixedPrecisionCoordinateConvertor.convertToDouble(resultSet.getInt("longitude"));
 
@@ -75,6 +77,6 @@ public class CurrentNodeTableReader extends BaseEntityReader<Node> {
         }
 
         // Non-visible records will be ignored by the caller.
-        return new ReadResult<Node>(visible, new Node(id, version, timestamp, user, latitude, longitude));
+        return new ReadResult<Node>(visible, new Node(id, version, timestamp, user, changesetId, latitude, longitude));
     }
 }

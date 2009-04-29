@@ -64,7 +64,7 @@ public class DatasetDriver implements DatasetSink {
 			nodeManager.removeEntity(6);
 			
 			// Add node 7 using the NONE user.
-			node = new Node(7, 16, buildDate("2008-01-02 18:19:20"), OsmUser.NONE, -11, -12);
+			node = new Node(7, 16, buildDate("2008-01-02 18:19:20"), OsmUser.NONE, 0, -11, -12);
 			node.getTags().addAll(
 					Arrays.asList(new Tag[]{new Tag("created_by", "Me7"), new Tag("change", "new node")}));
 			nodeManager.addEntity(node);

@@ -61,12 +61,12 @@ public class BoundingBoxFilterTest {
 		simpleAreaFilter.setSink(entityInspector);
 		intersectingBound = new Bound(30, 10, 30, 10, "intersecting");
 		nonIntersectingBound = new Bound(-30, -50, 10, -10, "nonintersecting");
-		inAreaNode = new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, 10, 10);
-		outOfAreaNode = new Node(1235, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, 30, 30);
-		edgeNodeEast = new Node(1236, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, 10, 20);
-		edgeNodeWest = new Node(1237, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, 10, -20);
-		edgeNodeNorth = new Node(1238, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, 20, 10);
-		edgeNodeSouth = new Node(1239, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, -20, 10);
+		inAreaNode = new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 10, 10);
+		outOfAreaNode = new Node(1235, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 30, 30);
+		edgeNodeEast = new Node(1236, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 10, 20);
+		edgeNodeWest = new Node(1237, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 10, -20);
+		edgeNodeNorth = new Node(1238, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 20, 10);
+		edgeNodeSouth = new Node(1239, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, -20, 10);
 	}
 
 

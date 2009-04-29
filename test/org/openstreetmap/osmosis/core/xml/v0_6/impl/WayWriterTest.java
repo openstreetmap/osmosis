@@ -87,7 +87,7 @@ public class WayWriterTest {
 	@Test
 	public final void testProcessNormalWay() {
 		Way way =
-			new Way(1234, 2, timestamp, new OsmUser(23, "someuser"));
+			new Way(1234, 2, timestamp, new OsmUser(23, "someuser"), 0);
 		way.getWayNodes().add(new WayNode(1235));
 		way.getWayNodes().add(new WayNode(1236));
 		way.getTags().add(new Tag("waykey", "wayvalue"));
@@ -114,7 +114,7 @@ public class WayWriterTest {
 	@Test
 	public final void testProcessWayWithNoUser() {
 		Way way =
-			new Way(1234, 2, timestamp, OsmUser.NONE);
+			new Way(1234, 2, timestamp, OsmUser.NONE, 0);
 		way.getWayNodes().add(new WayNode(1235));
 		way.getWayNodes().add(new WayNode(1236));
 		way.getTags().add(new Tag("waykey", "wayvalue"));
@@ -146,7 +146,7 @@ public class WayWriterTest {
 	@Test
 	public final void testProcessWayNoTags() {
 		Way way =
-			new Way(1234, 2, timestamp, new OsmUser(23, "someuser"));
+			new Way(1234, 2, timestamp, new OsmUser(23, "someuser"), 0);
 		way.getWayNodes().add(new WayNode(1235));
 		way.getWayNodes().add(new WayNode(1236));
 		

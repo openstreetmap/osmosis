@@ -29,6 +29,7 @@ public abstract class Entity implements Storeable {
 	
 	private int id;
 	private int version;
+	private int changesetId;
 	private TimestampContainer timestampContainer;
 	private OsmUser user;
 	private TagCollection tags;
@@ -46,10 +47,12 @@ public abstract class Entity implements Storeable {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	public Entity(long id, int version, Date timestamp, OsmUser user) {
+	public Entity(long id, int version, Date timestamp, OsmUser user, long changesetId) {
 		// Chain to the more specific constructor
-		this(id, version, new SimpleTimestampContainer(timestamp), user);
+		this(id, version, new SimpleTimestampContainer(timestamp), user, changesetId);
 	}
 	
 	
@@ -65,9 +68,11 @@ public abstract class Entity implements Storeable {
 	 *            timestamp representation.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	public Entity(long id, int version, TimestampContainer timestampContainer, OsmUser user) {
-		init(id, timestampContainer, user, version);
+	public Entity(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId) {
+		init(id, timestampContainer, user, version, changesetId);
 		tags = new TagCollectionImpl();
 	}
 	
@@ -83,12 +88,14 @@ public abstract class Entity implements Storeable {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @param tags
 	 *            The tags to apply to the object.
 	 */
-	public Entity(long id, int version, Date timestamp, OsmUser user, Collection<Tag> tags) {
+	public Entity(long id, int version, Date timestamp, OsmUser user, long changesetId, Collection<Tag> tags) {
 		// Chain to the more specific constructor
-		this(id, version, new SimpleTimestampContainer(timestamp), user, tags);
+		this(id, version, new SimpleTimestampContainer(timestamp), user, changesetId, tags);
 	}
 	
 	
@@ -104,33 +111,39 @@ public abstract class Entity implements Storeable {
 	 *            timestamp representation.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @param tags
 	 *            The tags to apply to the object.
 	 */
-	public Entity(long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags) {
-		init(id, timestampContainer, user, version);
+	public Entity(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
+			Collection<Tag> tags) {
+		init(id, timestampContainer, user, version, changesetId);
 		this.tags = new TagCollectionImpl(tags);
 	}
-	
-	
+
+
 	/**
 	 * Initializes non-collection attributes.
 	 * 
 	 * @param newId
 	 *            The unique identifier.
 	 * @param newTimestampContainer
-	 *            The container holding the timestamp in an alternative
-	 *            timestamp representation.
+	 *            The container holding the timestamp in an alternative timestamp representation.
 	 * @param newUser
 	 *            The user that last modified this entity.
 	 * @param newVersion
 	 *            The version of the entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	private void init(long newId, TimestampContainer newTimestampContainer, OsmUser newUser, int newVersion) {
+	private void init(long newId, TimestampContainer newTimestampContainer, OsmUser newUser, int newVersion,
+			long newChangesetId) {
 		this.id = LongAsInt.longToInt(newId);
 		this.timestampContainer = newTimestampContainer;
 		this.user = newUser;
 		this.version = newVersion;
+		this.changesetId = LongAsInt.longToInt(newChangesetId);
 	}
 	
 	
@@ -158,6 +171,7 @@ public abstract class Entity implements Storeable {
 			sr.readCharacter(),
 			readTimestampContainer(sr, scr),
 			new OsmUser(sr, scr),
+			sr.readInteger(),
 			new TagCollectionImpl(sr, scr)
 		);
 	}
@@ -179,6 +193,7 @@ public abstract class Entity implements Storeable {
 		}
 		
 		user.store(sw, scr);
+		sw.writeInteger(changesetId);
 		
 		tags.store(sw, scr);
 	}
@@ -363,6 +378,29 @@ public abstract class Entity implements Storeable {
 		assertWriteable();
 		
 		this.user = user;
+	}
+	
+	
+	/**
+	 * Gets the id of the changeset that this version of the entity was created by.
+	 * 
+	 * @return The changeset id.
+	 */
+	public long getChangesetId() {
+		return changesetId;
+	}
+	
+	
+	/**
+	 * Sets the id of the changeset that this version of the entity was created by.
+	 * 
+	 * @param changesetId
+	 *            The changeset id.
+	 */
+	public void setChangesetId(long changesetId) {
+		assertWriteable();
+		
+		this.changesetId = LongAsInt.longToInt(changesetId);
 	}
 
 

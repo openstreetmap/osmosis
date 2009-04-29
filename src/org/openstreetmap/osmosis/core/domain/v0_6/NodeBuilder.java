@@ -54,15 +54,18 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @param latitude
 	 *            The latitude of the node.
 	 * @param longitude
 	 *            The longitude of the entity.
 	 */
-	public NodeBuilder(long id, int version, Date timestamp, OsmUser user, double latitude, double longitude) {
+	public NodeBuilder(long id, int version, Date timestamp, OsmUser user, long changesetId, double latitude,
+			double longitude) {
 		this();
 		
-		initialize(id, version, timestamp, user, latitude, longitude);
+		initialize(id, version, timestamp, user, changesetId, latitude, longitude);
 	}
 	
 	
@@ -78,17 +81,19 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	 *            timestamp representation.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @param latitude
 	 *            The latitude of the node.
 	 * @param longitude
 	 *            The longitude of the entity.
 	 */
 	public NodeBuilder(
-			long id, int version, TimestampContainer timestampContainer, OsmUser user, double latitude,
-			double longitude) {
+			long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
+			double latitude, double longitude) {
 		this();
 		
-		initialize(id, version, timestampContainer, user, latitude, longitude);
+		initialize(id, version, timestampContainer, user, changesetId, latitude, longitude);
 	}
 	
 	
@@ -155,6 +160,8 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	 *            The last updated timestamp.
 	 * @param newUser
 	 *            The user that last modified this entity.
+	 * @param newChangesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @param newLatitude
 	 *            The latitude of the node.
 	 * @param newLongitude
@@ -162,8 +169,9 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	 * @return This object allowing method chaining.
 	 */
 	public NodeBuilder initialize(
-			long newId, int newVersion, Date newTimestamp, OsmUser newUser, double newLatitude, double newLongitude) {
-		super.initialize(newId, newVersion, newTimestamp, newUser);
+			long newId, int newVersion, Date newTimestamp, OsmUser newUser, long newChangesetId,
+			double newLatitude, double newLongitude) {
+		super.initialize(newId, newVersion, newTimestamp, newUser, newChangesetId);
 		initializeLocal(newLatitude, newLongitude);
 		
 		return this;
@@ -182,6 +190,8 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	 *            timestamp representation.
 	 * @param newUser
 	 *            The user that last modified this entity.
+	 * @param newChangesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @param newLatitude
 	 *            The latitude of the node.
 	 * @param newLongitude
@@ -189,9 +199,9 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	 * @return This object allowing method chaining.
 	 */
 	public NodeBuilder initialize(
-			long newId, int newVersion, TimestampContainer newTimestampContainer, OsmUser newUser, double newLatitude,
-			double newLongitude) {
-		super.initialize(newId, newVersion, newTimestampContainer, newUser);
+			long newId, int newVersion, TimestampContainer newTimestampContainer,
+			OsmUser newUser, long newChangesetId, double newLatitude, double newLongitude) {
+		super.initialize(newId, newVersion, newTimestampContainer, newUser, newChangesetId);
 		initializeLocal(newLatitude, newLongitude);
 		
 		return this;
@@ -251,7 +261,7 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	 */
 	@Override
 	public Node buildEntity() {
-		return new Node(id, version, timestampContainer, user, tags, latitude, longitude);
+		return new Node(id, version, timestampContainer, user, changesetId, tags, latitude, longitude);
 	}
 
     /** 

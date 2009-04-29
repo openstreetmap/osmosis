@@ -43,6 +43,10 @@ public abstract class EntityBuilder<T extends Entity> implements Storeable {
 	 */
 	protected OsmUser user;
 	/**
+	 * The entity changeset identifier.
+	 */
+	protected int changesetId;
+	/**
 	 * The tags describing the entity.
 	 */
 	protected Collection<Tag> tags;
@@ -80,11 +84,13 @@ public abstract class EntityBuilder<T extends Entity> implements Storeable {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	public EntityBuilder(long id, int version, Date timestamp, OsmUser user) {
+	public EntityBuilder(long id, int version, Date timestamp, OsmUser user, long changesetId) {
 		this();
 		
-		initialize(id, version, timestamp, user);
+		initialize(id, version, timestamp, user, changesetId);
 	}
 	
 	
@@ -100,11 +106,13 @@ public abstract class EntityBuilder<T extends Entity> implements Storeable {
 	 *            timestamp representation.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	public EntityBuilder(long id, int version, TimestampContainer timestampContainer, OsmUser user) {
+	public EntityBuilder(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId) {
 		this();
 		
-		initialize(id, version, timestampContainer, user);
+		initialize(id, version, timestampContainer, user, changesetId);
 	}
 	
 	
@@ -117,7 +125,8 @@ public abstract class EntityBuilder<T extends Entity> implements Storeable {
 	 */
 	protected EntityBuilder<T> initialize(Entity entity) {
 		// Delegate to the more specific method.
-		initialize(entity.getId(), entity.getVersion(), entity.getTimestampContainer(), entity.getUser());
+		initialize(entity.getId(), entity.getVersion(), entity.getTimestampContainer(), entity.getUser(), entity
+				.getChangesetId());
 		
 		tags.addAll(entity.getTags());
 		
@@ -136,11 +145,14 @@ public abstract class EntityBuilder<T extends Entity> implements Storeable {
 	 *            The last updated timestamp.
 	 * @param newUser
 	 *            The user that last modified this entity.
+	 * @param newChangesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @return This object allowing method chaining.
 	 */
-	protected EntityBuilder<T> initialize(long newId, int newVersion, Date newTimestamp, OsmUser newUser) {
+	protected EntityBuilder<T> initialize(long newId, int newVersion, Date newTimestamp, OsmUser newUser,
+			long newChangesetId) {
 		// Delegate to the more specific method.
-		initialize(newId, newVersion, new SimpleTimestampContainer(newTimestamp), newUser);
+		initialize(newId, newVersion, new SimpleTimestampContainer(newTimestamp), newUser, newChangesetId);
 		
 		return this;
 	}
@@ -158,13 +170,17 @@ public abstract class EntityBuilder<T extends Entity> implements Storeable {
 	 *            timestamp representation.
 	 * @param newUser
 	 *            The user that last modified this entity.
+	 * @param newChangesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @return This object allowing method chaining.
 	 */
 	protected EntityBuilder<T> initialize(
-			long newId, int newVersion, TimestampContainer newTimestampContainer, OsmUser newUser) {
+			long newId, int newVersion, TimestampContainer newTimestampContainer,
+			OsmUser newUser, long newChangesetId) {
 		this.id = LongAsInt.longToInt(newId);
 		this.timestampContainer = newTimestampContainer;
 		this.user = newUser;
+		this.changesetId = LongAsInt.longToInt(newChangesetId);
 		this.version = newVersion;
 		
 		this.tags.clear();
@@ -290,6 +306,30 @@ public abstract class EntityBuilder<T extends Entity> implements Storeable {
 	 */
 	public OsmUser getUser() {
 		return user;
+	}
+	
+	
+	/**
+	 * Gets the id of the changeset that this version of the entity was created by.
+	 * 
+	 * @return The changeset id.
+	 */
+	public long getChangesetId() {
+		return changesetId;
+	}
+	
+	
+	/**
+	 * Sets the id of the changeset that this version of the entity was created by.
+	 * 
+	 * @param newChangesetId
+	 *            The changeset id.
+	 * @return This object allowing method chaining.
+	 */
+	public EntityBuilder<T> setChangesetId(long newChangesetId) {
+		this.changesetId = LongAsInt.longToInt(newChangesetId);
+		
+		return this;
 	}
 	
 	

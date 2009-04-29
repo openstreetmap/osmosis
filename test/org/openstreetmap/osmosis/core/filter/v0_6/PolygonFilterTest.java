@@ -56,9 +56,9 @@ public class PolygonFilterTest {
 		intersectingBound = new Bound(30, 0, 30, 0, "intersecting");
 		crossingIntersectingBound = new Bound(-10, 10, 30, -30, "crossing intersecting");
 		nonIntersectingBound = new Bound(30, 15, 30, 15, "nonintersecting");
-		inAreaNode = new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, 5, 10);
-		outOfAreaNode = new Node(1235, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, 15, 15);
-		edgeNode = new Node(1236, 0, new Date(), new OsmUser(12, "OsmosisTest"), tags, 15, 10);
+		inAreaNode = new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 5, 10);
+		outOfAreaNode = new Node(1235, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 15, 15);
+		edgeNode = new Node(1236, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 15, 10);
 	}
 
 

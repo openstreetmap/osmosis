@@ -37,10 +37,12 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	public Way(long id, int version, Date timestamp, OsmUser user) {
+	public Way(long id, int version, Date timestamp, OsmUser user, long changesetId) {
 		// Chain to the more specific constructor
-		this(id, version, new SimpleTimestampContainer(timestamp), user);
+		this(id, version, new SimpleTimestampContainer(timestamp), user, changesetId);
 	}
 	
 	
@@ -56,9 +58,11 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            timestamp representation.
 	 * @param user
 	 *            The name of the user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	public Way(long id, int version, TimestampContainer timestampContainer, OsmUser user) {
-		super(id, version, timestampContainer, user);
+	public Way(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId) {
+		super(id, version, timestampContainer, user, changesetId);
 		
 		this.wayNodes = new ArrayList<WayNode>();
 	}
@@ -75,14 +79,17 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @param tags
 	 *            The tags to apply to the object.
 	 * @param wayNodes
 	 *            The way nodes to apply to the object
 	 */
-	public Way(long id, int version, Date timestamp, OsmUser user, Collection<Tag> tags, List<WayNode> wayNodes) {
+	public Way(long id, int version, Date timestamp, OsmUser user, long changesetId, Collection<Tag> tags,
+			List<WayNode> wayNodes) {
 		// Chain to the more specific constructor
-		this(id, version, new SimpleTimestampContainer(timestamp), user, tags, wayNodes);
+		this(id, version, new SimpleTimestampContainer(timestamp), user, changesetId, tags, wayNodes);
 	}
 	
 	
@@ -98,15 +105,17 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            timestamp representation.
 	 * @param user
 	 *            The name of the user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @param tags
 	 *            The tags to apply to the object.
 	 * @param wayNodes
 	 *            The way nodes to apply to the object
 	 */
 	public Way(
-			long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags,
-			List<WayNode> wayNodes) {
-		super(id, version, timestampContainer, user, tags);
+			long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
+			Collection<Tag> tags, List<WayNode> wayNodes) {
+		super(id, version, timestampContainer, user, changesetId, tags);
 		
 		this.wayNodes = new ArrayList<WayNode>(wayNodes);
 	}
@@ -303,7 +312,8 @@ public class Way extends Entity implements Comparable<Way> {
 	@Override
 	public Way getWriteableInstance() {
 		if (isReadOnly()) {
-			return new Way(getId(), getVersion(), getTimestampContainer(), getUser(), getTags(), wayNodes);
+			return new Way(getId(), getVersion(), getTimestampContainer(), getUser(), getChangesetId(), getTags(),
+					wayNodes);
 		} else {
 			return this;
 		}

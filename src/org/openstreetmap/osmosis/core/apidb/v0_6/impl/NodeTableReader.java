@@ -21,7 +21,7 @@ import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 public class NodeTableReader extends BaseEntityReader<EntityHistory<Node>> {
 
     private static final String SELECT_SQL = "SELECT n.id, n.version, n.timestamp, n.visible, u.data_public,"
-            + " u.id AS user_id, u.display_name, n.latitude, n.longitude" + " FROM nodes n"
+            + " u.id AS user_id, u.display_name, n.changeset_id, n.latitude, n.longitude" + " FROM nodes n"
             + " LEFT OUTER JOIN changesets c ON n.changeset_id = c.id" + " LEFT OUTER JOIN users u ON c.user_id = u.id"
             + " ORDER BY n.id, n.version";
 
@@ -54,6 +54,7 @@ public class NodeTableReader extends BaseEntityReader<EntityHistory<Node>> {
         Date timestamp;
         boolean visible;
         OsmUser user;
+        long changesetId;
         double latitude;
         double longitude;
 
@@ -64,6 +65,7 @@ public class NodeTableReader extends BaseEntityReader<EntityHistory<Node>> {
             visible = resultSet.getBoolean("visible");
             user = readUserField(resultSet.getBoolean("data_public"), resultSet.getInt("user_id"), resultSet
                     .getString("display_name"));
+            changesetId = resultSet.getLong("changeset_id");
             latitude = FixedPrecisionCoordinateConvertor.convertToDouble(resultSet.getInt("latitude"));
             longitude = FixedPrecisionCoordinateConvertor.convertToDouble(resultSet.getInt("longitude"));
 
@@ -72,6 +74,6 @@ public class NodeTableReader extends BaseEntityReader<EntityHistory<Node>> {
         }
 
         return new ReadResult<EntityHistory<Node>>(true, new EntityHistory<Node>(new Node(id, version, timestamp, user,
-                latitude, longitude), visible));
+                changesetId, latitude, longitude), visible));
     }
 }

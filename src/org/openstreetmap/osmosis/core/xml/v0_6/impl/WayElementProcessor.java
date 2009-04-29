@@ -25,6 +25,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
 	private static final String ATTRIBUTE_NAME_USER = "user";
 	private static final String ATTRIBUTE_NAME_USERID = "uid";
+	private static final String ATTRIBUTE_NAME_CHANGESET_ID = "changeset";
 	private static final String ATTRIBUTE_NAME_VERSION = "version";
 	
 	private TagElementProcessor tagElementProcessor;
@@ -61,16 +62,18 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 		String rawUserId;
 		String rawUserName;
 		OsmUser user;
+		long changesetId;
 		
 		id = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_ID));
 		version = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_VERSION));
 		timestampContainer = createTimestampContainer(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
 		rawUserId = attributes.getValue(ATTRIBUTE_NAME_USERID);
 		rawUserName = attributes.getValue(ATTRIBUTE_NAME_USER);
+		changesetId = buildChangesetId(attributes.getValue(ATTRIBUTE_NAME_CHANGESET_ID));
 		
 		user = buildUser(rawUserId, rawUserName);
 		
-		way = new Way(id, version, timestampContainer, user);
+		way = new Way(id, version, timestampContainer, user, changesetId);
 	}
 	
 	

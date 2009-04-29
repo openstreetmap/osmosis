@@ -84,6 +84,7 @@ public class NodeMapper extends EntityMapper<Node> {
 				resultSet.getInt("version"),
 				new Date(resultSet.getTimestamp("tstamp").getTime()),
 				buildUser(resultSet),
+				0,
 				point.y,
 				point.x
 			);

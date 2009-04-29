@@ -24,6 +24,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
 	private static final String ATTRIBUTE_NAME_USER = "user";
 	private static final String ATTRIBUTE_NAME_USERID = "uid";
+	private static final String ATTRIBUTE_NAME_CHANGESET_ID = "changeset";
 	private static final String ATTRIBUTE_NAME_VERSION = "version";
 	private static final String ATTRIBUTE_NAME_LATITUDE = "lat";
 	private static final String ATTRIBUTE_NAME_LONGITUDE = "lon";
@@ -60,6 +61,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 		String rawUserId;
 		String rawUserName;
 		OsmUser user;
+		long changesetId;
 		double latitude;
 		double longitude;
 		
@@ -68,12 +70,13 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 		timestampContainer = createTimestampContainer(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
 		rawUserId = attributes.getValue(ATTRIBUTE_NAME_USERID);
 		rawUserName = attributes.getValue(ATTRIBUTE_NAME_USER);
+		changesetId = buildChangesetId(attributes.getValue(ATTRIBUTE_NAME_CHANGESET_ID));
 		latitude = Double.parseDouble(attributes.getValue(ATTRIBUTE_NAME_LATITUDE));
 		longitude = Double.parseDouble(attributes.getValue(ATTRIBUTE_NAME_LONGITUDE));
 		
 		user = buildUser(rawUserId, rawUserName);
 		
-		node = new Node(id, version, timestampContainer, user, latitude, longitude);
+		node = new Node(id, version, timestampContainer, user, changesetId, latitude, longitude);
 	}
 	
 	

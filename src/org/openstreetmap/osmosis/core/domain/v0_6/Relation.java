@@ -39,10 +39,12 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	public Relation(long id, int version, Date timestamp, OsmUser user) {
+	public Relation(long id, int version, Date timestamp, OsmUser user, long changesetId) {
 		// Chain to the more-specific constructor
-		this(id, version, new SimpleTimestampContainer(timestamp), user);
+		this(id, version, new SimpleTimestampContainer(timestamp), user, changesetId);
 	}
 	
 	
@@ -58,9 +60,11 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *            timestamp representation.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	public Relation(long id, int version, TimestampContainer timestampContainer, OsmUser user) {
-		super(id, version, timestampContainer, user);
+	public Relation(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId) {
+		super(id, version, timestampContainer, user, changesetId);
 		
 		this.members = new ArrayList<RelationMember>();
 	}
@@ -77,15 +81,18 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @param tags
 	 *            The tags to apply to the object.
 	 * @param members
 	 *            The members to apply to the object.
 	 */
 	public Relation(
-			long id, int version, Date timestamp, OsmUser user, Collection<Tag> tags, List<RelationMember> members) {
+			long id, int version, Date timestamp, OsmUser user, long changesetId, Collection<Tag> tags,
+			List<RelationMember> members) {
 		// Chain to the more-specific constructor
-		this(id, version, new SimpleTimestampContainer(timestamp), user, tags, members);
+		this(id, version, new SimpleTimestampContainer(timestamp), user, changesetId, tags, members);
 	}
 	
 	
@@ -101,15 +108,17 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *            timestamp representation.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @param tags
 	 *            The tags to apply to the object.
 	 * @param members
 	 *            The members to apply to the object.
 	 */
 	public Relation(
-			long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags,
-			List<RelationMember> members) {
-		super(id, version, timestampContainer, user, tags);
+			long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
+			Collection<Tag> tags, List<RelationMember> members) {
+		super(id, version, timestampContainer, user, changesetId, tags);
 		
 		this.members = new ArrayList<RelationMember>(members);
 	}
@@ -297,7 +306,8 @@ public class Relation extends Entity implements Comparable<Relation> {
 	@Override
 	public Relation getWriteableInstance() {
 		if (isReadOnly()) {
-			return new Relation(getId(), getVersion(), getTimestampContainer(), getUser(), getTags(), members);
+			return new Relation(getId(), getVersion(), getTimestampContainer(), getUser(), getChangesetId(), getTags(),
+					members);
 		} else {
 			return this;
 		}

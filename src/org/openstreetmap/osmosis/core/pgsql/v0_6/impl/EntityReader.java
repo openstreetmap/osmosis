@@ -3,10 +3,10 @@ package org.openstreetmap.osmosis.core.pgsql.v0_6.impl;
 
 import java.util.NoSuchElementException;
 
+import org.openstreetmap.osmosis.core.apidb.v0_6.impl.DbFeature;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
-import org.openstreetmap.osmosis.core.mysql.v0_6.impl.DbFeature;
 import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.store.PeekableIterator;
 import org.openstreetmap.osmosis.core.store.PersistentIterator;

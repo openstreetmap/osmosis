@@ -1,4 +1,0 @@
-host=localhost
-database=api06_test
-user=osm
-password=password

@@ -51,6 +51,7 @@ public class FastXmlParser {
 	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
 	private static final String ATTRIBUTE_NAME_USER_ID = "uid";
 	private static final String ATTRIBUTE_NAME_USER = "user";
+	private static final String ATTRIBUTE_NAME_CHANGESET_ID = "changeset";
 	private static final String ATTRIBUTE_NAME_LATITUDE = "lat";
 	private static final String ATTRIBUTE_NAME_LONGITUDE = "lon";
 	private static final String ATTRIBUTE_NAME_KEY = "k";
@@ -127,19 +128,21 @@ public class FastXmlParser {
 			reader.nextTag();
 		} while (level > 0);
 	}
-	
-	
+
+
 	/**
-	 * Creates a user instance appropriate to the arguments. This includes
-	 * identifying the case where no user is available.
+	 * Creates a user instance based on the current entity attributes. This includes identifying the
+	 * case where no user is available.
 	 * 
-	 * @param rawUserId
-	 *            The value of the user id attribute.
-	 * @param rawUserName
-	 *            The value of the user name attribute.
 	 * @return The appropriate user instance.
 	 */
-	private OsmUser readUser(String rawUserId, String rawUserName) {
+	private OsmUser readUser() {
+		String rawUserId;
+		String rawUserName;
+		
+		rawUserId = reader.getAttributeValue(null, ATTRIBUTE_NAME_USER_ID);
+		rawUserName = reader.getAttributeValue(null, ATTRIBUTE_NAME_USER);
+		
 		if (rawUserId != null) {
 			int userId;
 			String userName;
@@ -155,6 +158,23 @@ public class FastXmlParser {
 			
 		} else {
 			return OsmUser.NONE;
+		}
+	}
+	
+	
+	/**
+	 * Parses a changeset id from the current entity.
+	 * 
+	 * @return The changeset id as a long. 0 is returned if no attribute is available.
+	 */
+	private long readChangesetId() {
+		String changesetIdAttribute;
+		
+		changesetIdAttribute = reader.getAttributeValue(null, ATTRIBUTE_NAME_CHANGESET_ID);
+		if (changesetIdAttribute != null) {
+			return Long.parseLong(changesetIdAttribute);
+		} else {
+			return 0;
 		}
 	}
 	
@@ -210,6 +230,7 @@ public class FastXmlParser {
 		int version;
 		TimestampContainer timestamp;
 		OsmUser user;
+		long changesetId;
 		double latitude;
 		double longitude;
 		Node node;
@@ -217,14 +238,13 @@ public class FastXmlParser {
 		id = Long.parseLong(reader.getAttributeValue(null, ATTRIBUTE_NAME_ID));
 		version = Integer.parseInt(reader.getAttributeValue(null, ATTRIBUTE_NAME_VERSION));
 		timestamp = parseTimestamp(reader.getAttributeValue(null, ATTRIBUTE_NAME_TIMESTAMP));
-		user = readUser(
-			reader.getAttributeValue(null, ATTRIBUTE_NAME_USER_ID),
-			reader.getAttributeValue(null, ATTRIBUTE_NAME_USER)
-		);
+		changesetId = Long.parseLong(reader.getAttributeValue(null, ATTRIBUTE_NAME_CHANGESET_ID));
+		user = readUser();
+		changesetId = readChangesetId();
 		latitude = Double.parseDouble(reader.getAttributeValue(null, ATTRIBUTE_NAME_LATITUDE));
 		longitude = Double.parseDouble(reader.getAttributeValue(null, ATTRIBUTE_NAME_LONGITUDE));
 		
-		node = new Node(id, version, timestamp, user, latitude, longitude);
+		node = new Node(id, version, timestamp, user, changesetId, latitude, longitude);
 		
 		reader.nextTag();
 		while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
@@ -253,17 +273,16 @@ public class FastXmlParser {
 		int version;
 		TimestampContainer timestamp;
 		OsmUser user;
+		long changesetId;
 		Way way;
 		
 		id = Long.parseLong(reader.getAttributeValue(null, ATTRIBUTE_NAME_ID));
 		version = Integer.parseInt(reader.getAttributeValue(null, ATTRIBUTE_NAME_VERSION));
 		timestamp = parseTimestamp(reader.getAttributeValue(null, ATTRIBUTE_NAME_TIMESTAMP));
-		user = readUser(
-			reader.getAttributeValue(null, ATTRIBUTE_NAME_USER_ID),
-			reader.getAttributeValue(null, ATTRIBUTE_NAME_USER)
-		);
+		user = readUser();
+		changesetId = readChangesetId();
 		
-		way = new Way(id, version, timestamp, user);
+		way = new Way(id, version, timestamp, user, changesetId);
 		
 		reader.nextTag();
 		while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
@@ -302,17 +321,16 @@ public class FastXmlParser {
 		int version;
 		TimestampContainer timestamp;
 		OsmUser user;
+		long changesetId;
 		Relation relation;
 		
 		id = Long.parseLong(reader.getAttributeValue(null, ATTRIBUTE_NAME_ID));
 		version = Integer.parseInt(reader.getAttributeValue(null, ATTRIBUTE_NAME_VERSION));
 		timestamp = parseTimestamp(reader.getAttributeValue(null, ATTRIBUTE_NAME_TIMESTAMP));
-		user = readUser(
-			reader.getAttributeValue(null, ATTRIBUTE_NAME_USER_ID),
-			reader.getAttributeValue(null, ATTRIBUTE_NAME_USER)
-		);
+		user = readUser();
+		changesetId = readChangesetId();
 		
-		relation = new Relation(id, version, timestamp, user);
+		relation = new Relation(id, version, timestamp, user, changesetId);
 		
 		reader.nextTag();
 		while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {

@@ -57,4 +57,21 @@ public abstract class EntityElementProcessor extends SourceElementProcessor {
 			return OsmUser.NONE;
 		}
 	}
+	
+	
+	/**
+	 * Parses a changeset id based on the provided attribute value. If no attribute is available it
+	 * will be defaulted to 0.
+	 * 
+	 * @param rawChangesetId
+	 *            The raw changeset id attribute value.
+	 * @return The parsed changeset id.
+	 */
+	protected long buildChangesetId(String rawChangesetId) {
+		if (rawChangesetId != null) {
+			return Long.parseLong(rawChangesetId);
+		} else {
+			return 0;
+		}
+	}
 }

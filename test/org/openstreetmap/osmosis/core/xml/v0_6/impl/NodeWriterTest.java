@@ -89,7 +89,7 @@ public class NodeWriterTest {
 	@Test
 	public final void testProcessNormalNode() {
 		Node node =
-			new Node(1234, 2, timestamp, new OsmUser(23, "someuser"), 20.12345678, -21.98765432);
+			new Node(1234, 2, timestamp, new OsmUser(23, "someuser"), 0, 20.12345678, -21.98765432);
 		node.getTags().add(new Tag("nodekey", "nodevalue"));
 		testNodeWriter.process(node);
 		try {
@@ -113,7 +113,7 @@ public class NodeWriterTest {
 		testNodeWriter.process(
 				new Node(
 						1234, 2, timestamp,
-						new OsmUser(23, "someuser"),
+						new OsmUser(23, "someuser"), 0,
 						new ArrayList<Tag>(), 20.12345678, -21.98765432));
 		try {
 			testBufferedWriter.flush();
@@ -139,7 +139,7 @@ public class NodeWriterTest {
 	 */
 	@Test
 	public final void testProcessNodeWithNoUser() {
-		Node node = new Node(1234, 2, timestamp, OsmUser.NONE, 20.12345678, -21.98765432);
+		Node node = new Node(1234, 2, timestamp, OsmUser.NONE, 0, 20.12345678, -21.98765432);
 		node.getTags().add(new Tag("nodekey", "nodevalue"));
 		testNodeWriter.process(node);
 		try {

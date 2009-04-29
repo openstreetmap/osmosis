@@ -20,7 +20,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 public class CurrentWayTableReader extends BaseEntityReader<Way> {
 
     private static final String SELECT_SQL =
-    	"SELECT w.id, w.version, w.timestamp, w.visible, u.data_public, u.id AS user_id, u.display_name"
+    	"SELECT w.id, w.version, w.timestamp, w.visible, u.data_public, u.id AS user_id, u.display_name, w.changeset_id"
             + " FROM current_ways w"
             + " LEFT OUTER JOIN changesets c ON w.changeset_id = c.id"
             + " LEFT OUTER JOIN users u ON c.user_id = u.id" + " ORDER BY w.id";
@@ -54,6 +54,7 @@ public class CurrentWayTableReader extends BaseEntityReader<Way> {
         Date timestamp;
         boolean visible;
         OsmUser user;
+        long changesetId;
 
         try {
             id = resultSet.getLong("id");
@@ -62,12 +63,13 @@ public class CurrentWayTableReader extends BaseEntityReader<Way> {
             visible = resultSet.getBoolean("visible");
             user = readUserField(resultSet.getBoolean("data_public"), resultSet.getInt("user_id"), resultSet
                     .getString("display_name"));
+            changesetId = resultSet.getLong("changeset_id");
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to read way fields.", e);
         }
 
         // Non-visible records will be ignored by the caller.
-        return new ReadResult<Way>(visible, new Way(id, version, timestamp, user));
+        return new ReadResult<Way>(visible, new Way(id, version, timestamp, user, changesetId));
     }
 }

@@ -100,7 +100,7 @@ public class RelationWriterTest {
 	@Test
 	public final void testProcessNormalRelation() {
 		Relation relation =
-			new Relation(1234, 2, timestamp, new OsmUser(23, "someuser"));
+			new Relation(1234, 2, timestamp, new OsmUser(23, "someuser"), 0);
 		relation.getMembers().add(new RelationMember(2345, EntityType.Node, "noderole"));
 		relation.getMembers().add(new RelationMember(3456, EntityType.Way, "wayrole"));
 		relation.getMembers().add(new RelationMember(4567, EntityType.Relation, "relationrole"));
@@ -129,7 +129,7 @@ public class RelationWriterTest {
 	@Test
 	public final void testProcessRelationWithNoUser() {
 		Relation relation =
-			new Relation(1234, 2, timestamp, OsmUser.NONE);
+			new Relation(1234, 2, timestamp, OsmUser.NONE, 0);
 		relation.getMembers().add(new RelationMember(2345, EntityType.Node, "noderole"));
 		relation.getMembers().add(new RelationMember(3456, EntityType.Way, "wayrole"));
 		relation.getMembers().add(new RelationMember(4567, EntityType.Relation, "relationrole"));
@@ -163,7 +163,7 @@ public class RelationWriterTest {
 	@Test
 	public final void testProcessRelationNoTags() {
 		Relation relation =
-			new Relation(1234, 2, timestamp, new OsmUser(23, "someuser"));
+			new Relation(1234, 2, timestamp, new OsmUser(23, "someuser"), 0);
 		relation.getMembers().add(new RelationMember(2345, EntityType.Node, "noderole"));
 		relation.getMembers().add(new RelationMember(3456, EntityType.Way, "wayrole"));
 		relation.getMembers().add(new RelationMember(4567, EntityType.Relation, "relationrole"));

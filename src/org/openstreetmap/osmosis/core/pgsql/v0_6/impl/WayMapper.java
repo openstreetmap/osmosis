@@ -104,7 +104,8 @@ public class WayMapper extends EntityMapper<Way> {
 				resultSet.getLong("id"),
 				resultSet.getInt("version"),
 				new Date(resultSet.getTimestamp("tstamp").getTime()),
-				buildUser(resultSet)
+				buildUser(resultSet),
+				0
 			);
 			
 		} catch (SQLException e) {

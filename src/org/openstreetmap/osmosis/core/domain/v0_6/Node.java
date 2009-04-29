@@ -34,14 +34,17 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @param latitude
 	 *            The geographic latitude.
 	 * @param longitude
 	 *            The geographic longitude.
 	 */
-	public Node(long id, int version, Date timestamp, OsmUser user, double latitude, double longitude) {
+	public Node(long id, int version, Date timestamp, OsmUser user, long changesetId, double latitude,
+			double longitude) {
 		// Chain to the more-specific constructor
-		this(id, version, new SimpleTimestampContainer(timestamp), user, latitude, longitude);
+		this(id, version, new SimpleTimestampContainer(timestamp), user, changesetId, latitude, longitude);
 	}
 
 
@@ -56,6 +59,8 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            The container holding the timestamp in an alternative timestamp representation.
 	 * @param user
 	 *            The name of the user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @param latitude
 	 *            The geographic latitude.
 	 * @param longitude
@@ -63,8 +68,8 @@ public class Node extends Entity implements Comparable<Node> {
 	 */
 	public Node(
 			long id, int version, TimestampContainer timestampContainer,
-			OsmUser user, double latitude, double longitude) {
-		super(id, version, timestampContainer, user);
+			OsmUser user, long changesetId, double latitude, double longitude) {
+		super(id, version, timestampContainer, user, changesetId);
 
 		init(latitude, longitude);
 	}
@@ -81,6 +86,8 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @param tags
 	 *            The tags to apply to the object.
 	 * @param latitude
@@ -88,10 +95,10 @@ public class Node extends Entity implements Comparable<Node> {
 	 * @param longitude
 	 *            The geographic longitude.
 	 */
-	public Node(long id, int version, Date timestamp, OsmUser user, Collection<Tag> tags, double latitude,
-			double longitude) {
+	public Node(long id, int version, Date timestamp, OsmUser user, long changesetId, Collection<Tag> tags,
+			double latitude, double longitude) {
 		// Chain to the more-specific constructor
-		this(id, version, new SimpleTimestampContainer(timestamp), user, tags, latitude, longitude);
+		this(id, version, new SimpleTimestampContainer(timestamp), user, changesetId, tags, latitude, longitude);
 	}
 
 
@@ -106,6 +113,8 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            The container holding the timestamp in an alternative timestamp representation.
 	 * @param user
 	 *            The name of the user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @param tags
 	 *            The tags to apply to the object.
 	 * @param latitude
@@ -113,9 +122,9 @@ public class Node extends Entity implements Comparable<Node> {
 	 * @param longitude
 	 *            The geographic longitude.
 	 */
-	public Node(long id, int version, TimestampContainer timestampContainer, OsmUser user, Collection<Tag> tags,
-			double latitude, double longitude) {
-		super(id, version, timestampContainer, user, tags);
+	public Node(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
+			Collection<Tag> tags, double latitude, double longitude) {
+		super(id, version, timestampContainer, user, changesetId, tags);
 		
 		init(latitude, longitude);
 	}
@@ -312,7 +321,8 @@ public class Node extends Entity implements Comparable<Node> {
 	@Override
 	public Node getWriteableInstance() {
 		if (isReadOnly()) {
-			return new Node(getId(), getVersion(), getTimestampContainer(), getUser(), getTags(), latitude, longitude);
+			return new Node(getId(), getVersion(), getTimestampContainer(), getUser(), getChangesetId(), getTags(),
+					latitude, longitude);
 		} else {
 			return this;
 		}

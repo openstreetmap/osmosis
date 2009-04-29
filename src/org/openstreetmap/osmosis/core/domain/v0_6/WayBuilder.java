@@ -57,11 +57,13 @@ public class WayBuilder extends EntityBuilder<Way> {
 	 *            The last updated timestamp.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	public WayBuilder(long id, int version, Date timestamp, OsmUser user) {
+	public WayBuilder(long id, int version, Date timestamp, OsmUser user, long changesetId) {
 		this();
 		
-		initialize(id, version, timestamp, user);
+		initialize(id, version, timestamp, user, changesetId);
 	}
 	
 	
@@ -77,11 +79,13 @@ public class WayBuilder extends EntityBuilder<Way> {
 	 *            timestamp representation.
 	 * @param user
 	 *            The user that last modified this entity.
+	 * @param changesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	public WayBuilder(long id, TimestampContainer timestampContainer, OsmUser user, int version) {
+	public WayBuilder(long id, TimestampContainer timestampContainer, OsmUser user, long changesetId, int version) {
 		this();
 		
-		initialize(id, version, timestampContainer, user);
+		initialize(id, version, timestampContainer, user, changesetId);
 	}
 	
 	
@@ -145,11 +149,13 @@ public class WayBuilder extends EntityBuilder<Way> {
 	 *            The last updated timestamp.
 	 * @param newUser
 	 *            The user that last modified this entity.
+	 * @param newChangesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @return This object allowing method chaining.
 	 */
 	@Override
-	public WayBuilder initialize(long newId, int newVersion, Date newTimestamp, OsmUser newUser) {
-		super.initialize(newId, newVersion, newTimestamp, newUser);
+	public WayBuilder initialize(long newId, int newVersion, Date newTimestamp, OsmUser newUser, long newChangesetId) {
+		super.initialize(newId, newVersion, newTimestamp, newUser, newChangesetId);
 		initializeLocal();
 		
 		return this;
@@ -168,12 +174,14 @@ public class WayBuilder extends EntityBuilder<Way> {
 	 *            timestamp representation.
 	 * @param newUser
 	 *            The user that last modified this entity.
+	 * @param newChangesetId
+	 *            The id of the changeset that this version of the entity was created by.
 	 * @return This object allowing method chaining.
 	 */
 	@Override
-	public WayBuilder initialize(
-			long newId, int newVersion, TimestampContainer newTimestampContainer, OsmUser newUser) {
-		super.initialize(newId, newVersion, newTimestampContainer, newUser);
+	public WayBuilder initialize(long newId, int newVersion, TimestampContainer newTimestampContainer, OsmUser newUser,
+			long newChangesetId) {
+		super.initialize(newId, newVersion, newTimestampContainer, newUser, newChangesetId);
 		initializeLocal();
 		
 		return this;
@@ -236,7 +244,7 @@ public class WayBuilder extends EntityBuilder<Way> {
 	 */
 	@Override
 	public Way buildEntity() {
-		return new Way(id, version, timestampContainer, user, tags, wayNodes);
+		return new Way(id, version, timestampContainer, user, changesetId, tags, wayNodes);
 	}
 
     /** 

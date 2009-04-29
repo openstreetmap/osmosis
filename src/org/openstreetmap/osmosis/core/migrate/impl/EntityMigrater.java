@@ -118,6 +118,7 @@ public class EntityMigrater {
 			1,
 			entity.getTimestamp(),
 			migrateUser(entity.getUser()),
+			0,
 			migrateTags(entity),
 			entity.getLatitude(),
 			entity.getLongitude()
@@ -142,6 +143,7 @@ public class EntityMigrater {
 			1,
 			entity.getTimestamp(),
 			migrateUser(entity.getUser()),
+			0,
 			migrateTags(entity),
 			migrateWayNodes(entity)
 		);
@@ -165,6 +167,7 @@ public class EntityMigrater {
 			1,
 			entity.getTimestamp(),
 			migrateUser(entity.getUser()),
+			0,
 			migrateTags(entity),
 			migrateRelationMembers(entity)
 		);

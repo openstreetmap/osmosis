@@ -11,6 +11,8 @@ import java.util.logging.Logger;
 import org.postgis.Geometry;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.apidb.v0_6.impl.DbFeature;
+import org.openstreetmap.osmosis.core.apidb.v0_6.impl.DbOrderedFeature;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityProcessor;
@@ -27,8 +29,6 @@ import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
-import org.openstreetmap.osmosis.core.mysql.v0_6.impl.DbFeature;
-import org.openstreetmap.osmosis.core.mysql.v0_6.impl.DbOrderedFeature;
 import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.pgsql.common.SchemaVersionValidator;
 import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.ActionDao;

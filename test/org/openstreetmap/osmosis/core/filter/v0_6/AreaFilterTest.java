@@ -121,25 +121,25 @@ public class AreaFilterTest {
 
 
 	private void setUpNodes() {
-		inAreaNode = new Node(1234, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 10, 10);
+		inAreaNode = new Node(1234, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 0, 10, 10);
 		inAreaNode.getTags().add(new Tag("test_key1", "test_value1"));
 		
-		outOfAreaNode = new Node(1235, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 30, 30);
+		outOfAreaNode = new Node(1235, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 0, 30, 30);
 		
-		inAreaWayNode1 = new Node(2345, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 10, 10);
-		inAreaWayNode2 = new Node(2346, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), -10, -10);
+		inAreaWayNode1 = new Node(2345, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 0, 10, 10);
+		inAreaWayNode2 = new Node(2346, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 0, -10, -10);
 		
-		outOfAreaWayNode1 = new Node(2347, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), -30, -30);
-		outOfAreaWayNode2 = new Node(2348, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), -40, -40);
+		outOfAreaWayNode1 = new Node(2347, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 0, -30, -30);
+		outOfAreaWayNode2 = new Node(2348, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 0, -40, -40);
 	}
 
 
 	private void setUpWays() {
-		inAreaWay = new Way(3456, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER));
+		inAreaWay = new Way(3456, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 0);
 		inAreaWay.getWayNodes().add(new WayNode(inAreaWayNode1.getId()));
 		inAreaWay.getTags().add(new Tag("test_key2", "test_value2"));
 		
-		outOfAreaWay = new Way(3457, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER));
+		outOfAreaWay = new Way(3457, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 0);
 		outOfAreaWay.getWayNodes().addAll(
 				Arrays.asList(new WayNode[] {
 						new WayNode(outOfAreaWayNode1.getId()),
@@ -147,7 +147,7 @@ public class AreaFilterTest {
 				})
 		);
 		
-		inOutWay = new Way(3458, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER));
+		inOutWay = new Way(3458, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 0);
 		inOutWay.getWayNodes().addAll(
 				Arrays.asList(new WayNode[] {
 						new WayNode(inAreaWayNode1.getId()),
@@ -159,7 +159,7 @@ public class AreaFilterTest {
 		inOutWay.getTags().add(new Tag("test_key3", "test_value3"));
 		
 		// mangledInOutWay1 is mangled by completeWays=false
-		mangledInOutWay1 = new Way(inOutWay.getId(), 0, inOutWay.getTimestamp(), inOutWay.getUser());
+		mangledInOutWay1 = new Way(inOutWay.getId(), 0, inOutWay.getTimestamp(), inOutWay.getUser(), 0);
 		mangledInOutWay1.getWayNodes().addAll(
 				Arrays.asList(new WayNode[] {
 						new WayNode(inAreaWayNode1.getId()),
@@ -171,7 +171,7 @@ public class AreaFilterTest {
 
 
 	private void setUpRelations() {
-		inAreaRelation = new Relation(4567, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER));
+		inAreaRelation = new Relation(4567, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 0);
 		inAreaRelation.getMembers().addAll(
 				Arrays.asList(new RelationMember[] {
 						new RelationMember(inAreaWayNode1.getId(), EntityType.Node, "node1"),
@@ -181,7 +181,7 @@ public class AreaFilterTest {
 		);
 		inAreaRelation.getTags().add(new Tag("test_key4", "test_value4"));
 		
-		outOfAreaRelation1 = new Relation(4568, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER));
+		outOfAreaRelation1 = new Relation(4568, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 0);
 		outOfAreaRelation1.getMembers().addAll(
 				Arrays.asList(new RelationMember[] {
 						new RelationMember(outOfAreaWayNode1.getId(), EntityType.Node, "node1"),
@@ -190,7 +190,7 @@ public class AreaFilterTest {
 				})
 		);
 		
-		inOutRelation2 = new Relation(4570, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER));
+		inOutRelation2 = new Relation(4570, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 0);
 		inOutRelation2.getMembers().addAll(
 				Arrays.asList(new RelationMember[] {
 						new RelationMember(inAreaWayNode2.getId(), EntityType.Node, "node1"),
@@ -200,7 +200,7 @@ public class AreaFilterTest {
 		);
 		inOutRelation2.getTags().add(new Tag("test_key5", "test_value5"));
 		
-		inOutRelation1 = new Relation(4569, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER));
+		inOutRelation1 = new Relation(4569, 0, new Date(), new OsmUser(TEST_USER_ID, TEST_USER), 0);
 		inOutRelation1.getMembers().addAll(
 				Arrays.asList(new RelationMember[] {
 						new RelationMember(inAreaWayNode1.getId(), EntityType.Node, "node1"),
@@ -214,7 +214,8 @@ public class AreaFilterTest {
 		mangledInOutRelation1 = new Relation(inOutRelation1.getId(),
 				inOutRelation1.getVersion(),
 				inOutRelation1.getTimestamp(),
-				inOutRelation1.getUser());
+				inOutRelation1.getUser(),
+				0);
 		mangledInOutRelation1.getMembers().addAll(
 				Arrays.asList(new RelationMember[] {
 						new RelationMember(inAreaWayNode1.getId(), EntityType.Node, "node1"),
@@ -227,7 +228,8 @@ public class AreaFilterTest {
 				inOutRelation2.getId(),
 				inOutRelation2.getVersion(),
 				inOutRelation2.getTimestamp(),
-				inOutRelation2.getUser());
+				inOutRelation2.getUser(),
+				0);
 		mangledInOutRelation2.getMembers().addAll(
 				Arrays.asList(new RelationMember[] {
 						new RelationMember(inAreaWayNode2.getId(), EntityType.Node, "node1"),
@@ -240,7 +242,8 @@ public class AreaFilterTest {
 				inOutRelation1.getId(),
 				inOutRelation1.getVersion(),
 				inOutRelation1.getTimestamp(),
-				inOutRelation1.getUser());
+				inOutRelation1.getUser(),
+				0);
 		mangledCompleteInOutRelation1.getMembers().addAll(
 				Arrays.asList(new RelationMember[] {
 						new RelationMember(inAreaWayNode1.getId(), EntityType.Node, "node1"),
