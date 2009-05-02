@@ -325,6 +325,9 @@ public class ChangeWriter {
 
         // Add or update the user in the database.
         userManager.addOrUpdateUser(node.getUser());
+        
+        // Create the changeset in the database.
+        changesetManager.addChangesetIfRequired(node.getChangesetId(), node.getUser());
 
         // If this is a deletion, the entity is not visible.
         visible = !action.equals(ChangeAction.Delete);
@@ -371,7 +374,7 @@ public class ChangeWriter {
                 prmIndex = 1;
                 updateNodeStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
                 updateNodeStatement.setBoolean(prmIndex++, visible);
-                updateNodeStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(node.getUser()));
+                updateNodeStatement.setLong(prmIndex++, node.getChangesetId());
                 updateNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
                         .getLatitude()));
                 updateNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
@@ -394,7 +397,7 @@ public class ChangeWriter {
                 insertNodeStatement.setInt(prmIndex++, node.getVersion());
                 insertNodeStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
                 insertNodeStatement.setBoolean(prmIndex++, visible);
-                insertNodeStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(node.getUser()));
+                insertNodeStatement.setLong(prmIndex++, node.getChangesetId());
                 insertNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
                         .getLatitude()));
                 insertNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
@@ -453,7 +456,7 @@ public class ChangeWriter {
                     updateNodeCurrentStatement.setInt(prmIndex++, node.getVersion());
                     updateNodeCurrentStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
                     updateNodeCurrentStatement.setBoolean(prmIndex++, visible);
-                    updateNodeCurrentStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(node.getUser()));
+                    updateNodeCurrentStatement.setLong(prmIndex++, node.getChangesetId());
                     updateNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
                             .getLatitude()));
                     updateNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
@@ -475,7 +478,7 @@ public class ChangeWriter {
                     insertNodeCurrentStatement.setInt(prmIndex++, node.getVersion());
                     insertNodeCurrentStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
                     insertNodeCurrentStatement.setBoolean(prmIndex++, visible);
-                    insertNodeCurrentStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(node.getUser()));
+                    insertNodeCurrentStatement.setLong(prmIndex++, node.getChangesetId());
                     insertNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
                             .getLatitude()));
                     insertNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
@@ -527,6 +530,9 @@ public class ChangeWriter {
 
         // Add or update the user in the database.
         userManager.addOrUpdateUser(way.getUser());
+        
+        // Create the changeset in the database.
+        changesetManager.addChangesetIfRequired(way.getChangesetId(), way.getUser());
 
         nodeReferenceList = way.getWayNodes();
 
@@ -591,7 +597,7 @@ public class ChangeWriter {
                 prmIndex = 1;
                 updateWayStatement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
                 updateWayStatement.setBoolean(prmIndex++, visible);
-                updateWayStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(way.getUser()));
+                updateWayStatement.setLong(prmIndex++, way.getChangesetId());
                 updateWayStatement.setLong(prmIndex++, way.getId());
                 updateWayStatement.setInt(prmIndex++, way.getVersion());
 
@@ -608,7 +614,7 @@ public class ChangeWriter {
                 insertWayStatement.setInt(prmIndex++, way.getVersion());
                 insertWayStatement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
                 insertWayStatement.setBoolean(prmIndex++, visible);
-                insertWayStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(way.getUser()));
+                insertWayStatement.setLong(prmIndex++, way.getChangesetId());
 
                 insertWayStatement.execute();
 
@@ -690,7 +696,7 @@ public class ChangeWriter {
                     updateWayCurrentStatement.setInt(prmIndex++, way.getVersion());
                     updateWayCurrentStatement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
                     updateWayCurrentStatement.setBoolean(prmIndex++, visible);
-                    updateWayCurrentStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(way.getUser()));
+                    updateWayCurrentStatement.setLong(prmIndex++, way.getChangesetId());
                     updateWayCurrentStatement.setLong(prmIndex++, way.getId());
 
                     updateWayCurrentStatement.execute();
@@ -706,7 +712,7 @@ public class ChangeWriter {
                     insertWayCurrentStatement.setInt(prmIndex++, way.getVersion());
                     insertWayCurrentStatement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
                     insertWayCurrentStatement.setBoolean(prmIndex++, visible);
-                    insertWayCurrentStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(way.getUser()));
+                    insertWayCurrentStatement.setLong(prmIndex++, way.getChangesetId());
 
                     insertWayCurrentStatement.execute();
 
@@ -772,6 +778,9 @@ public class ChangeWriter {
 
         // Add or update the user in the database.
         userManager.addOrUpdateUser(relation.getUser());
+        
+        // Create the changeset in the database.
+        changesetManager.addChangesetIfRequired(relation.getChangesetId(), relation.getUser());
 
         relationMemberList = relation.getMembers();
 
@@ -864,7 +873,7 @@ public class ChangeWriter {
                 prmIndex = 1;
                 updateRelationStatement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
                 updateRelationStatement.setBoolean(prmIndex++, visible);
-                updateRelationStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(relation.getUser()));
+                updateRelationStatement.setLong(prmIndex++, relation.getChangesetId());
                 updateRelationStatement.setLong(prmIndex++, relation.getId());
                 updateRelationStatement.setInt(prmIndex++, relation.getVersion());
 
@@ -882,7 +891,7 @@ public class ChangeWriter {
                 insertRelationStatement.setInt(prmIndex++, relation.getVersion());
                 insertRelationStatement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
                 insertRelationStatement.setBoolean(prmIndex++, visible);
-                insertRelationStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(relation.getUser()));
+                insertRelationStatement.setLong(prmIndex++, relation.getChangesetId());
 
                 insertRelationStatement.execute();
 
@@ -972,8 +981,7 @@ public class ChangeWriter {
                     updateRelationCurrentStatement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp()
                             .getTime()));
                     updateRelationCurrentStatement.setBoolean(prmIndex++, visible);
-                    updateRelationCurrentStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(relation
-                            .getUser()));
+                    updateRelationCurrentStatement.setLong(prmIndex++, relation.getChangesetId());
                     updateRelationCurrentStatement.setLong(prmIndex++, relation.getId());
 
                     updateRelationCurrentStatement.execute();
@@ -991,8 +999,7 @@ public class ChangeWriter {
                     insertRelationCurrentStatement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp()
                             .getTime()));
                     insertRelationCurrentStatement.setBoolean(prmIndex++, visible);
-                    insertRelationCurrentStatement.setLong(prmIndex++, changesetManager.obtainChangesetId(relation
-                            .getUser()));
+                    insertRelationCurrentStatement.setLong(prmIndex++, relation.getChangesetId());
 
                     insertRelationCurrentStatement.execute();
 

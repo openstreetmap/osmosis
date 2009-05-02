@@ -68,6 +68,10 @@ public class NodeWriter extends ElementWriter {
 			addAttribute("user", user.getName());
 		}
 		
+		if (node.getChangesetId() != 0) {
+			addAttribute("changeset", Long.toString(node.getChangesetId()));
+		}
+		
 		addAttribute("lat", numberFormat.format(node.getLatitude()));
 		addAttribute("lon", numberFormat.format(node.getLongitude()));
 		

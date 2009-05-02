@@ -25,6 +25,7 @@ import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
+import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
@@ -388,7 +389,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
             statement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
             statement.setInt(prmIndex++, node.getVersion());
             statement.setBoolean(prmIndex++, true);
-            statement.setLong(prmIndex++, changesetManager.obtainChangesetId(node.getUser()));
+            statement.setLong(prmIndex++, node.getChangesetId());
             statement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
             statement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
             statement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
@@ -420,7 +421,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
             statement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
             statement.setInt(prmIndex++, way.getVersion());
             statement.setBoolean(prmIndex++, true);
-            statement.setLong(prmIndex++, changesetManager.obtainChangesetId(way.getUser()));
+            statement.setLong(prmIndex++, way.getChangesetId());
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a way.", e);
@@ -500,7 +501,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
             statement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
             statement.setInt(prmIndex++, relation.getVersion());
             statement.setBoolean(prmIndex++, true);
-            statement.setLong(prmIndex++, changesetManager.obtainChangesetId(relation.getUser()));
+            statement.setLong(prmIndex++, relation.getChangesetId());
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a relation.", e);
@@ -1040,9 +1041,13 @@ public class ApidbWriter implements Sink, EntityProcessor {
      * {@inheritDoc}
      */
     public void process(EntityContainer entityContainer) {
+    	Entity entity;
+    	
         initialize();
 
+        entity = entityContainer.getEntity();
         userManager.addOrUpdateUser(entityContainer.getEntity().getUser());
+        changesetManager.addChangesetIfRequired(entity.getChangesetId(), entity.getUser());
 
         entityContainer.process(this);
     }

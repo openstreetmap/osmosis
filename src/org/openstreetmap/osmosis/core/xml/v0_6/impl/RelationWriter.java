@@ -61,6 +61,10 @@ public class RelationWriter extends ElementWriter {
 			addAttribute("user", user.getName());
 		}
 		
+		if (relation.getChangesetId() != 0) {
+			addAttribute("changeset", Long.toString(relation.getChangesetId()));
+		}
+		
 		relationMembers = relation.getMembers();
 		tags = relation.getTags();
 		

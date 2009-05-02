@@ -12,6 +12,7 @@ import java.util.TimeZone;
 
 import org.junit.Test;
 import org.openstreetmap.osmosis.core.Osmosis;
+import org.openstreetmap.osmosis.core.apidb.v0_6.impl.DatabaseUtilities;
 
 import data.util.DataFileUtilities;
 
@@ -22,11 +23,10 @@ import data.util.DataFileUtilities;
  */
 public class ApiDbTest {
 
-    private static final String AUTHFILE = "v0_6/apidb-authfile.txt";
-
     private static final String DATE_FORMAT = "yyyy-MM-dd_HH:mm:ss";
 
     private final DataFileUtilities fileUtils = new DataFileUtilities();
+    private final DatabaseUtilities dbUtils = new DatabaseUtilities();
 
     private String convertUTCTimeToLocalTime(String dateString) throws ParseException {
         DateFormat inFormat;
@@ -55,16 +55,12 @@ public class ApiDbTest {
         File outputFile;
 
         // Generate input files.
-        authFile = fileUtils.getDataFile(AUTHFILE);
+        authFile = dbUtils.getAuthorizationFile();
         inputFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
         outputFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
-        Osmosis.run(new String[] {
-        		"-q",
-        		"--truncate-apidb-0.6",
-        		"authFile=" + authFile.getPath()
-        		});
+        dbUtils.truncateDatabase();
 
         // Load the database with a dataset.
         Osmosis.run(new String[] {
@@ -105,16 +101,12 @@ public class ApiDbTest {
         File outputFile;
 
         // Generate input files.
-        authFile = fileUtils.getDataFile(AUTHFILE);
+        authFile = dbUtils.getAuthorizationFile();
         inputFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
         outputFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
-        Osmosis.run(new String[] {
-        		"-q",
-        		"--truncate-apidb-0.6",
-        		"authFile=" + authFile.getPath()
-        		});
+        dbUtils.truncateDatabase();
 
         // Load the database with a dataset.
         Osmosis.run(new String[] {
@@ -154,18 +146,14 @@ public class ApiDbTest {
         File actualResultFile;
 
         // Generate input files.
-        authFile = fileUtils.getDataFile(AUTHFILE);
+        authFile = dbUtils.getAuthorizationFile();
         snapshotFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
         changesetFile = fileUtils.getDataFile("v0_6/db-changeset.osc");
         expectedResultFile = fileUtils.getDataFile("v0_6/db-changeset-expected.osm");
         actualResultFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
-        Osmosis.run(new String[] {
-        		"-q",
-        		"--truncate-apidb-0.6",
-        		"authFile=" + authFile.getPath()
-        		});
+        dbUtils.truncateDatabase();
 
         // Load the database with the snapshot file.
         Osmosis.run(new String[] {
@@ -214,18 +202,14 @@ public class ApiDbTest {
         File actualResultFile;
 
         // Generate input files.
-        authFile = fileUtils.getDataFile(AUTHFILE);
+        authFile = dbUtils.getAuthorizationFile();
         snapshotFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
         changesetFile = fileUtils.getDataFile("v0_6/db-changeset.osc");
         expectedResultFile = fileUtils.getDataFile("v0_6/db-snapshot-b.osm");
         actualResultFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
-        Osmosis.run(new String[] {
-        		"-q",
-        		"--truncate-apidb-0.6",
-        		"authFile=" + authFile.getPath()
-        		});
+        dbUtils.truncateDatabase();
 
         // Load the database with the snapshot file.
         Osmosis.run(new String[] {
@@ -278,18 +262,14 @@ public class ApiDbTest {
         File actualResultFile;
 
         // Generate input files.
-        authFile = fileUtils.getDataFile(AUTHFILE);
+        authFile = dbUtils.getAuthorizationFile();
         snapshotFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
         changesetFile = fileUtils.getDataFile("v0_6/db-changeset.osc");
         expectedResultFile = fileUtils.getDataFile("v0_6/db-changeset-b.osc");
         actualResultFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
-		Osmosis.run(new String[] {
-				"-q",
-				"--truncate-apidb-0.6",
-				"authFile=" + authFile.getPath()
-				});
+        dbUtils.truncateDatabase();
 
         // Load the database with the snapshot file.
         Osmosis.run(new String[] {

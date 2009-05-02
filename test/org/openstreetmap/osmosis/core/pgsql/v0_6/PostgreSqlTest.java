@@ -34,7 +34,7 @@ public class PostgreSqlTest {
 		
 		// Generate input files.
 		authFile = fileUtils.getDataFile("v0_6/pgsql-authfile.txt");
-		inputFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
+		inputFile = fileUtils.getDataFile("v0_6/db-snapshot-nochangeset.osm");
 		outputFile = File.createTempFile("test", ".osm");
 		
 		// Remove all existing data from the database.
@@ -97,7 +97,7 @@ public class PostgreSqlTest {
 		authFile = fileUtils.getDataFile("v0_6/pgsql-authfile.txt");
 		snapshotFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
 		changesetFile = fileUtils.getDataFile("v0_6/db-changeset.osc");
-		expectedResultFile = fileUtils.getDataFile("v0_6/db-changeset-expected.osm");
+		expectedResultFile = fileUtils.getDataFile("v0_6/db-changeset-expected-nochangeset.osm");
 		actualResultFile = File.createTempFile("test", ".osm");
 		
 		// Remove all existing data from the database.

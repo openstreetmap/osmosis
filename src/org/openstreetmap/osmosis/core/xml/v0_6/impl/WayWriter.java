@@ -61,6 +61,10 @@ public class WayWriter extends ElementWriter {
 			addAttribute("user", user.getName());
 		}
 		
+		if (way.getChangesetId() != 0) {
+			addAttribute("changeset", Long.toString(way.getChangesetId()));
+		}
+		
 		wayNodes = way.getWayNodes();
 		tags = way.getTags();
 		
