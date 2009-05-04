@@ -92,7 +92,7 @@ public abstract class EntityMapper<T extends Entity> {
 		StringBuilder resultSql;
 		
 		resultSql = new StringBuilder();
-		resultSql.append("SELECT e.id, e.version, e.user_id, u.name AS user_name, e.tstamp");
+		resultSql.append("SELECT e.id, e.version, e.user_id, u.name AS user_name, e.tstamp, e.changeset_id");
 		for (String fieldName : Arrays.asList(getTypeSpecificFieldNames())) {
 			resultSql.append(", ").append(fieldName);
 		}
@@ -126,7 +126,7 @@ public abstract class EntityMapper<T extends Entity> {
 		
 		resultSql = new StringBuilder();
 		resultSql.append("INSERT INTO ").append(getEntityName()).append("s");
-		resultSql.append("(id, version, user_id, tstamp");
+		resultSql.append("(id, version, user_id, tstamp, changeset_id");
 		for (String fieldName : Arrays.asList(typeSpecificFieldNames)) {
 			resultSql.append(", ").append(fieldName);
 		}
@@ -135,7 +135,7 @@ public abstract class EntityMapper<T extends Entity> {
 			if (row > 0) {
 				resultSql.append(", ");
 			}
-			resultSql.append("(?, ?, ?, ?");
+			resultSql.append("(?, ?, ?, ?, ?");
 			for (int i = 0; i < typeSpecificFieldNames.length; i++) {
 				resultSql.append(", ?");
 			}
@@ -159,7 +159,7 @@ public abstract class EntityMapper<T extends Entity> {
 		
 		resultSql = new StringBuilder();
 		resultSql.append("UPDATE ").append(getEntityName())
-				.append("s SET id = ?, version = ?, user_id = ?, tstamp = ?");
+				.append("s SET id = ?, version = ?, user_id = ?, tstamp = ?, changeset_id = ?");
 		for (String fieldName : Arrays.asList(getTypeSpecificFieldNames())) {
 			resultSql.append(", ").append(fieldName).append(" = ?");
 		}
@@ -260,6 +260,7 @@ public abstract class EntityMapper<T extends Entity> {
 			statement.setInt(prmIndex++, entity.getVersion());
 			statement.setInt(prmIndex++, entity.getUser().getId());
 			statement.setTimestamp(prmIndex++, new Timestamp(entity.getTimestamp().getTime()));
+			statement.setLong(prmIndex++, entity.getChangesetId());
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
