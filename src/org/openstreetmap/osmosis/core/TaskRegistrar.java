@@ -66,6 +66,7 @@ import org.openstreetmap.osmosis.core.report.v0_6.IntegrityReporterFactory;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeForSeekableApplierComparator;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeForStreamableApplierComparator;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeSorterFactory;
+import org.openstreetmap.osmosis.core.sort.v0_6.ChangeTagSorterFactory;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntitySorterFactory;
 import org.openstreetmap.osmosis.core.sort.v0_6.TagSorterFactory;
@@ -358,6 +359,7 @@ public class TaskRegistrar {
 		factoryRegister.register("migrate-0.6", new MigrateV05ToV06Factory());
 		factoryRegister.register("mig-0.6", new MigrateV05ToV06Factory());
 		factoryRegister.register("tag-sort-0.6", new TagSorterFactory());
+		factoryRegister.register("tag-sort-change-0.6", new ChangeTagSorterFactory());
 		factoryRegister.register("remove-tags-0.6", new TagRemoverFactory());
 		factoryRegister.register("read-apidb-0.6", new ApidbReaderFactory());
 		factoryRegister.register("read-apidb-change-0.6", new ApidbChangeReaderFactory());

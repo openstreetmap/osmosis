@@ -7,6 +7,7 @@ import java.util.Date;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbChangeReader;
 import org.openstreetmap.osmosis.core.merge.v0_6.impl.ChangesetFileNameFormatter;
+import org.openstreetmap.osmosis.core.sort.v0_6.ChangeTagSorter;
 import org.openstreetmap.osmosis.core.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.core.xml.v0_6.XmlChangeWriter;
 import org.openstreetmap.osmosis.extract.apidb.common.Configuration;
@@ -58,6 +59,7 @@ public class IntervalExtractor {
 	public void run() {
 		ApidbChangeReader reader;
 		XmlChangeWriter writer;
+		ChangeTagSorter tagSorter;
 		String fileName;
 		File tmpFile;
 		File file;
@@ -78,9 +80,14 @@ public class IntervalExtractor {
 		// Create the input task to read the change interval from the database.
 		reader = new ApidbChangeReader(config.getDatabaseLoginCredentials(), config.getDatabasePreferences(), false,
 				intervalBegin, intervalEnd, fullHistory);
+		
+		// Create the tag sorter to ensure that output files are consistent allowing simple
+		// comparisons when auditing results.
+		tagSorter = new ChangeTagSorter();
 
-		// Connect the input task to the output task.
-		reader.setChangeSink(writer);
+		// Connect the tasks together.
+		reader.setChangeSink(tagSorter);
+		tagSorter.setChangeSink(writer);
 
 		// Run the changeset extraction.
 		reader.run();
