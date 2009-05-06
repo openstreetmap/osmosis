@@ -44,23 +44,25 @@
 		<ivy:configure />
 	</target>
 	
-	<target name="resolve" depends="init-ivy" unless="ivy.resolve.skip" description="Downloads all program dependencies using ivy.">
+	<target name="resolve-uptodate" depends="init-ivy" description="Checks if the ivy configuration has changed since the last resolve check.">
+		<uptodate property="resolve.uptodate" srcfile="${ivy.dep.file}" targetfile="${ivy.lib.dir}/resolve.tstamp"/>
+	</target>
+	
+	<target name="resolve" depends="init-ivy" unless="resolve.uptodate" description="Downloads all program dependencies using ivy.">
 		<ivy:resolve file="${ivy.dep.file}" conf="${ivy.configurations}" />
 		
 		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact]-[revision].[ext]" sync="true" conf="${ivy.configurations}" />
+		
+		<!-- Create the timestamp file for the resolve-uptodate target to check.  If this file is newer than ivy.xml then no
+		resolve will be performed. -->
+		<touch file="${ivy.lib.dir}/resolve.tstamp"/>
 	</target>
 	
-	<target name="resolve-message" if="ivy.resolve.skip">
-		<echo>Java libraries are already available, to refresh them run "ant resolve".</echo>
+	<target name="resolve-message" if="resolve.uptodate">
+		<echo>Dependencies libraries are already available, to force a refresh run "ant resolve".</echo>
 	</target>
 	
-	<target name="conditional-resolve" depends="init-ivy" description="Invokes resolve only if no libraries are available.">
-		<!-- Determine if the libraries have already been resolved. -->
-		<available property="ivy.resolve.skip" file="lib/compile" />
-		<!-- Download required libraries.  This will only execute if the ivy.resolve.skip property is not set. -->
-		<antcall target="resolve" />
-		<antcall target="resolve-message" />
-	</target>
+	<target name="conditional-resolve" depends="resolve-uptodate, resolve-message, resolve" description="Invokes resolve only if the libraries are out of date."/>
 	
 	<target name="clean-cache" depends="init-ivy" description="Clean the ivy cache.">
 		<ivy:cleancache />
