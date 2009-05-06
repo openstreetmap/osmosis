@@ -83,7 +83,7 @@
         <module name="Header">
             <property
                  name="header"
-                 value="// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors."/>
+                 value="// This software is released into the Public Domain.  See copying.txt for details."/>
         </module>
 
         <!-- Following interprets the header file as regular expressions. -->

@@ -1,19 +1,15 @@
 Osmosis consists of all files in this archive with the exception of the
-third party libraries in the lib subdirectory, and the apache bzip2
-implementation.
+third party libraries in the lib and repo subdirectories.
 
-Osmosis is Copyright 2007-2008 by Brett Henderson and other
-contributors.
+Osmosis is placed into the public domain and where this is not legally
+possible everybody is granted a perpetual, irrevocable license to use
+this work for any purpose whatsoever.
 
-Osmosis is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Osmosis is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with Osmosis.  If not, see <http://www.gnu.org/licenses/>.
+DISCLAIMERS
+By making Osmosis publicly available, it is hoped that users will find the
+software useful.  However:
+* Osmosis comes without any warranty, to the extent permitted by applicable
+law.
+* Unless required by applicable law, no liability will be accepted by
+the authors and distributors of this software for any damages caused
+as a result of its use. 

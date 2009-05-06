@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
+// This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.apidb.v0_6.impl;
 
 import java.sql.ResultSet;

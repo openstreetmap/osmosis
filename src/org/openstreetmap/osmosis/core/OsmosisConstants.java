@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2007-2008 by Brett Henderson and other contributors.
+// This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core;
 
 /**
@@ -10,5 +10,5 @@ public interface OsmosisConstants {
 	/**
 	 * Defines the version of the Osmosis application.
 	 */
-	String VERSION = "0.31";
+	String VERSION = "0.31.1";
 }
