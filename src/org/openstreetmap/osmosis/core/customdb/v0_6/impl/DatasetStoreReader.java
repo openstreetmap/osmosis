@@ -151,6 +151,7 @@ public class DatasetStoreReader implements DatasetContext {
 	 * {@inheritDoc}
 	 */
 	@Override
+	@Deprecated
 	public Node getNode(long id) {
 		return nodeManager.getEntity(id);
 	}
@@ -160,6 +161,7 @@ public class DatasetStoreReader implements DatasetContext {
 	 * {@inheritDoc}
 	 */
 	@Override
+	@Deprecated
 	public Way getWay(long id) {
 		return wayManager.getEntity(id);
 	}
@@ -169,6 +171,7 @@ public class DatasetStoreReader implements DatasetContext {
 	 * {@inheritDoc}
 	 */
 	@Override
+	@Deprecated
 	public Relation getRelation(long id) {
 		return relationManager.getEntity(id);
 	}

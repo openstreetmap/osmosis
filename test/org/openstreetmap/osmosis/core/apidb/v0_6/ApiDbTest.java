@@ -68,7 +68,8 @@ public class ApiDbTest {
         		"--read-xml-0.6",
         		inputFile.getPath(),
         		"--write-apidb-0.6",
-                "authFile=" + authFile.getPath()
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true"
                 });
 
         // Dump the database to an osm file.
@@ -76,6 +77,7 @@ public class ApiDbTest {
         		"-q",
         		"--read-apidb-0.6",
         		"authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true",
         		"--tag-sort-0.6",
                 "--write-xml-0.6",
                 outputFile.getPath()
@@ -114,7 +116,8 @@ public class ApiDbTest {
         		"--read-xml-0.6",
         		inputFile.getPath(),
         		"--write-apidb-0.6",
-                "authFile=" + authFile.getPath()
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true"
                 });
 
         // Dump the database to an osm file.
@@ -122,6 +125,7 @@ public class ApiDbTest {
         		"-q",
         		"--read-apidb-current-0.6",
         		"authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true",
                 "--tag-sort-0.6", "--write-xml-0.6", outputFile.getPath() });
 
         // Validate that the output file matches the input file.
@@ -161,7 +165,8 @@ public class ApiDbTest {
         		"--read-xml-0.6",
         		snapshotFile.getPath(),
         		"--write-apidb-0.6",
-                "authFile=" + authFile.getPath() });
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true" });
 
         // Apply the changeset file to the database.
         Osmosis.run(new String[] {
@@ -169,13 +174,15 @@ public class ApiDbTest {
         		"--read-xml-change-0.6",
         		changesetFile.getPath(),
         		"--write-apidb-change-0.6",
-                "authFile=" + authFile.getPath() });
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true" });
 
         // Dump the database to an osm file.
         Osmosis.run(new String[] {
         		"-q",
         		"--read-apidb-0.6",
         		"authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true",
         		"--tag-sort-0.6",
                 "--write-xml-0.6", actualResultFile.getPath() });
 
@@ -217,7 +224,8 @@ public class ApiDbTest {
         		"--read-xml-0.6",
         		snapshotFile.getPath(),
         		"--write-apidb-0.6",
-                "authFile=" + authFile.getPath()
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true"
                 });
 
         // Apply the changeset file to the database.
@@ -226,7 +234,8 @@ public class ApiDbTest {
         		"--read-xml-change-0.6",
         		changesetFile.getPath(),
         		"--write-apidb-change-0.6",
-                "authFile=" + authFile.getPath()
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true"
                 });
 
         // Dump the database to an osm file.
@@ -235,6 +244,7 @@ public class ApiDbTest {
         		"--read-apidb-0.6",
                 "snapshotInstant=" + convertUTCTimeToLocalTime("2008-01-03_00:00:00"),
                 "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true",
                 "--tag-sort-0.6",
                 "--write-xml-0.6",
                 actualResultFile.getPath() });
@@ -277,7 +287,8 @@ public class ApiDbTest {
         		"--read-xml-0.6",
         		snapshotFile.getPath(),
         		"--write-apidb-0.6",
-                "authFile=" + authFile.getPath()
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true"
                 });
 
         // Apply the changeset file to the database.
@@ -286,7 +297,8 @@ public class ApiDbTest {
         		"--read-xml-change-0.6",
         		changesetFile.getPath(),
         		"--write-apidb-change-0.6",
-                "authFile=" + authFile.getPath()
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true"
                 });
 
         // Dump the changeset to an osm file.
@@ -296,6 +308,7 @@ public class ApiDbTest {
                 "intervalBegin=" + convertUTCTimeToLocalTime("2008-01-03_00:00:00"),
                 "intervalEnd=" + convertUTCTimeToLocalTime("2008-01-04_00:00:00"),
                 "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true",
                 "--write-xml-change-0.6", actualResultFile.getPath()
                 });
 

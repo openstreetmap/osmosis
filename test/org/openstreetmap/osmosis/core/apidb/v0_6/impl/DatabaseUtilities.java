@@ -58,7 +58,8 @@ public class DatabaseUtilities {
         Osmosis.run(new String[] {
         		"-q",
         		"--truncate-apidb-0.6",
-        		"authFile=" + getAuthorizationFile().getPath()
+        		"authFile=" + getAuthorizationFile().getPath(),
+        		"allowIncorrectSchemaVersion=true"
         		});
     }
     

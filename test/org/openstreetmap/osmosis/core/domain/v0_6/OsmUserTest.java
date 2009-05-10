@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.store.DataInputStoreReader;
 import org.openstreetmap.osmosis.core.store.DataOutputStoreWriter;
+import org.openstreetmap.osmosis.core.store.DynamicStoreClassRegister;
 import org.openstreetmap.osmosis.core.store.StoreClassRegister;
 import org.openstreetmap.osmosis.core.store.StoreReader;
 import org.openstreetmap.osmosis.core.store.StoreWriter;
@@ -62,7 +63,7 @@ public class OsmUserTest {
 	public final void testGetInstanceFromStore() {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		StoreWriter sw = new DataOutputStoreWriter(new DataOutputStream(out));
-		StoreClassRegister scr = new StoreClassRegister();
+		StoreClassRegister scr = new DynamicStoreClassRegister();
 		OsmUser user1 = new OsmUser(12, "aUser");
 		OsmUser user3 = new OsmUser(13, "aUser2");
 		OsmUser user5 = new OsmUser(14, "");

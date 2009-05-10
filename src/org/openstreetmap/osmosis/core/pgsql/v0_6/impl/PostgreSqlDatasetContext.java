@@ -125,6 +125,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	 * {@inheritDoc}
 	 */
 	@Override
+	@Deprecated
 	public Node getNode(long id) {
 		return getNodeManager().getEntity(id);
 	}
@@ -134,6 +135,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	 * {@inheritDoc}
 	 */
 	@Override
+	@Deprecated
 	public Way getWay(long id) {
 		return getWayManager().getEntity(id);
 	}
@@ -143,6 +145,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	 * {@inheritDoc}
 	 */
 	@Override
+	@Deprecated
 	public Relation getRelation(long id) {
 		return getRelationManager().getEntity(id);
 	}

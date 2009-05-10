@@ -68,7 +68,7 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 		this.storageFilePrefix = storageFilePrefix;
 		this.useCompression = useCompression;
 		
-		storeClassRegister = new StoreClassRegister();
+		storeClassRegister = new DynamicStoreClassRegister();
 		
 		stage = StorageStage.NotStarted;
 		fileSize = 0;

@@ -58,7 +58,7 @@ public class SimpleObjectStore<T extends Storeable> implements Completable {
 		this.storageFilePrefix = storageFilePrefix;
 		this.useCompression = useCompression;
 		
-		storeClassRegister = new StoreClassRegister();
+		storeClassRegister = new DynamicStoreClassRegister();
 		
 		stage = StorageStage.NotStarted;
 	}

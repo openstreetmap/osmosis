@@ -49,7 +49,7 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 		this.serializationFactory = serializationFactory;
 		this.tempFilePrefix = tempFilePrefix;
 		
-		storeClassRegister = new StoreClassRegister();
+		storeClassRegister = new DynamicStoreClassRegister();
 		
 		stage = StorageStage.NotStarted;
 	}
@@ -67,7 +67,7 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 		this.serializationFactory = serializationFactory;
 		this.storageFile = storageFile;
 		
-		storeClassRegister = new StoreClassRegister();
+		storeClassRegister = new DynamicStoreClassRegister();
 		
 		stage = StorageStage.NotStarted;
 	}
