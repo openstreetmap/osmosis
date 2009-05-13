@@ -60,5 +60,6 @@ public class ReleasableContainer implements Releasable {
 		for (Releasable object : objects) {
 			object.release();
 		}
+		objects.clear();
 	}
 }

@@ -20,10 +20,13 @@ public class PostgresqlIdentityValueLoader implements IdentityValueLoader {
 	private static final Logger LOG = Logger.getLogger(PostgresqlIdentityValueLoader.class.getName());
 	private static final String SQL_SELECT_LAST_INSERT_ID =
 		"SELECT lastval() AS lastInsertId";
+	private static final String SQL_SELECT_LAST_SEQUENCE_ID =
+		"SELECT currval(?) AS lastSequenceId";
 	
 	private DatabaseContext dbCtx;
 	private ReleasableStatementContainer statementContainer;
 	private PreparedStatement selectInsertIdStatement;
+	private PreparedStatement selectSequenceIdStatement;
 	
 	
 	/**
@@ -79,6 +82,51 @@ public class PostgresqlIdentityValueLoader implements IdentityValueLoader {
 				} catch (SQLException e) {
 					// We are already in an error condition so log and continue.
 					LOG.log(Level.WARNING, "Unable to close last insert query.", e);
+				}
+			}
+		}
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public long getLastSequenceId(String sequenceName) {
+		ResultSet lastSequenceQuery;
+		
+		if (selectSequenceIdStatement == null) {
+			selectSequenceIdStatement =
+				statementContainer.add(dbCtx.prepareStatementForStreaming(SQL_SELECT_LAST_SEQUENCE_ID));
+		}
+		
+		lastSequenceQuery = null;
+		try {
+			long lastSequenceId;
+			
+			selectInsertIdStatement.setString(1, sequenceName);
+			lastSequenceQuery = selectSequenceIdStatement.executeQuery();
+			
+			lastSequenceQuery.next();
+			lastSequenceId = lastSequenceQuery.getLong("lastSequenceId");
+			
+			lastSequenceQuery.close();
+			lastSequenceQuery = null;
+			
+			return lastSequenceId;
+			
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException(
+				"Unable to retrieve the last sequence id.",
+				e
+			);
+		} finally {
+			if (lastSequenceQuery != null) {
+				try {
+					lastSequenceQuery.close();
+				} catch (SQLException e) {
+					// We are already in an error condition so log and continue.
+					LOG.log(Level.WARNING, "Unable to close last sequence query.", e);
 				}
 			}
 		}

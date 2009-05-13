@@ -13,8 +13,6 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  */
 public interface IdentityValueLoader extends Releasable {
 
-	
-	
 	/**
 	 * Returns the id of the most recently inserted row on the current
 	 * connection.
@@ -22,4 +20,15 @@ public interface IdentityValueLoader extends Releasable {
 	 * @return The newly inserted id.
 	 */
 	long getLastInsertId();
+
+
+	/**
+	 * Returns the most recently returned value from the specified sequence on the current
+	 * connection.
+	 * 
+	 * @param sequenceName
+	 *            The name of the sequence to query.
+	 * @return The most recent sequence id.
+	 */
+	long getLastSequenceId(String sequenceName);
 }

@@ -295,6 +295,18 @@ public class DatabaseContext {
 	}
 
 
+	/**
+	 * Gets the last retrieved sequence value. This is specific to the current connection only.
+	 * 
+	 * @param sequenceName
+	 *            The name of the sequence.
+	 * @return The last inserted identity column value.
+	 */
+	public long getLastSequenceId(String sequenceName) {
+		return identityValueLoader.getLastSequenceId(sequenceName);
+	}
+
+
     /**
      * Executes a sql statement against the database.
      * 

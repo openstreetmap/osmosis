@@ -67,8 +67,9 @@ public class ReleasableStatementContainer implements Releasable {
 				statement.close();
 			} catch (SQLException e) {
 				// We're inside a release method therefore can't throw an exception.
-				LOG.log(Level.WARNING, "Unable to close database connection.", e);
+				LOG.log(Level.WARNING, "Unable to close database statement.", e);
 			}
 		}
+		objects.clear();
 	}
 }
