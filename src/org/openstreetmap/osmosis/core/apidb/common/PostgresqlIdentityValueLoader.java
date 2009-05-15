@@ -104,7 +104,7 @@ public class PostgresqlIdentityValueLoader implements IdentityValueLoader {
 		try {
 			long lastSequenceId;
 			
-			selectInsertIdStatement.setString(1, sequenceName);
+			selectSequenceIdStatement.setString(1, sequenceName);
 			lastSequenceQuery = selectSequenceIdStatement.executeQuery();
 			
 			lastSequenceQuery.next();

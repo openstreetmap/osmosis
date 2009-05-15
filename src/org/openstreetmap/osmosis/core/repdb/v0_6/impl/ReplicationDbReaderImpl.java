@@ -63,7 +63,7 @@ public class ReplicationDbReaderImpl implements ChangeSource, Releasable {
 	private void initialize() {
 		if (!initialized) {
 			getItemPayloadStatement = statementContainer.add(
-					dbCtx.prepareStatement("SELECT payload FROM item WHERE itemId > ? AND itemId <= ?"));
+					dbCtx.prepareStatement("SELECT payload FROM item WHERE id > ? AND id <= ?"));
 		}
 	}
 	

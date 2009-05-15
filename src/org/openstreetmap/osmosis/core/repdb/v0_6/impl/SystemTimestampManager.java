@@ -38,6 +38,8 @@ public class SystemTimestampManager implements Releasable {
 	 */
 	public SystemTimestampManager(DatabaseContext dbCtx) {
 		this.dbCtx = dbCtx;
+		
+		statementContainer = new ReleasableStatementContainer();
 	}
 	
 	

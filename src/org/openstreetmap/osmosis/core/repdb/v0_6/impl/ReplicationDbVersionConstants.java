@@ -10,5 +10,5 @@ public interface ReplicationDbVersionConstants {
 	/**
 	 * Defines the schema version number currently supported.
 	 */
-	int SCHEMA_VERSION = 4;
+	int SCHEMA_VERSION = 1;
 }

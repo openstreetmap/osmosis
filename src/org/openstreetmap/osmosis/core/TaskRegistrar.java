@@ -61,6 +61,10 @@ import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactoryRegister
 import org.openstreetmap.osmosis.core.plugin.PluginLoader;
 import org.openstreetmap.osmosis.core.progress.v0_6.ChangeProgressLoggerFactory;
 import org.openstreetmap.osmosis.core.progress.v0_6.EntityProgressLoggerFactory;
+import org.openstreetmap.osmosis.core.repdb.v0_6.ReplicationDbQueueCreatorFactory;
+import org.openstreetmap.osmosis.core.repdb.v0_6.ReplicationDbQueueDeleterFactory;
+import org.openstreetmap.osmosis.core.repdb.v0_6.ReplicationDbReaderFactory;
+import org.openstreetmap.osmosis.core.repdb.v0_6.ReplicationDbWriterFactory;
 import org.openstreetmap.osmosis.core.report.v0_6.EntityReporterFactory;
 import org.openstreetmap.osmosis.core.report.v0_6.IntegrityReporterFactory;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeForSeekableApplierComparator;
@@ -240,6 +244,14 @@ public class TaskRegistrar {
 		factoryRegister.register("td", new ApidbTruncatorFactory());
 		factoryRegister.register("append-change", new ChangeAppenderFactory());
 		factoryRegister.register("apc", new ChangeAppenderFactory());
+		factoryRegister.register("create-repdb-queue", new ReplicationDbQueueCreatorFactory());
+		factoryRegister.register("cq", new ReplicationDbQueueCreatorFactory());
+		factoryRegister.register("delete-repdb-queue", new ReplicationDbQueueDeleterFactory());
+		factoryRegister.register("dq", new ReplicationDbQueueDeleterFactory());
+		factoryRegister.register("read-repdb-queue", new ReplicationDbReaderFactory());
+		factoryRegister.register("rq", new ReplicationDbReaderFactory());
+		factoryRegister.register("write-repdb", new ReplicationDbWriterFactory());
+		factoryRegister.register("wq", new ReplicationDbWriterFactory());
 		
 		factoryRegister.register("apply-change-0.5",
 				new org.openstreetmap.osmosis.core.change.v0_5.ChangeApplierFactory());
@@ -368,6 +380,10 @@ public class TaskRegistrar {
 		factoryRegister.register("write-apidb-change-0.6", new ApidbChangeWriterFactory());
 		factoryRegister.register("truncate-apidb-0.6", new ApidbTruncatorFactory());
 		factoryRegister.register("append-change-0.6", new ChangeAppenderFactory());
+		factoryRegister.register("create-repdb-queue-0.6", new ReplicationDbQueueCreatorFactory());
+		factoryRegister.register("delete-repdb-queue-0.6", new ReplicationDbQueueDeleterFactory());
+		factoryRegister.register("read-repdb-queue-0.6", new ReplicationDbReaderFactory());
+		factoryRegister.register("write-repdb-0.6", new ReplicationDbWriterFactory());
 
 		// Register the plugins.
 		for (String plugin : plugins) {

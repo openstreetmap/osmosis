@@ -51,11 +51,14 @@ public class ReplicationDbWriter implements ChangeSink {
 	 */
 	public ReplicationDbWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
 			Date systemTimestamp) {
+		this.systemTimestamp = systemTimestamp;
+		
 		dbCtx = new DatabaseContext(loginCredentials);
 		
 		itemSerializer = new ItemSerializer();
 		timestampManager = new SystemTimestampManager(dbCtx);
 		schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
+		statementContainer = new ReleasableStatementContainer();
 	}
 	
 	

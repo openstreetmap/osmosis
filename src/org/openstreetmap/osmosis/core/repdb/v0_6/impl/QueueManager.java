@@ -44,6 +44,8 @@ public class QueueManager implements Releasable {
 	 */
 	public QueueManager(DatabaseContext dbCtx) {
 		this.dbCtx = dbCtx;
+		
+		statementContainer = new ReleasableStatementContainer();
 	}
 	
 	
