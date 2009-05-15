@@ -13,7 +13,7 @@ import org.openstreetmap.osmosis.core.task.common.RunnableTask;
 /**
  * Creates a new queue in a replication database.
  */
-public class ReplicationDbQueueCreator implements RunnableTask {
+public class ReplicationDbQueueDeleter implements RunnableTask {
 	
 	private DatabaseLoginCredentials loginCredentials;
 	private DatabasePreferences preferences;
@@ -30,7 +30,7 @@ public class ReplicationDbQueueCreator implements RunnableTask {
 	 * @param queueName
 	 *            The name of the queue.
 	 */
-	public ReplicationDbQueueCreator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
+	public ReplicationDbQueueDeleter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
 			String queueName) {
 		this.loginCredentials = loginCredentials;
 		this.preferences = preferences;
@@ -50,7 +50,7 @@ public class ReplicationDbQueueCreator implements RunnableTask {
 			new SchemaVersionValidator(loginCredentials, preferences)
 					.validateVersion(ReplicationDbVersionConstants.SCHEMA_VERSION);
 			
-			queueMgr.createQueue(queueName);
+			queueMgr.deleteQueue(queueName);
 			
 			dbCtx.commit();
 			

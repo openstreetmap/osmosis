@@ -72,7 +72,7 @@ public class ReplicationDbReaderImpl implements ChangeSource, Releasable {
 	 * Reads all data currently available in the queue.
 	 */
 	public void process() {
-		processImpl(systemTimestampManager.getTimestamp());
+		processImpl(queueManager.getCurrentItemId());
 	}
 	
 	
@@ -131,28 +131,43 @@ public class ReplicationDbReaderImpl implements ChangeSource, Releasable {
 
 
 	private void processImpl(Date queueTimestamp) {
+		long startItemId;
+		long finishItemId;
+		
+		startItemId = queueManager.getQueuePosition(queueName);
+		finishItemId = queueManager.getPositionForTimestamp(queueTimestamp);
+		
+		processImpl(startItemId, finishItemId);
+	}
+
+
+	private void processImpl(long finishItemId) {
+		long startItemId;
+		
+		startItemId = queueManager.getQueuePosition(queueName);
+		
+		processImpl(startItemId, finishItemId);
+	}
+
+
+	private void processImpl(long startItemId, long finishItemId) {
 		int prmIndex;
 		
 		initialize();
 		
 		try {
-			long startItem;
-			long finishItem;
-			
-			startItem = queueManager.getQueuePosition(queueName);
-			finishItem = queueManager.getPositionForTimestamp(queueTimestamp);
-			
-			if (finishItem > startItem) {
+			if (finishItemId > startItemId) {
 				prmIndex = 1;
-				getItemPayloadStatement.setLong(prmIndex++, startItem);
-				getItemPayloadStatement.setLong(prmIndex++, finishItem);
+				getItemPayloadStatement.setLong(prmIndex++, startItemId);
+				getItemPayloadStatement.setLong(prmIndex++, finishItemId);
 				consumeResultSet(getItemPayloadStatement.executeQuery());
 				
-				queueManager.seekQueue(queueName, finishItem);
+				queueManager.seekQueue(queueName, finishItemId);
 			}
 			
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to retrieve items up to queue timestamp " + queueTimestamp + ".");
+			throw new OsmosisRuntimeException("Unable to retrieve items between items " + startItemId + " and "
+					+ finishItemId + ".", e);
 		}
 	}
 	
