@@ -16,16 +16,14 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
 
 
 /**
- * Allows the timestamp column for system and queue tables to be queried and manipulated.
+ * Allows the timestamp column for the system table to be queried and manipulated.
  */
-public class TimestampManager implements Releasable {
+public class SystemTimestampManager implements Releasable {
 	
-	private static final Logger LOG = Logger.getLogger(TimestampManager.class.getName());
+	private static final Logger LOG = Logger.getLogger(SystemTimestampManager.class.getName());
 	
 	
 	private DatabaseContext dbCtx;
-	private String tableName;
-	private int queueId;
 	private ReleasableStatementContainer statementContainer;
 	private boolean initialized;
 	private PreparedStatement selectStatement;
@@ -38,36 +36,17 @@ public class TimestampManager implements Releasable {
 	 * @param dbCtx
 	 *            Used to access the database.
 	 */
-	public TimestampManager(DatabaseContext dbCtx) {
+	public SystemTimestampManager(DatabaseContext dbCtx) {
 		this.dbCtx = dbCtx;
-		
-		tableName = "system";
-		queueId = 1;
-	}
-	
-	
-	/**
-	 * Creates a new instance for manipulating the current time of a queue.
-	 * 
-	 * @param dbCtx
-	 *            Used to access the database.
-	 * @param queueId
-	 *            The queue to modify.
-	 */
-	public TimestampManager(DatabaseContext dbCtx, int queueId) {
-		this.dbCtx = dbCtx;
-		
-		tableName = "queue";
-		this.queueId = queueId;
 	}
 	
 	
 	private void initialize() {
 		if (!initialized) {
 			selectStatement = statementContainer.add(
-					dbCtx.prepareStatementForStreaming("SELECT tstamp FROM " + tableName + " WHERE id = " + queueId));
+					dbCtx.prepareStatementForStreaming("SELECT tstamp FROM system"));
 			updateStatement = statementContainer.add(
-					dbCtx.prepareStatement("UPDATE " + tableName + " (tstamp) VALUES (?)"));
+					dbCtx.prepareStatement("UPDATE system SET tstamp = ?"));
 			
 			initialized = true;
 		}

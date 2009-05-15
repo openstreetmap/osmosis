@@ -1,28 +1,23 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.repdb.v0_6;
 
-import java.util.Date;
-
 import org.openstreetmap.osmosis.core.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.pgsql.common.SchemaVersionValidator;
-import org.openstreetmap.osmosis.core.repdb.v0_6.impl.ReplicationDbReaderImpl;
+import org.openstreetmap.osmosis.core.repdb.v0_6.impl.QueueManager;
 import org.openstreetmap.osmosis.core.repdb.v0_6.impl.ReplicationDbVersionConstants;
-import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
-import org.openstreetmap.osmosis.core.task.v0_6.RunnableChangeSource;
+import org.openstreetmap.osmosis.core.task.common.RunnableTask;
 
 
 /**
- * Reads a stream of changes from a replication database.
+ * Creates a new queue in a replication database.
  */
-public class ReplicationDbReader implements RunnableChangeSource {
+public class ReplicationDbQueueCreator implements RunnableTask {
 	
-	private ChangeSink changeSink;
 	private DatabaseLoginCredentials loginCredentials;
 	private DatabasePreferences preferences;
 	private String queueName;
-	private Date queueTimestamp;
 	
 	
 	/**
@@ -34,50 +29,34 @@ public class ReplicationDbReader implements RunnableChangeSource {
 	 *            Contains preferences configuring database behaviour.
 	 * @param queueName
 	 *            The name of the queue to read from.
-	 * @param queueTimestamp
-	 *            The timestamp marking the end of the time period of change data to be retrieved.
 	 */
-	public ReplicationDbReader(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
-			String queueName, Date queueTimestamp) {
+	public ReplicationDbQueueCreator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
+			String queueName) {
 		this.loginCredentials = loginCredentials;
 		this.preferences = preferences;
 		this.queueName = queueName;
-		this.queueTimestamp = queueTimestamp;
 	}
 
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void run() {
 		DatabaseContext dbCtx = new DatabaseContext(loginCredentials);
-		ReplicationDbReaderImpl reader = new ReplicationDbReaderImpl(dbCtx, queueName);
+		QueueManager queueMgr = new QueueManager(dbCtx); 
 		
 		try {
 			new SchemaVersionValidator(loginCredentials, preferences)
 					.validateVersion(ReplicationDbVersionConstants.SCHEMA_VERSION);
 			
-			reader.setChangeSink(changeSink);
-			reader.process(queueTimestamp);
-			
-			changeSink.complete();
+			queueMgr.createQueue(queueName);
 			
 			dbCtx.commit();
 			
 		} finally {
-			reader.release();
+			queueMgr.release();
 			dbCtx.release();
-			changeSink.release();
 		}
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void setChangeSink(ChangeSink changeSink) {
-		this.changeSink = changeSink;
 	}
 }

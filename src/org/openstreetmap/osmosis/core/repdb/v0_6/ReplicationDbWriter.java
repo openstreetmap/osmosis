@@ -17,7 +17,7 @@ import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
 import org.openstreetmap.osmosis.core.pgsql.common.SchemaVersionValidator;
 import org.openstreetmap.osmosis.core.repdb.v0_6.impl.ItemSerializer;
 import org.openstreetmap.osmosis.core.repdb.v0_6.impl.ReplicationDbVersionConstants;
-import org.openstreetmap.osmosis.core.repdb.v0_6.impl.TimestampManager;
+import org.openstreetmap.osmosis.core.repdb.v0_6.impl.SystemTimestampManager;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 
 
@@ -32,10 +32,9 @@ public class ReplicationDbWriter implements ChangeSink {
 	private DatabaseContext dbCtx;
 	private ReleasableStatementContainer statementContainer;
 	private PreparedStatement insertItemStatement;
-	private PreparedStatement insertItemQueueStatement;
 	private boolean initialized;
 	private ItemSerializer itemSerializer;
-	private TimestampManager timestampManager;
+	private SystemTimestampManager timestampManager;
 	private Date systemTimestamp;
 	private SchemaVersionValidator schemaVersionValidator;
 	
@@ -55,7 +54,7 @@ public class ReplicationDbWriter implements ChangeSink {
 		dbCtx = new DatabaseContext(loginCredentials);
 		
 		itemSerializer = new ItemSerializer();
-		timestampManager = new TimestampManager(dbCtx);
+		timestampManager = new SystemTimestampManager(dbCtx);
 		schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
 	}
 	
@@ -63,9 +62,6 @@ public class ReplicationDbWriter implements ChangeSink {
 	private void initialize() {
 		if (!initialized) {
 			insertItemStatement = dbCtx.prepareStatement("INSERT INTO item (tstamp, payload) VALUES (?, ?)");
-			insertItemQueueStatement = dbCtx.prepareStatement(
-					"INSERT INTO item_queue (item_id, queue_id, selected)"
-					+ " SELECT currval('item_id_seq'), id, FALSE FROM queue");
 			
 			schemaVersionValidator.validateVersion(ReplicationDbVersionConstants.SCHEMA_VERSION);
 			
@@ -89,12 +85,6 @@ public class ReplicationDbWriter implements ChangeSink {
 		
 		if (LOG.isLoggable(Level.FINEST)) {
 			LOG.log(Level.FINEST, "The item has been added with id " + dbCtx.getLastSequenceId("item_id_seq") + ".");
-		}
-		
-		try {
-			insertItemQueueStatement.executeUpdate();
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to queue the item.", e);
 		}
 	}
 

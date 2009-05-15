@@ -4,7 +4,6 @@ package org.openstreetmap.osmosis.core.repdb.v0_6.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,14 +33,11 @@ public class ReplicationDbReaderImpl implements ChangeSource, Releasable {
 	private ChangeSink changeSink;
 	private DatabaseContext dbCtx;
 	private String queueName;
-	private int queueId;
 	private ItemDeserializer itemDeserializer;
-	private TimestampManager systemTimestampManager;
-	private TimestampManager queueTimestampManager;
+	private SystemTimestampManager systemTimestampManager;
+	private QueueManager queueManager;
 	private ReleasableStatementContainer statementContainer;
-	private PreparedStatement markItems;
-	private PreparedStatement selectMarkedItems;
-	private PreparedStatement deleteMarkedItems;
+	private PreparedStatement getItemPayloadStatement;
 	private boolean initialized;
 
 
@@ -58,69 +54,16 @@ public class ReplicationDbReaderImpl implements ChangeSource, Releasable {
 		this.queueName = queueName;
 		
 		itemDeserializer = new ItemDeserializer();
-		systemTimestampManager = new TimestampManager(dbCtx);
+		systemTimestampManager = new SystemTimestampManager(dbCtx);
+		queueManager = new QueueManager(dbCtx);
 		statementContainer = new ReleasableStatementContainer();
-	}
-	
-	
-	private void identifyQueueId() {
-		PreparedStatement queueNameStatement = null;
-		ResultSet queueNameResultSet = null;
-		
-		try {
-			queueNameStatement = dbCtx.prepareStatementForStreaming("SELECT id FROM queue WHERE name = ?");
-			queueNameStatement.setString(1, queueName);
-			queueNameResultSet = queueNameStatement.executeQuery();
-			
-			if (!queueNameResultSet.next()) {
-				throw new OsmosisRuntimeException("The queue (" + queueName + ") does not exist.");
-			}
-			
-			queueId = queueNameResultSet.getInt("id");
-			
-			queueNameResultSet.close();
-			queueNameResultSet = null;
-			queueNameStatement.close();
-			queueNameStatement = null;
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to get the id for queue (" + queueName + ").");
-			
-		} finally {
-			if (queueNameResultSet != null) {
-				try {
-					queueNameResultSet.close();
-				} catch (SQLException e) {
-					LOG.log(Level.WARNING, "Unable to close the result set.", e);
-				}
-			}
-			if (queueNameStatement != null) {
-				try {
-					queueNameStatement.close();
-				} catch (SQLException e) {
-					LOG.log(Level.WARNING, "Unable to close the prepared statement.", e);
-				}
-			}
-		}
 	}
 	
 	
 	private void initialize() {
 		if (!initialized) {
-			// Get the id of the queue.
-			identifyQueueId();
-			
-			markItems = statementContainer.add(dbCtx
-					.prepareStatement("UPDATE item_queue iq INNER JOIN item i ON iq.item_id = i.id"
-							+ " SET iq.selected = TRUE WHERE iq.queue_id = ? AND tstamp <= ?"));
-			
-			selectMarkedItems = statementContainer.add(
-					dbCtx.prepareStatementForStreaming(
-							"SELECT i.payload FROM item i INNER JOIN item_queue iq ON i.id = iq.item_id"
-							+ " WHERE iq.queue_id = ? AND iq.selected = TRUE"));
-			
-			deleteMarkedItems = statementContainer.add(dbCtx
-					.prepareStatement("DELETE FROM item_queue WHERE iq.queue_id = ? AND selected = TRUE"));
+			getItemPayloadStatement = statementContainer.add(
+					dbCtx.prepareStatement("SELECT payload FROM item WHERE itemId > ? AND itemId <= ?"));
 		}
 	}
 	
@@ -150,28 +93,35 @@ public class ReplicationDbReaderImpl implements ChangeSource, Releasable {
 			throw new OsmosisRuntimeException("The requested queue timestamp of " + queueTimestamp
 					+ " exceeds the current system timestamp of " + systemTimestamp + ".");
 		}
+		
+		processImpl(queueTimestamp);
 	}
 	
 	
 	private void consumeResultSet(ResultSet itemResultSet) {
+		ResultSet itemResultSetLocal = itemResultSet;
+		
 		try {
-			while (itemResultSet.next()) {
+			while (itemResultSetLocal.next()) {
 				byte[] payload;
 				ChangeContainer change;
 				
-				payload = itemResultSet.getBytes("payload");
+				payload = itemResultSetLocal.getBytes("payload");
 				
 				change = itemDeserializer.deserialize(payload);
 				
 				changeSink.process(change);
 			}
 			
+			itemResultSetLocal.close();
+			itemResultSetLocal = null;
+			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read the item result set.", e);
 		} finally {
-			if (itemResultSet != null) {
+			if (itemResultSetLocal != null) {
 				try {
-					itemResultSet.close();
+					itemResultSetLocal.close();
 				} catch (SQLException e) {
 					LOG.log(Level.WARNING, "Unable to close the result set.", e);
 				}
@@ -186,18 +136,20 @@ public class ReplicationDbReaderImpl implements ChangeSource, Releasable {
 		initialize();
 		
 		try {
-			prmIndex = 1;
-			markItems.setInt(prmIndex++, queueId);
-			markItems.setTimestamp(prmIndex++, new Timestamp(queueTimestamp.getTime()));
-			markItems.executeUpdate();
+			long startItem;
+			long finishItem;
 			
-			selectMarkedItems.setInt(1, queueId);
-			consumeResultSet(selectMarkedItems.executeQuery());
+			startItem = queueManager.getQueuePosition(queueName);
+			finishItem = queueManager.getPositionForTimestamp(queueTimestamp);
 			
-			deleteMarkedItems.setInt(1, queueId);
-			deleteMarkedItems.executeUpdate();
-			
-			queueTimestampManager.setTimestamp(queueTimestamp);
+			if (finishItem > startItem) {
+				prmIndex = 1;
+				getItemPayloadStatement.setLong(prmIndex++, startItem);
+				getItemPayloadStatement.setLong(prmIndex++, finishItem);
+				consumeResultSet(getItemPayloadStatement.executeQuery());
+				
+				queueManager.seekQueue(queueName, finishItem);
+			}
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to retrieve items up to queue timestamp " + queueTimestamp + ".");
