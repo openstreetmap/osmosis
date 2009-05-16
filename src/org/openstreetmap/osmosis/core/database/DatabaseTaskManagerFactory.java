@@ -53,6 +53,8 @@ public abstract class DatabaseTaskManagerFactory extends TaskManagerFactory {
                 loginCredentials.getForceUtf8()));
         loginCredentials.setProfileSql(getBooleanArgument(taskConfig, DatabaseConstants.TASK_ARG_PROFILE_SQL,
                 loginCredentials.getProfileSql()));
+        loginCredentials.setDbType(getStringArgument(taskConfig, DatabaseConstants.TASK_ARG_DB_TYPE, loginCredentials
+				.getDbType().toString()));
 
         return loginCredentials;
     }

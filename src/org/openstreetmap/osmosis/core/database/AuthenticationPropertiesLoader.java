@@ -36,7 +36,7 @@ public class AuthenticationPropertiesLoader {
 
     private static final String KEY_PASSWORD = "password";
 
-    private static final String KEY_DBTYPE = "db";
+    private static final String KEY_DBTYPE = "dbType";
 
     private final File propertiesFile;
 

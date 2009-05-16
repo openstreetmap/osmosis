@@ -27,7 +27,7 @@ public class Configuration {
 	private static final String KEY_DATABASE = "database";
 	private static final String KEY_USER = "user";
 	private static final String KEY_PASSWORD = "password";
-	private static final String KEY_DB_TYPE = "db";
+	private static final String KEY_DB_TYPE = "dbType";
 	private static final String KEY_INTERVAL_LENGTH = "intervalLength";
 	private static final String KEY_LAG_LENGTH = "lagLength";
 	private static final String KEY_CHANGE_FILE_BEGIN_FORMAT = "changeFileBeginFormat";

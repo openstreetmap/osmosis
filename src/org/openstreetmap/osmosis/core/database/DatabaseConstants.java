@@ -28,6 +28,11 @@ public interface DatabaseConstants {
      * The task argument for specifying the user for a database connection.
      */
     String TASK_ARG_USER = "user";
+    
+    /**
+     * The task argument for specifying the database type to be used.
+     */
+    String TASK_ARG_DB_TYPE = "dbType";
 
     /**
      * The task argument for specifying the password for a database connection.
