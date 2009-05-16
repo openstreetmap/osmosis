@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.repdb.v0_6;
 
+import java.util.Date;
+
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.database.DatabaseTaskManagerFactory;
@@ -10,11 +12,12 @@ import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
 
 
 /**
- * The task manager factory for a queue deleter.
+ * The task manager factory for a queue seeker.
  */
-public class ReplicationDbQueueDeleterFactory extends DatabaseTaskManagerFactory {
+public class ReplicationDbQueueSeekerFactory extends DatabaseTaskManagerFactory {
 
 	private static final String ARG_QUEUE_NAME = "queueName";
+	private static final String ARG_QUEUE_TIMESTAMP = "queueTimestamp";
 	private static final String DEFAULT_QUEUE_NAME = "queue1";
 	
 	
@@ -26,18 +29,21 @@ public class ReplicationDbQueueDeleterFactory extends DatabaseTaskManagerFactory
 		DatabaseLoginCredentials loginCredentials;
 		DatabasePreferences preferences;
 		String queueName;
+		Date queueTimestamp;
 		
 		// Get the task arguments.
 		loginCredentials = getDatabaseLoginCredentials(taskConfig);
 		preferences = getDatabasePreferences(taskConfig);
 		queueName = getStringArgument(taskConfig, ARG_QUEUE_NAME, DEFAULT_QUEUE_NAME);
+		queueTimestamp = getDateArgument(taskConfig, ARG_QUEUE_TIMESTAMP, new Date());
 		
 		return new RunnableTaskManager(
 			taskConfig.getId(),
-			new ReplicationDbQueueDeleter(
+			new ReplicationDbQueueSeeker(
 				loginCredentials,
 				preferences,
-				queueName
+				queueName,
+				queueTimestamp
 			),
 			taskConfig.getPipeArgs()
 		);

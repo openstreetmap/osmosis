@@ -63,7 +63,9 @@ import org.openstreetmap.osmosis.core.progress.v0_6.ChangeProgressLoggerFactory;
 import org.openstreetmap.osmosis.core.progress.v0_6.EntityProgressLoggerFactory;
 import org.openstreetmap.osmosis.core.repdb.v0_6.ReplicationDbQueueCreatorFactory;
 import org.openstreetmap.osmosis.core.repdb.v0_6.ReplicationDbQueueDeleterFactory;
+import org.openstreetmap.osmosis.core.repdb.v0_6.ReplicationDbQueueSeekerFactory;
 import org.openstreetmap.osmosis.core.repdb.v0_6.ReplicationDbReaderFactory;
+import org.openstreetmap.osmosis.core.repdb.v0_6.ReplicationDbTruncatorFactory;
 import org.openstreetmap.osmosis.core.repdb.v0_6.ReplicationDbWriterFactory;
 import org.openstreetmap.osmosis.core.report.v0_6.EntityReporterFactory;
 import org.openstreetmap.osmosis.core.report.v0_6.IntegrityReporterFactory;
@@ -252,6 +254,10 @@ public class TaskRegistrar {
 		factoryRegister.register("rq", new ReplicationDbReaderFactory());
 		factoryRegister.register("write-repdb", new ReplicationDbWriterFactory());
 		factoryRegister.register("wq", new ReplicationDbWriterFactory());
+		factoryRegister.register("seek-repdb-queue", new ReplicationDbQueueSeekerFactory());
+		factoryRegister.register("sq", new ReplicationDbQueueSeekerFactory());
+		factoryRegister.register("truncate-repdb", new ReplicationDbTruncatorFactory());
+		factoryRegister.register("tq", new ReplicationDbTruncatorFactory());
 		
 		factoryRegister.register("apply-change-0.5",
 				new org.openstreetmap.osmosis.core.change.v0_5.ChangeApplierFactory());
@@ -384,6 +390,8 @@ public class TaskRegistrar {
 		factoryRegister.register("delete-repdb-queue-0.6", new ReplicationDbQueueDeleterFactory());
 		factoryRegister.register("read-repdb-queue-0.6", new ReplicationDbReaderFactory());
 		factoryRegister.register("write-repdb-0.6", new ReplicationDbWriterFactory());
+		factoryRegister.register("seek-repdb-queue-0.6", new ReplicationDbQueueSeekerFactory());
+		factoryRegister.register("truncate-repdb-0.6", new ReplicationDbTruncatorFactory());
 
 		// Register the plugins.
 		for (String plugin : plugins) {

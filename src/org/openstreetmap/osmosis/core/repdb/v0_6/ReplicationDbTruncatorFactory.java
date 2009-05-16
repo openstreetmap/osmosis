@@ -10,12 +10,9 @@ import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
 
 
 /**
- * The task manager factory for a queue deleter.
+ * The task manager factory for a truncator.
  */
-public class ReplicationDbQueueDeleterFactory extends DatabaseTaskManagerFactory {
-
-	private static final String ARG_QUEUE_NAME = "queueName";
-	private static final String DEFAULT_QUEUE_NAME = "queue1";
+public class ReplicationDbTruncatorFactory extends DatabaseTaskManagerFactory {
 	
 	
 	/**
@@ -25,19 +22,16 @@ public class ReplicationDbQueueDeleterFactory extends DatabaseTaskManagerFactory
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		DatabaseLoginCredentials loginCredentials;
 		DatabasePreferences preferences;
-		String queueName;
 		
 		// Get the task arguments.
 		loginCredentials = getDatabaseLoginCredentials(taskConfig);
 		preferences = getDatabasePreferences(taskConfig);
-		queueName = getStringArgument(taskConfig, ARG_QUEUE_NAME, DEFAULT_QUEUE_NAME);
 		
 		return new RunnableTaskManager(
 			taskConfig.getId(),
-			new ReplicationDbQueueDeleter(
+			new ReplicationDbTruncator(
 				loginCredentials,
-				preferences,
-				queueName
+				preferences
 			),
 			taskConfig.getPipeArgs()
 		);

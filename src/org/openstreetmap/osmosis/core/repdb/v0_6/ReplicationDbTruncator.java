@@ -1,25 +1,25 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.repdb.v0_6;
 
+import java.util.Arrays;
+
 import org.openstreetmap.osmosis.core.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.pgsql.common.SchemaVersionValidator;
-import org.openstreetmap.osmosis.core.repdb.v0_6.impl.QueueManager;
 import org.openstreetmap.osmosis.core.repdb.v0_6.impl.ReplicationDbVersionConstants;
 import org.openstreetmap.osmosis.core.task.common.RunnableTask;
 
 
 /**
- * Deletes a queue in a replication database.
+ * Completely empties a replication database.
  */
-public class ReplicationDbQueueDeleter implements RunnableTask {
+public class ReplicationDbTruncator implements RunnableTask {
 	
 	private DatabaseLoginCredentials loginCredentials;
 	private DatabasePreferences preferences;
-	private String queueName;
-	
-	
+
+
 	/**
 	 * Creates a new instance.
 	 * 
@@ -27,14 +27,10 @@ public class ReplicationDbQueueDeleter implements RunnableTask {
 	 *            Contains all information required to connect to the database.
 	 * @param preferences
 	 *            Contains preferences configuring database behaviour.
-	 * @param queueName
-	 *            The name of the queue.
 	 */
-	public ReplicationDbQueueDeleter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
-			String queueName) {
+	public ReplicationDbTruncator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
 		this.loginCredentials = loginCredentials;
 		this.preferences = preferences;
-		this.queueName = queueName;
 	}
 
 	
@@ -44,18 +40,17 @@ public class ReplicationDbQueueDeleter implements RunnableTask {
 	@Override
 	public void run() {
 		DatabaseContext dbCtx = new DatabaseContext(loginCredentials);
-		QueueManager queueMgr = new QueueManager(dbCtx); 
 		
 		try {
 			new SchemaVersionValidator(loginCredentials, preferences)
 					.validateVersion(ReplicationDbVersionConstants.SCHEMA_VERSION);
 			
-			queueMgr.deleteQueue(queueName);
+			dbCtx.truncateTables(Arrays.asList(new String[]{"queue", "item", "system"}));
+			dbCtx.executeStatement("INSERT INTO system (id, tstamp) VALUES (1, timestamp 'January 1, 1970')");
 			
 			dbCtx.commit();
 			
 		} finally {
-			queueMgr.release();
 			dbCtx.release();
 		}
 	}
