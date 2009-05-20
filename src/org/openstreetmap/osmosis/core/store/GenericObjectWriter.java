@@ -26,6 +26,7 @@ public class GenericObjectWriter extends BaseObjectWriter {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected void writeClassIdentifier(StoreWriter sw, StoreClassRegister scr, Class<?> clazz) {
 		scr.storeIdentifierForClass(sw, clazz);

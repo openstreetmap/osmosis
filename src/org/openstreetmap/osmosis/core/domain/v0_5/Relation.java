@@ -87,6 +87,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		super.store(sw, scr);
@@ -101,6 +102,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public EntityType getType() {
 		return EntityType.Relation;
@@ -110,6 +112,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Relation) {
@@ -123,6 +126,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public int hashCode() {
 		/*

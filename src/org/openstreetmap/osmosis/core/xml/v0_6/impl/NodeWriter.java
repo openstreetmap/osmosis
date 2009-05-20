@@ -95,6 +95,7 @@ public class NodeWriter extends ElementWriter {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void setWriter(BufferedWriter writer) {
 		super.setWriter(writer);

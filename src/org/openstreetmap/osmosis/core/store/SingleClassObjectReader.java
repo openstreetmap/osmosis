@@ -34,6 +34,7 @@ public class SingleClassObjectReader extends BaseObjectReader {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected Class<?> readClassFromIdentifier(StoreReader sr, StoreClassRegister scr) {
 		// This implementation only stores a single type so no data read is

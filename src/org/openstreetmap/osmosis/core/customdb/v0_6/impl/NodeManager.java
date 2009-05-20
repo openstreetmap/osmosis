@@ -32,7 +32,7 @@ public class NodeManager implements EntityManager<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void addEntity(Node entity) {
 		throw new UnsupportedOperationException();
 	}
@@ -41,7 +41,7 @@ public class NodeManager implements EntityManager<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean exists(long id) {
 		// Check if the node id exists in the index.
 		try {
@@ -58,7 +58,7 @@ public class NodeManager implements EntityManager<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Node getEntity(long id) {
 		return storageContainer.getNodeObjectReader().get(
 				storageContainer.getNodeObjectOffsetIndexReader().get(id).getValue()
@@ -69,7 +69,7 @@ public class NodeManager implements EntityManager<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ReleasableIterator<Node> iterate() {
 		return new ReleasableAdaptorForIterator<Node>(
 				storageContainer.getNodeObjectReader().iterate());
@@ -79,7 +79,7 @@ public class NodeManager implements EntityManager<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void modifyEntity(Node entity) {
 		throw new UnsupportedOperationException();
 	}
@@ -88,7 +88,7 @@ public class NodeManager implements EntityManager<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void removeEntity(long entityId) {
 		throw new UnsupportedOperationException();
 	}

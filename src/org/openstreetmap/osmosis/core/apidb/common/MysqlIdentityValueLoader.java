@@ -88,7 +88,7 @@ public class MysqlIdentityValueLoader implements IdentityValueLoader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public long getLastSequenceId(String sequenceName) {
 		throw new UnsupportedOperationException();
 	}
@@ -97,7 +97,7 @@ public class MysqlIdentityValueLoader implements IdentityValueLoader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		statementContainer.release();
 	}

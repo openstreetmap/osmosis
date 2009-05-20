@@ -125,7 +125,7 @@ public class PersistentNodeLocationStore implements NodeLocationStore {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void addLocation(long nodeId, NodeLocation nodeLocation) {
 		long requiredFileOffset;
 		
@@ -179,7 +179,7 @@ public class PersistentNodeLocationStore implements NodeLocationStore {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public NodeLocation getNodeLocation(long nodeId) {
 		NodeLocation nodeLocation;
 		long offset;
@@ -216,7 +216,7 @@ public class PersistentNodeLocationStore implements NodeLocationStore {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		if (fileOutStream != null) {
 			try {

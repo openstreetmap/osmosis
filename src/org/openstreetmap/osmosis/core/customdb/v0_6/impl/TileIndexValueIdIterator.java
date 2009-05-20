@@ -31,7 +31,7 @@ public class TileIndexValueIdIterator implements ReleasableIterator<Long> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean hasNext() {
 		return source.hasNext();
 	}
@@ -40,7 +40,7 @@ public class TileIndexValueIdIterator implements ReleasableIterator<Long> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Long next() {
 		return source.next().getValue();
 	}
@@ -49,7 +49,7 @@ public class TileIndexValueIdIterator implements ReleasableIterator<Long> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void remove() {
 		source.remove();
 	}
@@ -58,7 +58,7 @@ public class TileIndexValueIdIterator implements ReleasableIterator<Long> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		// Do nothing.
 	}

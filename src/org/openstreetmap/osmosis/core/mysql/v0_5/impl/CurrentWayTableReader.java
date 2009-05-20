@@ -43,6 +43,7 @@ public class CurrentWayTableReader extends BaseEntityReader<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
@@ -52,6 +53,7 @@ public class CurrentWayTableReader extends BaseEntityReader<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<Way> createNextValue(ResultSet resultSet) {
 		long id;

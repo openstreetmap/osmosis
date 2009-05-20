@@ -47,8 +47,9 @@ public class WayNodeHistoryReader extends BaseTableReader<DbFeatureHistory<DbOrd
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
         try {
             PreparedStatement statement;
 
@@ -66,8 +67,9 @@ public class WayNodeHistoryReader extends BaseTableReader<DbFeatureHistory<DbOrd
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ReadResult<DbFeatureHistory<DbOrderedFeature<WayNode>>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<DbFeatureHistory<DbOrderedFeature<WayNode>>> createNextValue(ResultSet resultSet) {
         long wayId;
         long nodeId;
         int sequenceId;

@@ -44,7 +44,7 @@ public class CompletableContainer implements Completable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void complete() {
 		for (Completable object : objects) {
 			object.complete();
@@ -55,7 +55,7 @@ public class CompletableContainer implements Completable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		for (Releasable object : objects) {
 			object.release();

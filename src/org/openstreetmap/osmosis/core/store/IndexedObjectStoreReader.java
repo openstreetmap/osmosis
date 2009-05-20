@@ -60,7 +60,7 @@ public class IndexedObjectStoreReader<T> implements Releasable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		objectStoreReader.release();
 		indexStoreReader.release();

@@ -124,7 +124,7 @@ public class UserIdManager implements Releasable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		identityLoader.release();
 	}

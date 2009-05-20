@@ -23,6 +23,7 @@ public class WriteDatasetFactory extends TaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		String directoryName;

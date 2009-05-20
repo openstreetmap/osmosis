@@ -48,6 +48,7 @@ public class CurrentNodeReader extends BaseEntityReader<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
@@ -57,6 +58,7 @@ public class CurrentNodeReader extends BaseEntityReader<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<Node> createNextValue(ResultSet resultSet) {
 		long id;

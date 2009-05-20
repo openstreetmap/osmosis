@@ -62,6 +62,7 @@ public class RelationTableReader extends BaseTableReader<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		return queryDbCtx.executeQuery(sql);
@@ -71,6 +72,7 @@ public class RelationTableReader extends BaseTableReader<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<Relation> createNextValue(ResultSet resultSet) {
 		long id;

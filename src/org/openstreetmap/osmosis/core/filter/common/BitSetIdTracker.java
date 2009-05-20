@@ -75,7 +75,7 @@ public class BitSetIdTracker implements IdTracker {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Iterator<Long> iterator() {
 		return new IdIterator();
 	}
@@ -84,7 +84,7 @@ public class BitSetIdTracker implements IdTracker {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void setAll(IdTracker idTracker) {
 		for (Long id : idTracker) {
 			set(id);
@@ -126,7 +126,7 @@ public class BitSetIdTracker implements IdTracker {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public boolean hasNext() {
 			if (!nextIdAvailable) {
 				if (!readingPositive) {
@@ -166,7 +166,7 @@ public class BitSetIdTracker implements IdTracker {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public Long next() {
 			if (!hasNext()) {
 				throw new NoSuchElementException();
@@ -181,7 +181,7 @@ public class BitSetIdTracker implements IdTracker {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}

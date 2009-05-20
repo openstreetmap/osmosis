@@ -911,7 +911,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(BoundContainer bound) {
 		// Do nothing.
 	}
@@ -957,7 +957,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		statementContainer.release();
 		wayGeometryBuilder.release();

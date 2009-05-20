@@ -44,6 +44,7 @@ public class CurrentEntityTagTableReader extends BaseTableReader<DBEntityTag> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		return queryDbCtx.executeStreamingQuery(SELECT_SQL_1 + tableName + SELECT_SQL_2);
@@ -53,6 +54,7 @@ public class CurrentEntityTagTableReader extends BaseTableReader<DBEntityTag> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<DBEntityTag> createNextValue(ResultSet resultSet) {
 		long entityId;

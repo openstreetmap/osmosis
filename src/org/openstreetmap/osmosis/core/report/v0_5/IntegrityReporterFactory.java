@@ -22,6 +22,7 @@ public class IntegrityReporterFactory extends TaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		String fileName;

@@ -42,6 +42,7 @@ public class ChangeSinkRunnableChangeSourceManager extends ActiveTaskManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void connect(PipeTasks pipeTasks) {
 		ChangeSource source;
@@ -62,6 +63,7 @@ public class ChangeSinkRunnableChangeSourceManager extends ActiveTaskManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected Runnable getTask() {
 		return task;

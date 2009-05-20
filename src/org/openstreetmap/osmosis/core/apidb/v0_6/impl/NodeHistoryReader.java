@@ -50,8 +50,9 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
         try {
             PreparedStatement statement;
 
@@ -69,8 +70,9 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ReadResult<EntityHistory<Node>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<Node>> createNextValue(ResultSet resultSet) {
         long id;
         int version;
         Date timestamp;

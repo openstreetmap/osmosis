@@ -70,6 +70,7 @@ public class EntityTagHistoryReader extends BaseTableReader<EntityHistory<DBEnti
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		try {
@@ -94,6 +95,7 @@ public class EntityTagHistoryReader extends BaseTableReader<EntityHistory<DBEnti
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<EntityHistory<DBEntityTag>> createNextValue(ResultSet resultSet) {
 		long entityId;

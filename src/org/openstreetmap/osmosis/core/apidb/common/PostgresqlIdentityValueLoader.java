@@ -91,7 +91,7 @@ public class PostgresqlIdentityValueLoader implements IdentityValueLoader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public long getLastSequenceId(String sequenceName) {
 		ResultSet lastSequenceQuery;
 		
@@ -136,7 +136,7 @@ public class PostgresqlIdentityValueLoader implements IdentityValueLoader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		statementContainer.release();
 	}

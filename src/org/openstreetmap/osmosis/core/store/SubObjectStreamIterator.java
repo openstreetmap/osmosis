@@ -39,6 +39,7 @@ public class SubObjectStreamIterator<T extends Storeable> extends ObjectStreamIt
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public boolean hasNext() {
 		if (objectCount >= maxObjectCount) {
@@ -52,6 +53,7 @@ public class SubObjectStreamIterator<T extends Storeable> extends ObjectStreamIt
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public T next() {
 		T result;

@@ -30,6 +30,7 @@ public class XmlTimestampFormat extends TimestampFormat {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String formatTimestamp(Date timestamp) {
 		DateFormatter dateFormatter;
@@ -47,6 +48,7 @@ public class XmlTimestampFormat extends TimestampFormat {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public Date parseTimestamp(String timestamp) {
 		DateParser dateParser;

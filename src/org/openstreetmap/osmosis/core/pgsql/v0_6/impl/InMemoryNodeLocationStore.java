@@ -120,7 +120,7 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void addLocation(long nodeId, NodeLocation nodeLocation) {
 		int bufferIndex;
 		byte[] buffer;
@@ -153,7 +153,7 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public NodeLocation getNodeLocation(long nodeId) {
 		NodeLocation nodeLocation;
 		int bufferIndex;
@@ -196,7 +196,7 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		logMemoryConsumption(Level.FINE);
 	}

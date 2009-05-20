@@ -29,6 +29,7 @@ public class PostgreSqlDatasetDumpWriterFactory extends TaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		String filePrefixString;

@@ -56,7 +56,7 @@ public class TagRemover implements SinkSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(EntityContainer entityContainer) {
 		EntityContainer writeableContainer;
 		Entity entity;

@@ -29,7 +29,7 @@ public class DataPostboxChangeSink implements ChangeSink {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(ChangeContainer change) {
 		postbox.put(change);
 	}
@@ -38,7 +38,7 @@ public class DataPostboxChangeSink implements ChangeSink {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void complete() {
 		postbox.complete();
 	}
@@ -47,7 +47,7 @@ public class DataPostboxChangeSink implements ChangeSink {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		postbox.release();
 	}

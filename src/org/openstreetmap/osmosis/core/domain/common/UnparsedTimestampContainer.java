@@ -33,7 +33,7 @@ public class UnparsedTimestampContainer implements TimestampContainer {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public String getFormattedTimestamp(TimestampFormat timestampFormat) {
 		if (timestampString != null && managedTimestampFormat.isEquivalent(timestampFormat)) {
 			return timestampString;
@@ -53,7 +53,7 @@ public class UnparsedTimestampContainer implements TimestampContainer {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Date getTimestamp() {
 		if (timestamp == null && timestampString != null && timestampString.length() > 0) {
 			timestamp = managedTimestampFormat.parseTimestamp(timestampString);

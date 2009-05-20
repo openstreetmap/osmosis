@@ -37,7 +37,7 @@ public class ReplicationDbTruncator implements RunnableTask {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void run() {
 		DatabaseContext dbCtx = new DatabaseContext(loginCredentials);
 		

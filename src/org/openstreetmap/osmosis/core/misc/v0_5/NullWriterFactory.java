@@ -17,6 +17,7 @@ public class NullWriterFactory extends TaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		return new SinkManager(taskConfig.getId(), new NullWriter(), taskConfig.getPipeArgs());

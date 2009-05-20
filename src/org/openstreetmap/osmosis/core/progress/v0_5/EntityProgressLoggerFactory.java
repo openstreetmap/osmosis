@@ -19,6 +19,7 @@ public class EntityProgressLoggerFactory extends TaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		EntityProgressLogger task;

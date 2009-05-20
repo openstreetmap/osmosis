@@ -208,7 +208,7 @@ public class SimpleObjectStore<T extends Storeable> implements Completable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void complete() {
 		// Do nothing.
 	}

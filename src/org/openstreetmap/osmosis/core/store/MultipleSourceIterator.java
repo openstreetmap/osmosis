@@ -36,7 +36,7 @@ public class MultipleSourceIterator<T> implements ReleasableIterator<T> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean hasNext() {
 		while (sources.size() > 0) {
 			if (sources.get(0).hasNext()) {
@@ -53,7 +53,7 @@ public class MultipleSourceIterator<T> implements ReleasableIterator<T> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public T next() {
 		if (!hasNext()) {
 			throw new NoSuchElementException();
@@ -66,7 +66,7 @@ public class MultipleSourceIterator<T> implements ReleasableIterator<T> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}
@@ -75,7 +75,7 @@ public class MultipleSourceIterator<T> implements ReleasableIterator<T> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		for (ReleasableIterator<T> source : sources) {
 			source.release();

@@ -61,6 +61,7 @@ public class RelationReader  extends EntityReader<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected void populateEntityFeatures(Relation entity) {
 		long relationId;
@@ -97,6 +98,7 @@ public class RelationReader  extends EntityReader<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void release() {
 		super.release();

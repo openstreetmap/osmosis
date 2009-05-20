@@ -52,8 +52,9 @@ public class WayHistoryReader extends BaseEntityReader<EntityHistory<Way>> {
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
         try {
             PreparedStatement statement;
 
@@ -71,8 +72,9 @@ public class WayHistoryReader extends BaseEntityReader<EntityHistory<Way>> {
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ReadResult<EntityHistory<Way>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<Way>> createNextValue(ResultSet resultSet) {
         long id;
         int version;
         Date timestamp;

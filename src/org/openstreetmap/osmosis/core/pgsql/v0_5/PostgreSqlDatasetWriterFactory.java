@@ -19,6 +19,7 @@ public class PostgreSqlDatasetWriterFactory extends DatabaseTaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		DatabaseLoginCredentials loginCredentials;

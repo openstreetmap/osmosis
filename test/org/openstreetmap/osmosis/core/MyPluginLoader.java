@@ -18,7 +18,7 @@ public class MyPluginLoader implements PluginLoader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Map<String, TaskManagerFactory> loadTaskFactories() {
 		Map<String, TaskManagerFactory> taskFactories;
 		

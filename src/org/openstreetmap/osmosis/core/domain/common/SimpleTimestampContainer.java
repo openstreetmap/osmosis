@@ -28,7 +28,7 @@ public class SimpleTimestampContainer implements TimestampContainer {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public String getFormattedTimestamp(TimestampFormat timestampFormat) {
 		return timestampFormat.formatTimestamp(timestamp);
 	}
@@ -37,7 +37,7 @@ public class SimpleTimestampContainer implements TimestampContainer {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Date getTimestamp() {
 		return timestamp;
 	}

@@ -58,7 +58,7 @@ public class BaseDao implements Releasable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		statementContainer.release();
 	}

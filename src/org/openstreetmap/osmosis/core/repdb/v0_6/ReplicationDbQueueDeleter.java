@@ -41,7 +41,7 @@ public class ReplicationDbQueueDeleter implements RunnableTask {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void run() {
 		DatabaseContext dbCtx = new DatabaseContext(loginCredentials);
 		QueueManager queueMgr = new QueueManager(dbCtx); 

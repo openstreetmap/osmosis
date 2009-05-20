@@ -25,6 +25,7 @@ public class PolygonFilterFactory extends AreaFilterTaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		IdTrackerType idTrackerType;

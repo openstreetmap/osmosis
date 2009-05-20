@@ -27,7 +27,7 @@ public class BoundContainerIterator implements ReleasableIterator<BoundContainer
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean hasNext() {
 		return source.hasNext();
 	}
@@ -35,7 +35,7 @@ public class BoundContainerIterator implements ReleasableIterator<BoundContainer
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public BoundContainer next() {
 		return new BoundContainer(source.next());
 	}
@@ -43,7 +43,7 @@ public class BoundContainerIterator implements ReleasableIterator<BoundContainer
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void remove() {
 		source.remove();
 	}
@@ -52,7 +52,7 @@ public class BoundContainerIterator implements ReleasableIterator<BoundContainer
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		source.release();
 	}

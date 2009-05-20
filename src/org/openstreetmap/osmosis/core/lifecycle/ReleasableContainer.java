@@ -55,7 +55,7 @@ public class ReleasableContainer implements Releasable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		for (Releasable object : objects) {
 			object.release();

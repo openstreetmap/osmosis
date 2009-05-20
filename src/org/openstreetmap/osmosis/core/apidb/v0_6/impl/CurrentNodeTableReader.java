@@ -42,16 +42,18 @@ public class CurrentNodeTableReader extends BaseEntityReader<Node> {
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
         return queryDbCtx.executeQuery(SELECT_SQL);
     }
 
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ReadResult<Node> createNextValue(ResultSet resultSet) {
+	protected ReadResult<Node> createNextValue(ResultSet resultSet) {
         long id;
         int version;
         Date timestamp;

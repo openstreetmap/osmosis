@@ -54,6 +54,7 @@ public class PolygonFilter extends AreaFilter {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void process(BoundContainer boundContainer) {
 		Bound newBound = null;
@@ -126,6 +127,7 @@ public class PolygonFilter extends AreaFilter {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected boolean isNodeWithinArea(Node node) {
 		double latitude;

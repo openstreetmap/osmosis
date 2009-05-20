@@ -109,7 +109,7 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		buildEntity().store(sw, scr);
 	}
@@ -154,6 +154,7 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	 *            The id of the changeset that this version of the entity was created by.
 	 * @return This object allowing method chaining.
 	 */
+	
 	@Override
 	public RelationBuilder initialize(long newId, int newVersion, Date newTimestamp, OsmUser newUser,
 			long newChangesetId) {
@@ -180,6 +181,7 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	 *            The id of the changeset that this version of the entity was created by.
 	 * @return This object allowing method chaining.
 	 */
+	
 	@Override
 	public RelationBuilder initialize(long newId, int newVersion, TimestampContainer newTimestampContainer,
 			OsmUser newUser, long newChangesetId) {
@@ -244,6 +246,7 @@ public class RelationBuilder extends EntityBuilder<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public Relation buildEntity() {
 		return new Relation(id, version, timestampContainer, user, changesetId, tags, members);
@@ -252,8 +255,9 @@ public class RelationBuilder extends EntityBuilder<Relation> {
     /** 
      * ${@inheritDoc}.
      */
+    
     @Override
-    public String toString() {
+	public String toString() {
         String type = null;
         for (Tag tag : tags) {
             if (tag.getKey() != null && tag.getKey().equalsIgnoreCase("type")) {

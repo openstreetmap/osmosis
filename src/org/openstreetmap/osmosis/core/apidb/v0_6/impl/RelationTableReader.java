@@ -39,16 +39,18 @@ public class RelationTableReader extends BaseEntityReader<EntityHistory<Relation
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
         return queryDbCtx.executeQuery(SELECT_SQL);
     }
 
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ReadResult<EntityHistory<Relation>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<Relation>> createNextValue(ResultSet resultSet) {
         long id;
         int version;
         Date timestamp;

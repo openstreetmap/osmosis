@@ -60,6 +60,7 @@ public class WayNodeTableReader extends BaseTableReader<DBWayNode> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		return queryDbCtx.executeQuery(sql);
@@ -69,6 +70,7 @@ public class WayNodeTableReader extends BaseTableReader<DBWayNode> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<DBWayNode> createNextValue(ResultSet resultSet) {
 		long wayId;

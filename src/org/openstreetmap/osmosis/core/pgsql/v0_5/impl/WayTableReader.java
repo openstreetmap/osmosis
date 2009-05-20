@@ -61,6 +61,7 @@ public class WayTableReader extends BaseTableReader<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		return queryDbCtx.executeQuery(sql);
@@ -70,6 +71,7 @@ public class WayTableReader extends BaseTableReader<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<Way> createNextValue(ResultSet resultSet) {
 		long id;

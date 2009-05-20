@@ -55,7 +55,7 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void setSink(Sink sink) {
 		this.sink = sink;
 	}
@@ -64,7 +64,7 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(Dataset dataset) {
 		ReleasableIterator<EntityContainer> bboxData;
 		
@@ -92,7 +92,7 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		if (datasetReader != null) {
 			datasetReader.release();

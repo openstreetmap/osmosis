@@ -55,6 +55,7 @@ public class WayContainer extends EntityContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void process(EntityProcessor processor) {
 		processor.process(this);
@@ -64,6 +65,7 @@ public class WayContainer extends EntityContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public Way getEntity() {
 		return way;
@@ -73,6 +75,7 @@ public class WayContainer extends EntityContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public WayContainer getWriteableInstance() {
 		if (way.isReadOnly()) {

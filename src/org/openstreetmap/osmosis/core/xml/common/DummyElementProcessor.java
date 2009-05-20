@@ -51,6 +51,7 @@ public class DummyElementProcessor extends BaseElementProcessor {
 	 *            The element qName.
 	 * @return This instance.
 	 */
+	
 	@Override
 	public ElementProcessor getChild(String uri, String localName, String qName) {
 		nestedElementCount++;
@@ -65,6 +66,7 @@ public class DummyElementProcessor extends BaseElementProcessor {
 	 * 
 	 * @return The element processor for the parent of the current element.
 	 */
+	
 	@Override
 	public ElementProcessor getParent() {
 		if (nestedElementCount > 0) {

@@ -43,6 +43,7 @@ public class RelationTableReader extends BaseEntityReader<EntityHistory<Relation
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
@@ -52,6 +53,7 @@ public class RelationTableReader extends BaseEntityReader<EntityHistory<Relation
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<EntityHistory<Relation>> createNextValue(ResultSet resultSet) {
 		long id;

@@ -36,6 +36,7 @@ public class SingleClassObjectWriter extends BaseObjectWriter {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected void writeClassIdentifier(StoreWriter sw, StoreClassRegister scr, Class<?> clazz) {
 		// We don't need to write anything, we just need to verify that the

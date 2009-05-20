@@ -34,6 +34,7 @@ public abstract class PassiveTaskManager extends TaskManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void execute() {
 		// Nothing to do for a sink because it passively receives data.
@@ -44,6 +45,7 @@ public abstract class PassiveTaskManager extends TaskManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public boolean waitForCompletion() {
 		// Nothing to do for a sink because it passively receives data.

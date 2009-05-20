@@ -124,7 +124,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	@Deprecated
 	public Node getNode(long id) {
 		return getNodeManager().getEntity(id);
@@ -134,7 +134,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	@Deprecated
 	public Way getWay(long id) {
 		return getWayManager().getEntity(id);
@@ -144,7 +144,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	@Deprecated
 	public Relation getRelation(long id) {
 		return getRelationManager().getEntity(id);
@@ -154,7 +154,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public EntityManager<Node> getNodeManager() {
 		if (!initialized) {
 			initialize();
@@ -167,7 +167,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public EntityManager<Way> getWayManager() {
 		if (!initialized) {
 			initialize();
@@ -180,7 +180,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public EntityManager<Relation> getRelationManager() {
 		if (!initialized) {
 			initialize();
@@ -193,7 +193,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ReleasableIterator<EntityContainer> iterate() {
 		List<Bound> bounds;
 		List<ReleasableIterator<EntityContainer>> sources;
@@ -224,7 +224,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ReleasableIterator<EntityContainer> iterateBoundingBox(
 			double left, double right, double top, double bottom, boolean completeWays) {
 		List<Bound> bounds;
@@ -431,7 +431,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void complete() {
 		if (dbCtx != null) {
 			dbCtx.commit();
@@ -442,7 +442,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		releasableContainer.release();
 		releasableContainer.clear();

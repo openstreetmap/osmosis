@@ -107,6 +107,7 @@ public class Bound extends Entity implements Comparable<Bound> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		super.store(sw, scr);
@@ -122,6 +123,7 @@ public class Bound extends Entity implements Comparable<Bound> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public EntityType getType() {
 		return EntityType.Bound;
@@ -461,6 +463,7 @@ public class Bound extends Entity implements Comparable<Bound> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Bound) {
@@ -474,6 +477,7 @@ public class Bound extends Entity implements Comparable<Bound> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public int hashCode() {
 		/*
@@ -489,6 +493,7 @@ public class Bound extends Entity implements Comparable<Bound> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public Bound getWriteableInstance() {
 		return this;
@@ -497,8 +502,9 @@ public class Bound extends Entity implements Comparable<Bound> {
     /** 
      * ${@inheritDoc}.
      */
+    
     @Override
-    public String toString() {
+	public String toString() {
         return "Bound(top=" + getTop() + ", bottom=" + getBottom() + ", left=" + getLeft() + ", right=" + getRight()
 				+ ")";
     }

@@ -20,6 +20,7 @@ public class WayNodeMapper extends EntityFeatureMapper<DbOrderedFeature<WayNode>
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getParentEntityName() {
 		return "way";
@@ -29,6 +30,7 @@ public class WayNodeMapper extends EntityFeatureMapper<DbOrderedFeature<WayNode>
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getEntityName() {
 		return "way_nodes";
@@ -38,6 +40,7 @@ public class WayNodeMapper extends EntityFeatureMapper<DbOrderedFeature<WayNode>
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getSqlSelect(boolean filterByEntityId, boolean orderBy) {
 		StringBuilder resultSql;
@@ -59,6 +62,7 @@ public class WayNodeMapper extends EntityFeatureMapper<DbOrderedFeature<WayNode>
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getSqlDefaultOrderBy() {
 		return super.getSqlDefaultOrderBy() + ", sequence_id";
@@ -68,6 +72,7 @@ public class WayNodeMapper extends EntityFeatureMapper<DbOrderedFeature<WayNode>
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getSqlInsert(int rowCount) {
 		StringBuilder resultSql;
@@ -89,6 +94,7 @@ public class WayNodeMapper extends EntityFeatureMapper<DbOrderedFeature<WayNode>
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getSqlDelete(boolean filterByEntityId) {
 		StringBuilder resultSql;
@@ -106,6 +112,7 @@ public class WayNodeMapper extends EntityFeatureMapper<DbOrderedFeature<WayNode>
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public DbOrderedFeature<WayNode> buildEntity(ResultSet resultSet) {
 		try {
@@ -126,6 +133,7 @@ public class WayNodeMapper extends EntityFeatureMapper<DbOrderedFeature<WayNode>
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public int populateEntityParameters(
 			PreparedStatement statement, int initialIndex, DbOrderedFeature<WayNode> entityFeature) {

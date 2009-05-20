@@ -85,6 +85,7 @@ public class Way extends Entity implements Comparable<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		super.store(sw, scr);
@@ -99,6 +100,7 @@ public class Way extends Entity implements Comparable<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public EntityType getType() {
 		return EntityType.Way;
@@ -108,6 +110,7 @@ public class Way extends Entity implements Comparable<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Way) {
@@ -121,6 +124,7 @@ public class Way extends Entity implements Comparable<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public int hashCode() {
 		/*

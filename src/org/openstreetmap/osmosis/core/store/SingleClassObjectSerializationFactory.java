@@ -27,7 +27,7 @@ public class SingleClassObjectSerializationFactory implements ObjectSerializatio
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ObjectReader createObjectReader(StoreReader storeReader, StoreClassRegister storeClassRegister) {
 		return new SingleClassObjectReader(storeReader, storeClassRegister, storeableType);
 	}
@@ -36,7 +36,7 @@ public class SingleClassObjectSerializationFactory implements ObjectSerializatio
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ObjectWriter createObjectWriter(StoreWriter storeWriter, StoreClassRegister storeClassRegister) {
 		return new SingleClassObjectWriter(storeWriter, storeClassRegister, storeableType);
 	}

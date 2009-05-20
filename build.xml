@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="Osmosis" default="all" basedir="."
+<project name="Osmosis-1.5" default="all" basedir="."
 	xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
 	
 	<description>
@@ -46,7 +46,7 @@
 		<mkdir dir="build"/>
 		<mkdir dir="build/src"/>
 		<!-- Compile the java code from src into build/src -->
-		<javac srcdir="src" destdir="build/src" debug="on" debuglevel="lines,vars,source" classpathref="classpath.compile"/>
+		<javac srcdir="src" destdir="build/src" debug="on" debuglevel="lines,vars,source" classpathref="classpath.compile" source="1.5"/>
 		<!-- Copy all resource files from src into build/src -->
 		<copy todir="build/src">
 			<fileset dir="src">
@@ -69,7 +69,7 @@
 		<replace token="%VERSION%" value="${project.version}" dir="test/data/input"/>
 		
 		<!-- Compile the java test code with the main project classes as a dependency. -->
-		<javac srcdir="test" destdir="build/test" debug="on" debuglevel="lines,vars,source">
+		<javac srcdir="test" destdir="build/test" debug="on" debuglevel="lines,vars,source" source="1.5">
 			<classpath>
 				<path refid="classpath.test"/>
 				<path location="build/src"/>
@@ -190,7 +190,7 @@
 	<!-- Runs all of the unit tests in the application. -->
 	<target name="test" depends="build_test" description="Run automated test cases.">
 		<mkdir dir="report/test"/>
-		<junit fork="no" maxmemory="512m" printsummary="on" haltonerror="off" haltonfailure="off" filtertrace="on" failureproperty="test.failure">
+		<junit fork="no" maxmemory="512m" printsummary="on" haltonerror="off" haltonfailure="off" filtertrace="on" failureproperty="test.failure" >
 			<formatter type="plain" usefile="true"/>
 			<formatter type="xml" usefile="true"/>
 			<classpath>

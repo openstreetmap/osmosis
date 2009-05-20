@@ -32,7 +32,7 @@ public class MigrateV05ToV06 implements Sink05Source06, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(EntityContainer entityContainer) {
 		entityContainer.process(this);
 	}
@@ -41,7 +41,7 @@ public class MigrateV05ToV06 implements Sink05Source06, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(BoundContainer bound) {
 		sink.process(migrater.migrate(bound));
 	}
@@ -50,7 +50,7 @@ public class MigrateV05ToV06 implements Sink05Source06, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(NodeContainer node) {
 		sink.process(migrater.migrate(node));
 	}
@@ -59,7 +59,7 @@ public class MigrateV05ToV06 implements Sink05Source06, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(WayContainer way) {
 		sink.process(migrater.migrate(way));
 	}
@@ -68,7 +68,7 @@ public class MigrateV05ToV06 implements Sink05Source06, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(RelationContainer relation) {
 		sink.process(migrater.migrate(relation));
 	}
@@ -77,7 +77,7 @@ public class MigrateV05ToV06 implements Sink05Source06, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void complete() {
 		sink.complete();
 	}
@@ -86,7 +86,7 @@ public class MigrateV05ToV06 implements Sink05Source06, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		sink.release();
 	}
@@ -95,7 +95,7 @@ public class MigrateV05ToV06 implements Sink05Source06, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void setSink(org.openstreetmap.osmosis.core.task.v0_6.Sink sink) {
 		this.sink = sink;
 	}

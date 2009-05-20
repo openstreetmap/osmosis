@@ -41,6 +41,7 @@ public class SinkManager extends PassiveTaskManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void connect(PipeTasks pipeTasks) {
 		Source source;

@@ -72,7 +72,7 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public File getNodeObjectFile() {
 		if (nodeObjectFile == null) {
 			nodeObjectFile = createTempFile("dsno");
@@ -85,7 +85,7 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public File getNodeObjectOffsetIndexFile() {
 		if (nodeObjectOffsetIndexFile == null) {
 			nodeObjectOffsetIndexFile = createTempFile("dsnooi");
@@ -98,7 +98,7 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public File getNodeTileIndexFile() {
 		if (nodeTileIndexFile == null) {
 			nodeTileIndexFile = createTempFile("dsnti");
@@ -111,7 +111,7 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public File getWayObjectFile() {
 		if (wayObjectFile == null) {
 			wayObjectFile = createTempFile("dswo");
@@ -124,7 +124,7 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public File getWayObjectOffsetIndexFile() {
 		if (wayObjectOffsetIndexFile == null) {
 			wayObjectOffsetIndexFile = createTempFile("dswooi");
@@ -137,7 +137,7 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public File getWayTileIndexFile(int instance) {
 		if (!wayTileIndexFileMap.containsKey(instance)) {
 			wayTileIndexFileMap.put(instance, createTempFile("dswti"));
@@ -150,7 +150,7 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public File getNodeWayIndexFile() {
 		if (nodeWayIndexFile == null) {
 			nodeWayIndexFile = createTempFile("dsnwi");
@@ -163,7 +163,7 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public File getRelationObjectFile() {
 		if (relationObjectFile == null) {
 			relationObjectFile = createTempFile("dsro");
@@ -176,7 +176,7 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public File getRelationObjectOffsetIndexFile() {
 		if (relationObjectOffsetIndexFile == null) {
 			relationObjectOffsetIndexFile = createTempFile("dsrooi");
@@ -189,7 +189,7 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public File getNodeRelationIndexFile() {
 		if (nodeRelationIndexFile == null) {
 			nodeRelationIndexFile = createTempFile("dsnri");
@@ -202,7 +202,7 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public File getWayRelationIndexFile() {
 		if (wayRelationIndexFile == null) {
 			wayRelationIndexFile = createTempFile("dswri");
@@ -215,7 +215,7 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public File getRelationRelationIndexFile() {
 		if (relationRelationIndexFile == null) {
 			relationRelationIndexFile = createTempFile("dsrri");
@@ -228,7 +228,7 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		for (File file : allFiles) {
 			if (!file.delete()) {

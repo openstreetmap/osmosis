@@ -41,7 +41,7 @@ public class ChangeAppender implements MultiChangeSinkRunnableChangeSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ChangeSink getChangeSink(int instance) {
 		if (instance < 0 || instance >= sources.size()) {
 			throw new OsmosisRuntimeException("Sink instance " + instance + " is not valid.");
@@ -54,7 +54,7 @@ public class ChangeAppender implements MultiChangeSinkRunnableChangeSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public int getChangeSinkCount() {
 		return sources.size();
 	}
@@ -63,7 +63,7 @@ public class ChangeAppender implements MultiChangeSinkRunnableChangeSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void setChangeSink(ChangeSink changeSink) {
 		this.changeSink = changeSink;
 	}
@@ -72,7 +72,7 @@ public class ChangeAppender implements MultiChangeSinkRunnableChangeSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void run() {
 		boolean completed = false;
 		

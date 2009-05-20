@@ -190,7 +190,7 @@ public class WayGeometryBuilder implements Releasable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		locationStore.release();
 	}

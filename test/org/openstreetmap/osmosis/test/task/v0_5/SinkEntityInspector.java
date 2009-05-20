@@ -27,7 +27,7 @@ public class SinkEntityInspector implements Sink {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void complete() {
 		// Nothing to do here
 	}
@@ -39,7 +39,7 @@ public class SinkEntityInspector implements Sink {
 	 * @param entityContainer
 	 *            The entity to be processed.
 	 */
-	@Override
+	
 	public void process(EntityContainer entityContainer) {
 		initialize();
 		processedEntities.add(entityContainer);
@@ -49,7 +49,7 @@ public class SinkEntityInspector implements Sink {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		// Nothing to do here
 	}

@@ -70,6 +70,7 @@ public class EntityFeatureTableReader<Tef extends Storeable, Tdb extends DbFeatu
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		return queryDbCtx.executeQuery(sql);
@@ -79,6 +80,7 @@ public class EntityFeatureTableReader<Tef extends Storeable, Tdb extends DbFeatu
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<Tdb> createNextValue(ResultSet resultSet) {
 		return new ReadResult<Tdb>(

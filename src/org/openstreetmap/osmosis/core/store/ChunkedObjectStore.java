@@ -154,7 +154,7 @@ public class ChunkedObjectStore<T extends Storeable> implements Completable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void complete() {
 		// Any outstanding chunks must be closed before we can complete.
 		closeChunk();

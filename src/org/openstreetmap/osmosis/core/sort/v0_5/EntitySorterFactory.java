@@ -78,6 +78,7 @@ public class EntitySorterFactory extends TaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		Comparator<EntityContainer> comparator;

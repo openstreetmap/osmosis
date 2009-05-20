@@ -88,6 +88,7 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public int read() throws IOException {
 		return readerList.get(0).read();
@@ -97,6 +98,7 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public int read(byte[] b) throws IOException {
 		return read(b, 0, b.length);
@@ -106,6 +108,7 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public int read(byte[] b, int off, int len) throws IOException {
 		return readerList.get(0).read(b, off, len);
@@ -177,6 +180,7 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void close() throws IOException {
 		randomFile.close();

@@ -9,6 +9,7 @@ public class ListIdTrackerTest extends IdTrackerBase {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected IdTracker getImplementation() {
 		return new ListIdTracker();

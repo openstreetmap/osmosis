@@ -68,6 +68,7 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReleasableIterator<Long> getNodeIdsForTileRange(int minimumTile, int maximumTile) {
 		return new TileIndexValueIdIterator(
@@ -78,6 +79,7 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReleasableIterator<Long> getWayIdsForTileRange(int minimumTile, int maximumTile) {
 		return new ReleasableAdaptorForIterator<Long>(
@@ -88,6 +90,7 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReleasableIterator<Long> getWayIdsOwningNode(long nodeId) {
 		return new RelationalIndexValueIdIterator(
@@ -98,6 +101,7 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReleasableIterator<Long> getRelationIdsOwningNode(long nodeId) {
 		return new RelationalIndexValueIdIterator(
@@ -108,6 +112,7 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReleasableIterator<Long> getRelationIdsOwningWay(long wayId) {
 		return new RelationalIndexValueIdIterator(
@@ -118,6 +123,7 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReleasableIterator<Long> getRelationIdsOwningRelation(long relationId) {
 		return new RelationalIndexValueIdIterator(
@@ -128,6 +134,7 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected boolean isTileWayIndexAvailable() {
 		return enableWayTileIndex;
@@ -137,7 +144,7 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Node getNode(long id) {
 		return nodeStorageContainer.getNodeObjectReader().get(
 			nodeStorageContainer.getNodeObjectOffsetIndexReader().get(id).getValue()
@@ -148,7 +155,7 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Way getWay(long id) {
 		return wayStorageContainer.getWayObjectReader().get(
 			wayStorageContainer.getWayObjectOffsetIndexReader().get(id).getValue()
@@ -159,7 +166,7 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Relation getRelation(long id) {
 		return relationStorageContainer.getRelationObjectReader().get(
 			relationStorageContainer.getRelationObjectOffsetIndexReader().get(id).getValue()
@@ -170,7 +177,7 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ReleasableIterator<EntityContainer> iterate() {
 		List<ReleasableIterator<EntityContainer>> sources;
 		
@@ -199,7 +206,7 @@ public class DatasetStoreReader extends BaseDatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		nodeStorageContainer.release();
 		wayStorageContainer.release();

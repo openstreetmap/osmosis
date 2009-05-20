@@ -2,4 +2,4 @@ host=localhost
 database=api06_test
 user=osm
 password=password
-db=postgresql
+dbType=postgresql

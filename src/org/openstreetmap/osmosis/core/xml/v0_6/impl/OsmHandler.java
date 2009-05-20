@@ -68,6 +68,7 @@ public class OsmHandler extends DefaultHandler {
 	 * @param attributes
 	 *            The attributes.
 	 */
+	
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		// Get the appropriate element processor for the element.
@@ -102,6 +103,7 @@ public class OsmHandler extends DefaultHandler {
 	 * @param qName
 	 *            The qName.
 	 */
+	
 	@Override
 	public void endElement(String uri, String localName, String qName) {
 		// Tell the currently active element processor to complete its processing.
@@ -119,6 +121,7 @@ public class OsmHandler extends DefaultHandler {
 	 * @param documentLocator
 	 *            The document locator.
 	 */
+	
 	@Override
 	public void setDocumentLocator(Locator documentLocator) {
 		this.documentLocator = documentLocator;
@@ -134,6 +137,7 @@ public class OsmHandler extends DefaultHandler {
 	 * @throws SAXException
 	 *             if the error reporting throws an exception.
 	 */
+	
 	@Override
 	public void error(SAXParseException e) throws SAXException {
 		LOG.severe(

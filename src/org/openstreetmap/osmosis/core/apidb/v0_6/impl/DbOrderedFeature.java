@@ -55,6 +55,7 @@ public class DbOrderedFeature<T extends Storeable> extends DbFeature<T> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		super.store(sw, scr);

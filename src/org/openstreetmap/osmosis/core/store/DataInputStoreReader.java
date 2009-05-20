@@ -31,7 +31,7 @@ public class DataInputStoreReader implements StoreReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean readBoolean() {
 		try {
 			return input.readBoolean();
@@ -47,7 +47,7 @@ public class DataInputStoreReader implements StoreReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public byte readByte() {
 		try {
 			return input.readByte();
@@ -64,7 +64,7 @@ public class DataInputStoreReader implements StoreReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public char readCharacter() {
 		try {
 			return input.readChar();
@@ -81,7 +81,7 @@ public class DataInputStoreReader implements StoreReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public int readInteger() {
 		try {
 			return input.readInt();
@@ -98,7 +98,7 @@ public class DataInputStoreReader implements StoreReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public long readLong() {
 		try {
 			return input.readLong();
@@ -115,7 +115,7 @@ public class DataInputStoreReader implements StoreReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public double readDouble() {
 		try {
 			return input.readDouble();
@@ -132,7 +132,7 @@ public class DataInputStoreReader implements StoreReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public String readString() {
 		try {
 			return input.readUTF();

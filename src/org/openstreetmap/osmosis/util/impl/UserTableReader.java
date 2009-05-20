@@ -35,6 +35,7 @@ public class UserTableReader extends BaseTableReader<User> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
@@ -44,6 +45,7 @@ public class UserTableReader extends BaseTableReader<User> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected BaseTableReader.ReadResult<User> createNextValue(ResultSet resultSet) {
 		long id;

@@ -62,6 +62,7 @@ public class WayDao extends EntityDao<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected void loadFeatures(long entityId, Way entity) {
 		entity.getWayNodes().addAll(wayNodeDao.getAllRaw(entityId));
@@ -134,6 +135,7 @@ public class WayDao extends EntityDao<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void addEntity(Way entity) {
 		super.addEntity(entity);
@@ -147,6 +149,7 @@ public class WayDao extends EntityDao<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void modifyEntity(Way entity) {
 		long wayId;
@@ -164,6 +167,7 @@ public class WayDao extends EntityDao<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void removeEntity(long entityId) {
 		wayNodeDao.removeList(entityId);
@@ -175,6 +179,7 @@ public class WayDao extends EntityDao<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public ReleasableIterator<Way> iterate() {
 		return new WayReader(getDatabaseContext());

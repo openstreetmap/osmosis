@@ -89,6 +89,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 	 *            The element qName.
 	 * @return The appropriate element processor for the nested element.
 	 */
+	
 	@Override
 	public ElementProcessor getChild(String uri, String localName, String qName) {
 		if (ELEMENT_NAME_NODE.equals(qName)) {

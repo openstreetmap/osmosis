@@ -45,7 +45,7 @@ public class EntityContainerMigrater implements EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(org.openstreetmap.osmosis.core.container.v0_5.BoundContainer entityContainer) {
 		resultContainer.set(
 			new BoundContainer(migrater.migrate(entityContainer.getEntity()))
@@ -56,7 +56,7 @@ public class EntityContainerMigrater implements EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(org.openstreetmap.osmosis.core.container.v0_5.NodeContainer entityContainer) {
 		resultContainer.set(
 			new NodeContainer(migrater.migrate(entityContainer.getEntity()))
@@ -67,7 +67,7 @@ public class EntityContainerMigrater implements EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(org.openstreetmap.osmosis.core.container.v0_5.WayContainer entityContainer) {
 		resultContainer.set(
 			new WayContainer(migrater.migrate(entityContainer.getEntity()))
@@ -78,7 +78,7 @@ public class EntityContainerMigrater implements EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(org.openstreetmap.osmosis.core.container.v0_5.RelationContainer entityContainer) {
 		resultContainer.set(
 			new RelationContainer(migrater.migrate(entityContainer.getEntity()))

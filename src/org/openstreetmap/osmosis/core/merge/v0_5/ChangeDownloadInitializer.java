@@ -80,7 +80,7 @@ public class ChangeDownloadInitializer implements RunnableTask {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void run() {
 		FileBasedLock fileLock;
 		

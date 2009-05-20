@@ -201,7 +201,7 @@ public class ListIdTracker implements IdTracker {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Iterator<Long> iterator() {
 		// If the list is not sorted, it must be sorted prior to data being
 		// returned.
@@ -214,7 +214,7 @@ public class ListIdTracker implements IdTracker {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void setAll(IdTracker idTracker) {
 		for (Long id : idTracker) {
 			set(id);
@@ -243,7 +243,7 @@ public class ListIdTracker implements IdTracker {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public boolean hasNext() {
 			return (iteratorOffset < idOffset);
 		}
@@ -252,7 +252,7 @@ public class ListIdTracker implements IdTracker {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public Long next() {
 			if (!hasNext()) {
 				throw new NoSuchElementException();
@@ -265,7 +265,7 @@ public class ListIdTracker implements IdTracker {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}

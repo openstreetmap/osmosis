@@ -34,6 +34,7 @@ public class NodeMapper extends EntityMapper<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getEntityName() {
 		return "node";
@@ -43,6 +44,7 @@ public class NodeMapper extends EntityMapper<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public ActionDataType getEntityType() {
 		return ActionDataType.NODE;
@@ -52,6 +54,7 @@ public class NodeMapper extends EntityMapper<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public Class<Node> getEntityClass() {
 		return Node.class;
@@ -61,6 +64,7 @@ public class NodeMapper extends EntityMapper<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected String[] getTypeSpecificFieldNames() {
 		return new String[] {"geom"};
@@ -70,6 +74,7 @@ public class NodeMapper extends EntityMapper<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public Node parseRecord(ResultSet resultSet) {
 		try {
@@ -98,6 +103,7 @@ public class NodeMapper extends EntityMapper<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public int populateEntityParameters(PreparedStatement statement, int initialIndex, Node node) {
 		int prmIndex;

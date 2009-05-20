@@ -23,6 +23,7 @@ public class XmlChangeWriterFactory extends XmlTaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		String fileName;

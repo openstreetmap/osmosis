@@ -229,7 +229,7 @@ public class IndexStoreReader<K, T extends IndexElement<K>> implements Releasabl
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		indexStoreReader.release();
 	}

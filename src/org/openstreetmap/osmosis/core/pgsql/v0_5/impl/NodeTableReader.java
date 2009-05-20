@@ -64,6 +64,7 @@ public class NodeTableReader extends BaseTableReader<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		return queryDbCtx.executeQuery(sql);
@@ -73,6 +74,7 @@ public class NodeTableReader extends BaseTableReader<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<Node> createNextValue(ResultSet resultSet) {
 		long id;

@@ -41,6 +41,7 @@ public class RunnableSourceManager extends ActiveTaskManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void connect(PipeTasks pipeTasks) {
 		// Register the task as an output. A source only has one output, this
@@ -52,6 +53,7 @@ public class RunnableSourceManager extends ActiveTaskManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected Runnable getTask() {
 		return task;

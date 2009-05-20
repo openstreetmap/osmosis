@@ -39,6 +39,7 @@ public class RunnableTaskManager extends ActiveTaskManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void connect(PipeTasks pipeTasks) {
 		// This type of task has no inputs or outputs.
@@ -48,6 +49,7 @@ public class RunnableTaskManager extends ActiveTaskManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected Runnable getTask() {
 		return task;

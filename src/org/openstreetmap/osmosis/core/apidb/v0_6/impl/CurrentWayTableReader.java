@@ -39,16 +39,18 @@ public class CurrentWayTableReader extends BaseEntityReader<Way> {
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
         return queryDbCtx.executeQuery(SELECT_SQL);
     }
 
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ReadResult<Way> createNextValue(ResultSet resultSet) {
+	protected ReadResult<Way> createNextValue(ResultSet resultSet) {
         long id;
         int version;
         Date timestamp;

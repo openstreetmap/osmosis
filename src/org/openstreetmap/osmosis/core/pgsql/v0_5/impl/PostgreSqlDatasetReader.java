@@ -99,7 +99,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Node getNode(long id) {
 		if (!initialized) {
 			initialize();
@@ -112,7 +112,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Way getWay(long id) {
 		if (!initialized) {
 			initialize();
@@ -125,7 +125,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Relation getRelation(long id) {
 		if (!initialized) {
 			initialize();
@@ -138,7 +138,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ReleasableIterator<EntityContainer> iterate() {
 		List<ReleasableIterator<EntityContainer>> sources;
 		
@@ -165,7 +165,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ReleasableIterator<EntityContainer> iterateBoundingBox(
 			double left, double right, double top, double bottom, boolean completeWays) {
 		PreparedStatement preparedStatement = null;
@@ -336,7 +336,7 @@ public class PostgreSqlDatasetReader implements DatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		if (nodeDao != null) {
 			nodeDao.release();

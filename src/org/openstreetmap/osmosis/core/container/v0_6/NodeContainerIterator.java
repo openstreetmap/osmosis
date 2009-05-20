@@ -27,7 +27,7 @@ public class NodeContainerIterator implements ReleasableIterator<NodeContainer> 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean hasNext() {
 		return source.hasNext();
 	}
@@ -35,7 +35,7 @@ public class NodeContainerIterator implements ReleasableIterator<NodeContainer> 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public NodeContainer next() {
 		return new NodeContainer(source.next());
 	}
@@ -43,7 +43,7 @@ public class NodeContainerIterator implements ReleasableIterator<NodeContainer> 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void remove() {
 		source.remove();
 	}
@@ -52,7 +52,7 @@ public class NodeContainerIterator implements ReleasableIterator<NodeContainer> 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		source.release();
 	}

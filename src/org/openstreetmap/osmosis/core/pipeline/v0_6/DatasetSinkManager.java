@@ -41,6 +41,7 @@ public class DatasetSinkManager extends PassiveTaskManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void connect(PipeTasks pipeTasks) {
 		DatasetSource source;

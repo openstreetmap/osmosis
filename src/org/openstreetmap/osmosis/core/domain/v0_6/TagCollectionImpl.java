@@ -63,7 +63,7 @@ public class TagCollectionImpl extends CollectionWrapper<Tag> implements TagColl
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		sw.writeCharacter(IntAsChar.intToChar(size()));
 		for (Tag tag : this) {

@@ -32,7 +32,7 @@ public class RelationManager implements EntityManager<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void addEntity(Relation entity) {
 		throw new UnsupportedOperationException();
 	}
@@ -41,7 +41,7 @@ public class RelationManager implements EntityManager<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean exists(long id) {
 		// Check if the node id exists in the index.
 		try {
@@ -58,7 +58,7 @@ public class RelationManager implements EntityManager<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Relation getEntity(long id) {
 		return storageContainer.getRelationObjectReader().get(
 				storageContainer.getRelationObjectOffsetIndexReader().get(id).getValue()
@@ -69,7 +69,7 @@ public class RelationManager implements EntityManager<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ReleasableIterator<Relation> iterate() {
 		return new ReleasableAdaptorForIterator<Relation>(
 				storageContainer.getRelationObjectReader().iterate());
@@ -79,7 +79,7 @@ public class RelationManager implements EntityManager<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void modifyEntity(Relation entity) {
 		throw new UnsupportedOperationException();
 	}
@@ -88,7 +88,7 @@ public class RelationManager implements EntityManager<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void removeEntity(long entityId) {
 		throw new UnsupportedOperationException();
 	}

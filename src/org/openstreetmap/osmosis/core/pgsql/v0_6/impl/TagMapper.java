@@ -34,6 +34,7 @@ public class TagMapper extends EntityFeatureMapper<DbFeature<Tag>> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getParentEntityName() {
 		return parentEntityName;
@@ -43,6 +44,7 @@ public class TagMapper extends EntityFeatureMapper<DbFeature<Tag>> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getEntityName() {
 		return parentEntityName + "_tags";
@@ -52,6 +54,7 @@ public class TagMapper extends EntityFeatureMapper<DbFeature<Tag>> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getSqlSelect(boolean filterByEntityId, boolean orderBy) {
 		StringBuilder resultSql;
@@ -73,6 +76,7 @@ public class TagMapper extends EntityFeatureMapper<DbFeature<Tag>> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getSqlInsert(int rowCount) {
 		StringBuilder resultSql;
@@ -94,6 +98,7 @@ public class TagMapper extends EntityFeatureMapper<DbFeature<Tag>> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getSqlDelete(boolean filterByEntityId) {
 		StringBuilder resultSql;
@@ -111,6 +116,7 @@ public class TagMapper extends EntityFeatureMapper<DbFeature<Tag>> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public DbFeature<Tag> buildEntity(ResultSet resultSet) {
 		try {
@@ -131,6 +137,7 @@ public class TagMapper extends EntityFeatureMapper<DbFeature<Tag>> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public int populateEntityParameters(PreparedStatement statement, int initialIndex, DbFeature<Tag> entityFeature) {
 		try {

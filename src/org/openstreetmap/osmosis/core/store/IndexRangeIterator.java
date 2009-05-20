@@ -51,7 +51,7 @@ public class IndexRangeIterator<K, T extends IndexElement<K>> implements Iterato
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean hasNext() {
 		while (!nextRecordAvailable) {
 			K key;
@@ -82,7 +82,7 @@ public class IndexRangeIterator<K, T extends IndexElement<K>> implements Iterato
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public T next() {
 		if (!hasNext()) {
 			throw new NoSuchElementException();
@@ -97,7 +97,7 @@ public class IndexRangeIterator<K, T extends IndexElement<K>> implements Iterato
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}

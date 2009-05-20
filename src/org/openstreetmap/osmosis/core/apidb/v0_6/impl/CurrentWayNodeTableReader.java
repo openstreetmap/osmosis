@@ -32,16 +32,18 @@ public class CurrentWayNodeTableReader extends BaseTableReader<DbOrderedFeature<
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
         return queryDbCtx.executeQuery(SELECT_SQL);
     }
 
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ReadResult<DbOrderedFeature<WayNode>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<DbOrderedFeature<WayNode>> createNextValue(ResultSet resultSet) {
         long wayId;
         long nodeId;
         int sequenceId;

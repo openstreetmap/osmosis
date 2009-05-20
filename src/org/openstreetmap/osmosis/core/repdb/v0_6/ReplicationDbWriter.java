@@ -95,7 +95,7 @@ public class ReplicationDbWriter implements ChangeSink {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(ChangeContainer change) {
 		Date timestamp;
 		byte[] data;
@@ -112,7 +112,7 @@ public class ReplicationDbWriter implements ChangeSink {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void complete() {
 		timestampManager.setTimestamp(systemTimestamp);
 		
@@ -123,7 +123,7 @@ public class ReplicationDbWriter implements ChangeSink {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		initialized = false;
 		

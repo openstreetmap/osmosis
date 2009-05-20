@@ -63,7 +63,7 @@ public class IntegerLongIndexElement implements IndexElement<Integer> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Integer getKey() {
 		// This will cause the sign of the identifier to be ignored resulting in
 		// unsigned ordering of index values.

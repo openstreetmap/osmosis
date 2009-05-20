@@ -53,6 +53,7 @@ public class XmlWriter extends BaseXmlWriter implements Sink {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected void beginElementWriter() {
 		osmWriter.begin();
@@ -62,6 +63,7 @@ public class XmlWriter extends BaseXmlWriter implements Sink {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected void endElementWriter() {
 		osmWriter.end();
@@ -71,6 +73,7 @@ public class XmlWriter extends BaseXmlWriter implements Sink {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected void setWriterOnElementWriter(BufferedWriter writer) {
 		osmWriter.setWriter(writer);

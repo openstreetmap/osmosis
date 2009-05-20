@@ -14,7 +14,7 @@ public class GenericObjectSerializationFactory implements ObjectSerializationFac
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ObjectReader createObjectReader(StoreReader storeReader, StoreClassRegister storeClassRegister) {
 		return new GenericObjectReader(storeReader, storeClassRegister);
 	}
@@ -23,7 +23,7 @@ public class GenericObjectSerializationFactory implements ObjectSerializationFac
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ObjectWriter createObjectWriter(StoreWriter storeWriter, StoreClassRegister storeClassRegister) {
 		return new GenericObjectWriter(storeWriter, storeClassRegister);
 	}

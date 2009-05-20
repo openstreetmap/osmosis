@@ -112,7 +112,7 @@ public class IndexedObjectStore<T extends Storeable> implements Completable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void complete() {
 		objectStore.complete();
 		indexStore.complete();

@@ -33,7 +33,7 @@ public class IteratorReleasableIterator<T> implements ReleasableIterator<T>{
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean hasNext() {
 		return iterator.hasNext();
 	}
@@ -41,7 +41,7 @@ public class IteratorReleasableIterator<T> implements ReleasableIterator<T>{
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public T next() {
 		return iterator.next();
 	}
@@ -49,7 +49,7 @@ public class IteratorReleasableIterator<T> implements ReleasableIterator<T>{
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void remove() {
 		iterator.remove();
 	}
@@ -57,7 +57,7 @@ public class IteratorReleasableIterator<T> implements ReleasableIterator<T>{
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		// Do nothing.
 	}

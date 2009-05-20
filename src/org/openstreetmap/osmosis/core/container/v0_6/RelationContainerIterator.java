@@ -27,7 +27,7 @@ public class RelationContainerIterator implements ReleasableIterator<RelationCon
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean hasNext() {
 		return source.hasNext();
 	}
@@ -35,7 +35,7 @@ public class RelationContainerIterator implements ReleasableIterator<RelationCon
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public RelationContainer next() {
 		return new RelationContainer(source.next());
 	}
@@ -43,7 +43,7 @@ public class RelationContainerIterator implements ReleasableIterator<RelationCon
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void remove() {
 		source.remove();
 	}
@@ -52,7 +52,7 @@ public class RelationContainerIterator implements ReleasableIterator<RelationCon
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		source.release();
 	}

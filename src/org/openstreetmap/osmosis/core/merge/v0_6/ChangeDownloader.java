@@ -78,7 +78,7 @@ public class ChangeDownloader implements RunnableChangeSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void setChangeSink(ChangeSink changeSink) {
 		this.changeSink = changeSink;
 	}
@@ -381,7 +381,7 @@ public class ChangeDownloader implements RunnableChangeSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void run() {
 		FileBasedLock fileLock;
 		

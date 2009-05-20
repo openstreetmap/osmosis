@@ -76,7 +76,7 @@ public class WayTileAreaIndexReader implements Releasable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		for (IndexStoreReader<Integer, IntegerLongIndexElement> indexReader : indexReaders) {
 			indexReader.release();
@@ -112,7 +112,7 @@ public class WayTileAreaIndexReader implements Releasable {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public boolean hasNext() {
 			while (true) {
 				// Get the next available input source if required.
@@ -137,7 +137,7 @@ public class WayTileAreaIndexReader implements Releasable {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public Long next() {
 			if (!hasNext()) {
 				throw new NoSuchElementException();
@@ -150,7 +150,7 @@ public class WayTileAreaIndexReader implements Releasable {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}

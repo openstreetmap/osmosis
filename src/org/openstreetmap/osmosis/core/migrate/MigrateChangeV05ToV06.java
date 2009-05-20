@@ -27,7 +27,7 @@ public class MigrateChangeV05ToV06 implements ChangeSink05ChangeSource06 {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(org.openstreetmap.osmosis.core.container.v0_5.ChangeContainer changeContainer) {
 		changeSink.process(
 				new ChangeContainer(
@@ -39,7 +39,7 @@ public class MigrateChangeV05ToV06 implements ChangeSink05ChangeSource06 {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void complete() {
 		changeSink.complete();
 	}
@@ -48,7 +48,7 @@ public class MigrateChangeV05ToV06 implements ChangeSink05ChangeSource06 {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		changeSink.release();
 	}
@@ -57,7 +57,7 @@ public class MigrateChangeV05ToV06 implements ChangeSink05ChangeSource06 {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void setChangeSink(org.openstreetmap.osmosis.core.task.v0_6.ChangeSink changeSink) {
 		this.changeSink = changeSink;
 	}

@@ -33,7 +33,7 @@ public class UnmodifiableTagCollection extends CollectionWrapper<Tag> implements
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		wrappedTags.store(sw, scr);
 	}
@@ -42,7 +42,7 @@ public class UnmodifiableTagCollection extends CollectionWrapper<Tag> implements
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Map<String, String> buildMap() {
 		return wrappedTags.buildMap();
 	}

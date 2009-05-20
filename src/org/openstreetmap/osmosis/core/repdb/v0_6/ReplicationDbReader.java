@@ -49,7 +49,7 @@ public class ReplicationDbReader implements RunnableChangeSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void run() {
 		DatabaseContext dbCtx = new DatabaseContext(loginCredentials);
 		ReplicationDbReaderImpl reader = new ReplicationDbReaderImpl(dbCtx, queueName);
@@ -76,7 +76,7 @@ public class ReplicationDbReader implements RunnableChangeSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void setChangeSink(ChangeSink changeSink) {
 		this.changeSink = changeSink;
 	}

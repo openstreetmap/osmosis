@@ -39,16 +39,18 @@ public class CurrentEntityTagTableReader extends BaseTableReader<DbFeature<Tag>>
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
         return queryDbCtx.executeQuery(SELECT_SQL_1 + tableName + SELECT_SQL_2);
     }
 
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ReadResult<DbFeature<Tag>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<DbFeature<Tag>> createNextValue(ResultSet resultSet) {
         long entityId;
         String key;
         String value;

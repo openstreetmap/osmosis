@@ -25,6 +25,7 @@ public class ChangeDownloadInitializerFactory extends TaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		String workingDirectoryString;

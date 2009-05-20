@@ -28,6 +28,7 @@ public class ProductionDbCharset extends Charset {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public boolean contains(Charset cs) {
 		return CHARSET_NAME.equals(cs.displayName());
@@ -37,6 +38,7 @@ public class ProductionDbCharset extends Charset {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public CharsetDecoder newDecoder() {
 		return new ProductionDbDataDecoder(this, 1, 1);
@@ -46,6 +48,7 @@ public class ProductionDbCharset extends Charset {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public CharsetEncoder newEncoder() {
 		return new ProductionDbDataEncoder(this, 1, 1);

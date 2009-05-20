@@ -20,6 +20,7 @@ public class RelationMapper extends EntityMapper<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getEntityName() {
 		return "relation";
@@ -29,6 +30,7 @@ public class RelationMapper extends EntityMapper<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public ActionDataType getEntityType() {
 		return ActionDataType.RELATION;
@@ -38,6 +40,7 @@ public class RelationMapper extends EntityMapper<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public Class<Relation> getEntityClass() {
 		return Relation.class;
@@ -47,6 +50,7 @@ public class RelationMapper extends EntityMapper<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected String[] getTypeSpecificFieldNames() {
 		return new String[] {};
@@ -56,6 +60,7 @@ public class RelationMapper extends EntityMapper<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public Relation parseRecord(ResultSet resultSet) {
 		try {
@@ -76,6 +81,7 @@ public class RelationMapper extends EntityMapper<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public int populateEntityParameters(PreparedStatement statement, int initialIndex, Relation relation) {
 		// Populate the entity level parameters.

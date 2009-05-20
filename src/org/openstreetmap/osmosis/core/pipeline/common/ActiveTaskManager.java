@@ -47,6 +47,7 @@ public abstract class ActiveTaskManager extends TaskManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void execute() {
 		LOG.fine("Launching task " + getTaskId() + " in a new thread.");
@@ -65,6 +66,7 @@ public abstract class ActiveTaskManager extends TaskManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public boolean waitForCompletion() {
 		LOG.fine("Waiting for task " + getTaskId() + " to complete.");

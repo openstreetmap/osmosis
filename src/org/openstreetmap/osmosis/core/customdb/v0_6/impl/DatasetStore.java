@@ -87,17 +87,17 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 		// Validate all input data to ensure it is sorted.
 		sortedPipeValidator = new SortedEntityPipeValidator();
 		sortedPipeValidator.setSink(new Sink() {
-			@Override
+			
 			public void complete() {
 				throw new UnsupportedOperationException();
 			}
 			
-			@Override
+			
 			public void process(EntityContainer entityContainer) {
 				processImpl(entityContainer);
 			}
 			
-			@Override
+			
 			public void release() {
 				throw new UnsupportedOperationException();
 			}});
@@ -211,7 +211,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
     public void process(BoundContainer bound) {
         // Do nothing.
     }
@@ -385,7 +385,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public DatasetContext createReader() {
 		ReleasableContainer releasableContainer = new ReleasableContainer();
 		

@@ -55,6 +55,7 @@ public class RelationContainer extends EntityContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void process(EntityProcessor processor) {
 		processor.process(this);
@@ -64,6 +65,7 @@ public class RelationContainer extends EntityContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public Relation getEntity() {
 		return relation;
@@ -73,6 +75,7 @@ public class RelationContainer extends EntityContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public RelationContainer getWriteableInstance() {
 		if (relation.isReadOnly()) {

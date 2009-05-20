@@ -92,6 +92,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	 *            The element qName.
 	 * @return The appropriate element processor for the nested element.
 	 */
+	
 	@Override
 	public ElementProcessor getChild(String uri, String localName, String qName) {
 		if (ELEMENT_NAME_TAG.equals(qName)) {

@@ -77,6 +77,7 @@ public class MultiMemberGZIPInputStream extends GZIPInputStream {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public int read(byte[] inputBuffer, int inputBufferOffset,
 			int inputBufferLen) throws IOException {

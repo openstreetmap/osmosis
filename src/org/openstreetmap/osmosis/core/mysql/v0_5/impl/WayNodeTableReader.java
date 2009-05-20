@@ -38,6 +38,7 @@ public class WayNodeTableReader extends BaseTableReader<EntityHistory<DBWayNode>
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
@@ -47,6 +48,7 @@ public class WayNodeTableReader extends BaseTableReader<EntityHistory<DBWayNode>
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<EntityHistory<DBWayNode>> createNextValue(ResultSet resultSet) {
 		long wayId;

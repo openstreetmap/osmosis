@@ -116,7 +116,7 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		buildEntity().store(sw, scr);
 	}
@@ -259,6 +259,7 @@ public class NodeBuilder extends EntityBuilder<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public Node buildEntity() {
 		return new Node(id, version, timestampContainer, user, changesetId, tags, latitude, longitude);
@@ -267,8 +268,9 @@ public class NodeBuilder extends EntityBuilder<Node> {
     /** 
      * ${@inheritDoc}.
      */
+    
     @Override
-    public String toString() {
+	public String toString() {
         String name = null;
         for (Tag tag : tags) {
             if (tag.getKey() != null && tag.getKey().equalsIgnoreCase("name")) {

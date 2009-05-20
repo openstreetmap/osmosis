@@ -43,6 +43,7 @@ public class MultiChangeSinkRunnableChangeSourceManager extends ActiveTaskManage
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void connect(PipeTasks pipeTasks) {
 		// A multi sink receives multiple streams of data, so we must connect
@@ -69,6 +70,7 @@ public class MultiChangeSinkRunnableChangeSourceManager extends ActiveTaskManage
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected Runnable getTask() {
 		return task;

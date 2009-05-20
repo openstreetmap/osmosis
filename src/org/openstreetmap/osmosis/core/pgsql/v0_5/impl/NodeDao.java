@@ -174,7 +174,7 @@ public class NodeDao implements Releasable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		if (singleNodeStatement != null) {
 			try {

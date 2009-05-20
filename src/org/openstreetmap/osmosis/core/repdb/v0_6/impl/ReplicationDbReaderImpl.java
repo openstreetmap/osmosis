@@ -175,7 +175,7 @@ public class ReplicationDbReaderImpl implements ChangeSource, Releasable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void setChangeSink(ChangeSink changeSink) {
 		this.changeSink = changeSink;
 	}
@@ -184,7 +184,7 @@ public class ReplicationDbReaderImpl implements ChangeSource, Releasable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		statementContainer.release();
 		initialized = false;

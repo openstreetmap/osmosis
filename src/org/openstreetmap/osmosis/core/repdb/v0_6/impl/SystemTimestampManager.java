@@ -112,7 +112,7 @@ public class SystemTimestampManager implements Releasable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		statementContainer.release();
 		

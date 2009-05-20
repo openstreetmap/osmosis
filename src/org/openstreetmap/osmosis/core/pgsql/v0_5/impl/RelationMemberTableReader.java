@@ -61,6 +61,7 @@ public class RelationMemberTableReader extends BaseTableReader<DBRelationMember>
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		return queryDbCtx.executeQuery(sql);
@@ -70,6 +71,7 @@ public class RelationMemberTableReader extends BaseTableReader<DBRelationMember>
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<DBRelationMember> createNextValue(ResultSet resultSet) {
 		long relationId;

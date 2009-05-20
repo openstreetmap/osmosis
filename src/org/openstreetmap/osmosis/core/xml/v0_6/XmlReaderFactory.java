@@ -25,6 +25,7 @@ public class XmlReaderFactory extends XmlTaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		String fileName;

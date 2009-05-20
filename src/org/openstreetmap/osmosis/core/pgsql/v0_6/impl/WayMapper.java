@@ -50,6 +50,7 @@ public class WayMapper extends EntityMapper<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getEntityName() {
 		return "way";
@@ -59,6 +60,7 @@ public class WayMapper extends EntityMapper<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public ActionDataType getEntityType() {
 		return ActionDataType.WAY;
@@ -68,6 +70,7 @@ public class WayMapper extends EntityMapper<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public Class<Way> getEntityClass() {
 		return Way.class;
@@ -77,6 +80,7 @@ public class WayMapper extends EntityMapper<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected String[] getTypeSpecificFieldNames() {
 		List<String> fieldNames;
@@ -97,6 +101,7 @@ public class WayMapper extends EntityMapper<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public Way parseRecord(ResultSet resultSet) {
 		try {
@@ -117,6 +122,7 @@ public class WayMapper extends EntityMapper<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public int populateEntityParameters(PreparedStatement statement, int initialIndex, Way way) {
 		// Populate the entity level parameters.

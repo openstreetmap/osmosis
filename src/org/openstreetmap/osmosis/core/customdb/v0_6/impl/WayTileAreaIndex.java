@@ -107,7 +107,7 @@ public class WayTileAreaIndex implements Completable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void complete() {
 		for (Completable index : indexes) {
 			index.complete();
@@ -118,7 +118,7 @@ public class WayTileAreaIndex implements Completable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		for (Releasable index : indexes) {
 			index.release();

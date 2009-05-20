@@ -58,8 +58,9 @@ public class RelationMemberHistoryReader extends BaseTableReader<DbFeatureHistor
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
         try {
             PreparedStatement statement;
 
@@ -77,8 +78,9 @@ public class RelationMemberHistoryReader extends BaseTableReader<DbFeatureHistor
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ReadResult<DbFeatureHistory<DbOrderedFeature<RelationMember>>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<DbFeatureHistory<DbOrderedFeature<RelationMember>>> createNextValue(ResultSet resultSet) {
         long relationId;
         EntityType memberType;
         long memberId;

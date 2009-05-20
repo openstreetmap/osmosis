@@ -150,7 +150,7 @@ public class DatasetStoreReader implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	@Deprecated
 	public Node getNode(long id) {
 		return nodeManager.getEntity(id);
@@ -160,7 +160,7 @@ public class DatasetStoreReader implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	@Deprecated
 	public Way getWay(long id) {
 		return wayManager.getEntity(id);
@@ -170,7 +170,7 @@ public class DatasetStoreReader implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	@Deprecated
 	public Relation getRelation(long id) {
 		return relationManager.getEntity(id);
@@ -180,7 +180,7 @@ public class DatasetStoreReader implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public EntityManager<Node> getNodeManager() {
 		return nodeManager;
 	}
@@ -189,7 +189,7 @@ public class DatasetStoreReader implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public EntityManager<Way> getWayManager() {
 		return wayManager;
 	}
@@ -198,7 +198,7 @@ public class DatasetStoreReader implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public EntityManager<Relation> getRelationManager() {
 		return relationManager;
 	}
@@ -207,7 +207,7 @@ public class DatasetStoreReader implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ReleasableIterator<EntityContainer> iterate() {
 		List<ReleasableIterator<EntityContainer>> sources;
 		
@@ -491,7 +491,7 @@ public class DatasetStoreReader implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ReleasableIterator<EntityContainer> iterateBoundingBox(
 			double left, double right, double top, double bottom, boolean completeWays) {
 		BoundingBoxContext bboxCtx;
@@ -564,7 +564,7 @@ public class DatasetStoreReader implements DatasetContext {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public boolean hasNext() {
 			return (nodeIds.hasNext() || wayIds.hasNext() || relationIds.hasNext());
 		}
@@ -573,7 +573,7 @@ public class DatasetStoreReader implements DatasetContext {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public EntityContainer next() {
 			if (nodeIds.hasNext()) {
 				return new NodeContainer(getNode(nodeIds.next()));
@@ -592,7 +592,7 @@ public class DatasetStoreReader implements DatasetContext {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
@@ -601,7 +601,7 @@ public class DatasetStoreReader implements DatasetContext {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public void release() {
 			// Do nothing.
 		}
@@ -611,7 +611,7 @@ public class DatasetStoreReader implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void complete() {
 		// This dataset is read-only so no changes need to be committed.
 	}
@@ -620,7 +620,7 @@ public class DatasetStoreReader implements DatasetContext {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		nodeStorageContainer.release();
 		wayStorageContainer.release();

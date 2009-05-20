@@ -90,7 +90,7 @@ public class EntityContainerBuilder implements EntityProcessor, Source {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(BoundContainer boundContainer) {
 		sink.process(boundContainer);
 	}
@@ -98,7 +98,7 @@ public class EntityContainerBuilder implements EntityProcessor, Source {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(NodeContainer nodeContainer) {
 		boolean modified;
 		
@@ -118,7 +118,7 @@ public class EntityContainerBuilder implements EntityProcessor, Source {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(WayContainer wayContainer) {
 		boolean modified;
 		
@@ -138,7 +138,7 @@ public class EntityContainerBuilder implements EntityProcessor, Source {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(RelationContainer relationContainer) {
 		boolean modified;
 		
@@ -158,7 +158,7 @@ public class EntityContainerBuilder implements EntityProcessor, Source {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void setSink(Sink sink) {
 		this.sink = sink;
 	}

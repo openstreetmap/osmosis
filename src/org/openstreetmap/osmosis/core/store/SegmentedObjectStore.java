@@ -312,7 +312,7 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void complete() {
 		// Do nothing.
 	}

@@ -18,6 +18,7 @@ public class NodeKeyFilterFactory extends TaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		String keyList = getStringArgument(taskConfig, "keyList");

@@ -163,6 +163,7 @@ public class Node extends Entity implements Comparable<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		super.store(sw, scr);
@@ -175,6 +176,7 @@ public class Node extends Entity implements Comparable<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public EntityType getType() {
 		return EntityType.Node;
@@ -184,6 +186,7 @@ public class Node extends Entity implements Comparable<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Node) {
@@ -197,6 +200,7 @@ public class Node extends Entity implements Comparable<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public int hashCode() {
 		/*
@@ -318,6 +322,7 @@ public class Node extends Entity implements Comparable<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public Node getWriteableInstance() {
 		if (isReadOnly()) {
@@ -331,8 +336,9 @@ public class Node extends Entity implements Comparable<Node> {
     /** 
      * ${@inheritDoc}.
      */
+    
     @Override
-    public String toString() {
+	public String toString() {
         String name = null;
         Collection<Tag> tags = getTags();
         for (Tag tag : tags) {

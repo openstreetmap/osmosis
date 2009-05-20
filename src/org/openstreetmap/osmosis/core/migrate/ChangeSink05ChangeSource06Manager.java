@@ -42,6 +42,7 @@ public class ChangeSink05ChangeSource06Manager extends PassiveTaskManager {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void connect(PipeTasks pipeTasks) {
 		ChangeSource source;

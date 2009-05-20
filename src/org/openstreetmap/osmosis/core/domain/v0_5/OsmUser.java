@@ -91,6 +91,7 @@ public class OsmUser implements Storeable {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public boolean equals(Object o) {
 		OsmUser ou;
@@ -108,6 +109,7 @@ public class OsmUser implements Storeable {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public int hashCode() {
 		int result;

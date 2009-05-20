@@ -171,7 +171,7 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 					new Comparator<T>() {
 						private Comparator<K> elementKeyOrdering = keyOrdering;
 						
-						@Override
+						
 						public int compare(T o1, T o2) {
 							return elementKeyOrdering.compare(o1.getKey(), o2.getKey());
 						}

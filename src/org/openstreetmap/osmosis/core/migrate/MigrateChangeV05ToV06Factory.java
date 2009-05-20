@@ -16,6 +16,7 @@ public class MigrateChangeV05ToV06Factory extends TaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		return new ChangeSink05ChangeSource06Manager(

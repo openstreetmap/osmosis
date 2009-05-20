@@ -202,7 +202,7 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void complete() {
 		// If we're already in the reading stage, we don't need to perform a
 		// complete.

@@ -66,6 +66,7 @@ public class EntityTableReader<T extends Entity> extends BaseTableReader<T> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		return queryDbCtx.executeQuery(sql);
@@ -75,6 +76,7 @@ public class EntityTableReader<T extends Entity> extends BaseTableReader<T> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<T> createNextValue(ResultSet resultSet) {
 		T entity;

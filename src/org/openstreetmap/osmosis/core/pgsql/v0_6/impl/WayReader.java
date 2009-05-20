@@ -61,6 +61,7 @@ public class WayReader extends EntityReader<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected void populateEntityFeatures(Way entity) {
 		long wayId;
@@ -100,6 +101,7 @@ public class WayReader extends EntityReader<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void release() {
 		super.release();

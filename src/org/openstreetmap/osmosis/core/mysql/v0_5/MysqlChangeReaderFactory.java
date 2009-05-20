@@ -26,6 +26,7 @@ public class MysqlChangeReaderFactory extends DatabaseTaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		DatabaseLoginCredentials loginCredentials;

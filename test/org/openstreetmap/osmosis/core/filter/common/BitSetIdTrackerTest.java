@@ -9,6 +9,7 @@ public class BitSetIdTrackerTest extends IdTrackerBase {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected IdTracker getImplementation() {
 		return new BitSetIdTracker();

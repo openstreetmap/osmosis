@@ -46,6 +46,7 @@ public class OsmChangeWriter extends ElementWriter {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void setWriter(BufferedWriter writer) {
 		super.setWriter(writer);

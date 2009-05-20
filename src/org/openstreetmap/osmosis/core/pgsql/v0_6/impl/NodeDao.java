@@ -60,6 +60,7 @@ public class NodeDao extends EntityDao<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected void loadFeatures(long entityId, Node entity) {
 		// Nodes have no additional features.
@@ -69,6 +70,7 @@ public class NodeDao extends EntityDao<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void modifyEntity(Node entity) {
 		super.modifyEntity(entity);
@@ -112,6 +114,7 @@ public class NodeDao extends EntityDao<Node> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public ReleasableIterator<Node> iterate() {
 		return new NodeReader(getDatabaseContext());

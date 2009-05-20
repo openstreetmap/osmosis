@@ -77,6 +77,7 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		try {
@@ -99,6 +100,7 @@ public class NodeHistoryReader extends BaseEntityReader<EntityHistory<Node>> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<EntityHistory<Node>> createNextValue(ResultSet resultSet) {
 		long id;

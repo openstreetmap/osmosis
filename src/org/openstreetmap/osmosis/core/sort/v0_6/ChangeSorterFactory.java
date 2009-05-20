@@ -78,6 +78,7 @@ public class ChangeSorterFactory extends TaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		Comparator<ChangeContainer> comparator;

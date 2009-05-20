@@ -17,6 +17,7 @@ public class MysqlTruncatorFactory extends DatabaseTaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		return new RunnableTaskManager(

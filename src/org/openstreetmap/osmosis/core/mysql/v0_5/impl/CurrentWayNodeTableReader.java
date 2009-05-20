@@ -38,6 +38,7 @@ public class CurrentWayNodeTableReader extends BaseTableReader<DBWayNode> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		return queryDbCtx.executeStreamingQuery(SELECT_SQL);
@@ -47,6 +48,7 @@ public class CurrentWayNodeTableReader extends BaseTableReader<DBWayNode> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<DBWayNode> createNextValue(ResultSet resultSet) {
 		long wayId;

@@ -53,6 +53,7 @@ public class XmlChangeWriter extends BaseXmlWriter implements ChangeSink {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected void beginElementWriter() {
 		osmChangeWriter.begin();
@@ -62,6 +63,7 @@ public class XmlChangeWriter extends BaseXmlWriter implements ChangeSink {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected void endElementWriter() {
 		osmChangeWriter.end();
@@ -71,6 +73,7 @@ public class XmlChangeWriter extends BaseXmlWriter implements ChangeSink {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected void setWriterOnElementWriter(BufferedWriter writer) {
 		osmChangeWriter.setWriter(writer);

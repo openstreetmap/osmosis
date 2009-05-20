@@ -23,7 +23,7 @@ public class DumpDataset implements DatasetSinkSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void setSink(Sink sink) {
 		this.sink = sink;
 	}
@@ -32,7 +32,7 @@ public class DumpDataset implements DatasetSinkSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void process(Dataset dataset) {
 		ReleasableIterator<EntityContainer> bboxData;
 		
@@ -60,7 +60,7 @@ public class DumpDataset implements DatasetSinkSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		if (datasetReader != null) {
 			datasetReader.release();

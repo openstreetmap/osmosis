@@ -14,6 +14,7 @@ public class CorePlugin extends Plugin {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected void doStart() throws Exception {
 		// ignored
@@ -23,6 +24,7 @@ public class CorePlugin extends Plugin {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected void doStop() throws Exception {
 		// ignored

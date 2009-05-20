@@ -60,7 +60,7 @@ public class ReleasableStatementContainer implements Releasable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		for (Statement statement : objects) {
 			try {

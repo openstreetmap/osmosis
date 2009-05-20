@@ -35,7 +35,7 @@ public class CollectionWrapper<E> implements Collection<E> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean add(E e) {
 		return wrappedCollection.add(e);
 	}
@@ -44,7 +44,7 @@ public class CollectionWrapper<E> implements Collection<E> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean addAll(Collection<? extends E> c) {
 		return wrappedCollection.addAll(c);
 	}
@@ -53,7 +53,7 @@ public class CollectionWrapper<E> implements Collection<E> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void clear() {
 		wrappedCollection.clear();
 	}
@@ -62,7 +62,7 @@ public class CollectionWrapper<E> implements Collection<E> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean contains(Object o) {
 		return wrappedCollection.contains(o);
 	}
@@ -71,7 +71,7 @@ public class CollectionWrapper<E> implements Collection<E> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean containsAll(Collection<?> c) {
 		return wrappedCollection.containsAll(c);
 	}
@@ -80,7 +80,7 @@ public class CollectionWrapper<E> implements Collection<E> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean isEmpty() {
 		return wrappedCollection.isEmpty();
 	}
@@ -89,7 +89,7 @@ public class CollectionWrapper<E> implements Collection<E> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Iterator<E> iterator() {
 		return wrappedCollection.iterator();
 	}
@@ -98,7 +98,7 @@ public class CollectionWrapper<E> implements Collection<E> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean remove(Object o) {
 		return wrappedCollection.remove(o);
 	}
@@ -107,7 +107,7 @@ public class CollectionWrapper<E> implements Collection<E> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean removeAll(Collection<?> c) {
 		return wrappedCollection.removeAll(c);
 	}
@@ -116,7 +116,7 @@ public class CollectionWrapper<E> implements Collection<E> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean retainAll(Collection<?> c) {
 		return wrappedCollection.retainAll(c);
 	}
@@ -125,7 +125,7 @@ public class CollectionWrapper<E> implements Collection<E> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public int size() {
 		return wrappedCollection.size();
 	}
@@ -134,7 +134,7 @@ public class CollectionWrapper<E> implements Collection<E> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Object[] toArray() {
 		return wrappedCollection.toArray();
 	}
@@ -143,7 +143,7 @@ public class CollectionWrapper<E> implements Collection<E> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public <T> T[] toArray(T[] a) {
 		return wrappedCollection.toArray(a);
 	}

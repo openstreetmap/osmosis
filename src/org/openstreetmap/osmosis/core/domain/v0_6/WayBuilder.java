@@ -108,7 +108,7 @@ public class WayBuilder extends EntityBuilder<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		buildEntity().store(sw, scr);
 	}
@@ -153,6 +153,7 @@ public class WayBuilder extends EntityBuilder<Way> {
 	 *            The id of the changeset that this version of the entity was created by.
 	 * @return This object allowing method chaining.
 	 */
+	
 	@Override
 	public WayBuilder initialize(long newId, int newVersion, Date newTimestamp, OsmUser newUser, long newChangesetId) {
 		super.initialize(newId, newVersion, newTimestamp, newUser, newChangesetId);
@@ -178,6 +179,7 @@ public class WayBuilder extends EntityBuilder<Way> {
 	 *            The id of the changeset that this version of the entity was created by.
 	 * @return This object allowing method chaining.
 	 */
+	
 	@Override
 	public WayBuilder initialize(long newId, int newVersion, TimestampContainer newTimestampContainer, OsmUser newUser,
 			long newChangesetId) {
@@ -242,6 +244,7 @@ public class WayBuilder extends EntityBuilder<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public Way buildEntity() {
 		return new Way(id, version, timestampContainer, user, changesetId, tags, wayNodes);
@@ -250,8 +253,9 @@ public class WayBuilder extends EntityBuilder<Way> {
     /** 
      * ${@inheritDoc}.
      */
+    
     @Override
-    public String toString() {
+	public String toString() {
         String name = null;
         for (Tag tag : tags) {
             if (tag.getKey() != null && tag.getKey().equalsIgnoreCase("name")) {

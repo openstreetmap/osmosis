@@ -26,6 +26,7 @@ public class GenericObjectReader extends BaseObjectReader {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected Class<?> readClassFromIdentifier(StoreReader sr, StoreClassRegister scr) {
 		return scr.getClassFromIdentifier(sr);

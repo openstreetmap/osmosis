@@ -237,7 +237,7 @@ public class RelationDao implements Releasable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		if (singleRelationStatement != null) {
 			try {

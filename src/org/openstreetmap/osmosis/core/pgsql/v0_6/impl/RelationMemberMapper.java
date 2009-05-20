@@ -31,6 +31,7 @@ public class RelationMemberMapper extends EntityFeatureMapper<DbOrderedFeature<R
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getParentEntityName() {
 		return "relation";
@@ -40,6 +41,7 @@ public class RelationMemberMapper extends EntityFeatureMapper<DbOrderedFeature<R
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getEntityName() {
 		return "relation_members";
@@ -49,6 +51,7 @@ public class RelationMemberMapper extends EntityFeatureMapper<DbOrderedFeature<R
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getSqlSelect(boolean filterByEntityId, boolean orderBy) {
 		StringBuilder resultSql;
@@ -70,6 +73,7 @@ public class RelationMemberMapper extends EntityFeatureMapper<DbOrderedFeature<R
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getSqlDefaultOrderBy() {
 		return super.getSqlDefaultOrderBy() + ", sequence_id";
@@ -79,6 +83,7 @@ public class RelationMemberMapper extends EntityFeatureMapper<DbOrderedFeature<R
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getSqlInsert(int rowCount) {
 		StringBuilder resultSql;
@@ -100,6 +105,7 @@ public class RelationMemberMapper extends EntityFeatureMapper<DbOrderedFeature<R
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public String getSqlDelete(boolean filterByEntityId) {
 		StringBuilder resultSql;
@@ -117,6 +123,7 @@ public class RelationMemberMapper extends EntityFeatureMapper<DbOrderedFeature<R
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public DbOrderedFeature<RelationMember> buildEntity(ResultSet resultSet) {
 		try {
@@ -139,6 +146,7 @@ public class RelationMemberMapper extends EntityFeatureMapper<DbOrderedFeature<R
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public int populateEntityParameters(
 			PreparedStatement statement, int initialIndex, DbOrderedFeature<RelationMember> entityFeature) {

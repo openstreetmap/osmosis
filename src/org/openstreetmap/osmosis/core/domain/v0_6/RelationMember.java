@@ -139,8 +139,9 @@ public class RelationMember implements Comparable<RelationMember>, Storeable {
     /** 
      * ${@inheritDoc}.
      */
+    
     @Override
-    public String toString() {
+	public String toString() {
         return "RelationMember(" + getMemberType() + " with id " + getMemberId() + " in the role '" + getMemberRole()
 				+ "')";
     }

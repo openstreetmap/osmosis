@@ -67,6 +67,7 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		IdTrackerType idTrackerType;

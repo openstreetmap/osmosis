@@ -59,6 +59,7 @@ public class RelationHistoryReader extends BaseEntityReader<EntityHistory<Relati
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		try {
@@ -79,6 +80,7 @@ public class RelationHistoryReader extends BaseEntityReader<EntityHistory<Relati
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<EntityHistory<Relation>> createNextValue(ResultSet resultSet) {
 		long id;

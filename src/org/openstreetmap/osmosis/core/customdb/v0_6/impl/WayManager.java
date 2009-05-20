@@ -32,7 +32,7 @@ public class WayManager implements EntityManager<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void addEntity(Way entity) {
 		throw new UnsupportedOperationException();
 	}
@@ -41,7 +41,7 @@ public class WayManager implements EntityManager<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean exists(long id) {
 		// Check if the node id exists in the index.
 		try {
@@ -58,7 +58,7 @@ public class WayManager implements EntityManager<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public Way getEntity(long id) {
 		return storageContainer.getWayObjectReader().get(
 				storageContainer.getWayObjectOffsetIndexReader().get(id).getValue()
@@ -69,7 +69,7 @@ public class WayManager implements EntityManager<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ReleasableIterator<Way> iterate() {
 		return new ReleasableAdaptorForIterator<Way>(
 				storageContainer.getWayObjectReader().iterate());
@@ -79,7 +79,7 @@ public class WayManager implements EntityManager<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void modifyEntity(Way entity) {
 		throw new UnsupportedOperationException();
 	}
@@ -88,7 +88,7 @@ public class WayManager implements EntityManager<Way> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void removeEntity(long entityId) {
 		throw new UnsupportedOperationException();
 	}

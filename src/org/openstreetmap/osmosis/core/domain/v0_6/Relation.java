@@ -150,6 +150,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		super.store(sw, scr);
@@ -164,6 +165,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public EntityType getType() {
 		return EntityType.Relation;
@@ -173,6 +175,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Relation) {
@@ -186,6 +189,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public int hashCode() {
 		/*
@@ -290,6 +294,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void makeReadOnly() {
 		if (!isReadOnly()) {
@@ -303,6 +308,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public Relation getWriteableInstance() {
 		if (isReadOnly()) {
@@ -327,8 +333,9 @@ public class Relation extends Entity implements Comparable<Relation> {
     /** 
      * ${@inheritDoc}.
      */
+    
     @Override
-    public String toString() {
+	public String toString() {
         String type = null;
         Collection<Tag> tags = getTags();
         for (Tag tag : tags) {

@@ -58,6 +58,7 @@ public class WayNodeHistoryReader extends BaseTableReader<EntityHistory<DBWayNod
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		try {
@@ -78,6 +79,7 @@ public class WayNodeHistoryReader extends BaseTableReader<EntityHistory<DBWayNod
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<EntityHistory<DBWayNode>> createNextValue(ResultSet resultSet) {
 		long wayId;

@@ -38,7 +38,7 @@ public class PostgreSqlReader implements RunnableDatasetSource, Dataset {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void setDatasetSink(DatasetSink datasetSink) {
 		this.datasetSink = datasetSink;
 	}
@@ -47,7 +47,7 @@ public class PostgreSqlReader implements RunnableDatasetSource, Dataset {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void run() {
 		try {
 			datasetSink.process(this);
@@ -61,7 +61,7 @@ public class PostgreSqlReader implements RunnableDatasetSource, Dataset {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public DatasetReader createReader() {
 		return new PostgreSqlDatasetReader(loginCredentials, preferences);
 	}

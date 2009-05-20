@@ -260,6 +260,7 @@ public class DatabaseContext {
 	 * @throws Throwable
 	 *             If a problem occurs during finalization.
 	 */
+	
 	@Override
 	protected void finalize() throws Throwable {
 		release();

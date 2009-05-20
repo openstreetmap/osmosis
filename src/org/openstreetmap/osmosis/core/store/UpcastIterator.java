@@ -34,7 +34,7 @@ public class UpcastIterator<X, Y extends X> implements ReleasableIterator<X> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean hasNext() {
 		return source.hasNext();
 	}
@@ -43,7 +43,7 @@ public class UpcastIterator<X, Y extends X> implements ReleasableIterator<X> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public X next() {
 		return source.next();
 	}
@@ -52,7 +52,7 @@ public class UpcastIterator<X, Y extends X> implements ReleasableIterator<X> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void remove() {
 		source.remove();
 	}
@@ -61,7 +61,7 @@ public class UpcastIterator<X, Y extends X> implements ReleasableIterator<X> {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		source.release();
 	}

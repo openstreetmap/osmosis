@@ -101,8 +101,9 @@ public class Tag implements Comparable<Tag>, Storeable {
     /** 
      * ${@inheritDoc}.
      */
+    
     @Override
-    public String toString() {
+	public String toString() {
         return "Tag('" + getKey() + "'='" + getValue() + "')";
     }
 

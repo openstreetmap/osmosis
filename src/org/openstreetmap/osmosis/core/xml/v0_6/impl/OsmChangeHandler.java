@@ -54,6 +54,7 @@ public class OsmChangeHandler extends DefaultHandler {
 	 * @param attributes
 	 *            The attributes.
 	 */
+	
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) {
 		// Get the appropriate element processor for the element.
@@ -88,6 +89,7 @@ public class OsmChangeHandler extends DefaultHandler {
 	 * @param qName
 	 *            The qName.
 	 */
+	
 	@Override
 	public void endElement(String uri, String localName, String qName) {
 		// Tell the currently active element processor to complete its processing.

@@ -26,6 +26,7 @@ public class DynamicStoreClassRegister extends BaseStoreClassRegister {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void storeIdentifierForClass(StoreWriter storeWriter, Class<?> clazz) {
 		if (!isClassRecognized(clazz)) {

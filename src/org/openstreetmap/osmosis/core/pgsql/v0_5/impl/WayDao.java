@@ -229,7 +229,7 @@ public class WayDao implements Releasable {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void release() {
 		if (singleWayStatement != null) {
 			try {

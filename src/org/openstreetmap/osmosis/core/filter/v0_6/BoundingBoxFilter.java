@@ -57,6 +57,7 @@ public class BoundingBoxFilter extends AreaFilter {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void process(BoundContainer boundContainer) {
 		Bound newBound;
@@ -77,6 +78,7 @@ public class BoundingBoxFilter extends AreaFilter {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected boolean isNodeWithinArea(Node node) {
 		double latitude;

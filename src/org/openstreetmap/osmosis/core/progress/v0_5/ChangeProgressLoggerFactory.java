@@ -20,6 +20,7 @@ public class ChangeProgressLoggerFactory extends TaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		ChangeProgressLogger task;

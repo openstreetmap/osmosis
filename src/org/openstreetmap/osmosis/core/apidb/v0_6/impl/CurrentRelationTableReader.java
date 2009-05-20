@@ -39,16 +39,18 @@ public class CurrentRelationTableReader extends BaseEntityReader<Relation> {
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
         return queryDbCtx.executeQuery(SELECT_SQL);
     }
 
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ReadResult<Relation> createNextValue(ResultSet resultSet) {
+	protected ReadResult<Relation> createNextValue(ResultSet resultSet) {
         long id;
         int version;
         Date timestamp;

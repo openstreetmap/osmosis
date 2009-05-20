@@ -371,7 +371,7 @@ public abstract class BaseDatasetReader implements DatasetReader {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ReleasableIterator<EntityContainer> iterateBoundingBox(
 			double left, double right, double top, double bottom, boolean completeWays) {
 		BoundingBoxContext bboxCtx;
@@ -444,7 +444,7 @@ public abstract class BaseDatasetReader implements DatasetReader {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public boolean hasNext() {
 			return (nodeIds.hasNext() || wayIds.hasNext() || relationIds.hasNext());
 		}
@@ -453,7 +453,7 @@ public abstract class BaseDatasetReader implements DatasetReader {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public EntityContainer next() {
 			if (nodeIds.hasNext()) {
 				return new NodeContainer(getNode(nodeIds.next()));
@@ -472,7 +472,7 @@ public abstract class BaseDatasetReader implements DatasetReader {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
@@ -481,7 +481,7 @@ public abstract class BaseDatasetReader implements DatasetReader {
 		/**
 		 * {@inheritDoc}
 		 */
-		@Override
+		
 		public void release() {
 			// Do nothing.
 		}

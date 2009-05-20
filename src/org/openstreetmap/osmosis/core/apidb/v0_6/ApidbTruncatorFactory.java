@@ -17,6 +17,7 @@ public class ApidbTruncatorFactory extends DatabaseTaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		return new RunnableTaskManager(

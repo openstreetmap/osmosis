@@ -54,7 +54,7 @@ public class DataOutputStoreWriter implements StoreWriter {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void writeCharacter(char value) {
 		try {
 			output.writeChar(value);

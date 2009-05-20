@@ -80,7 +80,7 @@ public class PostgresSqlEntityManager<T extends Entity> implements EntityManager
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void addEntity(T entity) {
 		writeUser(entity.getUser());
 		entityDao.addEntity(entity);
@@ -90,7 +90,7 @@ public class PostgresSqlEntityManager<T extends Entity> implements EntityManager
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public boolean exists(long id) {
 		return entityDao.exists(id);
 	}
@@ -99,7 +99,7 @@ public class PostgresSqlEntityManager<T extends Entity> implements EntityManager
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public T getEntity(long id) {
 		return entityDao.getEntity(id);
 	}
@@ -108,7 +108,7 @@ public class PostgresSqlEntityManager<T extends Entity> implements EntityManager
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public ReleasableIterator<T> iterate() {
 		return entityDao.iterate();
 	}
@@ -117,7 +117,7 @@ public class PostgresSqlEntityManager<T extends Entity> implements EntityManager
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void modifyEntity(T entity) {
 		writeUser(entity.getUser());
 		entityDao.modifyEntity(entity);
@@ -127,7 +127,7 @@ public class PostgresSqlEntityManager<T extends Entity> implements EntityManager
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	
 	public void removeEntity(long entityId) {
 		entityDao.removeEntity(entityId);
 	}

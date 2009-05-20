@@ -198,7 +198,7 @@ public class UserManager implements Releasable {
     /**
      * {@inheritDoc}
      */
-    @Override
+    
     public void release() {
         statementContainer.release();
     }

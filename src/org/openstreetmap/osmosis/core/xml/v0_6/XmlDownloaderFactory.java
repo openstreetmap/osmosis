@@ -30,7 +30,8 @@ public class XmlDownloaderFactory extends TaskManagerFactory {
     /**
      * {@inheritDoc}
      */
-    @Override
+    
+	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		double left;
 		double right;

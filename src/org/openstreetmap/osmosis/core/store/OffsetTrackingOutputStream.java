@@ -42,6 +42,7 @@ public class OffsetTrackingOutputStream extends OutputStream {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void write(int b) throws IOException {
 		byteCount++;
@@ -53,6 +54,7 @@ public class OffsetTrackingOutputStream extends OutputStream {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void write(byte[] b, int off, int len) throws IOException {
 		byteCount += len;
@@ -64,6 +66,7 @@ public class OffsetTrackingOutputStream extends OutputStream {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void write(byte[] b) throws IOException {
 		byteCount += b.length;
@@ -75,6 +78,7 @@ public class OffsetTrackingOutputStream extends OutputStream {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void flush() throws IOException {
 		out.flush();
@@ -84,6 +88,7 @@ public class OffsetTrackingOutputStream extends OutputStream {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void close() throws IOException {
 		out.close();

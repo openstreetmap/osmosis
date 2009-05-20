@@ -53,6 +53,7 @@ public class NodeContainer extends EntityContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void process(EntityProcessor processor) {
 		processor.process(this);
@@ -62,6 +63,7 @@ public class NodeContainer extends EntityContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public Node getEntity() {
 		return node;
@@ -71,6 +73,7 @@ public class NodeContainer extends EntityContainer {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public NodeContainer getWriteableInstance() {
 		if (node.isReadOnly()) {

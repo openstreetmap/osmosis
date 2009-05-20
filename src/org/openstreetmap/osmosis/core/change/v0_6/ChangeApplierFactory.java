@@ -17,6 +17,7 @@ public class ChangeApplierFactory extends TaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		return new MultiSinkMultiChangeSinkRunnableSourceManager(

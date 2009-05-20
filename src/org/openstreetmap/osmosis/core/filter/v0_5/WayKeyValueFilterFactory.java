@@ -18,6 +18,7 @@ public class WayKeyValueFilterFactory extends TaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		String keyValueList = getStringArgument(

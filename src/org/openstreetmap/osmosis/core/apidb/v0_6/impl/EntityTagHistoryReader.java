@@ -59,8 +59,9 @@ public class EntityTagHistoryReader extends BaseTableReader<DbFeatureHistory<DbF
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
         try {
             PreparedStatement statement;
 
@@ -80,8 +81,9 @@ public class EntityTagHistoryReader extends BaseTableReader<DbFeatureHistory<DbF
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ReadResult<DbFeatureHistory<DbFeature<Tag>>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<DbFeatureHistory<DbFeature<Tag>>> createNextValue(ResultSet resultSet) {
         long entityId;
         String key;
         String value;

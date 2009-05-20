@@ -17,6 +17,7 @@ public class PostgreSqlDatasetTruncatorFactory extends DatabaseTaskManagerFactor
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		return new RunnableTaskManager(

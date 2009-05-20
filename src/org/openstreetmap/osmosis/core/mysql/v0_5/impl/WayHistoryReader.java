@@ -59,6 +59,7 @@ public class WayHistoryReader extends BaseEntityReader<EntityHistory<Way>> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		try {
@@ -79,6 +80,7 @@ public class WayHistoryReader extends BaseEntityReader<EntityHistory<Way>> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<EntityHistory<Way>> createNextValue(ResultSet resultSet) {
 		long id;

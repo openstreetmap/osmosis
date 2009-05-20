@@ -75,6 +75,7 @@ public class EntityTagTableReader extends BaseTableReader<DBEntityTag> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
 		return queryDbCtx.executeQuery(sql);
@@ -84,6 +85,7 @@ public class EntityTagTableReader extends BaseTableReader<DBEntityTag> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected ReadResult<DBEntityTag> createNextValue(ResultSet resultSet) {
 		long entityId;

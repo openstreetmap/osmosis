@@ -40,6 +40,7 @@ public class RelationDao extends EntityDao<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected void loadFeatures(long entityId, Relation entity) {
 		entity.getMembers().addAll(relationMemberDao.getAllRaw(entityId));
@@ -70,6 +71,7 @@ public class RelationDao extends EntityDao<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void addEntity(Relation entity) {
 		super.addEntity(entity);
@@ -81,6 +83,7 @@ public class RelationDao extends EntityDao<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void modifyEntity(Relation entity) {
 		long relationId;
@@ -96,6 +99,7 @@ public class RelationDao extends EntityDao<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public void removeEntity(long entityId) {
 		relationMemberDao.removeList(entityId);
@@ -107,6 +111,7 @@ public class RelationDao extends EntityDao<Relation> {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	public ReleasableIterator<Relation> iterate() {
 		return new RelationReader(getDatabaseContext());

@@ -38,16 +38,18 @@ public class CurrentRelationMemberTableReader extends BaseTableReader<DbOrderedF
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
         return queryDbCtx.executeQuery(SELECT_SQL);
     }
 
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ReadResult<DbOrderedFeature<RelationMember>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<DbOrderedFeature<RelationMember>> createNextValue(ResultSet resultSet) {
         long relationId;
         EntityType memberType;
         long memberId;

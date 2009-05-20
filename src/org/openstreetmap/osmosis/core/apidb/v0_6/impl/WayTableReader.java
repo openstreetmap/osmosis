@@ -39,16 +39,18 @@ public class WayTableReader extends BaseEntityReader<EntityHistory<Way>> {
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
+	protected ResultSet createResultSet(DatabaseContext queryDbCtx) {
         return queryDbCtx.executeQuery(SELECT_SQL);
     }
 
     /**
      * {@inheritDoc}
      */
+    
     @Override
-    protected ReadResult<EntityHistory<Way>> createNextValue(ResultSet resultSet) {
+	protected ReadResult<EntityHistory<Way>> createNextValue(ResultSet resultSet) {
         long id;
         int version;
         Date timestamp;

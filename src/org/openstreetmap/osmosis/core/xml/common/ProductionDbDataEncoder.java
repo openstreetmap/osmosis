@@ -36,6 +36,7 @@ public class ProductionDbDataEncoder extends CharsetEncoder {
 	/**
 	 * {@inheritDoc}
 	 */
+	
 	@Override
 	protected CoderResult encodeLoop(CharBuffer in, ByteBuffer out) {
 		while (true) {
