@@ -27,7 +27,6 @@ public abstract class BaseXmlWriter {
 	private boolean initialized;
 	private BufferedWriter writer;
 	private CompressionMethod compressionMethod;
-	private boolean enableProdEncodingHack;
 	
 	
 	/**
@@ -37,15 +36,10 @@ public abstract class BaseXmlWriter {
 	 *            The file to write.
 	 * @param compressionMethod
 	 *            Specifies the compression method to employ.
-	 * @param enableProdEncodingHack
-	 *            If true, a special encoding is enabled which works around an
-	 *            encoding issue with the current production configuration where
-	 *            data is double encoded as utf-8.
 	 */
-	public BaseXmlWriter(File file, CompressionMethod compressionMethod, boolean enableProdEncodingHack) {
+	public BaseXmlWriter(File file, CompressionMethod compressionMethod) {
 		this.file = file;
 		this.compressionMethod = compressionMethod;
-		this.enableProdEncodingHack = enableProdEncodingHack;
 	}
 	
 	
@@ -122,11 +116,7 @@ public abstract class BaseXmlWriter {
 				outStream =
 					new CompressionActivator(compressionMethod).createCompressionOutputStream(outStream);
 				
-				if (enableProdEncodingHack) {
-					outStreamWriter = new OutputStreamWriter(outStream, new ProductionDbCharset());
-				} else {
-					outStreamWriter = new OutputStreamWriter(outStream, "UTF-8");
-				}
+				outStreamWriter = new OutputStreamWriter(outStream, "UTF-8");
 				
 				writer = new BufferedWriter(outStreamWriter);
 				

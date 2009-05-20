@@ -41,7 +41,7 @@ public class XmlChangeReaderWriterTest {
 		
 		// Create and connect the xml tasks.
 		xmlReader = new XmlChangeReader(inputFile, true, CompressionMethod.None);
-		xmlWriter = new XmlChangeWriter(outputFile, CompressionMethod.None, false);
+		xmlWriter = new XmlChangeWriter(outputFile, CompressionMethod.None);
 		xmlReader.setChangeSink(xmlWriter);
 		
 		// Process the xml.

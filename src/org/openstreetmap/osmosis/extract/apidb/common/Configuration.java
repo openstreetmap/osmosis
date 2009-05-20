@@ -32,7 +32,6 @@ public class Configuration {
 	private static final String KEY_LAG_LENGTH = "lagLength";
 	private static final String KEY_CHANGE_FILE_BEGIN_FORMAT = "changeFileBeginFormat";
 	private static final String KEY_CHANGE_FILE_END_FORMAT = "changeFileEndFormat";
-	private static final String KEY_ENABLE_PROD_ENCODING_HACK = "enableProdEncodingHack";
 	private static final String KEY_READ_FULL_HISTORY = "readFullHistory";
 	private static final String KEY_VALIDATE_SCHEMA_VERSION = "validateSchemaVersion";
 	private static final String KEY_ALLOW_INCORRECT_SCHEMA_VERSION = "allowIncorrectSchemaVersion";
@@ -179,16 +178,6 @@ public class Configuration {
 	 */
 	public String getChangeFileEndFormat() {
 		return getProperty(KEY_CHANGE_FILE_END_FORMAT);
-	}
-
-
-	/**
-	 * Returns the production encoding hack flag.
-	 * 
-	 * @return The production encoding hack flag.
-	 */
-	public boolean getEnableProductionEncodingHack() {
-		return Boolean.valueOf(getProperty(KEY_ENABLE_PROD_ENCODING_HACK));
 	}
 
 

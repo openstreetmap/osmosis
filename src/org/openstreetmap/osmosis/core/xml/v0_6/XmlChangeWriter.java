@@ -28,13 +28,9 @@ public class XmlChangeWriter extends BaseXmlWriter implements ChangeSink {
 	 *            The file to write.
 	 * @param compressionMethod
 	 *            Specifies the compression method to employ.
-	 * @param enableProdEncodingHack
-	 *            If true, a special encoding is enabled which works around an
-	 *            encoding issue with the current production configuration where
-	 *            data is double encoded as utf-8.
 	 */
-	public XmlChangeWriter(File file, CompressionMethod compressionMethod, boolean enableProdEncodingHack) {
-		super(file, compressionMethod, enableProdEncodingHack);
+	public XmlChangeWriter(File file, CompressionMethod compressionMethod) {
+		super(file, compressionMethod);
 		
 		osmChangeWriter = new OsmChangeWriter("osmChange", 0);
 	}

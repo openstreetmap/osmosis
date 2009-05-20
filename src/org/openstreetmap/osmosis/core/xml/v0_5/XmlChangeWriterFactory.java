@@ -28,7 +28,6 @@ public class XmlChangeWriterFactory extends XmlTaskManagerFactory {
 		String fileName;
 		File file;
 		CompressionMethod compressionMethod;
-		boolean enableProdEncodingHack;
 		XmlChangeWriter task;
 		
 		// Get the task arguments.
@@ -38,13 +37,12 @@ public class XmlChangeWriterFactory extends XmlTaskManagerFactory {
 			getDefaultStringArgument(taskConfig, DEFAULT_FILE_NAME)
 		);
 		compressionMethod = getCompressionMethodArgument(taskConfig, fileName);
-		enableProdEncodingHack = getProdEncodingHackArgument(taskConfig);
 		
 		// Create a file object from the file name provided.
 		file = new File(fileName);
 		
 		// Build the task object.
-		task = new XmlChangeWriter(file, compressionMethod, enableProdEncodingHack);
+		task = new XmlChangeWriter(file, compressionMethod);
 		
 		return new ChangeSinkManager(taskConfig.getId(), task, taskConfig.getPipeArgs());
 	}

@@ -75,7 +75,7 @@ public class IntervalExtractor {
 		file = new File(baseDirectory, fileName);
 
 		// Create the output task to write to a compressed xml file.
-		writer = new XmlChangeWriter(tmpFile, CompressionMethod.GZip, config.getEnableProductionEncodingHack());
+		writer = new XmlChangeWriter(tmpFile, CompressionMethod.GZip);
 
 		// Create the input task to read the change interval from the database.
 		reader = new ApidbChangeReader(config.getDatabaseLoginCredentials(), config.getDatabasePreferences(), false,
