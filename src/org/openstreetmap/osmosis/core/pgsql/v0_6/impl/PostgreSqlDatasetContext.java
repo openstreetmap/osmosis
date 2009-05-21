@@ -38,8 +38,8 @@ import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.pgsql.common.PolygonBuilder;
 import org.openstreetmap.osmosis.core.pgsql.common.SchemaVersionValidator;
 import org.openstreetmap.osmosis.core.pgsql.v0_6.PostgreSqlVersionConstants;
-import org.openstreetmap.osmosis.core.store.IteratorReleasableIterator;
 import org.openstreetmap.osmosis.core.store.MultipleSourceIterator;
+import org.openstreetmap.osmosis.core.store.ReleasableAdaptorForIterator;
 import org.openstreetmap.osmosis.core.store.UpcastIterator;
 
 
@@ -209,7 +209,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 		sources = new ArrayList<ReleasableIterator<EntityContainer>>();
 		
 		sources.add(new UpcastIterator<EntityContainer, BoundContainer>(
-				new BoundContainerIterator(new IteratorReleasableIterator<Bound>(bounds.iterator()))));
+				new BoundContainerIterator(new ReleasableAdaptorForIterator<Bound>(bounds.iterator()))));
 		sources.add(new UpcastIterator<EntityContainer, NodeContainer>(
 				new NodeContainerIterator(nodeDao.iterate())));
 		sources.add(new UpcastIterator<EntityContainer, WayContainer>(
@@ -399,7 +399,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			resultSets = new ArrayList<ReleasableIterator<EntityContainer>>();
 			resultSets.add(
 					new UpcastIterator<EntityContainer, BoundContainer>(
-							new BoundContainerIterator(new IteratorReleasableIterator<Bound>(bounds.iterator()))));
+							new BoundContainerIterator(new ReleasableAdaptorForIterator<Bound>(bounds.iterator()))));
 			resultSets.add(
 					new UpcastIterator<EntityContainer, NodeContainer>(
 							new NodeContainerIterator(new NodeReader(dbCtx, "box_node_list"))));
