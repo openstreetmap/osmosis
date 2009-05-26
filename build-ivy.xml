@@ -53,6 +53,8 @@
 		
 		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact]-[revision].[ext]" sync="true" conf="${ivy.configurations}" />
 		
+		<ivy:report todir="report/ivy"/>
+		
 		<!-- Create the timestamp file for the resolve-uptodate target to check.  If this file is newer than ivy.xml then no
 		resolve will be performed. -->
 		<touch file="${ivy.lib.dir}/resolve.tstamp"/>
