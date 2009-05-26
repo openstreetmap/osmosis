@@ -15,6 +15,16 @@ build-stamp:
 
 	# Add here commands to compile the package.
 	# $(MAKE)
+	if ! javac -version 2>&1 | grep -q -e 1.6 ; then \
+	    javac -version; \
+	    echo "!!!!! ERROR: Wrong JavaC Version. Need 1.6*"; \
+	    exit -1 ; \
+	fi
+
+	# Resolve dependencies
+	ant resolve
+
+	ant dist
 
 	touch build-stamp
 
@@ -24,9 +34,13 @@ clean:
 	rm -f build-stamp
 
 	# Osmosis moves it's Binary arround, so to be sure we do not catch old Versions and don't 
-	# recognize it we remove all osmosis.jar Files first
-	( find . -name "osmosis*.jar" | while read file ; do rm "$file" ; done ) || true
-	-$(MAKE) distclean
+	# recognize it we; remove all osmosis.jar Files first
+	( find . -name "osmosis*.jar" | while read file ; do rm -v "$file" ; done ) || true
+
+	ant clean
+
+	ant clean-cache
+
 	dh_clean
 
 install: build

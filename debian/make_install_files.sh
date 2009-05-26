@@ -44,27 +44,6 @@ if ! javac -version 2>&1 | grep -q -e 1.6 ; then
     exit -1 
 fi
 
-ant clean >build.log 2>&1
-if [ "$?" -ne "0" ] ; then
-    cat build.log
-    echo "${RED}!!!!!! ERROR compiling  Osmosis (ant clean) ${NORMAL}"
-    exit -1
-fi
-
-ant resolve >>build.log 2>&1
-if [ "$?" -ne "0" ] ; then
-    cat build.log
-    echo "${RED}!!!!!! ERROR compiling  Osmosis (ant resolve) ${NORMAL}"
-    exit -1
-fi
-
-ant dist >>build.log 2>&1
-if [ "$?" -ne "0" ] ; then
-    cat build.log
-    echo "${RED}!!!!!! ERROR compiling  Osmosis (ant build) ${NORMAL}"
-    exit -1
-fi
-
 osmosis_dir="$dst_path/usr/local/share/osmosis/"
 mkdir -p $osmosis_dir
 cp build/binary/osmosis.jar $osmosis_dir
