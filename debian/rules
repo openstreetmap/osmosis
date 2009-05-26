@@ -15,9 +15,8 @@ build-stamp:
 
 	# Add here commands to compile the package.
 	# $(MAKE)
-	if ! javac -version 2>&1 | grep -q -e 1.6 ; then \
+	if ! javac -version 2>&1 | grep -q -e 1.6 ; then echo "!!!!! ER" "ROR: Wrong JavaC Version. Need 1.6*"; \
 	    javac -version; \
-	    echo "!!!!! ERROR: Wrong JavaC Version. Need 1.6*"; \
 	    exit -1 ; \
 	fi
 
