@@ -73,6 +73,19 @@ public class Relation extends Entity implements Comparable<Relation> {
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param entityData
+	 *            The common entity data.
+	 */
+	public Relation(CommonEntityData entityData) {
+		super(entityData);
+		
+		this.members = new ArrayList<RelationMember>();
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
 	 * @param id
 	 *            The unique identifier.
 	 * @param version
@@ -119,6 +132,22 @@ public class Relation extends Entity implements Comparable<Relation> {
 			long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
 			Collection<Tag> tags, List<RelationMember> members) {
 		super(id, version, timestampContainer, user, changesetId, tags);
+		
+		this.members = new ArrayList<RelationMember>(members);
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param entityData
+	 *            The common entity data.
+	 * @param members
+	 *            The members to apply to the object.
+	 */
+	public Relation(
+			CommonEntityData entityData, List<RelationMember> members) {
+		super(entityData);
 		
 		this.members = new ArrayList<RelationMember>(members);
 	}

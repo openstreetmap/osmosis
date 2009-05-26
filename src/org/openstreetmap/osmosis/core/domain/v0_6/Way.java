@@ -71,6 +71,19 @@ public class Way extends Entity implements Comparable<Way> {
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param entityData
+	 *            The common entity data.
+	 */
+	public Way(CommonEntityData entityData) {
+		super(entityData);
+		
+		this.wayNodes = new ArrayList<WayNode>();
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
 	 * @param id
 	 *            The unique identifier.
 	 * @param version
@@ -116,6 +129,22 @@ public class Way extends Entity implements Comparable<Way> {
 			long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
 			Collection<Tag> tags, List<WayNode> wayNodes) {
 		super(id, version, timestampContainer, user, changesetId, tags);
+		
+		this.wayNodes = new ArrayList<WayNode>(wayNodes);
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param entityData
+	 *            The common entity data.
+	 * @param wayNodes
+	 *            The way nodes to apply to the object
+	 */
+	public Way(
+			CommonEntityData entityData, List<WayNode> wayNodes) {
+		super(entityData);
 		
 		this.wayNodes = new ArrayList<WayNode>(wayNodes);
 	}

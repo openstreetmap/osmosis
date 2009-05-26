@@ -41,8 +41,8 @@ public class Node extends Entity implements Comparable<Node> {
 	 * @param longitude
 	 *            The geographic longitude.
 	 */
-	public Node(long id, int version, Date timestamp, OsmUser user, long changesetId, double latitude,
-			double longitude) {
+	public Node(
+			long id, int version, Date timestamp, OsmUser user, long changesetId, double latitude, double longitude) {
 		// Chain to the more-specific constructor
 		this(id, version, new SimpleTimestampContainer(timestamp), user, changesetId, latitude, longitude);
 	}
@@ -66,10 +66,26 @@ public class Node extends Entity implements Comparable<Node> {
 	 * @param longitude
 	 *            The geographic longitude.
 	 */
-	public Node(
-			long id, int version, TimestampContainer timestampContainer,
-			OsmUser user, long changesetId, double latitude, double longitude) {
+	public Node(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
+			double latitude, double longitude) {
 		super(id, version, timestampContainer, user, changesetId);
+
+		init(latitude, longitude);
+	}
+
+
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param entityData
+	 *            The common entity data.
+	 * @param latitude
+	 *            The geographic latitude.
+	 * @param longitude
+	 *            The geographic longitude.
+	 */
+	public Node(CommonEntityData entityData, double latitude, double longitude) {
+		super(entityData);
 
 		init(latitude, longitude);
 	}
@@ -125,11 +141,11 @@ public class Node extends Entity implements Comparable<Node> {
 	public Node(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
 			Collection<Tag> tags, double latitude, double longitude) {
 		super(id, version, timestampContainer, user, changesetId, tags);
-		
+
 		init(latitude, longitude);
 	}
-	
-	
+
+
 	/**
 	 * Initializes non-collection attributes.
 	 * 
@@ -140,7 +156,7 @@ public class Node extends Entity implements Comparable<Node> {
 	 */
 	private void init(double newLatitude, double newLongitude) {
 		this.latitude = newLatitude;
-		this.longitude= newLongitude;
+		this.longitude = newLongitude;
 	}
 
 
@@ -287,7 +303,7 @@ public class Node extends Entity implements Comparable<Node> {
 	 */
 	public void setLatitude(double latitude) {
 		assertWriteable();
-		
+
 		this.latitude = latitude;
 	}
 
@@ -300,8 +316,8 @@ public class Node extends Entity implements Comparable<Node> {
 	public double getLongitude() {
 		return longitude;
 	}
-	
-	
+
+
 	/**
 	 * Sets the longitude.
 	 * 
@@ -310,7 +326,7 @@ public class Node extends Entity implements Comparable<Node> {
 	 */
 	public void setLongitude(double longitude) {
 		assertWriteable();
-		
+
 		this.longitude = longitude;
 	}
 
@@ -328,22 +344,23 @@ public class Node extends Entity implements Comparable<Node> {
 		}
 	}
 
-    /** 
-     * ${@inheritDoc}.
-     */
-    @Override
-    public String toString() {
-        String name = null;
-        Collection<Tag> tags = getTags();
-        for (Tag tag : tags) {
-            if (tag.getKey() != null && tag.getKey().equalsIgnoreCase("name")) {
-                name = tag.getValue();
-                break;
-            }
-        }
-        if (name != null) {
-            return "Node(id=" + getId() + ", #tags=" +  getTags().size()+ ", name='" + name + "')";
-        }
-        return "Node(id=" + getId() + ", #tags=" +  getTags().size()+ ")";
-    }
+
+	/**
+	 * ${@inheritDoc}.
+	 */
+	@Override
+	public String toString() {
+		String name = null;
+		Collection<Tag> tags = getTags();
+		for (Tag tag : tags) {
+			if (tag.getKey() != null && tag.getKey().equalsIgnoreCase("name")) {
+				name = tag.getValue();
+				break;
+			}
+		}
+		if (name != null) {
+			return "Node(id=" + getId() + ", #tags=" + getTags().size() + ", name='" + name + "')";
+		}
+		return "Node(id=" + getId() + ", #tags=" + getTags().size() + ")";
+	}
 }
