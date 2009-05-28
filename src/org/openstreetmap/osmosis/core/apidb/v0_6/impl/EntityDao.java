@@ -153,11 +153,11 @@ public abstract class EntityDao<T extends Entity> {
 		}
 
 		sql.append(" FROM ");
-		sql.append(selectedEntityTableName);
-		sql.append(" e");
-		sql.append("INNER JOIN tmp_");
 		sql.append(entityName);
-		sql.append("s t ON e.id = t.id AND e.version = t.version");
+		sql.append("s e");
+		sql.append(" INNER JOIN ");
+		sql.append(selectedEntityTableName);
+		sql.append(" t ON e.id = t.id AND e.version = t.version");
 		sql.append(" INNER JOIN changesets c ON e.changeset_id = c.id INNER JOIN users u ON c.user_id = u.id");
 		sql.append(" ORDER BY e.id, e.version");
 		
@@ -220,10 +220,10 @@ public abstract class EntityDao<T extends Entity> {
 		sql.append(" FROM ");
 		sql.append(entityName);
 		sql.append("_tags et");
-		sql.append("INNER JOIN ");
+		sql.append(" INNER JOIN ");
 		sql.append(selectedEntityTableName);
 		sql.append(" t ON et.id = t.id AND et.version = t.version");
-		sql.append(" ORDER BY e.id, e.version");
+		sql.append(" ORDER BY et.id, et.version");
 		
 		LOG.log(Level.FINER, "Tag history query: " + sql);
 
@@ -242,23 +242,24 @@ public abstract class EntityDao<T extends Entity> {
 			ReleasableIterator<DbFeatureHistory<DbFeature<Tag>>> tagIterator;
 			List<FeatureHistoryPopulator<T, ?>> featurePopulators;
 			EntityHistoryReader2<T> entityHistoryReader;
+			EntityChangeReader<T> entityChangeReader;
 			
 			entityIterator = releasableContainer.add(getEntityHistory(selectedEntityTableName));
 			tagIterator = releasableContainer.add(getTagHistory(selectedEntityTableName));
 			
-			featurePopulators = getFeatureHistoryPopulators("tmp_" + entityName + "s");
+			featurePopulators = getFeatureHistoryPopulators(selectedEntityTableName);
 			for (FeatureHistoryPopulator<T, ?> featurePopulator : featurePopulators) {
 				releasableContainer.add(featurePopulator);
 			}
 			
-			entityHistoryReader = new EntityHistoryReader2<T>(entityIterator, tagIterator, featurePopulators,
-					getContainerFactory());
+			entityHistoryReader = new EntityHistoryReader2<T>(entityIterator, tagIterator, featurePopulators);
+			entityChangeReader = new EntityChangeReader<T>(entityHistoryReader, getContainerFactory());
 			
 			// The sources are now all attached to the history reader so we don't want to release
 			// them in the finally block.
 			releasableContainer.clear();
 			
-			return entityHistoryReader;
+			return entityChangeReader;
 			
 		} finally {
 			releasableContainer.release();
@@ -288,6 +289,7 @@ public abstract class EntityDao<T extends Entity> {
 		sql.append("CREATE TEMPORARY TABLE ");
 		sql.append(selectedEntityTableName);
 		sql.append(" AS SELECT id, version FROM ");
+		sql.append(entityName);
 		sql.append("s WHERE timestamp > :baseTimestamp AND xmin IN [:txnList]");
 		sql.append(" ON COMMIT DROP");
 		
@@ -309,6 +311,7 @@ public abstract class EntityDao<T extends Entity> {
 	 * @return An iterator pointing at the identified records.
 	 */
 	public ReleasableIterator<ChangeContainer> getHistory() {
+		// Join the entity table to itself which will return all records.
 		return getHistory(entityName + "s");
 	}
 }

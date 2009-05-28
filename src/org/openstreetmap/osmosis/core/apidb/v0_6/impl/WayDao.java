@@ -117,10 +117,10 @@ public class WayDao extends EntityDao<Way> {
 		sql.append("SELECT wn.id, wn.node_id, wn.version");
 		sql.append(" FROM ");
 		sql.append("way_nodes wn");
-		sql.append("INNER JOIN ");
+		sql.append(" INNER JOIN ");
 		sql.append(selectedEntityTableName);
 		sql.append(" t ON wn.id = t.id AND wn.version = t.version");
-		sql.append(" ORDER BY e.id, e.version");
+		sql.append(" ORDER BY wn.id, wn.version, wn.sequence_id");
 		
 		LOG.log(Level.FINER, "Way node history query: " + sql);
 

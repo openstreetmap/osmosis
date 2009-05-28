@@ -1,54 +1,45 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.apidb.v0_6.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
+import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
+import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.store.PeekableIterator;
+import org.openstreetmap.osmosis.core.task.common.ChangeAction;
 
 
 /**
- * Reads a complete snapshot of an entity type based on the complete history of
- * an entity type.
+ * Produces a snapshot at a point in time from a complete history stream.
  * 
  * @author Brett Henderson
- * @param <T>
- *            The data type to be read.
  */
-public class EntitySnapshotReader<T extends Entity> implements ReleasableIterator<T> {
+public class EntitySnapshotReader implements ReleasableIterator<EntityContainer> {
 	
-	private PeekableIterator<EntityHistory<T>> entityIterator;
+	private PeekableIterator<ChangeContainer> sourceIterator;
 	private Date snapshotInstant;
-	private Comparator<EntityHistory<T>> resultOrdering;
-	private T nextValue;
+	private EntityContainer nextValue;
 	private boolean nextValueLoaded;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param entityIterator
+	 * @param sourceIterator
 	 *            An iterator containing the full history for an entity type
-	 *            ordered by identifier.
+	 *            ordered by identifier and version.
 	 * @param snapshotInstant
 	 *            The state of the entity at this point in time will be dumped.
 	 *            This ensures a consistent snapshot.
-	 * @param resultOrdering
-	 *            This provides a way of sorting the history records for a
-	 *            single entity, it may be null if no sorting is required.
 	 */
 	public EntitySnapshotReader(
-			PeekableIterator<EntityHistory<T>> entityIterator, Date snapshotInstant,
-			Comparator<EntityHistory<T>> resultOrdering) {
-		this.entityIterator = entityIterator;
+			ReleasableIterator<ChangeContainer> sourceIterator, Date snapshotInstant) {
+		this.sourceIterator = new PeekableIterator<ChangeContainer>(sourceIterator);
 		this.snapshotInstant = snapshotInstant;
-		this.resultOrdering = resultOrdering;
 		
 		nextValueLoaded = false;
 	}
@@ -58,42 +49,44 @@ public class EntitySnapshotReader<T extends Entity> implements ReleasableIterato
 	 * {@inheritDoc}
 	 */
 	public boolean hasNext() {
-		while (!nextValueLoaded && entityIterator.hasNext()) {
-			List<EntityHistory<T>> entityHistoryList;
+		while (!nextValueLoaded && sourceIterator.hasNext()) {
+			ChangeContainer changeContainer;
+			Entity peekEntity;
 			long currentId;
+			EntityType currentEntityType;
 			
-			entityHistoryList = new ArrayList<EntityHistory<T>>();
+			// Get the next change from the underlying stream.
+			peekEntity = sourceIterator.peekNext().getEntityContainer().getEntity();
+			currentId = peekEntity.getId();
+			currentEntityType = peekEntity.getType();
 			
-			// Determine the id of the next set of history elements.
-			currentId = entityIterator.peekNext().getEntity().getId();
-			
-			// Loop until all history values for the current element are exhausted.
-			while (entityIterator.hasNext() && currentId == entityIterator.peekNext().getEntity().getId()) {
-				EntityHistory<T> entityHistory;
+			// Loop until all history values for the current element are exhausted and get the
+			// latest version of the entity that fits within the snapshot timestamp.
+			changeContainer = null;
+			while (sourceIterator.hasNext()) {
+				ChangeContainer tmpChangeContainer = sourceIterator.peekNext();
 				
-				entityHistory = entityIterator.next();
+				// Break out of the loop when we reach the next entity in the stream.
+				if (currentId != tmpChangeContainer.getEntityContainer().getEntity().getId()
+					|| !currentEntityType.equals(tmpChangeContainer.getEntityContainer().getEntity().getType())) {
+					break;
+				}
+				
+				// We want the value that we have already peeked from the iterator, so remove it from the iterator.
+				sourceIterator.next();
 				
 				// We're only interested in elements prior or equal to the snapshot point.
-				if (entityHistory.getEntity().getTimestamp().compareTo(snapshotInstant) <= 0) {
-					entityHistoryList.add(entityHistory);
+				if (tmpChangeContainer.getEntityContainer().getEntity()
+						.getTimestamp().compareTo(snapshotInstant) <= 0) {
+					// Replace the current change container with the later version.
+					changeContainer = tmpChangeContainer;
 				}
 			}
 			
-			if (resultOrdering != null) {
-				Collections.sort(entityHistoryList, resultOrdering);
-			}
-			
-			// If we have elements in the list, the last one is the one required
-			// for the snapshot.  We only consider it if it is visible.
-			if (entityHistoryList.size() > 0) {
-				EntityHistory<T> entityHistory;
-				
-				entityHistory = entityHistoryList.get(entityHistoryList.size() - 1);
-				
-				if (entityHistory.isVisible()) {
-					nextValue = entityHistory.getEntity();
-					nextValueLoaded = true;
-				}
+			// We are not interested in items created after the snapshot timestamp (ie. null) or deleted items.
+			if (changeContainer != null && !ChangeAction.Delete.equals(changeContainer.getAction())) {
+				nextValue = changeContainer.getEntityContainer();
+				nextValueLoaded = true;
 			}
 		}
 		
@@ -104,17 +97,14 @@ public class EntitySnapshotReader<T extends Entity> implements ReleasableIterato
 	/**
 	 * {@inheritDoc}
 	 */
-	public T next() {
-		T result;
-		
+	public EntityContainer next() {
 		if (!hasNext()) {
 			throw new NoSuchElementException();
 		}
 		
-		result = nextValue;
 		nextValueLoaded = false;
 		
-		return result;
+		return nextValue;
 	}
 	
 	
@@ -130,6 +120,6 @@ public class EntitySnapshotReader<T extends Entity> implements ReleasableIterato
 	 * {@inheritDoc}
 	 */
 	public void release() {
-		entityIterator.release();
+		sourceIterator.release();
 	}
 }

@@ -116,13 +116,13 @@ public class RelationDao extends EntityDao<Relation> {
 		MapSqlParameterSource parameterSource;
 
 		sql = new StringBuilder();
-		sql.append("SELECT rm.id, rm.node_id, rm.version");
+		sql.append("SELECT rm.id, rm.member_id, rm.member_role, rm.member_type, rm.version");
 		sql.append(" FROM ");
 		sql.append("relation_members rm");
-		sql.append("INNER JOIN ");
+		sql.append(" INNER JOIN ");
 		sql.append(selectedEntityTableName);
 		sql.append(" t ON rm.id = t.id AND rm.version = t.version");
-		sql.append(" ORDER BY e.id, e.version");
+		sql.append(" ORDER BY rm.id, rm.version, rm.sequence_id");
 		
 		LOG.log(Level.FINER, "Relation member history query: " + sql);
 
