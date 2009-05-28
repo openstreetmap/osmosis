@@ -78,7 +78,7 @@ public class IntervalExtractor {
 		writer = new XmlChangeWriter(tmpFile, CompressionMethod.GZip);
 
 		// Create the input task to read the change interval from the database.
-		reader = new ApidbChangeReader(config.getDatabaseLoginCredentials(), config.getDatabasePreferences(), false,
+		reader = new ApidbChangeReader(config.getDatabaseLoginCredentials(), config.getDatabasePreferences(),
 				intervalBegin, intervalEnd, fullHistory);
 		
 		// Create the tag sorter to ensure that output files are consistent allowing simple

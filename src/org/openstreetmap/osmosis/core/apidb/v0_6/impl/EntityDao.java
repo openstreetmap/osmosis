@@ -288,16 +288,52 @@ public abstract class EntityDao<T extends Entity> {
 		sql = new StringBuilder();
 		sql.append("CREATE TEMPORARY TABLE ");
 		sql.append(selectedEntityTableName);
+		sql.append(" ON COMMIT DROP");
 		sql.append(" AS SELECT id, version FROM ");
 		sql.append(entityName);
 		sql.append("s WHERE timestamp > :baseTimestamp AND xmin IN [:txnList]");
-		sql.append(" ON COMMIT DROP");
 		
 		LOG.log(Level.FINER, "Entity identification query: " + sql);
 
 		parameterSource = new MapSqlParameterSource();
 		parameterSource.addValue("baseTimestamp", baseTimestamp, Types.TIMESTAMP);
 		parameterSource.addValue("txnList", txnList, Types.BIGINT);
+		
+		namedParamJdbcTemplate.update(sql.toString(), parameterSource);
+		
+		return getHistory(selectedEntityTableName);
+	}
+
+
+	/**
+	 * Retrieves the changes that have were made between two points in time.
+	 * 
+	 * @param intervalBegin
+	 *            Marks the beginning (inclusive) of the time interval to be checked.
+	 * @param intervalEnd
+	 *            Marks the end (exclusive) of the time interval to be checked.
+	 * @return An iterator pointing at the identified records.
+	 */
+	public ReleasableIterator<ChangeContainer> getHistory(Date intervalBegin, Date intervalEnd) {
+		String selectedEntityTableName;
+		StringBuilder sql;
+		MapSqlParameterSource parameterSource;
+		
+		selectedEntityTableName = "tmp_" + entityName + "s";
+		
+		sql = new StringBuilder();
+		sql.append("CREATE TEMPORARY TABLE ");
+		sql.append(selectedEntityTableName);
+		sql.append(" ON COMMIT DROP");
+		sql.append(" AS SELECT id, version FROM ");
+		sql.append(entityName);
+		sql.append("s WHERE timestamp > :intervalBegin AND timestamp <= :intervalEnd");
+		
+		LOG.log(Level.FINER, "Entity identification query: " + sql);
+
+		parameterSource = new MapSqlParameterSource();
+		parameterSource.addValue("intervalBegin", intervalBegin, Types.TIMESTAMP);
+		parameterSource.addValue("intervalEnd", intervalEnd, Types.TIMESTAMP);
 		
 		namedParamJdbcTemplate.update(sql.toString(), parameterSource);
 		

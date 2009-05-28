@@ -2,12 +2,11 @@
 package org.openstreetmap.osmosis.core.apidb.v0_6.impl;
 
 import java.util.Date;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
-import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
-import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.store.PeekableIterator;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
@@ -20,7 +19,7 @@ import org.openstreetmap.osmosis.core.task.common.ChangeAction;
  */
 public class EntitySnapshotReader implements ReleasableIterator<EntityContainer> {
 	
-	private PeekableIterator<ChangeContainer> sourceIterator;
+	private PeekableIterator<List<ChangeContainer>> sourceIterator;
 	private Date snapshotInstant;
 	private EntityContainer nextValue;
 	private boolean nextValueLoaded;
@@ -30,15 +29,14 @@ public class EntitySnapshotReader implements ReleasableIterator<EntityContainer>
 	 * Creates a new instance.
 	 * 
 	 * @param sourceIterator
-	 *            An iterator containing the full history for an entity type
-	 *            ordered by identifier and version.
+	 *            An iterator containing the full history for entities.
 	 * @param snapshotInstant
 	 *            The state of the entity at this point in time will be dumped.
 	 *            This ensures a consistent snapshot.
 	 */
 	public EntitySnapshotReader(
 			ReleasableIterator<ChangeContainer> sourceIterator, Date snapshotInstant) {
-		this.sourceIterator = new PeekableIterator<ChangeContainer>(sourceIterator);
+		this.sourceIterator = new PeekableIterator<List<ChangeContainer>>(new EntityHistoryListReader(sourceIterator));
 		this.snapshotInstant = snapshotInstant;
 		
 		nextValueLoaded = false;
@@ -50,30 +48,16 @@ public class EntitySnapshotReader implements ReleasableIterator<EntityContainer>
 	 */
 	public boolean hasNext() {
 		while (!nextValueLoaded && sourceIterator.hasNext()) {
+			List<ChangeContainer> changeList;
 			ChangeContainer changeContainer;
-			Entity peekEntity;
-			long currentId;
-			EntityType currentEntityType;
 			
-			// Get the next change from the underlying stream.
-			peekEntity = sourceIterator.peekNext().getEntityContainer().getEntity();
-			currentId = peekEntity.getId();
-			currentEntityType = peekEntity.getType();
+			// Get the next change list from the underlying stream.
+			changeList = sourceIterator.next();
 			
 			// Loop until all history values for the current element are exhausted and get the
 			// latest version of the entity that fits within the snapshot timestamp.
 			changeContainer = null;
-			while (sourceIterator.hasNext()) {
-				ChangeContainer tmpChangeContainer = sourceIterator.peekNext();
-				
-				// Break out of the loop when we reach the next entity in the stream.
-				if (currentId != tmpChangeContainer.getEntityContainer().getEntity().getId()
-					|| !currentEntityType.equals(tmpChangeContainer.getEntityContainer().getEntity().getType())) {
-					break;
-				}
-				
-				// We want the value that we have already peeked from the iterator, so remove it from the iterator.
-				sourceIterator.next();
+			for (ChangeContainer tmpChangeContainer : changeList) {
 				
 				// We're only interested in elements prior or equal to the snapshot point.
 				if (tmpChangeContainer.getEntityContainer().getEntity()
