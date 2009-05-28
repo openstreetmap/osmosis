@@ -54,6 +54,17 @@ public class DatabaseContext2 {
     	this.dbType = loginCredentials.getDbType();
     	
     	setStatementFetchSizeForStreaming();
+
+        switch (loginCredentials.getDbType()) {
+        case POSTGRESQL:
+            identityValueLoader = new PostgresqlIdentityValueLoader2(this);
+            break;
+        case MYSQL:
+            identityValueLoader = new MysqlIdentityValueLoader2(this);
+            break;
+        default:
+            throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+        }
     }
     
     
