@@ -15,9 +15,6 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.RunnableSourceManager;
  * @author Brett Henderson
  */
 public class ApidbCurrentReaderFactory extends DatabaseTaskManagerFactory {
-	private static final String ARG_READ_ALL_USERS = "readAllUsers";
-	private static final boolean DEFAULT_READ_ALL_USERS = false;
-	
 	
 	/**
 	 * {@inheritDoc}
@@ -26,16 +23,14 @@ public class ApidbCurrentReaderFactory extends DatabaseTaskManagerFactory {
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		DatabaseLoginCredentials loginCredentials;
 		DatabasePreferences preferences;
-		boolean readAllUsers;
 		
 		// Get the task arguments.
 		loginCredentials = getDatabaseLoginCredentials(taskConfig);
 		preferences = getDatabasePreferences(taskConfig);
-		readAllUsers = getBooleanArgument(taskConfig, ARG_READ_ALL_USERS, DEFAULT_READ_ALL_USERS);
 		
 		return new RunnableSourceManager(
 			taskConfig.getId(),
-			new ApidbCurrentReader(loginCredentials, preferences, readAllUsers),
+			new ApidbCurrentReader(loginCredentials, preferences),
 			taskConfig.getPipeArgs()
 		);
 	}

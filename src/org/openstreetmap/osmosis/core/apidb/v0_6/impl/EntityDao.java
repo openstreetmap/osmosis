@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
+import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainerFactory;
 import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
@@ -139,7 +140,7 @@ public abstract class EntityDao<T extends Entity> {
 	}
 
 
-	private ReleasableIterator<EntityHistory<T>> getEntityHistory(String selectedEntityTableName) {
+	private ReleasableIterator<EntityHistory<T>> getRawEntityHistory(String selectedEntityTableName) {
 		StringBuilder sql;
 		MapSqlParameterSource parameterSource;
 
@@ -233,7 +234,7 @@ public abstract class EntityDao<T extends Entity> {
 	}
 	
 	
-	private ReleasableIterator<ChangeContainer> getHistory(String selectedEntityTableName) {
+	private ReleasableIterator<EntityHistory<T>> getEntityHistory(String selectedEntityTableName) {
 		ReleasableContainer releasableContainer;
 		
 		releasableContainer = new ReleasableContainer();
@@ -241,10 +242,9 @@ public abstract class EntityDao<T extends Entity> {
 			ReleasableIterator<EntityHistory<T>> entityIterator;
 			ReleasableIterator<DbFeatureHistory<DbFeature<Tag>>> tagIterator;
 			List<FeatureHistoryPopulator<T, ?>> featurePopulators;
-			EntityHistoryReader2<T> entityHistoryReader;
-			EntityChangeReader<T> entityChangeReader;
+			EntityHistoryReader<T> entityHistoryReader;
 			
-			entityIterator = releasableContainer.add(getEntityHistory(selectedEntityTableName));
+			entityIterator = releasableContainer.add(getRawEntityHistory(selectedEntityTableName));
 			tagIterator = releasableContainer.add(getTagHistory(selectedEntityTableName));
 			
 			featurePopulators = getFeatureHistoryPopulators(selectedEntityTableName);
@@ -252,18 +252,22 @@ public abstract class EntityDao<T extends Entity> {
 				releasableContainer.add(featurePopulator);
 			}
 			
-			entityHistoryReader = new EntityHistoryReader2<T>(entityIterator, tagIterator, featurePopulators);
-			entityChangeReader = new EntityChangeReader<T>(entityHistoryReader, getContainerFactory());
+			entityHistoryReader = new EntityHistoryReader<T>(entityIterator, tagIterator, featurePopulators);
 			
 			// The sources are now all attached to the history reader so we don't want to release
 			// them in the finally block.
 			releasableContainer.clear();
 			
-			return entityChangeReader;
+			return entityHistoryReader;
 			
 		} finally {
 			releasableContainer.release();
 		}
+	}
+	
+	
+	private ReleasableIterator<ChangeContainer> getChangeHistory(String selectedEntityTableName) {
+		return new ChangeReader<T>(getEntityHistory(selectedEntityTableName), getContainerFactory());
 	}
 	
 	
@@ -301,7 +305,7 @@ public abstract class EntityDao<T extends Entity> {
 		
 		namedParamJdbcTemplate.update(sql.toString(), parameterSource);
 		
-		return getHistory(selectedEntityTableName);
+		return getChangeHistory(selectedEntityTableName);
 	}
 
 
@@ -337,7 +341,7 @@ public abstract class EntityDao<T extends Entity> {
 		
 		namedParamJdbcTemplate.update(sql.toString(), parameterSource);
 		
-		return getHistory(selectedEntityTableName);
+		return getChangeHistory(selectedEntityTableName);
 	}
 	
 	
@@ -348,6 +352,19 @@ public abstract class EntityDao<T extends Entity> {
 	 */
 	public ReleasableIterator<ChangeContainer> getHistory() {
 		// Join the entity table to itself which will return all records.
-		return getHistory(entityName + "s");
+		return getChangeHistory(entityName + "s");
+	}
+	
+	
+	/**
+	 * Retrieves all current data in the database.
+	 * 
+	 * @return An iterator pointing at the current records.
+	 */
+	public ReleasableIterator<EntityContainer> getCurrent() {
+		// Join the entity table to the current version of itself which will return all current
+		// records.
+		return new EntityContainerReader<T>(getEntityHistory("(SELECT id, version FROM current_" + entityName
+				+ "s WHERE visible = TRUE)"), getContainerFactory());
 	}
 }

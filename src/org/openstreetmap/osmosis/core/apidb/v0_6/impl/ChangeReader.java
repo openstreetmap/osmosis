@@ -15,7 +15,7 @@ import org.openstreetmap.osmosis.core.task.common.ChangeAction;
  * @param <T>
  *            The type of entity provided by this iterator.
  */
-public class EntityChangeReader<T extends Entity> implements ReleasableIterator<ChangeContainer> {
+public class ChangeReader<T extends Entity> implements ReleasableIterator<ChangeContainer> {
 
 	private ReleasableIterator<EntityHistory<T>> source;
 	private EntityContainerFactory<T> containerFactory;
@@ -29,7 +29,7 @@ public class EntityChangeReader<T extends Entity> implements ReleasableIterator<
 	 * @param containerFactory
 	 *            The factory for wrapping entity objects into containers.
 	 */
-	public EntityChangeReader(ReleasableIterator<EntityHistory<T>> source, EntityContainerFactory<T> containerFactory) {
+	public ChangeReader(ReleasableIterator<EntityHistory<T>> source, EntityContainerFactory<T> containerFactory) {
 		this.source = source;
 		this.containerFactory = containerFactory;
 	}

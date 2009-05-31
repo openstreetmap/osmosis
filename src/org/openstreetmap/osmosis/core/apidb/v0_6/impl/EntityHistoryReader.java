@@ -18,7 +18,7 @@ import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
  * @param <T>
  *            The type of entity provided by this iterator.
  */
-public class EntityHistoryReader2<T extends Entity> implements ReleasableIterator<EntityHistory<T>> {
+public class EntityHistoryReader<T extends Entity> implements ReleasableIterator<EntityHistory<T>> {
 
 	private ReleasableContainer releasableContainer;
 	private ReleasableIterator<EntityHistory<T>> entityIterator;
@@ -37,7 +37,7 @@ public class EntityHistoryReader2<T extends Entity> implements ReleasableIterato
 	 * @param featurePopulators
 	 *            Populators to add entity specific features to the generated entities.
 	 */
-	public EntityHistoryReader2(ReleasableIterator<EntityHistory<T>> entityIterator,
+	public EntityHistoryReader(ReleasableIterator<EntityHistory<T>> entityIterator,
 			ReleasableIterator<DbFeatureHistory<DbFeature<Tag>>> tagIterator,
 			List<FeatureHistoryPopulator<T, ?>> featurePopulators) {
 		
