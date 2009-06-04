@@ -157,6 +157,9 @@ public class Replicator {
 			// Load the current replication state.
 			state = destination.loadState();
 			
+			// Increment the current replication sequence number.
+			state.setSequenceNumber(state.getSequenceNumber() + 1);
+			
 			// If the maximum queried transaction id has reached the maximum transaction id then a new
 			// transaction snapshot must be obtained in order to get more data.
 			if (state.getTxnMaxQueried() == state.getTxnMax()) {

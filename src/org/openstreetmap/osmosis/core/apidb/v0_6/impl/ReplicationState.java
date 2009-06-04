@@ -25,6 +25,7 @@ public class ReplicationState implements Storeable {
 	private List<Long> txnActive;
 	private List<Long> txnReady;
 	private Date timestamp;
+	private long sequenceNumber;
 
 
 	/**
@@ -40,14 +41,17 @@ public class ReplicationState implements Storeable {
 	 *            The previously active transaction ids that can now be queried.
 	 * @param timestamp
 	 *            The maximum timestamp of data currently read from the database.
+	 * @param sequenceNumber
+	 *            The replication sequence number.
 	 */
 	public ReplicationState(long txnMax, long txnMaxQueried, List<Long> txnActive, List<Long> txnReady,
-			Date timestamp) {
+			Date timestamp, long sequenceNumber) {
 		this.txnMax = txnMax;
 		this.txnMaxQueried = txnMaxQueried;
 		this.txnActive = txnActive;
 		this.txnReady = txnReady;
 		this.timestamp = timestamp;
+		this.sequenceNumber = sequenceNumber;
 	}
 	
 	
@@ -80,6 +84,7 @@ public class ReplicationState implements Storeable {
 		}
 		
 		timestamp = new Date(reader.readLong());
+		sequenceNumber = reader.readLong();
 	}
 	
 	
@@ -95,6 +100,7 @@ public class ReplicationState implements Storeable {
 		txnActive = fromString(properties.getProperty("txnActiveList"));
 		txnReady = fromString(properties.getProperty("txnReadyList"));
 		timestamp = new DateParser().parse(properties.getProperty("timestamp"));
+		sequenceNumber = Long.parseLong(properties.getProperty("sequenceNumber"));
 	}
 
 
@@ -117,6 +123,7 @@ public class ReplicationState implements Storeable {
 		}
 		
 		writer.writeLong(timestamp.getTime());
+		writer.writeLong(sequenceNumber);
 	}
 
 
@@ -132,6 +139,7 @@ public class ReplicationState implements Storeable {
 		properties.setProperty("txnActiveList", toString(txnActive));
 		properties.setProperty("txnReadyList", toString(txnReady));
 		properties.setProperty("timestamp", new DateFormatter().format(timestamp));
+		properties.setProperty("sequenceNumber", Long.toString(sequenceNumber));
 	}
 	
 	
@@ -247,6 +255,27 @@ public class ReplicationState implements Storeable {
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
+	
+	
+	/**
+	 * Gets the replication sequence number.
+	 * 
+	 * @return The sequence number.
+	 */
+	public long getSequenceNumber() {
+		return sequenceNumber;
+	}
+
+
+	/**
+	 * Sets the replication sequence number.
+	 * 
+	 * @param sequenceNumber
+	 *            The sequence number.
+	 */
+	public void setSequenceNumber(long sequenceNumber) {
+		this.sequenceNumber = sequenceNumber;
+	}
 
 
 	/**
@@ -263,7 +292,8 @@ public class ReplicationState implements Storeable {
 					&& txnMaxQueried == compareState.txnMaxQueried
 					&& txnActive.equals(compareState.txnActive)
 					&& txnReady.equals(compareState.txnReady)
-					&& timestamp.equals(compareState.timestamp)) {
+					&& timestamp.equals(compareState.timestamp)
+					&& sequenceNumber == compareState.sequenceNumber) {
 				result = true;
 			} else {
 				result = false;
@@ -281,6 +311,6 @@ public class ReplicationState implements Storeable {
 	 */
 	@Override
 	public int hashCode() {
-		return (int) txnMax + (int) txnMaxQueried + (int) timestamp.getTime();
+		return (int) sequenceNumber + (int) txnMax + (int) txnMaxQueried + (int) timestamp.getTime();
 	}
 }
