@@ -143,4 +143,16 @@ public class FileReplicationStatePersistor implements ReplicationStatePersister 
 			}
 		}
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean stateExists() {
+		// We're checking both files because there is a small window where only the new file exists
+		// after the main state file is deleted before the new file being renamed.
+		// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4017593 for more details.
+		return newStateFile.exists() || stateFile.exists();
+	}
 }

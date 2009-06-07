@@ -87,16 +87,19 @@ public class FileReplicationDestination implements ReplicationDestination {
 	 */
 	@Override
 	public void complete() {
-		initializeWriter();
-		
-		// Close the output file and rename it as a sequenced change file.
-		// We must release the file completely before we attempt to rename it.
-		writer.complete();
-		writer.release();
-		writer = null;
-		renameFile(
-				new File(workingDirectory, TMP_CHANGE_FILE),
-				new File(workingDirectory, Long.toString(state.getSequenceNumber()) + CHANGE_FILE_SUFFIX));
+		// We won't write an output file if we are initializing.
+		if (statePersistor.stateExists()) {
+			initializeWriter();
+			
+			// Close the output file and rename it as a sequenced change file.
+			// We must release the file completely before we attempt to rename it.
+			writer.complete();
+			writer.release();
+			writer = null;
+			renameFile(
+					new File(workingDirectory, TMP_CHANGE_FILE),
+					new File(workingDirectory, Long.toString(state.getSequenceNumber()) + CHANGE_FILE_SUFFIX));
+		}
 		
 		// The final step is to save the current state. This must be done last so that if a crash
 		// occurs during processing it starts from the same point as last time.
@@ -123,7 +126,7 @@ public class FileReplicationDestination implements ReplicationDestination {
 	 */
 	@Override
 	public ReplicationState loadState() {
-		if (state != null) {
+		if (state == null) {
 			state = statePersistor.loadState();
 		}
 		
@@ -136,7 +139,20 @@ public class FileReplicationDestination implements ReplicationDestination {
 	 */
 	@Override
 	public void saveState(ReplicationState newState) {
-		// Do nothing, we will write the state out during the complete call in order to simulate a
-		// transaction.
+		// The caller will usually be passing back the state object that was initially provided by
+		// this class, however when initialising a new one will need to be created externally.
+		state = newState;
+		
+		// Don't save the state to file at this point, we will write the state out during the
+		// complete call in order to simulate a transaction.
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean stateExists() {
+		return statePersistor.stateExists();
 	}
 }

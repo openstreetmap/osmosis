@@ -25,6 +25,7 @@ import org.java.plugin.standard.StandardPluginLocation;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbChangeReaderFactory;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbChangeWriterFactory;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbCurrentReaderFactory;
+import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbFileReplicatorFactory;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbReaderFactory;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbTruncatorFactory;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbWriterFactory;
@@ -258,6 +259,8 @@ public class TaskRegistrar {
 		factoryRegister.register("sq", new ReplicationDbQueueSeekerFactory());
 		factoryRegister.register("truncate-repdb", new ReplicationDbTruncatorFactory());
 		factoryRegister.register("tq", new ReplicationDbTruncatorFactory());
+		factoryRegister.register("replicate-apidb", new ApidbFileReplicatorFactory());
+		factoryRegister.register("repa", new ApidbFileReplicatorFactory());
 		
 		factoryRegister.register("apply-change-0.5",
 				new org.openstreetmap.osmosis.core.change.v0_5.ChangeApplierFactory());
@@ -392,6 +395,7 @@ public class TaskRegistrar {
 		factoryRegister.register("write-repdb-0.6", new ReplicationDbWriterFactory());
 		factoryRegister.register("seek-repdb-queue-0.6", new ReplicationDbQueueSeekerFactory());
 		factoryRegister.register("truncate-repdb-0.6", new ReplicationDbTruncatorFactory());
+		factoryRegister.register("replicate-apidb-0.6", new ApidbFileReplicatorFactory());
 
 		// Register the plugins.
 		for (String plugin : plugins) {

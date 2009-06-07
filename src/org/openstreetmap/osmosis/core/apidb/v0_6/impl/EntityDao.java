@@ -295,13 +295,13 @@ public abstract class EntityDao<T extends Entity> {
 		sql.append(" ON COMMIT DROP");
 		sql.append(" AS SELECT id, version FROM ");
 		sql.append(entityName);
-		sql.append("s WHERE timestamp > :baseTimestamp AND xmin IN [:txnList]");
+		sql.append("s WHERE timestamp > :baseTimestamp AND xmin IN (:txnList)");
 		
 		LOG.log(Level.FINER, "Entity identification query: " + sql);
 
 		parameterSource = new MapSqlParameterSource();
 		parameterSource.addValue("baseTimestamp", baseTimestamp, Types.TIMESTAMP);
-		parameterSource.addValue("txnList", txnList, Types.BIGINT);
+		parameterSource.addValue("txnList", txnList, Types.INTEGER);
 		
 		namedParamJdbcTemplate.update(sql.toString(), parameterSource);
 		

@@ -111,4 +111,50 @@ public class DataFileUtilities {
 		outStream.close();
 		inStream.close();
 	}
+	
+	
+	/**
+	 * Creates a temporary directory.
+	 * 
+	 * @return The created directory.
+	 * @throws IOException
+	 *             if an IO exception occurs.
+	 */
+	public File createTempDirectory() throws IOException {
+		File tmpDir;
+		
+		tmpDir = File.createTempFile("test", null);
+		tmpDir.delete();
+		
+		tmpDir = new File(tmpDir.getAbsolutePath() + File.separator);
+		if (!tmpDir.mkdir()) {
+			throw new OsmosisRuntimeException("Unable to create directory " + tmpDir + ".");
+		}
+		
+		return tmpDir;
+	}
+	
+	
+	/**
+	 * Deletes a temporary directory and its contents.
+	 * 
+	 * @param tmpDir
+	 *            The directory to be deleted.
+	 */
+	public void deleteTempDirectory(File tmpDir) {
+		File[] files;
+		
+		// Delete all files in the directory.
+		files = tmpDir.listFiles();
+		for (int i = 0; i < files.length; i++) {
+			if (!files[i].delete()) {
+				throw new OsmosisRuntimeException("Unable to delete file " + files[i] + ".");
+			}
+		}
+		
+		// Delete the directory itself.
+		if (!tmpDir.delete()) {
+			throw new OsmosisRuntimeException("Unable to delete directory " + tmpDir + ".");
+		}
+	}
 }

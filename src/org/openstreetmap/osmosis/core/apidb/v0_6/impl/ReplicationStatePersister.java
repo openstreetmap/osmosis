@@ -15,10 +15,19 @@ public interface ReplicationStatePersister {
 	 */
 	void saveState(ReplicationState state);
 	
+	
 	/**
 	 * Loads the existing state.
 	 * 
 	 * @return The state to be loaded.
 	 */
 	ReplicationState loadState();
+	
+	
+	/**
+	 * Checks if state currently exists. If no state exists it will need to be initialized.
+	 * 
+	 * @return True if state exists, false otherwise.
+	 */
+	boolean stateExists();
 }

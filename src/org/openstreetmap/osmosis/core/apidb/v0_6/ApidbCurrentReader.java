@@ -3,10 +3,8 @@ package org.openstreetmap.osmosis.core.apidb.v0_6;
 
 import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.core.apidb.common.DatabaseContext2;
-import org.openstreetmap.osmosis.core.apidb.v0_6.impl.NodeDao;
-import org.openstreetmap.osmosis.core.apidb.v0_6.impl.RelationDao;
+import org.openstreetmap.osmosis.core.apidb.v0_6.impl.AllEntityDao;
 import org.openstreetmap.osmosis.core.apidb.v0_6.impl.SchemaVersionValidator;
-import org.openstreetmap.osmosis.core.apidb.v0_6.impl.WayDao;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
@@ -52,72 +50,6 @@ public class ApidbCurrentReader implements RunnableSource {
     public void setSink(Sink sink) {
         this.sink = sink;
     }
-
-
-    /**
-     * Reads all nodes from the database and sends to the sink.
-     */
-    private void processNodes(DatabaseContext2 dbCtx) {
-    	NodeDao entityDao;
-    	ReleasableIterator<EntityContainer> reader;
-    	
-    	entityDao = new NodeDao(dbCtx.getJdbcTemplate());
-
-    	reader = entityDao.getCurrent();
-
-        try {
-            while (reader.hasNext()) {
-            	sink.process(reader.next());
-            }
-
-        } finally {
-            reader.release();
-        }
-    }
-
-
-    /**
-     * Reads all ways from the database and sends to the sink.
-     */
-    private void processWays(DatabaseContext2 dbCtx) {
-    	WayDao entityDao;
-    	ReleasableIterator<EntityContainer> reader;
-    	
-    	entityDao = new WayDao(dbCtx.getJdbcTemplate());
-
-    	reader = entityDao.getCurrent();
-
-        try {
-            while (reader.hasNext()) {
-            	sink.process(reader.next());
-            }
-
-        } finally {
-            reader.release();
-        }
-    }
-
-
-    /**
-     * Reads all relations from the database and sends to the sink.
-     */
-    private void processRelations(DatabaseContext2 dbCtx) {
-    	RelationDao entityDao;
-    	ReleasableIterator<EntityContainer> reader;
-    	
-    	entityDao = new RelationDao(dbCtx.getJdbcTemplate());
-
-    	reader = entityDao.getCurrent();
-
-        try {
-            while (reader.hasNext()) {
-            	sink.process(reader.next());
-            }
-
-        } finally {
-            reader.release();
-        }
-    }
     
     
     /**
@@ -128,13 +60,24 @@ public class ApidbCurrentReader implements RunnableSource {
 	 */
     protected void runImpl(DatabaseContext2 dbCtx) {
     	try {
+    		AllEntityDao entityDao;
+    		ReleasableIterator<EntityContainer> reader;
+    		
 	        new SchemaVersionValidator(loginCredentials, preferences)
 	                .validateVersion(ApidbVersionConstants.SCHEMA_MIGRATIONS);
-	
+	        
+	        entityDao = new AllEntityDao(dbCtx.getJdbcTemplate());
+	        
 	        sink.process(new BoundContainer(new Bound("Osmosis " + OsmosisConstants.VERSION)));
-	        processNodes(dbCtx);
-	        processWays(dbCtx);
-	        processRelations(dbCtx);
+	        reader = entityDao.getCurrent();
+	        try {
+	        	while (reader.hasNext()) {
+	        		sink.process(reader.next());
+	        	}
+	        	
+	        } finally {
+	        	reader.release();
+	        }
 	
 	        sink.complete();
 	        

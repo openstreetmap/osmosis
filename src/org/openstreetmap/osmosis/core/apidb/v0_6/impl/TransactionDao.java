@@ -16,7 +16,8 @@ public class TransactionDao implements TransactionSnapshotLoader {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param jdbcTemplate Used to access the database.
+	 * @param jdbcTemplate
+	 *            Used to access the database.
 	 */
 	public TransactionDao(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = new SimpleJdbcTemplate(jdbcTemplate);
