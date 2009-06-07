@@ -30,8 +30,11 @@ public class TransactionSnapshot {
 		xMax = Long.parseLong(tokenizer.nextToken());
 		
 		xIpList = new ArrayList<Long>();
-		while (tokenizer.hasMoreTokens()) {
-			xIpList.add(Long.parseLong(tokenizer.nextToken()));
+		if (tokenizer.hasMoreTokens()) {
+			tokenizer = new StringTokenizer(tokenizer.nextToken(), ",");
+			while (tokenizer.hasMoreTokens()) {
+				xIpList.add(Long.parseLong(tokenizer.nextToken()));
+			}
 		}
 	}
 
