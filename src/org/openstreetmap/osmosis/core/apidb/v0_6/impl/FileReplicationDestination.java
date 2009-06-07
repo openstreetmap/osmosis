@@ -16,12 +16,15 @@ public class FileReplicationDestination implements ReplicationDestination {
 	
 	private static final String STATE_FILE = "state.txt";
 	private static final String TMP_STATE_FILE = "tmpstate.txt";
+	private static final String SEQUENCE_STATE_FILE_SUFFIX = ".state.txt";
 	private static final String CHANGE_FILE_SUFFIX = ".osc.gz";
 	private static final CompressionMethod CHANGE_FILE_COMPRESSION = CompressionMethod.GZip;
 	private static final String TMP_CHANGE_FILE = "tmpchangeset.osc.gz";
 	
 
 	private File workingDirectory;
+	private File stateFile;
+	private File tmpStateFile;
 	private FileReplicationStatePersistor statePersistor;
 	private ReplicationState state;
 	private XmlChangeWriter writer;
@@ -36,8 +39,10 @@ public class FileReplicationDestination implements ReplicationDestination {
 	public FileReplicationDestination(File workingDirectory) {
 		this.workingDirectory = workingDirectory;
 		
-		statePersistor = new FileReplicationStatePersistor(new File(workingDirectory, STATE_FILE), new File(
-				workingDirectory, TMP_STATE_FILE));
+		stateFile = new File(workingDirectory, STATE_FILE);
+		tmpStateFile = new File(workingDirectory, TMP_STATE_FILE);
+		
+		statePersistor = new FileReplicationStatePersistor(stateFile, tmpStateFile);
 	}
 
 
@@ -105,6 +110,11 @@ public class FileReplicationDestination implements ReplicationDestination {
 		// occurs during processing it starts from the same point as last time.
 		if (state != null) {
 			statePersistor.saveState(state);
+			
+			// Also the state to a sequence specific state file.
+			new FileReplicationStatePersistor(
+					new File(workingDirectory, state.getSequenceNumber()
+					+ SEQUENCE_STATE_FILE_SUFFIX), tmpStateFile).saveState(state);
 		}
 	}
 
