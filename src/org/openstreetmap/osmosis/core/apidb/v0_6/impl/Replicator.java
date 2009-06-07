@@ -17,7 +17,17 @@ import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 public class Replicator {
 	private static final long TRANSACTION_ID_MAX = 4294967295L;
 	private static final long TRANSACTION_ID_MIN = 3L;
-	private static final int TRANSACTION_QUERY_SIZE_MAX = 100000;
+	/**
+	 * This is the maximum number of transaction ids sent in a single query. If larger than 2 power
+	 * 16 it fails due to a 16 bit number failing, but still fails below that with a stack limit
+	 * being exceeded. The current value is near to the maximum value known to work, it will work
+	 * slightly higher but this is a round number.
+	 */
+	private static final int TRANSACTION_QUERY_SIZE_MAX = 25000;
+	/**
+	 * When querying, the data will be constrained to data within a period of this length in
+	 * milliseconds. This is because the transaction id columns in the database are not indexed.
+	 */
 	private static final long BASE_TIMESTAMP_OFFSET = 1000 * 1000 * 60;
 	
 	private ReplicationDestination destination;
@@ -106,7 +116,7 @@ public class Replicator {
 		
 		transactionQueryList = new ArrayList<Long>();
 		while (true) {
-			if (currentId == state.getTxnMax()) {
+			if (compareTxnIds(currentId, state.getTxnMax()) >= 0) {
 				break;
 			}
 			
@@ -210,7 +220,7 @@ public class Replicator {
 			
 			// If the maximum queried transaction id has reached the maximum transaction id then a new
 			// transaction snapshot must be obtained in order to get more data.
-			if (state.getTxnMaxQueried() == state.getTxnMax()) {
+			if (compareTxnIds(state.getTxnMaxQueried(), state.getTxnMax()) >= 0) {
 				obtainNewSnapshot(state);
 			}
 			
@@ -218,12 +228,14 @@ public class Replicator {
 			transactionQueryList = buildTransactionQueryList(state);
 			
 			// Write the changes to the destination.
-			copyChanges(source.getHistory(baseTimestamp, transactionQueryList), state);
+			if (transactionQueryList.size() > 0) {
+				copyChanges(source.getHistory(baseTimestamp, transactionQueryList), state);
+			}
 			
 			// If we have completely caught up to the database, we can update the timestamp to the
 			// database system timestamp. Otherwise we leave the timestamp set at the value
 			// determined while processing changes.
-			if (state.getTxnMaxQueried() == state.getTxnMax()) {
+			if (compareTxnIds(state.getTxnMaxQueried(), state.getTxnMax()) >= 0) {
 				state.setTimestamp(systemTimestamp);
 			}
 			

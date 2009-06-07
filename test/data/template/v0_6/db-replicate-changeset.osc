@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osmChange version="0.6" generator="Osmosis %VERSION%">
+  <modify>
+    <node id="1" version="11" timestamp="2108-01-03T03:04:05Z" uid="10" user="user10b" changeset="12" lat="-1" lon="-2">
+      <tag k="created_by" v="Me1-revised"/>
+    </node>
+  </modify>
+  <create>
+    <node id="7" version="1" timestamp="2108-01-03T18:19:20Z" changeset="92" lat="-13" lon="-14">
+      <tag k="created_by" v="Me6"/>
+    </node>
+  </create>
+  <modify>
+    <way id="1" version="11" timestamp="2108-01-03T03:04:05Z" uid="10" user="user10b" changeset="12">
+      <nd ref="1"/>
+      <nd ref="2"/>
+      <nd ref="3"/>
+      <nd ref="4"/>
+      <tag k="created_by" v="Me1"/>
+    </way>
+  </modify>
+  <delete>
+    <way id="3" version="13" timestamp="2108-01-03T09:10:11Z" changeset="92"/>
+  </delete>
+  <modify>
+    <relation id="1" version="11" timestamp="2108-01-03T03:04:05Z" uid="10" user="user10b" changeset="12">
+      <member type="node" ref="7" role="noderole"/>
+      <member type="way" ref="1" role="wayrole1"/>
+      <member type="way" ref="2" role="wayrole2"/>
+      <tag k="type" v="myrelation"/>
+    </relation>
+  </modify>
+</osmChange>

@@ -33,6 +33,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 public abstract class EntityDao<T extends Entity> {
 	private static final Logger LOG = Logger.getLogger(EntityDao.class.getName());
 
+	private JdbcTemplate jdbcTemplate;
 	private NamedParameterJdbcTemplate namedParamJdbcTemplate;
 	private String entityName;
 
@@ -46,6 +47,7 @@ public abstract class EntityDao<T extends Entity> {
 	 *            The name of the entity. Used for building dynamic sql queries.
 	 */
 	protected EntityDao(JdbcTemplate jdbcTemplate, String entityName) {
+		this.jdbcTemplate = jdbcTemplate;
 		this.namedParamJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 		this.entityName = entityName;
 	}
@@ -304,6 +306,12 @@ public abstract class EntityDao<T extends Entity> {
 		parameterSource.addValue("txnList", txnList, Types.INTEGER);
 		
 		namedParamJdbcTemplate.update(sql.toString(), parameterSource);
+		
+		if (LOG.isLoggable(Level.FINER)) {
+			LOG.log(Level.FINER,
+					jdbcTemplate.queryForInt("SELECT Count(id) FROM " + selectedEntityTableName) + " "
+					+ entityName + " records located.");
+		}
 		
 		return getChangeHistory(selectedEntityTableName);
 	}
