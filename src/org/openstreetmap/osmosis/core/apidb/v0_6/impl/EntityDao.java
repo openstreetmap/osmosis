@@ -273,6 +273,20 @@ public abstract class EntityDao<T extends Entity> {
 	}
 	
 	
+	private void appendTxnList(StringBuilder sql, List<Long> txnList) {
+		for (int i = 0; i < txnList.size(); i++) {
+			Long txnId;
+			
+			txnId = txnList.get(i);
+			
+			if (i > 0) {
+				sql.append(",");
+			}
+			sql.append(txnId);
+		}
+	}
+	
+	
 	/**
 	 * Retrieves the changes that have were made by a set of transactions.
 	 * 
@@ -297,7 +311,9 @@ public abstract class EntityDao<T extends Entity> {
 		sql.append(" ON COMMIT DROP");
 		sql.append(" AS SELECT id, version FROM ");
 		sql.append(entityName);
-		sql.append("s WHERE timestamp > :baseTimestamp AND xmin IN (:txnList)");
+		sql.append("s WHERE timestamp > :baseTimestamp AND xmin IN (");
+		appendTxnList(sql, txnList);
+		sql.append(")");
 		
 		LOG.log(Level.FINER, "Entity identification query: " + sql);
 
