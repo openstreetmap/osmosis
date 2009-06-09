@@ -54,6 +54,8 @@ public class FileBasedLock implements Releasable {
 			}
 			
 			fileChannel = outputStream.getChannel();
+			
+			initialized = true;
 		}
 	}
 	
