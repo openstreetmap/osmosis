@@ -21,14 +21,15 @@ public class Replicator {
 	 * This is the maximum number of transaction ids sent in a single query. If larger than 2 power
 	 * 16 it fails due to a 16 bit number failing, but still fails below that with a stack limit
 	 * being exceeded. The current value is near to the maximum value known to work, it will work
-	 * slightly higher but this is a round number.
+	 * slightly higher but this is a round number. It is dependent on the max_stack_depth parameter
+	 * defined in postgresql.conf.
 	 */
 	private static final int TRANSACTION_QUERY_SIZE_MAX = 25000;
 	/**
 	 * When querying, the data will be constrained to data within a period of this length in
 	 * milliseconds. This is because the transaction id columns in the database are not indexed.
 	 */
-	private static final long BASE_TIMESTAMP_OFFSET = 1000 * 1000 * 60;
+	private static final long BASE_TIMESTAMP_OFFSET = 1000 * 60 * 60 * 2;
 	
 	private ReplicationDestination destination;
 	private ReplicationSource source;
