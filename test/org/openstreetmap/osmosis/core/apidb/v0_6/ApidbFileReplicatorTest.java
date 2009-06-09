@@ -93,7 +93,7 @@ public class ApidbFileReplicatorTest {
         Osmosis.run(new String[] {
         		"-q",
         		"--read-xml-change-0.6",
-        		new File(workingDirectory, "2.osc.gz").getPath(),
+        		new File(workingDirectory, "000000002.osc.gz").getPath(),
         		"--write-xml-change-0.6",
         		outputFile.getPath()
                 });
