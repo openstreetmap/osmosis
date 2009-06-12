@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.core.apidb.v0_6.impl;
 
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -273,35 +274,119 @@ public abstract class EntityDao<T extends Entity> {
 	}
 	
 	
-	private void appendTxnList(StringBuilder sql, List<Long> txnList) {
-		for (int i = 0; i < txnList.size(); i++) {
-			Long txnId;
+	private List<Integer> buildTransactionRanges(long bottomTransactionId, long topTransactionId) {
+		List<Integer> rangeValues;
+		int topTransactionIdInt;
+		int currentXid;
+		
+		// We need the top transaction id in int form so that we can tell if it will be treated as a
+		// negative number.
+		topTransactionIdInt = (int) topTransactionId;
+		
+		// Begin building the values to use in the WHERE clause transaction ranges. Each pair of ids
+		// in this list will become a range selection.
+		rangeValues = new ArrayList<Integer>();
+		
+		// The bottom id is the last one read, so we begin reading from the next transaction.
+		currentXid = ((int) bottomTransactionId) + 1;
+		rangeValues.add(currentXid);
+		
+		// We only have data to process if the two transaction ids are not equal.
+		if (bottomTransactionId != topTransactionId) {
 			
-			txnId = txnList.get(i);
-			
-			if (i > 0) {
-				sql.append(",");
+			// Process until we have enough ranges to reach the top transaction id.
+			while (currentXid != topTransactionIdInt) {
+				// Determine how to terminate the current transaction range.
+				if (currentXid <= 2 && topTransactionId >= 0) {
+					// The range overlaps special ids 0-2 which should never be queried on.
+					
+					// Terminate the current range before the special values.
+					rangeValues.add(-1);
+					// Begin the new range after the special values.
+					rangeValues.add(3);
+					
+					currentXid = 3;
+					
+				} else if (topTransactionIdInt < currentXid) {
+					// The range crosses the integer overflow point. Only do this check once we are
+					// past 2 because the xid special values 0-2 may need to be crossed first.
+					
+					// Terminate the current range at the maximum int value.
+					rangeValues.add(Integer.MAX_VALUE);
+					// Begin a new range at the minimum int value.
+					rangeValues.add(Integer.MIN_VALUE);
+					
+					currentXid = Integer.MIN_VALUE;
+					
+				} else {
+					// There are no problematic transaction id values between the current value and
+					// the top transaction id so terminate the current range at the top transaction
+					// id.
+					rangeValues.add(topTransactionIdInt);
+					currentXid = topTransactionIdInt;
+				}
 			}
-			sql.append(txnId);
+			
+		} else {
+			// Terminate the range at the top transaction id. The start of the range is one higher
+			// therefore no data will be selected.
+			rangeValues.add(topTransactionIdInt);
+		}
+		
+		return rangeValues;
+	}
+	
+	
+	private void buildTransactionRangeWhereClause(StringBuilder sql, MapSqlParameterSource parameters,
+			long bottomTransactionId, long topTransactionId) {
+		List<Integer> rangeValues;
+		
+		// Determine the transaction ranges required to select all transactions between the bottom
+		// and top values. This takes into account transaction id wrapping issues and reserved ids.
+		rangeValues = buildTransactionRanges(bottomTransactionId, topTransactionId);
+		
+		// Create a range clause for each range pair.
+		for (int i = 0; i < rangeValues.size(); i = i + 2) {
+			if (i > 0) {
+				sql.append(" OR ");
+			}
+			sql.append("(");
+			sql.append("xid_to_int4(xmin) >= :rangeValue").append(i);
+			sql.append(" AND ");
+			sql.append("xid_to_int4(xmin) <= :rangeValue").append(i + 1);
+			sql.append(")");
+			
+			parameters.addValue("rangeValue" + i, rangeValues.get(i), Types.INTEGER);
+			parameters.addValue("rangeValue" + (i + 1), rangeValues.get(i + 1), Types.INTEGER);
 		}
 	}
 	
 	
+	private void buildTransactionIdListWhereClause(StringBuilder sql, List<Long> transactionIdList) {
+		for (int i = 0; i < transactionIdList.size(); i++) {
+			if (i > 0) {
+				sql.append(",");
+			}
+		
+			// Must cast to int to allow the integer based xmin index to be used correctly.
+			sql.append((int) transactionIdList.get(i).longValue());
+		}
+	}
+
+
 	/**
 	 * Retrieves the changes that have were made by a set of transactions.
 	 * 
-	 * @param baseTimestamp
-	 *            The timestamp to constrain the query by. This timestamp is included for
-	 *            performance reasons and limits the amount of data searched for the transaction
-	 *            ids.
-	 * @param txnList
-	 *            The set of transactions to query for.
+	 * @param predicates
+	 *            Contains the predicates defining the transactions to be queried.
 	 * @return An iterator pointing at the identified records.
 	 */
-	public ReleasableIterator<ChangeContainer> getHistory(Date baseTimestamp, List<Long> txnList) {
+	public ReleasableIterator<ChangeContainer> getHistory(ReplicationQueryPredicates predicates) {
 		String selectedEntityTableName;
 		StringBuilder sql;
 		MapSqlParameterSource parameterSource;
+		
+		parameterSource = new MapSqlParameterSource();
 		
 		selectedEntityTableName = "tmp_" + entityName + "s";
 		
@@ -311,15 +396,26 @@ public abstract class EntityDao<T extends Entity> {
 		sql.append(" ON COMMIT DROP");
 		sql.append(" AS SELECT id, version FROM ");
 		sql.append(entityName);
-		sql.append("s WHERE timestamp > :baseTimestamp AND xmin IN (");
-		appendTxnList(sql, txnList);
+		sql.append("s WHERE ((");
+		// Add the main transaction ranges to the where clause.
+		buildTransactionRangeWhereClause(sql, parameterSource, predicates.getBottomTransactionId(), predicates
+				.getTopTransactionId());
 		sql.append(")");
+		// If previously active transactions have become ready since the last invocation we include those as well.
+		if (predicates.getReadyList().size() > 0) {
+			sql.append(" OR xid_to_int4(xmin) IN [");
+			buildTransactionIdListWhereClause(sql, predicates.getReadyList());
+			sql.append("]");
+		}
+		sql.append(")");
+		// Any active transactions must be explicitly excluded.
+		if (predicates.getActiveList().size() > 0) {
+			sql.append(" AND xid_to_int4(xmin) NOT IN [");
+			buildTransactionIdListWhereClause(sql, predicates.getActiveList());
+			sql.append("]");
+		}
 		
 		LOG.log(Level.FINER, "Entity identification query: " + sql);
-
-		parameterSource = new MapSqlParameterSource();
-		parameterSource.addValue("baseTimestamp", baseTimestamp, Types.TIMESTAMP);
-		parameterSource.addValue("txnList", txnList, Types.INTEGER);
 		
 		namedParamJdbcTemplate.update(sql.toString(), parameterSource);
 		

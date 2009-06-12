@@ -39,15 +39,11 @@ public class AllEntityDao implements ReplicationSource {
 	/**
 	 * Retrieves the changes that have were made by a set of transactions.
 	 * 
-	 * @param baseTimestamp
-	 *            The timestamp to constrain the query by. This timestamp is included for
-	 *            performance reasons and limits the amount of data searched for the transaction
-	 *            ids.
-	 * @param txnList
-	 *            The set of transactions to query for.
+	 * @param predicates
+	 *            Contains the predicates defining the transactions to be queried.
 	 * @return An iterator pointing at the identified records.
 	 */
-	public ReleasableIterator<ChangeContainer> getHistory(Date baseTimestamp, List<Long> txnList) {
+	public ReleasableIterator<ChangeContainer> getHistory(ReplicationQueryPredicates predicates) {
 		ReleasableContainer releasableContainer;
 		
 		releasableContainer = new ReleasableContainer();
@@ -56,9 +52,9 @@ public class AllEntityDao implements ReplicationSource {
 			MultipleSourceIterator<ChangeContainer> resultIterator;
 			
 			sources = new ArrayList<ReleasableIterator<ChangeContainer>>();
-			sources.add(releasableContainer.add(nodeDao.getHistory(baseTimestamp, txnList)));
-			sources.add(releasableContainer.add(wayDao.getHistory(baseTimestamp, txnList)));
-			sources.add(releasableContainer.add(relationDao.getHistory(baseTimestamp, txnList)));
+			sources.add(releasableContainer.add(nodeDao.getHistory(predicates)));
+			sources.add(releasableContainer.add(wayDao.getHistory(predicates)));
+			sources.add(releasableContainer.add(relationDao.getHistory(predicates)));
 			
 			resultIterator = new MultipleSourceIterator<ChangeContainer>(sources);
 			

@@ -2,10 +2,8 @@
 package org.openstreetmap.osmosis.core.apidb.v0_6.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
@@ -15,8 +13,10 @@ import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
  * Replicates changes from the database utilising transaction snapshots.
  */
 public class Replicator {
-	private static final long TRANSACTION_ID_MAX = 4294967295L;
-	private static final long TRANSACTION_ID_MIN = 3L;
+	/**
+	 * The number of special transactions beginning from 0.
+	 */
+	private static final int SPECIAL_TRANSACTION_OFFSET = 3;
 	/**
 	 * This is the maximum number of transaction ids sent in a single query. If larger than 2 power
 	 * 16 it fails due to a 16 bit number failing, but still fails below that with a stack limit
@@ -25,11 +25,7 @@ public class Replicator {
 	 * defined in postgresql.conf.
 	 */
 	private static final int TRANSACTION_QUERY_SIZE_MAX = 25000;
-	/**
-	 * When querying, the data will be constrained to data within a period of this length in
-	 * milliseconds. This is because the transaction id columns in the database are not indexed.
-	 */
-	private static final long BASE_TIMESTAMP_OFFSET = 1000 * 60 * 60 * 2;
+	
 	
 	private ReplicationDestination destination;
 	private ReplicationSource source;
@@ -58,6 +54,12 @@ public class Replicator {
 	}
 	
 	
+	/**
+	 * Obtains a new transaction shapshot from the database and updates the state to match.
+	 * 
+	 * @param state
+	 *            The replication state.
+	 */
 	private void obtainNewSnapshot(ReplicationState state) {
 		TransactionSnapshot transactionSnapshot;
 		
@@ -95,59 +97,68 @@ public class Replicator {
 	 *            The first transaction id.
 	 * @param id2
 	 *            The second transaction id.
-	 * @return The difference between the two transaction ids.
+	 * @return The difference between the two transaction ids (id1 - id2).
 	 */
 	private int compareTxnIds(long id1, long id2) {
 		return ((int) id1) - ((int) id2);
 	}
 	
 	
-	private List<Long> buildTransactionQueryList(ReplicationState state) {
-		ArrayList<Long> transactionQueryList;
-		long currentId;
-		List<Long> readyList;
+	/**
+	 * This adds an offset to the transaction id. It takes into account the special values 0-2 and
+	 * adds an extra 3 to the offset accordingly.
+	 * 
+	 * @param id
+	 *            The transaction id.
+	 * @param increment
+	 *            The amount to increment the id.
+	 * @return The result transaction id.
+	 */
+	private long incrementTxnId(long id, int increment) {
+		int oldId;
+		int newId;
 		
-		// The ready list must be sorted in reverse order because we'll keep removing items from the
-		// end of the list.
-		readyList = state.getTxnReady();
-		Collections.sort(readyList);
-		Collections.reverse(readyList);
+		oldId = (int) id;
+		newId = oldId + increment;
 		
-		currentId = state.getTxnMaxQueried();
-		
-		transactionQueryList = new ArrayList<Long>();
-		while (true) {
-			if (compareTxnIds(currentId, state.getTxnMax()) >= 0) {
-				break;
-			}
-			
-			// Move to the next id value.
-			currentId++;
-			
-			// If the transaction id has exceeded the maximum 32-bit unsigned number then wrap back to the start.
-			if (currentId > TRANSACTION_ID_MAX) {
-				currentId = TRANSACTION_ID_MIN;
-			}
-			
-			// If the current ready list contains this id, remove it.
-			if (readyList.contains(currentId)) {
-				readyList.remove(currentId);
-			}
-			// Add the current transaction id to the query list, but only if it isn't currently active.
-			if (!state.getTxnActive().contains(currentId)) {
-				transactionQueryList.add(currentId);
-			}
-			
-			// If the query has reached the maximum size, then stop adding ids.
-			if (transactionQueryList.size() >= TRANSACTION_QUERY_SIZE_MAX) {
-				break;
-			}
+		if (oldId < 0 && newId >= 0) {
+			newId += SPECIAL_TRANSACTION_OFFSET;
 		}
 		
-		// Mark the xmax that was reached during this invocation.
-		state.setTxnMaxQueried(currentId);
+		return newId;
+	}
+	
+	
+	private ReplicationQueryPredicates buildQueryPredicates(ReplicationState state) {
+		long topTransactionId;
+		int rangeLength;
+		ReplicationQueryPredicates predicates;
 		
-		return transactionQueryList;
+		// The top transaction id of the next query is the current xMax up to a maximum of
+		// TRANSACTION_QUERY_SIZE_MAX transactions.
+		topTransactionId = state.getTxnMax();
+		rangeLength = compareTxnIds(topTransactionId, state.getTxnMaxQueried());
+		if (rangeLength > TRANSACTION_QUERY_SIZE_MAX) {
+			topTransactionId = incrementTxnId(state.getTxnMaxQueried(), TRANSACTION_QUERY_SIZE_MAX);
+		}
+		
+		// Build the predicate object with the new range.
+		predicates = new ReplicationQueryPredicates(state.getTxnMaxQueried(), topTransactionId);
+		
+		// Update the state with the new queried marker.
+		state.setTxnMaxQueried(topTransactionId);
+		
+		// Copy the active transaction list into the predicate.
+		predicates.getActiveList().addAll(state.getTxnActive());
+		
+		// The state object will only contain ready ids for transaction ranges that have passed
+		// already so we must add all of them to the predicate so they get included in this query.
+		predicates.getReadyList().addAll(state.getTxnReady());
+		
+		// The ready list can be cleared on the state object now.
+		state.getTxnReady().clear();
+		
+		return predicates;
 	}
 	
 	
@@ -201,20 +212,14 @@ public class Replicator {
 	private void replicateImpl() {
 		try {
 			ReplicationState state;
-			List<Long> transactionQueryList;
+			ReplicationQueryPredicates predicates;
 			Date systemTimestamp;
-			Date baseTimestamp;
 			
 			// Determine the time of processing.
 			systemTimestamp = systemTimeLoader.getSystemTime();
 			
 			// Load the current replication state.
 			state = destination.loadState();
-			
-			// Calculate the base timestamp. The transaction ids are not indexed in the database,
-			// therefore we need to use a timestamp range that will contain all values but not
-			// overload the database too much by retrieving too many records.
-			baseTimestamp = new Date(state.getTimestamp().getTime() - BASE_TIMESTAMP_OFFSET);
 			
 			// Increment the current replication sequence number.
 			state.setSequenceNumber(state.getSequenceNumber() + 1);
@@ -225,12 +230,12 @@ public class Replicator {
 				obtainNewSnapshot(state);
 			}
 			
-			// Obtain the transaction list to use during the query.
-			transactionQueryList = buildTransactionQueryList(state);
+			// Obtain the predicates to use during the query.
+			predicates = buildQueryPredicates(state);
 			
 			// Write the changes to the destination.
-			if (transactionQueryList.size() > 0) {
-				copyChanges(source.getHistory(baseTimestamp, transactionQueryList), state);
+			if (predicates.getBottomTransactionId() != predicates.getTopTransactionId()) {
+				copyChanges(source.getHistory(predicates), state);
 			}
 			
 			// If we have completely caught up to the database, we can update the timestamp to the
