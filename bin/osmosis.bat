@@ -63,6 +63,6 @@ REM #echo $EXEC
 REM exec $EXEC
 set MAINCLASS=org.openstreetmap.osmosis.core.Osmosis
 
-SET EXEC=%JAVACMD% %JAVACMD_OPTIONS% -cp %MYAPP_HOME%\osmosis.jar;%MYAPP_HOME%\lib\commons-logging.jar;%MYAPP_HOME%\lib\mysql-connector-java-5.0.7-bin.jar;%MYAPP_HOME%\lib\postgresql-8.3-603.jdbc4.jar;%MYAPP_HOME%\lib\postgis_1.3.2.jar %MAINCLASS% %OSMOSIS_OPTIONS% %*
+SET EXEC=%JAVACMD% %JAVACMD_OPTIONS% -cp %MYAPP_HOME%\osmosis.jar;%MYAPP_HOME%\lib\default\aopalliance-1.0.jar;%MYAPP_HOME%\lib\default\bzip2-20090327.jar;%MYAPP_HOME%\lib\default\commons-dbcp-1.2.2.jar;%MYAPP_HOME%\lib\default\commons-logging-1.1.1.jar;%MYAPP_HOME%\lib\default\commons-pool-1.3.jar;%MYAPP_HOME%\lib\default\jpf-1.5.jar;%MYAPP_HOME%\lib\default\mysql-connector-java-5.1.6.jar;%MYAPP_HOME%\lib\default\postgis_1.3.2.jar;%MYAPP_HOME%\lib\default\postgresql-8.3-603.jdbc4.jar;%MYAPP_HOME%\lib\default\spring-beans-2.5.6.SEC01.jar;%MYAPP_HOME%\lib\default\spring-context-2.5.6.SEC01.jar;%MYAPP_HOME%\lib\default\spring-core-2.5.6.SEC01.jar;%MYAPP_HOME%\lib\default\spring-jdbc-2.5.6.SEC01.jar;%MYAPP_HOME%\lib\default\spring-tx-2.5.6.SEC01.jar;%MYAPP_HOME%\lib\default\stax2-api-3.0.1.jar;%MYAPP_HOME%\lib\default\woodstox-core-lgpl-4.0.3.jar %MAINCLASS% %OSMOSIS_OPTIONS% %*
 
 %EXEC%
