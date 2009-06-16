@@ -292,7 +292,7 @@ public abstract class EntityDao<T extends Entity> {
 		rangeValues.add(currentXid);
 		
 		// We only have data to process if the two transaction ids are not equal.
-		if (bottomTransactionId != topTransactionId) {
+		if (currentXid != topTransactionId) {
 			
 			// Process until we have enough ranges to reach the top transaction id.
 			while (currentXid != topTransactionIdInt) {
