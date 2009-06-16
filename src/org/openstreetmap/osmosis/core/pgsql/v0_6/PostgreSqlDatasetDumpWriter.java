@@ -152,6 +152,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		nodeWriter.writeField(node.getVersion());
 		nodeWriter.writeField(node.getUser().getId());
 		nodeWriter.writeField(node.getTimestamp());
+		nodeWriter.writeField(node.getChangesetId());
 		nodeWriter.writeField(pointBuilder.createPoint(node.getLatitude(), node.getLongitude()));
 		nodeWriter.endRecord();
 		
@@ -183,6 +184,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 			wayWriter.writeField(way.getVersion());
 			wayWriter.writeField(way.getUser().getId());
 			wayWriter.writeField(way.getTimestamp());
+			wayWriter.writeField(way.getChangesetId());
 			if (enableBboxBuilder) {
 				wayWriter.writeField(wayGeometryBuilder.createWayBbox(way));
 			}
@@ -222,6 +224,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 		relationWriter.writeField(relation.getVersion());
 		relationWriter.writeField(relation.getUser().getId());
 		relationWriter.writeField(relation.getTimestamp());
+		relationWriter.writeField(relation.getChangesetId());
 		relationWriter.endRecord();
 		
 		for (Tag tag : relation.getTags()) {
