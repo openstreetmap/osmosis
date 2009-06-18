@@ -2,13 +2,9 @@
 package org.openstreetmap.osmosis.core.merge.v0_6.impl;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.util.PropertiesPersister;
 
 
 /**
@@ -16,9 +12,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  * 
  * @author Brett Henderson
  */
-public class DownloaderConfiguration {
-	private static final Logger LOG = Logger.getLogger(DownloaderConfiguration.class.getName());
-	
+public class IntervalDownloaderConfiguration {
 	private static final String KEY_BASE_URL = "baseUrl";
 	private static final String KEY_CHANGE_FILE_BEGIN_FORMAT = "changeFileBeginFormat";
 	private static final String KEY_CHANGE_FILE_END_FORMAT = "changeFileEndFormat";
@@ -35,38 +29,8 @@ public class DownloaderConfiguration {
 	 * @param configFile
 	 *            The configuration file to read from.
 	 */
-	public DownloaderConfiguration(File configFile) {
-		properties = loadProperties(configFile);
-	}
-	
-	
-	private Properties loadProperties(File configFile) {
-		FileInputStream fileInputStream = null;
-		
-		properties = new Properties();
-		
-		try {
-			fileInputStream = new FileInputStream(configFile);
-			
-			properties.load(fileInputStream);
-			
-			fileInputStream.close();
-			fileInputStream = null;
-			
-		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to load properties from config file " + configFile);
-		} finally {
-			if (fileInputStream != null) {
-				try {
-					fileInputStream.close();
-				} catch (IOException e) {
-					// We are already in an error condition so log and continue.
-					LOG.log(Level.WARNING, "Unable to close property file.", e);
-				}
-			}
-		}
-		
-		return properties;
+	public IntervalDownloaderConfiguration(File configFile) {
+		properties = new PropertiesPersister(configFile, null).load();
 	}
 	
 	

@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
 import org.openstreetmap.osmosis.core.merge.v0_6.impl.ChangesetFileNameFormatter;
-import org.openstreetmap.osmosis.core.merge.v0_6.impl.DownloaderConfiguration;
+import org.openstreetmap.osmosis.core.merge.v0_6.impl.IntervalDownloaderConfiguration;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskRunner;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableChangeSource;
@@ -39,9 +39,9 @@ import org.openstreetmap.osmosis.extract.mysql.common.TimestampTracker;
  * 
  * @author Brett Henderson
  */
-public class ChangeDownloader implements RunnableChangeSource {
+public class IntervalDownloader implements RunnableChangeSource {
 	
-	private static final Logger LOG = Logger.getLogger(ChangeDownloader.class.getName());
+	private static final Logger LOG = Logger.getLogger(IntervalDownloader.class.getName());
 	
 	
 	private static final String LOCK_FILE = "download.lock";
@@ -67,7 +67,7 @@ public class ChangeDownloader implements RunnableChangeSource {
 	 * @param workingDirectory
 	 *            The directory containing configuration and tracking files.
 	 */
-	public ChangeDownloader(String taskId, File workingDirectory) {
+	public IntervalDownloader(String taskId, File workingDirectory) {
 		this.taskId = taskId;
 		this.workingDirectory = workingDirectory;
 		
@@ -212,7 +212,7 @@ public class ChangeDownloader implements RunnableChangeSource {
 	 * to the output task.
 	 */
 	private void download() {
-		DownloaderConfiguration configuration;
+		IntervalDownloaderConfiguration configuration;
 		TimestampTracker timestampTracker;
 		ChangesetFileNameFormatter fileNameFormatter;
 		Date currentTime;
@@ -226,7 +226,7 @@ public class ChangeDownloader implements RunnableChangeSource {
 		boolean tasksSuccessful;
 		
 		// Instantiate utility objects.
-		configuration = new DownloaderConfiguration(new File(workingDirectory, CONFIG_FILE));
+		configuration = new IntervalDownloaderConfiguration(new File(workingDirectory, CONFIG_FILE));
 		timestampTracker = new TimestampTracker(
 			new File(workingDirectory, TSTAMP_FILE),
 			new File(workingDirectory, TSTAMP_NEW_FILE)

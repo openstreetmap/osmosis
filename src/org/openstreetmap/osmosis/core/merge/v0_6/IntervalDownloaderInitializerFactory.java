@@ -16,7 +16,7 @@ import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
  * 
  * @author Brett Henderson
  */
-public class ChangeDownloadInitializerFactory extends TaskManagerFactory {
+public class IntervalDownloaderInitializerFactory extends TaskManagerFactory {
 	private static final String ARG_WORKING_DIRECTORY = "workingDirectory";
 	private static final String ARG_INITIAL_DATE = "initialDate";
 	private static final String DEFAULT_WORKING_DIRECTORY = "./";
@@ -44,7 +44,7 @@ public class ChangeDownloadInitializerFactory extends TaskManagerFactory {
 		
 		return new RunnableTaskManager(
 			taskConfig.getId(),
-			new ChangeDownloadInitializer(
+			new IntervalDownloaderInitializer(
 				workingDirectory,
 				initialDate
 			),

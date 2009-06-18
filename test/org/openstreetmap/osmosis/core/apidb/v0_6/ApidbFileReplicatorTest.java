@@ -89,6 +89,15 @@ public class ApidbFileReplicatorTest {
         		"directory=" + workingDirectory.getPath()
                 });
         
+        // Ensure that replication runs successfully even if no data is available.
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--replicate-apidb-0.6",
+        		"authFile=" + authFile.getPath(),
+                "allowIncorrectSchemaVersion=true",
+        		"directory=" + workingDirectory.getPath()
+                });
+        
         // Decompress the result file.
         Osmosis.run(new String[] {
         		"-q",

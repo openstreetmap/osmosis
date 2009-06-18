@@ -2,8 +2,6 @@
 package org.openstreetmap.osmosis.core.apidb.v0_6.impl;
 
 import java.io.File;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
@@ -24,7 +22,6 @@ public class FileReplicationDestination implements ReplicationDestination {
 	private static final String CHANGE_FILE_SUFFIX = ".osc.gz";
 	private static final CompressionMethod CHANGE_FILE_COMPRESSION = CompressionMethod.GZip;
 	private static final String TMP_CHANGE_FILE = "tmpchangeset.osc.gz";
-	private static final String SEQUENCE_FORMAT = "000000000";
 	
 
 	private File workingDirectory;
@@ -35,7 +32,7 @@ public class FileReplicationDestination implements ReplicationDestination {
 	private FileReplicationStatePersistor statePersistor;
 	private ReplicationState state;
 	private XmlChangeWriter writer;
-	private NumberFormat sequenceFormat;
+	private ReplicationFileSequenceFormatter sequenceFormatter;
 
 
 	/**
@@ -54,7 +51,7 @@ public class FileReplicationDestination implements ReplicationDestination {
 		
 		statePersistor = new FileReplicationStatePersistor(stateFile, tmpStateFile);
 		
-		sequenceFormat = new DecimalFormat(SEQUENCE_FORMAT);
+		sequenceFormatter = new ReplicationFileSequenceFormatter();
 	}
 
 
@@ -122,7 +119,7 @@ public class FileReplicationDestination implements ReplicationDestination {
 			String formattedSequenceNumber;
 			
 			// Get the formatted sequence number.
-			formattedSequenceNumber = sequenceFormat.format(state.getSequenceNumber());
+			formattedSequenceNumber = sequenceFormatter.getFormattedName(state.getSequenceNumber());
 			
 			// We won't write an output file if we are initializing.
 			if (statePersistor.stateExists()) {

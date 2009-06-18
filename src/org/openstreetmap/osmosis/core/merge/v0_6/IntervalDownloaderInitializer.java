@@ -19,13 +19,13 @@ import org.openstreetmap.osmosis.extract.mysql.common.TimestampTracker;
  * 
  * @author Brett Henderson
  */
-public class ChangeDownloadInitializer implements RunnableTask {
+public class IntervalDownloaderInitializer implements RunnableTask {
 	
 	private static final String LOCK_FILE_NAME = "download.lock";
 	private static final String CONFIG_FILE_NAME = "configuration.txt";
 	private static final String TSTAMP_FILE_NAME = "timestamp.txt";
 	private static final String TSTAMP_NEW_FILE_NAME = "timestamp-new.txt";
-	private static final String CONFIG_RESOURCE = "impl/configuration.txt";
+	private static final String CONFIG_RESOURCE = "impl/intervalConfiguration.txt";
 	
 	
 	private File workingDirectory;
@@ -40,7 +40,7 @@ public class ChangeDownloadInitializer implements RunnableTask {
 	 * @param initialDate
 	 *            The date to begin changeset downloads from.
 	 */
-	public ChangeDownloadInitializer(File workingDirectory, Date initialDate) {
+	public IntervalDownloaderInitializer(File workingDirectory, Date initialDate) {
 		this.workingDirectory = workingDirectory;
 		this.initialDate = initialDate;
 	}

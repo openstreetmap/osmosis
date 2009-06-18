@@ -14,7 +14,7 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.RunnableChangeSourceManager;
  * 
  * @author Brett Henderson
  */
-public class ChangeDownloaderFactory extends TaskManagerFactory {
+public class IntervalDownloaderFactory extends TaskManagerFactory {
 	private static final String ARG_WORKING_DIRECTORY = "workingDirectory";
 	private static final String DEFAULT_WORKING_DIRECTORY = "./";
 	
@@ -39,7 +39,7 @@ public class ChangeDownloaderFactory extends TaskManagerFactory {
 		
 		return new RunnableChangeSourceManager(
 			taskConfig.getId(),
-			new ChangeDownloader(
+			new IntervalDownloader(
 				taskConfig.getId(),
 				workingDirectory
 			),
