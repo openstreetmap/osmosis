@@ -3,6 +3,8 @@ package org.openstreetmap.osmosis.core.domain.common;
 
 import java.util.Date;
 
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+
 
 /**
  * A timestamp container implementation that holds a timestamp in textual form.
@@ -27,6 +29,10 @@ public class UnparsedTimestampContainer implements TimestampContainer {
 	public UnparsedTimestampContainer(TimestampFormat timestampFormat, String timestampString) {
 		this.managedTimestampFormat = timestampFormat;
 		this.timestampString = timestampString;
+		
+		if (timestampString == null) {
+			throw new OsmosisRuntimeException("The entity timestamp attribute is missing.");
+		}
 	}
 	
 	
