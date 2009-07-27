@@ -1,4 +1,4 @@
-// This software is released into the Public Domain. See copying.txt for details.
+// This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.xml.common;
 
 import java.io.BufferedWriter;
@@ -29,7 +29,13 @@ public class ElementWriter {
     static {
         // Define all the characters and their encodings.
         XML_ENCODING = new HashMap<Character, String>();
-
+        
+        // Non-xml compatible control characters will not be written.
+        for (int i = 0; i <= 0x1F; i++) {
+        	XML_ENCODING.put(new Character((char) i), "");
+        }
+        XML_ENCODING.put(new Character((char) 0x7F), "");
+        
         XML_ENCODING.put(new Character('<'), "&lt;");
         XML_ENCODING.put(new Character('>'), "&gt;");
         XML_ENCODING.put(new Character('"'), "&quot;");
@@ -101,18 +107,16 @@ public class ElementWriter {
         for (int i = 0; i < data.length(); ++i) {
             char currentChar = data.charAt(i);
                 
-            if (currentChar > "\0x31".charAt(0) && currentChar != "\0x127".charAt(0)) {
-                String replacement = XML_ENCODING.get(new Character(currentChar));
+            String replacement = XML_ENCODING.get(new Character(currentChar));
 
-                if (replacement != null) {
-                    if (buffer == null) {
-                        buffer = new StringBuffer(data.substring(0, i));
-                    }
-                    buffer.append(replacement);
-
-                } else if (buffer != null) {
-                    buffer.append(currentChar);
+            if (replacement != null) {
+                if (buffer == null) {
+                    buffer = new StringBuffer(data.substring(0, i));
                 }
+                buffer.append(replacement);
+
+            } else if (buffer != null) {
+                buffer.append(currentChar);
             }
         }
 

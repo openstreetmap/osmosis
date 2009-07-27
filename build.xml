@@ -202,6 +202,7 @@
 				<fileset dir="build/test">
 					<include name="**/*Test*.class"/>
 					<exclude name="**/*TestSuite*.class"/>
+					<exclude name="**/*$*.class"/>
 				</fileset>
 			</batchtest>
 		</junit>
