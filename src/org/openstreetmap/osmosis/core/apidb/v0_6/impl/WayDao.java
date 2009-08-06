@@ -67,19 +67,31 @@ public class WayDao extends EntityDao<Way> {
 	}
 	
 	
-	private ReleasableIterator<DbFeatureHistory<DbFeature<WayNode>>> getWayNodeHistory(String sql,
-			SqlParameterSource parameterSource) {
+	private ReleasableIterator<DbFeatureHistory<DbFeature<WayNode>>> getWayNodeHistory(
+			String selectedEntityStatement, SqlParameterSource parameterSource) {
 		
 		SimpleObjectStore<DbFeatureHistory<DbFeature<WayNode>>> store =
 			new SimpleObjectStore<DbFeatureHistory<DbFeature<WayNode>>>(
 				new SingleClassObjectSerializationFactory(DbFeatureHistory.class), "wnd", true);
 		
 		try {
+			String sql;
 			ObjectStoreRowMapperListener<DbFeatureHistory<DbFeature<WayNode>>> storeListener;
 			DbFeatureHistoryRowMapper<DbFeature<WayNode>> dbFeatureHistoryRowMapper;
 			DbFeatureRowMapper<WayNode> dbFeatureRowMapper;
 			WayNodeRowMapper wayNodeRowMapper;
 			ReleasableIterator<DbFeatureHistory<DbFeature<WayNode>>> resultIterator;
+			
+			sql =
+				"SELECT wn.id, wn.node_id, wn.version"
+				+ " FROM "
+				+ "way_nodes wn"
+				+ " INNER JOIN "
+				+ selectedEntityStatement
+				+ " t ON wn.id = t.id AND wn.version = t.version"
+				+ " ORDER BY wn.id, wn.version, wn.sequence_id";
+			
+			LOG.log(Level.FINER, "Way node history query: " + sql);
 			
 			// Sends all received data into the object store.
 			storeListener = new ObjectStoreRowMapperListener<DbFeatureHistory<DbFeature<WayNode>>>(store);
@@ -107,41 +119,22 @@ public class WayDao extends EntityDao<Way> {
 			}
 		}
 	}
-	
-	
-	private ReleasableIterator<DbFeatureHistory<DbFeature<WayNode>>> getWayNodeHistory(String selectedEntityTableName) {
-		StringBuilder sql;
-		MapSqlParameterSource parameterSource;
-
-		sql = new StringBuilder();
-		sql.append("SELECT wn.id, wn.node_id, wn.version");
-		sql.append(" FROM ");
-		sql.append("way_nodes wn");
-		sql.append(" INNER JOIN ");
-		sql.append(selectedEntityTableName);
-		sql.append(" t ON wn.id = t.id AND wn.version = t.version");
-		sql.append(" ORDER BY wn.id, wn.version, wn.sequence_id");
-		
-		LOG.log(Level.FINER, "Way node history query: " + sql);
-
-		parameterSource = new MapSqlParameterSource();
-
-		return getWayNodeHistory(sql.toString(), parameterSource);
-	}
 
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected List<FeatureHistoryPopulator<Way, ?>> getFeatureHistoryPopulators(String selectedEntityTableName) {
+	protected List<FeatureHistoryPopulator<Way, ?>> getFeatureHistoryPopulators(
+			String selectedEntityStatement, MapSqlParameterSource parameterSource) {
+		
 		ReleasableIterator<DbFeatureHistory<DbFeature<WayNode>>> wayNodeIterator;
 		List<FeatureHistoryPopulator<Way, ?>> featurePopulators;
 		
 		featurePopulators = new ArrayList<FeatureHistoryPopulator<Way,?>>();
 		
 		// Get the way nodes for the selected entities.
-		wayNodeIterator = getWayNodeHistory(selectedEntityTableName);
+		wayNodeIterator = getWayNodeHistory(selectedEntityStatement, parameterSource);
 		
 		// Wrap the way node source into a feature history populator that can attach them to their
 		// owning ways.

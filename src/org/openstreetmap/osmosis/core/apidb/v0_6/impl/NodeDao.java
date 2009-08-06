@@ -9,6 +9,7 @@ import org.openstreetmap.osmosis.core.container.v0_6.NodeContainerFactory;
 import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 
 /**
@@ -61,7 +62,8 @@ public class NodeDao extends EntityDao<Node> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected List<FeatureHistoryPopulator<Node, ?>> getFeatureHistoryPopulators(String selectedEntityTableName) {
+	protected List<FeatureHistoryPopulator<Node, ?>> getFeatureHistoryPopulators(
+			String selectedEntityTableName, MapSqlParameterSource parameterSource) {
 		return Collections.emptyList();
 	}
 }

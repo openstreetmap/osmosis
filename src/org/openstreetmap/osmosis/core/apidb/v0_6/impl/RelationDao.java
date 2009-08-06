@@ -67,19 +67,31 @@ public class RelationDao extends EntityDao<Relation> {
 	}
 	
 	
-	private ReleasableIterator<DbFeatureHistory<DbFeature<RelationMember>>> getRelationMemberHistory(String sql,
-			SqlParameterSource parameterSource) {
+	private ReleasableIterator<DbFeatureHistory<DbFeature<RelationMember>>> getRelationMemberHistory(
+			String selectedEntityStatement, SqlParameterSource parameterSource) {
 		
 		SimpleObjectStore<DbFeatureHistory<DbFeature<RelationMember>>> store =
 			new SimpleObjectStore<DbFeatureHistory<DbFeature<RelationMember>>>(
 				new SingleClassObjectSerializationFactory(DbFeatureHistory.class), "rmb", true);
 		
 		try {
+			String sql;
 			ObjectStoreRowMapperListener<DbFeatureHistory<DbFeature<RelationMember>>> storeListener;
 			DbFeatureHistoryRowMapper<DbFeature<RelationMember>> dbFeatureHistoryRowMapper;
 			DbFeatureRowMapper<RelationMember> dbFeatureRowMapper;
 			RelationMemberRowMapper relationNodeRowMapper;
 			ReleasableIterator<DbFeatureHistory<DbFeature<RelationMember>>> resultIterator;
+			
+			sql =
+				"SELECT rm.id, rm.member_id, rm.member_role, rm.member_type, rm.version"
+				+ " FROM "
+				+ "relation_members rm"
+				+ " INNER JOIN "
+				+ selectedEntityStatement
+				+ " t ON rm.id = t.id AND rm.version = t.version"
+				+ " ORDER BY rm.id, rm.version, rm.sequence_id";
+			
+			LOG.log(Level.FINER, "Relation member history query: " + sql);
 			
 			// Sends all received data into the object store.
 			storeListener = new ObjectStoreRowMapperListener<DbFeatureHistory<DbFeature<RelationMember>>>(store);
@@ -108,42 +120,21 @@ public class RelationDao extends EntityDao<Relation> {
 			}
 		}
 	}
-	
-	
-	private ReleasableIterator<DbFeatureHistory<DbFeature<RelationMember>>> getRelationMemberHistory(
-			String selectedEntityTableName) {
-		StringBuilder sql;
-		MapSqlParameterSource parameterSource;
-
-		sql = new StringBuilder();
-		sql.append("SELECT rm.id, rm.member_id, rm.member_role, rm.member_type, rm.version");
-		sql.append(" FROM ");
-		sql.append("relation_members rm");
-		sql.append(" INNER JOIN ");
-		sql.append(selectedEntityTableName);
-		sql.append(" t ON rm.id = t.id AND rm.version = t.version");
-		sql.append(" ORDER BY rm.id, rm.version, rm.sequence_id");
-		
-		LOG.log(Level.FINER, "Relation member history query: " + sql);
-
-		parameterSource = new MapSqlParameterSource();
-
-		return getRelationMemberHistory(sql.toString(), parameterSource);
-	}
 
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected List<FeatureHistoryPopulator<Relation, ?>> getFeatureHistoryPopulators(String selectedEntityTableName) {
+	protected List<FeatureHistoryPopulator<Relation, ?>> getFeatureHistoryPopulators(
+			String selectedEntityTableName, MapSqlParameterSource parameterSource) {
 		ReleasableIterator<DbFeatureHistory<DbFeature<RelationMember>>> relationNodeIterator;
 		List<FeatureHistoryPopulator<Relation, ?>> featurePopulators;
 		
 		featurePopulators = new ArrayList<FeatureHistoryPopulator<Relation,?>>();
 		
 		// Get the relation nodes for the selected entities.
-		relationNodeIterator = getRelationMemberHistory(selectedEntityTableName);
+		relationNodeIterator = getRelationMemberHistory(selectedEntityTableName, parameterSource);
 		
 		// Wrap the relation node source into a feature history populator that can attach them to their
 		// owning relations.

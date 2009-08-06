@@ -22,7 +22,6 @@ import org.openstreetmap.osmosis.core.store.StoreReleasingIterator;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 
 /**
@@ -95,24 +94,57 @@ public abstract class EntityDao<T extends Entity> {
 	/**
 	 * Gets the history feature populators for the entity type.
 	 * 
-	 * @param selectedEntityTableName
-	 *            The name of the table containing the id and version pairs of entity records
-	 *            selected.
+	 * @param selectedEntityStatement
+	 *            The statement for obtaining the id and version pairs of entity records selected.
+	 * @param parameterSource
+	 *            The parameters required to execute the selected entity statement.
 	 * @return The history feature populators.
 	 */
-	protected abstract List<FeatureHistoryPopulator<T, ?>> getFeatureHistoryPopulators(String selectedEntityTableName);
+	protected abstract List<FeatureHistoryPopulator<T, ?>> getFeatureHistoryPopulators(
+			String selectedEntityStatement, MapSqlParameterSource parameterSource);
 	
 	
-	private ReleasableIterator<EntityHistory<T>> getEntityHistory(String sql, SqlParameterSource parameterSource) {
+	private String buildFeaturelessEntityHistoryQuery(String selectedEntityStatement) {
+		StringBuilder sql;
+
+		sql = new StringBuilder();
+		sql.append("SELECT e.id, e.version, e.timestamp, e.visible, u.data_public,");
+		sql.append(" u.id AS user_id, u.display_name, e.changeset_id");
+
+		for (String fieldName : getTypeSpecificFieldNames()) {
+			sql.append(", e.");
+			sql.append(fieldName);
+		}
+
+		sql.append(" FROM ");
+		sql.append(entityName);
+		sql.append("s e");
+		sql.append(" INNER JOIN ");
+		sql.append(selectedEntityStatement);
+		sql.append(" t ON e.id = t.id AND e.version = t.version");
+		sql.append(" INNER JOIN changesets c ON e.changeset_id = c.id INNER JOIN users u ON c.user_id = u.id");
+		sql.append(" ORDER BY e.id, e.version");
+		
+		LOG.log(Level.FINER, "Entity history query: " + sql);
+
+		return sql.toString();
+	}
+
+
+	private ReleasableIterator<EntityHistory<T>> getFeaturelessEntityHistory(
+			String selectedEntityStatement, MapSqlParameterSource parameterSource) {
 		SimpleObjectStore<EntityHistory<T>> store = new SimpleObjectStore<EntityHistory<T>>(
 				new SingleClassObjectSerializationFactory(EntityHistory.class), "his", true);
 		
 		try {
+			String sql;
 			ObjectStoreRowMapperListener<EntityHistory<T>> storeListener;
 			EntityHistoryRowMapper<T> entityHistoryRowMapper;
 			RowMapperListener<CommonEntityData> entityRowMapper;
 			EntityDataRowMapper entityDataRowMapper;
 			ReleasableIterator<EntityHistory<T>> resultIterator;
+			
+			sql = buildFeaturelessEntityHistoryQuery(selectedEntityStatement);
 			
 			// Sends all received data into the object store.
 			storeListener = new ObjectStoreRowMapperListener<EntityHistory<T>>(store);
@@ -141,51 +173,34 @@ public abstract class EntityDao<T extends Entity> {
 			}
 		}
 	}
-
-
-	private ReleasableIterator<EntityHistory<T>> getRawEntityHistory(String selectedEntityTableName) {
-		StringBuilder sql;
-		MapSqlParameterSource parameterSource;
-
-		sql = new StringBuilder();
-		sql.append("SELECT e.id, e.version, e.timestamp, e.visible, u.data_public,");
-		sql.append(" u.id AS user_id, u.display_name, e.changeset_id");
-
-		for (String fieldName : getTypeSpecificFieldNames()) {
-			sql.append(", e.");
-			sql.append(fieldName);
-		}
-
-		sql.append(" FROM ");
-		sql.append(entityName);
-		sql.append("s e");
-		sql.append(" INNER JOIN ");
-		sql.append(selectedEntityTableName);
-		sql.append(" t ON e.id = t.id AND e.version = t.version");
-		sql.append(" INNER JOIN changesets c ON e.changeset_id = c.id INNER JOIN users u ON c.user_id = u.id");
-		sql.append(" ORDER BY e.id, e.version");
-		
-		LOG.log(Level.FINER, "Entity history query: " + sql);
-
-		parameterSource = new MapSqlParameterSource();
-
-		return getEntityHistory(sql.toString(), parameterSource);
-	}
 	
 	
-	private ReleasableIterator<DbFeatureHistory<DbFeature<Tag>>> getTagHistory(String sql,
-			SqlParameterSource parameterSource) {
+	private ReleasableIterator<DbFeatureHistory<DbFeature<Tag>>> getTagHistory(String selectedEntityStatement,
+			MapSqlParameterSource parameterSource) {
 		
 		SimpleObjectStore<DbFeatureHistory<DbFeature<Tag>>> store =
 			new SimpleObjectStore<DbFeatureHistory<DbFeature<Tag>>>(
 				new SingleClassObjectSerializationFactory(DbFeatureHistory.class), "tag", true);
 		
 		try {
+			String sql;
 			ObjectStoreRowMapperListener<DbFeatureHistory<DbFeature<Tag>>> storeListener;
 			DbFeatureHistoryRowMapper<DbFeature<Tag>> dbFeatureHistoryRowMapper;
 			DbFeatureRowMapper<Tag> dbFeatureRowMapper;
 			TagRowMapper tagRowMapper;
 			ReleasableIterator<DbFeatureHistory<DbFeature<Tag>>> resultIterator;
+			
+			sql =
+				"SELECT et.id, et.k, et.v, et.version"
+				+ " FROM "
+				+ entityName
+				+ "_tags et"
+				+ " INNER JOIN "
+				+ selectedEntityStatement
+				+ " t ON et.id = t.id AND et.version = t.version"
+				+ " ORDER BY et.id, et.version";
+			
+			LOG.log(Level.FINER, "Tag history query: " + sql);
 			
 			// Sends all received data into the object store.
 			storeListener = new ObjectStoreRowMapperListener<DbFeatureHistory<DbFeature<Tag>>>(store);
@@ -215,29 +230,8 @@ public abstract class EntityDao<T extends Entity> {
 	}
 	
 	
-	private ReleasableIterator<DbFeatureHistory<DbFeature<Tag>>> getTagHistory(String selectedEntityTableName) {
-		StringBuilder sql;
-		MapSqlParameterSource parameterSource;
-
-		sql = new StringBuilder();
-		sql.append("SELECT et.id, et.k, et.v, et.version");
-		sql.append(" FROM ");
-		sql.append(entityName);
-		sql.append("_tags et");
-		sql.append(" INNER JOIN ");
-		sql.append(selectedEntityTableName);
-		sql.append(" t ON et.id = t.id AND et.version = t.version");
-		sql.append(" ORDER BY et.id, et.version");
-		
-		LOG.log(Level.FINER, "Tag history query: " + sql);
-
-		parameterSource = new MapSqlParameterSource();
-
-		return getTagHistory(sql.toString(), parameterSource);
-	}
-	
-	
-	private ReleasableIterator<EntityHistory<T>> getEntityHistory(String selectedEntityTableName) {
+	private ReleasableIterator<EntityHistory<T>> getEntityHistory(
+			String selectedEntityStatement, MapSqlParameterSource parameterSource) {
 		ReleasableContainer releasableContainer;
 		
 		releasableContainer = new ReleasableContainer();
@@ -247,10 +241,12 @@ public abstract class EntityDao<T extends Entity> {
 			List<FeatureHistoryPopulator<T, ?>> featurePopulators;
 			EntityHistoryReader<T> entityHistoryReader;
 			
-			entityIterator = releasableContainer.add(getRawEntityHistory(selectedEntityTableName));
-			tagIterator = releasableContainer.add(getTagHistory(selectedEntityTableName));
+			entityIterator = releasableContainer.add(
+					getFeaturelessEntityHistory(selectedEntityStatement, parameterSource));
+			tagIterator = releasableContainer.add(
+					getTagHistory(selectedEntityStatement, parameterSource));
 			
-			featurePopulators = getFeatureHistoryPopulators(selectedEntityTableName);
+			featurePopulators = getFeatureHistoryPopulators(selectedEntityStatement, parameterSource);
 			for (FeatureHistoryPopulator<T, ?> featurePopulator : featurePopulators) {
 				releasableContainer.add(featurePopulator);
 			}
@@ -269,8 +265,10 @@ public abstract class EntityDao<T extends Entity> {
 	}
 	
 	
-	private ReleasableIterator<ChangeContainer> getChangeHistory(String selectedEntityTableName) {
-		return new ChangeReader<T>(getEntityHistory(selectedEntityTableName), getContainerFactory());
+	private ReleasableIterator<ChangeContainer> getChangeHistory(
+			String selectedEntityStatement, MapSqlParameterSource parameterSource) {
+		
+		return new ChangeReader<T>(getEntityHistory(selectedEntityStatement, parameterSource), getContainerFactory());
 	}
 	
 	
@@ -382,17 +380,17 @@ public abstract class EntityDao<T extends Entity> {
 	 * @return An iterator pointing at the identified records.
 	 */
 	public ReleasableIterator<ChangeContainer> getHistory(ReplicationQueryPredicates predicates) {
-		String selectedEntityTableName;
+		String selectedEntityStatement;
 		StringBuilder sql;
 		MapSqlParameterSource parameterSource;
 		
 		parameterSource = new MapSqlParameterSource();
 		
-		selectedEntityTableName = "tmp_" + entityName + "s";
+		selectedEntityStatement = "tmp_" + entityName + "s";
 		
 		sql = new StringBuilder();
 		sql.append("CREATE TEMPORARY TABLE ");
-		sql.append(selectedEntityTableName);
+		sql.append(selectedEntityStatement);
 		sql.append(" ON COMMIT DROP");
 		sql.append(" AS SELECT id, version FROM ");
 		sql.append(entityName);
@@ -421,11 +419,11 @@ public abstract class EntityDao<T extends Entity> {
 		
 		if (LOG.isLoggable(Level.FINER)) {
 			LOG.log(Level.FINER,
-					jdbcTemplate.queryForInt("SELECT Count(id) FROM " + selectedEntityTableName) + " "
+					jdbcTemplate.queryForInt("SELECT Count(id) FROM " + selectedEntityStatement) + " "
 					+ entityName + " records located.");
 		}
 		
-		return getChangeHistory(selectedEntityTableName);
+		return getChangeHistory(selectedEntityStatement, new MapSqlParameterSource());
 	}
 
 
@@ -439,19 +437,13 @@ public abstract class EntityDao<T extends Entity> {
 	 * @return An iterator pointing at the identified records.
 	 */
 	public ReleasableIterator<ChangeContainer> getHistory(Date intervalBegin, Date intervalEnd) {
-		String selectedEntityTableName;
-		StringBuilder sql;
+		String sql;
 		MapSqlParameterSource parameterSource;
 		
-		selectedEntityTableName = "tmp_" + entityName + "s";
-		
-		sql = new StringBuilder();
-		sql.append("CREATE TEMPORARY TABLE ");
-		sql.append(selectedEntityTableName);
-		sql.append(" ON COMMIT DROP");
-		sql.append(" AS SELECT id, version FROM ");
-		sql.append(entityName);
-		sql.append("s WHERE timestamp > :intervalBegin AND timestamp <= :intervalEnd");
+		sql =
+			"(SELECT id, version FROM "
+			+ entityName
+			+ "s WHERE timestamp > :intervalBegin AND timestamp <= :intervalEnd)";
 		
 		LOG.log(Level.FINER, "Entity identification query: " + sql);
 
@@ -459,9 +451,7 @@ public abstract class EntityDao<T extends Entity> {
 		parameterSource.addValue("intervalBegin", intervalBegin, Types.TIMESTAMP);
 		parameterSource.addValue("intervalEnd", intervalEnd, Types.TIMESTAMP);
 		
-		namedParamJdbcTemplate.update(sql.toString(), parameterSource);
-		
-		return getChangeHistory(selectedEntityTableName);
+		return getChangeHistory(sql, parameterSource);
 	}
 	
 	
@@ -472,7 +462,7 @@ public abstract class EntityDao<T extends Entity> {
 	 */
 	public ReleasableIterator<ChangeContainer> getHistory() {
 		// Join the entity table to itself which will return all records.
-		return getChangeHistory(entityName + "s");
+		return getChangeHistory(entityName + "s", new MapSqlParameterSource());
 	}
 	
 	
@@ -484,7 +474,8 @@ public abstract class EntityDao<T extends Entity> {
 	public ReleasableIterator<EntityContainer> getCurrent() {
 		// Join the entity table to the current version of itself which will return all current
 		// records.
-		return new EntityContainerReader<T>(getEntityHistory("(SELECT id, version FROM current_" + entityName
-				+ "s WHERE visible = TRUE)"), getContainerFactory());
+		return new EntityContainerReader<T>(
+				getEntityHistory("(SELECT id, version FROM current_" + entityName + "s WHERE visible = TRUE)",
+						new MapSqlParameterSource()), getContainerFactory());
 	}
 }
