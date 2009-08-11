@@ -11,7 +11,11 @@
 	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy-${ivy.version}.jar" />
 
 	<target name="download-ivy" unless="ivy.available" description="Downloads the ivy library from public repositories.">
+		<!-- Delete any existing ivy files -->
+		<delete dir="ivy"/>
+		
 		<mkdir dir="${ivy.jar.dir}" />
+		
 		<!--
 			Download Ivy from web site so that it can be used even without any
 			special installation
