@@ -46,6 +46,9 @@ public class EntityHistoryReader<T extends Entity> implements ReleasableIterator
 		this.entityIterator = releasableContainer.add(entityIterator);
 		tagPopulator = releasableContainer.add(new FeatureHistoryPopulator<T, Tag, DbFeature<Tag>>(tagIterator,
 				new TagCollectionLoader<T>()));
+		for (FeatureHistoryPopulator<T, ?, ?> featurePopulator : featurePopulators) {
+			releasableContainer.add(featurePopulator);
+		}
 		this.featurePopulators = featurePopulators;
 	}
 	
