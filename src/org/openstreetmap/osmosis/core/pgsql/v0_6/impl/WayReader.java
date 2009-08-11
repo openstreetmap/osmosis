@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.apidb.v0_6.impl.DbOrderedFeature;
-import org.openstreetmap.osmosis.core.apidb.v0_6.impl.DbOrderedFeatureComparator;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;

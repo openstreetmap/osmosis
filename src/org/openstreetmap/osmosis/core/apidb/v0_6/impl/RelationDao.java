@@ -12,7 +12,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
-import org.openstreetmap.osmosis.core.store.SimpleObjectStore;
+import org.openstreetmap.osmosis.core.sort.common.FileBasedSort;
 import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactory;
 import org.openstreetmap.osmosis.core.store.StoreReleasingIterator;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -67,38 +67,42 @@ public class RelationDao extends EntityDao<Relation> {
 	}
 	
 	
-	private ReleasableIterator<DbFeatureHistory<DbFeature<RelationMember>>> getRelationMemberHistory(
+	private ReleasableIterator<DbFeatureHistory<DbOrderedFeature<RelationMember>>> getRelationMemberHistory(
 			String selectedEntityStatement, SqlParameterSource parameterSource) {
 		
-		SimpleObjectStore<DbFeatureHistory<DbFeature<RelationMember>>> store =
-			new SimpleObjectStore<DbFeatureHistory<DbFeature<RelationMember>>>(
-				new SingleClassObjectSerializationFactory(DbFeatureHistory.class), "rmb", true);
+		FileBasedSort<DbFeatureHistory<DbOrderedFeature<RelationMember>>> sortingStore =
+			new FileBasedSort<DbFeatureHistory<DbOrderedFeature<RelationMember>>>(
+				new SingleClassObjectSerializationFactory(DbFeatureHistory.class),
+				new DbOrderedFeatureHistoryComparator<RelationMember>(), true);
 		
 		try {
 			String sql;
-			ObjectStoreRowMapperListener<DbFeatureHistory<DbFeature<RelationMember>>> storeListener;
-			DbFeatureHistoryRowMapper<DbFeature<RelationMember>> dbFeatureHistoryRowMapper;
+			SortingStoreRowMapperListener<DbFeatureHistory<DbOrderedFeature<RelationMember>>> storeListener;
+			DbFeatureHistoryRowMapper<DbOrderedFeature<RelationMember>> dbFeatureHistoryRowMapper;
 			DbFeatureRowMapper<RelationMember> dbFeatureRowMapper;
+			DbOrderedFeatureRowMapper<RelationMember> dbOrderedFeatureRowMapper;
 			RelationMemberRowMapper relationNodeRowMapper;
-			ReleasableIterator<DbFeatureHistory<DbFeature<RelationMember>>> resultIterator;
+			ReleasableIterator<DbFeatureHistory<DbOrderedFeature<RelationMember>>> resultIterator;
 			
 			sql =
-				"SELECT rm.id, rm.member_id, rm.member_role, rm.member_type, rm.version"
+				"SELECT rm.id, rm.member_id, rm.member_role, rm.member_type, rm.version, rm.sequence_id"
 				+ " FROM "
 				+ "relation_members rm"
 				+ " INNER JOIN "
 				+ selectedEntityStatement
-				+ " t ON rm.id = t.id AND rm.version = t.version"
-				+ " ORDER BY rm.id, rm.version, rm.sequence_id";
+				+ " t ON rm.id = t.id AND rm.version = t.version";
 			
 			LOG.log(Level.FINER, "Relation member history query: " + sql);
 			
 			// Sends all received data into the object store.
-			storeListener = new ObjectStoreRowMapperListener<DbFeatureHistory<DbFeature<RelationMember>>>(store);
+			storeListener =
+				new SortingStoreRowMapperListener<DbFeatureHistory<DbOrderedFeature<RelationMember>>>(sortingStore);
 			// Retrieves the version information associated with the feature.
-			dbFeatureHistoryRowMapper = new DbFeatureHistoryRowMapper<DbFeature<RelationMember>>(storeListener);
+			dbFeatureHistoryRowMapper = new DbFeatureHistoryRowMapper<DbOrderedFeature<RelationMember>>(storeListener);
+			// Retrieves the sequence number associated with the feature.
+			dbOrderedFeatureRowMapper = new DbOrderedFeatureRowMapper<RelationMember>(dbFeatureHistoryRowMapper);
 			// Retrieves the entity information associated with the feature.
-			dbFeatureRowMapper = new DbFeatureRowMapper<RelationMember>(dbFeatureHistoryRowMapper);
+			dbFeatureRowMapper = new DbFeatureRowMapper<RelationMember>(dbOrderedFeatureRowMapper);
 			// Retrieves the basic feature information.
 			relationNodeRowMapper = new RelationMemberRowMapper(dbFeatureRowMapper);
 			
@@ -106,17 +110,18 @@ public class RelationDao extends EntityDao<Relation> {
 			getNamedParamJdbcTemplate().query(sql, parameterSource, relationNodeRowMapper);
 			
 			// Open a iterator on the store that will release the store upon completion.
-			resultIterator = new StoreReleasingIterator<DbFeatureHistory<DbFeature<RelationMember>>>(store.iterate(),
-					store);
+			resultIterator = new StoreReleasingIterator<DbFeatureHistory<DbOrderedFeature<RelationMember>>>(
+					sortingStore.iterate(),
+					sortingStore);
 			
 			// The store itself shouldn't be released now that it has been attached to the iterator.
-			store = null;
+			sortingStore = null;
 			
 			return resultIterator;
 			
 		} finally {
-			if (store != null) {
-				store.release();
+			if (sortingStore != null) {
+				sortingStore.release();
 			}
 		}
 	}
@@ -126,12 +131,12 @@ public class RelationDao extends EntityDao<Relation> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected List<FeatureHistoryPopulator<Relation, ?>> getFeatureHistoryPopulators(
+	protected List<FeatureHistoryPopulator<Relation, ?, ?>> getFeatureHistoryPopulators(
 			String selectedEntityTableName, MapSqlParameterSource parameterSource) {
-		ReleasableIterator<DbFeatureHistory<DbFeature<RelationMember>>> relationNodeIterator;
-		List<FeatureHistoryPopulator<Relation, ?>> featurePopulators;
+		ReleasableIterator<DbFeatureHistory<DbOrderedFeature<RelationMember>>> relationNodeIterator;
+		List<FeatureHistoryPopulator<Relation, ?, ?>> featurePopulators;
 		
-		featurePopulators = new ArrayList<FeatureHistoryPopulator<Relation,?>>();
+		featurePopulators = new ArrayList<FeatureHistoryPopulator<Relation, ?, ?>>();
 		
 		// Get the relation nodes for the selected entities.
 		relationNodeIterator = getRelationMemberHistory(selectedEntityTableName, parameterSource);
@@ -139,7 +144,7 @@ public class RelationDao extends EntityDao<Relation> {
 		// Wrap the relation node source into a feature history populator that can attach them to their
 		// owning relations.
 		featurePopulators.add(
-				new FeatureHistoryPopulator<Relation, RelationMember>(
+				new FeatureHistoryPopulator<Relation, RelationMember, DbOrderedFeature<RelationMember>>(
 						relationNodeIterator, new RelationMemberCollectionLoader()));
 		
 		return featurePopulators;

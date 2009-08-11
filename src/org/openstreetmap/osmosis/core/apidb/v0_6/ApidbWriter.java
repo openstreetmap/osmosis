@@ -442,10 +442,10 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
         prmIndex = initialIndex;
 
-        tag = dbEntityTag.getDbFeature().getFeature();
+        tag = dbEntityTag.getFeature().getFeature();
 
         try {
-            statement.setLong(prmIndex++, dbEntityTag.getDbFeature().getEntityId());
+            statement.setLong(prmIndex++, dbEntityTag.getFeature().getEntityId());
             statement.setString(prmIndex++, tag.getKey());
             statement.setString(prmIndex++, tag.getValue());
             statement.setInt(prmIndex++, dbEntityTag.getVersion());
@@ -469,9 +469,9 @@ public class ApidbWriter implements Sink, EntityProcessor {
         prmIndex = initialIndex;
 
         try {
-            statement.setLong(prmIndex++, dbWayNode.getDbFeature().getEntityId());
-            statement.setLong(prmIndex++, dbWayNode.getDbFeature().getFeature().getNodeId());
-            statement.setInt(prmIndex++, dbWayNode.getDbFeature().getSequenceId());
+            statement.setLong(prmIndex++, dbWayNode.getFeature().getEntityId());
+            statement.setLong(prmIndex++, dbWayNode.getFeature().getFeature().getNodeId());
+            statement.setInt(prmIndex++, dbWayNode.getFeature().getSequenceId());
             statement.setInt(prmIndex++, dbWayNode.getVersion());
 
         } catch (SQLException e) {
@@ -522,13 +522,13 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
         prmIndex = initialIndex;
 
-        relationMember = dbRelationMember.getDbFeature().getFeature();
+        relationMember = dbRelationMember.getFeature().getFeature();
 
         try {
-            statement.setLong(prmIndex++, dbRelationMember.getDbFeature().getEntityId());
+            statement.setLong(prmIndex++, dbRelationMember.getFeature().getEntityId());
             statement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
             statement.setLong(prmIndex++, relationMember.getMemberId());
-            statement.setInt(prmIndex++, dbRelationMember.getDbFeature().getSequenceId());
+            statement.setInt(prmIndex++, dbRelationMember.getFeature().getSequenceId());
             statement.setString(prmIndex++, relationMember.getMemberRole());
             statement.setInt(prmIndex++, dbRelationMember.getVersion());
 

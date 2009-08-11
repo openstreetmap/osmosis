@@ -14,10 +14,14 @@ import org.openstreetmap.osmosis.core.store.Storeable;
  *            The type of entity to be populated.
  * @param <Tf>
  *            The type of feature to be added.
+ * @param <Tdbf>
+ *            The database feature class type. This is extensible to allow other attributes to be
+ *            added to features such as a sequence number.
  */
-public class FeatureHistoryPopulator<Te extends Entity, Tf extends Storeable> implements FeaturePopulator<Te> {
+public class FeatureHistoryPopulator<Te extends Entity, Tf extends Storeable, Tdbf extends DbFeature<Tf>> implements
+		FeaturePopulator<Te> {
 	
-	private PeekableIterator<DbFeatureHistory<DbFeature<Tf>>> source;
+	private PeekableIterator<DbFeatureHistory<Tdbf>> source;
 	private FeatureCollectionLoader<Te, Tf> featureLoader;
 	
 	
@@ -29,9 +33,9 @@ public class FeatureHistoryPopulator<Te extends Entity, Tf extends Storeable> im
 	 * @param featureLoader
 	 *            Provides access to the feature collection within the entity.
 	 */
-	public FeatureHistoryPopulator(ReleasableIterator<DbFeatureHistory<DbFeature<Tf>>> source,
+	public FeatureHistoryPopulator(ReleasableIterator<DbFeatureHistory<Tdbf>> source,
 			FeatureCollectionLoader<Te, Tf> featureLoader) {
-		this.source = new PeekableIterator<DbFeatureHistory<DbFeature<Tf>>>(source);
+		this.source = new PeekableIterator<DbFeatureHistory<Tdbf>>(source);
 		this.featureLoader = featureLoader;
 	}
 
@@ -43,9 +47,9 @@ public class FeatureHistoryPopulator<Te extends Entity, Tf extends Storeable> im
 	public void populateFeatures(Te entity) {
 		// Add all applicable tags to the entity.
 		while (source.hasNext()
-				&& source.peekNext().getDbFeature().getEntityId() == entity.getId()
+				&& source.peekNext().getFeature().getEntityId() == entity.getId()
 				&& source.peekNext().getVersion() == entity.getVersion()) {
-			featureLoader.getFeatureCollection(entity).add(source.next().getDbFeature().getFeature());
+			featureLoader.getFeatureCollection(entity).add(source.next().getFeature().getFeature());
 		}
 	}
 

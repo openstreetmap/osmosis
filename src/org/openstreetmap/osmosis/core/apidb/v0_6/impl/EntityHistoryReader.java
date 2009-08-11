@@ -22,8 +22,8 @@ public class EntityHistoryReader<T extends Entity> implements ReleasableIterator
 
 	private ReleasableContainer releasableContainer;
 	private ReleasableIterator<EntityHistory<T>> entityIterator;
-	private FeatureHistoryPopulator<T, Tag> tagPopulator;
-	private List<FeatureHistoryPopulator<T, ?>> featurePopulators;
+	private FeatureHistoryPopulator<T, Tag, ?> tagPopulator;
+	private List<FeatureHistoryPopulator<T, ?, ?>> featurePopulators;
 	private EntityHistory<T> nextValue;
 
 
@@ -39,12 +39,12 @@ public class EntityHistoryReader<T extends Entity> implements ReleasableIterator
 	 */
 	public EntityHistoryReader(ReleasableIterator<EntityHistory<T>> entityIterator,
 			ReleasableIterator<DbFeatureHistory<DbFeature<Tag>>> tagIterator,
-			List<FeatureHistoryPopulator<T, ?>> featurePopulators) {
+			List<FeatureHistoryPopulator<T, ?, ?>> featurePopulators) {
 		
 		releasableContainer = new ReleasableContainer();
 		
 		this.entityIterator = releasableContainer.add(entityIterator);
-		tagPopulator = releasableContainer.add(new FeatureHistoryPopulator<T, Tag>(tagIterator,
+		tagPopulator = releasableContainer.add(new FeatureHistoryPopulator<T, Tag, DbFeature<Tag>>(tagIterator,
 				new TagCollectionLoader<T>()));
 		this.featurePopulators = featurePopulators;
 	}
@@ -67,7 +67,7 @@ public class EntityHistoryReader<T extends Entity> implements ReleasableIterator
 		tagPopulator.populateFeatures(entity);
 		
 		// Add entity type specific features to the entity.
-		for (FeatureHistoryPopulator<T, ?> populator : featurePopulators) {
+		for (FeatureHistoryPopulator<T, ?, ?> populator : featurePopulators) {
 			populator.populateFeatures(entity);
 		}
 		

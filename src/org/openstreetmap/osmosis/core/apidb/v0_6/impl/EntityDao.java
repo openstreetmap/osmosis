@@ -16,7 +16,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableContainer;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
-import org.openstreetmap.osmosis.core.store.SimpleObjectStore;
+import org.openstreetmap.osmosis.core.sort.common.FileBasedSort;
 import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactory;
 import org.openstreetmap.osmosis.core.store.StoreReleasingIterator;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -100,7 +100,7 @@ public abstract class EntityDao<T extends Entity> {
 	 *            The parameters required to execute the selected entity statement.
 	 * @return The history feature populators.
 	 */
-	protected abstract List<FeatureHistoryPopulator<T, ?>> getFeatureHistoryPopulators(
+	protected abstract List<FeatureHistoryPopulator<T, ?, ?>> getFeatureHistoryPopulators(
 			String selectedEntityStatement, MapSqlParameterSource parameterSource);
 	
 	
@@ -123,7 +123,6 @@ public abstract class EntityDao<T extends Entity> {
 		sql.append(selectedEntityStatement);
 		sql.append(" t ON e.id = t.id AND e.version = t.version");
 		sql.append(" INNER JOIN changesets c ON e.changeset_id = c.id INNER JOIN users u ON c.user_id = u.id");
-		sql.append(" ORDER BY e.id, e.version");
 		
 		LOG.log(Level.FINER, "Entity history query: " + sql);
 
@@ -133,12 +132,15 @@ public abstract class EntityDao<T extends Entity> {
 
 	private ReleasableIterator<EntityHistory<T>> getFeaturelessEntityHistory(
 			String selectedEntityStatement, MapSqlParameterSource parameterSource) {
-		SimpleObjectStore<EntityHistory<T>> store = new SimpleObjectStore<EntityHistory<T>>(
-				new SingleClassObjectSerializationFactory(EntityHistory.class), "his", true);
+		
+		FileBasedSort<EntityHistory<T>> sortingStore =
+			new FileBasedSort<EntityHistory<T>>(
+				new SingleClassObjectSerializationFactory(EntityHistory.class),
+				new EntityHistoryComparator<T>(), true);
 		
 		try {
 			String sql;
-			ObjectStoreRowMapperListener<EntityHistory<T>> storeListener;
+			SortingStoreRowMapperListener<EntityHistory<T>> storeListener;
 			EntityHistoryRowMapper<T> entityHistoryRowMapper;
 			RowMapperListener<CommonEntityData> entityRowMapper;
 			EntityDataRowMapper entityDataRowMapper;
@@ -147,7 +149,7 @@ public abstract class EntityDao<T extends Entity> {
 			sql = buildFeaturelessEntityHistoryQuery(selectedEntityStatement);
 			
 			// Sends all received data into the object store.
-			storeListener = new ObjectStoreRowMapperListener<EntityHistory<T>>(store);
+			storeListener = new SortingStoreRowMapperListener<EntityHistory<T>>(sortingStore);
 			// Retrieves the visible attribute allowing modifies to be distinguished
 			// from deletes.
 			entityHistoryRowMapper = new EntityHistoryRowMapper<T>(storeListener);
@@ -160,16 +162,16 @@ public abstract class EntityDao<T extends Entity> {
 			namedParamJdbcTemplate.query(sql, parameterSource, entityDataRowMapper);
 			
 			// Open a iterator on the store that will release the store upon completion.
-			resultIterator = new StoreReleasingIterator<EntityHistory<T>>(store.iterate(), store);
+			resultIterator = new StoreReleasingIterator<EntityHistory<T>>(sortingStore.iterate(), sortingStore);
 			
 			// The store itself shouldn't be released now that it has been attached to the iterator.
-			store = null;
+			sortingStore = null;
 			
 			return resultIterator;
 			
 		} finally {
-			if (store != null) {
-				store.release();
+			if (sortingStore != null) {
+				sortingStore.release();
 			}
 		}
 	}
@@ -178,13 +180,14 @@ public abstract class EntityDao<T extends Entity> {
 	private ReleasableIterator<DbFeatureHistory<DbFeature<Tag>>> getTagHistory(String selectedEntityStatement,
 			MapSqlParameterSource parameterSource) {
 		
-		SimpleObjectStore<DbFeatureHistory<DbFeature<Tag>>> store =
-			new SimpleObjectStore<DbFeatureHistory<DbFeature<Tag>>>(
-				new SingleClassObjectSerializationFactory(DbFeatureHistory.class), "tag", true);
+		FileBasedSort<DbFeatureHistory<DbFeature<Tag>>> sortingStore =
+			new FileBasedSort<DbFeatureHistory<DbFeature<Tag>>>(
+				new SingleClassObjectSerializationFactory(DbFeatureHistory.class),
+				new DbFeatureHistoryComparator<Tag>(), true);
 		
 		try {
 			String sql;
-			ObjectStoreRowMapperListener<DbFeatureHistory<DbFeature<Tag>>> storeListener;
+			SortingStoreRowMapperListener<DbFeatureHistory<DbFeature<Tag>>> storeListener;
 			DbFeatureHistoryRowMapper<DbFeature<Tag>> dbFeatureHistoryRowMapper;
 			DbFeatureRowMapper<Tag> dbFeatureRowMapper;
 			TagRowMapper tagRowMapper;
@@ -197,13 +200,12 @@ public abstract class EntityDao<T extends Entity> {
 				+ "_tags et"
 				+ " INNER JOIN "
 				+ selectedEntityStatement
-				+ " t ON et.id = t.id AND et.version = t.version"
-				+ " ORDER BY et.id, et.version";
+				+ " t ON et.id = t.id AND et.version = t.version";
 			
 			LOG.log(Level.FINER, "Tag history query: " + sql);
 			
 			// Sends all received data into the object store.
-			storeListener = new ObjectStoreRowMapperListener<DbFeatureHistory<DbFeature<Tag>>>(store);
+			storeListener = new SortingStoreRowMapperListener<DbFeatureHistory<DbFeature<Tag>>>(sortingStore);
 			// Retrieves the version information associated with the tag.
 			dbFeatureHistoryRowMapper = new DbFeatureHistoryRowMapper<DbFeature<Tag>>(storeListener);
 			// Retrieves the entity information associated with the tag.
@@ -215,16 +217,17 @@ public abstract class EntityDao<T extends Entity> {
 			namedParamJdbcTemplate.query(sql, parameterSource, tagRowMapper);
 			
 			// Open a iterator on the store that will release the store upon completion.
-			resultIterator = new StoreReleasingIterator<DbFeatureHistory<DbFeature<Tag>>>(store.iterate(), store);
+			resultIterator = new StoreReleasingIterator<DbFeatureHistory<DbFeature<Tag>>>(sortingStore.iterate(),
+					sortingStore);
 			
 			// The store itself shouldn't be released now that it has been attached to the iterator.
-			store = null;
+			sortingStore = null;
 			
 			return resultIterator;
 			
 		} finally {
-			if (store != null) {
-				store.release();
+			if (sortingStore != null) {
+				sortingStore.release();
 			}
 		}
 	}
@@ -238,7 +241,7 @@ public abstract class EntityDao<T extends Entity> {
 		try {
 			ReleasableIterator<EntityHistory<T>> entityIterator;
 			ReleasableIterator<DbFeatureHistory<DbFeature<Tag>>> tagIterator;
-			List<FeatureHistoryPopulator<T, ?>> featurePopulators;
+			List<FeatureHistoryPopulator<T, ?, ?>> featurePopulators;
 			EntityHistoryReader<T> entityHistoryReader;
 			
 			entityIterator = releasableContainer.add(
@@ -247,7 +250,7 @@ public abstract class EntityDao<T extends Entity> {
 					getTagHistory(selectedEntityStatement, parameterSource));
 			
 			featurePopulators = getFeatureHistoryPopulators(selectedEntityStatement, parameterSource);
-			for (FeatureHistoryPopulator<T, ?> featurePopulator : featurePopulators) {
+			for (FeatureHistoryPopulator<T, ?, ?> featurePopulator : featurePopulators) {
 				releasableContainer.add(featurePopulator);
 			}
 			

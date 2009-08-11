@@ -67,7 +67,7 @@ public class DbFeatureHistory<T extends Storeable> implements Storeable {
 	 * 
 	 * @return The feature.
 	 */
-	public T getDbFeature() {
+	public T getFeature() {
 		return feature;
 	}
 	

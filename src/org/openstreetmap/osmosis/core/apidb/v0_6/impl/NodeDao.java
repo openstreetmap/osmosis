@@ -62,7 +62,7 @@ public class NodeDao extends EntityDao<Node> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected List<FeatureHistoryPopulator<Node, ?>> getFeatureHistoryPopulators(
+	protected List<FeatureHistoryPopulator<Node, ?, ?>> getFeatureHistoryPopulators(
 			String selectedEntityTableName, MapSqlParameterSource parameterSource) {
 		return Collections.emptyList();
 	}
