@@ -6,9 +6,9 @@
 		Installs and configures the ivy build dependencies system.
 	</description>
 
-	<property name="ivy.install.version" value="2.0.0-rc2" />
+	<property name="ivy.version" value="2.0.0" />
 	<property name="ivy.jar.dir" value="ivy" />
-	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy-${ivy.version}.jar" />
 
 	<target name="download-ivy" unless="ivy.available" description="Downloads the ivy library from public repositories.">
 		<mkdir dir="${ivy.jar.dir}" />
@@ -17,7 +17,7 @@
 			special installation
 		-->
 		<get
-			src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+			src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar"
 			dest="${ivy.jar.file}" usetimestamp="true"/>
 	</target>
 
