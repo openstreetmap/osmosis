@@ -244,6 +244,12 @@ public abstract class EntityDao<T extends Entity> {
 			List<FeatureHistoryPopulator<T, ?, ?>> featurePopulators;
 			EntityHistoryReader<T> entityHistoryReader;
 			
+			// PostgreSQL sometimes incorrectly chooses to perform full table scans, this option
+			// prevents this. Note that this is not recommended practice according to documentation,
+			// but fixing this would require modifying the table statistics gathering configuration
+			// on the production database.
+			jdbcTemplate.execute("set enable_seqscan = false");
+			
 			entityIterator = releasableContainer.add(
 					getFeaturelessEntityHistory(selectedEntityStatement, parameterSource));
 			tagIterator = releasableContainer.add(
