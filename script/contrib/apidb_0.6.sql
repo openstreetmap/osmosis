@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Started on 2009-08-11 22:08:29 EST
+-- Started on 2009-08-15 17:35:34 EST
 
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
@@ -13,7 +13,7 @@ SET escape_string_warning = off;
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 468 (class 0 OID 0)
+-- TOC entry 419 (class 0 OID 0)
 -- Name: gbtreekey16; Type: SHELL TYPE; Schema: public; Owner: -
 --
 
@@ -22,7 +22,7 @@ CREATE TYPE gbtreekey16;
 
 --
 -- TOC entry 24 (class 1255 OID 58861)
--- Dependencies: 3 468
+-- Dependencies: 3 419
 -- Name: gbtreekey16_in(cstring); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -33,7 +33,7 @@ CREATE FUNCTION gbtreekey16_in(cstring) RETURNS gbtreekey16
 
 --
 -- TOC entry 25 (class 1255 OID 58862)
--- Dependencies: 3 468
+-- Dependencies: 3 419
 -- Name: gbtreekey16_out(gbtreekey16); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -43,8 +43,8 @@ CREATE FUNCTION gbtreekey16_out(gbtreekey16) RETURNS cstring
 
 
 --
--- TOC entry 467 (class 1247 OID 58860)
--- Dependencies: 25 24 3
+-- TOC entry 418 (class 1247 OID 58860)
+-- Dependencies: 24 25 3
 -- Name: gbtreekey16; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -58,7 +58,7 @@ CREATE TYPE gbtreekey16 (
 
 
 --
--- TOC entry 471 (class 0 OID 0)
+-- TOC entry 422 (class 0 OID 0)
 -- Name: gbtreekey32; Type: SHELL TYPE; Schema: public; Owner: -
 --
 
@@ -67,7 +67,7 @@ CREATE TYPE gbtreekey32;
 
 --
 -- TOC entry 26 (class 1255 OID 58865)
--- Dependencies: 3 471
+-- Dependencies: 3 422
 -- Name: gbtreekey32_in(cstring); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -78,7 +78,7 @@ CREATE FUNCTION gbtreekey32_in(cstring) RETURNS gbtreekey32
 
 --
 -- TOC entry 27 (class 1255 OID 58866)
--- Dependencies: 3 471
+-- Dependencies: 3 422
 -- Name: gbtreekey32_out(gbtreekey32); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -88,8 +88,8 @@ CREATE FUNCTION gbtreekey32_out(gbtreekey32) RETURNS cstring
 
 
 --
--- TOC entry 470 (class 1247 OID 58864)
--- Dependencies: 27 26 3
+-- TOC entry 421 (class 1247 OID 58864)
+-- Dependencies: 26 27 3
 -- Name: gbtreekey32; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -103,7 +103,7 @@ CREATE TYPE gbtreekey32 (
 
 
 --
--- TOC entry 462 (class 0 OID 0)
+-- TOC entry 413 (class 0 OID 0)
 -- Name: gbtreekey4; Type: SHELL TYPE; Schema: public; Owner: -
 --
 
@@ -112,7 +112,7 @@ CREATE TYPE gbtreekey4;
 
 --
 -- TOC entry 20 (class 1255 OID 58853)
--- Dependencies: 3 462
+-- Dependencies: 3 413
 -- Name: gbtreekey4_in(cstring); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -123,7 +123,7 @@ CREATE FUNCTION gbtreekey4_in(cstring) RETURNS gbtreekey4
 
 --
 -- TOC entry 21 (class 1255 OID 58854)
--- Dependencies: 3 462
+-- Dependencies: 3 413
 -- Name: gbtreekey4_out(gbtreekey4); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -133,8 +133,8 @@ CREATE FUNCTION gbtreekey4_out(gbtreekey4) RETURNS cstring
 
 
 --
--- TOC entry 461 (class 1247 OID 58852)
--- Dependencies: 3 21 20
+-- TOC entry 412 (class 1247 OID 58852)
+-- Dependencies: 20 3 21
 -- Name: gbtreekey4; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -148,7 +148,7 @@ CREATE TYPE gbtreekey4 (
 
 
 --
--- TOC entry 465 (class 0 OID 0)
+-- TOC entry 416 (class 0 OID 0)
 -- Name: gbtreekey8; Type: SHELL TYPE; Schema: public; Owner: -
 --
 
@@ -157,7 +157,7 @@ CREATE TYPE gbtreekey8;
 
 --
 -- TOC entry 22 (class 1255 OID 58857)
--- Dependencies: 3 465
+-- Dependencies: 3 416
 -- Name: gbtreekey8_in(cstring); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -168,7 +168,7 @@ CREATE FUNCTION gbtreekey8_in(cstring) RETURNS gbtreekey8
 
 --
 -- TOC entry 23 (class 1255 OID 58858)
--- Dependencies: 3 465
+-- Dependencies: 3 416
 -- Name: gbtreekey8_out(gbtreekey8); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -178,8 +178,8 @@ CREATE FUNCTION gbtreekey8_out(gbtreekey8) RETURNS cstring
 
 
 --
--- TOC entry 464 (class 1247 OID 58856)
--- Dependencies: 3 23 22
+-- TOC entry 415 (class 1247 OID 58856)
+-- Dependencies: 23 22 3
 -- Name: gbtreekey8; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -193,7 +193,7 @@ CREATE TYPE gbtreekey8 (
 
 
 --
--- TOC entry 474 (class 0 OID 0)
+-- TOC entry 426 (class 0 OID 0)
 -- Name: gbtreekey_var; Type: SHELL TYPE; Schema: public; Owner: -
 --
 
@@ -202,7 +202,7 @@ CREATE TYPE gbtreekey_var;
 
 --
 -- TOC entry 28 (class 1255 OID 58869)
--- Dependencies: 3 474
+-- Dependencies: 3 426
 -- Name: gbtreekey_var_in(cstring); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -213,7 +213,7 @@ CREATE FUNCTION gbtreekey_var_in(cstring) RETURNS gbtreekey_var
 
 --
 -- TOC entry 29 (class 1255 OID 58870)
--- Dependencies: 3 474
+-- Dependencies: 3 426
 -- Name: gbtreekey_var_out(gbtreekey_var); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -223,7 +223,7 @@ CREATE FUNCTION gbtreekey_var_out(gbtreekey_var) RETURNS cstring
 
 
 --
--- TOC entry 473 (class 1247 OID 58868)
+-- TOC entry 425 (class 1247 OID 58868)
 -- Dependencies: 29 28 3
 -- Name: gbtreekey_var; Type: TYPE; Schema: public; Owner: -
 --
@@ -238,7 +238,21 @@ CREATE TYPE gbtreekey_var (
 
 
 --
--- TOC entry 426 (class 1247 OID 61100)
+-- TOC entry 496 (class 1247 OID 64165)
+-- Dependencies: 3
+-- Name: gpx_visibility_enum; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE gpx_visibility_enum AS ENUM (
+    'private',
+    'public',
+    'trackable',
+    'identifiable'
+);
+
+
+--
+-- TOC entry 447 (class 1247 OID 63766)
 -- Dependencies: 3
 -- Name: nwr_enum; Type: TYPE; Schema: public; Owner: -
 --
@@ -307,7 +321,7 @@ CREATE FUNCTION gbt_bit_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 133 (class 1255 OID 59227)
--- Dependencies: 473 3
+-- Dependencies: 425 3
 -- Name: gbt_bit_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -395,7 +409,7 @@ CREATE FUNCTION gbt_bytea_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 121 (class 1255 OID 59187)
--- Dependencies: 473 3
+-- Dependencies: 3 425
 -- Name: gbt_bytea_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -461,7 +475,7 @@ CREATE FUNCTION gbt_cash_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 101 (class 1255 OID 59111)
--- Dependencies: 3 464
+-- Dependencies: 415 3
 -- Name: gbt_cash_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -527,7 +541,7 @@ CREATE FUNCTION gbt_date_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 88 (class 1255 OID 59070)
--- Dependencies: 3 464
+-- Dependencies: 3 415
 -- Name: gbt_date_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -604,7 +618,7 @@ CREATE FUNCTION gbt_float4_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 60 (class 1255 OID 58958)
--- Dependencies: 464 3
+-- Dependencies: 415 3
 -- Name: gbt_float4_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -670,7 +684,7 @@ CREATE FUNCTION gbt_float8_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 66 (class 1255 OID 58978)
--- Dependencies: 3 467
+-- Dependencies: 418 3
 -- Name: gbt_float8_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -736,7 +750,7 @@ CREATE FUNCTION gbt_inet_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 139 (class 1255 OID 59261)
--- Dependencies: 467 3
+-- Dependencies: 3 418
 -- Name: gbt_inet_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -802,7 +816,7 @@ CREATE FUNCTION gbt_int2_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 42 (class 1255 OID 58898)
--- Dependencies: 3 461
+-- Dependencies: 412 3
 -- Name: gbt_int2_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -868,7 +882,7 @@ CREATE FUNCTION gbt_int4_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 48 (class 1255 OID 58918)
--- Dependencies: 464 3
+-- Dependencies: 415 3
 -- Name: gbt_int4_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -934,7 +948,7 @@ CREATE FUNCTION gbt_int8_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 54 (class 1255 OID 58938)
--- Dependencies: 467 3
+-- Dependencies: 3 418
 -- Name: gbt_int8_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1011,7 +1025,7 @@ CREATE FUNCTION gbt_intv_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 95 (class 1255 OID 59091)
--- Dependencies: 3 470
+-- Dependencies: 421 3
 -- Name: gbt_intv_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1077,7 +1091,7 @@ CREATE FUNCTION gbt_macad_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 107 (class 1255 OID 59131)
--- Dependencies: 3 467
+-- Dependencies: 3 418
 -- Name: gbt_macad_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1143,7 +1157,7 @@ CREATE FUNCTION gbt_numeric_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 127 (class 1255 OID 59207)
--- Dependencies: 3 473
+-- Dependencies: 425 3
 -- Name: gbt_numeric_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1209,7 +1223,7 @@ CREATE FUNCTION gbt_oid_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 36 (class 1255 OID 58878)
--- Dependencies: 464 3
+-- Dependencies: 415 3
 -- Name: gbt_oid_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1275,7 +1289,7 @@ CREATE FUNCTION gbt_text_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 115 (class 1255 OID 59153)
--- Dependencies: 3 473
+-- Dependencies: 3 425
 -- Name: gbt_text_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1341,7 +1355,7 @@ CREATE FUNCTION gbt_time_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 82 (class 1255 OID 59036)
--- Dependencies: 3 467
+-- Dependencies: 3 418
 -- Name: gbt_time_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1429,7 +1443,7 @@ CREATE FUNCTION gbt_ts_same(internal, internal, internal) RETURNS internal
 
 --
 -- TOC entry 74 (class 1255 OID 59000)
--- Dependencies: 467 3
+-- Dependencies: 418 3
 -- Name: gbt_ts_union(bytea, internal); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -1472,8 +1486,8 @@ CREATE FUNCTION gbt_var_decompress(internal) RETURNS internal
 
 
 --
--- TOC entry 1357 (class 2616 OID 59230)
--- Dependencies: 473 1486 3
+-- TOC entry 1359 (class 2616 OID 59230)
+-- Dependencies: 425 3 1488
 -- Name: gist_bit_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1495,8 +1509,8 @@ CREATE OPERATOR CLASS gist_bit_ops
 
 
 --
--- TOC entry 1354 (class 2616 OID 59170)
--- Dependencies: 1483 3 473
+-- TOC entry 1356 (class 2616 OID 59170)
+-- Dependencies: 1485 3 425
 -- Name: gist_bpchar_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1518,8 +1532,8 @@ CREATE OPERATOR CLASS gist_bpchar_ops
 
 
 --
--- TOC entry 1355 (class 2616 OID 59190)
--- Dependencies: 3 1484 473
+-- TOC entry 1357 (class 2616 OID 59190)
+-- Dependencies: 425 3 1486
 -- Name: gist_bytea_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1541,8 +1555,8 @@ CREATE OPERATOR CLASS gist_bytea_ops
 
 
 --
--- TOC entry 1351 (class 2616 OID 59114)
--- Dependencies: 467 1480 3
+-- TOC entry 1353 (class 2616 OID 59114)
+-- Dependencies: 1482 418 3
 -- Name: gist_cash_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1564,8 +1578,8 @@ CREATE OPERATOR CLASS gist_cash_ops
 
 
 --
--- TOC entry 1360 (class 2616 OID 59278)
--- Dependencies: 467 1489 3
+-- TOC entry 1362 (class 2616 OID 59278)
+-- Dependencies: 418 3 1491
 -- Name: gist_cidr_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1587,8 +1601,8 @@ CREATE OPERATOR CLASS gist_cidr_ops
 
 
 --
--- TOC entry 1349 (class 2616 OID 59073)
--- Dependencies: 1478 464 3
+-- TOC entry 1351 (class 2616 OID 59073)
+-- Dependencies: 3 415 1480
 -- Name: gist_date_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1610,8 +1624,8 @@ CREATE OPERATOR CLASS gist_date_ops
 
 
 --
--- TOC entry 1343 (class 2616 OID 58961)
--- Dependencies: 3 1472 464
+-- TOC entry 1345 (class 2616 OID 58961)
+-- Dependencies: 3 415 1474
 -- Name: gist_float4_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1633,8 +1647,8 @@ CREATE OPERATOR CLASS gist_float4_ops
 
 
 --
--- TOC entry 1344 (class 2616 OID 58981)
--- Dependencies: 1473 467 3
+-- TOC entry 1346 (class 2616 OID 58981)
+-- Dependencies: 418 3 1475
 -- Name: gist_float8_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1656,8 +1670,8 @@ CREATE OPERATOR CLASS gist_float8_ops
 
 
 --
--- TOC entry 1359 (class 2616 OID 59264)
--- Dependencies: 3 1488 467
+-- TOC entry 1361 (class 2616 OID 59264)
+-- Dependencies: 3 1490 418
 -- Name: gist_inet_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1679,8 +1693,8 @@ CREATE OPERATOR CLASS gist_inet_ops
 
 
 --
--- TOC entry 1340 (class 2616 OID 58901)
--- Dependencies: 1469 3 461
+-- TOC entry 1342 (class 2616 OID 58901)
+-- Dependencies: 3 1471 412
 -- Name: gist_int2_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1702,8 +1716,8 @@ CREATE OPERATOR CLASS gist_int2_ops
 
 
 --
--- TOC entry 1341 (class 2616 OID 58921)
--- Dependencies: 464 3 1470
+-- TOC entry 1343 (class 2616 OID 58921)
+-- Dependencies: 3 415 1472
 -- Name: gist_int4_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1725,8 +1739,8 @@ CREATE OPERATOR CLASS gist_int4_ops
 
 
 --
--- TOC entry 1342 (class 2616 OID 58941)
--- Dependencies: 1471 467 3
+-- TOC entry 1344 (class 2616 OID 58941)
+-- Dependencies: 1473 3 418
 -- Name: gist_int8_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1748,8 +1762,8 @@ CREATE OPERATOR CLASS gist_int8_ops
 
 
 --
--- TOC entry 1350 (class 2616 OID 59094)
--- Dependencies: 1479 3 470
+-- TOC entry 1352 (class 2616 OID 59094)
+-- Dependencies: 421 3 1481
 -- Name: gist_interval_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1771,8 +1785,8 @@ CREATE OPERATOR CLASS gist_interval_ops
 
 
 --
--- TOC entry 1352 (class 2616 OID 59134)
--- Dependencies: 3 1481 467
+-- TOC entry 1354 (class 2616 OID 59134)
+-- Dependencies: 418 3 1483
 -- Name: gist_macaddr_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1794,8 +1808,8 @@ CREATE OPERATOR CLASS gist_macaddr_ops
 
 
 --
--- TOC entry 1356 (class 2616 OID 59210)
--- Dependencies: 3 473 1485
+-- TOC entry 1358 (class 2616 OID 59210)
+-- Dependencies: 425 1487 3
 -- Name: gist_numeric_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1817,8 +1831,8 @@ CREATE OPERATOR CLASS gist_numeric_ops
 
 
 --
--- TOC entry 1339 (class 2616 OID 58881)
--- Dependencies: 464 3 1468
+-- TOC entry 1341 (class 2616 OID 58881)
+-- Dependencies: 1470 415 3
 -- Name: gist_oid_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1840,8 +1854,8 @@ CREATE OPERATOR CLASS gist_oid_ops
 
 
 --
--- TOC entry 1353 (class 2616 OID 59156)
--- Dependencies: 3 1482 473
+-- TOC entry 1355 (class 2616 OID 59156)
+-- Dependencies: 3 1484 425
 -- Name: gist_text_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1863,8 +1877,8 @@ CREATE OPERATOR CLASS gist_text_ops
 
 
 --
--- TOC entry 1347 (class 2616 OID 59039)
--- Dependencies: 3 467 1476
+-- TOC entry 1349 (class 2616 OID 59039)
+-- Dependencies: 418 3 1478
 -- Name: gist_time_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1886,8 +1900,8 @@ CREATE OPERATOR CLASS gist_time_ops
 
 
 --
--- TOC entry 1345 (class 2616 OID 59003)
--- Dependencies: 467 1474 3
+-- TOC entry 1347 (class 2616 OID 59003)
+-- Dependencies: 3 418 1476
 -- Name: gist_timestamp_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1909,8 +1923,8 @@ CREATE OPERATOR CLASS gist_timestamp_ops
 
 
 --
--- TOC entry 1346 (class 2616 OID 59017)
--- Dependencies: 467 3 1475
+-- TOC entry 1348 (class 2616 OID 59017)
+-- Dependencies: 1477 3 418
 -- Name: gist_timestamptz_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1932,8 +1946,8 @@ CREATE OPERATOR CLASS gist_timestamptz_ops
 
 
 --
--- TOC entry 1348 (class 2616 OID 59053)
--- Dependencies: 3 1477 467
+-- TOC entry 1350 (class 2616 OID 59053)
+-- Dependencies: 1479 418 3
 -- Name: gist_timetz_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1955,8 +1969,8 @@ CREATE OPERATOR CLASS gist_timetz_ops
 
 
 --
--- TOC entry 1358 (class 2616 OID 59244)
--- Dependencies: 3 1487 473
+-- TOC entry 1360 (class 2616 OID 59244)
+-- Dependencies: 1489 425 3
 -- Name: gist_vbit_ops; Type: OPERATOR CLASS; Schema: public; Owner: -
 --
 
@@ -1982,7 +1996,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 1779 (class 1259 OID 61208)
+-- TOC entry 1781 (class 1259 OID 63874)
 -- Dependencies: 3
 -- Name: acls; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -1997,8 +2011,8 @@ CREATE TABLE acls (
 
 
 --
--- TOC entry 1778 (class 1259 OID 61206)
--- Dependencies: 1779 3
+-- TOC entry 1780 (class 1259 OID 63872)
+-- Dependencies: 1781 3
 -- Name: acls_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2011,8 +2025,8 @@ CREATE SEQUENCE acls_id_seq
 
 
 --
--- TOC entry 2280 (class 0 OID 0)
--- Dependencies: 1778
+-- TOC entry 2282 (class 0 OID 0)
+-- Dependencies: 1780
 -- Name: acls_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2020,8 +2034,8 @@ ALTER SEQUENCE acls_id_seq OWNED BY acls.id;
 
 
 --
--- TOC entry 2281 (class 0 OID 0)
--- Dependencies: 1778
+-- TOC entry 2283 (class 0 OID 0)
+-- Dependencies: 1780
 -- Name: acls_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -2029,8 +2043,8 @@ SELECT pg_catalog.setval('acls_id_seq', 1, false);
 
 
 --
--- TOC entry 1784 (class 1259 OID 61344)
--- Dependencies: 2107 2108 3
+-- TOC entry 1786 (class 1259 OID 64010)
+-- Dependencies: 2109 2110 3
 -- Name: changeset_tags; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2042,8 +2056,8 @@ CREATE TABLE changeset_tags (
 
 
 --
--- TOC entry 1783 (class 1259 OID 61337)
--- Dependencies: 2106 3
+-- TOC entry 1785 (class 1259 OID 64003)
+-- Dependencies: 2108 3
 -- Name: changesets; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2061,8 +2075,8 @@ CREATE TABLE changesets (
 
 
 --
--- TOC entry 1782 (class 1259 OID 61335)
--- Dependencies: 3 1783
+-- TOC entry 1784 (class 1259 OID 64001)
+-- Dependencies: 1785 3
 -- Name: changesets_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2075,8 +2089,8 @@ CREATE SEQUENCE changesets_id_seq
 
 
 --
--- TOC entry 2282 (class 0 OID 0)
--- Dependencies: 1782
+-- TOC entry 2284 (class 0 OID 0)
+-- Dependencies: 1784
 -- Name: changesets_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2084,8 +2098,8 @@ ALTER SEQUENCE changesets_id_seq OWNED BY changesets.id;
 
 
 --
--- TOC entry 2283 (class 0 OID 0)
--- Dependencies: 1782
+-- TOC entry 2285 (class 0 OID 0)
+-- Dependencies: 1784
 -- Name: changesets_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -2093,7 +2107,7 @@ SELECT pg_catalog.setval('changesets_id_seq', 1, false);
 
 
 --
--- TOC entry 1786 (class 1259 OID 61469)
+-- TOC entry 1788 (class 1259 OID 64135)
 -- Dependencies: 3
 -- Name: countries; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -2109,8 +2123,8 @@ CREATE TABLE countries (
 
 
 --
--- TOC entry 1785 (class 1259 OID 61467)
--- Dependencies: 3 1786
+-- TOC entry 1787 (class 1259 OID 64133)
+-- Dependencies: 3 1788
 -- Name: countries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2122,8 +2136,8 @@ CREATE SEQUENCE countries_id_seq
 
 
 --
--- TOC entry 2284 (class 0 OID 0)
--- Dependencies: 1785
+-- TOC entry 2286 (class 0 OID 0)
+-- Dependencies: 1787
 -- Name: countries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2131,8 +2145,8 @@ ALTER SEQUENCE countries_id_seq OWNED BY countries.id;
 
 
 --
--- TOC entry 2285 (class 0 OID 0)
--- Dependencies: 1785
+-- TOC entry 2287 (class 0 OID 0)
+-- Dependencies: 1787
 -- Name: countries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -2140,8 +2154,8 @@ SELECT pg_catalog.setval('countries_id_seq', 246, true);
 
 
 --
--- TOC entry 1780 (class 1259 OID 61226)
--- Dependencies: 2101 2102 3
+-- TOC entry 1782 (class 1259 OID 63892)
+-- Dependencies: 2103 2104 3
 -- Name: current_node_tags; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2153,7 +2167,7 @@ CREATE TABLE current_node_tags (
 
 
 --
--- TOC entry 1765 (class 1259 OID 61054)
+-- TOC entry 1767 (class 1259 OID 63720)
 -- Dependencies: 3
 -- Name: current_nodes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -2171,8 +2185,8 @@ CREATE TABLE current_nodes (
 
 
 --
--- TOC entry 1764 (class 1259 OID 61052)
--- Dependencies: 1765 3
+-- TOC entry 1766 (class 1259 OID 63718)
+-- Dependencies: 3 1767
 -- Name: current_nodes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2185,8 +2199,8 @@ CREATE SEQUENCE current_nodes_id_seq
 
 
 --
--- TOC entry 2286 (class 0 OID 0)
--- Dependencies: 1764
+-- TOC entry 2288 (class 0 OID 0)
+-- Dependencies: 1766
 -- Name: current_nodes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2194,8 +2208,8 @@ ALTER SEQUENCE current_nodes_id_seq OWNED BY current_nodes.id;
 
 
 --
--- TOC entry 2287 (class 0 OID 0)
--- Dependencies: 1764
+-- TOC entry 2289 (class 0 OID 0)
+-- Dependencies: 1766
 -- Name: current_nodes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -2203,8 +2217,8 @@ SELECT pg_catalog.setval('current_nodes_id_seq', 1, false);
 
 
 --
--- TOC entry 1767 (class 1259 OID 61104)
--- Dependencies: 2087 3 426
+-- TOC entry 1769 (class 1259 OID 63770)
+-- Dependencies: 2089 447 3
 -- Name: current_relation_members; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2218,8 +2232,8 @@ CREATE TABLE current_relation_members (
 
 
 --
--- TOC entry 1768 (class 1259 OID 61110)
--- Dependencies: 2088 2089 3
+-- TOC entry 1770 (class 1259 OID 63776)
+-- Dependencies: 2090 2091 3
 -- Name: current_relation_tags; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2231,7 +2245,7 @@ CREATE TABLE current_relation_tags (
 
 
 --
--- TOC entry 1770 (class 1259 OID 61122)
+-- TOC entry 1772 (class 1259 OID 63788)
 -- Dependencies: 3
 -- Name: current_relations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -2246,8 +2260,8 @@ CREATE TABLE current_relations (
 
 
 --
--- TOC entry 1769 (class 1259 OID 61120)
--- Dependencies: 3 1770
+-- TOC entry 1771 (class 1259 OID 63786)
+-- Dependencies: 1772 3
 -- Name: current_relations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2260,8 +2274,8 @@ CREATE SEQUENCE current_relations_id_seq
 
 
 --
--- TOC entry 2288 (class 0 OID 0)
--- Dependencies: 1769
+-- TOC entry 2290 (class 0 OID 0)
+-- Dependencies: 1771
 -- Name: current_relations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2269,8 +2283,8 @@ ALTER SEQUENCE current_relations_id_seq OWNED BY current_relations.id;
 
 
 --
--- TOC entry 2289 (class 0 OID 0)
--- Dependencies: 1769
+-- TOC entry 2291 (class 0 OID 0)
+-- Dependencies: 1771
 -- Name: current_relations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -2278,7 +2292,7 @@ SELECT pg_catalog.setval('current_relations_id_seq', 1, false);
 
 
 --
--- TOC entry 1775 (class 1259 OID 61168)
+-- TOC entry 1777 (class 1259 OID 63834)
 -- Dependencies: 3
 -- Name: current_way_nodes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -2291,8 +2305,8 @@ CREATE TABLE current_way_nodes (
 
 
 --
--- TOC entry 1741 (class 1259 OID 60220)
--- Dependencies: 2054 2055 3
+-- TOC entry 1743 (class 1259 OID 62886)
+-- Dependencies: 2056 2057 3
 -- Name: current_way_tags; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2304,7 +2318,7 @@ CREATE TABLE current_way_tags (
 
 
 --
--- TOC entry 1743 (class 1259 OID 60232)
+-- TOC entry 1745 (class 1259 OID 62898)
 -- Dependencies: 3
 -- Name: current_ways; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -2319,8 +2333,8 @@ CREATE TABLE current_ways (
 
 
 --
--- TOC entry 1742 (class 1259 OID 60230)
--- Dependencies: 3 1743
+-- TOC entry 1744 (class 1259 OID 62896)
+-- Dependencies: 1745 3
 -- Name: current_ways_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2333,8 +2347,8 @@ CREATE SEQUENCE current_ways_id_seq
 
 
 --
--- TOC entry 2290 (class 0 OID 0)
--- Dependencies: 1742
+-- TOC entry 2292 (class 0 OID 0)
+-- Dependencies: 1744
 -- Name: current_ways_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2342,8 +2356,8 @@ ALTER SEQUENCE current_ways_id_seq OWNED BY current_ways.id;
 
 
 --
--- TOC entry 2291 (class 0 OID 0)
--- Dependencies: 1742
+-- TOC entry 2293 (class 0 OID 0)
+-- Dependencies: 1744
 -- Name: current_ways_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -2351,7 +2365,7 @@ SELECT pg_catalog.setval('current_ways_id_seq', 1, false);
 
 
 --
--- TOC entry 1777 (class 1259 OID 61191)
+-- TOC entry 1779 (class 1259 OID 63857)
 -- Dependencies: 3
 -- Name: diary_comments; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -2367,8 +2381,8 @@ CREATE TABLE diary_comments (
 
 
 --
--- TOC entry 1776 (class 1259 OID 61189)
--- Dependencies: 3 1777
+-- TOC entry 1778 (class 1259 OID 63855)
+-- Dependencies: 3 1779
 -- Name: diary_comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2381,8 +2395,8 @@ CREATE SEQUENCE diary_comments_id_seq
 
 
 --
--- TOC entry 2292 (class 0 OID 0)
--- Dependencies: 1776
+-- TOC entry 2294 (class 0 OID 0)
+-- Dependencies: 1778
 -- Name: diary_comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2390,8 +2404,8 @@ ALTER SEQUENCE diary_comments_id_seq OWNED BY diary_comments.id;
 
 
 --
--- TOC entry 2293 (class 0 OID 0)
--- Dependencies: 1776
+-- TOC entry 2295 (class 0 OID 0)
+-- Dependencies: 1778
 -- Name: diary_comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -2399,8 +2413,8 @@ SELECT pg_catalog.setval('diary_comments_id_seq', 1, false);
 
 
 --
--- TOC entry 1745 (class 1259 OID 60240)
--- Dependencies: 2057 3
+-- TOC entry 1747 (class 1259 OID 62906)
+-- Dependencies: 2059 3
 -- Name: diary_entries; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2418,8 +2432,8 @@ CREATE TABLE diary_entries (
 
 
 --
--- TOC entry 1744 (class 1259 OID 60238)
--- Dependencies: 3 1745
+-- TOC entry 1746 (class 1259 OID 62904)
+-- Dependencies: 3 1747
 -- Name: diary_entries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2432,8 +2446,8 @@ CREATE SEQUENCE diary_entries_id_seq
 
 
 --
--- TOC entry 2294 (class 0 OID 0)
--- Dependencies: 1744
+-- TOC entry 2296 (class 0 OID 0)
+-- Dependencies: 1746
 -- Name: diary_entries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2441,8 +2455,8 @@ ALTER SEQUENCE diary_entries_id_seq OWNED BY diary_entries.id;
 
 
 --
--- TOC entry 2295 (class 0 OID 0)
--- Dependencies: 1744
+-- TOC entry 2297 (class 0 OID 0)
+-- Dependencies: 1746
 -- Name: diary_entries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -2450,7 +2464,7 @@ SELECT pg_catalog.setval('diary_entries_id_seq', 1, false);
 
 
 --
--- TOC entry 1747 (class 1259 OID 60251)
+-- TOC entry 1749 (class 1259 OID 62917)
 -- Dependencies: 3
 -- Name: friends; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -2463,8 +2477,8 @@ CREATE TABLE friends (
 
 
 --
--- TOC entry 1746 (class 1259 OID 60249)
--- Dependencies: 1747 3
+-- TOC entry 1748 (class 1259 OID 62915)
+-- Dependencies: 3 1749
 -- Name: friends_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2477,8 +2491,8 @@ CREATE SEQUENCE friends_id_seq
 
 
 --
--- TOC entry 2296 (class 0 OID 0)
--- Dependencies: 1746
+-- TOC entry 2298 (class 0 OID 0)
+-- Dependencies: 1748
 -- Name: friends_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2486,8 +2500,8 @@ ALTER SEQUENCE friends_id_seq OWNED BY friends.id;
 
 
 --
--- TOC entry 2297 (class 0 OID 0)
--- Dependencies: 1746
+-- TOC entry 2299 (class 0 OID 0)
+-- Dependencies: 1748
 -- Name: friends_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -2495,7 +2509,7 @@ SELECT pg_catalog.setval('friends_id_seq', 1, false);
 
 
 --
--- TOC entry 1748 (class 1259 OID 60258)
+-- TOC entry 1750 (class 1259 OID 62924)
 -- Dependencies: 3
 -- Name: gps_points; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -2512,8 +2526,8 @@ CREATE TABLE gps_points (
 
 
 --
--- TOC entry 1750 (class 1259 OID 60266)
--- Dependencies: 2060 3
+-- TOC entry 1752 (class 1259 OID 62932)
+-- Dependencies: 2062 3
 -- Name: gpx_file_tags; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2525,8 +2539,8 @@ CREATE TABLE gpx_file_tags (
 
 
 --
--- TOC entry 1749 (class 1259 OID 60264)
--- Dependencies: 3 1750
+-- TOC entry 1751 (class 1259 OID 62930)
+-- Dependencies: 1752 3
 -- Name: gpx_file_tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2539,8 +2553,8 @@ CREATE SEQUENCE gpx_file_tags_id_seq
 
 
 --
--- TOC entry 2298 (class 0 OID 0)
--- Dependencies: 1749
+-- TOC entry 2300 (class 0 OID 0)
+-- Dependencies: 1751
 -- Name: gpx_file_tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2548,8 +2562,8 @@ ALTER SEQUENCE gpx_file_tags_id_seq OWNED BY gpx_file_tags.id;
 
 
 --
--- TOC entry 2299 (class 0 OID 0)
--- Dependencies: 1749
+-- TOC entry 2301 (class 0 OID 0)
+-- Dependencies: 1751
 -- Name: gpx_file_tags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -2557,8 +2571,8 @@ SELECT pg_catalog.setval('gpx_file_tags_id_seq', 1, false);
 
 
 --
--- TOC entry 1752 (class 1259 OID 60276)
--- Dependencies: 2063 2064 2065 2066 3
+-- TOC entry 1754 (class 1259 OID 62942)
+-- Dependencies: 2065 2066 2067 2068 3 496
 -- Name: gpx_files; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2571,15 +2585,15 @@ CREATE TABLE gpx_files (
     latitude double precision,
     longitude double precision,
     "timestamp" timestamp without time zone NOT NULL,
-    public boolean DEFAULT true NOT NULL,
     description character varying(255) DEFAULT ''::character varying NOT NULL,
-    inserted boolean NOT NULL
+    inserted boolean NOT NULL,
+    visibility gpx_visibility_enum DEFAULT 'public'::gpx_visibility_enum NOT NULL
 );
 
 
 --
--- TOC entry 1751 (class 1259 OID 60274)
--- Dependencies: 3 1752
+-- TOC entry 1753 (class 1259 OID 62940)
+-- Dependencies: 3 1754
 -- Name: gpx_files_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2592,8 +2606,8 @@ CREATE SEQUENCE gpx_files_id_seq
 
 
 --
--- TOC entry 2300 (class 0 OID 0)
--- Dependencies: 1751
+-- TOC entry 2302 (class 0 OID 0)
+-- Dependencies: 1753
 -- Name: gpx_files_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2601,8 +2615,8 @@ ALTER SEQUENCE gpx_files_id_seq OWNED BY gpx_files.id;
 
 
 --
--- TOC entry 2301 (class 0 OID 0)
--- Dependencies: 1751
+-- TOC entry 2303 (class 0 OID 0)
+-- Dependencies: 1753
 -- Name: gpx_files_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -2610,7 +2624,7 @@ SELECT pg_catalog.setval('gpx_files_id_seq', 1, false);
 
 
 --
--- TOC entry 1787 (class 1259 OID 61477)
+-- TOC entry 1789 (class 1259 OID 64143)
 -- Dependencies: 3
 -- Name: languages; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -2623,8 +2637,8 @@ CREATE TABLE languages (
 
 
 --
--- TOC entry 1754 (class 1259 OID 60299)
--- Dependencies: 2067 2068 2070 3
+-- TOC entry 1756 (class 1259 OID 62965)
+-- Dependencies: 2069 2071 2072 3
 -- Name: messages; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2642,8 +2656,8 @@ CREATE TABLE messages (
 
 
 --
--- TOC entry 1753 (class 1259 OID 60297)
--- Dependencies: 3 1754
+-- TOC entry 1755 (class 1259 OID 62963)
+-- Dependencies: 3 1756
 -- Name: messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2656,8 +2670,8 @@ CREATE SEQUENCE messages_id_seq
 
 
 --
--- TOC entry 2302 (class 0 OID 0)
--- Dependencies: 1753
+-- TOC entry 2304 (class 0 OID 0)
+-- Dependencies: 1755
 -- Name: messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2665,8 +2679,8 @@ ALTER SEQUENCE messages_id_seq OWNED BY messages.id;
 
 
 --
--- TOC entry 2303 (class 0 OID 0)
--- Dependencies: 1753
+-- TOC entry 2305 (class 0 OID 0)
+-- Dependencies: 1755
 -- Name: messages_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -2674,8 +2688,8 @@ SELECT pg_catalog.setval('messages_id_seq', 1, false);
 
 
 --
--- TOC entry 1781 (class 1259 OID 61234)
--- Dependencies: 2103 2104 3
+-- TOC entry 1783 (class 1259 OID 63900)
+-- Dependencies: 2105 2106 3
 -- Name: node_tags; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2688,7 +2702,7 @@ CREATE TABLE node_tags (
 
 
 --
--- TOC entry 1766 (class 1259 OID 61078)
+-- TOC entry 1768 (class 1259 OID 63744)
 -- Dependencies: 3
 -- Name: nodes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -2706,8 +2720,8 @@ CREATE TABLE nodes (
 
 
 --
--- TOC entry 1771 (class 1259 OID 61128)
--- Dependencies: 2091 2092 2093 426 3
+-- TOC entry 1773 (class 1259 OID 63794)
+-- Dependencies: 2093 2094 2095 3 447
 -- Name: relation_members; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2722,8 +2736,8 @@ CREATE TABLE relation_members (
 
 
 --
--- TOC entry 1772 (class 1259 OID 61136)
--- Dependencies: 2094 2095 2096 3
+-- TOC entry 1774 (class 1259 OID 63802)
+-- Dependencies: 2096 2097 2098 3
 -- Name: relation_tags; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2736,8 +2750,8 @@ CREATE TABLE relation_tags (
 
 
 --
--- TOC entry 1773 (class 1259 OID 61146)
--- Dependencies: 2097 2098 3
+-- TOC entry 1775 (class 1259 OID 63812)
+-- Dependencies: 2099 2100 3
 -- Name: relations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2751,7 +2765,7 @@ CREATE TABLE relations (
 
 
 --
--- TOC entry 1740 (class 1259 OID 60169)
+-- TOC entry 1742 (class 1259 OID 62835)
 -- Dependencies: 3
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -2762,7 +2776,7 @@ CREATE TABLE schema_migrations (
 
 
 --
--- TOC entry 1760 (class 1259 OID 61022)
+-- TOC entry 1762 (class 1259 OID 63688)
 -- Dependencies: 3
 -- Name: sessions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -2777,8 +2791,8 @@ CREATE TABLE sessions (
 
 
 --
--- TOC entry 1759 (class 1259 OID 61020)
--- Dependencies: 3 1760
+-- TOC entry 1761 (class 1259 OID 63686)
+-- Dependencies: 3 1762
 -- Name: sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2791,8 +2805,8 @@ CREATE SEQUENCE sessions_id_seq
 
 
 --
--- TOC entry 2304 (class 0 OID 0)
--- Dependencies: 1759
+-- TOC entry 2306 (class 0 OID 0)
+-- Dependencies: 1761
 -- Name: sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2800,8 +2814,8 @@ ALTER SEQUENCE sessions_id_seq OWNED BY sessions.id;
 
 
 --
--- TOC entry 2305 (class 0 OID 0)
--- Dependencies: 1759
+-- TOC entry 2307 (class 0 OID 0)
+-- Dependencies: 1761
 -- Name: sessions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -2809,7 +2823,7 @@ SELECT pg_catalog.setval('sessions_id_seq', 1, false);
 
 
 --
--- TOC entry 1761 (class 1259 OID 61032)
+-- TOC entry 1763 (class 1259 OID 63698)
 -- Dependencies: 3
 -- Name: user_preferences; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -2822,7 +2836,7 @@ CREATE TABLE user_preferences (
 
 
 --
--- TOC entry 1763 (class 1259 OID 61042)
+-- TOC entry 1765 (class 1259 OID 63708)
 -- Dependencies: 3
 -- Name: user_tokens; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -2836,8 +2850,8 @@ CREATE TABLE user_tokens (
 
 
 --
--- TOC entry 1762 (class 1259 OID 61040)
--- Dependencies: 3 1763
+-- TOC entry 1764 (class 1259 OID 63706)
+-- Dependencies: 3 1765
 -- Name: user_tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2850,8 +2864,8 @@ CREATE SEQUENCE user_tokens_id_seq
 
 
 --
--- TOC entry 2306 (class 0 OID 0)
--- Dependencies: 1762
+-- TOC entry 2308 (class 0 OID 0)
+-- Dependencies: 1764
 -- Name: user_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2859,8 +2873,8 @@ ALTER SEQUENCE user_tokens_id_seq OWNED BY user_tokens.id;
 
 
 --
--- TOC entry 2307 (class 0 OID 0)
--- Dependencies: 1762
+-- TOC entry 2309 (class 0 OID 0)
+-- Dependencies: 1764
 -- Name: user_tokens_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -2868,8 +2882,8 @@ SELECT pg_catalog.setval('user_tokens_id_seq', 1, false);
 
 
 --
--- TOC entry 1756 (class 1259 OID 60340)
--- Dependencies: 2071 2072 2073 2074 2076 2077 2078 2079 2080 3
+-- TOC entry 1758 (class 1259 OID 63006)
+-- Dependencies: 2073 2075 2076 2077 2078 2079 2080 2081 2082 3
 -- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2898,8 +2912,8 @@ CREATE TABLE users (
 
 
 --
--- TOC entry 1755 (class 1259 OID 60338)
--- Dependencies: 1756 3
+-- TOC entry 1757 (class 1259 OID 63004)
+-- Dependencies: 1758 3
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -2912,8 +2926,8 @@ CREATE SEQUENCE users_id_seq
 
 
 --
--- TOC entry 2308 (class 0 OID 0)
--- Dependencies: 1755
+-- TOC entry 2310 (class 0 OID 0)
+-- Dependencies: 1757
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -2921,8 +2935,8 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
--- TOC entry 2309 (class 0 OID 0)
--- Dependencies: 1755
+-- TOC entry 2311 (class 0 OID 0)
+-- Dependencies: 1757
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
@@ -2930,7 +2944,7 @@ SELECT pg_catalog.setval('users_id_seq', 1, false);
 
 
 --
--- TOC entry 1774 (class 1259 OID 61163)
+-- TOC entry 1776 (class 1259 OID 63829)
 -- Dependencies: 3
 -- Name: way_nodes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -2944,8 +2958,8 @@ CREATE TABLE way_nodes (
 
 
 --
--- TOC entry 1757 (class 1259 OID 60373)
--- Dependencies: 2081 3
+-- TOC entry 1759 (class 1259 OID 63039)
+-- Dependencies: 2083 3
 -- Name: way_tags; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2958,8 +2972,8 @@ CREATE TABLE way_tags (
 
 
 --
--- TOC entry 1758 (class 1259 OID 60381)
--- Dependencies: 2082 2083 3
+-- TOC entry 1760 (class 1259 OID 63047)
+-- Dependencies: 2084 2085 3
 -- Name: ways; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2973,8 +2987,8 @@ CREATE TABLE ways (
 
 
 --
--- TOC entry 2100 (class 2604 OID 61211)
--- Dependencies: 1778 1779 1779
+-- TOC entry 2102 (class 2604 OID 63877)
+-- Dependencies: 1780 1781 1781
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2982,8 +2996,8 @@ ALTER TABLE acls ALTER COLUMN id SET DEFAULT nextval('acls_id_seq'::regclass);
 
 
 --
--- TOC entry 2105 (class 2604 OID 61340)
--- Dependencies: 1783 1782 1783
+-- TOC entry 2107 (class 2604 OID 64006)
+-- Dependencies: 1785 1784 1785
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2991,8 +3005,8 @@ ALTER TABLE changesets ALTER COLUMN id SET DEFAULT nextval('changesets_id_seq'::
 
 
 --
--- TOC entry 2109 (class 2604 OID 61472)
--- Dependencies: 1786 1785 1786
+-- TOC entry 2111 (class 2604 OID 64138)
+-- Dependencies: 1788 1787 1788
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3000,8 +3014,8 @@ ALTER TABLE countries ALTER COLUMN id SET DEFAULT nextval('countries_id_seq'::re
 
 
 --
--- TOC entry 2086 (class 2604 OID 61057)
--- Dependencies: 1764 1765 1765
+-- TOC entry 2088 (class 2604 OID 63723)
+-- Dependencies: 1767 1766 1767
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3009,8 +3023,8 @@ ALTER TABLE current_nodes ALTER COLUMN id SET DEFAULT nextval('current_nodes_id_
 
 
 --
--- TOC entry 2090 (class 2604 OID 61125)
--- Dependencies: 1769 1770 1770
+-- TOC entry 2092 (class 2604 OID 63791)
+-- Dependencies: 1772 1771 1772
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3018,8 +3032,8 @@ ALTER TABLE current_relations ALTER COLUMN id SET DEFAULT nextval('current_relat
 
 
 --
--- TOC entry 2056 (class 2604 OID 60235)
--- Dependencies: 1743 1742 1743
+-- TOC entry 2058 (class 2604 OID 62901)
+-- Dependencies: 1745 1744 1745
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3027,8 +3041,8 @@ ALTER TABLE current_ways ALTER COLUMN id SET DEFAULT nextval('current_ways_id_se
 
 
 --
--- TOC entry 2099 (class 2604 OID 61194)
--- Dependencies: 1776 1777 1777
+-- TOC entry 2101 (class 2604 OID 63860)
+-- Dependencies: 1779 1778 1779
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3036,8 +3050,8 @@ ALTER TABLE diary_comments ALTER COLUMN id SET DEFAULT nextval('diary_comments_i
 
 
 --
--- TOC entry 2058 (class 2604 OID 60243)
--- Dependencies: 1744 1745 1745
+-- TOC entry 2060 (class 2604 OID 62909)
+-- Dependencies: 1747 1746 1747
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3045,8 +3059,8 @@ ALTER TABLE diary_entries ALTER COLUMN id SET DEFAULT nextval('diary_entries_id_
 
 
 --
--- TOC entry 2059 (class 2604 OID 60254)
--- Dependencies: 1747 1746 1747
+-- TOC entry 2061 (class 2604 OID 62920)
+-- Dependencies: 1749 1748 1749
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3054,8 +3068,8 @@ ALTER TABLE friends ALTER COLUMN id SET DEFAULT nextval('friends_id_seq'::regcla
 
 
 --
--- TOC entry 2061 (class 2604 OID 60270)
--- Dependencies: 1750 1749 1750
+-- TOC entry 2063 (class 2604 OID 62936)
+-- Dependencies: 1751 1752 1752
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3063,8 +3077,8 @@ ALTER TABLE gpx_file_tags ALTER COLUMN id SET DEFAULT nextval('gpx_file_tags_id_
 
 
 --
--- TOC entry 2062 (class 2604 OID 60279)
--- Dependencies: 1752 1751 1752
+-- TOC entry 2064 (class 2604 OID 62945)
+-- Dependencies: 1753 1754 1754
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3072,8 +3086,8 @@ ALTER TABLE gpx_files ALTER COLUMN id SET DEFAULT nextval('gpx_files_id_seq'::re
 
 
 --
--- TOC entry 2069 (class 2604 OID 60302)
--- Dependencies: 1754 1753 1754
+-- TOC entry 2070 (class 2604 OID 62968)
+-- Dependencies: 1756 1755 1756
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3081,8 +3095,8 @@ ALTER TABLE messages ALTER COLUMN id SET DEFAULT nextval('messages_id_seq'::regc
 
 
 --
--- TOC entry 2084 (class 2604 OID 61025)
--- Dependencies: 1759 1760 1760
+-- TOC entry 2086 (class 2604 OID 63691)
+-- Dependencies: 1762 1761 1762
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3090,8 +3104,8 @@ ALTER TABLE sessions ALTER COLUMN id SET DEFAULT nextval('sessions_id_seq'::regc
 
 
 --
--- TOC entry 2085 (class 2604 OID 61045)
--- Dependencies: 1763 1762 1763
+-- TOC entry 2087 (class 2604 OID 63711)
+-- Dependencies: 1765 1764 1765
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3099,8 +3113,8 @@ ALTER TABLE user_tokens ALTER COLUMN id SET DEFAULT nextval('user_tokens_id_seq'
 
 
 --
--- TOC entry 2075 (class 2604 OID 60343)
--- Dependencies: 1755 1756 1756
+-- TOC entry 2074 (class 2604 OID 63009)
+-- Dependencies: 1758 1757 1758
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3108,8 +3122,8 @@ ALTER TABLE users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 
 --
--- TOC entry 2268 (class 0 OID 61208)
--- Dependencies: 1779
+-- TOC entry 2270 (class 0 OID 63874)
+-- Dependencies: 1781
 -- Data for Name: acls; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3118,8 +3132,8 @@ COPY acls (id, address, netmask, k, v) FROM stdin;
 
 
 --
--- TOC entry 2272 (class 0 OID 61344)
--- Dependencies: 1784
+-- TOC entry 2274 (class 0 OID 64010)
+-- Dependencies: 1786
 -- Data for Name: changeset_tags; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3128,8 +3142,8 @@ COPY changeset_tags (id, k, v) FROM stdin;
 
 
 --
--- TOC entry 2271 (class 0 OID 61337)
--- Dependencies: 1783
+-- TOC entry 2273 (class 0 OID 64003)
+-- Dependencies: 1785
 -- Data for Name: changesets; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3138,8 +3152,8 @@ COPY changesets (id, user_id, created_at, min_lat, max_lat, min_lon, max_lon, cl
 
 
 --
--- TOC entry 2273 (class 0 OID 61469)
--- Dependencies: 1786
+-- TOC entry 2275 (class 0 OID 64135)
+-- Dependencies: 1788
 -- Data for Name: countries; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3394,8 +3408,8 @@ COPY countries (id, code, min_lat, max_lat, min_lon, max_lon) FROM stdin;
 
 
 --
--- TOC entry 2269 (class 0 OID 61226)
--- Dependencies: 1780
+-- TOC entry 2271 (class 0 OID 63892)
+-- Dependencies: 1782
 -- Data for Name: current_node_tags; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3404,8 +3418,8 @@ COPY current_node_tags (id, k, v) FROM stdin;
 
 
 --
--- TOC entry 2257 (class 0 OID 61054)
--- Dependencies: 1765
+-- TOC entry 2259 (class 0 OID 63720)
+-- Dependencies: 1767
 -- Data for Name: current_nodes; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3414,8 +3428,8 @@ COPY current_nodes (id, latitude, longitude, changeset_id, visible, "timestamp",
 
 
 --
--- TOC entry 2259 (class 0 OID 61104)
--- Dependencies: 1767
+-- TOC entry 2261 (class 0 OID 63770)
+-- Dependencies: 1769
 -- Data for Name: current_relation_members; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3424,8 +3438,8 @@ COPY current_relation_members (id, member_type, member_id, member_role, sequence
 
 
 --
--- TOC entry 2260 (class 0 OID 61110)
--- Dependencies: 1768
+-- TOC entry 2262 (class 0 OID 63776)
+-- Dependencies: 1770
 -- Data for Name: current_relation_tags; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3434,8 +3448,8 @@ COPY current_relation_tags (id, k, v) FROM stdin;
 
 
 --
--- TOC entry 2261 (class 0 OID 61122)
--- Dependencies: 1770
+-- TOC entry 2263 (class 0 OID 63788)
+-- Dependencies: 1772
 -- Data for Name: current_relations; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3444,8 +3458,8 @@ COPY current_relations (id, changeset_id, "timestamp", visible, version) FROM st
 
 
 --
--- TOC entry 2266 (class 0 OID 61168)
--- Dependencies: 1775
+-- TOC entry 2268 (class 0 OID 63834)
+-- Dependencies: 1777
 -- Data for Name: current_way_nodes; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3454,8 +3468,8 @@ COPY current_way_nodes (id, node_id, sequence_id) FROM stdin;
 
 
 --
--- TOC entry 2243 (class 0 OID 60220)
--- Dependencies: 1741
+-- TOC entry 2245 (class 0 OID 62886)
+-- Dependencies: 1743
 -- Data for Name: current_way_tags; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3464,8 +3478,8 @@ COPY current_way_tags (id, k, v) FROM stdin;
 
 
 --
--- TOC entry 2244 (class 0 OID 60232)
--- Dependencies: 1743
+-- TOC entry 2246 (class 0 OID 62898)
+-- Dependencies: 1745
 -- Data for Name: current_ways; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3474,8 +3488,8 @@ COPY current_ways (id, changeset_id, "timestamp", visible, version) FROM stdin;
 
 
 --
--- TOC entry 2267 (class 0 OID 61191)
--- Dependencies: 1777
+-- TOC entry 2269 (class 0 OID 63857)
+-- Dependencies: 1779
 -- Data for Name: diary_comments; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3484,8 +3498,8 @@ COPY diary_comments (id, diary_entry_id, user_id, body, created_at, updated_at) 
 
 
 --
--- TOC entry 2245 (class 0 OID 60240)
--- Dependencies: 1745
+-- TOC entry 2247 (class 0 OID 62906)
+-- Dependencies: 1747
 -- Data for Name: diary_entries; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3494,8 +3508,8 @@ COPY diary_entries (id, user_id, title, body, created_at, updated_at, latitude, 
 
 
 --
--- TOC entry 2246 (class 0 OID 60251)
--- Dependencies: 1747
+-- TOC entry 2248 (class 0 OID 62917)
+-- Dependencies: 1749
 -- Data for Name: friends; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3504,8 +3518,8 @@ COPY friends (id, user_id, friend_user_id) FROM stdin;
 
 
 --
--- TOC entry 2247 (class 0 OID 60258)
--- Dependencies: 1748
+-- TOC entry 2249 (class 0 OID 62924)
+-- Dependencies: 1750
 -- Data for Name: gps_points; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3514,8 +3528,8 @@ COPY gps_points (altitude, trackid, latitude, longitude, gpx_id, "timestamp", ti
 
 
 --
--- TOC entry 2248 (class 0 OID 60266)
--- Dependencies: 1750
+-- TOC entry 2250 (class 0 OID 62932)
+-- Dependencies: 1752
 -- Data for Name: gpx_file_tags; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3524,18 +3538,18 @@ COPY gpx_file_tags (gpx_id, tag, id) FROM stdin;
 
 
 --
--- TOC entry 2249 (class 0 OID 60276)
--- Dependencies: 1752
+-- TOC entry 2251 (class 0 OID 62942)
+-- Dependencies: 1754
 -- Data for Name: gpx_files; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY gpx_files (id, user_id, visible, name, size, latitude, longitude, "timestamp", public, description, inserted) FROM stdin;
+COPY gpx_files (id, user_id, visible, name, size, latitude, longitude, "timestamp", description, inserted, visibility) FROM stdin;
 \.
 
 
 --
--- TOC entry 2274 (class 0 OID 61477)
--- Dependencies: 1787
+-- TOC entry 2276 (class 0 OID 64143)
+-- Dependencies: 1789
 -- Data for Name: languages; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3728,8 +3742,8 @@ cv	Chuvash	чӑваш чӗлхи
 
 
 --
--- TOC entry 2250 (class 0 OID 60299)
--- Dependencies: 1754
+-- TOC entry 2252 (class 0 OID 62965)
+-- Dependencies: 1756
 -- Data for Name: messages; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3738,8 +3752,8 @@ COPY messages (id, from_user_id, title, body, sent_on, message_read, to_user_id,
 
 
 --
--- TOC entry 2270 (class 0 OID 61234)
--- Dependencies: 1781
+-- TOC entry 2272 (class 0 OID 63900)
+-- Dependencies: 1783
 -- Data for Name: node_tags; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3748,8 +3762,8 @@ COPY node_tags (id, version, k, v) FROM stdin;
 
 
 --
--- TOC entry 2258 (class 0 OID 61078)
--- Dependencies: 1766
+-- TOC entry 2260 (class 0 OID 63744)
+-- Dependencies: 1768
 -- Data for Name: nodes; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3758,8 +3772,8 @@ COPY nodes (id, latitude, longitude, changeset_id, visible, "timestamp", tile, v
 
 
 --
--- TOC entry 2262 (class 0 OID 61128)
--- Dependencies: 1771
+-- TOC entry 2264 (class 0 OID 63794)
+-- Dependencies: 1773
 -- Data for Name: relation_members; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3768,8 +3782,8 @@ COPY relation_members (id, member_type, member_id, member_role, version, sequenc
 
 
 --
--- TOC entry 2263 (class 0 OID 61136)
--- Dependencies: 1772
+-- TOC entry 2265 (class 0 OID 63802)
+-- Dependencies: 1774
 -- Data for Name: relation_tags; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3778,8 +3792,8 @@ COPY relation_tags (id, k, v, version) FROM stdin;
 
 
 --
--- TOC entry 2264 (class 0 OID 61146)
--- Dependencies: 1773
+-- TOC entry 2266 (class 0 OID 63812)
+-- Dependencies: 1775
 -- Data for Name: relations; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3788,8 +3802,8 @@ COPY relations (id, changeset_id, "timestamp", version, visible) FROM stdin;
 
 
 --
--- TOC entry 2242 (class 0 OID 60169)
--- Dependencies: 1740
+-- TOC entry 2244 (class 0 OID 62835)
+-- Dependencies: 1742
 -- Data for Name: schema_migrations; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3832,12 +3846,13 @@ COPY schema_migrations (version) FROM stdin;
 36
 37
 38
+39
 \.
 
 
 --
--- TOC entry 2254 (class 0 OID 61022)
--- Dependencies: 1760
+-- TOC entry 2256 (class 0 OID 63688)
+-- Dependencies: 1762
 -- Data for Name: sessions; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3846,8 +3861,8 @@ COPY sessions (id, session_id, data, created_at, updated_at) FROM stdin;
 
 
 --
--- TOC entry 2255 (class 0 OID 61032)
--- Dependencies: 1761
+-- TOC entry 2257 (class 0 OID 63698)
+-- Dependencies: 1763
 -- Data for Name: user_preferences; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3856,8 +3871,8 @@ COPY user_preferences (user_id, k, v) FROM stdin;
 
 
 --
--- TOC entry 2256 (class 0 OID 61042)
--- Dependencies: 1763
+-- TOC entry 2258 (class 0 OID 63708)
+-- Dependencies: 1765
 -- Data for Name: user_tokens; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3866,8 +3881,8 @@ COPY user_tokens (id, user_id, token, expiry) FROM stdin;
 
 
 --
--- TOC entry 2251 (class 0 OID 60340)
--- Dependencies: 1756
+-- TOC entry 2253 (class 0 OID 63006)
+-- Dependencies: 1758
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3876,8 +3891,8 @@ COPY users (email, id, active, pass_crypt, creation_time, display_name, data_pub
 
 
 --
--- TOC entry 2265 (class 0 OID 61163)
--- Dependencies: 1774
+-- TOC entry 2267 (class 0 OID 63829)
+-- Dependencies: 1776
 -- Data for Name: way_nodes; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3886,8 +3901,8 @@ COPY way_nodes (id, node_id, version, sequence_id) FROM stdin;
 
 
 --
--- TOC entry 2252 (class 0 OID 60373)
--- Dependencies: 1757
+-- TOC entry 2254 (class 0 OID 63039)
+-- Dependencies: 1759
 -- Data for Name: way_tags; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3896,8 +3911,8 @@ COPY way_tags (id, k, v, version) FROM stdin;
 
 
 --
--- TOC entry 2253 (class 0 OID 60381)
--- Dependencies: 1758
+-- TOC entry 2255 (class 0 OID 63047)
+-- Dependencies: 1760
 -- Data for Name: ways; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -3906,8 +3921,8 @@ COPY ways (id, changeset_id, "timestamp", version, visible) FROM stdin;
 
 
 --
--- TOC entry 2193 (class 2606 OID 61216)
--- Dependencies: 1779 1779
+-- TOC entry 2195 (class 2606 OID 63882)
+-- Dependencies: 1781 1781
 -- Name: acls_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3916,8 +3931,8 @@ ALTER TABLE ONLY acls
 
 
 --
--- TOC entry 2202 (class 2606 OID 61343)
--- Dependencies: 1783 1783
+-- TOC entry 2204 (class 2606 OID 64009)
+-- Dependencies: 1785 1785
 -- Name: changesets_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3926,8 +3941,8 @@ ALTER TABLE ONLY changesets
 
 
 --
--- TOC entry 2207 (class 2606 OID 61474)
--- Dependencies: 1786 1786
+-- TOC entry 2209 (class 2606 OID 64140)
+-- Dependencies: 1788 1788
 -- Name: countries_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3936,8 +3951,8 @@ ALTER TABLE ONLY countries
 
 
 --
--- TOC entry 2195 (class 2606 OID 61267)
--- Dependencies: 1780 1780 1780
+-- TOC entry 2197 (class 2606 OID 63933)
+-- Dependencies: 1782 1782 1782
 -- Name: current_node_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3946,8 +3961,8 @@ ALTER TABLE ONLY current_node_tags
 
 
 --
--- TOC entry 2157 (class 2606 OID 61063)
--- Dependencies: 1765 1765
+-- TOC entry 2159 (class 2606 OID 63729)
+-- Dependencies: 1767 1767
 -- Name: current_nodes_pkey1; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3956,8 +3971,8 @@ ALTER TABLE ONLY current_nodes
 
 
 --
--- TOC entry 2167 (class 2606 OID 61388)
--- Dependencies: 1767 1767 1767 1767 1767 1767
+-- TOC entry 2169 (class 2606 OID 64054)
+-- Dependencies: 1769 1769 1769 1769 1769 1769
 -- Name: current_relation_members_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3966,8 +3981,8 @@ ALTER TABLE ONLY current_relation_members
 
 
 --
--- TOC entry 2169 (class 2606 OID 61271)
--- Dependencies: 1768 1768 1768
+-- TOC entry 2171 (class 2606 OID 63937)
+-- Dependencies: 1770 1770 1770
 -- Name: current_relation_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3976,8 +3991,8 @@ ALTER TABLE ONLY current_relation_tags
 
 
 --
--- TOC entry 2171 (class 2606 OID 61127)
--- Dependencies: 1770 1770
+-- TOC entry 2173 (class 2606 OID 63793)
+-- Dependencies: 1772 1772
 -- Name: current_relations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3986,8 +4001,8 @@ ALTER TABLE ONLY current_relations
 
 
 --
--- TOC entry 2187 (class 2606 OID 61172)
--- Dependencies: 1775 1775 1775
+-- TOC entry 2189 (class 2606 OID 63838)
+-- Dependencies: 1777 1777 1777
 -- Name: current_way_nodes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3996,8 +4011,8 @@ ALTER TABLE ONLY current_way_nodes
 
 
 --
--- TOC entry 2112 (class 2606 OID 61269)
--- Dependencies: 1741 1741 1741
+-- TOC entry 2114 (class 2606 OID 63935)
+-- Dependencies: 1743 1743 1743
 -- Name: current_way_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4006,8 +4021,8 @@ ALTER TABLE ONLY current_way_tags
 
 
 --
--- TOC entry 2114 (class 2606 OID 60237)
--- Dependencies: 1743 1743
+-- TOC entry 2116 (class 2606 OID 62903)
+-- Dependencies: 1745 1745
 -- Name: current_ways_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4016,8 +4031,8 @@ ALTER TABLE ONLY current_ways
 
 
 --
--- TOC entry 2190 (class 2606 OID 61199)
--- Dependencies: 1777 1777
+-- TOC entry 2192 (class 2606 OID 63865)
+-- Dependencies: 1779 1779
 -- Name: diary_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4026,8 +4041,8 @@ ALTER TABLE ONLY diary_comments
 
 
 --
--- TOC entry 2117 (class 2606 OID 60248)
--- Dependencies: 1745 1745
+-- TOC entry 2119 (class 2606 OID 62914)
+-- Dependencies: 1747 1747
 -- Name: diary_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4036,8 +4051,8 @@ ALTER TABLE ONLY diary_entries
 
 
 --
--- TOC entry 2119 (class 2606 OID 60256)
--- Dependencies: 1747 1747
+-- TOC entry 2121 (class 2606 OID 62922)
+-- Dependencies: 1749 1749
 -- Name: friends_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4046,8 +4061,8 @@ ALTER TABLE ONLY friends
 
 
 --
--- TOC entry 2126 (class 2606 OID 60272)
--- Dependencies: 1750 1750
+-- TOC entry 2128 (class 2606 OID 62938)
+-- Dependencies: 1752 1752
 -- Name: gpx_file_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4056,8 +4071,8 @@ ALTER TABLE ONLY gpx_file_tags
 
 
 --
--- TOC entry 2129 (class 2606 OID 60288)
--- Dependencies: 1752 1752
+-- TOC entry 2131 (class 2606 OID 62954)
+-- Dependencies: 1754 1754
 -- Name: gpx_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4066,8 +4081,8 @@ ALTER TABLE ONLY gpx_files
 
 
 --
--- TOC entry 2209 (class 2606 OID 61484)
--- Dependencies: 1787 1787
+-- TOC entry 2211 (class 2606 OID 64150)
+-- Dependencies: 1789 1789
 -- Name: languages_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4076,8 +4091,8 @@ ALTER TABLE ONLY languages
 
 
 --
--- TOC entry 2135 (class 2606 OID 60309)
--- Dependencies: 1754 1754
+-- TOC entry 2137 (class 2606 OID 62975)
+-- Dependencies: 1756 1756
 -- Name: messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4086,8 +4101,8 @@ ALTER TABLE ONLY messages
 
 
 --
--- TOC entry 2197 (class 2606 OID 61273)
--- Dependencies: 1781 1781 1781 1781
+-- TOC entry 2199 (class 2606 OID 63939)
+-- Dependencies: 1783 1783 1783 1783
 -- Name: node_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4096,8 +4111,8 @@ ALTER TABLE ONLY node_tags
 
 
 --
--- TOC entry 2162 (class 2606 OID 61279)
--- Dependencies: 1766 1766 1766
+-- TOC entry 2164 (class 2606 OID 63945)
+-- Dependencies: 1768 1768 1768
 -- Name: nodes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4106,8 +4121,8 @@ ALTER TABLE ONLY nodes
 
 
 --
--- TOC entry 2175 (class 2606 OID 61385)
--- Dependencies: 1771 1771 1771 1771 1771 1771 1771
+-- TOC entry 2177 (class 2606 OID 64051)
+-- Dependencies: 1773 1773 1773 1773 1773 1773 1773
 -- Name: relation_members_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4116,8 +4131,8 @@ ALTER TABLE ONLY relation_members
 
 
 --
--- TOC entry 2177 (class 2606 OID 61277)
--- Dependencies: 1772 1772 1772 1772
+-- TOC entry 2179 (class 2606 OID 63943)
+-- Dependencies: 1774 1774 1774 1774
 -- Name: relation_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4126,8 +4141,8 @@ ALTER TABLE ONLY relation_tags
 
 
 --
--- TOC entry 2180 (class 2606 OID 61258)
--- Dependencies: 1773 1773 1773
+-- TOC entry 2182 (class 2606 OID 63924)
+-- Dependencies: 1775 1775 1775
 -- Name: relations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4136,8 +4151,8 @@ ALTER TABLE ONLY relations
 
 
 --
--- TOC entry 2148 (class 2606 OID 61030)
--- Dependencies: 1760 1760
+-- TOC entry 2150 (class 2606 OID 63696)
+-- Dependencies: 1762 1762
 -- Name: sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4146,8 +4161,8 @@ ALTER TABLE ONLY sessions
 
 
 --
--- TOC entry 2151 (class 2606 OID 61039)
--- Dependencies: 1761 1761 1761
+-- TOC entry 2153 (class 2606 OID 63705)
+-- Dependencies: 1763 1763 1763
 -- Name: user_preferences_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4156,8 +4171,8 @@ ALTER TABLE ONLY user_preferences
 
 
 --
--- TOC entry 2153 (class 2606 OID 61047)
--- Dependencies: 1763 1763
+-- TOC entry 2155 (class 2606 OID 63713)
+-- Dependencies: 1765 1765
 -- Name: user_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4166,8 +4181,8 @@ ALTER TABLE ONLY user_tokens
 
 
 --
--- TOC entry 2140 (class 2606 OID 60355)
--- Dependencies: 1756 1756
+-- TOC entry 2142 (class 2606 OID 63021)
+-- Dependencies: 1758 1758
 -- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4176,8 +4191,8 @@ ALTER TABLE ONLY users
 
 
 --
--- TOC entry 2184 (class 2606 OID 61167)
--- Dependencies: 1774 1774 1774 1774
+-- TOC entry 2186 (class 2606 OID 63833)
+-- Dependencies: 1776 1776 1776 1776
 -- Name: way_nodes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4186,8 +4201,8 @@ ALTER TABLE ONLY way_nodes
 
 
 --
--- TOC entry 2142 (class 2606 OID 61275)
--- Dependencies: 1757 1757 1757 1757
+-- TOC entry 2144 (class 2606 OID 63941)
+-- Dependencies: 1759 1759 1759 1759
 -- Name: way_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4196,8 +4211,8 @@ ALTER TABLE ONLY way_tags
 
 
 --
--- TOC entry 2145 (class 2606 OID 61249)
--- Dependencies: 1758 1758 1758
+-- TOC entry 2147 (class 2606 OID 63915)
+-- Dependencies: 1760 1760 1760
 -- Name: ways_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4206,8 +4221,8 @@ ALTER TABLE ONLY ways
 
 
 --
--- TOC entry 2191 (class 1259 OID 61217)
--- Dependencies: 1779
+-- TOC entry 2193 (class 1259 OID 63883)
+-- Dependencies: 1781
 -- Name: acls_k_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4215,8 +4230,8 @@ CREATE INDEX acls_k_idx ON acls USING btree (k);
 
 
 --
--- TOC entry 2204 (class 1259 OID 61352)
--- Dependencies: 1784
+-- TOC entry 2206 (class 1259 OID 64018)
+-- Dependencies: 1786
 -- Name: changeset_tags_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4224,8 +4239,8 @@ CREATE INDEX changeset_tags_id_idx ON changeset_tags USING btree (id);
 
 
 --
--- TOC entry 2198 (class 1259 OID 61396)
--- Dependencies: 1341 1341 1341 1341 1783 1783 1783 1783
+-- TOC entry 2200 (class 1259 OID 64062)
+-- Dependencies: 1343 1785 1785 1785 1785 1343 1343 1343
 -- Name: changesets_bbox_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4233,8 +4248,8 @@ CREATE INDEX changesets_bbox_idx ON changesets USING gist (min_lat, max_lat, min
 
 
 --
--- TOC entry 2199 (class 1259 OID 61395)
--- Dependencies: 1783
+-- TOC entry 2201 (class 1259 OID 64061)
+-- Dependencies: 1785
 -- Name: changesets_closed_at_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4242,8 +4257,8 @@ CREATE INDEX changesets_closed_at_idx ON changesets USING btree (closed_at);
 
 
 --
--- TOC entry 2200 (class 1259 OID 61394)
--- Dependencies: 1783
+-- TOC entry 2202 (class 1259 OID 64060)
+-- Dependencies: 1785
 -- Name: changesets_created_at_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4251,8 +4266,8 @@ CREATE INDEX changesets_created_at_idx ON changesets USING btree (created_at);
 
 
 --
--- TOC entry 2203 (class 1259 OID 61390)
--- Dependencies: 1783
+-- TOC entry 2205 (class 1259 OID 64056)
+-- Dependencies: 1785
 -- Name: changesets_user_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4260,8 +4275,8 @@ CREATE INDEX changesets_user_id_idx ON changesets USING btree (user_id);
 
 
 --
--- TOC entry 2205 (class 1259 OID 61475)
--- Dependencies: 1786
+-- TOC entry 2207 (class 1259 OID 64141)
+-- Dependencies: 1788
 -- Name: countries_code_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4269,8 +4284,8 @@ CREATE UNIQUE INDEX countries_code_idx ON countries USING btree (code);
 
 
 --
--- TOC entry 2158 (class 1259 OID 61066)
--- Dependencies: 1765
+-- TOC entry 2160 (class 1259 OID 63732)
+-- Dependencies: 1767
 -- Name: current_nodes_tile_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4278,8 +4293,8 @@ CREATE INDEX current_nodes_tile_idx ON current_nodes USING btree (tile);
 
 
 --
--- TOC entry 2159 (class 1259 OID 61064)
--- Dependencies: 1765
+-- TOC entry 2161 (class 1259 OID 63730)
+-- Dependencies: 1767
 -- Name: current_nodes_timestamp_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4287,8 +4302,8 @@ CREATE INDEX current_nodes_timestamp_idx ON current_nodes USING btree ("timestam
 
 
 --
--- TOC entry 2165 (class 1259 OID 61109)
--- Dependencies: 1767 1767
+-- TOC entry 2167 (class 1259 OID 63775)
+-- Dependencies: 1769 1769
 -- Name: current_relation_members_member_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4296,8 +4311,8 @@ CREATE INDEX current_relation_members_member_idx ON current_relation_members USI
 
 
 --
--- TOC entry 2172 (class 1259 OID 61219)
--- Dependencies: 1770
+-- TOC entry 2174 (class 1259 OID 63885)
+-- Dependencies: 1772
 -- Name: current_relations_timestamp_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4305,8 +4320,8 @@ CREATE INDEX current_relations_timestamp_idx ON current_relations USING btree ("
 
 
 --
--- TOC entry 2185 (class 1259 OID 61173)
--- Dependencies: 1775
+-- TOC entry 2187 (class 1259 OID 63839)
+-- Dependencies: 1777
 -- Name: current_way_nodes_node_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4314,8 +4329,8 @@ CREATE INDEX current_way_nodes_node_idx ON current_way_nodes USING btree (node_i
 
 
 --
--- TOC entry 2115 (class 1259 OID 61218)
--- Dependencies: 1743
+-- TOC entry 2117 (class 1259 OID 63884)
+-- Dependencies: 1745
 -- Name: current_ways_timestamp_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4323,8 +4338,8 @@ CREATE INDEX current_ways_timestamp_idx ON current_ways USING btree ("timestamp"
 
 
 --
--- TOC entry 2188 (class 1259 OID 61200)
--- Dependencies: 1777 1777
+-- TOC entry 2190 (class 1259 OID 63866)
+-- Dependencies: 1779 1779
 -- Name: diary_comments_entry_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4332,8 +4347,8 @@ CREATE UNIQUE INDEX diary_comments_entry_id_idx ON diary_comments USING btree (d
 
 
 --
--- TOC entry 2120 (class 1259 OID 60585)
--- Dependencies: 1747
+-- TOC entry 2122 (class 1259 OID 63251)
+-- Dependencies: 1749
 -- Name: friends_user_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4341,8 +4356,8 @@ CREATE INDEX friends_user_id_idx ON friends USING btree (user_id);
 
 
 --
--- TOC entry 2124 (class 1259 OID 60273)
--- Dependencies: 1750
+-- TOC entry 2126 (class 1259 OID 62939)
+-- Dependencies: 1752
 -- Name: gpx_file_tags_gpxid_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4350,8 +4365,8 @@ CREATE INDEX gpx_file_tags_gpxid_idx ON gpx_file_tags USING btree (gpx_id);
 
 
 --
--- TOC entry 2127 (class 1259 OID 61205)
--- Dependencies: 1750
+-- TOC entry 2129 (class 1259 OID 63871)
+-- Dependencies: 1752
 -- Name: gpx_file_tags_tag_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4359,8 +4374,8 @@ CREATE INDEX gpx_file_tags_tag_idx ON gpx_file_tags USING btree (tag);
 
 
 --
--- TOC entry 2130 (class 1259 OID 60631)
--- Dependencies: 1752
+-- TOC entry 2132 (class 1259 OID 63297)
+-- Dependencies: 1754
 -- Name: gpx_files_timestamp_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4368,8 +4383,8 @@ CREATE INDEX gpx_files_timestamp_idx ON gpx_files USING btree ("timestamp");
 
 
 --
--- TOC entry 2131 (class 1259 OID 61204)
--- Dependencies: 1752
+-- TOC entry 2133 (class 1259 OID 63870)
+-- Dependencies: 1754
 -- Name: gpx_files_user_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4377,17 +4392,17 @@ CREATE INDEX gpx_files_user_id_idx ON gpx_files USING btree (user_id);
 
 
 --
--- TOC entry 2132 (class 1259 OID 60290)
--- Dependencies: 1752 1752
--- Name: gpx_files_visible_public_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- TOC entry 2134 (class 1259 OID 64171)
+-- Dependencies: 1754 1754
+-- Name: gpx_files_visible_visibility_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX gpx_files_visible_public_idx ON gpx_files USING btree (visible, public);
+CREATE INDEX gpx_files_visible_visibility_idx ON gpx_files USING btree (visible, visibility);
 
 
 --
--- TOC entry 2133 (class 1259 OID 61497)
--- Dependencies: 1754
+-- TOC entry 2135 (class 1259 OID 64163)
+-- Dependencies: 1756
 -- Name: messages_from_user_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4395,8 +4410,8 @@ CREATE INDEX messages_from_user_id_idx ON messages USING btree (from_user_id);
 
 
 --
--- TOC entry 2136 (class 1259 OID 60714)
--- Dependencies: 1754
+-- TOC entry 2138 (class 1259 OID 63380)
+-- Dependencies: 1756
 -- Name: messages_to_user_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4404,8 +4419,8 @@ CREATE INDEX messages_to_user_id_idx ON messages USING btree (to_user_id);
 
 
 --
--- TOC entry 2160 (class 1259 OID 61391)
--- Dependencies: 1766
+-- TOC entry 2162 (class 1259 OID 64057)
+-- Dependencies: 1768
 -- Name: nodes_changeset_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4413,8 +4428,8 @@ CREATE INDEX nodes_changeset_id_idx ON nodes USING btree (changeset_id);
 
 
 --
--- TOC entry 2163 (class 1259 OID 61088)
--- Dependencies: 1766
+-- TOC entry 2165 (class 1259 OID 63754)
+-- Dependencies: 1768
 -- Name: nodes_tile_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4422,8 +4437,8 @@ CREATE INDEX nodes_tile_idx ON nodes USING btree (tile);
 
 
 --
--- TOC entry 2164 (class 1259 OID 61086)
--- Dependencies: 1766
+-- TOC entry 2166 (class 1259 OID 63752)
+-- Dependencies: 1768
 -- Name: nodes_timestamp_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4431,8 +4446,8 @@ CREATE INDEX nodes_timestamp_idx ON nodes USING btree ("timestamp");
 
 
 --
--- TOC entry 2122 (class 1259 OID 60604)
--- Dependencies: 1748
+-- TOC entry 2124 (class 1259 OID 63270)
+-- Dependencies: 1750
 -- Name: points_gpxid_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4440,8 +4455,8 @@ CREATE INDEX points_gpxid_idx ON gps_points USING btree (gpx_id);
 
 
 --
--- TOC entry 2123 (class 1259 OID 61051)
--- Dependencies: 1748
+-- TOC entry 2125 (class 1259 OID 63717)
+-- Dependencies: 1750
 -- Name: points_tile_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4449,8 +4464,8 @@ CREATE INDEX points_tile_idx ON gps_points USING btree (tile);
 
 
 --
--- TOC entry 2173 (class 1259 OID 61135)
--- Dependencies: 1771 1771
+-- TOC entry 2175 (class 1259 OID 63801)
+-- Dependencies: 1773 1773
 -- Name: relation_members_member_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4458,8 +4473,8 @@ CREATE INDEX relation_members_member_idx ON relation_members USING btree (member
 
 
 --
--- TOC entry 2178 (class 1259 OID 61393)
--- Dependencies: 1773
+-- TOC entry 2180 (class 1259 OID 64059)
+-- Dependencies: 1775
 -- Name: relations_changeset_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4467,8 +4482,8 @@ CREATE INDEX relations_changeset_id_idx ON relations USING btree (changeset_id);
 
 
 --
--- TOC entry 2181 (class 1259 OID 61153)
--- Dependencies: 1773
+-- TOC entry 2183 (class 1259 OID 63819)
+-- Dependencies: 1775
 -- Name: relations_timestamp_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4476,8 +4491,8 @@ CREATE INDEX relations_timestamp_idx ON relations USING btree ("timestamp");
 
 
 --
--- TOC entry 2149 (class 1259 OID 61031)
--- Dependencies: 1760
+-- TOC entry 2151 (class 1259 OID 63697)
+-- Dependencies: 1762
 -- Name: sessions_session_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4485,8 +4500,8 @@ CREATE UNIQUE INDEX sessions_session_id_idx ON sessions USING btree (session_id)
 
 
 --
--- TOC entry 2110 (class 1259 OID 60172)
--- Dependencies: 1740
+-- TOC entry 2112 (class 1259 OID 62838)
+-- Dependencies: 1742
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4494,8 +4509,8 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
--- TOC entry 2121 (class 1259 OID 60257)
--- Dependencies: 1747
+-- TOC entry 2123 (class 1259 OID 62923)
+-- Dependencies: 1749
 -- Name: user_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4503,8 +4518,8 @@ CREATE INDEX user_id_idx ON friends USING btree (friend_user_id);
 
 
 --
--- TOC entry 2154 (class 1259 OID 61048)
--- Dependencies: 1763
+-- TOC entry 2156 (class 1259 OID 63714)
+-- Dependencies: 1765
 -- Name: user_tokens_token_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4512,8 +4527,8 @@ CREATE UNIQUE INDEX user_tokens_token_idx ON user_tokens USING btree (token);
 
 
 --
--- TOC entry 2155 (class 1259 OID 61049)
--- Dependencies: 1763
+-- TOC entry 2157 (class 1259 OID 63715)
+-- Dependencies: 1765
 -- Name: user_tokens_user_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4521,8 +4536,8 @@ CREATE INDEX user_tokens_user_id_idx ON user_tokens USING btree (user_id);
 
 
 --
--- TOC entry 2137 (class 1259 OID 60964)
--- Dependencies: 1756
+-- TOC entry 2139 (class 1259 OID 63630)
+-- Dependencies: 1758
 -- Name: users_display_name_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4530,8 +4545,8 @@ CREATE UNIQUE INDEX users_display_name_idx ON users USING btree (display_name);
 
 
 --
--- TOC entry 2138 (class 1259 OID 60963)
--- Dependencies: 1756
+-- TOC entry 2140 (class 1259 OID 63629)
+-- Dependencies: 1758
 -- Name: users_email_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4539,8 +4554,8 @@ CREATE UNIQUE INDEX users_email_idx ON users USING btree (email);
 
 
 --
--- TOC entry 2182 (class 1259 OID 61188)
--- Dependencies: 1774
+-- TOC entry 2184 (class 1259 OID 63854)
+-- Dependencies: 1776
 -- Name: way_nodes_node_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4548,8 +4563,8 @@ CREATE INDEX way_nodes_node_idx ON way_nodes USING btree (node_id);
 
 
 --
--- TOC entry 2143 (class 1259 OID 61392)
--- Dependencies: 1758
+-- TOC entry 2145 (class 1259 OID 64058)
+-- Dependencies: 1760
 -- Name: ways_changeset_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4557,8 +4572,8 @@ CREATE INDEX ways_changeset_id_idx ON ways USING btree (changeset_id);
 
 
 --
--- TOC entry 2146 (class 1259 OID 61019)
--- Dependencies: 1758
+-- TOC entry 2148 (class 1259 OID 63685)
+-- Dependencies: 1760
 -- Name: ways_timestamp_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4566,8 +4581,8 @@ CREATE INDEX ways_timestamp_idx ON ways USING btree ("timestamp");
 
 
 --
--- TOC entry 2241 (class 2606 OID 61447)
--- Dependencies: 2201 1784 1783
+-- TOC entry 2243 (class 2606 OID 64113)
+-- Dependencies: 1785 2203 1786
 -- Name: changeset_tags_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4576,8 +4591,8 @@ ALTER TABLE ONLY changeset_tags
 
 
 --
--- TOC entry 2240 (class 2606 OID 61397)
--- Dependencies: 1756 2139 1783
+-- TOC entry 2242 (class 2606 OID 64063)
+-- Dependencies: 1758 2141 1785
 -- Name: changesets_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4586,8 +4601,8 @@ ALTER TABLE ONLY changesets
 
 
 --
--- TOC entry 2238 (class 2606 OID 61280)
--- Dependencies: 1765 2156 1780
+-- TOC entry 2240 (class 2606 OID 63946)
+-- Dependencies: 1782 2158 1767
 -- Name: current_node_tags_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4596,8 +4611,8 @@ ALTER TABLE ONLY current_node_tags
 
 
 --
--- TOC entry 2225 (class 2606 OID 61353)
--- Dependencies: 1765 1783 2201
+-- TOC entry 2227 (class 2606 OID 64019)
+-- Dependencies: 2203 1767 1785
 -- Name: current_nodes_changeset_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4606,8 +4621,8 @@ ALTER TABLE ONLY current_nodes
 
 
 --
--- TOC entry 2227 (class 2606 OID 61315)
--- Dependencies: 1767 2170 1770
+-- TOC entry 2229 (class 2606 OID 63981)
+-- Dependencies: 1769 1772 2172
 -- Name: current_relation_members_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4616,8 +4631,8 @@ ALTER TABLE ONLY current_relation_members
 
 
 --
--- TOC entry 2228 (class 2606 OID 61310)
--- Dependencies: 2170 1770 1768
+-- TOC entry 2230 (class 2606 OID 63976)
+-- Dependencies: 1772 1770 2172
 -- Name: current_relation_tags_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4626,8 +4641,8 @@ ALTER TABLE ONLY current_relation_tags
 
 
 --
--- TOC entry 2229 (class 2606 OID 61358)
--- Dependencies: 2201 1770 1783
+-- TOC entry 2231 (class 2606 OID 64024)
+-- Dependencies: 2203 1785 1772
 -- Name: current_relations_changeset_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4636,8 +4651,8 @@ ALTER TABLE ONLY current_relations
 
 
 --
--- TOC entry 2234 (class 2606 OID 61295)
--- Dependencies: 2113 1743 1775
+-- TOC entry 2236 (class 2606 OID 63961)
+-- Dependencies: 1745 1777 2115
 -- Name: current_way_nodes_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4646,8 +4661,8 @@ ALTER TABLE ONLY current_way_nodes
 
 
 --
--- TOC entry 2235 (class 2606 OID 61330)
--- Dependencies: 2156 1765 1775
+-- TOC entry 2237 (class 2606 OID 63996)
+-- Dependencies: 1767 1777 2158
 -- Name: current_way_nodes_node_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4656,8 +4671,8 @@ ALTER TABLE ONLY current_way_nodes
 
 
 --
--- TOC entry 2210 (class 2606 OID 61290)
--- Dependencies: 1743 1741 2113
+-- TOC entry 2212 (class 2606 OID 63956)
+-- Dependencies: 2115 1745 1743
 -- Name: current_way_tags_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4666,8 +4681,8 @@ ALTER TABLE ONLY current_way_tags
 
 
 --
--- TOC entry 2211 (class 2606 OID 61363)
--- Dependencies: 1743 2201 1783
+-- TOC entry 2213 (class 2606 OID 64029)
+-- Dependencies: 1745 2203 1785
 -- Name: current_ways_changeset_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4676,8 +4691,8 @@ ALTER TABLE ONLY current_ways
 
 
 --
--- TOC entry 2237 (class 2606 OID 61452)
--- Dependencies: 1777 2116 1745
+-- TOC entry 2239 (class 2606 OID 64118)
+-- Dependencies: 2118 1779 1747
 -- Name: diary_comments_diary_entry_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4686,8 +4701,8 @@ ALTER TABLE ONLY diary_comments
 
 
 --
--- TOC entry 2236 (class 2606 OID 61402)
--- Dependencies: 1777 1756 2139
+-- TOC entry 2238 (class 2606 OID 64068)
+-- Dependencies: 1758 1779 2141
 -- Name: diary_comments_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4696,8 +4711,8 @@ ALTER TABLE ONLY diary_comments
 
 
 --
--- TOC entry 2213 (class 2606 OID 61490)
--- Dependencies: 2208 1745 1787
+-- TOC entry 2215 (class 2606 OID 64156)
+-- Dependencies: 1789 2210 1747
 -- Name: diary_entries_language_code_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4706,8 +4721,8 @@ ALTER TABLE ONLY diary_entries
 
 
 --
--- TOC entry 2212 (class 2606 OID 61407)
--- Dependencies: 1745 1756 2139
+-- TOC entry 2214 (class 2606 OID 64073)
+-- Dependencies: 1758 2141 1747
 -- Name: diary_entries_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4716,8 +4731,8 @@ ALTER TABLE ONLY diary_entries
 
 
 --
--- TOC entry 2215 (class 2606 OID 61417)
--- Dependencies: 1756 1747 2139
+-- TOC entry 2217 (class 2606 OID 64083)
+-- Dependencies: 1758 1749 2141
 -- Name: friends_friend_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4726,8 +4741,8 @@ ALTER TABLE ONLY friends
 
 
 --
--- TOC entry 2214 (class 2606 OID 61412)
--- Dependencies: 1747 2139 1756
+-- TOC entry 2216 (class 2606 OID 64078)
+-- Dependencies: 2141 1749 1758
 -- Name: friends_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4736,8 +4751,8 @@ ALTER TABLE ONLY friends
 
 
 --
--- TOC entry 2216 (class 2606 OID 61457)
--- Dependencies: 1752 1748 2128
+-- TOC entry 2218 (class 2606 OID 64123)
+-- Dependencies: 1750 2130 1754
 -- Name: gps_points_gpx_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4746,8 +4761,8 @@ ALTER TABLE ONLY gps_points
 
 
 --
--- TOC entry 2217 (class 2606 OID 61462)
--- Dependencies: 1750 2128 1752
+-- TOC entry 2219 (class 2606 OID 64128)
+-- Dependencies: 1752 1754 2130
 -- Name: gpx_file_tags_gpx_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4756,8 +4771,8 @@ ALTER TABLE ONLY gpx_file_tags
 
 
 --
--- TOC entry 2218 (class 2606 OID 61422)
--- Dependencies: 2139 1756 1752
+-- TOC entry 2220 (class 2606 OID 64088)
+-- Dependencies: 2141 1754 1758
 -- Name: gpx_files_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4766,8 +4781,8 @@ ALTER TABLE ONLY gpx_files
 
 
 --
--- TOC entry 2219 (class 2606 OID 61427)
--- Dependencies: 1754 2139 1756
+-- TOC entry 2221 (class 2606 OID 64093)
+-- Dependencies: 2141 1758 1756
 -- Name: messages_from_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4776,8 +4791,8 @@ ALTER TABLE ONLY messages
 
 
 --
--- TOC entry 2220 (class 2606 OID 61432)
--- Dependencies: 1754 1756 2139
+-- TOC entry 2222 (class 2606 OID 64098)
+-- Dependencies: 1756 1758 2141
 -- Name: messages_to_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4786,8 +4801,8 @@ ALTER TABLE ONLY messages
 
 
 --
--- TOC entry 2239 (class 2606 OID 61285)
--- Dependencies: 1766 2161 1766 1781 1781
+-- TOC entry 2241 (class 2606 OID 63951)
+-- Dependencies: 1783 1783 1768 1768 2163
 -- Name: node_tags_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4796,8 +4811,8 @@ ALTER TABLE ONLY node_tags
 
 
 --
--- TOC entry 2226 (class 2606 OID 61368)
--- Dependencies: 1783 2201 1766
+-- TOC entry 2228 (class 2606 OID 64034)
+-- Dependencies: 2203 1768 1785
 -- Name: nodes_changeset_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4806,8 +4821,8 @@ ALTER TABLE ONLY nodes
 
 
 --
--- TOC entry 2230 (class 2606 OID 61325)
--- Dependencies: 1771 1773 2179 1771 1773
+-- TOC entry 2232 (class 2606 OID 63991)
+-- Dependencies: 2181 1773 1773 1775 1775
 -- Name: relation_members_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4816,8 +4831,8 @@ ALTER TABLE ONLY relation_members
 
 
 --
--- TOC entry 2231 (class 2606 OID 61320)
--- Dependencies: 1773 1772 1773 2179 1772
+-- TOC entry 2233 (class 2606 OID 63986)
+-- Dependencies: 1775 1774 1774 1775 2181
 -- Name: relation_tags_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4826,8 +4841,8 @@ ALTER TABLE ONLY relation_tags
 
 
 --
--- TOC entry 2232 (class 2606 OID 61373)
--- Dependencies: 2201 1783 1773
+-- TOC entry 2234 (class 2606 OID 64039)
+-- Dependencies: 1785 1775 2203
 -- Name: relations_changeset_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4836,8 +4851,8 @@ ALTER TABLE ONLY relations
 
 
 --
--- TOC entry 2223 (class 2606 OID 61437)
--- Dependencies: 2139 1761 1756
+-- TOC entry 2225 (class 2606 OID 64103)
+-- Dependencies: 2141 1758 1763
 -- Name: user_preferences_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4846,8 +4861,8 @@ ALTER TABLE ONLY user_preferences
 
 
 --
--- TOC entry 2224 (class 2606 OID 61442)
--- Dependencies: 1756 2139 1763
+-- TOC entry 2226 (class 2606 OID 64108)
+-- Dependencies: 1758 2141 1765
 -- Name: user_tokens_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4856,8 +4871,8 @@ ALTER TABLE ONLY user_tokens
 
 
 --
--- TOC entry 2233 (class 2606 OID 61305)
--- Dependencies: 1758 1774 1774 2144 1758
+-- TOC entry 2235 (class 2606 OID 63971)
+-- Dependencies: 1776 1760 1760 2146 1776
 -- Name: way_nodes_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4866,8 +4881,8 @@ ALTER TABLE ONLY way_nodes
 
 
 --
--- TOC entry 2221 (class 2606 OID 61300)
--- Dependencies: 1757 1757 2144 1758 1758
+-- TOC entry 2223 (class 2606 OID 63966)
+-- Dependencies: 1760 1759 1760 2146 1759
 -- Name: way_tags_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4876,8 +4891,8 @@ ALTER TABLE ONLY way_tags
 
 
 --
--- TOC entry 2222 (class 2606 OID 61378)
--- Dependencies: 1783 1758 2201
+-- TOC entry 2224 (class 2606 OID 64044)
+-- Dependencies: 1785 1760 2203
 -- Name: ways_changeset_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4886,7 +4901,7 @@ ALTER TABLE ONLY ways
 
 
 --
--- TOC entry 2279 (class 0 OID 0)
+-- TOC entry 2281 (class 0 OID 0)
 -- Dependencies: 3
 -- Name: public; Type: ACL; Schema: -; Owner: -
 --
@@ -4897,7 +4912,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2009-08-11 22:08:31 EST
+-- Completed on 2009-08-15 17:35:36 EST
 
 --
 -- PostgreSQL database dump complete
