@@ -102,7 +102,7 @@ public class ElementWriter {
      * @return The formatted data. This may be the input string if no changes are required.
      */
     private String escapeData(String data) {
-        StringBuffer buffer = null;
+        StringBuilder buffer = null;
 
         for (int i = 0; i < data.length(); ++i) {
             char currentChar = data.charAt(i);
@@ -111,7 +111,7 @@ public class ElementWriter {
 
             if (replacement != null) {
                 if (buffer == null) {
-                    buffer = new StringBuffer(data.substring(0, i));
+                    buffer = new StringBuilder(data.substring(0, i));
                 }
                 buffer.append(replacement);
 
