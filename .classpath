@@ -26,5 +26,6 @@
 	<classpathentry kind="lib" path="lib/test/woodstox-core-lgpl-4.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-dbcp-1.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-pool-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/test/xercesImpl-2.9.1.jar"/>
 	<classpathentry kind="output" path="eclipse"/>
 </classpath>
