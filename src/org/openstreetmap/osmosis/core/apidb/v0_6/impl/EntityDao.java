@@ -156,7 +156,7 @@ public abstract class EntityDao<T extends Entity> {
 			// Retrieves the entity type specific columns and builds the entity objects.
 			entityRowMapper = getEntityRowMapper(entityHistoryRowMapper);
 			// Retrieves the common entity information.
-			entityDataRowMapper = new EntityDataRowMapper(entityRowMapper, true);
+			entityDataRowMapper = new EntityDataRowMapper(entityRowMapper, false);
 			
 			// Perform the query passing the row mapper chain to process rows in a streamy fashion.
 			namedParamJdbcTemplate.query(sql, parameterSource, entityDataRowMapper);
