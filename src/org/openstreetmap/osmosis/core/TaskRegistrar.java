@@ -27,6 +27,7 @@ import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbChangeWriterFactory;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbCurrentReaderFactory;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbFileReplicatorFactory;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbReaderFactory;
+import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbTestReaderFactory;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbTruncatorFactory;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbWriterFactory;
 import org.openstreetmap.osmosis.core.buffer.v0_6.ChangeBufferFactory;
@@ -249,6 +250,8 @@ public class TaskRegistrar {
 		factoryRegister.register("apc", new ChangeAppenderFactory());
 		factoryRegister.register("replicate-apidb", new ApidbFileReplicatorFactory());
 		factoryRegister.register("repa", new ApidbFileReplicatorFactory());
+		factoryRegister.register("read-apidb-test", new ApidbTestReaderFactory());
+		factoryRegister.register("rat", new ApidbFileReplicatorFactory());
 		
 		factoryRegister.register("apply-change-0.5",
 				new org.openstreetmap.osmosis.core.change.v0_5.ChangeApplierFactory());
@@ -380,6 +383,7 @@ public class TaskRegistrar {
 		factoryRegister.register("truncate-apidb-0.6", new ApidbTruncatorFactory());
 		factoryRegister.register("append-change-0.6", new ChangeAppenderFactory());
 		factoryRegister.register("replicate-apidb-0.6", new ApidbFileReplicatorFactory());
+		factoryRegister.register("read-apidb-test-0.6", new ApidbTestReaderFactory());
 
 		// Register the plugins.
 		for (String plugin : plugins) {
