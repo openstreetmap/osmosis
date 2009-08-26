@@ -34,6 +34,7 @@ public class ApidbTestReader implements RunnableTask {
     private Date intervalBegin;
     private Date intervalEnd;
     private boolean enableSpring;
+    private boolean enableNewQuery;
 
 
 	/**
@@ -49,40 +50,57 @@ public class ApidbTestReader implements RunnableTask {
 	 *            Marks the end (exclusive) of the time interval to be checked.
 	 * @param enableSpring
 	 *            If true use Spring, otherwise use raw JDBC.
+	 * @param enableNewQuery
+	 *            If true use the new query style, otherwise use the old style.
 	 */
     public ApidbTestReader(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
-            Date intervalBegin, Date intervalEnd, boolean enableSpring) {
+            Date intervalBegin, Date intervalEnd, boolean enableSpring, boolean enableNewQuery) {
         this.loginCredentials = loginCredentials;
         this.intervalBegin = intervalBegin;
         this.intervalEnd = intervalEnd;
         this.enableSpring = enableSpring;
+        this.enableNewQuery = enableNewQuery;
     }
     
     
     private String buildEntityHistoryQuery() {
-		StringBuilder sql;
-		String selectedEntityStatement;
-		
-		selectedEntityStatement =
-			"(SELECT id, version FROM "
-			+ "node"
-			+ "s WHERE timestamp > ? AND timestamp <= ?)";
-
-		sql = new StringBuilder();
-		sql.append("SELECT e.id, e.version, e.timestamp, e.visible, u.data_public,");
-		sql.append(" u.id AS user_id, u.display_name, e.changeset_id, e.latitude, e.longitude");
-
-		sql.append(" FROM ");
-		sql.append("node");
-		sql.append("s e");
-		sql.append(" INNER JOIN ");
-		sql.append(selectedEntityStatement);
-		sql.append(" t ON e.id = t.id AND e.version = t.version");
-		sql.append(" INNER JOIN changesets c ON e.changeset_id = c.id INNER JOIN users u ON c.user_id = u.id");
-		
-		LOG.log(Level.FINER, "Entity history query: " + sql);
-
-		return sql.toString();
+    	String sql;
+    	
+    	if (enableNewQuery) {
+			StringBuilder sqlBuilder;
+			String selectedEntityStatement;
+			
+			selectedEntityStatement =
+				"(SELECT id, version FROM "
+				+ "node"
+				+ "s WHERE timestamp > ? AND timestamp <= ?)";
+	
+			sqlBuilder = new StringBuilder();
+			sqlBuilder.append("SELECT e.id, e.version, e.timestamp, e.visible, u.data_public,");
+			sqlBuilder.append(" u.id AS user_id, u.display_name, e.changeset_id, e.latitude, e.longitude");
+	
+			sqlBuilder.append(" FROM ");
+			sqlBuilder.append("node");
+			sqlBuilder.append("s e");
+			sqlBuilder.append(" INNER JOIN ");
+			sqlBuilder.append(selectedEntityStatement);
+			sqlBuilder.append(" t ON e.id = t.id AND e.version = t.version");
+			sqlBuilder.append(" INNER JOIN changesets c ON e.changeset_id = c.id");
+			sqlBuilder.append(" INNER JOIN users u ON c.user_id = u.id");
+			
+			sql = sqlBuilder.toString();
+			
+    	} else {
+    		sql = "SELECT e.id, e.version, e.timestamp, e.visible, u.data_public,"
+					+ " u.id AS user_id, u.display_name, e.changeset_id, e.latitude, e.longitude" + " FROM nodes e"
+					+ " LEFT OUTER JOIN changesets c ON e.changeset_id = c.id"
+					+ " LEFT OUTER JOIN users u ON c.user_id = u.id" + " WHERE e.timestamp > ? AND e.timestamp <= ?"
+					+ " ORDER BY e.id, e.version";
+    	}
+    	
+    	LOG.log(Level.FINER, "Entity history query: " + sql);
+    	
+    	return sql;
 	}
     
     

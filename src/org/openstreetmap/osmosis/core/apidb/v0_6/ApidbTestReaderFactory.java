@@ -19,8 +19,10 @@ import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
 public class ApidbTestReaderFactory extends DatabaseTaskManagerFactory {
 	private static final String ARG_INTERVAL_BEGIN = "intervalBegin";
 	private static final String ARG_INTERVAL_END = "intervalEnd";
-	private static final String ARG_USE_SPRING = "useSpring";
-	private static final boolean DEFAULT_USE_SPRING = false;
+	private static final String ARG_ENABLE_SPRING = "enableSpring";
+	private static final String ARG_ENABLE_NEW_QUERY = "enableNewQuery";
+	private static final boolean DEFAULT_ENABLE_SPRING = false;
+	private static final boolean DEFAULT_ENABLE_NEW_QUERY = false;
 	
 	
 	/**
@@ -32,18 +34,21 @@ public class ApidbTestReaderFactory extends DatabaseTaskManagerFactory {
 		DatabasePreferences preferences;
 		Date intervalBegin;
 		Date intervalEnd;
-		boolean useSpring;
+		boolean enableSpring;
+		boolean enableNewQuery;
 		
 		// Get the task arguments.
 		loginCredentials = getDatabaseLoginCredentials(taskConfig);
 		preferences = getDatabasePreferences(taskConfig);
 		intervalBegin = getDateArgument(taskConfig, ARG_INTERVAL_BEGIN, new Date(0));
 		intervalEnd = getDateArgument(taskConfig, ARG_INTERVAL_END, new Date());
-		useSpring = getBooleanArgument(taskConfig, ARG_USE_SPRING, DEFAULT_USE_SPRING);
+		enableSpring = getBooleanArgument(taskConfig, ARG_ENABLE_SPRING, DEFAULT_ENABLE_SPRING);
+		enableNewQuery = getBooleanArgument(taskConfig, ARG_ENABLE_NEW_QUERY, DEFAULT_ENABLE_NEW_QUERY);
 		
 		return new RunnableTaskManager(
 			taskConfig.getId(),
-			new ApidbTestReader(loginCredentials, preferences, intervalBegin, intervalEnd, useSpring),
+			new ApidbTestReader(loginCredentials, preferences,
+				intervalBegin, intervalEnd, enableSpring, enableNewQuery),
 			taskConfig.getPipeArgs()
 		);
 	}
