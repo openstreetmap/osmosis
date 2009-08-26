@@ -248,7 +248,7 @@ public abstract class EntityDao<T extends Entity> {
 			// prevents this. Note that this is not recommended practice according to documentation,
 			// but fixing this would require modifying the table statistics gathering configuration
 			// on the production database.
-			jdbcTemplate.execute("set enable_seqscan = false");
+			jdbcTemplate.execute("set local enable_seqscan = false");
 			
 			entityIterator = releasableContainer.add(
 					getFeaturelessEntityHistory(selectedEntityStatement, parameterSource));
