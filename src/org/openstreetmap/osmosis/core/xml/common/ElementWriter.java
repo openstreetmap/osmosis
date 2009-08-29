@@ -30,9 +30,12 @@ public class ElementWriter {
         // Define all the characters and their encodings.
         XML_ENCODING = new HashMap<Character, String>();
         
-        // Non-xml compatible control characters will not be written.
+        // Non-xml compatible control characters will not be written
+        // with the exception of tab, carriage return and line feed.
         for (int i = 0; i <= 0x1F; i++) {
-        	XML_ENCODING.put(new Character((char) i), "");
+        	if (i != 0x9 && i != 0xA && i != 0xD) {
+        		XML_ENCODING.put(new Character((char) i), "");
+        	}
         }
         XML_ENCODING.put(new Character((char) 0x7F), "");
         
