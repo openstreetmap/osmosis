@@ -245,10 +245,13 @@ public abstract class EntityDao<T extends Entity> {
 			EntityHistoryReader<T> entityHistoryReader;
 			
 			// PostgreSQL sometimes incorrectly chooses to perform full table scans, this option
-			// prevents this. Note that this is not recommended practice according to documentation,
-			// but fixing this would require modifying the table statistics gathering configuration
-			// on the production database.
+			// prevents this. Note that this is not recommended practice according to documentation
+			// but fixing this would either require modifying the table statistics gathering
+			// configuration on the production database or figuring out a way of disabling server
+			// side prepared statements.
 			jdbcTemplate.execute("set local enable_seqscan = false");
+			jdbcTemplate.execute("set local enable_mergejoin = false");
+			jdbcTemplate.execute("set local enable_hashjoin = false");
 			
 			entityIterator = releasableContainer.add(
 					getFeaturelessEntityHistory(selectedEntityStatement, parameterSource));
