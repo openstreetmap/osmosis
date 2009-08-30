@@ -244,15 +244,6 @@ public abstract class EntityDao<T extends Entity> {
 			List<FeatureHistoryPopulator<T, ?, ?>> featurePopulators;
 			EntityHistoryReader<T> entityHistoryReader;
 			
-			// PostgreSQL sometimes incorrectly chooses to perform full table scans, this option
-			// prevents this. Note that this is not recommended practice according to documentation
-			// but fixing this would either require modifying the table statistics gathering
-			// configuration on the production database or figuring out a way of disabling server
-			// side prepared statements.
-			jdbcTemplate.execute("set local enable_seqscan = false");
-			jdbcTemplate.execute("set local enable_mergejoin = false");
-			jdbcTemplate.execute("set local enable_hashjoin = false");
-			
 			entityIterator = releasableContainer.add(
 					getFeaturelessEntityHistory(selectedEntityStatement, parameterSource));
 			tagIterator = releasableContainer.add(
@@ -392,17 +383,26 @@ public abstract class EntityDao<T extends Entity> {
 	 * @return An iterator pointing at the identified records.
 	 */
 	public ReleasableIterator<ChangeContainer> getHistory(ReplicationQueryPredicates predicates) {
-		String selectedEntityStatement;
+		String selectedEntityTableName;
 		StringBuilder sql;
 		MapSqlParameterSource parameterSource;
 		
+		// PostgreSQL sometimes incorrectly chooses to perform full table scans, these options
+		// prevent this. Note that this is not recommended practice according to documentation
+		// but fixing this would require modifying the table statistics gathering
+		// configuration on the production database to produce better plans.
+		jdbcTemplate.execute(
+				"set local enable_seqscan = false;"
+				+ "set local enable_mergejoin = false;"
+				+ "set local enable_hashjoin = false");
+		
 		parameterSource = new MapSqlParameterSource();
 		
-		selectedEntityStatement = "tmp_" + entityName + "s";
+		selectedEntityTableName = "tmp_" + entityName + "s";
 		
 		sql = new StringBuilder();
 		sql.append("CREATE TEMPORARY TABLE ");
-		sql.append(selectedEntityStatement);
+		sql.append(selectedEntityTableName);
 		sql.append(" ON COMMIT DROP");
 		sql.append(" AS SELECT id, version FROM ");
 		sql.append(entityName);
@@ -429,13 +429,15 @@ public abstract class EntityDao<T extends Entity> {
 		
 		namedParamJdbcTemplate.update(sql.toString(), parameterSource);
 		
+		jdbcTemplate.update("ANALYZE " + selectedEntityTableName);
+		
 		if (LOG.isLoggable(Level.FINER)) {
 			LOG.log(Level.FINER,
-					jdbcTemplate.queryForInt("SELECT Count(id) FROM " + selectedEntityStatement) + " "
+					jdbcTemplate.queryForInt("SELECT Count(id) FROM " + selectedEntityTableName) + " "
 					+ entityName + " records located.");
 		}
 		
-		return getChangeHistory(selectedEntityStatement, new MapSqlParameterSource());
+		return getChangeHistory(selectedEntityTableName, new MapSqlParameterSource());
 	}
 
 
@@ -449,13 +451,28 @@ public abstract class EntityDao<T extends Entity> {
 	 * @return An iterator pointing at the identified records.
 	 */
 	public ReleasableIterator<ChangeContainer> getHistory(Date intervalBegin, Date intervalEnd) {
-		String sql;
+		String selectedEntityTableName;
+		StringBuilder sql;
 		MapSqlParameterSource parameterSource;
 		
-		sql =
-			"(SELECT id, version FROM "
-			+ entityName
-			+ "s WHERE timestamp > :intervalBegin AND timestamp <= :intervalEnd)";
+		// PostgreSQL sometimes incorrectly chooses to perform full table scans, these options
+		// prevent this. Note that this is not recommended practice according to documentation
+		// but fixing this would require modifying the table statistics gathering
+		// configuration on the production database to produce better plans.
+		jdbcTemplate.execute(
+				"set local enable_seqscan = false;"
+				+ "set local enable_mergejoin = false;"
+				+ "set local enable_hashjoin = false");
+		
+		selectedEntityTableName = "tmp_" + entityName + "s";
+		
+		sql = new StringBuilder();
+		sql.append("CREATE TEMPORARY TABLE ");
+		sql.append(selectedEntityTableName);
+		sql.append(" ON COMMIT DROP");
+		sql.append(" AS SELECT id, version FROM ");
+		sql.append(entityName);
+		sql.append("s WHERE timestamp > :intervalBegin AND timestamp <= :intervalEnd");
 		
 		LOG.log(Level.FINER, "Entity identification query: " + sql);
 
@@ -463,7 +480,11 @@ public abstract class EntityDao<T extends Entity> {
 		parameterSource.addValue("intervalBegin", intervalBegin, Types.TIMESTAMP);
 		parameterSource.addValue("intervalEnd", intervalEnd, Types.TIMESTAMP);
 		
-		return getChangeHistory(sql, parameterSource);
+		namedParamJdbcTemplate.update(sql.toString(), parameterSource);
+		
+		jdbcTemplate.update("ANALYZE " + selectedEntityTableName);
+		
+		return getChangeHistory(selectedEntityTableName, new MapSqlParameterSource());
 	}
 	
 	
