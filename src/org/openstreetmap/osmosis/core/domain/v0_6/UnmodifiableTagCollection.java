@@ -27,6 +27,8 @@ public class UnmodifiableTagCollection extends CollectionWrapper<Tag> implements
 	 */
 	public UnmodifiableTagCollection(TagCollection wrappedTags) {
 		super(Collections.unmodifiableCollection(wrappedTags));
+		
+		this.wrappedTags = wrappedTags;
 	}
 	
 	
