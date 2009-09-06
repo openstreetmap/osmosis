@@ -17,8 +17,7 @@ import org.openstreetmap.osmosis.core.util.PropertiesPersister;
  */
 public class ReplicationDownloaderConfiguration {
 	private static final String KEY_BASE_URL = "baseUrl";
-	private static final String KEY_INTERVAL_LENGTH = "intervalLength";
-	private static final String KEY_MAX_DOWNLOAD_COUNT = "maxDownloadCount";
+	private static final String KEY_MAX_INTERVAL = "maxInterval";
 	
 	
 	private Properties properties;
@@ -59,21 +58,11 @@ public class ReplicationDownloaderConfiguration {
 	
 	
 	/**
-	 * Returns the duration of each changeset interval.
+	 * Returns the maximum interval to be downloaded in a single invocation.
 	 * 
-	 * @return The interval length in milliseconds.
+	 * @return The maximum download interval.
 	 */
-	public int getIntervalLength() {
-		return Integer.parseInt(properties.getProperty(KEY_INTERVAL_LENGTH)) * 1000;
-	}
-	
-	
-	/**
-	 * Returns the maximum number of files to download in a single invocation.
-	 * 
-	 * @return The maximum download count.
-	 */
-	public int getMaxDownloadCount() {
-		return Integer.parseInt(properties.getProperty(KEY_MAX_DOWNLOAD_COUNT));
+	public int getMaxInterval() {
+		return Integer.parseInt(properties.getProperty(KEY_MAX_INTERVAL));
 	}
 }
