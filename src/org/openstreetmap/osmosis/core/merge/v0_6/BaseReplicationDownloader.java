@@ -222,7 +222,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			
 			// Calculate the next sequence number.
 			sequenceNumber = localState.getSequenceNumber() + 1;
-			LOG.finer("Downloading replication sequence " + sequenceNumber + ".");
+			LOG.finer("Processing replication sequence " + sequenceNumber + ".");
 			
 			// Get the state associated with the next file.
 			fileReplicationState = serverStateReader.getServerState(baseUrl, sequenceNumber);
