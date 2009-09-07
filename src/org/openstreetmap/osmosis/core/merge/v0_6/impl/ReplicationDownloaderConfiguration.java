@@ -63,6 +63,6 @@ public class ReplicationDownloaderConfiguration {
 	 * @return The maximum download interval.
 	 */
 	public int getMaxInterval() {
-		return Integer.parseInt(properties.getProperty(KEY_MAX_INTERVAL));
+		return Integer.parseInt(properties.getProperty(KEY_MAX_INTERVAL)) * 1000;
 	}
 }

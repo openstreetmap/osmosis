@@ -2,8 +2,8 @@
 baseUrl=http://planet.openstreetmap.org/replicate
 
 # The length of an extraction interval in seconds (3600 = 1 hour).
-intervalLength=3600
+intervalLength=60
 
-# Defines the maximum time interval in milliseconds to download in a single invocation.
+# Defines the maximum time interval in seconds to download in a single invocation.
 # Setting to 0 disables this feature.
 maxInterval = 3600
