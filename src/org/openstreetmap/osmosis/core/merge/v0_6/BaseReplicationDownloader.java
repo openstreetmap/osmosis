@@ -212,6 +212,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 		// Determine the maximum timestamp that can be downloaded.
 		maximumDownloadTimestamp =
 			calculateMaximumTimestamp(configuration, serverState.getTimestamp(), localState.getTimestamp());
+		LOG.fine("The maximum timestamp to be downloaded is " + maximumDownloadTimestamp + ".");
 		
 		// Download all files and send their contents to the sink.
 		while (localState.getSequenceNumber() < serverState.getSequenceNumber()) {
@@ -221,6 +222,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			
 			// Calculate the next sequence number.
 			sequenceNumber = localState.getSequenceNumber() + 1;
+			LOG.finer("Downloading replication sequence " + sequenceNumber + ".");
 			
 			// Get the state associated with the next file.
 			fileReplicationState = serverStateReader.getServerState(baseUrl, sequenceNumber);
@@ -257,6 +259,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			configuration = new ReplicationDownloaderConfiguration(new File(workingDirectory, CONFIG_FILE));
 			
 			// Obtain the server state.
+			LOG.fine("Reading current server state.");
 			serverState = serverStateReader.getServerState(configuration.getBaseUrl());
 			
 			// Build the local state persister which is used for both loading and storing local state.
