@@ -1,6 +1,0 @@
-# The URL of the directory containing change files.
-baseUrl=http://planet.openstreetmap.org/replicate
-
-# Defines the maximum number of files to download in a single invocation.
-# Setting this to 0 disables this feature.
-maxDownloadCount = 20

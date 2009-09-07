@@ -21,7 +21,7 @@ public class ReplicationDownloaderInitializer implements RunnableTask {
 	
 	private static final String LOCK_FILE_NAME = "download.lock";
 	private static final String CONFIG_FILE_NAME = "configuration.txt";
-	private static final String CONFIG_RESOURCE = "impl/replicationConfiguration.txt";
+	private static final String CONFIG_RESOURCE = "impl/replicationDownloaderConfiguration.txt";
 	
 	
 	private File workingDirectory;

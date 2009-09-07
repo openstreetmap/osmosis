@@ -1,0 +1,6 @@
+# The URL of the directory containing change files.
+baseUrl=http://planet.openstreetmap.org/replicate
+
+# Defines the maximum time interval in milliseconds to download in a single invocation.
+# Setting to 0 disables this feature.
+maxInterval = 3600

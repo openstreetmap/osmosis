@@ -51,6 +51,8 @@ import org.openstreetmap.osmosis.core.merge.v0_6.ChangeMergerFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.EntityMergerFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.ReplicationDownloaderFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.ReplicationDownloaderInitializerFactory;
+import org.openstreetmap.osmosis.core.merge.v0_6.ReplicationFileMergerFactory;
+import org.openstreetmap.osmosis.core.merge.v0_6.ReplicationFileMergerInitializerFactory;
 import org.openstreetmap.osmosis.core.migrate.MigrateChangeV05ToV06Factory;
 import org.openstreetmap.osmosis.core.migrate.MigrateV05ToV06Factory;
 import org.openstreetmap.osmosis.core.misc.v0_6.NullChangeWriterFactory;
@@ -230,6 +232,10 @@ public class TaskRegistrar {
 		factoryRegister.register("rri", new ReplicationDownloaderFactory());
 		factoryRegister.register("read-replication-interval-init", new ReplicationDownloaderInitializerFactory());
 		factoryRegister.register("rrii", new ReplicationDownloaderInitializerFactory());
+		factoryRegister.register("merge-replication-files", new ReplicationFileMergerFactory());
+		factoryRegister.register("mrf", new ReplicationFileMergerFactory());
+		factoryRegister.register("merge-replication-files-init", new ReplicationFileMergerInitializerFactory());
+		factoryRegister.register("mrfi", new ReplicationFileMergerInitializerFactory());
 		factoryRegister.register("migrate", new MigrateV05ToV06Factory());
 		factoryRegister.register("mig", new MigrateV05ToV06Factory());
 		factoryRegister.register("migrate-change", new MigrateChangeV05ToV06Factory());
@@ -370,6 +376,8 @@ public class TaskRegistrar {
 		factoryRegister.register("read-change-interval-init-0.6", new IntervalDownloaderInitializerFactory());
 		factoryRegister.register("read-replication-interval-0.6", new ReplicationDownloaderFactory());
 		factoryRegister.register("read-replication-interval-init-0.6", new ReplicationDownloaderInitializerFactory());
+		factoryRegister.register("merge-replication-files-0.6", new ReplicationFileMergerFactory());
+		factoryRegister.register("merge-replication-files-init-0.6", new ReplicationFileMergerInitializerFactory());
 		factoryRegister.register("migrate-0.6", new MigrateV05ToV06Factory());
 		factoryRegister.register("mig-0.6", new MigrateV05ToV06Factory());
 		factoryRegister.register("tag-sort-0.6", new TagSorterFactory());
