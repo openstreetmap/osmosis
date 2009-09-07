@@ -227,7 +227,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			
 			// Download the next replication file to a temporary file.
 			replicationFile =
-				downloadReplicationFile(sequenceFormatter.getFormattedName(sequenceNumber), baseUrl);
+				downloadReplicationFile(sequenceFormatter.getFormattedName(sequenceNumber) + ".osc.gz", baseUrl);
 			
 			// Process the file and send its contents to the sink.
 			processReplicationFile(replicationFile, fileReplicationState);
