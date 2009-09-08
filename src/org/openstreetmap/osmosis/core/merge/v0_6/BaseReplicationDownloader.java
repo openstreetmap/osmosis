@@ -278,6 +278,8 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 				
 			} else {
 				localState = serverState;
+				
+				processInitialize(localState);
 			}
 			
 			// Commit downstream changes.
