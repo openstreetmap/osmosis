@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.core.merge.v0_6;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.openstreetmap.osmosis.core.apidb.v0_6.impl.FileReplicationStatePersistor;
@@ -11,6 +12,8 @@ import org.openstreetmap.osmosis.core.apidb.v0_6.impl.ReplicationStatePersister;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.merge.v0_6.impl.ReplicationDownloaderConfiguration;
 import org.openstreetmap.osmosis.core.merge.v0_6.impl.ReplicationFileMergerConfiguration;
+import org.openstreetmap.osmosis.core.sort.v0_6.ChangeForStreamableApplierComparator;
+import org.openstreetmap.osmosis.core.sort.v0_6.ChangeSorter;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.core.xml.v0_6.XmlChangeReader;
@@ -28,8 +31,8 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	private static final String DATA_STATE_FILE = "state.txt";
 	
 	
-	private boolean writerActive;
-	private XmlChangeWriter xmlWriter;
+	private boolean sinkActive;
+	private ChangeSink changeSink;
 	private ReplicationState currentDataState;
 	private ReplicationStatePersister dataStatePersister;
 	private ReplicationFileSequenceFormatter replicationFileSequenceFormatter;
@@ -50,7 +53,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		
 		replicationFileSequenceFormatter = new ReplicationFileSequenceFormatter();
 		
-		writerActive = false;
+		sinkActive = false;
 	}
 	
 	
@@ -94,16 +97,23 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	}
 	
 	
-	private XmlChangeWriter buildResultFileWriter(long sequenceNumber) {
+	private ChangeSink buildResultWriter(long sequenceNumber) {
 		File resultFile;
+		XmlChangeWriter xmlChangeWriter;
+		ChangeSorter changeSorter;
 		
 		resultFile = new File(
 				getWorkingDirectory(),
 				replicationFileSequenceFormatter.getFormattedName(currentDataState.getSequenceNumber()));
 		
-		return new XmlChangeWriter(
+		xmlChangeWriter = new XmlChangeWriter(
 				resultFile,
 				CompressionMethod.GZip);
+		
+		changeSorter = new ChangeSorter(new ChangeForStreamableApplierComparator());
+		changeSorter.setChangeSink(xmlChangeWriter);
+		
+		return changeSorter;
 	}
 	
 	
@@ -127,7 +137,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	
 	
 	private void writeChangeset(XmlChangeReader xmlReader) {
-		final ChangeSink localChangeSink = xmlWriter;
+		final ChangeSink localChangeSink = changeSink;
 		
 		xmlReader.setChangeSink(new ChangeSink() {
 			ChangeSink suppressedWriter = localChangeSink;
@@ -149,6 +159,44 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	}
 	
 	
+	private ReplicationFileMergerConfiguration getConfiguration() {
+		return new ReplicationFileMergerConfiguration(new File(getWorkingDirectory(), CONFIG_FILE));
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void processInitialize(ReplicationState initialState) {
+		Date initialDate;
+		Date alignedDate;
+		long intervalLength;
+		ReplicationState dataState;
+		
+		intervalLength = getConfiguration().getIntervalLength();
+		
+		initialDate = initialState.getTimestamp();
+		
+		// Align the date to an interval boundary.
+		alignedDate = alignDateToIntervalBoundary(initialDate, intervalLength);
+		
+		// If the date has been moved, then advance it to the next interval. We do this because
+		// during replication we never claim to have covered a time period that we haven't received
+		// data for. We may include extra data from a previous interval. By advancing the stated
+		// initial timestamp to the next interval our first replication will include some data from
+		// the previous interval.
+		if (alignedDate.compareTo(initialDate) < 0) {
+			alignedDate = new Date(alignedDate.getTime() + intervalLength);
+		}
+		
+		// Create a replication state object and persist to the data directory.
+		dataState = new ReplicationState(0, 0, new ArrayList<Long>(), new ArrayList<Long>(), alignedDate, 0);
+		
+		dataStatePersister.saveState(dataState);
+	}
+	
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -157,13 +205,13 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		int intervalLength;
 		ReplicationFileMergerConfiguration configuration;
 		
-		configuration = new ReplicationFileMergerConfiguration(new File(getWorkingDirectory(), CONFIG_FILE));
+		configuration = getConfiguration();
 		
 		// Get the configured interval length.
 		intervalLength = configuration.getIntervalLength();
 		
 		// If this is the first time through, initialise a writer for the next sequence number.
-		if (!writerActive) {
+		if (!sinkActive) {
 			// Read the current persisted state.
 			currentDataState = dataStatePersister.loadState();
 			
@@ -171,7 +219,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 			currentDataState.setSequenceNumber(currentDataState.getSequenceNumber() + 1);
 			
 			// Initialise an output file for the new sequence number.
-			xmlWriter = buildResultFileWriter(currentDataState.getSequenceNumber());
+			changeSink = buildResultWriter(currentDataState.getSequenceNumber());
 		}
 		
 		// Write the changeset to the writer. We write before checking if we've crossed a timestamp
@@ -183,7 +231,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		
 		if (intervalLength > 0) {
 			// If this is the first time through, align the timestamp at the next boundary.
-			if (!writerActive) {
+			if (!sinkActive) {
 				Date intervalEnd;
 				
 				intervalEnd = new Date(currentDataState.getTimestamp().getTime() + intervalLength);
@@ -196,8 +244,8 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 			// us past several intervals.
 			while (replicationState.getTimestamp().compareTo(currentDataState.getTimestamp()) > 0) {
 				// If we have an open changeset writer, close it and save the current state.
-				xmlWriter.complete();
-				xmlWriter.release();
+				changeSink.complete();
+				changeSink.release();
 				
 				persistSequencedCurrentState();
 				dataStatePersister.saveState(currentDataState);
@@ -208,7 +256,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 						new Date(currentDataState.getTimestamp().getTime() + configuration.getIntervalLength()));
 				
 				// Begin a new interval.
-				xmlWriter = buildResultFileWriter(currentDataState.getSequenceNumber());
+				changeSink = buildResultWriter(currentDataState.getSequenceNumber());
 			}
 			
 		} else {
@@ -218,7 +266,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		}
 		
 		// We are guaranteed to have an active writer at this point.
-		writerActive = true;
+		sinkActive = true;
 	}
 
 
@@ -227,15 +275,15 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	 */
 	@Override
 	protected void processComplete() {
-		if (writerActive) {
-			xmlWriter.complete();
+		if (sinkActive) {
+			changeSink.complete();
 			persistSequencedCurrentState();
 			dataStatePersister.saveState(currentDataState);
 			
-			xmlWriter.release();
-			xmlWriter = null;
+			changeSink.release();
+			changeSink = null;
 			
-			writerActive = false;
+			sinkActive = false;
 		}
 	}
 
@@ -245,9 +293,9 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	 */
 	@Override
 	protected void processRelease() {
-		if (writerActive) {
-			xmlWriter.release();
-			writerActive = false;
+		if (sinkActive) {
+			changeSink.release();
+			sinkActive = false;
 		}
 	}
 }

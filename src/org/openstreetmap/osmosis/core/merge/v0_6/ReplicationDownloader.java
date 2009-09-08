@@ -5,6 +5,8 @@ import java.io.File;
 
 import org.openstreetmap.osmosis.core.apidb.v0_6.impl.ReplicationState;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
+import org.openstreetmap.osmosis.core.sort.v0_6.ChangeForStreamableApplierComparator;
+import org.openstreetmap.osmosis.core.sort.v0_6.ChangeSorter;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableChangeSource;
 import org.openstreetmap.osmosis.core.xml.v0_6.XmlChangeReader;
@@ -20,7 +22,7 @@ import org.openstreetmap.osmosis.core.xml.v0_6.XmlChangeReader;
  */
 public class ReplicationDownloader extends BaseReplicationDownloader implements RunnableChangeSource {
 	
-	private ChangeSink changeSink;
+	private ChangeSorter changeSorter;
 	
 	
 	/**
@@ -31,6 +33,10 @@ public class ReplicationDownloader extends BaseReplicationDownloader implements 
 	 */
 	public ReplicationDownloader(File workingDirectory) {
 		super(workingDirectory);
+		
+		// We will sort all contents prior to sending to the sink. This adds overhead that may not
+		// always be required, but provides consistent behaviour.
+		changeSorter = new ChangeSorter(new ChangeForStreamableApplierComparator());
 	}
 	
 	
@@ -39,7 +45,16 @@ public class ReplicationDownloader extends BaseReplicationDownloader implements 
 	 */
 	@Override
 	public void setChangeSink(ChangeSink changeSink) {
-		this.changeSink = changeSink;
+		changeSorter.setChangeSink(changeSink);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void processInitialize(ReplicationState initialState) {
+		// Nothing to do.
 	}
 	
 	
@@ -48,7 +63,7 @@ public class ReplicationDownloader extends BaseReplicationDownloader implements 
 	 */
 	@Override
 	protected void processChangeset(XmlChangeReader xmlReader, ReplicationState replicationState) {
-		final ChangeSink localChangeSink = changeSink;
+		final ChangeSink localChangeSink = changeSorter;
 		
 		xmlReader.setChangeSink(new ChangeSink() {
 			ChangeSink suppressedChangeSink = localChangeSink;
@@ -75,7 +90,7 @@ public class ReplicationDownloader extends BaseReplicationDownloader implements 
 	 */
 	@Override
 	protected void processComplete() {
-		changeSink.complete();
+		changeSorter.complete();
 	}
 
 
@@ -84,6 +99,6 @@ public class ReplicationDownloader extends BaseReplicationDownloader implements 
 	 */
 	@Override
 	protected void processRelease() {
-		changeSink.release();
+		changeSorter.release();
 	}
 }

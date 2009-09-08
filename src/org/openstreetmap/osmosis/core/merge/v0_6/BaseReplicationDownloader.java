@@ -295,6 +295,16 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 	
 	
 	/**
+	 * Invoked once during the first execution run to allow initialisation based on the initial
+	 * replication state downloaded from the server.
+	 * 
+	 * @param initialState
+	 *            The first server state.
+	 */
+	protected abstract void processInitialize(ReplicationState initialState);
+	
+	
+	/**
 	 * Processes the changeset.
 	 * 
 	 * @param xmlReader
