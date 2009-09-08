@@ -34,7 +34,8 @@ public class DataSourceFactory {
             throw new OsmosisRuntimeException("Unknown database type " + credentials.getDbType() + ".");
         }
         
-        dataSource.setUrl("jdbc:postgresql://" + credentials.getHost() + "/" + credentials.getDatabase());
+        dataSource.setUrl("jdbc:postgresql://" + credentials.getHost() + "/" + credentials.getDatabase()
+        		/*+ "?loglevel=2"*/);
         dataSource.setUsername(credentials.getUser());
         dataSource.setPassword(credentials.getPassword());
         
