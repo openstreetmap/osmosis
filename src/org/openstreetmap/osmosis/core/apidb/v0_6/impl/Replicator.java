@@ -76,7 +76,7 @@ public class Replicator {
 		state.setTxnMax(transactionSnapshot.getXMax());
 		
 		// Any items in the old active transaction list but not in the new active transaction list
-		// must be moved to the ready list.
+		// must be added to the ready list.
 		for (Iterator<Long> i = state.getTxnActive().iterator(); i.hasNext();) {
 			Long id;
 			
@@ -87,10 +87,12 @@ public class Replicator {
 				if (compareTxnIds(id, state.getTxnMaxQueried()) <= 0) {
 					state.getTxnReady().add(id);
 				}
-				
-				i.remove();
 			}
 		}
+		
+		// The active transaction list must be updated to match the latest snapshot.
+		state.getTxnActive().clear();
+		state.getTxnActive().addAll(transactionSnapshot.getXIpList());
 		
 		if (LOG.isLoggable(Level.FINER)) {
 			LOG.finer("Updated replication state with new snapshot, maxTxnQueried="
