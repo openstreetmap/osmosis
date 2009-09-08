@@ -1,6 +1,9 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.apidb.v0_6.impl;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
@@ -10,6 +13,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
  * when extracting changesets from the history tables.
  */
 public class TransactionDao implements TransactionSnapshotLoader {
+	private static final Logger LOG = Logger.getLogger(TransactionDao.class.getName());
+	
 	private SimpleJdbcTemplate jdbcTemplate;
 	
 	
@@ -36,6 +41,12 @@ public class TransactionDao implements TransactionSnapshotLoader {
 		snapshotString = jdbcTemplate.queryForObject("SELECT txid_current_snapshot()", String.class);
 		
 		snapshot = new TransactionSnapshot(snapshotString);
+		
+		if (LOG.isLoggable(Level.FINER)) {
+			LOG.finer("Loaded new database snapshot, xmin=" + snapshot.getXMin()
+					+ ", xmax=" + snapshot.getXMax()
+					+ ", xiplist=" + snapshot.getXIpList());
+		}
 		
 		return snapshot;
 	}

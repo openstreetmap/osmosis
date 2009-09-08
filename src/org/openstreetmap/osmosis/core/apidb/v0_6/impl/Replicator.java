@@ -4,6 +4,8 @@ package org.openstreetmap.osmosis.core.apidb.v0_6.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
@@ -13,6 +15,10 @@ import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
  * Replicates changes from the database utilising transaction snapshots.
  */
 public class Replicator {
+	
+	private static final Logger LOG = Logger.getLogger(Replicator.class.getName());
+	
+	
 	/**
 	 * The number of special transactions beginning from 0.
 	 */
@@ -84,6 +90,13 @@ public class Replicator {
 				
 				i.remove();
 			}
+		}
+		
+		if (LOG.isLoggable(Level.FINER)) {
+			LOG.finer("Updated replication state with new snapshot, maxTxnQueried="
+					+ state.getTxnMaxQueried() + ", maxTxn=" + state.getTxnMax()
+					+ ", txnActiveList=" + state.getTxnActive()
+					+ ", txnReadyList=" + state.getTxnReady() + ".");
 		}
 	}
 	
@@ -158,6 +171,14 @@ public class Replicator {
 		// The ready list can be cleared on the state object now.
 		state.getTxnReady().clear();
 		
+		if (LOG.isLoggable(Level.FINER)) {
+			LOG.finer("Query predicates updated, bottomXid="
+					+ predicates.getBottomTransactionId()
+					+ ", topXid=" + predicates.getTopTransactionId()
+					+ ", activeXidList=" + predicates.getActiveList()
+					+ ", readyXidList=" + predicates.getReadyList() + ".");
+		}
+		
 		return predicates;
 	}
 	
@@ -199,8 +220,10 @@ public class Replicator {
 		// If we have already run once we begin replication, otherwise we initialise to the current
 		// database state.
 		if (destination.stateExists()) {
+			LOG.fine("Replication state exists, beginning replication.");
 			replicateImpl();
 		} else {
+			LOG.fine("Replication state does not exist, initializing.");
 			initialize();
 		}
 	}
@@ -217,12 +240,18 @@ public class Replicator {
 			
 			// Determine the time of processing.
 			systemTimestamp = systemTimeLoader.getSystemTime();
+			if (LOG.isLoggable(Level.FINER)) {
+				LOG.finer("Loaded system time " + systemTimestamp + " from the database.");
+			}
 			
 			// Load the current replication state.
 			state = destination.loadState();
 			
 			// Increment the current replication sequence number.
 			state.setSequenceNumber(state.getSequenceNumber() + 1);
+			if (LOG.isLoggable(Level.FINER)) {
+				LOG.finer("Replication sequence number is " + state.getSequenceNumber() + ".");
+			}
 			
 			// If the maximum queried transaction id has reached the maximum transaction id then a new
 			// transaction snapshot must be obtained in order to get more data.
