@@ -413,16 +413,16 @@ public abstract class EntityDao<T extends Entity> {
 		sql.append(")");
 		// If previously active transactions have become ready since the last invocation we include those as well.
 		if (predicates.getReadyList().size() > 0) {
-			sql.append(" OR xid_to_int4(xmin) IN [");
+			sql.append(" OR xid_to_int4(xmin) IN (");
 			buildTransactionIdListWhereClause(sql, predicates.getReadyList());
-			sql.append("]");
+			sql.append(")");
 		}
 		sql.append(")");
 		// Any active transactions must be explicitly excluded.
 		if (predicates.getActiveList().size() > 0) {
-			sql.append(" AND xid_to_int4(xmin) NOT IN [");
+			sql.append(" AND xid_to_int4(xmin) NOT IN (");
 			buildTransactionIdListWhereClause(sql, predicates.getActiveList());
-			sql.append("]");
+			sql.append(")");
 		}
 		
 		LOG.log(Level.FINER, "Entity identification query: " + sql);
