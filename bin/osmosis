@@ -43,25 +43,25 @@ osmosis
 
 Example Usage
 
-Import a planet file into a local MySQL database.
+Import a planet file into a local PostgreSQL database.
 
-osmosis --read-xml file=~/osm/planbet/planet.osm --write-mysql host="x" database="x" user="x" password="x"
+osmosis --read-xml file=~/osm/planbet/planet.osm --write-apidb host="x" database="x" user="x" password="x"
 
-Export a planet file from a local MySQL database.
+Export a planet file from a local PostgreSQL database.
 
-osmosis --read-mysql host="x" database="x" user="x" password="x" --write-xml file="planet.osm"
+osmosis --read-apidb host="x" database="x" user="x" password="x" --write-xml file="planet.osm"
 
 Derive a change set between two planet files.
 
-osmosis --read-xml file="planet1.osm" --read-xml file="planet2.osm" --derive-change --write-xml-change file="planetdiff-1-2.osc"
+osmosis --read-xml file="planet2.osm" --read-xml file="planet1.osm" --derive-change --write-xml-change file="planetdiff-1-2.osc"
 
 Derive a change set between a planet file and a database.
 
-osmosis --read-xml file="planet1.osm" --read-mysql host="x" database="x" user="x" password="x" --derive-change --write-xml-change file="planetdiff-1-2.osc"
+osmosis --read-mysql host="x" database="x" user="x" password="x" --read-xml file="planet1.osm" --derive-change --write-xml-change file="planetdiff-1-2.osc"
 
 Apply a change set to a planet file.
 
-osmosis --read-xml file="planet1.osm" --read-xml-change file="planetdiff-1-2.osc" --apply-change --write-xml file="planet2.osm"
+osmosis --read-xml-change file="planetdiff-1-2.osc" --read-xml file="planet1.osm" --apply-change --write-xml file="planet2.osm"
 
 Sort the contents of a planet file.
 
@@ -72,7 +72,6 @@ The above examples make use of the default pipe connection feature, however a si
 osmosis --read-xml file="planetin.osm" --write-xml file="planetout.osm"
 
 osmosis --read-xml file="planetin.osm" outPipe.0="mypipe" --write-xml file="planetout.osm" inPipe.0="mypipe"
-[edit] Detailed Usage
 
 Full usage details are available at: http://www.bretth.com/wiki/Wiki.jsp?page=OpenStreetMap 
 
