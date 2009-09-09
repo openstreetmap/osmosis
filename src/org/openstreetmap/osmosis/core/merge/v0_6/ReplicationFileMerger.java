@@ -103,8 +103,8 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		ChangeSorter changeSorter;
 		
 		resultFile = new File(
-				getWorkingDirectory(),
-				replicationFileSequenceFormatter.getFormattedName(currentDataState.getSequenceNumber()));
+				getDataDirectory(),
+				replicationFileSequenceFormatter.getFormattedName(currentDataState.getSequenceNumber()) + ".osc.gz");
 		
 		xmlChangeWriter = new XmlChangeWriter(
 				resultFile,
@@ -125,10 +125,10 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		String stateFileName;
 		
 		sequenceNumber = currentDataState.getSequenceNumber();
-		stateFileName = replicationFileSequenceFormatter.getFormattedName(sequenceNumber) + ".txt";
+		stateFileName = replicationFileSequenceFormatter.getFormattedName(sequenceNumber) + ".state.txt";
 		
-		stateFile = new File(getWorkingDirectory(), stateFileName);
-		tmpStateFile = new File(getWorkingDirectory(), "tmp" + stateFileName);
+		stateFile = new File(getDataDirectory(), stateFileName);
+		tmpStateFile = new File(getDataDirectory(), "tmp" + stateFileName);
 		
 		statePersistor = new FileReplicationStatePersistor(stateFile, tmpStateFile);
 		
