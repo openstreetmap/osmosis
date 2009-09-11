@@ -1,3 +1,15 @@
+0.32
+Change to Public Domain licence.
+Re-factored all entity classes to use a CommonEntityData class to avoid duplication of code and simplify code re-use.
+Significant re-factoring of many apidb tasks to use Spring JDBC Template functionality.
+Added a --replicate-apidb task for extracting replication files based on PostgreSQL transaction ids.
+Fixed PostgreSQL apidb COPY files to include changeset id.
+Fixed the Windows launcher batch file to contain all libraries.
+Added a --read-replication-interval task.
+Updated XML writing tasks to ignore UTF-8 characters not supported by XML.
+Included new Xerces XML library to provide proper support for UTF-16 surrogate pairs.
+Added a --merge-replication-files task.
+
 0.31
 Added a --remove-tags task.
 Added JPF plugin support.
