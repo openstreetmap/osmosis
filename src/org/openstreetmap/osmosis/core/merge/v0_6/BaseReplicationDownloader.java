@@ -220,6 +220,11 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			long sequenceNumber;
 			ReplicationState fileReplicationState;
 			
+			// Ensure that our current state is within the allowable timestamp range.
+			if (localState.getTimestamp().compareTo(maximumDownloadTimestamp) >= 0) {
+				break;
+			}
+			
 			// Calculate the next sequence number.
 			sequenceNumber = localState.getSequenceNumber() + 1;
 			LOG.finer("Processing replication sequence " + sequenceNumber + ".");
@@ -236,11 +241,6 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			
 			// Update the local state to reflect the file state just processed.
 			localState = fileReplicationState;
-			
-			// Ensure that the next file is within the allowable timestamp range.
-			if (fileReplicationState.getTimestamp().compareTo(maximumDownloadTimestamp) >= 0) {
-				break;
-			}
 		}
 		
 		return localState;

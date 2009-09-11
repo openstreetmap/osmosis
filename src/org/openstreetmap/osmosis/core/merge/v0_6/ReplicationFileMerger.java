@@ -82,15 +82,28 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	protected Date calculateMaximumTimestamp(ReplicationDownloaderConfiguration configuration, Date serverTimestamp,
 			Date localTimestamp) {
 		Date maximumTimestamp;
-		long maxInterval;
+		long intervalLength;
+		
+		// Read the current persisted state.
+		currentDataState = dataStatePersister.loadState();
 		
 		// Get the default maximum timestamp according to base calculations.
 		maximumTimestamp = super.calculateMaximumTimestamp(configuration, serverTimestamp, localTimestamp);
 		
 		// Align the maximum timestamp to an interval boundary.
-		maxInterval = configuration.getMaxInterval();
-		if (maxInterval > 0) {
-			maximumTimestamp = alignDateToIntervalBoundary(maximumTimestamp, maxInterval);
+		intervalLength = getConfiguration().getIntervalLength();
+		if (intervalLength > 0) {
+			maximumTimestamp = alignDateToIntervalBoundary(maximumTimestamp, intervalLength);
+			
+			// For the first sequence file, we make sure we make sure that the maximum timestamp is
+			// ahead of the data timestamp. If it isn't, we move the maximum timestamp backwards by
+			// one interval to address the case where the local timestamp is behind the data
+			// timestamp causing some data to be downloaded and processed.
+			if (currentDataState.getSequenceNumber() == 0) {
+				if (maximumTimestamp.compareTo(currentDataState.getTimestamp()) <= 0) {
+					maximumTimestamp = new Date(maximumTimestamp.getTime() - intervalLength);
+				}
+			}
 		}
 		
 		return maximumTimestamp;
@@ -172,7 +185,6 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		Date initialDate;
 		Date alignedDate;
 		long intervalLength;
-		ReplicationState dataState;
 		
 		intervalLength = getConfiguration().getIntervalLength();
 		
@@ -190,10 +202,14 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 			alignedDate = new Date(alignedDate.getTime() + intervalLength);
 		}
 		
-		// Create a replication state object and persist to the data directory.
-		dataState = new ReplicationState(0, 0, new ArrayList<Long>(), new ArrayList<Long>(), alignedDate, 0);
+		// Create an initial replication state object.
+		currentDataState = new ReplicationState(0, 0, new ArrayList<Long>(), new ArrayList<Long>(), alignedDate, 0);
 		
-		dataStatePersister.saveState(dataState);
+		// Write out the initial "0" state file.
+		persistSequencedCurrentState();
+		
+		// Save the main state file.
+		dataStatePersister.saveState(currentDataState);
 	}
 	
 	
@@ -212,22 +228,12 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		
 		// If this is the first time through, initialise a writer for the next sequence number.
 		if (!sinkActive) {
-			// Read the current persisted state.
-			currentDataState = dataStatePersister.loadState();
-			
 			// Increment the current sequence number.
 			currentDataState.setSequenceNumber(currentDataState.getSequenceNumber() + 1);
 			
 			// Initialise an output file for the new sequence number.
 			changeSink = buildResultWriter(currentDataState.getSequenceNumber());
 		}
-		
-		// Write the changeset to the writer. We write before checking if we've crossed a timestamp
-		// boundary. A replication timestamp is guaranteed to contain all data up to that point in
-		// time, but may contain data past that point in time. For that reason we apply replication
-		// files until we have reached or passed the next interval, and to do this we apply a change
-		// then check *afterwards* if the point in time has been reached.
-		writeChangeset(xmlReader);
 		
 		if (intervalLength > 0) {
 			// If this is the first time through, align the timestamp at the next boundary.
@@ -242,7 +248,9 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 			// If the replication state has moved us past the current interval end point we need to
 			// open a new interval. This may occur many times if the current replication state moves
 			// us past several intervals.
-			while (replicationState.getTimestamp().compareTo(currentDataState.getTimestamp()) > 0) {
+			while ((replicationState.getTimestamp().getTime() - currentDataState.getTimestamp().getTime())
+					>= intervalLength) {
+				
 				// If we have an open changeset writer, close it and save the current state.
 				changeSink.complete();
 				changeSink.release();
@@ -264,6 +272,9 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 			// current replication state.
 			currentDataState.setTimestamp(replicationState.getTimestamp());
 		}
+		
+		// Write the changeset to the writer.
+		writeChangeset(xmlReader);
 		
 		// We are guaranteed to have an active writer at this point.
 		sinkActive = true;
