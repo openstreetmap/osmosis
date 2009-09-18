@@ -102,7 +102,7 @@ public class ApidbFileReplicatorTest {
         Osmosis.run(new String[] {
         		"-q",
         		"--read-xml-change-0.6",
-        		new File(workingDirectory, "000000002.osc.gz").getPath(),
+        		new File(workingDirectory, "000/000/002.osc.gz").getPath(),
         		"--write-xml-change-0.6",
         		outputFile.getPath()
                 });
@@ -111,7 +111,6 @@ public class ApidbFileReplicatorTest {
         fileUtils.compareFiles(changesetFile, outputFile);
 
         // Success so delete the temporary files.
-        outputFile.delete();
         fileUtils.deleteTempDirectory(workingDirectory);
     }
 }

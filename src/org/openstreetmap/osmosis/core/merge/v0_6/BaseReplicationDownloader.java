@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.apidb.v0_6.impl.ReplicationFileSequenceFormatter;
+import org.openstreetmap.osmosis.core.apidb.v0_6.impl.ReplicationSequenceFormatter;
 import org.openstreetmap.osmosis.core.apidb.v0_6.impl.ReplicationState;
 import org.openstreetmap.osmosis.core.merge.v0_6.impl.ReplicationDownloaderConfiguration;
 import org.openstreetmap.osmosis.core.merge.v0_6.impl.ServerStateReader;
@@ -43,7 +43,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 	
 	
 	private File workingDirectory;
-	private ReplicationFileSequenceFormatter sequenceFormatter;
+	private ReplicationSequenceFormatter sequenceFormatter;
 	private ServerStateReader serverStateReader;
 	
 	
@@ -56,7 +56,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 	public BaseReplicationDownloader(File workingDirectory) {
 		this.workingDirectory = workingDirectory;
 		
-		sequenceFormatter = new ReplicationFileSequenceFormatter();
+		sequenceFormatter = new ReplicationSequenceFormatter(9, 3);
 		serverStateReader = new ServerStateReader();
 	}
 	
@@ -234,7 +234,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			
 			// Download the next replication file to a temporary file.
 			replicationFile =
-				downloadReplicationFile(sequenceFormatter.getFormattedName(sequenceNumber) + ".osc.gz", baseUrl);
+				downloadReplicationFile(sequenceFormatter.getFormattedName(sequenceNumber, ".osc.gz"), baseUrl);
 			
 			// Process the file and send its contents to the sink.
 			processReplicationFile(replicationFile, fileReplicationState);
@@ -263,9 +263,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			serverState = serverStateReader.getServerState(configuration.getBaseUrl());
 			
 			// Build the local state persister which is used for both loading and storing local state.
-			localStatePersistor = new PropertiesPersister(
-					new File(workingDirectory, LOCAL_STATE_FILE),
-					new File(workingDirectory, "tmp" + LOCAL_STATE_FILE));
+			localStatePersistor = new PropertiesPersister(new File(workingDirectory, LOCAL_STATE_FILE));
 			
 			// If local state isn't available we need to copy server state to be the initial local state
 			// then exit.

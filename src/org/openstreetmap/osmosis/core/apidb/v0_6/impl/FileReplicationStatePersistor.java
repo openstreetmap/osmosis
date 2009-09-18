@@ -20,12 +20,9 @@ public class FileReplicationStatePersistor implements ReplicationStatePersister 
 	 * 
 	 * @param stateFile
 	 *            The location of the file containing the persisted data.
-	 * @param newStateFile
-	 *            The location of the temp file to use when updating the
-	 *            persisted data to make the update atomic.
 	 */
-	public FileReplicationStatePersistor(File stateFile, File newStateFile) {
-		persister = new PropertiesPersister(stateFile, newStateFile);
+	public FileReplicationStatePersistor(File stateFile) {
+		persister = new PropertiesPersister(stateFile);
 	}
 	
 	

@@ -3,8 +3,8 @@ package org.openstreetmap.osmosis.core.apidb.v0_6.impl;
 
 import java.io.File;
 
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
+import org.openstreetmap.osmosis.core.util.AtomicFileCreator;
 import org.openstreetmap.osmosis.core.util.FileBasedLock;
 import org.openstreetmap.osmosis.core.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.core.xml.v0_6.XmlChangeWriter;
@@ -17,20 +17,17 @@ public class FileReplicationDestination implements ReplicationDestination {
 	
 	private static final String LOCK_FILE = "replicate.lock";
 	private static final String STATE_FILE = "state.txt";
-	private static final String TMP_STATE_FILE = "tmpstate.txt";
 	private static final String SEQUENCE_STATE_FILE_SUFFIX = ".state.txt";
 	private static final String CHANGE_FILE_SUFFIX = ".osc.gz";
 	private static final CompressionMethod CHANGE_FILE_COMPRESSION = CompressionMethod.GZip;
-	private static final String TMP_CHANGE_FILE = "tmpchangeset.osc.gz";
 	
 
-	private File workingDirectory;
 	private File stateFile;
-	private File tmpStateFile;
 	private FileBasedLock fileLock;
 	private boolean lockObtained;
 	private FileReplicationStatePersistor statePersistor;
 	private ReplicationState state;
+	private AtomicFileCreator atomicXmlFile;
 	private XmlChangeWriter writer;
 	private ReplicationFileSequenceFormatter sequenceFormatter;
 
@@ -42,37 +39,13 @@ public class FileReplicationDestination implements ReplicationDestination {
 	 *            The directory that all files will be produced in.
 	 */
 	public FileReplicationDestination(File workingDirectory) {
-		this.workingDirectory = workingDirectory;
-		
 		stateFile = new File(workingDirectory, STATE_FILE);
-		tmpStateFile = new File(workingDirectory, TMP_STATE_FILE);
 		
 		fileLock = new FileBasedLock(new File(workingDirectory, LOCK_FILE));
 		
-		statePersistor = new FileReplicationStatePersistor(stateFile, tmpStateFile);
+		statePersistor = new FileReplicationStatePersistor(stateFile);
 		
-		sequenceFormatter = new ReplicationFileSequenceFormatter();
-	}
-
-
-	private void renameFile(File existingName, File newName) {
-		// Make sure we have a new file.
-		if (!existingName.exists()) {
-			throw new OsmosisRuntimeException("Can't rename non-existent file " + existingName + ".");
-		}
-		
-		// Delete the existing file if it exists.
-		if (newName.exists()) {
-			if (!newName.delete()) {
-				throw new OsmosisRuntimeException("Unable to delete file " + newName + ".");
-			}
-		}
-		
-		// Rename the new file to the existing file.
-		if (!existingName.renameTo(newName)) {
-			throw new OsmosisRuntimeException(
-					"Unable to rename file " + existingName + " to " + newName + ".");
-		}
+		sequenceFormatter = new ReplicationFileSequenceFormatter(workingDirectory);
 	}
 	
 	
@@ -84,12 +57,26 @@ public class FileReplicationDestination implements ReplicationDestination {
 	}
 	
 	
+	private File generateFormattedSequenceFile(String fileNameSuffix) {
+		File formattedSequenceNumber;
+		
+		// Generate the formatted sequence number.
+		formattedSequenceNumber = sequenceFormatter.getFormattedName(state.getSequenceNumber(), fileNameSuffix);
+		
+		return formattedSequenceNumber;
+	}
+	
+	
 	private void initializeWriter() {
 		if (writer == null) {
 			ensureLocked();
 			
+			// Create an atomic file creator for the xml file.
+			atomicXmlFile = new AtomicFileCreator(generateFormattedSequenceFile(CHANGE_FILE_SUFFIX));
+			
+			// Create a writer writing to a new temporary file.
 			writer = new XmlChangeWriter(
-					new File(workingDirectory, TMP_CHANGE_FILE),
+					atomicXmlFile.getTmpFile(),
 					CHANGE_FILE_COMPRESSION);
 		}
 	}
@@ -116,24 +103,16 @@ public class FileReplicationDestination implements ReplicationDestination {
 		
 		// We can't do anything if we haven't loaded state yet.
 		if (state != null) {
-			String formattedSequenceNumber;
-			
-			// Get the formatted sequence number.
-			formattedSequenceNumber = sequenceFormatter.getFormattedName(state.getSequenceNumber());
-			
 			// We won't write an output file if we are initializing.
 			if (statePersistor.stateExists()) {
 				// When replicating, we will always write a file even if there is no data.
 				initializeWriter();
 				
-				// Close the output file and rename it as a sequenced change file.
-				// We must release the file completely before we attempt to rename it.
+				// Close the output file and rename it to the final file.
 				writer.complete();
 				writer.release();
 				writer = null;
-				renameFile(
-						new File(workingDirectory, TMP_CHANGE_FILE),
-						new File(workingDirectory, formattedSequenceNumber + CHANGE_FILE_SUFFIX));
+				atomicXmlFile.renameTmpFileToCurrent();
 			}
 			
 			// The final step is to save the current state. This must be done last so that if a crash
@@ -141,9 +120,8 @@ public class FileReplicationDestination implements ReplicationDestination {
 			statePersistor.saveState(state);
 			
 			// Also the state to a sequence specific state file.
-			new FileReplicationStatePersistor(
-					new File(workingDirectory, formattedSequenceNumber
-					+ SEQUENCE_STATE_FILE_SUFFIX), tmpStateFile).saveState(state);
+			new FileReplicationStatePersistor(generateFormattedSequenceFile(SEQUENCE_STATE_FILE_SUFFIX))
+					.saveState(state);
 		}
 		
 		fileLock.unlock();

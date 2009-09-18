@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.apidb.v0_6.impl.ReplicationFileSequenceFormatter;
+import org.openstreetmap.osmosis.core.apidb.v0_6.impl.ReplicationSequenceFormatter;
 import org.openstreetmap.osmosis.core.apidb.v0_6.impl.ReplicationState;
 
 
@@ -25,14 +25,14 @@ public class ServerStateReader {
 	private static final String SEQUENCE_STATE_FILE_SUFFIX = ".state.txt";
 	
 	
-	private ReplicationFileSequenceFormatter sequenceFormatter;
+	private ReplicationSequenceFormatter sequenceFormatter;
 	
 	
 	/**
 	 * Creates a new instance.
 	 */
 	public ServerStateReader() {
-		sequenceFormatter = new ReplicationFileSequenceFormatter();
+		sequenceFormatter = new ReplicationSequenceFormatter(9, 3);
 	}
 	
 	
@@ -58,7 +58,7 @@ public class ServerStateReader {
 	 * @return The state.
 	 */
 	public ReplicationState getServerState(URL baseUrl, long sequenceNumber) {
-		return getServerState(baseUrl, sequenceFormatter.getFormattedName(sequenceNumber) + SEQUENCE_STATE_FILE_SUFFIX);
+		return getServerState(baseUrl, sequenceFormatter.getFormattedName(sequenceNumber, SEQUENCE_STATE_FILE_SUFFIX));
 	}
 
 

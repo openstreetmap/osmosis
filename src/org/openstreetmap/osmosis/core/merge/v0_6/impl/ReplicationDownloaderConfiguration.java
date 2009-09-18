@@ -30,7 +30,7 @@ public class ReplicationDownloaderConfiguration {
 	 *            The configuration file to read from.
 	 */
 	public ReplicationDownloaderConfiguration(File configFile) {
-		properties = new PropertiesPersister(configFile, null).load();
+		properties = new PropertiesPersister(configFile).load();
 	}
 	
 	

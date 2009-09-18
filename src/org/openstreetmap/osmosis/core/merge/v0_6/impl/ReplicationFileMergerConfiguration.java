@@ -24,7 +24,7 @@ public class ReplicationFileMergerConfiguration {
 	 *            The configuration file to read from.
 	 */
 	public ReplicationFileMergerConfiguration(File configFile) {
-		properties = new PropertiesPersister(configFile, null).load();
+		properties = new PropertiesPersister(configFile).load();
 	}
 	
 	

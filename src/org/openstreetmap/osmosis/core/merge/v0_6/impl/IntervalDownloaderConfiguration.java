@@ -30,7 +30,7 @@ public class IntervalDownloaderConfiguration {
 	 *            The configuration file to read from.
 	 */
 	public IntervalDownloaderConfiguration(File configFile) {
-		properties = new PropertiesPersister(configFile, null).load();
+		properties = new PropertiesPersister(configFile).load();
 	}
 	
 	

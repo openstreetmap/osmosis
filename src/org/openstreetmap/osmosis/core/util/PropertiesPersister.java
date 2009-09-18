@@ -27,8 +27,7 @@ public class PropertiesPersister {
 	private static final Logger LOG = Logger.getLogger(PropertiesPersister.class.getName());
 	
 	
-	private File propertiesFile;
-	private File tmpPropertiesFile;
+	private AtomicFileCreator atomicFileCreator;
 	
 	
 	/**
@@ -36,37 +35,9 @@ public class PropertiesPersister {
 	 * 
 	 * @param propertiesFile
 	 *            The location of the file containing the persisted data.
-	 * @param tmpPropertiesFile
-	 *            The location of the temp file to use when updating the
-	 *            persisted data to make the update atomic.
 	 */
-	public PropertiesPersister(File propertiesFile, File tmpPropertiesFile) {
-		this.propertiesFile = propertiesFile;
-		this.tmpPropertiesFile = tmpPropertiesFile;
-	}
-
-
-	/**
-	 * Renames the new state file to the current file deleting the current file if it exists.
-	 */
-	private void renameNewFileToCurrent() {
-		// Make sure we have a new file.
-		if (!tmpPropertiesFile.exists()) {
-			throw new OsmosisRuntimeException("Can't rename non-existent file " + tmpPropertiesFile + ".");
-		}
-		
-		// Delete the existing file if it exists.
-		if (propertiesFile.exists()) {
-			if (!propertiesFile.delete()) {
-				throw new OsmosisRuntimeException("Unable to delete file " + propertiesFile + ".");
-			}
-		}
-		
-		// Rename the new file to the existing file.
-		if (!tmpPropertiesFile.renameTo(propertiesFile)) {
-			throw new OsmosisRuntimeException(
-					"Unable to rename file " + tmpPropertiesFile + " to " + propertiesFile + ".");
-		}
+	public PropertiesPersister(File propertiesFile) {
+		atomicFileCreator = new AtomicFileCreator(propertiesFile);
 	}
 	
 	
@@ -83,7 +54,7 @@ public class PropertiesPersister {
 			Reader reader;
 			Properties properties;
 			
-			fileInputStream = new FileInputStream(propertiesFile);
+			fileInputStream = new FileInputStream(atomicFileCreator.getFile());
 			reader = new InputStreamReader(new BufferedInputStream(fileInputStream), Charset.forName("UTF-8"));
 			
 			properties = new Properties();
@@ -95,13 +66,14 @@ public class PropertiesPersister {
 			return properties;
 			
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to read the properties from file " + propertiesFile + ".", e);
+			throw new OsmosisRuntimeException("Unable to read the properties from file " + atomicFileCreator.getFile()
+					+ ".", e);
 		} finally {
 			if (fileInputStream != null) {
 				try {
 					fileInputStream.close();
 				} catch (Exception e) {
-					LOG.log(Level.WARNING, "Unable to close properties file " + propertiesFile + ".", e);
+					LOG.log(Level.WARNING, "Unable to close properties file " + atomicFileCreator.getFile() + ".", e);
 				}
 			}
 		}
@@ -120,24 +92,25 @@ public class PropertiesPersister {
 		try {
 			Writer writer;
 			
-			fileOutputStream = new FileOutputStream(tmpPropertiesFile);
+			fileOutputStream = new FileOutputStream(atomicFileCreator.getTmpFile());
 			writer = new OutputStreamWriter(new BufferedOutputStream(fileOutputStream));
 			
 			properties.store(writer, null);
 			
 			writer.close();
 			
-			renameNewFileToCurrent();
+			atomicFileCreator.renameTmpFileToCurrent();
 			
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException(
-					"Unable to write the properties to temporary file " + tmpPropertiesFile + ".", e);
+					"Unable to write the properties to temporary file " + atomicFileCreator.getTmpFile() + ".", e);
 		} finally {
 			if (fileOutputStream != null) {
 				try {
 					fileOutputStream.close();
 				} catch (Exception e) {
-					LOG.log(Level.WARNING, "Unable to close temporary state file " + tmpPropertiesFile + ".", e);
+					LOG.log(Level.WARNING, "Unable to close temporary state file " + atomicFileCreator.getTmpFile()
+							+ ".", e);
 				}
 			}
 		}
@@ -145,14 +118,11 @@ public class PropertiesPersister {
 
 
 	/**
-	 * Checks if either one of the main or temporary files currently exists.
+	 * Checks if the properties file exists.
 	 * 
 	 * @return True if a file exists, false otherwise.
 	 */
 	public boolean exists() {
-		// We're checking both files because there is a small window where only the new file exists
-		// after the main state file is deleted before the new file being renamed.
-		// See http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4017593 for more details.
-		return propertiesFile.exists() || tmpPropertiesFile.exists();
+		return atomicFileCreator.exists();
 	}
 }

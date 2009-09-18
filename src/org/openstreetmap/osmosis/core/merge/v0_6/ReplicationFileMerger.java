@@ -47,18 +47,15 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	public ReplicationFileMerger(File workingDirectory) {
 		super(workingDirectory);
 		
-		dataStatePersister = new FileReplicationStatePersistor(
-				new File(getDataDirectory(), DATA_STATE_FILE),
-				new File(getDataDirectory(), "tmp" + DATA_STATE_FILE));
+		File dataDirectory;
 		
-		replicationFileSequenceFormatter = new ReplicationFileSequenceFormatter();
+		dataDirectory = new File(getWorkingDirectory(), DATA_DIRECTORY);
+		
+		dataStatePersister = new FileReplicationStatePersistor(new File(dataDirectory, DATA_STATE_FILE));
+		
+		replicationFileSequenceFormatter = new ReplicationFileSequenceFormatter(dataDirectory);
 		
 		sinkActive = false;
-	}
-	
-	
-	private File getDataDirectory() {
-		return new File(getWorkingDirectory(), DATA_DIRECTORY);
 	}
 	
 	
@@ -115,9 +112,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		XmlChangeWriter xmlChangeWriter;
 		ChangeSorter changeSorter;
 		
-		resultFile = new File(
-				getDataDirectory(),
-				replicationFileSequenceFormatter.getFormattedName(currentDataState.getSequenceNumber()) + ".osc.gz");
+		resultFile = replicationFileSequenceFormatter.getFormattedName(currentDataState.getSequenceNumber(), ".osc.gz");
 		
 		xmlChangeWriter = new XmlChangeWriter(
 				resultFile,
@@ -131,19 +126,13 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	
 	
 	private void persistSequencedCurrentState() {
-		long sequenceNumber;
 		FileReplicationStatePersistor statePersistor;
 		File stateFile;
-		File tmpStateFile;
-		String stateFileName;
 		
-		sequenceNumber = currentDataState.getSequenceNumber();
-		stateFileName = replicationFileSequenceFormatter.getFormattedName(sequenceNumber) + ".state.txt";
+		stateFile = replicationFileSequenceFormatter.getFormattedName(currentDataState.getSequenceNumber(),
+				".state.txt");
 		
-		stateFile = new File(getDataDirectory(), stateFileName);
-		tmpStateFile = new File(getDataDirectory(), "tmp" + stateFileName);
-		
-		statePersistor = new FileReplicationStatePersistor(stateFile, tmpStateFile);
+		statePersistor = new FileReplicationStatePersistor(stateFile);
 		
 		statePersistor.saveState(currentDataState);
 	}
