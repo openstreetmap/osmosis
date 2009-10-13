@@ -55,7 +55,17 @@ public class WayGeometryBuilder implements Releasable {
 	public void addNodeLocation(Node node) {
 		locationStore.addLocation(node.getId(), new NodeLocation(node.getLongitude(), node.getLatitude()));
 	}
-	
+
+    /**
+     * Get NodeLocation from internal store.
+     *
+     * @param nodeId
+     *              Id of the node we want the location for.
+     * @return Location of node
+     */
+    public NodeLocation getNodeLocation(long nodeId) {
+        return locationStore.getNodeLocation(nodeId);
+    }
 	
 	private Polygon createWayBbox(double left, double right, double bottom, double top) {
 		Point[] points;
@@ -85,7 +95,7 @@ public class WayGeometryBuilder implements Releasable {
 	 *            The points making up the line.
 	 * @return The linestring.
 	 */
-	protected LineString createLinestring(List<Point> points) {
+	public LineString createLinestring(List<Point> points) {
 		LineString lineString;
 		
 		lineString = new LineString(points.toArray(new Point[]{}));
@@ -93,7 +103,21 @@ public class WayGeometryBuilder implements Releasable {
 		
 		return lineString;
 	}
-	
+
+
+    /**
+     * @param nodeId
+     *             Id of the node.
+     * @return Point object
+     */
+    public Point createPoint(long nodeId) {
+	    NodeLocation nodeLocation = locationStore.getNodeLocation(nodeId);
+        Point point = new Point(nodeLocation.getLongitude(), nodeLocation.getLatitude());
+        point.srid = 4326;
+
+        return point;
+    }
+
 	
 	/**
 	 * Builds a bounding box geometry object from the node references in the
