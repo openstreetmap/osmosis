@@ -49,8 +49,10 @@ public class SortedChangePipeValidator implements ChangeSinkChangeSource {
 					"Pipeline entities are not sorted, previous entity type="
 					+ previousChangeContainer.getEntityContainer().getEntity().getType()
 					+ ", id=" + previousChangeContainer.getEntityContainer().getEntity().getId()
+					+ ", version=" + previousChangeContainer.getEntityContainer().getEntity().getVersion()
 					+ " current entity type=" + changeContainer.getEntityContainer().getEntity().getType()
-					+ ", id=" + changeContainer.getEntityContainer().getEntity().getId() + "."
+					+ ", id=" + changeContainer.getEntityContainer().getEntity().getId() 
+					+ ", version=" + changeContainer.getEntityContainer().getEntity().getVersion() + "."
 				);
 			}
 		}

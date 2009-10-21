@@ -47,8 +47,11 @@ public class SortedEntityPipeValidator implements SinkSource {
 				throw new OsmosisRuntimeException(
 					"Pipeline entities are not sorted, previous entity type="
 					+ previousEntityContainer.getEntity().getType() + ", id="
-					+ previousEntityContainer.getEntity().getId() + " current entity type="
-					+ entityContainer.getEntity().getType() + ", id=" + entityContainer.getEntity().getId() + "."
+					+ previousEntityContainer.getEntity().getId() + ", version="
+					+ previousEntityContainer.getEntity().getVersion() + " current entity type="
+					+ entityContainer.getEntity().getType() + ", id=" 
+                    + entityContainer.getEntity().getId() + ", version="
+                    + entityContainer.getEntity().getVersion() + "."
 				);
 			}
 		}

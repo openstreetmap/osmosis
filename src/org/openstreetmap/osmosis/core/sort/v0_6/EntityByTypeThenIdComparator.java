@@ -20,6 +20,7 @@ public class EntityByTypeThenIdComparator implements Comparator<EntityContainer>
 	public int compare(EntityContainer o1, EntityContainer o2) {
 		int typeDiff;
 		long idDiff;
+        long verDiff;
 		
 		// Perform a type comparison.
 		typeDiff = o1.getEntity().getType().compareTo(o2.getEntity().getType());
@@ -35,6 +36,16 @@ public class EntityByTypeThenIdComparator implements Comparator<EntityContainer>
 		if (idDiff < 0) {
 			return -1;
 		}
+
+        // finally compare the version.
+		verDiff = o1.getEntity().getVersion() - o2.getEntity().getVersion();
+		if (verDiff > 0) {
+			return 1;
+		}
+		if (verDiff < 0) {
+			return -1;
+		}
+
 		return 0;
 	}
 }
