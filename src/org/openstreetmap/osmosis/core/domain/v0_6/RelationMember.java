@@ -10,7 +10,7 @@ import org.openstreetmap.osmosis.core.util.LongAsInt;
 
 /**
  * A data class representing a single member within a relation entity.
- * 
+ *
  * @author Brett Henderson
  */
 public class RelationMember implements Comparable<RelationMember>, Storeable {
@@ -34,6 +34,12 @@ public class RelationMember implements Comparable<RelationMember>, Storeable {
 		this.memberId = LongAsInt.longToInt(memberId);
 		this.memberType = memberType;
 		this.memberRole = memberRole;
+		if (memberType == null) {
+			throw new IllegalArgumentException("null type given for relation-member");
+		}
+		if (memberRole == null) {
+			throw new IllegalArgumentException("null role given for relation-member");
+		}
 	}
 	
 	
