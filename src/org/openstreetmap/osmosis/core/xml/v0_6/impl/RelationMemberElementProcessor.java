@@ -52,6 +52,9 @@ public class RelationMemberElementProcessor extends BaseElementProcessor {
 		id = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_ID));
 		type = memberTypeParser.parse(attributes.getValue(ATTRIBUTE_NAME_TYPE));
 		role = attributes.getValue(ATTRIBUTE_NAME_ROLE);
+		if (role == null) {
+			role = ""; // this may actually happen
+		}
 		
 		relationMember = new RelationMember(id, type, role);
 	}
