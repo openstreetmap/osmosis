@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.core.xml.v0_5.impl;
 
 import java.io.BufferedWriter;
+import java.io.Writer;
 
 import org.openstreetmap.osmosis.core.container.v0_5.ChangeContainer;
 import org.openstreetmap.osmosis.core.OsmosisConstants;
@@ -47,7 +48,7 @@ public class OsmChangeWriter extends ElementWriter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setWriter(BufferedWriter writer) {
+	public void setWriter(final Writer writer) {
 		super.setWriter(writer);
 		
 		osmCreateWriter.setWriter(writer);

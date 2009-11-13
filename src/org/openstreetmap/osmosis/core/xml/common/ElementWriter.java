@@ -3,6 +3,7 @@ package org.openstreetmap.osmosis.core.xml.common;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,64 +53,80 @@ public class ElementWriter {
     /**
      * The output destination for writing all xml.
      */
-    protected BufferedWriter writer;
+    private Writer myWriter;
 
-    private final String elementName;
+    /**
+     * The name of the element to be written.
+     */
+    private final String myElementName;
 
-    private final int indentLevel;
+    /**
+     * The indent level of the element.
+     */
+    private final int myIndentLevel;
 
-    private final TimestampFormat timestampFormat;
+    private final TimestampFormat myTimestampFormat;
+
+    /**
+     * Line separator string.  This is the value of the line.separator
+     * property at the moment that the stream was created.
+     */
+    private String myLineSeparator;
 
     /**
      * Creates a new instance.
-     * 
-     * @param elementName The name of the element to be written.
-     * @param indentLevel The indent level of the element.
+     *
+     * @param anElementName The name of the element to be written.
+     * @param anIndentionLevel The indent level of the element.
      */
-    protected ElementWriter(String elementName, int indentLevel) {
-        this.elementName = elementName;
-        this.indentLevel = indentLevel;
+    protected ElementWriter(final String anElementName,
+                            final int anIndentionLevel) {
+        this.myElementName = anElementName;
+        this.myIndentLevel = anIndentionLevel;
 
-        timestampFormat = new XmlTimestampFormat();
+        myTimestampFormat = new XmlTimestampFormat();
+        this.myLineSeparator = (String)
+              java.security.AccessController.doPrivileged(
+                new sun.security.action.GetPropertyAction("line.separator"));
     }
 
     /**
      * Sets the writer used as the xml output destination.
-     * 
-     * @param writer The writer.
+     *
+     * @param aWriter The writer.
      */
-    public void setWriter(BufferedWriter writer) {
-        this.writer = writer;
+    public void setWriter(final Writer aWriter) {
+        this.myWriter = aWriter;
     }
 
     /**
      * Writes a series of spaces to indent the current line.
-     * 
-     * @param writer The underlying writer.
+     *
      * @throws IOException if an error occurs.
      */
     private void writeIndent() throws IOException {
         int indentSpaceCount;
 
-        indentSpaceCount = indentLevel * INDENT_SPACES_PER_LEVEL;
+        indentSpaceCount = myIndentLevel * INDENT_SPACES_PER_LEVEL;
 
         for (int i = 0; i < indentSpaceCount; i++) {
-            writer.append(' ');
+            myWriter.append(' ');
         }
     }
 
     /**
      * A utility method for encoding data in XML format.
-     * 
+     *
      * @param data The data to be formatted.
-     * @return The formatted data. This may be the input string if no changes are required.
+     * @return The formatted data. This may be the input
+     *         string if no changes are required.
      */
-    private String escapeData(String data) {
+    private String escapeData(final String data) {
         StringBuilder buffer = null;
 
         for (int i = 0; i < data.length(); ++i) {
             char currentChar = data.charAt(i);
-                
+
             String replacement = XML_ENCODING.get(new Character(currentChar));
 
             if (replacement != null) {
@@ -132,22 +149,23 @@ public class ElementWriter {
 
     /**
      * Returns a timestamp format suitable for xml files.
-     * 
+     *
      * @return The timestamp format.
      */
     protected TimestampFormat getTimestampFormat() {
-        return timestampFormat;
+        return myTimestampFormat;
     }
 
     /**
-     * Writes an element opening line without the final closing portion of the tag.
+     * Writes an element opening line without the final
+     * closing portion of the tag.
      */
     protected void beginOpenElement() {
         try {
             writeIndent();
 
-            writer.append('<');
-            writer.append(elementName);
+            myWriter.append('<');
+            myWriter.append(this.myElementName);
 
         } catch (IOException e) {
             throw new OsmosisRuntimeException("Unable to write data.", e);
@@ -156,18 +174,19 @@ public class ElementWriter {
 
     /**
      * Writes out the opening tag of the element.
-     * 
-     * @param closeElement If true, the element will be closed immediately and written as a single
+     *
+     * @param closeElement If true, the element will be closed
+     *        immediately and written as a single
      *        tag in the output xml file.
      */
-    protected void endOpenElement(boolean closeElement) {
+    protected void endOpenElement(final boolean closeElement) {
         try {
             if (closeElement) {
-                writer.append('/');
+                myWriter.append('/');
             }
-            writer.append('>');
+            myWriter.append('>');
 
-            writer.newLine();
+            myWriter.append(this.myLineSeparator);
 
         } catch (IOException e) {
             throw new OsmosisRuntimeException("Unable to write data.", e);
@@ -176,19 +195,19 @@ public class ElementWriter {
 
     /**
      * Adds an attribute to the element.
-     * 
+     *
      * @param name The name of the attribute.
      * @param value The value of the attribute.
      */
-    protected void addAttribute(String name, String value) {
+    protected void addAttribute(final String name, final String value) {
         try {
-            writer.append(' ');
-            writer.append(name);
-            writer.append("=\"");
+            myWriter.append(' ');
+            myWriter.append(name);
+            myWriter.append("=\"");
 
-            writer.append(escapeData(value));
+            myWriter.append(escapeData(value));
 
-            writer.append('"');
+            myWriter.append('"');
 
         } catch (IOException e) {
             throw new OsmosisRuntimeException("Unable to write data.", e);
@@ -202,11 +221,11 @@ public class ElementWriter {
         try {
             writeIndent();
 
-            writer.append("</");
-            writer.append(elementName);
-            writer.append('>');
+            myWriter.append("</");
+            myWriter.append(myElementName);
+            myWriter.append('>');
 
-            writer.newLine();
+            myWriter.append(this.myLineSeparator);
 
         } catch (IOException e) {
             throw new OsmosisRuntimeException("Unable to write data.", e);

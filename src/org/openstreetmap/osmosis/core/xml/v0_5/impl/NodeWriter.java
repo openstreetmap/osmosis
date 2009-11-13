@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.core.xml.v0_5.impl;
 
 import java.io.BufferedWriter;
+import java.io.Writer;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -91,7 +92,7 @@ public class NodeWriter extends ElementWriter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setWriter(BufferedWriter writer) {
+	public void setWriter(final Writer writer) {
 		super.setWriter(writer);
 		
 		tagWriter.setWriter(writer);

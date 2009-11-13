@@ -81,6 +81,7 @@ import org.openstreetmap.osmosis.core.tee.v0_6.ChangeTeeFactory;
 import org.openstreetmap.osmosis.core.tee.v0_6.EntityTeeFactory;
 import org.openstreetmap.osmosis.core.xml.v0_6.FastXmlReaderFactory;
 import org.openstreetmap.osmosis.core.xml.v0_6.XmlChangeReaderFactory;
+import org.openstreetmap.osmosis.core.xml.v0_6.XmlChangeUploaderFactory;
 import org.openstreetmap.osmosis.core.xml.v0_6.XmlChangeWriterFactory;
 import org.openstreetmap.osmosis.core.xml.v0_6.XmlDownloaderFactory;
 import org.openstreetmap.osmosis.core.xml.v0_6.XmlReaderFactory;
@@ -94,10 +95,10 @@ import org.openstreetmap.osmosis.core.xml.v0_6.XmlWriterFactory;
  */
 public class TaskRegistrar {
 
-	/**
-	 * Out logger for debug and error -output.
-	 */
-	private static final Logger LOG = Logger.getLogger(TaskRegistrar.class.getName());
+    /**
+     * Our logger for debug and error -output.
+     */
+    private static final Logger LOG = Logger.getLogger(TaskRegistrar.class.getName());
 
 	/**
 	 * The register containing all known task manager factories.
@@ -160,7 +161,8 @@ public class TaskRegistrar {
 		factoryRegister.register("dc", new ChangeDeriverFactory());
 		factoryRegister.register("read-xml", new XmlReaderFactory());
 		factoryRegister.register("rx", new XmlReaderFactory());
-		factoryRegister.register("read-xml-change", new XmlChangeReaderFactory());
+        factoryRegister.register("read-xml-change",  new XmlChangeReaderFactory());
+        factoryRegister.register("upload-xml-change", new XmlChangeUploaderFactory());
 		factoryRegister.register("rxc", new XmlChangeReaderFactory());
 		factoryRegister.register("sort", entitySorterFactory05);
 		factoryRegister.register("s", entitySorterFactory05);

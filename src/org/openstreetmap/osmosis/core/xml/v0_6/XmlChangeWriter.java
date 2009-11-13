@@ -30,11 +30,11 @@ public class XmlChangeWriter extends BaseXmlWriter implements ChangeSink {
 	 *            Specifies the compression method to employ.
 	 */
 	public XmlChangeWriter(File file, CompressionMethod compressionMethod) {
-		super(file, compressionMethod);
-		
-		osmChangeWriter = new OsmChangeWriter("osmChange", 0);
-	}
-	
+    	super(file, compressionMethod);
+
+        osmChangeWriter = new OsmChangeWriter("osmChange", 0);
+    }
+
 
 	/**
 	 * {@inheritDoc}
