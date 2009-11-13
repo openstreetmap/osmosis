@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.core.xml.v0_5.impl;
 
 import java.io.BufferedWriter;
+import java.io.Writer;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.domain.v0_5.OsmUser;
@@ -85,7 +86,7 @@ public class WayWriter extends ElementWriter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setWriter(BufferedWriter writer) {
+	public void setWriter(final Writer writer) {
 		super.setWriter(writer);
 		
 		wayNodeWriter.setWriter(writer);
