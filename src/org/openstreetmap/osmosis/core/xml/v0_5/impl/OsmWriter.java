@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.core.xml.v0_5.impl;
 
 import java.io.BufferedWriter;
+import java.io.Writer;
 
 import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
@@ -75,7 +76,7 @@ public class OsmWriter extends ElementWriter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setWriter(BufferedWriter writer) {
+	public void setWriter(final Writer writer) {
 		super.setWriter(writer);
 		
 		// Tell the sub element writer that a new writer is available. This will
@@ -117,7 +118,7 @@ public class OsmWriter extends ElementWriter {
 		 * @param writer
 		 *            The writer to be used for all output xml.
 		 */
-		public void updateWriter(BufferedWriter writer) {
+		public void updateWriter(final Writer writer) {
 			nodeWriter.setWriter(writer);
 			wayWriter.setWriter(writer);
 			relationWriter.setWriter(writer);
