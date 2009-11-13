@@ -28,11 +28,13 @@ public class ChangeTagSorter implements ChangeSinkChangeSource {
 	 * {@inheritDoc}
 	 */
 	public void process(ChangeContainer changeContainer) {
+		EntityContainer readOnlyContainer;
 		EntityContainer writeableContainer;
 		Entity entity;
 		Collection<Tag> sortedTags;
 		
-		writeableContainer = changeContainer.getEntityContainer().getWriteableInstance();
+		readOnlyContainer = changeContainer.getEntityContainer();
+		writeableContainer = readOnlyContainer.getWriteableInstance();
 		
 		entity = writeableContainer.getEntity();
 		sortedTags = sortTags(entity.getTags());
