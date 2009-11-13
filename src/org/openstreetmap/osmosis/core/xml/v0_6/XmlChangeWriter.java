@@ -13,14 +13,13 @@ import org.openstreetmap.osmosis.core.xml.v0_6.impl.OsmChangeWriter;
 
 /**
  * An OSM change sink for storing all data to an xml file.
- * 
+ *
  * @author Brett Henderson
  */
 public class XmlChangeWriter extends BaseXmlWriter implements ChangeSink {
-	
+
 	private OsmChangeWriter osmChangeWriter;
-	
-	
+
 	/**
 	 * Creates a new instance.
 	 * 
@@ -44,8 +43,7 @@ public class XmlChangeWriter extends BaseXmlWriter implements ChangeSink {
 		
 		osmChangeWriter.process(changeContainer);
 	}
-	
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -53,8 +51,7 @@ public class XmlChangeWriter extends BaseXmlWriter implements ChangeSink {
 	protected void beginElementWriter() {
 		osmChangeWriter.begin();
 	}
-	
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -62,8 +59,7 @@ public class XmlChangeWriter extends BaseXmlWriter implements ChangeSink {
 	protected void endElementWriter() {
 		osmChangeWriter.end();
 	}
-	
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

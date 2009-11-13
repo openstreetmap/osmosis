@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
@@ -132,7 +133,8 @@ public class XmlChangeUploader implements ChangeSink {
             httpCon.setRequestMethod("PUT");
             OutputStreamWriter out = new OutputStreamWriter(
                 httpCon.getOutputStream());
-            out.write("<osm version=\"0.6\" generator=\"Osmosis\">\n"
+            out.write("<osm version=\"0.6\" generator=\"Osmosis "
+                    + OsmosisConstants.VERSION + "\">\n"
                     + "\t<changeset>\n");
             out.write("\t\t<tag k=\"created_by\" v=\"Osmosis\"/>\n");
             out.write("\t\t<tag k=\"comment\" v=\""
