@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.core.xml.v0_6.impl;
 
 import java.io.BufferedWriter;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.List;
 
@@ -91,7 +92,7 @@ public class RelationWriter extends ElementWriter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void setWriter(BufferedWriter writer) {
+	public void setWriter(final Writer writer) {
 		super.setWriter(writer);
 		
 		relationMemberWriter.setWriter(writer);
