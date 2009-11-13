@@ -13,7 +13,6 @@ import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
 import org.openstreetmap.osmosis.core.store.StoreClassRegister;
 import org.openstreetmap.osmosis.core.store.StoreReader;
 import org.openstreetmap.osmosis.core.store.StoreWriter;
-import org.openstreetmap.osmosis.core.util.IntAsChar;
 
 
 /**
@@ -167,7 +166,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 		
 		int featureCount;
 		
-		featureCount = sr.readCharacter();
+		featureCount = sr.readInteger();
 		
 		members = new ArrayList<RelationMember>();
 		for (int i = 0; i < featureCount; i++) {
@@ -183,7 +182,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		super.store(sw, scr);
 		
-		sw.writeCharacter(IntAsChar.intToChar(members.size()));
+		sw.writeInteger(members.size());
 		for (RelationMember relationMember : members) {
 			relationMember.store(sw, scr);
 		}
