@@ -12,11 +12,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-
 /**
  * This class is a SAX default handler for processing OSM XML files. It utilises
  * a tree of element processors to extract the data from the xml structure.
- * 
+ *
  * @author Brett Henderson
  */
 public class OsmHandler extends DefaultHandler {
