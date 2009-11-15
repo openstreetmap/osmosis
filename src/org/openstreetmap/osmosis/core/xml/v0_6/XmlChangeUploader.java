@@ -142,6 +142,11 @@ public class XmlChangeUploader implements ChangeSink {
             out.write("\t</changeset>\n</osm>");
             out.close();
 
+            int responseCode = httpCon.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                throw new IllegalStateException("Http-Status-code is not"
+                        + " 200 OK but " + responseCode + "!");
+            }
             Reader in = new InputStreamReader(httpCon.getInputStream());
             char[] buffer = new char[Byte.MAX_VALUE];
             int len = in.read(buffer);
@@ -209,9 +214,13 @@ public class XmlChangeUploader implements ChangeSink {
         System.out.println("changeset we are uploading:\n" + modified);
         writer.write(modified);
         writer.close();
-        //TODO: check response-code
+        int responseCode = httpCon.getResponseCode();
         LOG.fine("response-code to changeset: "
-                + httpCon.getResponseCode());
+                + responseCode);
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            throw new IllegalStateException("Http-Status-code is not"
+                    + " 200 OK but " + responseCode + "!");
+        }
     }
 
     /**
@@ -235,9 +244,14 @@ public class XmlChangeUploader implements ChangeSink {
         httpCon.setRequestProperty(
                 "Content-Type", "application/x-www-form-urlencoded");
         httpCon.connect();
-        System.out.println("response-code to closing of changeset: "
-                + httpCon.getResponseCode());
+        int responseCode = httpCon.getResponseCode();
+        LOG.info("response-code to closing of changeset: "
+                + responseCode);
         this.myChangesetNumber = -1;
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            throw new IllegalStateException("Http-Status-code is not"
+                    + " 200 OK but " + responseCode + "!");
+        }
     }
 
     /**
