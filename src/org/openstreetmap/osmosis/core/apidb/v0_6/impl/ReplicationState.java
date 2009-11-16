@@ -48,8 +48,8 @@ public class ReplicationState implements Storeable {
 			Date timestamp, long sequenceNumber) {
 		this.txnMax = txnMax;
 		this.txnMaxQueried = txnMaxQueried;
-		this.txnActive = txnActive;
-		this.txnReady = txnReady;
+		this.txnActive = new ArrayList<Long>(txnActive);
+		this.txnReady = new ArrayList<Long>(txnReady);
 		this.timestamp = timestamp;
 		this.sequenceNumber = sequenceNumber;
 	}
@@ -312,5 +312,15 @@ public class ReplicationState implements Storeable {
 	@Override
 	public int hashCode() {
 		return (int) sequenceNumber + (int) txnMax + (int) txnMaxQueried + (int) timestamp.getTime();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "ReplicationState(txnMax=" + txnMax + ", txnMaxQueried=" + txnMaxQueried + ", txnActive=" + txnActive
+				+ ", txnReady=" + txnReady + ", timestamp=" + timestamp + ", sequenceNumber=" + sequenceNumber + ")";
 	}
 }

@@ -19,9 +19,9 @@ public class ReplicationQueryPredicates {
 	 * Creates a new instance.
 	 * 
 	 * @param bottomTransactionId
-	 *            The transaction id to begin querying from. This will not be included in the query.
+	 *            The transaction id to begin querying from. This will be included in the query.
 	 * @param topTransactionId
-	 *            The transaction id to stop querying at. This will be included in the query.
+	 *            The transaction id to stop querying at. This will not be included in the query.
 	 */
 	public ReplicationQueryPredicates(long bottomTransactionId, long topTransactionId) {
 		this.bottomTransactionId = bottomTransactionId;
@@ -33,7 +33,7 @@ public class ReplicationQueryPredicates {
 	
 	
 	/**
-	 * Gets the transaction id to begin querying from. This will not be included in the query.
+	 * Gets the transaction id to begin querying from. This will be included in the query.
 	 * 
 	 * @return The transaction id.
 	 */
@@ -43,7 +43,7 @@ public class ReplicationQueryPredicates {
 	
 	
 	/**
-	 * Gets the transaction id to stop querying at.  This will be included in the query.
+	 * Gets the transaction id to stop querying at.  This will not be included in the query.
 	 * 
 	 * @return The transaction id.
 	 */

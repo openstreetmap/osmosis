@@ -277,62 +277,62 @@ public abstract class EntityDao<T extends Entity> {
 	
 	private List<Integer> buildTransactionRanges(long bottomTransactionId, long topTransactionId) {
 		List<Integer> rangeValues;
-		int topTransactionIdInt;
 		int currentXid;
-		
-		// We need the top transaction id in int form so that we can tell if it will be treated as a
-		// negative number.
-		topTransactionIdInt = (int) topTransactionId;
+		int finishXid;
 		
 		// Begin building the values to use in the WHERE clause transaction ranges. Each pair of ids
 		// in this list will become a range selection.
 		rangeValues = new ArrayList<Integer>();
 		
-		// The bottom id is the last one read, so we begin reading from the next transaction.
-		currentXid = ((int) bottomTransactionId) + 1;
+		// If the bottom and top values are identical then no ranges are required. If we don't add
+		// this check here we could end up querying for all 4 billion transaction ids or all data in
+		// the database.
+		if (bottomTransactionId == topTransactionId) {
+			return rangeValues;
+		}
+		
+		// We must now convert the top and bottom long representations of xids into their integer
+		// format because that is how they are indexed in the database.
+		
+		// The bottom id is the first transaction id that has not been read yet, so we begin reading from it.
+		currentXid = (int) bottomTransactionId;
 		rangeValues.add(currentXid);
 		
-		// We only have data to process if the two transaction ids are not equal.
-		if (currentXid != topTransactionId) {
-			
-			// Process until we have enough ranges to reach the top transaction id.
-			while (currentXid != topTransactionIdInt) {
-				// Determine how to terminate the current transaction range.
-				if (currentXid <= 2 && topTransactionId >= 0) {
-					// The range overlaps special ids 0-2 which should never be queried on.
-					
-					// Terminate the current range before the special values.
-					rangeValues.add(-1);
-					// Begin the new range after the special values.
-					rangeValues.add(3);
-					
-					currentXid = 3;
-					
-				} else if (topTransactionIdInt < currentXid) {
-					// The range crosses the integer overflow point. Only do this check once we are
-					// past 2 because the xid special values 0-2 may need to be crossed first.
-					
-					// Terminate the current range at the maximum int value.
-					rangeValues.add(Integer.MAX_VALUE);
-					// Begin a new range at the minimum int value.
-					rangeValues.add(Integer.MIN_VALUE);
-					
-					currentXid = Integer.MIN_VALUE;
-					
-				} else {
-					// There are no problematic transaction id values between the current value and
-					// the top transaction id so terminate the current range at the top transaction
-					// id.
-					rangeValues.add(topTransactionIdInt);
-					currentXid = topTransactionIdInt;
-				}
+		// The top transaction id is the first unassigned transaction id, so we must stop reading one short of that.
+		finishXid = ((int) topTransactionId) - 1;
+		
+		// Process until we have enough ranges to reach the finish xid.
+		do {
+			// Determine how to terminate the current transaction range.
+			if (currentXid <= 2 && finishXid >= 0) {
+				// The range overlaps special ids 0-2 which should never be queried on.
+				
+				// Terminate the current range before the special values.
+				rangeValues.add(-1);
+				// Begin the new range after the special values.
+				rangeValues.add(3);
+				
+				currentXid = 3;
+				
+			} else if (finishXid < currentXid) {
+				// The range crosses the integer overflow point. Only do this check once we are
+				// past 2 because the xid special values 0-2 may need to be crossed first.
+				
+				// Terminate the current range at the maximum int value.
+				rangeValues.add(Integer.MAX_VALUE);
+				// Begin a new range at the minimum int value.
+				rangeValues.add(Integer.MIN_VALUE);
+				
+				currentXid = Integer.MIN_VALUE;
+				
+			} else {
+				// There are no problematic transaction id values between the current value and
+				// the top transaction id so terminate the current range at the top transaction
+				// id.
+				rangeValues.add(finishXid);
+				currentXid = finishXid;
 			}
-			
-		} else {
-			// Terminate the range at the top transaction id. The start of the range is one higher
-			// therefore no data will be selected.
-			rangeValues.add(topTransactionIdInt);
-		}
+		} while (currentXid != finishXid);
 		
 		return rangeValues;
 	}

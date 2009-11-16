@@ -84,7 +84,7 @@ public class Replicator {
 			
 			if (!transactionSnapshot.getXIpList().contains(id)) {
 				// They only need to be added if the maximum queried xmax has been passed.
-				if (compareTxnIds(id, state.getTxnMaxQueried()) <= 0) {
+				if (compareTxnIds(id, state.getTxnMaxQueried()) < 0) {
 					state.getTxnReady().add(id);
 				}
 			}
@@ -301,7 +301,7 @@ public class Replicator {
 			systemTime = systemTimeLoader.getSystemTime();
 			
 			// Create a new state initialised with the current state of the database.
-			state = new ReplicationState(snapshot.getXMax(), snapshot.getXMax(), new ArrayList<Long>(),
+			state = new ReplicationState(snapshot.getXMax(), snapshot.getXMax(), snapshot.getXIpList(),
 					new ArrayList<Long>(), systemTime, 0);
 			
 			// Persist the updated replication state.
