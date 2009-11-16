@@ -97,9 +97,10 @@ public class XmlChangeUploader implements ChangeSink {
             throw new IllegalArgumentException("null username given");
         }
         this.myUserName = aUserName;
-        if (myPassword == null) {
+        if (aPassword == null) {
             throw new IllegalArgumentException("null password given");
         }
+        this.myPassword = aPassword;
         if (aComment == null) {
             this.myComment = "";
         } else {
@@ -254,8 +255,9 @@ public class XmlChangeUploader implements ChangeSink {
                 + responseCode);
         this.myChangesetNumber = -1;
         if (responseCode != HttpURLConnection.HTTP_OK) {
-        	InputStreamReader reader = new InputStreamReader(httpCon.getInputStream());
-        	LOG.severe(readAll(reader).toString());
+            InputStreamReader reader = new InputStreamReader(
+                       httpCon.getInputStream());
+            LOG.severe(readAll(reader).toString());
             throw new IllegalStateException("Http-Status-code is not"
                     + " 200 OK but " + responseCode + "!");
         }
