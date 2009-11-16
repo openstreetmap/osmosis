@@ -144,6 +144,9 @@ public class XmlChangeUploader implements ChangeSink {
 
             int responseCode = httpCon.getResponseCode();
             if (responseCode != HttpURLConnection.HTTP_OK) {
+                InputStreamReader reader = new InputStreamReader(
+                        httpCon.getInputStream());
+                LOG.severe(readAll(reader).toString());
                 throw new IllegalStateException("Http-Status-code is not"
                         + " 200 OK but " + responseCode + "!");
             }
@@ -218,6 +221,8 @@ public class XmlChangeUploader implements ChangeSink {
         LOG.fine("response-code to changeset: "
                 + responseCode);
         if (responseCode != HttpURLConnection.HTTP_OK) {
+        	InputStreamReader reader = new InputStreamReader(httpCon.getInputStream());
+        	LOG.severe(readAll(reader).toString());
             throw new IllegalStateException("Http-Status-code is not"
                     + " 200 OK but " + responseCode + "!");
         }
@@ -249,9 +254,28 @@ public class XmlChangeUploader implements ChangeSink {
                 + responseCode);
         this.myChangesetNumber = -1;
         if (responseCode != HttpURLConnection.HTTP_OK) {
+        	InputStreamReader reader = new InputStreamReader(httpCon.getInputStream());
+        	LOG.severe(readAll(reader).toString());
             throw new IllegalStateException("Http-Status-code is not"
                     + " 200 OK but " + responseCode + "!");
         }
+    }
+
+    /**
+     * Read this reader into a String.
+     * @param aReader where to read from
+     * @return the content
+     * @throws IOException if we cannot read
+     */
+    private StringBuilder readAll(final Reader aReader) throws IOException {
+        char[] buffer = new char[Byte.MAX_VALUE];
+        int reat = -1;
+        StringBuilder sb = new StringBuilder();
+        while ((reat = aReader.read(buffer)) >= 0) {
+            sb.append(buffer, 0, reat);
+        }
+        aReader.close();
+        return sb;
     }
 
     /**
