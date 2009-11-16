@@ -159,8 +159,8 @@ public class XmlChangeUploader implements ChangeSink {
             LOG.info("opened changeset with ID: " + changeset);
             this.myChangesetNumber = changeset;
 
-            this.myChangeWriter.begin();
             this.myChangeWriter.setWriter(this.myChangesetBuffer);
+            this.myChangeWriter.begin();
         }
     }
 
@@ -240,6 +240,7 @@ public class XmlChangeUploader implements ChangeSink {
         System.err.println("DEBUG: URL= " + url.toString());
         HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
         httpCon.setDoOutput(true);
+        httpCon.setRequestMethod("PUT");
 
         // we do not use Authenticator.setDefault() here to stay thread-safe.
         httpCon.setRequestProperty("Authorization", "Basic "
