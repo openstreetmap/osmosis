@@ -96,6 +96,9 @@ public class ElementWriter {
      * @param aWriter The writer.
      */
     public void setWriter(final Writer aWriter) {
+    	if (aWriter == null) {
+    		throw new IllegalArgumentException("null writer given");
+    	}
         this.myWriter = aWriter;
     }
 
