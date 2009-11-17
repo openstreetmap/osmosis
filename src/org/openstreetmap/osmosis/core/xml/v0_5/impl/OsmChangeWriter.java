@@ -1,7 +1,7 @@
-// This software is released into the Public Domain.  See copying.txt for details.
+// This software is released into the Public Domain.
+// See copying.txt for details.
 package org.openstreetmap.osmosis.core.xml.v0_5.impl;
 
-import java.io.BufferedWriter;
 import java.io.Writer;
 
 import org.openstreetmap.osmosis.core.container.v0_5.ChangeContainer;
@@ -13,19 +13,38 @@ import org.openstreetmap.osmosis.core.xml.common.ElementWriter;
 
 /**
  * Renders OSM changes as xml.
- * 
+ *
  * @author Brett Henderson
  */
 public class OsmChangeWriter extends ElementWriter {
-	
-	private OsmWriter osmCreateWriter;
-	private OsmWriter osmModifyWriter;
-	private OsmWriter osmDeleteWriter;
-	private OsmWriter activeOsmWriter;
-	private ChangeAction lastAction;
-	
-	
-	/**
+
+    /**
+     * The OsmWriter to use for created elements.
+     */
+    private OsmWriter osmCreateWriter;
+
+    /**
+     * The OsmWriter to use for modified elements.
+     */
+    private OsmWriter osmModifyWriter;
+
+    /**
+     * The OsmWriter to use for deleted elements.
+     */
+    private OsmWriter osmDeleteWriter;
+
+    /**
+     * @see #updateActiveOsmWriter(ChangeAction).
+     */
+    private OsmWriter activeOsmWriter;
+
+    /**
+     * The last action (add, modify, delete)
+     * that we processed.
+     */
+    private ChangeAction lastAction;
+
+    /**
 	 * Creates a new instance.
 	 * 
 	 * @param elementName

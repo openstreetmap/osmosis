@@ -1,7 +1,6 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.xml.v0_6.impl;
 
-import java.io.BufferedWriter;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.List;
@@ -15,14 +14,14 @@ import org.openstreetmap.osmosis.core.xml.common.ElementWriter;
 
 /**
  * Renders a relation as xml.
- * 
+ *
  * @author Brett Henderson
  */
 public class RelationWriter extends ElementWriter {
-	private RelationMemberWriter relationMemberWriter;
-	private TagWriter tagWriter;
-	
-	
+    private RelationMemberWriter relationMemberWriter;
+    private TagWriter tagWriter;
+
+
 	/**
 	 * Creates a new instance.
 	 * 

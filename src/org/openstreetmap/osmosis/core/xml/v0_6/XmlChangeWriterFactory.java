@@ -12,12 +12,12 @@ import org.openstreetmap.osmosis.core.xml.common.XmlTaskManagerFactory;
 
 /**
  * The task manager factory for an xml change writer.
- * 
+ *
  * @author Brett Henderson
  */
 public class XmlChangeWriterFactory extends XmlTaskManagerFactory {
-	private static final String ARG_FILE_NAME = "file";
-	private static final String DEFAULT_FILE_NAME = "change.osc";
+    private static final String ARG_FILE_NAME = "file";
+	    private static final String DEFAULT_FILE_NAME = "change.osc";
 
 	
 	/**

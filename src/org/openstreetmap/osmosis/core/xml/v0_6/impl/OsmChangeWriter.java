@@ -17,25 +17,29 @@ import org.openstreetmap.osmosis.core.xml.common.ElementWriter;
  */
 public class OsmChangeWriter extends ElementWriter {
 
-	/**
-	 * The OsmWriter to use for created elements.
-	 */
+    /**
+     * The OsmWriter to use for created elements.
+     */
     private OsmWriter osmCreateWriter;
 
-	/**
-	 * The OsmWriter to use for modified elements.
-	 */
+    /**
+     * The OsmWriter to use for modified elements.
+     */
     private OsmWriter osmModifyWriter;
 
-	/**
-	 * The OsmWriter to use for deleted elements.
-	 */
+    /**
+     * The OsmWriter to use for deleted elements.
+     */
     private OsmWriter osmDeleteWriter;
     /**
      * @see #updateActiveOsmWriter(ChangeAction)
      */
-	private OsmWriter activeOsmWriter;
-	private ChangeAction lastAction;
+    private OsmWriter activeOsmWriter;
+    /**
+     * The last action (add, modify, delete)
+     * that we processed.
+     */
+    private ChangeAction lastAction;
 
     /**
      * Creates a new instance that

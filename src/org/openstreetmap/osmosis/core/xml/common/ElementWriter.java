@@ -1,7 +1,6 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.xml.common;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
@@ -12,7 +11,7 @@ import org.openstreetmap.osmosis.core.domain.common.TimestampFormat;
 
 /**
  * Provides common functionality for all classes writing elements to xml.
- * 
+ *
  * @author Brett Henderson
  */
 public class ElementWriter {
@@ -23,7 +22,8 @@ public class ElementWriter {
     private static final int INDENT_SPACES_PER_LEVEL = 2;
 
     /**
-     * Defines the characters that must be replaced by an encoded string when writing to XML.
+     * Defines the characters that must be replaced by
+     * an encoded string when writing to XML.
      */
     private static final Map<Character, String> XML_ENCODING;
 

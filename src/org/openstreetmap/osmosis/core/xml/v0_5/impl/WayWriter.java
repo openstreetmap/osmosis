@@ -1,7 +1,6 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.xml.v0_5.impl;
 
-import java.io.BufferedWriter;
 import java.io.Writer;
 import java.util.List;
 
@@ -14,14 +13,13 @@ import org.openstreetmap.osmosis.core.xml.common.ElementWriter;
 
 /**
  * Renders a way as xml.
- * 
+ *
  * @author Brett Henderson
  */
 public class WayWriter extends ElementWriter {
-	private WayNodeWriter wayNodeWriter;
-	private TagWriter tagWriter;
-	
-	
+  private WayNodeWriter wayNodeWriter;
+  private TagWriter tagWriter;
+
 	/**
 	 * Creates a new instance.
 	 * 

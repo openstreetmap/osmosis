@@ -1,7 +1,6 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.xml.v0_6.impl;
 
-import java.io.BufferedWriter;
 import java.io.Writer;
 
 import org.openstreetmap.osmosis.core.OsmosisConstants;
@@ -17,15 +16,15 @@ import org.openstreetmap.osmosis.core.xml.common.ElementWriter;
 
 /**
  * Renders OSM data types as xml.
- * 
+ *
  * @author Brett Henderson
  */
 public class OsmWriter extends ElementWriter {
-	
+
 	private SubElementWriter subElementWriter;
 	private boolean renderAttributes;
-	
-	
+
+
 	/**
 	 * Creates a new instance.
 	 * 

@@ -1,7 +1,6 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.xml.v0_6.impl;
 
-import java.io.BufferedWriter;
 import java.io.Writer;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -17,14 +16,13 @@ import org.openstreetmap.osmosis.core.xml.common.ElementWriter;
 
 /**
  * Renders a node as xml.
- * 
+ *
  * @author Brett Henderson
  */
 public class NodeWriter extends ElementWriter {
-	private TagWriter tagWriter;
-	private NumberFormat numberFormat;
-	
-	
+   private TagWriter tagWriter;
+   private NumberFormat numberFormat;
+
 	/**
 	 * Creates a new instance.
 	 * 
