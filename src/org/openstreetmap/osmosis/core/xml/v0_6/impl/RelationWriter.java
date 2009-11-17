@@ -18,7 +18,13 @@ import org.openstreetmap.osmosis.core.xml.common.ElementWriter;
  * @author Brett Henderson
  */
 public class RelationWriter extends ElementWriter {
-    private RelationMemberWriter relationMemberWriter;
+    /**
+     * Write the ordered list of members of a relation.
+     */
+	private RelationMemberWriter relationMemberWriter;
+    /**
+     * Write the tags of a relation.
+     */
     private TagWriter tagWriter;
 
 

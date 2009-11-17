@@ -18,7 +18,13 @@ import org.openstreetmap.osmosis.core.xml.common.ElementWriter;
  * @author Brett Henderson
  */
 public class WayWriter extends ElementWriter {
+    /**
+     * Write the ordered list of node-references of a way.
+     */
     private WayNodeWriter wayNodeWriter;
+    /**
+     * Write the tags of a way.
+     */
     private TagWriter tagWriter;
 
 
