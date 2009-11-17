@@ -21,7 +21,7 @@ public class RelationWriter extends ElementWriter {
     /**
      * Write the ordered list of members of a relation.
      */
-	private RelationMemberWriter relationMemberWriter;
+    private RelationMemberWriter relationMemberWriter;
     /**
      * Write the tags of a relation.
      */

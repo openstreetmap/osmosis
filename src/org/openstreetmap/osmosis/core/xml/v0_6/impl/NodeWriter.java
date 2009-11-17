@@ -20,6 +20,9 @@ import org.openstreetmap.osmosis.core.xml.common.ElementWriter;
  * @author Brett Henderson
  */
 public class NodeWriter extends ElementWriter {
+    /**
+     * Write the tags of a node.
+     */
    private TagWriter tagWriter;
    private NumberFormat numberFormat;
 
