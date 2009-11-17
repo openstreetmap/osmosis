@@ -75,7 +75,10 @@ public class ChangeReader<T extends Entity> implements ReleasableIterator<Change
 		} else if (!entityHistory.isVisible() && createdPreviously) {
 			return new ChangeContainer(entityContainer, ChangeAction.Delete);
 		} else {
-			return null;
+			// This is an unusual case in that an initial version has been marked as not visible.
+			// The production database contains many examples of this, presumably due to the original
+			// TIGER import not being deleted properly.
+			return new ChangeContainer(entityContainer, ChangeAction.Delete);
 		}
 	}
 
