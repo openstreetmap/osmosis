@@ -85,7 +85,7 @@ public class ElementWriter {
         this.myIndentLevel = anIndentionLevel;
 
         myTimestampFormat = new XmlTimestampFormat();
-        this.myLineSeparator = (String)
+        this.myLineSeparator =
               java.security.AccessController.doPrivileged(
                 new sun.security.action.GetPropertyAction("line.separator"));
     }

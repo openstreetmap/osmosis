@@ -22,7 +22,7 @@ import org.openstreetmap.osmosis.core.xml.common.ElementWriter;
 public class NodeWriter extends ElementWriter {
     /**
      * The Tag-writer for writing out
-     * the key=value -tags of a node.#
+     * the key=value -tags of a node.
      *
      */
 	private TagWriter tagWriter;

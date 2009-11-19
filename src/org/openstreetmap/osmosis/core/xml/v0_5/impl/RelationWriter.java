@@ -1,4 +1,4 @@
-// This software is released into the Public Domain. See copying.txt for details.
+// This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.xml.v0_5.impl;
 
 import java.io.Writer;
