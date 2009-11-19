@@ -43,6 +43,7 @@ import org.openstreetmap.osmosis.core.filter.v0_6.NodeKeyFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.NodeKeyValueFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.PolygonFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.UsedNodeFilterFactory;
+import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyValueFilterFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.ChangeAppenderFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.IntervalDownloaderInitializerFactory;
@@ -224,6 +225,8 @@ public class TaskRegistrar {
 		factoryRegister.register("nk", new NodeKeyFilterFactory());
 		factoryRegister.register("node-key-value", new NodeKeyValueFilterFactory());
 		factoryRegister.register("nkv", new NodeKeyValueFilterFactory());
+		factoryRegister.register("way-key", new WayKeyFilterFactory());
+		factoryRegister.register("wk", new WayKeyFilterFactory());
 		factoryRegister.register("way-key-value", new WayKeyValueFilterFactory());
 		factoryRegister.register("wkv", new WayKeyValueFilterFactory());
 		factoryRegister.register("read-change-interval", new IntervalDownloaderFactory());
@@ -373,6 +376,7 @@ public class TaskRegistrar {
 		factoryRegister.register("used-node-0.6", new UsedNodeFilterFactory());
 		factoryRegister.register("node-key-0.6", new NodeKeyFilterFactory());
 		factoryRegister.register("node-key-value-0.6", new NodeKeyValueFilterFactory());
+		factoryRegister.register("way-key-0.6", new WayKeyFilterFactory());
 		factoryRegister.register("way-key-value-0.6", new WayKeyValueFilterFactory());
 		factoryRegister.register("read-change-interval-0.6", new IntervalDownloaderFactory());
 		factoryRegister.register("read-change-interval-init-0.6", new IntervalDownloaderInitializerFactory());
