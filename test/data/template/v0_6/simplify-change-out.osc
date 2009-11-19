@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osmChange version="0.6" generator="Osmosis %VERSION%">
+  <create>
+    <node id="1" version="2" timestamp="2008-01-02T03:04:06Z" uid="10" user="user10" lat="-1" lon="-2">
+      <tag k="created_by" v="Me1"/>
+    </node>
+    <node id="2" version="2" timestamp="2008-01-02T03:04:06Z" uid="10" user="user10" lat="-1" lon="-2">
+      <tag k="created_by" v="Me1"/>
+    </node>
+  </create>
+  <delete>
+    <node id="3" version="2" timestamp="2008-01-02T03:04:06Z" uid="10" user="user10" lat="-1" lon="-2">
+      <tag k="created_by" v="Me1"/>
+    </node>
+  </delete>
+  <modify>
+    <node id="4" version="2" timestamp="2008-01-02T03:04:06Z" uid="10" user="user10" lat="-1" lon="-2">
+      <tag k="created_by" v="Me1"/>
+    </node>
+    <node id="5" version="2" timestamp="2008-01-02T03:04:06Z" uid="10" user="user10" lat="-1" lon="-2">
+      <tag k="created_by" v="Me1"/>
+    </node>
+  </modify>
+  <delete>
+    <node id="6" version="2" timestamp="2008-01-02T03:04:06Z" uid="10" user="user10" lat="-1" lon="-2">
+      <tag k="created_by" v="Me1"/>
+    </node>
+  </delete>
+  <modify>
+    <node id="7" version="2" timestamp="2008-01-02T03:04:06Z" uid="10" user="user10" lat="-1" lon="-2">
+      <tag k="created_by" v="Me1"/>
+    </node>
+    <node id="8" version="2" timestamp="2008-01-02T03:04:06Z" uid="10" user="user10" lat="-1" lon="-2">
+      <tag k="created_by" v="Me1"/>
+    </node>
+  </modify>
+  <delete>
+    <node id="9" version="2" timestamp="2008-01-02T03:04:06Z" uid="10" user="user10" lat="-1" lon="-2">
+      <tag k="created_by" v="Me1"/>
+    </node>
+  </delete>
+</osmChange>

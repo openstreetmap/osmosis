@@ -9,6 +9,8 @@ Added a --read-replication-interval task.
 Updated XML writing tasks to ignore UTF-8 characters not supported by XML.
 Included new Xerces XML library to provide proper support for UTF-16 surrogate pairs.
 Added a --merge-replication-files task.
+Added a --way-key task.
+Added a --simplify-change task.
 
 0.31
 Added a --remove-tags task.

@@ -46,6 +46,7 @@ import org.openstreetmap.osmosis.core.filter.v0_6.UsedNodeFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyValueFilterFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.ChangeAppenderFactory;
+import org.openstreetmap.osmosis.core.merge.v0_6.ChangeSimplifierFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.IntervalDownloaderInitializerFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.IntervalDownloaderFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.ChangeMergerFactory;
@@ -263,6 +264,8 @@ public class TaskRegistrar {
 		factoryRegister.register("repa", new ApidbFileReplicatorFactory());
 		factoryRegister.register("read-apidb-test", new ApidbTestReaderFactory());
 		factoryRegister.register("rat", new ApidbFileReplicatorFactory());
+		factoryRegister.register("simplify-change", new ChangeSimplifierFactory());
+		factoryRegister.register("simc", new ChangeSimplifierFactory());
 		
 		factoryRegister.register("apply-change-0.5",
 				new org.openstreetmap.osmosis.core.change.v0_5.ChangeApplierFactory());
@@ -398,6 +401,7 @@ public class TaskRegistrar {
 		factoryRegister.register("append-change-0.6", new ChangeAppenderFactory());
 		factoryRegister.register("replicate-apidb-0.6", new ApidbFileReplicatorFactory());
 		factoryRegister.register("read-apidb-test-0.6", new ApidbTestReaderFactory());
+		factoryRegister.register("simplify-change-0.6", new ChangeSimplifierFactory());
 
 		// Register the plugins.
 		for (String plugin : plugins) {
