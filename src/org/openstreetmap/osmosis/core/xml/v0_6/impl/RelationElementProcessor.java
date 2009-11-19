@@ -11,6 +11,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.core.xml.common.BaseElementProcessor;
 import org.openstreetmap.osmosis.core.xml.common.ElementProcessor;
 import org.xml.sax.Attributes;
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 
 
 /**
@@ -57,6 +58,7 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 	 */
 	public void begin(Attributes attributes) {
 		long id;
+		String sversion;
 		int version;
 		TimestampContainer timestampContainer;
 		String rawUserId;
@@ -65,7 +67,13 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 		long changesetId;
 		
 		id = Long.parseLong(attributes.getValue(ATTRIBUTE_NAME_ID));
-		version = Integer.parseInt(attributes.getValue(ATTRIBUTE_NAME_VERSION));
+		sversion = attributes.getValue(ATTRIBUTE_NAME_VERSION);
+		if (sversion == null) {
+			throw new OsmosisRuntimeException("Relation " + id
+					+ " does not have a version attribute as OSM 0.6 are required to have.  Is this a 0.5 file?");
+		} else {
+			version = Integer.parseInt(sversion);
+		}
 		timestampContainer = createTimestampContainer(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
 		rawUserId = attributes.getValue(ATTRIBUTE_NAME_USERID);
 		rawUserName = attributes.getValue(ATTRIBUTE_NAME_USER);
