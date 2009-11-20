@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.xerces.impl.dv.util.Base64;
 
 import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
@@ -124,9 +125,9 @@ public class XmlChangeUploader implements ChangeSink {
             // we do not use Authenticator.setDefault()
             // here to stay thread-safe.
             httpCon.setRequestProperty("Authorization", "Basic "
-                    + (new sun.misc.BASE64Encoder()).encode(
+                    + Base64.encode(
                             (this.myUserName + ":"
-                           + this.myPassword).getBytes()));
+                           + this.myPassword).getBytes("UTF8")));
 
 
             httpCon.setDoOutput(true);
@@ -207,9 +208,9 @@ public class XmlChangeUploader implements ChangeSink {
 
         // we do not use Authenticator.setDefault() here to stay thread-safe.
         httpCon.setRequestProperty("Authorization", "Basic "
-                + (new sun.misc.BASE64Encoder()).encode(
+                + Base64.encode(
                         (this.myUserName + ":"
-                       + this.myPassword).getBytes()));
+                       + this.myPassword).getBytes("UTF8")));
 
         OutputStream out = httpCon.getOutputStream();
         OutputStreamWriter writer = new OutputStreamWriter(out, "UTF8");
@@ -251,9 +252,9 @@ public class XmlChangeUploader implements ChangeSink {
 
         // we do not use Authenticator.setDefault() here to stay thread-safe.
         httpCon.setRequestProperty("Authorization", "Basic "
-                + (new sun.misc.BASE64Encoder()).encode(
+                + Base64.encode(
                         (this.myUserName + ":"
-                       + this.myPassword).getBytes()));
+                       + this.myPassword).getBytes("UTF8")));
 
         httpCon.setRequestProperty(
                 "Content-Type", "application/x-www-form-urlencoded");

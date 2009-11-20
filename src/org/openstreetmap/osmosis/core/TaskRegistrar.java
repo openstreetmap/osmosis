@@ -92,7 +92,7 @@ import org.openstreetmap.osmosis.core.xml.v0_6.XmlWriterFactory;
 
 /**
  * Provides the initialisation logic for registering all task factories.
- * 
+ *
  * @author Brett Henderson
  */
 public class TaskRegistrar {
