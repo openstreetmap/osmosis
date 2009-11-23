@@ -1,9 +1,12 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.merge.v0_6.impl;
 
+import java.util.Comparator;
+
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
-import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
+import org.openstreetmap.osmosis.core.sort.v0_6.ChangeAsEntityComparator;
+import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdThenVersionComparator;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSinkChangeSource;
 
@@ -16,7 +19,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.ChangeSinkChangeSource;
  */
 public class SortedChangePipeValidator implements ChangeSinkChangeSource {
 	private ChangeSink changeSink;
-	private EntityByTypeThenIdComparator comparator;
+	private Comparator<ChangeContainer> comparator;
 	private ChangeContainer previousChangeContainer;
 	
 	
@@ -24,7 +27,7 @@ public class SortedChangePipeValidator implements ChangeSinkChangeSource {
 	 * Creates a new instance.
 	 */
 	public SortedChangePipeValidator() {
-		comparator = new EntityByTypeThenIdComparator();
+		comparator = new ChangeAsEntityComparator(new EntityByTypeThenIdThenVersionComparator());
 	}
 	
 	
@@ -43,8 +46,7 @@ public class SortedChangePipeValidator implements ChangeSinkChangeSource {
 		// If this is not the first entity in the pipeline, make sure this
 		// entity is greater than the previous.
 		if (previousChangeContainer != null) {
-			if (comparator.compare(previousChangeContainer.getEntityContainer(),
-					changeContainer.getEntityContainer()) >= 0) {
+			if (comparator.compare(previousChangeContainer, changeContainer) >= 0) {
 				throw new OsmosisRuntimeException(
 					"Pipeline entities are not sorted, previous entity type="
 					+ previousChangeContainer.getEntityContainer().getEntity().getType()

@@ -12,23 +12,30 @@ import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
  * dump). The change action to be performed (eg. Create) doesn't affect the sort
  * order. The changes are ordered as follows:
  * <ul>
- * <li>Nodes ordered by id</li>
- * <li>Ways ordered by id</li>
- * <li>Relations ordered by id</li>
+ * <li>Nodes ordered by id and version</li>
+ * <li>Ways ordered by id and version</li>
+ * <li>Relations ordered by id and version</li>
  * </ul>
  * 
  * @author Brett Henderson
  */
 public class ChangeForStreamableApplierComparator implements Comparator<ChangeContainer> {
-	private EntityByTypeThenIdComparator comparator = new EntityByTypeThenIdComparator();
+	private Comparator<ChangeContainer> comparator;
+	
+	
+	/**
+	 * Creates a new instance.
+	 */
+	public ChangeForStreamableApplierComparator() {
+		// We have an existing entity comparator that performs the same ordering so simply adapt it.
+		comparator = new ChangeAsEntityComparator(new EntityByTypeThenIdThenVersionComparator());
+	}
 	
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	public int compare(ChangeContainer o1, ChangeContainer o2) {
-		// Changes aren't involved, so we can delegate directly to a standard
-		// entity comparator.
-		return comparator.compare(o1.getEntityContainer(), o2.getEntityContainer());
+		return comparator.compare(o1, o2);
 	}
 }

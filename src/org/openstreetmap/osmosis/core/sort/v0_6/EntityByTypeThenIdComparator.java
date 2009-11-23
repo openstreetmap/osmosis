@@ -1,51 +1,42 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.sort.v0_6;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 
 
 /**
- * Compares two entities and sorts them first by their type (Nodes, then
- * Segments, then Ways) and then by their identifier.
+ * Orders entities first by their type (bound, node, way and relation), then their identifer.
  * 
  * @author Brett Henderson
  */
 public class EntityByTypeThenIdComparator implements Comparator<EntityContainer> {
-	
+	private Comparator<EntityContainer> comparator;
+
+
+	/**
+	 * Creates a new instance.
+	 */
+	public EntityByTypeThenIdComparator() {
+		List<Comparator<EntityContainer>> entityComparators;
+
+		// Build the sequence of entity comparisons.
+		entityComparators = new ArrayList<Comparator<EntityContainer>>();
+		entityComparators.add(new EntityByTypeComparator());
+		entityComparators.add(new EntityByIdComparator());
+
+		// Combine all entity comparisons into a single logical comparison.
+		comparator = new StackableComparator<EntityContainer>(entityComparators);
+	}
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public int compare(EntityContainer o1, EntityContainer o2) {
-		int typeDiff;
-		long idDiff;
-        long verDiff;
-		
-		// Perform a type comparison.
-		typeDiff = o1.getEntity().getType().compareTo(o2.getEntity().getType());
-		if (typeDiff != 0) {
-			return typeDiff;
-		}
-		
-		// Perform an identifier comparison.
-		idDiff = o1.getEntity().getId() - o2.getEntity().getId();
-		if (idDiff > 0) {
-			return 1;
-		}
-		if (idDiff < 0) {
-			return -1;
-		}
-
-        // finally compare the version.
-		verDiff = o1.getEntity().getVersion() - o2.getEntity().getVersion();
-		if (verDiff > 0) {
-			return 1;
-		}
-		if (verDiff < 0) {
-			return -1;
-		}
-
-		return 0;
+		return comparator.compare(o1, o2);
 	}
 }
