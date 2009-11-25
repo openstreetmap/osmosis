@@ -11,8 +11,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.xerces.impl.dv.util.Base64;
 
+import org.apache.commons.codec.binary.Base64;
 import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
@@ -125,10 +125,9 @@ public class XmlChangeUploader implements ChangeSink {
             // we do not use Authenticator.setDefault()
             // here to stay thread-safe.
             httpCon.setRequestProperty("Authorization", "Basic "
-                    + Base64.encode(
+                    + Base64.encodeBase64(
                             (this.myUserName + ":"
                            + this.myPassword).getBytes("UTF8")));
-
 
             httpCon.setDoOutput(true);
             httpCon.setRequestMethod("PUT");
@@ -208,7 +207,7 @@ public class XmlChangeUploader implements ChangeSink {
 
         // we do not use Authenticator.setDefault() here to stay thread-safe.
         httpCon.setRequestProperty("Authorization", "Basic "
-                + Base64.encode(
+                + Base64.encodeBase64(
                         (this.myUserName + ":"
                        + this.myPassword).getBytes("UTF8")));
 
@@ -252,7 +251,7 @@ public class XmlChangeUploader implements ChangeSink {
 
         // we do not use Authenticator.setDefault() here to stay thread-safe.
         httpCon.setRequestProperty("Authorization", "Basic "
-                + Base64.encode(
+                + Base64.encodeBase64(
                         (this.myUserName + ":"
                        + this.myPassword).getBytes("UTF8")));
 
