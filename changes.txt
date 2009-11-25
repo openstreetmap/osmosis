@@ -11,6 +11,7 @@ Included new Xerces XML library to provide proper support for UTF-16 surrogate p
 Added a --merge-replication-files task.
 Added a --way-key task.
 Added a --simplify-change task.
+Added pom.xml for maven artifacts
 
 0.31
 Added a --remove-tags task.
