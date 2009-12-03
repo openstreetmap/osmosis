@@ -3,7 +3,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.openstreetmap</groupId>
+	<groupId>org.openstreetmap.osmosis</groupId>
 	<artifactId>osmosis</artifactId>
 	<version>0.32.1-SNAPSHOT</version>
 
