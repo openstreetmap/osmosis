@@ -5,11 +5,13 @@
 
 	<groupId>org.openstreetmap</groupId>
 	<artifactId>osmosis</artifactId>
-	<version>0.32-SNAPSHOT</version>
+	<version>0.32.1-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
 
 	<name>Osmosis</name>
+	<description>Osmosis is an application to create and handle differential data updates from the OpenStreetMap project</description>
+	<url>http://wiki.openstreetmap.org/wiki/Osmosis</url>
 
 	<organization>
 		<name>OpenStreetMap</name>
