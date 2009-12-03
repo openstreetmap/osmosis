@@ -217,7 +217,7 @@
 			TODO tools.bzip2 is not available in a public maven repository yet
 		-->
 		<dependency>
-			<groupId>org.apache.tools</groupId>
+			<groupId>org.openstreetmap.osmosis.org.apache.tools</groupId>
 			<artifactId>bzip2</artifactId>
 			<version>20090327</version>
 		</dependency>
