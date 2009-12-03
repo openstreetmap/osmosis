@@ -1,0 +1,65 @@
+<assembly>
+	<id>distribution</id>
+
+	<formats>
+		<format>dir</format>
+		<format>zip</format>
+	</formats>
+
+	<includeBaseDirectory>false</includeBaseDirectory>
+
+	<fileSets>
+
+		<fileSet>
+			<directory></directory>
+			<outputDirectory></outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+			<includes>
+				<include>*.txt</include>
+			</includes>
+		</fileSet>
+
+		<fileSet>
+			<directory>bin</directory>
+			<outputDirectory>bin</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+
+		<fileSet>
+			<directory>debian</directory>
+			<outputDirectory>debian</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+
+		<fileSet>
+			<directory>doc</directory>
+			<outputDirectory>doc</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+
+		<fileSet>
+			<directory>script</directory>
+			<outputDirectory>script</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+
+		<!-- Temporary solution: the starter script expects "osmosis.jar" -->
+		<fileSet>
+			<directory>target</directory>
+			<outputDirectory>lib</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+			<includes>
+				<include>*.jar</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+
+	<dependencySets>
+		<!-- Temporary solution: the starter script expects "osmosis.jar" -->
+		<dependencySet>
+			<useProjectArtifact>false</useProjectArtifact>
+			<outputDirectory>lib/default</outputDirectory>
+		</dependencySet>
+	</dependencySets>
+
+</assembly>
