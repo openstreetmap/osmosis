@@ -332,6 +332,11 @@
 
 	<repositories>
 		<repository>
+			<id>sonatype-openstreetmap-releases</id>
+			<name>Sonatype OpenStreetMap Releases Repo</name>
+			<url>http://oss.sonatype.org/content/repositories/openstreetmap-releases</url>
+		</repository>
+		<repository>
 			<id>sonatype-postgis-releases</id>
 			<name>Sonatype Postgis Releases Repo</name>
 			<url>http://oss.sonatype.org/content/repositories/postgis-releases</url>
