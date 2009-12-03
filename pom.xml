@@ -322,6 +322,14 @@
 		</plugins>
 	</reporting>
 
+	<distributionManagement>
+		<repository>
+			<id>sonatype-openstreetmap-snapshots</id>
+			<name>Sonatype OpenStreetMap Snapshots Repo</name>
+			<url>http://oss.sonatype.org/content/repositories/openstreetmap-snapshots</url>
+		</repository>
+	</distributionManagement>
+
 	<repositories>
 		<repository>
 			<id>sonatype-postgis-releases</id>
