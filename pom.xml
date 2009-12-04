@@ -341,11 +341,6 @@
 			<name>Sonatype Postgis Releases Repo</name>
 			<url>http://oss.sonatype.org/content/repositories/postgis-releases</url>
 		</repository>
-		<repository>
-			<id>sonatype-postgis-snapshots</id>
-			<name>Sonatype Postgis Snapshots Repo</name>
-			<url>http://oss.sonatype.org/content/repositories/postgis-snapshots</url>
-		</repository>
 	</repositories>
 
 </project>
