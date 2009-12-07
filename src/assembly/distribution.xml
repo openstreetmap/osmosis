@@ -45,6 +45,15 @@
 
 		<!-- Temporary solution: the starter script expects "osmosis.jar" -->
 		<fileSet>
+			<directory>config</directory>
+			<outputDirectory>lib</outputDirectory>
+			<useDefaultExcludes>true</useDefaultExcludes>
+			<includes>
+				<include>plexus.conf</include>
+			</includes>
+		</fileSet>
+
+		<fileSet>
 			<directory>target</directory>
 			<outputDirectory>lib</outputDirectory>
 			<useDefaultExcludes>true</useDefaultExcludes>

@@ -1,4 +1,5 @@
-0.33
+0.32.1
+Use Plexus Classworlds to simplify launcher scripts 
 
 0.32
 Change to Public Domain licence.

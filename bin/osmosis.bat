@@ -1,4 +1,5 @@
-@ECHO OFF
+@ECHO ON
+
 REM This is an equivalent Windows batch file to complement the unix shell script
 REM Corresponding lines from the shell script are printed before the matching batch file commands
 
@@ -24,29 +25,6 @@ REM   JAVACMD=java
 REM fi
 IF "%JAVACMD%"=="" set JAVACMD=java
 
-REM ## resolve links - $0 may be a link to application
-REM PRG="$0"
-REM
-REM # need this for relative symlinks
-REM while [ -h "$PRG" ] ; do
-REM   ls=`ls -ld "$PRG"`
-REM   link=`expr "$ls" : '.*-> \(.*\)$'`
-REM   if expr "$link" : '/.*' > /dev/null; then
-REM     PRG="$link"
-REM   else
-REM     PRG="`dirname "$PRG"`/$link"
-REM   fi
-REM done
-REM No symbolic links on Windows, so no equivalent
-
-REM # make it fully qualified
-REM saveddir=`pwd`
-REM MYAPP_HOME=`dirname "$PRG"`/..
-REM MYAPP_HOME=`cd "$MYAPP_HOME" && pwd`
-REM cd "$saveddir"
-REM
-REM #echo "myapp is installed in $MYAPP_HOME"
-
 REM Set "SAVEDIR" to the current directory
 set SAVEDIR=%CD%
 set MYAPP_HOME=%~dp0..
@@ -56,13 +34,8 @@ set MYAPP_HOME=%CD%
 REM Change back to the original directory
 cd %SAVEDIR%
 
-REM MAINCLASS=org.openstreetmap.osmosis.core.Osmosis
-REM EXEC="$JAVACMD -cp $MYAPP_HOME/osmosis.jar:$MYAPP_HOME/lib/mysql-connector-java-5.0.7-bin.jar:$MYAPP_HOME/lib/postgresql-8.3-603.jdbc4.jar:$MYAPP_HOME/lib/postgis-1.3.2.jar:$MYAPP_HOME/lib/xercesImpl-2.9.1.jar $MAINCLASS $@"
-REM 
-REM #echo $EXEC
-REM exec $EXEC
-set MAINCLASS=org.openstreetmap.osmosis.core.Osmosis
-
-SET EXEC=%JAVACMD% %JAVACMD_OPTIONS% -cp %MYAPP_HOME%\osmosis.jar;%MYAPP_HOME%\lib\default\aopalliance-1.0.jar;%MYAPP_HOME%\lib\default\bzip2-20090327.jar;%MYAPP_HOME%\lib\default\commons-dbcp-1.2.2.jar;%MYAPP_HOME%\lib\default\commons-logging-1.1.1.jar;%MYAPP_HOME%\lib\default\commons-pool-1.3.jar;%MYAPP_HOME%\lib\default\jpf-1.5.jar;%MYAPP_HOME%\lib\default\mysql-connector-java-5.1.10.jar;%MYAPP_HOME%\lib\default\postgis-1.3.2.jar;%MYAPP_HOME%\lib\default\postgresql-8.3-603.jdbc4.jar;%MYAPP_HOME%\lib\default\spring-beans-2.5.6.SEC01.jar;%MYAPP_HOME%\lib\default\spring-context-2.5.6.SEC01.jar;%MYAPP_HOME%\lib\default\spring-core-2.5.6.SEC01.jar;%MYAPP_HOME%\lib\default\spring-jdbc-2.5.6.SEC01.jar;%MYAPP_HOME%\lib\default\spring-tx-2.5.6.SEC01.jar;%MYAPP_HOME%\lib\default\stax2-api-3.0.1.jar;%MYAPP_HOME%\lib\default\woodstox-core-lgpl-4.0.3.jar;%MYAPP_HOME%\lib\default\commons-codec-1.4.jar %MAINCLASS% %OSMOSIS_OPTIONS% %*
+set MAINCLASS=org.codehaus.classworlds.Launcher
+set PLEXUS_CP=%MYAPP_HOME%\lib\default\plexus-classworlds-2.2.2.jar
+SET EXEC=%JAVACMD% %JAVACMD_OPTIONS% -cp %PLEXUS_CP% -Dclassworlds.conf=%MYAPP_HOME%\lib\plexus.conf %MAINCLASS%  %OSMOSIS_OPTIONS% %*"
 
 %EXEC%

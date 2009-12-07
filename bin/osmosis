@@ -85,13 +85,10 @@ MYAPP_HOME=`dirname "$PRG"`/..
 MYAPP_HOME=`cd "$MYAPP_HOME" && pwd`
 cd "$saveddir"
 
-# Build up the classpath of required jar files.
-MYAPP_CLASSPATH=$MYAPP_HOME/osmosis.jar:$OSMOSIS_CLASSPATH
-for FILE in `ls $MYAPP_HOME/lib/default/`; do
-  MYAPP_CLASSPATH=$MYAPP_CLASSPATH:$MYAPP_HOME/lib/default/$FILE
-done
+# Build up the classpath of required jar files via classworlds launcher.
+MYAPP_CLASSPATH=$MYAPP_HOME/lib/default/plexus-classworlds-*.jar
 
-MAINCLASS=org.openstreetmap.osmosis.core.Osmosis
-EXEC="$JAVACMD $JAVACMD_OPTIONS -cp $MYAPP_CLASSPATH $MAINCLASS $OSMOSIS_OPTIONS $@"
+MAINCLASS=org.codehaus.classworlds.Launcher
+EXEC="$JAVACMD $JAVACMD_OPTIONS -cp $MYAPP_CLASSPATH -Dclassworlds.conf=$MYAPP_HOME/lib/plexus.conf  $MAINCLASS $OSMOSIS_OPTIONS $@"
 
 exec $EXEC
