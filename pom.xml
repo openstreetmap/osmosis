@@ -5,11 +5,13 @@
 
 	<groupId>org.openstreetmap</groupId>
 	<artifactId>osmosis</artifactId>
-	<version>0.32-SNAPSHOT</version>
+	<version>0.32</version>
 
 	<packaging>jar</packaging>
 
 	<name>Osmosis</name>
+	<description>Osmosis is an application to create and handle differential data updates from the OpenStreetMap project</description>
+	<url>http://wiki.openstreetmap.org/wiki/Osmosis</url>
 
 	<organization>
 		<name>OpenStreetMap</name>
@@ -189,8 +191,8 @@
 		<!-- TODO postgis is not available in a public maven repository yet -->
 		<dependency>
 			<groupId>org.postgis</groupId>
-			<artifactId>postgis</artifactId>
-			<version>1.3.2</version>
+			<artifactId>postgis-jdbc</artifactId>
+			<version>1.3.2-SNAPSHOT</version>
 		</dependency>
 
 		<!--
@@ -301,5 +303,18 @@
 			</plugin>
 		</plugins>
 	</reporting>
+
+	<repositories>
+		<repository>
+			<id>sonatype-postgis-releases</id>
+			<name>Sonatype Postgis Releases Repo</name>
+			<url>http://oss.sonatype.org/content/repositories/postgis-releases</url>
+		</repository>
+		<repository>
+			<id>sonatype-postgis-snapshots</id>
+			<name>Sonatype Postgis Snapshots Repo</name>
+			<url>http://oss.sonatype.org/content/repositories/postgis-snapshots</url>
+		</repository>
+	</repositories>
 
 </project>
