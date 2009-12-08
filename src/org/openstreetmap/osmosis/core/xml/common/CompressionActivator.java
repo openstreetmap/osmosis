@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.tools.bzip2.CBZip2InputStream;
-import org.apache.tools.bzip2.CBZip2OutputStream;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.util.MultiMemberGZIPInputStream;
@@ -59,7 +59,7 @@ public class CompressionActivator {
 				// Add a file prefix to match the command line application.
 				destinationStream.write('B');
 				destinationStream.write('Z');
-				return new CBZip2OutputStream(destinationStream);
+				return new BZip2CompressorOutputStream(destinationStream);
 			}
 			
 			throw new OsmosisRuntimeException("Compression method " + compressionMethod + " is not recognized.");
@@ -101,7 +101,7 @@ public class CompressionActivator {
 					);
 				}
 				
-				return new CBZip2InputStream(sourceStream);
+				return new BZip2CompressorInputStream(sourceStream);
 			}
 			
 			throw new OsmosisRuntimeException("Compression method " + compressionMethod + " is not recognized.");

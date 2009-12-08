@@ -1,5 +1,6 @@
 0.32.1
 Use Plexus Classworlds to simplify launcher scripts 
+Switch from org.apache.tools.bzip2 to commons-compress (this project is still alive)
 
 0.32
 Change to Public Domain licence.
