@@ -50,6 +50,13 @@
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>test</testSourceDirectory>
 
+		<testResources>
+			<testResource>
+				<directory>test/data/template</directory>
+				<targetPath>data/input</targetPath>
+			</testResource>
+		</testResources>
+
 		<pluginManagement>
 			<plugins>
 			</plugins>
