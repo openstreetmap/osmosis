@@ -48,6 +48,17 @@
 	<!-- Global Build Settings -->
 	<build>
 		<sourceDirectory>src</sourceDirectory>
+
+		<resources>
+			<resource>
+				<directory>src</directory>
+				<targetPath></targetPath>
+				<includes>
+					<include>**/plugin.xml</include>
+				</includes>
+			</resource>
+		</resources>
+
 		<testSourceDirectory>test</testSourceDirectory>
 
 		<testResources>
