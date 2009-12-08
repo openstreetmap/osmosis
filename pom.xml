@@ -333,12 +333,4 @@
 		</repository>
 	</distributionManagement>
 
-	<repositories>
-		<repository>
-			<id>sonatype-postgis-releases</id>
-			<name>Sonatype Postgis Releases Repo</name>
-			<url>http://oss.sonatype.org/content/repositories/postgis-releases</url>
-		</repository>
-	</repositories>
-
 </project>
