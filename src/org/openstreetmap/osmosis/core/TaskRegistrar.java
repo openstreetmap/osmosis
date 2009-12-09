@@ -42,6 +42,7 @@ import org.openstreetmap.osmosis.core.filter.v0_6.DatasetBoundingBoxFilterFactor
 import org.openstreetmap.osmosis.core.filter.v0_6.NodeKeyFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.NodeKeyValueFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.PolygonFilterFactory;
+import org.openstreetmap.osmosis.core.filter.v0_6.TagFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.UsedNodeFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyValueFilterFactory;
@@ -222,6 +223,8 @@ public class TaskRegistrar {
 		factoryRegister.register("wpc", new PostgreSqlChangeWriterFactory());
 		factoryRegister.register("used-node", new UsedNodeFilterFactory());
 		factoryRegister.register("un", new UsedNodeFilterFactory());
+		factoryRegister.register("tag-filter", new TagFilterFactory());
+		factoryRegister.register("tf", new TagFilterFactory());
 		factoryRegister.register("node-key", new NodeKeyFilterFactory());
 		factoryRegister.register("nk", new NodeKeyFilterFactory());
 		factoryRegister.register("node-key-value", new NodeKeyValueFilterFactory());
@@ -377,6 +380,7 @@ public class TaskRegistrar {
 		factoryRegister.register("read-pgsql-0.6", new PostgreSqlDatasetReaderFactory());
 		factoryRegister.register("write-pgsql-change-0.6", new PostgreSqlChangeWriterFactory());
 		factoryRegister.register("used-node-0.6", new UsedNodeFilterFactory());
+		factoryRegister.register("tag-filter-0.6", new TagFilterFactory());
 		factoryRegister.register("node-key-0.6", new NodeKeyFilterFactory());
 		factoryRegister.register("node-key-value-0.6", new NodeKeyValueFilterFactory());
 		factoryRegister.register("way-key-0.6", new WayKeyFilterFactory());
