@@ -49,16 +49,6 @@
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 
-		<resources>
-			<resource>
-				<directory>src</directory>
-				<targetPath></targetPath>
-				<includes>
-					<include>./**/plugin.xml</include>
-				</includes>
-			</resource>
-		</resources>
-
 		<testSourceDirectory>test</testSourceDirectory>
 
 		<testResources>
@@ -93,6 +83,25 @@
 					</additionalBuildcommands>
 					<ajdtVersion>none</ajdtVersion>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<!-- copy plugin.xml manually until the directory layout is fixed -->
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<copy file="src/org/openstreetmap/osmosis/core/plugin/plugin.xml"
+									tofile="target/classes/org/openstreetmap/osmosis/core/plugin/plugin.xml" />
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>
