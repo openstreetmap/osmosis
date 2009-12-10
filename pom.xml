@@ -54,7 +54,7 @@
 				<directory>src</directory>
 				<targetPath></targetPath>
 				<includes>
-					<include>**/plugin.xml</include>
+					<include>./**/plugin.xml</include>
 				</includes>
 			</resource>
 		</resources>
