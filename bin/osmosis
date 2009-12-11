@@ -89,6 +89,6 @@ cd "$saveddir"
 MYAPP_CLASSPATH=$MYAPP_HOME/lib/default/plexus-classworlds-*.jar
 
 MAINCLASS=org.codehaus.classworlds.Launcher
-EXEC="$JAVACMD $JAVACMD_OPTIONS -cp $MYAPP_CLASSPATH -Dclassworlds.conf=$MYAPP_HOME/config/plexus.conf  $MAINCLASS $OSMOSIS_OPTIONS $@"
+EXEC="$JAVACMD $JAVACMD_OPTIONS -cp $MYAPP_CLASSPATH -Dapp.home=$MYAPP_HOME -Dclassworlds.conf=$MYAPP_HOME/config/plexus.conf  $MAINCLASS $OSMOSIS_OPTIONS $@"
 
 exec $EXEC
