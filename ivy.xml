@@ -32,6 +32,7 @@
         	<!-- All necessary APIs are included in the JDK. -->
         	<exclude module="xml-apis"/>
         </dependency>
+        <dependency org="org.codehaus.plexus" name="plexus-classworlds" rev="2.2.2" conf="compile->default"/>
         
         <dependency org="junit" name="junit" rev="4.4" conf="test->default"/>
     	<dependency org="checkstyle" name="checkstyle" rev="5.0-beta01" conf="test->default"/>
