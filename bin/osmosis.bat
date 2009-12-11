@@ -1,4 +1,4 @@
-@ECHO ON
+@ECHO OFF
 
 REM This is an equivalent Windows batch file to complement the unix shell script
 REM Corresponding lines from the shell script are printed before the matching batch file commands
@@ -36,6 +36,6 @@ cd %SAVEDIR%
 
 set MAINCLASS=org.codehaus.classworlds.Launcher
 set PLEXUS_CP=%MYAPP_HOME%\lib\default\plexus-classworlds-2.2.2.jar
-SET EXEC=%JAVACMD% %JAVACMD_OPTIONS% -cp %PLEXUS_CP% -Dclassworlds.conf=%MYAPP_HOME%\config\plexus.conf %MAINCLASS%  %OSMOSIS_OPTIONS% %*"
+SET EXEC=%JAVACMD% %JAVACMD_OPTIONS% -cp %PLEXUS_CP% -Dclassworlds.conf=%MYAPP_HOME%\config\plexus.conf %MAINCLASS%  %OSMOSIS_OPTIONS% %*
 
 %EXEC%
