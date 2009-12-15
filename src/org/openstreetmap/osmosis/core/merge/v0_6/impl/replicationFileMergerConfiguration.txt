@@ -1,5 +1,5 @@
 # The URL of the directory containing change files.
-baseUrl=http://planet.openstreetmap.org/replicate
+baseUrl=http://planet.openstreetmap.org/minute-replicate
 
 # The length of an extraction interval in seconds (3600 = 1 hour).
 intervalLength=60
