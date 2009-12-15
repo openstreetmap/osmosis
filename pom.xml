@@ -12,6 +12,8 @@
 	<name>Osmosis</name>
 	<description>Osmosis is an application to create and handle differential data updates from the OpenStreetMap project</description>
 	<url>http://wiki.openstreetmap.org/wiki/Osmosis</url>
+	<inceptionYear>2007</inceptionYear>
+	<!-- First commit 28/09/2007, http://trac.openstreetmap.org/changeset/4742 -->
 
 	<organization>
 		<name>OpenStreetMap</name>
@@ -44,6 +46,31 @@
 	<!-- contributors -->
 	<contributors>
 	</contributors>
+
+	<issueManagement>
+		<system>Trac</system>
+		<url>http://trac.openstreetmap.org/query?status=new&amp;status=assigned&amp;status=reopened&amp;component=osmosis&amp;order=priority</url>
+	</issueManagement>
+
+	<scm>
+		<url>http://trac.openstreetmap.org/browser/applications/utils/osmosis/trunk</url>
+		<connection>scm:svn:http://svn.openstreetmap.org/applications/utils/osmosis/trunk</connection>
+		<developerConnection>scm:svn:http://svn.openstreetmap.org/applications/utils/osmosis/trunk</developerConnection>
+	</scm>
+
+	<ciManagement>
+		<system>Hudson</system>
+		<url>http://dev.openstreetmap.de:23457/hudson/</url>
+	</ciManagement>
+
+	<!-- Mailing Lists -->
+	<mailingLists>
+		<mailingList>
+			<name>Developer List</name>
+			<post>osmosis-dev@openstreetmap.org</post>
+			<archive>http://lists.openstreetmap.org/pipermail/osmosis-dev/</archive>
+		</mailingList>
+	</mailingLists>
 
 	<!-- Global Build Settings -->
 	<build>
