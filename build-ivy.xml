@@ -6,7 +6,7 @@
 		Installs and configures the ivy build dependencies system.
 	</description>
 
-	<property name="ivy.version" value="2.0.0" />
+	<property name="ivy.version" value="2.1.0" />
 	<property name="ivy.jar.dir" value="ivy" />
 	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy-${ivy.version}.jar" />
 
