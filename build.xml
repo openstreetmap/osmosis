@@ -10,7 +10,7 @@
 	<property name="project.name" value="osmosis"/>
 	<property name="project.version" value="0.32.1"/>
 	
-	<import file="build-ivy.xml"/>
+	<import file="build_support/build-ivy.xml"/>
 	
 	<!-- Define classpaths for each of the lib directories. -->
 	<path id="classpath.compile">
@@ -121,6 +121,7 @@
 		<zip destfile="dist/${project.name}-${project.version}.zip">
 			<zipfileset prefix="${project.name}-${project.version}" dir=".">
 				<exclude name="build/"/>
+				<exclude name="build_support/"/>
 				<exclude name="dist/"/>
 				<exclude name="eclipse/"/>
 			</zipfileset>
@@ -128,6 +129,7 @@
 		<zip destfile="dist/${project.name}-${project.version}-bin.zip">
 			<zipfileset prefix="${project.name}-${project.version}" dir=".">
 				<exclude name="build/"/>
+				<exclude name="build_support/"/>
 				<exclude name="dist/"/>
 				<exclude name="eclipse/"/>
 				<exclude name="src/"/>
@@ -180,7 +182,7 @@
 	<target name="checkstyle">
 		<taskdef uri="antlib:com.puppycrawl.tools.checkstyle" resource="checkstyletask.properties" classpathref="classpath.test" />
 		
-		<cs:checkstyle config="config/osmosis_checks.xml">
+		<cs:checkstyle config="build_support/checkstyle.xml">
 			<fileset dir="src" includes="**/*.java"/>
 			<fileset dir="test" includes="**/*.java"/>
 			<formatter type="plain"/>
