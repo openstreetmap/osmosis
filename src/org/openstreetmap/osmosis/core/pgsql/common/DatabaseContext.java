@@ -68,9 +68,10 @@ public class DatabaseContext {
 				
 				connection = DriverManager.getConnection(
 					"jdbc:postgresql://" + loginCredentials.getHost() + "/"
-					+ loginCredentials.getDatabase()
-			    	+ "?user=" + loginCredentials.getUser()
-			    	+ "&password=" + loginCredentials.getPassword()// + "&logLevel=2"
+					+ loginCredentials.getDatabase(),
+			    	// + "?logLevel=2"
+			    	loginCredentials.getUser(),
+			    	loginCredentials.getPassword()
 			    );
 				
 				connection.setAutoCommit(autoCommit);

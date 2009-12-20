@@ -100,9 +100,11 @@ public class DatabaseContext {
         try {
             LOG.finer("Creating a new database connection.");
 
-            newConnection = DriverManager.getConnection("jdbc:postgresql://" + loginCredentials.getHost() + "/"
-                    + loginCredentials.getDatabase() + "?user=" + loginCredentials.getUser() + "&password="
-                    + loginCredentials.getPassword()// + "&logLevel=2"
+            newConnection = DriverManager.getConnection(
+            		"jdbc:postgresql://" + loginCredentials.getHost() + "/"
+                    + loginCredentials.getDatabase(), // + "?logLevel=2"
+                    loginCredentials.getUser(),
+                    loginCredentials.getPassword()
             );
 
             newConnection.setAutoCommit(autoCommit);
