@@ -16,3 +16,8 @@ then
 	cp -ar ${WORKSPACE}/trunk/target/site ${TARGET}/${JOB_NAME}
 
 fi
+
+# Clean up residual data
+/bin/rm /tmp/test*.osc
+/bin/rm /tmp/test*.osm
+/bin/rm /tmp/test*.osm.gz
