@@ -3,7 +3,7 @@ package org.openstreetmap.osmosis.core.database;
 
 
 /**
- * Defines common constants shared between database tasks.
+ * Defines common constants shared between MySQL tasks.
  * 
  * @author Brett Henderson
  */
@@ -73,7 +73,7 @@ public interface DatabaseConstants {
     /**
      * The default user for a database connection.
      */
-    String TASK_DEFAULT_USER = null;
+    String TASK_DEFAULT_USER = "osm";
 
     /**
      * The default password for a database connection.
@@ -83,7 +83,7 @@ public interface DatabaseConstants {
     /**
      * The default password for a database connection.
      */
-    String TASK_DEFAULT_PASSWORD = null;
+    String TASK_DEFAULT_PASSWORD = "";
 
     /**
      * The default value for whether schema version validation should be performed.
