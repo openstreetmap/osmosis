@@ -1,8 +1,8 @@
 #! /usr/bin/perl -w
 
-print "<document xmlns=|http://maven.apache.org/changes/1.0.0\"\n";
-print "          xmlns=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
-print "          xsi:schemaLocation=\"http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd\"\n";
+print "<document xmlns=\"http://maven.apache.org/changes/1.0.0\"\n";
+print "          xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
+print "          xsi:schemaLocation=\"http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd\">\n";
 
 print "<body>\n";
 
