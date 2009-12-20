@@ -8,7 +8,7 @@
 	
 	<!-- set global properties for this build -->
 	<property name="project.name" value="osmosis"/>
-	<property name="project.version" value="0.32.1"/>
+	<property name="project.version" value="0.33-SNAPSHOT"/>
 	
 	<import file="build_support/build-ivy.xml"/>
 	
