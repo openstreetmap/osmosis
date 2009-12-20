@@ -19,6 +19,11 @@ public class PostgreSqlTest {
 	private DataFileUtilities fileUtils = new DataFileUtilities();
 	
 	
+	private File getAuthFile() {
+		return fileUtils.getDataFile("db.pgsql.authfile", "v0_6/pgsql-authfile.txt");
+	}
+	
+	
 	/**
 	 * A basic test loading an osm file into a pgsql database, then dumping it
 	 * again and verifying that it is identical.
@@ -33,7 +38,7 @@ public class PostgreSqlTest {
 		File outputFile;
 		
 		// Generate input files.
-		authFile = fileUtils.getDataFile("v0_6/pgsql-authfile.txt");
+		authFile = getAuthFile();
 		inputFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
 		outputFile = File.createTempFile("test", ".osm");
 		
@@ -94,7 +99,7 @@ public class PostgreSqlTest {
 		File actualResultFile;
 		
 		// Generate input files.
-		authFile = fileUtils.getDataFile("v0_6/pgsql-authfile.txt");
+		authFile = getAuthFile();
 		snapshotFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
 		changesetFile = fileUtils.getDataFile("v0_6/db-changeset.osc");
 		expectedResultFile = fileUtils.getDataFile("v0_6/db-changeset-expected.osm");
@@ -167,7 +172,7 @@ public class PostgreSqlTest {
 		File actualResultFile;
 		
 		// Generate input files.
-		authFile = fileUtils.getDataFile("v0_6/pgsql-authfile.txt");
+		authFile = getAuthFile();
 		snapshotFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
 		expectedResultFile = fileUtils.getDataFile("v0_6/db-dataset-expected.osm");
 		actualResultFile = File.createTempFile("test", ".osm");

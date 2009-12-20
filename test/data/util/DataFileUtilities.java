@@ -42,6 +42,31 @@ public class DataFileUtilities {
 		
 		return file;
 	}
+
+
+	/**
+	 * Obtains the data file with the specified name. The name is a path relative to the data input
+	 * directory.
+	 * 
+	 * @param systemPropertyName
+	 *            The system property to use for getting the file name. If this doesn't exist, the
+	 *            dataFileName is used instead.
+	 * @param dataFileName
+	 *            The name of the data file to be loaded.
+	 * @return The file object pointing to the data file.
+	 */
+	public File getDataFile(String systemPropertyName, String dataFileName) {
+		String fileName;
+		
+		// Get the filename from the system property if it exists.
+		fileName = System.getProperty(systemPropertyName);
+		if (fileName != null) {
+			return new File(fileName);
+		}
+		
+		// No system property is available so use the provided file name.
+		return getDataFile(dataFileName);
+	}
 	
 	
 	/**

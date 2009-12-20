@@ -192,6 +192,11 @@
 	<!-- Runs all of the unit tests in the application. -->
 	<target name="test" depends="build_test" description="Run automated test cases.">
 		<mkdir dir="report/test"/>
+		
+		<!-- Determine the location of the database authorisation file.  This can be overridden outside the build if necessary. -->
+		<property name="db.apidb.authfile" location="test/data/input/v0_6/apidb-authfile.txt"/>
+		<property name="db.pgsql.authfile" location="test/data/input/v0_6/pgsql-authfile.txt"/>
+		
 		<junit fork="no" maxmemory="512m" printsummary="on" haltonerror="off" haltonfailure="off" filtertrace="on" failureproperty="test.failure">
 			<formatter type="plain" usefile="true"/>
 			<formatter type="xml" usefile="true"/>
@@ -200,6 +205,8 @@
 				<path location="build/src"/>
 				<path location="build/test"/>
 			</classpath>
+			<sysproperty key="db.apidb.authfile" value="${db.apidb.authfile}"/>
+			<sysproperty key="db.pgsql.authfile" value="${db.pgsql.authfile}"/>
 			<batchtest todir="report/test">
 				<fileset dir="build/test">
 					<include name="**/*Test*.class"/>

@@ -19,6 +19,7 @@ import data.util.DataFileUtilities;
  */
 public class DatabaseUtilities {
 	private static final String AUTHFILE = "v0_6/apidb-authfile.txt";
+	private static final String AUTHFILE_PROPERTY = "db.apidb.authfile";
 	
 	private DataFileUtilities fileUtils;
 	
@@ -70,6 +71,6 @@ public class DatabaseUtilities {
 	 * @return The authorization file.
 	 */
     public File getAuthorizationFile() {
-    	return fileUtils.getDataFile(AUTHFILE);
+    	return fileUtils.getDataFile(AUTHFILE_PROPERTY, AUTHFILE);
     }
 }
