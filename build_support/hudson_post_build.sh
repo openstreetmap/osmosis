@@ -1,6 +1,9 @@
-#! /bin/sh
+#! /bin/sh -ex
 
-TARGET=/osm/osmosis-continuous-integration/web
+export TARGET=/osm/osmosis-continuous-integration/web
+
+# remove '-maven' from the name
+export JOB_NAME=hudson-SNAPSHOT
 
 if [ -d ${WORKSPACE}/target/site ]
 then
