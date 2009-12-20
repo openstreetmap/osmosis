@@ -126,7 +126,8 @@ public class Configuration {
 	 * @return The database password.
 	 */
 	public String getPassword() {
-		return getProperty(KEY_PASSWORD);
+		// Call the properties object directly because we allow nulls for a password.
+		return properties.getProperty(KEY_PASSWORD);
 	}
 
 
