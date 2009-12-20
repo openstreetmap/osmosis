@@ -6,9 +6,8 @@ import java.util.Date;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.openstreetmap.osmosis.core.apidb.v0_6.impl.DatabaseUtilities;
 import org.openstreetmap.osmosis.extract.apidb.common.Configuration;
-
-import data.util.DataFileUtilities;
 
 /**
  * Tests the operation of the database system time loader.
@@ -16,7 +15,7 @@ import data.util.DataFileUtilities;
  * @author Brett Henderson
  */
 public class DatabaseTimeLoaderTest {
-	private DataFileUtilities fileUtils = new DataFileUtilities();
+	private DatabaseUtilities dbUtils = new DatabaseUtilities();
 	
 	
 	/**
@@ -31,7 +30,7 @@ public class DatabaseTimeLoaderTest {
 		Date databaseTime;
 		long difference;
 		
-		authFile = fileUtils.getDataFile("v0_6/apidb-authfile.txt");
+		authFile = dbUtils.getAuthorizationFile();
 		config = new Configuration(authFile);
 		timeLoader = new DatabaseTimeLoader(config.getDatabaseLoginCredentials());
 		
