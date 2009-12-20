@@ -3,7 +3,7 @@
 export TARGET=/osm/osmosis-continuous-integration/web
 
 # remove '-maven' from the name
-export JOB_NAME=hudson-SNAPSHOT
+JOB_NAME=$(echo ${JOB_NAME} | sed -e 's|-maven||')
 
 if [ -d ${WORKSPACE}/target/site ]
 then
