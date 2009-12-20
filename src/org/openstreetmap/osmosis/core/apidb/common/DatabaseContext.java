@@ -177,6 +177,8 @@ public class DatabaseContext {
 				statementBuilder.append(table);
 			}
 			
+			statementBuilder.append(" CASCADE");
+			
 			executeStatement(statementBuilder.toString());
 			break;
         case MYSQL:
