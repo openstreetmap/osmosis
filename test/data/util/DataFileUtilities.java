@@ -60,8 +60,12 @@ public class DataFileUtilities {
 		
 		// Get the filename from the system property if it exists.
 		fileName = System.getProperty(systemPropertyName);
+
 		if (fileName != null) {
-			return new File(fileName);
+			// Maven environment variable passing hack
+			if (!(fileName.startsWith("${"))) {
+				return new File(fileName);
+			}
 		}
 		
 		// No system property is available so use the provided file name.
