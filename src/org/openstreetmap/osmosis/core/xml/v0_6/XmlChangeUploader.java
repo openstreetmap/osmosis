@@ -40,7 +40,7 @@ public class XmlChangeUploader implements ChangeSink {
              "http://api.openstreetmap.org/api/0.6";
 
     /**
-     * The baseURL defaults to {@value #DEFAULTAPIBASEURL}.
+     * The baseURL defaults to the value of DEFAULTAPIBASEURL.
      */
     private String myBaseURL;
 
@@ -77,7 +77,7 @@ public class XmlChangeUploader implements ChangeSink {
 
     /**
      * Creates a new instance.
-     * The baseURL defaults to {@value #DEFAULTAPIBASEURL}.
+     * The baseURL defaults to the production API.
      * @param aBaseURL may be null
      * @param aUserName the user-name to use
      * @param aPassword the password to use
