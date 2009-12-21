@@ -27,7 +27,6 @@ import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbChangeWriterFactory;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbCurrentReaderFactory;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbFileReplicatorFactory;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbReaderFactory;
-import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbTestReaderFactory;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbTruncatorFactory;
 import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbWriterFactory;
 import org.openstreetmap.osmosis.core.buffer.v0_6.ChangeBufferFactory;
@@ -47,11 +46,11 @@ import org.openstreetmap.osmosis.core.filter.v0_6.UsedNodeFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyValueFilterFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.ChangeAppenderFactory;
-import org.openstreetmap.osmosis.core.merge.v0_6.ChangeSimplifierFactory;
-import org.openstreetmap.osmosis.core.merge.v0_6.IntervalDownloaderInitializerFactory;
-import org.openstreetmap.osmosis.core.merge.v0_6.IntervalDownloaderFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.ChangeMergerFactory;
+import org.openstreetmap.osmosis.core.merge.v0_6.ChangeSimplifierFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.EntityMergerFactory;
+import org.openstreetmap.osmosis.core.merge.v0_6.IntervalDownloaderFactory;
+import org.openstreetmap.osmosis.core.merge.v0_6.IntervalDownloaderInitializerFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.ReplicationDownloaderFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.ReplicationDownloaderInitializerFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.ReplicationFileMergerFactory;
@@ -265,8 +264,6 @@ public class TaskRegistrar {
 		factoryRegister.register("apc", new ChangeAppenderFactory());
 		factoryRegister.register("replicate-apidb", new ApidbFileReplicatorFactory());
 		factoryRegister.register("repa", new ApidbFileReplicatorFactory());
-		factoryRegister.register("read-apidb-test", new ApidbTestReaderFactory());
-		factoryRegister.register("rat", new ApidbFileReplicatorFactory());
 		factoryRegister.register("simplify-change", new ChangeSimplifierFactory());
 		factoryRegister.register("simc", new ChangeSimplifierFactory());
 		
@@ -404,7 +401,6 @@ public class TaskRegistrar {
 		factoryRegister.register("truncate-apidb-0.6", new ApidbTruncatorFactory());
 		factoryRegister.register("append-change-0.6", new ChangeAppenderFactory());
 		factoryRegister.register("replicate-apidb-0.6", new ApidbFileReplicatorFactory());
-		factoryRegister.register("read-apidb-test-0.6", new ApidbTestReaderFactory());
 		factoryRegister.register("simplify-change-0.6", new ChangeSimplifierFactory());
 
 		// Register the plugins.

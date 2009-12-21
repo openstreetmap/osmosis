@@ -1,4 +1,4 @@
-0.32.1
+0.33
 Use Plexus Classworlds to simplify launcher scripts 
 Switch from org.apache.tools.bzip2 to commons-compress (this project is still alive)
 Removed postgis distribution since it is synched to repo1.maven.org now
