@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+	<bannerLeft>
+		<name>Osmosis</name>
+	</bannerLeft>
+
+	<bannerRight>
+		<name>OpenStreetMap</name>
+	</bannerRight>
+
+	<version position="left" />
+	<publishDate position="left" />
+
+	<body>
+		<breadcrumbs>
+			<item name="${project.name}" href="index.html" mce_href="index.html" />
+		</breadcrumbs>
+
+		<menu name="Main">
+			<item name="Welcome" href="index.html" />
+		</menu>
+
+		<menu ref="reports" />
+		<menu ref="parent" />
+
+		<links>
+			<item name="OpenStreetMap" href="http://www.openstreetmap.org/" />
+			<item name="Apache" href="http://www.apache.org/" />
+			<item name="Maven 2" href="http://maven.apache.org/" />
+			<item name="Java 5" href="http://java.sun.com/j2se/1.5.0/docs/api/" />
+		</links>
+	</body>
+</project>
