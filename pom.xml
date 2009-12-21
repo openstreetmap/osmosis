@@ -176,6 +176,22 @@
 			</plugin>
 
 			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<systemProperties>
+						<property>
+							<name>db.apidb.authfile</name>
+							<value>${db.apidb.authfile}</value>
+						</property>
+						<property>
+							<name>db.pgsql.authfile</name>
+							<value>${db.pgsql.authfile}</value>
+						</property>
+				  	</systemProperties>
+				</configuration>
+			</plugin>
+
+			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<executions>
 					<execution>
