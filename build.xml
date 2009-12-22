@@ -6,9 +6,10 @@
 		Builds the Osmosis data replication library.
 	</description>
 	
-	<!-- set global properties for this build -->
+	<!-- Global properties for the build. -->
 	<property name="project.name" value="osmosis"/>
-	<property name="project.version" value="0.33-SNAPSHOT"/>
+	<property name="project.version.suffix" value=""/> <!-- Can be overriden to include extra info such as svn revision number. -->
+	<property name="project.version" value="0.33-SNAPSHOT${project.version.suffix}"/>
 	
 	<import file="build_support/build-ivy.xml"/>
 	
