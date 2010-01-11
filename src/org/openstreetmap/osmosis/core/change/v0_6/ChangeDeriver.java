@@ -5,6 +5,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.change.v0_6.impl.TimestampSetter;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
+import org.openstreetmap.osmosis.core.merge.v0_6.impl.DataPostboxSink;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
 import org.openstreetmap.osmosis.core.store.DataPostbox;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
@@ -22,7 +23,9 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 
 	private ChangeSink changeSink;
 	private DataPostbox<EntityContainer> fromPostbox;
+	private DataPostboxSink fromSink;
 	private DataPostbox<EntityContainer> toPostbox;
+	private DataPostboxSink toSink;
 	
 	
 	/**
@@ -33,7 +36,9 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 	 */
 	public ChangeDeriver(int inputBufferCapacity) {
 		fromPostbox = new DataPostbox<EntityContainer>(inputBufferCapacity);
+		fromSink = new DataPostboxSink(fromPostbox);
 		toPostbox = new DataPostbox<EntityContainer>(inputBufferCapacity);
+		toSink = new DataPostboxSink(toPostbox);
 	}
 
 
@@ -41,33 +46,15 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 	 * {@inheritDoc}
 	 */
 	public Sink getSink(int instance) {
-		final DataPostbox<EntityContainer> destinationPostbox;
-		
 		switch (instance) {
 		case 0:
-			destinationPostbox = fromPostbox;
-			break;
+			return fromSink;
 		case 1:
-			destinationPostbox = toPostbox;
-			break;
+			return toSink;
 		default:
 			throw new OsmosisRuntimeException("Sink instance " + instance
 					+ " is not valid.");
 		}
-		
-		return new Sink() {
-			private DataPostbox<EntityContainer> postbox = destinationPostbox;
-			
-			public void process(EntityContainer entityContainer) {
-				postbox.put(entityContainer);
-			}
-			public void complete() {
-				postbox.complete();
-			}
-			public void release() {
-				postbox.release();
-			}
-		};
 	}
 
 

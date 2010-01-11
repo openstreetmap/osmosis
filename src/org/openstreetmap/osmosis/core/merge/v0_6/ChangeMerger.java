@@ -5,7 +5,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
 import org.openstreetmap.osmosis.core.merge.v0_6.impl.DataPostboxChangeSink;
-import org.openstreetmap.osmosis.core.merge.v0_6.impl.SortedChangePipeValidator;
+import org.openstreetmap.osmosis.core.merge.v0_6.impl.SortedHistoryChangePipeValidator;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdThenVersionComparator;
 import org.openstreetmap.osmosis.core.store.DataPostbox;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
@@ -23,7 +23,9 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 	
 	private ChangeSink changeSink;
 	private DataPostbox<ChangeContainer> postbox0;
+	private SortedHistoryChangePipeValidator sortedChangeValidator0;
 	private DataPostbox<ChangeContainer> postbox1;
+	private SortedHistoryChangePipeValidator sortedChangeValidator1;
 	private ConflictResolutionMethod conflictResolutionMethod;
 	
 	
@@ -40,7 +42,12 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 		this.conflictResolutionMethod = conflictResolutionMethod;
 		
 		postbox0 = new DataPostbox<ChangeContainer>(inputBufferCapacity);
+		sortedChangeValidator0 = new SortedHistoryChangePipeValidator();
+		sortedChangeValidator0.setChangeSink(new DataPostboxChangeSink(postbox0));
+		
 		postbox1 = new DataPostbox<ChangeContainer>(inputBufferCapacity);
+		sortedChangeValidator1 = new SortedHistoryChangePipeValidator();
+		sortedChangeValidator1.setChangeSink(new DataPostboxChangeSink(postbox1));
 	}
 	
 	
@@ -48,31 +55,15 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 	 * {@inheritDoc}
 	 */
 	public ChangeSink getChangeSink(int instance) {
-		final DataPostbox<ChangeContainer> destinationPostbox;
-		ChangeSink postboxChangeSink;
-		SortedChangePipeValidator sortedPipeValidator;
-		
 		// Determine which postbox should be written to.
 		switch (instance) {
 		case 0:
-			destinationPostbox = postbox0;
-			break;
+			return sortedChangeValidator0;
 		case 1:
-			destinationPostbox = postbox1;
-			break;
+			return sortedChangeValidator1;
 		default:
 			throw new OsmosisRuntimeException("Sink instance " + instance + " is not valid.");
 		}
-		
-		// Create a changesink pointing to the postbox.
-		postboxChangeSink = new DataPostboxChangeSink(destinationPostbox);
-		
-		// Create a validation class to verify that all incoming data is sorted
-		// and connect its output to the postbox changesink.
-		sortedPipeValidator = new SortedChangePipeValidator();
-		sortedPipeValidator.setChangeSink(postboxChangeSink);
-		
-		return sortedPipeValidator;
 	}
 
 

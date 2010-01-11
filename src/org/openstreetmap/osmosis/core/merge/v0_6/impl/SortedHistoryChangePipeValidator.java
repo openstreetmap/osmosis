@@ -12,12 +12,13 @@ import org.openstreetmap.osmosis.core.task.v0_6.ChangeSinkChangeSource;
 
 
 /**
- * Validates that change data in a pipeline is sorted by entity type then id. It
- * accepts input data from a Source and passes all data to a downstream Sink.
+ * Validates that change data in a pipeline is sorted by entity type, then id, then version allowing
+ * full history changes. It accepts input data from a Source and passes all data to a downstream
+ * Sink.
  * 
  * @author Brett Henderson
  */
-public class SortedChangePipeValidator implements ChangeSinkChangeSource {
+public class SortedHistoryChangePipeValidator implements ChangeSinkChangeSource {
 	private ChangeSink changeSink;
 	private Comparator<ChangeContainer> comparator;
 	private ChangeContainer previousChangeContainer;
@@ -26,7 +27,7 @@ public class SortedChangePipeValidator implements ChangeSinkChangeSource {
 	/**
 	 * Creates a new instance.
 	 */
-	public SortedChangePipeValidator() {
+	public SortedHistoryChangePipeValidator() {
 		comparator = new ChangeAsEntityComparator(new EntityByTypeThenIdThenVersionComparator());
 	}
 	

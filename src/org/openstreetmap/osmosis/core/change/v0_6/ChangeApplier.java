@@ -1,9 +1,13 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.change.v0_6;
 
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.merge.v0_6.impl.DataPostboxChangeSink;
+import org.openstreetmap.osmosis.core.merge.v0_6.impl.DataPostboxSink;
+import org.openstreetmap.osmosis.core.merge.v0_6.impl.SortedDeltaChangePipeValidator;
+import org.openstreetmap.osmosis.core.merge.v0_6.impl.SortedEntityPipeValidator;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
 import org.openstreetmap.osmosis.core.store.DataPostbox;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
@@ -21,7 +25,9 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 	
 	private Sink sink;
 	private DataPostbox<EntityContainer> basePostbox;
+	private SortedEntityPipeValidator sortedEntityValidator;
 	private DataPostbox<ChangeContainer> changePostbox;
+	private SortedDeltaChangePipeValidator sortedChangeValidator;
 	
 	
 	/**
@@ -32,7 +38,11 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 	 */
 	public ChangeApplier(int inputBufferCapacity) {
 		basePostbox = new DataPostbox<EntityContainer>(inputBufferCapacity);
+		sortedEntityValidator = new SortedEntityPipeValidator();
+		sortedEntityValidator.setSink(new DataPostboxSink(basePostbox));
 		changePostbox = new DataPostbox<ChangeContainer>(inputBufferCapacity);
+		sortedChangeValidator = new SortedDeltaChangePipeValidator();
+		sortedChangeValidator.setChangeSink(new DataPostboxChangeSink(changePostbox));
 	}
 	
 	
@@ -40,26 +50,12 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 	 * {@inheritDoc}
 	 */
 	public Sink getSink(int instance) {
-		final DataPostbox<EntityContainer> destinationPostbox = basePostbox;
-		
 		if (instance != 0) {
 			throw new OsmosisRuntimeException("Sink instance " + instance
 					+ " is not valid.");
 		}
 		
-		return new Sink() {
-			private DataPostbox<EntityContainer> postbox = destinationPostbox;
-			
-			public void process(EntityContainer entityContainer) {
-				postbox.put(entityContainer);
-			}
-			public void complete() {
-				postbox.complete();
-			}
-			public void release() {
-				postbox.release();
-			}
-		};
+		return sortedEntityValidator;
 	}
 
 
@@ -77,26 +73,12 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 	 * {@inheritDoc}
 	 */
 	public ChangeSink getChangeSink(int instance) {
-		final DataPostbox<ChangeContainer> destinationPostbox = changePostbox;
-		
 		if (instance != 0) {
 			throw new OsmosisRuntimeException("Change sink instance " + instance
 					+ " is not valid.");
 		}
 		
-		return new ChangeSink() {
-			private DataPostbox<ChangeContainer> postbox = destinationPostbox;
-
-			public void process(ChangeContainer change) {
-				postbox.put(change);
-			}
-			public void complete() {
-				postbox.complete();
-			}
-			public void release() {
-				postbox.release();
-			}
-		};
+		return sortedChangeValidator;
 	}
 
 

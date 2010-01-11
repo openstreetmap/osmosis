@@ -3,7 +3,7 @@ package org.openstreetmap.osmosis.core.merge.v0_6;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.merge.v0_6.impl.ChangeSimplifierImpl;
-import org.openstreetmap.osmosis.core.merge.v0_6.impl.SortedChangePipeValidator;
+import org.openstreetmap.osmosis.core.merge.v0_6.impl.SortedHistoryChangePipeValidator;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSinkChangeSource;
 
@@ -16,7 +16,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.ChangeSinkChangeSource;
  */
 public class ChangeSimplifier implements ChangeSinkChangeSource {
 
-	private SortedChangePipeValidator orderingValidator;
+	private SortedHistoryChangePipeValidator orderingValidator;
 	private ChangeSimplifierImpl changeSimplifier;
 	
 	
@@ -24,7 +24,7 @@ public class ChangeSimplifier implements ChangeSinkChangeSource {
 	 * Creates a new instance.
 	 */
 	public ChangeSimplifier() {
-		orderingValidator = new SortedChangePipeValidator();
+		orderingValidator = new SortedHistoryChangePipeValidator();
 		changeSimplifier = new ChangeSimplifierImpl();
 		
 		orderingValidator.setChangeSink(changeSimplifier);

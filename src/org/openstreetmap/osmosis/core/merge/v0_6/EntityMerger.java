@@ -4,6 +4,7 @@ package org.openstreetmap.osmosis.core.merge.v0_6;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
+import org.openstreetmap.osmosis.core.merge.v0_6.impl.DataPostboxSink;
 import org.openstreetmap.osmosis.core.merge.v0_6.impl.SortedEntityPipeValidator;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
 import org.openstreetmap.osmosis.core.store.DataPostbox;
@@ -22,7 +23,9 @@ public class EntityMerger implements MultiSinkRunnableSource {
 	
 	private Sink sink;
 	private DataPostbox<EntityContainer> postbox0;
+	private SortedEntityPipeValidator sortedEntityValidator0;
 	private DataPostbox<EntityContainer> postbox1;
+	private SortedEntityPipeValidator sortedEntityValidator1;
 	private ConflictResolutionMethod conflictResolutionMethod;
 	
 	
@@ -39,7 +42,12 @@ public class EntityMerger implements MultiSinkRunnableSource {
 		this.conflictResolutionMethod = conflictResolutionMethod;
 		
 		postbox0 = new DataPostbox<EntityContainer>(inputBufferCapacity);
+		sortedEntityValidator0 = new SortedEntityPipeValidator();
+		sortedEntityValidator0.setSink(new DataPostboxSink(postbox0));
+		
 		postbox1 = new DataPostbox<EntityContainer>(inputBufferCapacity);
+		sortedEntityValidator1 = new SortedEntityPipeValidator();
+		sortedEntityValidator1.setSink(new DataPostboxSink(postbox1));
 	}
 	
 	
@@ -47,44 +55,16 @@ public class EntityMerger implements MultiSinkRunnableSource {
 	 * {@inheritDoc}
 	 */
 	public Sink getSink(int instance) {
-		final DataPostbox<EntityContainer> destinationPostbox;
-		Sink postboxSink;
-		SortedEntityPipeValidator sortedPipeValidator;
-		
 		// Determine which postbox should be written to.
 		switch (instance) {
 		case 0:
-			destinationPostbox = postbox0;
-			break;
+			return sortedEntityValidator0;
 		case 1:
-			destinationPostbox = postbox1;
-			break;
+			return sortedEntityValidator1;
 		default:
 			throw new OsmosisRuntimeException("Sink instance " + instance
 					+ " is not valid.");
 		}
-		
-		// Create a changesink pointing to the postbox.
-		postboxSink = new Sink() {
-			private DataPostbox<EntityContainer> postbox = destinationPostbox;
-			
-			public void process(EntityContainer entityContainer) {
-				postbox.put(entityContainer);
-			}
-			public void complete() {
-				postbox.complete();
-			}
-			public void release() {
-				postbox.release();
-			}
-		};
-		
-		// Create a validation class to verify that all incoming data is sorted
-		// and connect its output to the postbox sink.
-		sortedPipeValidator = new SortedEntityPipeValidator();
-		sortedPipeValidator.setSink(postboxSink);
-		
-		return sortedPipeValidator;
 	}
 
 
