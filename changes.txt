@@ -1,7 +1,8 @@
 0.33
-Use Plexus Classworlds to simplify launcher scripts 
-Switch from org.apache.tools.bzip2 to commons-compress (this project is still alive)
-Removed postgis distribution since it is synched to repo1.maven.org now
+Use Plexus Classworlds to simplify launcher scripts.
+Switch from org.apache.tools.bzip2 to commons-compress (this project is still alive).
+(Reverted temporarily) Removed postgis distribution since it is synched to repo1.maven.org now.
+Updated the --apply-change task to detect full history diffs and abort.
 
 0.32
 Change to Public Domain licence.
