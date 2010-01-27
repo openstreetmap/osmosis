@@ -1,8 +1,9 @@
 0.33
 Use Plexus Classworlds to simplify launcher scripts.
 Switch from org.apache.tools.bzip2 to commons-compress (this project is still alive).
-(Reverted temporarily) Removed postgis distribution since it is synched to repo1.maven.org now.
 Updated the --apply-change task to detect full history diffs and abort.
+Enabled cascading deletes in the --truncate-apidb task to minimise foreign key violations on new schema updates.
+Updated all PostgreSQL database tasks to support IDENT authentication.
 
 0.32
 Change to Public Domain licence.
