@@ -166,10 +166,10 @@ public class TaskRegistrar {
         factoryRegister.register("read-xml-change",  new XmlChangeReaderFactory());
         factoryRegister.register("upload-xml-change", new XmlChangeUploaderFactory());
 		factoryRegister.register("rxc", new XmlChangeReaderFactory());
-		factoryRegister.register("sort", entitySorterFactory05);
-		factoryRegister.register("s", entitySorterFactory05);
-		factoryRegister.register("sort-change", changeSorterFactory05);
-		factoryRegister.register("sc", changeSorterFactory05);
+		factoryRegister.register("sort", entitySorterFactory06);
+		factoryRegister.register("s", entitySorterFactory06);
+		factoryRegister.register("sort-change", changeSorterFactory06);
+		factoryRegister.register("sc", changeSorterFactory06);
 		factoryRegister.register("write-xml", new XmlWriterFactory());
 		factoryRegister.register("wx", new XmlWriterFactory());
 		factoryRegister.register("write-xml-change", new XmlChangeWriterFactory());
