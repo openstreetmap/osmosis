@@ -125,6 +125,7 @@
 				<exclude name="build_support/"/>
 				<exclude name="dist/"/>
 				<exclude name="eclipse/"/>
+				<exclude name="debian/"/>
 			</zipfileset>
 		</zip>
 		<zip destfile="dist/${project.name}-${project.version}-bin.zip">
@@ -133,9 +134,9 @@
 				<exclude name="build_support/"/>
 				<exclude name="dist/"/>
 				<exclude name="eclipse/"/>
+				<exclude name="debian/"/>
 				<exclude name="src/"/>
 				<exclude name="test/"/>
-				<exclude name="config/"/>
 				<exclude name="ivy/"/>
 				<exclude name="lib/compile/"/>
 				<exclude name="lib/test/"/>
@@ -143,6 +144,7 @@
 				<exclude name="build*.xml"/>
 				<exclude name="ivy.xml"/>
 				<exclude name=".*"/>
+				<exclude name="doc/api/"/>
 			</zipfileset>
 		</zip>
 		<tar destfile="dist/${project.name}-${project.version}.tar.gz" compression="gzip" longfile="gnu">
@@ -154,6 +156,7 @@
 				<exclude name="build/"/>
 				<exclude name="dist/"/>
 				<exclude name="eclipse/"/>
+				<exclude name="debian/"/>
 			</tarfileset>
 		</tar>
 		<tar destfile="dist/${project.name}-${project.version}-bin.tar.gz" compression="gzip" longfile="gnu">
@@ -161,13 +164,13 @@
 				<include name="bin/*"/>
 			</tarfileset>
 			<tarfileset prefix="${project.name}-${project.version}" dir=".">
-				<exclude name="bin/*"/>
 				<exclude name="build/"/>
+				<exclude name="build_support/"/>
 				<exclude name="dist/"/>
 				<exclude name="eclipse/"/>
+				<exclude name="debian/"/>
 				<exclude name="src/"/>
 				<exclude name="test/"/>
-				<exclude name="config/"/>
 				<exclude name="ivy/"/>
 				<exclude name="lib/compile/"/>
 				<exclude name="lib/test/"/>
@@ -175,6 +178,7 @@
 				<exclude name="build*.xml"/>
 				<exclude name="ivy.xml"/>
 				<exclude name=".*"/>
+				<exclude name="doc/api/"/>
 			</tarfileset>
 		</tar>
 	</target>
