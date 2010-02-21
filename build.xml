@@ -152,8 +152,8 @@
 				<include name="bin/*"/>
 			</tarfileset>
 			<tarfileset prefix="${project.name}-${project.version}" dir=".">
-				<exclude name="bin/*"/>
 				<exclude name="build/"/>
+				<exclude name="build_support/"/>
 				<exclude name="dist/"/>
 				<exclude name="eclipse/"/>
 				<exclude name="debian/"/>
