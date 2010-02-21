@@ -1,3 +1,8 @@
+0.34
+Fixed the --sort and --sort-change tasks to use 0.6 task implementations instead of the older 0.5 implementations.
+Fixed the archive distributions to include the config/plexus.conf file, and include the launcher scripts in the tar version.
+Various cleanups of archive distributions to remove unnecessary files and minimise size.
+
 0.33
 Use Plexus Classworlds to simplify launcher scripts.
 Switch from org.apache.tools.bzip2 to commons-compress (this project is still alive).
