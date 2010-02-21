@@ -5,7 +5,7 @@
 
 	<groupId>org.openstreetmap.osmosis</groupId>
 	<artifactId>osmosis</artifactId>
-	<version>0.34-SNAPSHOT</version>
+	<version>0.34</version>
 
 	<packaging>jar</packaging>
 
