@@ -117,11 +117,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private static final int INSERT_BULK_ROW_COUNT_RELATION_TAG = 1000;
 	private static final int INSERT_BULK_ROW_COUNT_RELATION_MEMBER = 1000;
 	
-	/**
-	 * Defines the number of entities to write between each commit.
-	 */
-	private static final int COMMIT_ENTITY_COUNT = -1;
-	
 	
 	private DatabaseContext dbCtx;
 	private boolean enableBboxBuilder;
@@ -303,22 +298,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	
 	
 	/**
-	 * Commits outstanding changes to the database if a threshold of uncommitted
-	 * data has been reached. This regular interval commit is intended to
-	 * improve performance on databases where large transactions hinder
-	 * performance.
-	 */
-	private void performIntervalCommit() {
-		if (COMMIT_ENTITY_COUNT >= 0 && uncommittedEntityCount >= COMMIT_ENTITY_COUNT) {
-			System.err.println("Commit");
-			dbCtx.commit();
-			
-			uncommittedEntityCount = 0;
-		}
-	}
-	
-	
-	/**
 	 * Writes the specified user to the database if it hasn't already been.
 	 * 
 	 * @param user
@@ -395,8 +374,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				addNodeTags(node);
 			}
 		}
-		
-		performIntervalCommit();
 	}
 	
 	
@@ -533,8 +510,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				addWayNodes(way);
 			}
 		}
-		
-		performIntervalCommit();
 	}
 	
 	
@@ -714,8 +689,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				addRelationMembers(relation);
 			}
 		}
-		
-		performIntervalCommit();
 	}
 	
 	
