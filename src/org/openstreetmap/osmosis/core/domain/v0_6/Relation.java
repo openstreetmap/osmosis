@@ -21,9 +21,6 @@ import org.openstreetmap.osmosis.core.store.StoreWriter;
  * @author Brett Henderson
  */
 public class Relation extends Entity implements Comparable<Relation> {
-	private static final long serialVersionUID = 1L;
-	
-	
 	private List<RelationMember> members;
 	
 	
