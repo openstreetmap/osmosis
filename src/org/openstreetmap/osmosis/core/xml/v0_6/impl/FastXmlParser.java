@@ -4,7 +4,6 @@ package org.openstreetmap.osmosis.core.xml.v0_6.impl;
 import java.util.Calendar;
 import java.util.logging.Logger;
 
-import javax.xml.stream.Location;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -113,12 +112,6 @@ public class FastXmlParser {
 	
 	private void readUnknownElement() throws XMLStreamException {
 		int level = 0;
-
-		Location l = reader.getLocation();
-		LOG.warning(String.format(
-				"Unknown xml element %s. publicId=(%s), systemId=(%s), "
-				+ "lineNumber=%d, columnNumber=%d", 
-				reader.getName(), l.getPublicId(), l.getSystemId(), l.getLineNumber(), l.getColumnNumber()));
 		
 		do {
 			if (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
