@@ -15,12 +15,13 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 public class SinkEntityInspector implements Sink {
 
 	private List<EntityContainer> processedEntities;
-
-
-	private void initialize() {
-		if (processedEntities == null) {
-			processedEntities = new LinkedList<EntityContainer>();
-		}
+	
+	
+	/**
+	 * Creates a new instance.
+	 */
+	public SinkEntityInspector() {
+		processedEntities = new LinkedList<EntityContainer>();
 	}
 
 
@@ -41,7 +42,6 @@ public class SinkEntityInspector implements Sink {
 	 */
 	@Override
 	public void process(EntityContainer entityContainer) {
-		initialize();
 		processedEntities.add(entityContainer);
 	}
 
@@ -61,7 +61,6 @@ public class SinkEntityInspector implements Sink {
 	 * @return the lastEntityContainer
 	 */
 	public EntityContainer getLastEntityContainer() {
-		initialize();
 		if (processedEntities.isEmpty()) {
 			return null;
 		} else {
@@ -76,7 +75,6 @@ public class SinkEntityInspector implements Sink {
 	 * @return the processedEntities
 	 */
 	public Iterable<EntityContainer> getProcessedEntities() {
-		initialize();
 		return Collections.unmodifiableList(processedEntities);
 	}
 
