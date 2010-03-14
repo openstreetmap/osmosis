@@ -45,7 +45,6 @@ public class FastXmlParser {
 	private static final String ELEMENT_NAME_TAG = "tag";
 	private static final String ELEMENT_NAME_NODE_REFERENCE = "nd";
 	private static final String ELEMENT_NAME_MEMBER = "member";
-	private static final String ELEMENT_NAME_CHANGESET = "changeset";
 	private static final String ATTRIBUTE_NAME_ID = "id";
 	private static final String ATTRIBUTE_NAME_VERSION = "version";
 	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
@@ -378,7 +377,7 @@ public class FastXmlParser {
 						sink.process(new WayContainer(readWay()));
 					} else if (reader.getLocalName().equals(ELEMENT_NAME_RELATION)) {
 						sink.process(new RelationContainer(readRelation()));
-					} else if (!reader.getLocalName().equals(ELEMENT_NAME_CHANGESET)) {
+					} else {
 						readUnknownElement();
 					}
 				}
