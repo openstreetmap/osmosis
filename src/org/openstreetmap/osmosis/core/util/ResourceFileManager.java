@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.core.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +45,10 @@ public class ResourceFileManager {
 			
 			is = callingClass.getResourceAsStream(sourceResource);
 			os = new FileOutputStream(destinationFile);
+			
+			if (is == null) {
+			    throw new FileNotFoundException("Could not find " + sourceResource);
+			}
 			
 			while (true) {
 				bytesRead = is.read(buffer);
