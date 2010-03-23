@@ -104,11 +104,15 @@
 			manifest="build/binary/jar.txt"/>
 		
 		<!-- Copy the jar to the root directory where it can be run. -->
-		<copy todir=".">
-			<fileset dir="build/binary">
-				<include name="**/*.jar"/>
-			</fileset>
-		</copy>
+		<copy
+			file="build/binary/${project.name}.jar"
+			todir="."/>
+		
+		<!-- Copy the jar to the distrib directory where it will be found by ivy. -->
+		<mkdir dir="distrib"/>
+		<copy
+			file="build/binary/${project.name}.jar"
+			tofile="distrib/jars/${project.name}-${project.version}.jar"/>
 	</target>
 	
 	<!-- Produces javadoc output from the source code. -->
@@ -117,22 +121,22 @@
 	</target>
 	
 	<target name="dist" depends="build_binary,javadoc" description="Generate the distribution.">
-		<!-- Create the distribution zip file. -->
-		<mkdir dir="dist"/>
-		<zip destfile="dist/${project.name}-${project.version}.zip">
+		<!-- Create the distribution archives. -->
+		<mkdir dir="distrib/zips"/>
+		<zip destfile="distrib/zips/${project.name}-${project.version}.zip">
 			<zipfileset prefix="${project.name}-${project.version}" dir=".">
 				<exclude name="build/"/>
 				<exclude name="build_support/"/>
-				<exclude name="dist/"/>
+				<exclude name="distrib/"/>
 				<exclude name="eclipse/"/>
 				<exclude name="debian/"/>
 			</zipfileset>
 		</zip>
-		<zip destfile="dist/${project.name}-${project.version}-bin.zip">
+		<zip destfile="distrib/zips/${project.name}-bin-${project.version}.zip">
 			<zipfileset prefix="${project.name}-${project.version}" dir=".">
 				<exclude name="build/"/>
 				<exclude name="build_support/"/>
-				<exclude name="dist/"/>
+				<exclude name="distrib/"/>
 				<exclude name="eclipse/"/>
 				<exclude name="debian/"/>
 				<exclude name="src/"/>
@@ -147,26 +151,27 @@
 				<exclude name="doc/api/"/>
 			</zipfileset>
 		</zip>
-		<tar destfile="dist/${project.name}-${project.version}.tar.gz" compression="gzip" longfile="gnu">
+		<mkdir dir="distrib/tgzs"/>
+		<tar destfile="distrib/tgzs/${project.name}-${project.version}.tgz" compression="gzip" longfile="gnu">
 			<tarfileset prefix="${project.name}-${project.version}" dir="." mode="755">
 				<include name="bin/*"/>
 			</tarfileset>
 			<tarfileset prefix="${project.name}-${project.version}" dir=".">
 				<exclude name="build/"/>
 				<exclude name="build_support/"/>
-				<exclude name="dist/"/>
+				<exclude name="distrib/"/>
 				<exclude name="eclipse/"/>
 				<exclude name="debian/"/>
 			</tarfileset>
 		</tar>
-		<tar destfile="dist/${project.name}-${project.version}-bin.tar.gz" compression="gzip" longfile="gnu">
+		<tar destfile="distrib/tgzs/${project.name}-bin-${project.version}.tgz" compression="gzip" longfile="gnu">
 			<tarfileset prefix="${project.name}-${project.version}" dir="." mode="755">
 				<include name="bin/*"/>
 			</tarfileset>
 			<tarfileset prefix="${project.name}-${project.version}" dir=".">
 				<exclude name="build/"/>
 				<exclude name="build_support/"/>
-				<exclude name="dist/"/>
+				<exclude name="distrib/"/>
 				<exclude name="eclipse/"/>
 				<exclude name="debian/"/>
 				<exclude name="src/"/>
@@ -231,7 +236,7 @@
 		<!-- Delete the build, report and dist directory trees. -->
 		<delete dir="build"/>
 		<delete dir="report"/>
-		<delete dir="dist"/>
+		<delete dir="distrib"/>
 		<!-- Delete the doc/api directory tree. -->
 		<delete dir="doc/api"/>
 		<!-- Delete the generated test data files. -->

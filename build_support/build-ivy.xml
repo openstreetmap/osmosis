@@ -70,6 +70,11 @@
 	
 	<target name="conditional-resolve" depends="resolve-uptodate, resolve-message, resolve" description="Invokes resolve only if the libraries are out of date."/>
 	
+	<target name="publish" depends="resolve, dist">
+		<ivy:deliver pubrevision="${project.version}"/>
+		<ivy:publish resolver="local" pubrevision="${project.version}" overwrite="true"/>
+	</target>
+	
 	<target name="clean-cache" depends="init-ivy" description="Clean the ivy cache.">
 		<ivy:cleancache />
 	</target>
