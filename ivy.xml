@@ -30,11 +30,11 @@
     <dependencies>
         <dependency org="postgresql" name="postgresql" rev="8.3-603.jdbc4" conf="compile->default"/>
         <dependency org="net.sf.jpf" name="jpf" rev="1.5" conf="compile->default"/>
-        <dependency org="org.codehaus.woodstox" name="woodstox-core-lgpl" rev="4.0.3" conf="default->default">
+        <dependency org="org.codehaus.woodstox" name="woodstox-core-lgpl" rev="4.0.3" conf="compile->default">
 			<!-- Stax is included in the JDK from java 1.6 onwards. -->
         	<exclude module="stax-api"/>
         </dependency>
-        <dependency org="mysql" name="mysql-connector-java" rev="5.1.10" conf="default->default"/>
+        <dependency org="mysql" name="mysql-connector-java" rev="5.1.10" conf="compile->default"/>
         <dependency org="org.apache.commons" name="commons-compress" rev="1.0" conf="compile->default"/>
         <dependency org="org.postgis" name="postgis-jdbc" rev="1.3.3" conf="compile->default">
         	<exclude module="postgis-stubs"/>
