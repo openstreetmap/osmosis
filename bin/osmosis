@@ -73,7 +73,7 @@ osmosis --read-xml file="planetin.osm" --write-xml file="planetout.osm"
 
 osmosis --read-xml file="planetin.osm" outPipe.0="mypipe" --write-xml file="planetout.osm" inPipe.0="mypipe"
 
-Full usage details are available at: http://www.bretth.com/wiki/Wiki.jsp?page=OpenStreetMap 
+Full usage details are available at: http://wiki.openstreetmap.org/wiki/Osmosis/DetailedUsage 
 
 EOF
 exit 1
