@@ -2,6 +2,7 @@
 Registered --fast-read-xml as a task instead of requiring --fast-read-xml-0.6 to be specified.
 Fixed the completeRelations option on the --bounding-box and --bounding-polygon tasks to work as expected and documented.
 Updated the --fast-read-xml task to ignore changeset elements.
+Various enhancements to the Ivy processing including publishing of all artefacts.
 Fixed apidb tasks to correctly select the MySQL drivers instead of always using PostgreSQL drivers.
 Fixed the osmosis.bat launcher to handle spaces in the installation path.
 
