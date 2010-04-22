@@ -4,7 +4,7 @@ package org.openstreetmap.osmosis.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openstreetmap.osmosis.core.misc.v0_5.NullChangeWriterFactory;
+import org.openstreetmap.osmosis.core.misc.v0_6.NullChangeWriterFactory;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
 import org.openstreetmap.osmosis.core.plugin.PluginLoader;
 
