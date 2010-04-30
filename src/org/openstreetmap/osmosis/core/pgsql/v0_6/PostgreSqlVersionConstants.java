@@ -7,9 +7,17 @@ package org.openstreetmap.osmosis.core.pgsql.v0_6;
  * 
  * @author Brett Henderson
  */
-public interface PostgreSqlVersionConstants {
+public final class PostgreSqlVersionConstants {
+	
+	/**
+	 * This class cannot be instantiated.
+	 */
+	private PostgreSqlVersionConstants() {
+	}
+	
+	
 	/**
 	 * Defines the schema version number currently supported.
 	 */
-	int SCHEMA_VERSION = 4;
+	public static final int SCHEMA_VERSION = 4;
 }

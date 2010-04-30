@@ -73,7 +73,7 @@ public class FastXmlReader implements RunnableSource {
 			try {
 				
 				// make "-" an alias for /dev/stdin
-				if(file.getName().equals("-")) {
+				if (file.getName().equals("-")) {
 					inputStream = System.in;
 				} else {
 					inputStream = new FileInputStream(file);

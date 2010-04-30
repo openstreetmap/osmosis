@@ -7,21 +7,28 @@ package org.openstreetmap.osmosis.core.pipeline.common;
  * 
  * @author Brett Henderson
  */
-public interface PipelineConstants {
+public final class PipelineConstants {
+	
+	/**
+	 * This class cannot be instantiated.
+	 */
+	private PipelineConstants() {
+	}
+	
 
 	/**
 	 * Defines the prefix used for command line input pipe arguments.
 	 */
-	String IN_PIPE_ARGUMENT_PREFIX = "inPipe";
+	public static final String IN_PIPE_ARGUMENT_PREFIX = "inPipe";
 
 	/**
 	 * Defines the prefix used for command line output pipe arguments.
 	 */
-	String OUT_PIPE_ARGUMENT_PREFIX = "outPipe";
+	public static final String OUT_PIPE_ARGUMENT_PREFIX = "outPipe";
 
 	/**
 	 * Defines the prefix for default pipe names used when no pipes are
 	 * specified.
 	 */
-	String DEFAULT_PIPE_PREFIX = "default";
+	public static final String DEFAULT_PIPE_PREFIX = "default";
 }

@@ -10,7 +10,15 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  * 
  * @author Brett Henderson
  */
-public class IdTrackerFactory {
+public final class IdTrackerFactory {
+	
+	/**
+	 * This class cannot be instantiated.
+	 */
+	private IdTrackerFactory() {
+	}
+	
+	
 	/**
 	 * Creates the requested id tracker type.
 	 * 

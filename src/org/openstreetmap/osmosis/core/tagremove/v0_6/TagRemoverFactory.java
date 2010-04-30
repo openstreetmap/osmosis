@@ -30,7 +30,7 @@ public class TagRemoverFactory extends TaskManagerFactory {
 		}
 		try {
 			keyPrefixes = getStringArgument(taskConfig, "keyPrefixes");
-		} catch (OsmosisRuntimeException e){
+		} catch (OsmosisRuntimeException e) {
 			keyPrefixes = "";
 		}
 		

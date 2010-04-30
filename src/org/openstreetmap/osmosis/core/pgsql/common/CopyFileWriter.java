@@ -336,9 +336,10 @@ public class CopyFileWriter implements Completable {
 				if (writer != null) {
 					writer.close();
 				}
-			} catch(Exception e) {
+			} catch (IOException e) {
 				log.log(Level.SEVERE, "Unable to close writer.", e);
 			}
+			
 		} finally {
 			initialized = false;
 			writer = null;

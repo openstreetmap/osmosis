@@ -110,7 +110,7 @@ public class FileBasedLock implements Releasable {
 				LOG.warning("Unable to close lock stream on file " + lockFile + ".");
 			} finally {
 				outputStream = null;
-				fileChannel= null;
+				fileChannel = null;
 				fileLock = null;
 				initialized = false;
 			}

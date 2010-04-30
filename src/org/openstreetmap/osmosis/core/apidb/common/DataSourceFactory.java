@@ -9,7 +9,15 @@ import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 /**
  * Produces data sources based on a set of database credentials.
  */
-public class DataSourceFactory {
+public final class DataSourceFactory {
+	
+	/**
+	 * This class cannot be instantiated.
+	 */
+	private DataSourceFactory() {
+	}
+	
+	
 	/**
 	 * Creates a new data source based on the specified credentials.
 	 * 

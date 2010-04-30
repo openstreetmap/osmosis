@@ -72,7 +72,7 @@ public class TagRemover implements SinkSource {
 			if (keysToDrop.contains(tag.getKey())) {
 				i.remove();
 			} else {
-				for (String prefix: keyPrefixesToDrop) {
+				for (String prefix : keyPrefixesToDrop) {
 					if (tag.getKey().startsWith(prefix)) {
 						i.remove();
 					   	break;

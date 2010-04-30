@@ -100,7 +100,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 			@Override
 			public void release() {
 				throw new UnsupportedOperationException();
-			}});
+			} });
 		
 		tileCalculator = new TileCalculator();
 		uintComparator = new UnsignedIntegerComparator();

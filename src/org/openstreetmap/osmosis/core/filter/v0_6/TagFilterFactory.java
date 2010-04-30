@@ -41,7 +41,7 @@ public class TagFilterFactory extends TaskManagerFactory {
                 }
                 escaped = false;
             } else {
-                if (c=='%') {
+                if (c == '%') {
                     escaped = true;
                 } else {
                     sb.append(c);

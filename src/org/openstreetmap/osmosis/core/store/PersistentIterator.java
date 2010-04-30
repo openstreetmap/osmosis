@@ -17,7 +17,7 @@ import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
  * @param <T>
  *            The type of entity to retrieved.
  */
-public class PersistentIterator<T extends Storeable> implements ReleasableIterator<T>{
+public class PersistentIterator<T extends Storeable> implements ReleasableIterator<T> {
 	
 	private ReleasableIterator<T> sourceIterator;
 	private SimpleObjectStore<T> store;

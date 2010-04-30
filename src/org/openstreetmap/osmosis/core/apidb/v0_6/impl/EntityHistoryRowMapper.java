@@ -13,7 +13,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
  * @param <T>
  *            The type of entity to be processed.
  */
-public class EntityHistoryRowMapper<T extends Entity> implements RowMapperListener<T>{
+public class EntityHistoryRowMapper<T extends Entity> implements RowMapperListener<T> {
 	
 	private RowMapperListener<EntityHistory<T>> listener;
 	

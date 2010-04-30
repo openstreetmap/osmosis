@@ -116,7 +116,7 @@ public class CommandLineParserTest {
 	/**
 	 * Validates failure when an unknown option is specified.
 	 */
-	@Test (expected=OsmosisRuntimeException.class)
+	@Test (expected = OsmosisRuntimeException.class)
 	public void testUnknownOption() {
 		CommandLineParser commandLineParser;
 		

@@ -279,6 +279,36 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
         initialized = false;
     }
+    
+    
+    private void buildSqlStatements() {
+    	insertSqlSingleNode = buildSqlInsertStatement(INSERT_SQL_NODE_COLUMNS, INSERT_SQL_NODE_PARAMS, 1);
+		insertSqlBulkNode = buildSqlInsertStatement(INSERT_SQL_NODE_COLUMNS, INSERT_SQL_NODE_PARAMS,
+				INSERT_BULK_ROW_COUNT_NODE);
+		insertSqlSingleNodeTag = buildSqlInsertStatement(
+				INSERT_SQL_NODE_TAG_COLUMNS, INSERT_SQL_NODE_TAG_PARAMS, 1);
+		insertSqlBulkNodeTag = buildSqlInsertStatement(INSERT_SQL_NODE_TAG_COLUMNS, INSERT_SQL_NODE_TAG_PARAMS,
+				INSERT_BULK_ROW_COUNT_NODE_TAG);
+		insertSqlSingleWay = buildSqlInsertStatement(INSERT_SQL_WAY_COLUMNS, INSERT_SQL_WAY_PARAMS, 1);
+		insertSqlBulkWay = buildSqlInsertStatement(INSERT_SQL_WAY_COLUMNS, INSERT_SQL_WAY_PARAMS,
+				INSERT_BULK_ROW_COUNT_WAY);
+		insertSqlSingleWayTag = buildSqlInsertStatement(INSERT_SQL_WAY_TAG_COLUMNS, INSERT_SQL_WAY_TAG_PARAMS, 1);
+		insertSqlBulkWayTag = buildSqlInsertStatement(INSERT_SQL_WAY_TAG_COLUMNS, INSERT_SQL_WAY_TAG_PARAMS,
+				INSERT_BULK_ROW_COUNT_WAY_TAG);
+		insertSqlSingleWayNode = buildSqlInsertStatement(
+				INSERT_SQL_WAY_NODE_COLUMNS, INSERT_SQL_WAY_NODE_PARAMS, 1);
+		insertSqlBulkWayNode = buildSqlInsertStatement(INSERT_SQL_WAY_NODE_COLUMNS, INSERT_SQL_WAY_NODE_PARAMS,
+				INSERT_BULK_ROW_COUNT_WAY_NODE);
+		insertSqlSingleRelation = buildSqlInsertStatement(INSERT_SQL_RELATION_COLUMNS, INSERT_SQL_RELATION_PARAMS,
+				1);
+		insertSqlBulkRelation = buildSqlInsertStatement(INSERT_SQL_RELATION_COLUMNS, INSERT_SQL_RELATION_PARAMS,
+				INSERT_BULK_ROW_COUNT_RELATION);
+    	insertSqlSingleRelationTag = buildSqlInsertStatement(INSERT_SQL_RELATION_TAG_COLUMNS,
+				INSERT_SQL_RELATION_TAG_PARAMS, 1);
+		insertSqlBulkRelationTag = buildSqlInsertStatement(INSERT_SQL_RELATION_TAG_COLUMNS,
+				INSERT_SQL_RELATION_TAG_PARAMS, INSERT_BULK_ROW_COUNT_RELATION_TAG);
+    }
+    
 
     /**
      * Initialises prepared statements and obtains database locks. Can be called multiple times.
@@ -287,31 +317,8 @@ public class ApidbWriter implements Sink, EntityProcessor {
         if (!initialized) {
             schemaVersionValidator.validateVersion(ApidbVersionConstants.SCHEMA_MIGRATIONS);
             
-            insertSqlSingleNode = buildSqlInsertStatement(INSERT_SQL_NODE_COLUMNS, INSERT_SQL_NODE_PARAMS, 1);
-			insertSqlBulkNode = buildSqlInsertStatement(INSERT_SQL_NODE_COLUMNS, INSERT_SQL_NODE_PARAMS,
-					INSERT_BULK_ROW_COUNT_NODE);
-			insertSqlSingleNodeTag = buildSqlInsertStatement(
-					INSERT_SQL_NODE_TAG_COLUMNS, INSERT_SQL_NODE_TAG_PARAMS, 1);
-			insertSqlBulkNodeTag = buildSqlInsertStatement(INSERT_SQL_NODE_TAG_COLUMNS, INSERT_SQL_NODE_TAG_PARAMS,
-					INSERT_BULK_ROW_COUNT_NODE_TAG);
-			insertSqlSingleWay = buildSqlInsertStatement(INSERT_SQL_WAY_COLUMNS, INSERT_SQL_WAY_PARAMS, 1);
-			insertSqlBulkWay = buildSqlInsertStatement(INSERT_SQL_WAY_COLUMNS, INSERT_SQL_WAY_PARAMS,
-					INSERT_BULK_ROW_COUNT_WAY);
-			insertSqlSingleWayTag = buildSqlInsertStatement(INSERT_SQL_WAY_TAG_COLUMNS, INSERT_SQL_WAY_TAG_PARAMS, 1);
-			insertSqlBulkWayTag = buildSqlInsertStatement(INSERT_SQL_WAY_TAG_COLUMNS, INSERT_SQL_WAY_TAG_PARAMS,
-					INSERT_BULK_ROW_COUNT_WAY_TAG);
-			insertSqlSingleWayNode = buildSqlInsertStatement(
-					INSERT_SQL_WAY_NODE_COLUMNS, INSERT_SQL_WAY_NODE_PARAMS, 1);
-			insertSqlBulkWayNode = buildSqlInsertStatement(INSERT_SQL_WAY_NODE_COLUMNS, INSERT_SQL_WAY_NODE_PARAMS,
-					INSERT_BULK_ROW_COUNT_WAY_NODE);
-			insertSqlSingleRelation = buildSqlInsertStatement(INSERT_SQL_RELATION_COLUMNS, INSERT_SQL_RELATION_PARAMS,
-					1);
-			insertSqlBulkRelation = buildSqlInsertStatement(INSERT_SQL_RELATION_COLUMNS, INSERT_SQL_RELATION_PARAMS,
-					INSERT_BULK_ROW_COUNT_RELATION);
-        	insertSqlSingleRelationTag = buildSqlInsertStatement(INSERT_SQL_RELATION_TAG_COLUMNS,
-					INSERT_SQL_RELATION_TAG_PARAMS, 1);
-			insertSqlBulkRelationTag = buildSqlInsertStatement(INSERT_SQL_RELATION_TAG_COLUMNS,
-					INSERT_SQL_RELATION_TAG_PARAMS, INSERT_BULK_ROW_COUNT_RELATION_TAG);
+            buildSqlStatements();
+            
             switch (dbCtx.getDatabaseType()) {
             case POSTGRESQL:
     			insertSqlSingleRelationMember = buildSqlInsertStatement(INSERT_SQL_RELATION_MEMBER_COLUMNS,
@@ -900,10 +907,131 @@ public class ApidbWriter implements Sink, EntityProcessor {
             }
         }
     }
+    
+    
+    private void populateCurrentNodes() {
+        // Copy data into the current node tables.
+        for (int i = 0; i < maxNodeId; i += LOAD_CURRENT_NODE_ROW_COUNT) {
+            // Node
+            try {
+                loadCurrentNodesStatement.setInt(1, i);
+                loadCurrentNodesStatement.setInt(2, i + LOAD_CURRENT_NODE_ROW_COUNT);
+
+                loadCurrentNodesStatement.execute();
+
+            } catch (SQLException e) {
+                throw new OsmosisRuntimeException("Unable to load current nodes.", e);
+            }
+
+            // Node tags
+            try {
+                loadCurrentNodeTagsStatement.setInt(1, i);
+                loadCurrentNodeTagsStatement.setInt(2, i + LOAD_CURRENT_NODE_ROW_COUNT);
+
+                loadCurrentNodeTagsStatement.execute();
+
+            } catch (SQLException e) {
+                throw new OsmosisRuntimeException("Unable to load current node tags.", e);
+            }
+
+            dbCtx.commit();
+        }
+    }
+    
+    
+    private void populateCurrentWays() {
+        for (int i = 0; i < maxWayId; i += LOAD_CURRENT_WAY_ROW_COUNT) {
+            // Way
+            try {
+                loadCurrentWaysStatement.setInt(1, i);
+                loadCurrentWaysStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
+
+                loadCurrentWaysStatement.execute();
+
+            } catch (SQLException e) {
+                throw new OsmosisRuntimeException("Unable to load current ways.", e);
+            }
+
+            // Way tags
+            try {
+                loadCurrentWayTagsStatement.setInt(1, i);
+                loadCurrentWayTagsStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
+
+                loadCurrentWayTagsStatement.execute();
+
+            } catch (SQLException e) {
+                throw new OsmosisRuntimeException("Unable to load current way tags.", e);
+            }
+
+            // Way nodes
+            try {
+                loadCurrentWayNodesStatement.setInt(1, i);
+                loadCurrentWayNodesStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
+
+                loadCurrentWayNodesStatement.execute();
+
+            } catch (SQLException e) {
+                throw new OsmosisRuntimeException("Unable to load current way nodes.", e);
+            }
+
+            dbCtx.commit();
+        }
+    }
+    
+    
+    private void populateCurrentRelations() {
+        for (int i = 0; i < maxRelationId; i += LOAD_CURRENT_RELATION_ROW_COUNT) {
+            // Way
+            try {
+                loadCurrentRelationsStatement.setInt(1, i);
+                loadCurrentRelationsStatement.setInt(2, i + LOAD_CURRENT_RELATION_ROW_COUNT);
+
+                loadCurrentRelationsStatement.execute();
+
+            } catch (SQLException e) {
+                throw new OsmosisRuntimeException("Unable to load current relations.", e);
+            }
+
+            // Relation tags
+            try {
+                loadCurrentRelationTagsStatement.setInt(1, i);
+                loadCurrentRelationTagsStatement.setInt(2, i + LOAD_CURRENT_RELATION_ROW_COUNT);
+
+                loadCurrentRelationTagsStatement.execute();
+
+            } catch (SQLException e) {
+                throw new OsmosisRuntimeException("Unable to load current relation tags.", e);
+            }
+
+            // Relation members
+            try {
+                loadCurrentRelationMembersStatement.setInt(1, i);
+                loadCurrentRelationMembersStatement.setInt(2, i + LOAD_CURRENT_RELATION_ROW_COUNT);
+
+                loadCurrentRelationMembersStatement.execute();
+
+            } catch (SQLException e) {
+                throw new OsmosisRuntimeException("Unable to load current relation members.", e);
+            }
+
+            dbCtx.commit();
+        }
+    }
+    
+    
+    private void populateCurrentTables() {
+    	if (populateCurrentTables) {
+    		populateCurrentNodes();
+    		populateCurrentWays();
+    		populateCurrentRelations();
+        }
+    }
+    
 
     /**
      * Writes any buffered data to the database and commits.
      */
+    @Override
     public void complete() {
         initialize();
 
@@ -919,106 +1047,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
         // Re-enable indexes now that the load has completed.
         dbCtx.enableIndexes(DISABLE_KEY_TABLES);
 
-        if (populateCurrentTables) {
-            // Copy data into the current node tables.
-            for (int i = 0; i < maxNodeId; i += LOAD_CURRENT_NODE_ROW_COUNT) {
-                // Node
-                try {
-                    loadCurrentNodesStatement.setInt(1, i);
-                    loadCurrentNodesStatement.setInt(2, i + LOAD_CURRENT_NODE_ROW_COUNT);
-
-                    loadCurrentNodesStatement.execute();
-
-                } catch (SQLException e) {
-                    throw new OsmosisRuntimeException("Unable to load current nodes.", e);
-                }
-
-                // Node tags
-                try {
-                    loadCurrentNodeTagsStatement.setInt(1, i);
-                    loadCurrentNodeTagsStatement.setInt(2, i + LOAD_CURRENT_NODE_ROW_COUNT);
-
-                    loadCurrentNodeTagsStatement.execute();
-
-                } catch (SQLException e) {
-                    throw new OsmosisRuntimeException("Unable to load current node tags.", e);
-                }
-
-                dbCtx.commit();
-            }
-            for (int i = 0; i < maxWayId; i += LOAD_CURRENT_WAY_ROW_COUNT) {
-                // Way
-                try {
-                    loadCurrentWaysStatement.setInt(1, i);
-                    loadCurrentWaysStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
-
-                    loadCurrentWaysStatement.execute();
-
-                } catch (SQLException e) {
-                    throw new OsmosisRuntimeException("Unable to load current ways.", e);
-                }
-
-                // Way tags
-                try {
-                    loadCurrentWayTagsStatement.setInt(1, i);
-                    loadCurrentWayTagsStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
-
-                    loadCurrentWayTagsStatement.execute();
-
-                } catch (SQLException e) {
-                    throw new OsmosisRuntimeException("Unable to load current way tags.", e);
-                }
-
-                // Way nodes
-                try {
-                    loadCurrentWayNodesStatement.setInt(1, i);
-                    loadCurrentWayNodesStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
-
-                    loadCurrentWayNodesStatement.execute();
-
-                } catch (SQLException e) {
-                    throw new OsmosisRuntimeException("Unable to load current way nodes.", e);
-                }
-
-                dbCtx.commit();
-            }
-            for (int i = 0; i < maxRelationId; i += LOAD_CURRENT_RELATION_ROW_COUNT) {
-                // Way
-                try {
-                    loadCurrentRelationsStatement.setInt(1, i);
-                    loadCurrentRelationsStatement.setInt(2, i + LOAD_CURRENT_RELATION_ROW_COUNT);
-
-                    loadCurrentRelationsStatement.execute();
-
-                } catch (SQLException e) {
-                    throw new OsmosisRuntimeException("Unable to load current relations.", e);
-                }
-
-                // Relation tags
-                try {
-                    loadCurrentRelationTagsStatement.setInt(1, i);
-                    loadCurrentRelationTagsStatement.setInt(2, i + LOAD_CURRENT_RELATION_ROW_COUNT);
-
-                    loadCurrentRelationTagsStatement.execute();
-
-                } catch (SQLException e) {
-                    throw new OsmosisRuntimeException("Unable to load current relation tags.", e);
-                }
-
-                // Relation members
-                try {
-                    loadCurrentRelationMembersStatement.setInt(1, i);
-                    loadCurrentRelationMembersStatement.setInt(2, i + LOAD_CURRENT_RELATION_ROW_COUNT);
-
-                    loadCurrentRelationMembersStatement.execute();
-
-                } catch (SQLException e) {
-                    throw new OsmosisRuntimeException("Unable to load current relation members.", e);
-                }
-
-                dbCtx.commit();
-            }
-        }
+        populateCurrentTables();
 
         // Unlock tables (if they were locked) now that we have completed.
         if (lockTables) {

@@ -6,9 +6,16 @@ package org.openstreetmap.osmosis.core;
  * 
  * @author Brett Henderson
  */
-public interface OsmosisConstants {
+public final class OsmosisConstants {
+	
+	/**
+	 * This class cannot be instantiated.
+	 */
+	private OsmosisConstants() {
+	}
+	
 	/**
 	 * Defines the version of the Osmosis application.
 	 */
-	String VERSION = "0.36-SNAPSHOT";
+	public static final String VERSION = "0.36-SNAPSHOT";
 }

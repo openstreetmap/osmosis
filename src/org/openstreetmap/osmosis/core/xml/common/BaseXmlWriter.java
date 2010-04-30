@@ -107,7 +107,7 @@ public abstract class BaseXmlWriter {
 				OutputStreamWriter outStreamWriter;
 				
 				// make "-" an alias for /dev/stdout
-				if(file.getName().equals("-")) {
+				if (file.getName().equals("-")) {
 					outStream = System.out;
 				} else {
 					outStream = new FileOutputStream(file);
@@ -180,7 +180,7 @@ public abstract class BaseXmlWriter {
 				if (writer != null) {
 					writer.close();
 				}
-			} catch(Exception e) {
+			} catch (IOException e) {
 				log.log(Level.SEVERE, "Unable to close writer.", e);
 			}
 		} finally {

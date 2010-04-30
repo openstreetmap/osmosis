@@ -260,8 +260,8 @@ public class WayBuilder extends EntityBuilder<Way> {
             }
         }
         if (name != null) {
-            return "WayBuilder(id=" + getId() + ", #tags=" +  getTags().size()+ ", name='" + name + "')";
+            return "WayBuilder(id=" + getId() + ", #tags=" +  getTags().size() + ", name='" + name + "')";
         }
-        return "WayBuilder(id=" + getId() + ", #tags=" +  getTags().size()+ ")";
+        return "WayBuilder(id=" + getId() + ", #tags=" +  getTags().size() + ")";
     }
 }

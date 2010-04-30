@@ -34,7 +34,7 @@ public class EntityHistoryComparator<T extends Entity> implements Comparator<Ent
 		
 		if (versionDelta < 0) {
 			return -1;
-		} else if (versionDelta > 0){
+		} else if (versionDelta > 0) {
 			return 1;
 		}
 		

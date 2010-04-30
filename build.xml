@@ -192,10 +192,12 @@
 	<target name="checkstyle">
 		<taskdef uri="antlib:com.puppycrawl.tools.checkstyle" resource="checkstyletask.properties" classpathref="classpath.test" />
 		
+		<mkdir dir="report"/>
 		<cs:checkstyle config="build_support/checkstyle.xml">
 			<fileset dir="src" includes="**/*.java"/>
 			<fileset dir="test" includes="**/*.java"/>
 			<formatter type="plain"/>
+			<formatter type="xml" toFile="report/checkstyle.xml"/>
 		</cs:checkstyle>
 	</target>
 	

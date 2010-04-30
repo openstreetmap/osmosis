@@ -41,7 +41,7 @@ public class BoundingBoxFilterTest {
 	 * Performs pre-test activities.
 	 */
 	@Before
-	public void setUp(){
+	public void setUp() {
 		List<Tag> tags;
 		
 		// All nodes have an empty tags list.
@@ -87,12 +87,12 @@ public class BoundingBoxFilterTest {
 		Bound compareBound;
 		simpleAreaFilter.process(new BoundContainer(intersectingBound));
 		simpleAreaFilter.complete();
-		compareBound = (Bound)entityInspector.getLastEntityContainer().getEntity();
-		assertTrue((Double.compare(compareBound.getRight(), 20) == 0)
-		        && (Double.compare(compareBound.getLeft(), 10) == 0)
-		        && (Double.compare(compareBound.getTop(), 20) == 0)
-		        && (Double.compare(compareBound.getBottom(), 10) == 0)
-		        && compareBound.getOrigin().equals("intersecting"));
+		compareBound = (Bound) entityInspector.getLastEntityContainer().getEntity();
+		assertTrue(Double.compare(compareBound.getRight(), 20) == 0);
+		assertTrue(Double.compare(compareBound.getLeft(), 10) == 0);
+		assertTrue(Double.compare(compareBound.getTop(), 20) == 0);
+		assertTrue(Double.compare(compareBound.getBottom(), 10) == 0);
+		assertTrue(compareBound.getOrigin().equals("intersecting"));
 	}
 
 

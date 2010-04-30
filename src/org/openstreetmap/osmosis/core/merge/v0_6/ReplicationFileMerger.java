@@ -142,7 +142,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		final ChangeSink localChangeSink = changeSink;
 		
 		xmlReader.setChangeSink(new ChangeSink() {
-			ChangeSink suppressedWriter = localChangeSink;
+			private ChangeSink suppressedWriter = localChangeSink;
 			
 			@Override
 			public void process(ChangeContainer change) {
@@ -155,7 +155,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 			@Override
 			public void release() {
 				// Suppress the call.
-			}});
+			} });
 		
 		xmlReader.run();
 	}

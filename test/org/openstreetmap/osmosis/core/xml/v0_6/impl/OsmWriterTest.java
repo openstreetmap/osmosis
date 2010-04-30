@@ -78,7 +78,7 @@ public class OsmWriterTest {
 	/**
 	 * Test processing a repeated Bound entity.
 	 */
-	@Test(expected=OsmosisRuntimeException.class)
+	@Test(expected = OsmosisRuntimeException.class)
 	public final void testProcess2() {
 		testOsmWriter.process(new BoundContainer(new Bound("source")));
 		testOsmWriter.process(new BoundContainer(new Bound("source2")));
@@ -102,7 +102,7 @@ public class OsmWriterTest {
 	/**
 	 * Test processing a Bound after a Node.
 	 */
-	@Test(expected=OsmosisRuntimeException.class)
+	@Test(expected = OsmosisRuntimeException.class)
 	public final void testProcess4() {
 		testOsmWriter.process(new NodeContainer(new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0,
 				new ArrayList<Tag>(), 20, 20)));
@@ -131,7 +131,7 @@ public class OsmWriterTest {
 	/**
 	 * Test processing a Bound after a Way.
 	 */
-	@Test(expected=OsmosisRuntimeException.class)
+	@Test(expected = OsmosisRuntimeException.class)
 	public final void testProcess7() {
 		Way testWay;
 		
@@ -164,7 +164,7 @@ public class OsmWriterTest {
 	/**
 	 * Test processing a Bound after a Relation.
 	 */
-	@Test(expected=OsmosisRuntimeException.class)
+	@Test(expected = OsmosisRuntimeException.class)
 	public final void testProcess9() {
 		Relation testRelation;
 		

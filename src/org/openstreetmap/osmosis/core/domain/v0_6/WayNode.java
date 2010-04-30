@@ -87,6 +87,6 @@ public class WayNode implements Comparable<WayNode>, Storeable {
      */
     @Override
     public String toString() {
-        return "WayNode(nodeID=" + getNodeId()+ ")";
+        return "WayNode(nodeID=" + getNodeId() + ")";
     }
 }

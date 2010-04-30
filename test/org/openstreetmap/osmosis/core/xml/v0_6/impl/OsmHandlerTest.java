@@ -99,12 +99,12 @@ public class OsmHandlerTest {
 		        + "<bound box=\"-12.34567,-23.45678,34.56789,45.67891\""
 		        + " origin=\"someorigin\"/>"
 		        + OSM_SUFFIX);
-		Bound b = (Bound)entityInspector.getLastEntityContainer().getEntity();
+		Bound b = (Bound) entityInspector.getLastEntityContainer().getEntity();
 		assertTrue(Double.compare(b.getRight(), 45.67891) == 0
 		        && Double.compare(b.getLeft(), -23.45678) == 0
 		        && Double.compare(b.getTop(), 34.56789) == 0
-		        && Double.compare(b.getBottom(), -12.34567) == 0
-		        && b.getOrigin().equals("someorigin"));
+		        && Double.compare(b.getBottom(), -12.34567) == 0);
+		assertTrue(b.getOrigin().equals("someorigin"));
 	}
 
 

@@ -41,7 +41,7 @@ public class OsmUserTest {
 	/**
 	 * Ensure that the class doesn't allow a null user name.
 	 */
-	@Test(expected=NullPointerException.class)
+	@Test(expected = NullPointerException.class)
 	public final void testGetInstancePreventsNullUser() {
 		new OsmUser(1, null);
 	}
@@ -50,7 +50,7 @@ public class OsmUserTest {
 	/**
 	 * Ensure that the class doesn't allow the reserved "NONE" user id to be specified.
 	 */
-	@Test(expected=OsmosisRuntimeException.class)
+	@Test(expected = OsmosisRuntimeException.class)
 	public final void testGetInstancePreventsNoneUser() {
 		new OsmUser(OsmUser.NONE.getId(), "MyNoneUser");
 	}

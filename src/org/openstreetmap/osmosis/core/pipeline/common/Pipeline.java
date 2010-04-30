@@ -122,7 +122,7 @@ public class Pipeline {
 	 */
 	public void execute() {
 		// Initiate execution of all nodes.
-		for (TaskManager taskManager: taskManagers) {
+		for (TaskManager taskManager : taskManagers) {
 			taskManager.execute();
 		}
 	}
@@ -136,7 +136,7 @@ public class Pipeline {
 		
 		// Wait for completion of all nodes.
 		successful = true;
-		for (TaskManager taskManager: taskManagers) {
+		for (TaskManager taskManager : taskManagers) {
 			if (!taskManager.waitForCompletion()) {
 				successful = false;
 			}

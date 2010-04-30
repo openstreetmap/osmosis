@@ -95,12 +95,12 @@ public class ApidbCurrentReader implements RunnableSource {
     	
         try {
         	dbCtx.executeWithinTransaction(new TransactionCallbackWithoutResult() {
-        		DatabaseContext2 dbCtxInner = dbCtx;
+        		private DatabaseContext2 dbCtxInner = dbCtx;
 
 				@Override
 				protected void doInTransactionWithoutResult(TransactionStatus arg0) {
 					runImpl(dbCtxInner);
-				}});
+				} });
 
         } finally {
             dbCtx.release();

@@ -63,7 +63,7 @@ public class TagFilter implements SinkSource {
 
         String entity = filterModeSplit[1];
         if  (entity.endsWith("s")) { 
-            entity = entity.substring(0, entity.length()-1); 
+            entity = entity.substring(0, entity.length() - 1); 
         }
         if  (entity.equals("node")) { 
             filterClass = NodeContainer.class; 

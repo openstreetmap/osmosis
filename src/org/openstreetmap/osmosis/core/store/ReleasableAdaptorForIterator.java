@@ -26,7 +26,7 @@ public class ReleasableAdaptorForIterator<T> implements ReleasableIterator<T> {
 	 *            The input source.
 	 */
 	public ReleasableAdaptorForIterator(Iterator<T> source) {
-		this.source= source;
+		this.source = source;
 	}
 	
 	

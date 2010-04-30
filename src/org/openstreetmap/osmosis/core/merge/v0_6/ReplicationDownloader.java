@@ -66,7 +66,7 @@ public class ReplicationDownloader extends BaseReplicationDownloader implements 
 		final ChangeSink localChangeSink = changeSorter;
 		
 		xmlReader.setChangeSink(new ChangeSink() {
-			ChangeSink suppressedChangeSink = localChangeSink;
+			private ChangeSink suppressedChangeSink = localChangeSink;
 			
 			@Override
 			public void process(ChangeContainer change) {
@@ -79,7 +79,7 @@ public class ReplicationDownloader extends BaseReplicationDownloader implements 
 			@Override
 			public void release() {
 				// Suppress the call.
-			}});
+			} });
 		
 		xmlReader.run();
 	}

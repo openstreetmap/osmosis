@@ -230,7 +230,7 @@ public class IntegrityReporter implements Sink, EntityProcessor {
 				if (writer != null) {
 					writer.close();
 				}
-			} catch(Exception e) {
+			} catch (IOException e) {
 				LOG.log(Level.SEVERE, "Unable to close writer.", e);
 			}
 		} finally {

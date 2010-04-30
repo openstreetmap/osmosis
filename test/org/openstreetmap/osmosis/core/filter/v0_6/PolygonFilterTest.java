@@ -79,12 +79,12 @@ public class PolygonFilterTest {
 		Bound compareBound;
 		polyAreaFilter.process(new BoundContainer(intersectingBound));
 		polyAreaFilter.complete();
-		compareBound = (Bound)entityInspector.getLastEntityContainer().getEntity();
-		assertTrue((Double.compare(compareBound.getRight(), 20) == 0)
-		        && (Double.compare(compareBound.getLeft(), 0) == 0)
-		        && (Double.compare(compareBound.getTop(), 20) == 0)
-		        && (Double.compare(compareBound.getBottom(), 0) == 0)
-		        && compareBound.getOrigin().equals("intersecting"));
+		compareBound = (Bound) entityInspector.getLastEntityContainer().getEntity();
+		assertTrue(Double.compare(compareBound.getRight(), 20) == 0);
+		assertTrue(Double.compare(compareBound.getLeft(), 0) == 0);
+		assertTrue(Double.compare(compareBound.getTop(), 20) == 0);
+		assertTrue(Double.compare(compareBound.getBottom(), 0) == 0);
+		assertTrue(compareBound.getOrigin().equals("intersecting"));
 	}
 
 
@@ -96,12 +96,12 @@ public class PolygonFilterTest {
 		Bound compareBound;
 		polyAreaFilter.process(new BoundContainer(crossingIntersectingBound));
 		polyAreaFilter.complete();
-		compareBound = (Bound)entityInspector.getLastEntityContainer().getEntity();
-		assertTrue((Double.compare(compareBound.getRight(), 20) == 0)
-		        && (Double.compare(compareBound.getLeft(), -20) == 0)
-		        && (Double.compare(compareBound.getTop(), 20) == 0)
-		        && (Double.compare(compareBound.getBottom(), -20) == 0)
-		        && compareBound.getOrigin().equals("crossing intersecting"));
+		compareBound = (Bound) entityInspector.getLastEntityContainer().getEntity();
+		assertTrue(Double.compare(compareBound.getRight(), 20) == 0);
+		assertTrue(Double.compare(compareBound.getLeft(), -20) == 0);
+		assertTrue(Double.compare(compareBound.getTop(), 20) == 0);
+		assertTrue(Double.compare(compareBound.getBottom(), -20) == 0);
+		assertTrue(compareBound.getOrigin().equals("crossing intersecting"));
 	}
 
 

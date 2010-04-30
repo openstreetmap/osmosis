@@ -262,8 +262,8 @@ public class RelationBuilder extends EntityBuilder<Relation> {
             }
         }
         if (type != null) {
-            return "RelationBuilder(id=" + getId() + ", #tags=" +  getTags().size()+ ", type='" + type + "')";
+            return "RelationBuilder(id=" + getId() + ", #tags=" +  getTags().size() + ", type='" + type + "')";
         }
-        return "RelationBuilder(id=" + getId() + ", #tags=" +  getTags().size()+ ")";
+        return "RelationBuilder(id=" + getId() + ", #tags=" +  getTags().size() + ")";
     }
 }

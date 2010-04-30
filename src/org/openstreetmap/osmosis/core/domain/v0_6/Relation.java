@@ -363,8 +363,8 @@ public class Relation extends Entity implements Comparable<Relation> {
             }
         }
         if (type != null) {
-            return "Relation(id=" + getId() + ", #tags=" +  getTags().size()+ ", type='" + type + "')";
+            return "Relation(id=" + getId() + ", #tags=" +  getTags().size() + ", type='" + type + "')";
         }
-        return "Relation(id=" + getId() + ", #tags=" +  getTags().size()+ ")";
+        return "Relation(id=" + getId() + ", #tags=" +  getTags().size() + ")";
     }
 }

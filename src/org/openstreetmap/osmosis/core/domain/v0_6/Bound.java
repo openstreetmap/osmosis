@@ -464,7 +464,7 @@ public class Bound extends Entity implements Comparable<Bound> {
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Bound) {
-			return compareTo((Bound)o) == 0;
+			return compareTo((Bound) o) == 0;
 		} else {
 			return false;
 		}

@@ -8,7 +8,8 @@ import java.util.Date;
  * Provides {@link Replicator} with access to the system time on the database server. This avoids
  * relying on the clock of this system which may be different.
  */
-public interface SystemTimeLoader {/**
+public interface SystemTimeLoader {
+	/**
 	 * Gets the system time of the database server.
 	 * 
 	 * @return The timestamp.

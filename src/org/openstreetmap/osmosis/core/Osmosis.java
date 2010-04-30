@@ -15,8 +15,15 @@ import org.openstreetmap.osmosis.core.pipeline.common.Pipeline;
  * 
  * @author Brett Henderson
  */
-public class Osmosis {
+public final class Osmosis {
 	private static final Logger LOG = Logger.getLogger(Osmosis.class.getName());
+	
+	
+	/**
+	 * This class cannot be instantiated.
+	 */
+	private Osmosis() {
+	}
 	
 	
 	/**

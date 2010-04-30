@@ -126,7 +126,7 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 		byte[] buffer;
 		int bufferOffset;
 		
-		bufferIndex = (int)(nodeId / BUFFER_ELEMENT_COUNT);
+		bufferIndex = (int) (nodeId / BUFFER_ELEMENT_COUNT);
 		
 		while (bufferIndex >= buffers.size()) {
 			buffer = new byte[BUFFER_SIZE];
@@ -160,7 +160,7 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 		
 		nodeLocation = invalidNodeLocation;
 		
-		bufferIndex = (int)(nodeId / BUFFER_ELEMENT_COUNT);
+		bufferIndex = (int) (nodeId / BUFFER_ELEMENT_COUNT);
 		
 		if (bufferIndex < buffers.size()) {
 			byte[] buffer;

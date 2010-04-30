@@ -46,7 +46,7 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 	}
 	
 	private double projectMercToLat(double y) {
-	    return(Math.toDegrees(Math.atan(Math.sinh(y))));
+	    return Math.toDegrees(Math.atan(Math.sinh(y)));
 	}
 	
 	private double yToLat(int zoom, int y) {
@@ -96,12 +96,12 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 		if (doesArgumentExist(taskConfig, ARG_X1)) {
 			int x1 = getIntegerArgument(taskConfig, ARG_X1);
 			left = xToLon(zoom, x1);
-			right = xToLon(zoom, getIntegerArgument(taskConfig, ARG_X2, x1)+1);
+			right = xToLon(zoom, getIntegerArgument(taskConfig, ARG_X2, x1) + 1);
 		}
 		if (doesArgumentExist(taskConfig, ARG_Y1)) {
 			int y1 = getIntegerArgument(taskConfig, ARG_Y1);
 			top = yToLat(zoom, y1);
-			bottom = yToLat(zoom, getIntegerArgument(taskConfig, ARG_Y2, y1)+1);
+			bottom = yToLat(zoom, getIntegerArgument(taskConfig, ARG_Y2, y1) + 1);
 		}
 		
 		return new SinkSourceManager(

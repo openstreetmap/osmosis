@@ -277,8 +277,8 @@ public class NodeBuilder extends EntityBuilder<Node> {
             }
         }
         if (name != null) {
-            return "NodeBuilder(id=" + getId() + ", #tags=" +  getTags().size()+ ", name='" + name + "')";
+            return "NodeBuilder(id=" + getId() + ", #tags=" +  getTags().size() + ", name='" + name + "')";
         }
-        return "NodeBuilder(id=" + getId() + ", #tags=" +  getTags().size()+ ")";
+        return "NodeBuilder(id=" + getId() + ", #tags=" +  getTags().size() + ")";
     }
 }

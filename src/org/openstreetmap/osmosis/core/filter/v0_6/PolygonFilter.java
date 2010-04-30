@@ -89,7 +89,7 @@ public class PolygonFilter extends AreaFilter {
 		double width, height;
 
 		Bound newBound = null;
-		Area a2 = (Area)area.clone(); // make a copy so we don't disturb the original
+		Area a2 = (Area) area.clone(); // make a copy so we don't disturb the original
 
 		/*
 		 * Note that AWT uses the computer graphics convention with the origin at the top left, so

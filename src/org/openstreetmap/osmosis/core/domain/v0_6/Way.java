@@ -355,7 +355,7 @@ public class Way extends Entity implements Comparable<Way> {
      * @return True or false
      */
     public boolean isClosed() {
-        return wayNodes.get(0).getNodeId() == wayNodes.get(wayNodes.size()-1).getNodeId();
+        return wayNodes.get(0).getNodeId() == wayNodes.get(wayNodes.size() - 1).getNodeId();
     }
 
     /** 
@@ -372,8 +372,8 @@ public class Way extends Entity implements Comparable<Way> {
             }
         }
         if (name != null) {
-            return "Way(id=" + getId() + ", #tags=" +  getTags().size()+ ", name='" + name + "')";
+            return "Way(id=" + getId() + ", #tags=" +  getTags().size() + ", name='" + name + "')";
         }
-        return "Way(id=" + getId() + ", #tags=" +  getTags().size()+ ")";
+        return "Way(id=" + getId() + ", #tags=" +  getTags().size() + ")";
     }
 }
