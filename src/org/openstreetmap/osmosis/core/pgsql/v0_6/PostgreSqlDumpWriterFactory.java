@@ -15,7 +15,7 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkManager;
  * 
  * @author Brett Henderson
  */
-public class PostgreSqlDatasetDumpWriterFactory extends TaskManagerFactory {
+public class PostgreSqlDumpWriterFactory extends TaskManagerFactory {
 	private static final String ARG_ENABLE_BBOX_BUILDER = "enableBboxBuilder";
 	private static final String ARG_ENABLE_LINESTRING_BUILDER = "enableLinestringBuilder";
 	private static final String ARG_FILE_NAME = "directory";
@@ -53,7 +53,7 @@ public class PostgreSqlDatasetDumpWriterFactory extends TaskManagerFactory {
 		
 		return new SinkManager(
 			taskConfig.getId(),
-			new PostgreSqlDatasetDumpWriter(filePrefix, enableBboxBuilder, enableLinestringBuilder, storeType),
+			new PostgreSqlDumpWriter(filePrefix, enableBboxBuilder, enableLinestringBuilder, storeType),
 			taskConfig.getPipeArgs()
 		);
 	}

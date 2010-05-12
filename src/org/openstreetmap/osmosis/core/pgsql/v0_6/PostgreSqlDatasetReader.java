@@ -15,7 +15,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.RunnableDatasetSource;
  * 
  * @author Brett Henderson
  */
-public class PostgreSqlReader implements RunnableDatasetSource, Dataset {
+public class PostgreSqlDatasetReader implements RunnableDatasetSource, Dataset {
 	private DatasetSink datasetSink;
 	private DatabaseLoginCredentials loginCredentials;
 	private DatabasePreferences preferences;
@@ -29,7 +29,7 @@ public class PostgreSqlReader implements RunnableDatasetSource, Dataset {
 	 * @param preferences
 	 *            Contains preferences configuring database behaviour.
 	 */
-	public PostgreSqlReader(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
+	public PostgreSqlDatasetReader(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
 		this.loginCredentials = loginCredentials;
 		this.preferences = preferences;
 	}

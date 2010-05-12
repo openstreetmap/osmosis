@@ -33,7 +33,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
  * 
  * @author Brett Henderson
  */
-public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
+public class PostgreSqlDumpWriter implements Sink, EntityProcessor {
 	
 	private static final String USER_SUFFIX = "users.txt";
 	private static final String NODE_SUFFIX = "nodes.txt";
@@ -82,7 +82,7 @@ public class PostgreSqlDatasetDumpWriter implements Sink, EntityProcessor {
 	 * @param storeType
 	 *            The node location storage type used by the geometry builders.
 	 */
-	public PostgreSqlDatasetDumpWriter(
+	public PostgreSqlDumpWriter(
 			File filePrefix, boolean enableBboxBuilder,
 			boolean enableLinestringBuilder, NodeLocationStoreType storeType) {
 		this.enableBboxBuilder = enableBboxBuilder;

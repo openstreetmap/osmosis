@@ -30,7 +30,7 @@ public class PostgreSqlDatasetReaderFactory extends DatabaseTaskManagerFactory {
 		
 		return new RunnableDatasetSourceManager(
 			taskConfig.getId(),
-			new PostgreSqlReader(loginCredentials, preferences),
+			new PostgreSqlDatasetReader(loginCredentials, preferences),
 			taskConfig.getPipeArgs()
 		);
 	}

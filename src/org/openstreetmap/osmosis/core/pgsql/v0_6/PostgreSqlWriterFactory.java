@@ -15,7 +15,7 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkManager;
  * 
  * @author Brett Henderson
  */
-public class PostgreSqlDatasetWriterFactory extends DatabaseTaskManagerFactory {
+public class PostgreSqlWriterFactory extends DatabaseTaskManagerFactory {
 	private static final String ARG_ENABLE_BBOX_BUILDER = "enableBboxBuilder";
 	private static final String ARG_ENABLE_LINESTRING_BUILDER = "enableLinestringBuilder";
 	private static final String ARG_NODE_LOCATION_STORE_TYPE = "nodeLocationStoreType";

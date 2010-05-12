@@ -12,13 +12,13 @@ import org.openstreetmap.osmosis.core.task.common.RunnableTask;
 
 /**
  * A standalone OSM task with no inputs or outputs that truncates tables in a
- * mysql database. This is used for removing all existing data from tables.
+ * PostgreSQL database. This is used for removing all existing data from tables.
  * 
  * @author Brett Henderson
  */
-public class PostgreSqlDatasetTruncator implements RunnableTask {
+public class PostgreSqlTruncator implements RunnableTask {
 	
-	private static final Logger LOG = Logger.getLogger(PostgreSqlDatasetTruncator.class.getName());
+	private static final Logger LOG = Logger.getLogger(PostgreSqlTruncator.class.getName());
 	
 	
 	// These tables will be truncated.
@@ -43,7 +43,7 @@ public class PostgreSqlDatasetTruncator implements RunnableTask {
 	 * @param preferences
 	 *            Contains preferences configuring database behaviour.
 	 */
-	public PostgreSqlDatasetTruncator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
+	public PostgreSqlTruncator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		
 		schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);

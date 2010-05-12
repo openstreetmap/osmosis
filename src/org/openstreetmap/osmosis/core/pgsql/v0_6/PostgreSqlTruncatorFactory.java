@@ -12,7 +12,7 @@ import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
  * 
  * @author Brett Henderson
  */
-public class PostgreSqlDatasetTruncatorFactory extends DatabaseTaskManagerFactory {
+public class PostgreSqlTruncatorFactory extends DatabaseTaskManagerFactory {
 	
 	/**
 	 * {@inheritDoc}
@@ -21,7 +21,7 @@ public class PostgreSqlDatasetTruncatorFactory extends DatabaseTaskManagerFactor
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		return new RunnableTaskManager(
 			taskConfig.getId(),
-			new PostgreSqlDatasetTruncator(
+			new PostgreSqlTruncator(
 				getDatabaseLoginCredentials(taskConfig),
 				getDatabasePreferences(taskConfig)
 			),
