@@ -20,7 +20,7 @@ import org.openstreetmap.osmosis.core.pgsql.common.NoSuchRecordException;
  * @param <T>
  *            The entity type to be supported.
  */
-public class PostgresSqlEntityManager<T extends Entity> implements EntityManager<T> {
+public class PostgreSqlEntityManager<T extends Entity> implements EntityManager<T> {
 	
 	private EntityDao<T> entityDao;
 	private UserDao userDao;
@@ -35,7 +35,7 @@ public class PostgresSqlEntityManager<T extends Entity> implements EntityManager
 	 * @param userDao
 	 *            The user dao allowing user entries to be updated or created.
 	 */
-	public PostgresSqlEntityManager(EntityDao<T> entityDao, UserDao userDao) {
+	public PostgreSqlEntityManager(EntityDao<T> entityDao, UserDao userDao) {
 		this.entityDao = entityDao;
 		this.userDao = userDao;
 		

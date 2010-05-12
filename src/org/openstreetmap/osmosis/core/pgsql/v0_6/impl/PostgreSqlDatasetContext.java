@@ -65,9 +65,9 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	private NodeDao nodeDao;
 	private WayDao wayDao;
 	private RelationDao relationDao;
-	private PostgresSqlEntityManager<Node> nodeManager;
-	private PostgresSqlEntityManager<Way> wayManager;
-	private PostgresSqlEntityManager<Relation> relationManager;
+	private PostgreSqlEntityManager<Node> nodeManager;
+	private PostgreSqlEntityManager<Way> wayManager;
+	private PostgreSqlEntityManager<Relation> relationManager;
 	private PolygonBuilder polygonBuilder;
 	private ReleasableContainer releasableContainer;
 	
@@ -112,9 +112,9 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			wayDao = releasableContainer.add(new WayDao(dbCtx, actionDao));
 			relationDao = releasableContainer.add(new RelationDao(dbCtx, actionDao));
 			
-			nodeManager = new PostgresSqlEntityManager<Node>(nodeDao, userDao);
-			wayManager = new PostgresSqlEntityManager<Way>(wayDao, userDao);
-			relationManager = new PostgresSqlEntityManager<Relation>(relationDao, userDao);
+			nodeManager = new PostgreSqlEntityManager<Node>(nodeDao, userDao);
+			wayManager = new PostgreSqlEntityManager<Way>(wayDao, userDao);
+			relationManager = new PostgreSqlEntityManager<Relation>(relationDao, userDao);
 		}
 		
 		initialized = true;
