@@ -2,13 +2,10 @@
 package org.openstreetmap.osmosis.core.pgsql.v0_6.impl;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,8 +33,6 @@ public class CopyFilesetLoader implements Runnable {
 	private DatabaseLoginCredentials loginCredentials;
 	private DatabasePreferences preferences;
 	private CopyFileset copyFileset;
-	private boolean populateBbox;
-	private boolean populateLinestring;
 	
 	
 	/**
@@ -49,20 +44,12 @@ public class CopyFilesetLoader implements Runnable {
 	 *            Contains preferences configuring database behaviour.
 	 * @param copyFileset
 	 *            The set of COPY files to be loaded into the database.
-	 * @param populateBbox
-	 *            If true, the bbox colum on the way table will be populated
-	 *            after load.
-	 * @param populateLinestring
-	 *            If true, the linestring column on the way table will be
-	 *            populated after load.
 	 */
 	public CopyFilesetLoader(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
-			CopyFileset copyFileset, boolean populateBbox, boolean populateLinestring) {
+			CopyFileset copyFileset) {
 		this.loginCredentials = loginCredentials;
 		this.preferences = preferences;
 		this.copyFileset = copyFileset;
-		this.populateBbox = populateBbox;
-		this.populateLinestring = populateLinestring;
 	}
 
 
@@ -81,14 +68,14 @@ public class CopyFilesetLoader implements Runnable {
     	InputStream inStream = null;
     	
     	try {
-    		Reader reader;
+    		InputStream bufferedInStream;
     		
     		inStream = new FileInputStream(copyFile);
-    		reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(inStream, 65536), "UTF-8"));
+    		bufferedInStream = new BufferedInputStream(inStream, 65536);
     		
     		copyManager = new CopyManager((BaseConnection) dbCtx.getConnection());
     		
-    		copyManager.copyIn("COPY " + tableName + " FROM STDIN", reader);
+    		copyManager.copyIn("COPY " + tableName + " FROM STDIN", bufferedInStream);
 			
     		inStream.close();
 			inStream = null;
@@ -122,7 +109,7 @@ public class CopyFilesetLoader implements Runnable {
 			new SchemaVersionValidator(loginCredentials, preferences)
 				.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
     		
-    		indexManager = new IndexManager(dbCtx, populateBbox, populateLinestring);
+    		indexManager = new IndexManager(dbCtx, false, false);
     		
 			// Drop all constraints and indexes.
 			indexManager.prepareForLoad();
