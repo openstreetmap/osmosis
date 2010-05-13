@@ -17,7 +17,7 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkManager;
  */
 public class PostgreSqlCopyWriterFactory extends DatabaseTaskManagerFactory {
 	private static final String ARG_NODE_LOCATION_STORE_TYPE = "nodeLocationStoreType";
-	private static final String DEFAULT_NODE_LOCATION_STORE_TYPE = "InMemory";
+	private static final String DEFAULT_NODE_LOCATION_STORE_TYPE = "TempFile";
 	
 	/**
 	 * {@inheritDoc}

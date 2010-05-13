@@ -23,7 +23,7 @@ public class PostgreSqlDumpWriterFactory extends TaskManagerFactory {
 	private static final boolean DEFAULT_ENABLE_BBOX_BUILDER = false;
 	private static final boolean DEFAULT_ENABLE_LINESTRING_BUILDER = false;
 	private static final String DEFAULT_FILE_PREFIX = "pgimport";
-	private static final String DEFAULT_NODE_LOCATION_STORE_TYPE = "InMemory";
+	private static final String DEFAULT_NODE_LOCATION_STORE_TYPE = "TempFile";
 	
 	
 	/**
