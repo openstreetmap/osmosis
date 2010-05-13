@@ -29,7 +29,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
  * 
  * @author Brett Henderson
  */
-public class PostgreSqlCopyFilesetBuilder implements Sink, EntityProcessor {
+public class CopyFilesetBuilder implements Sink, EntityProcessor {
 	
 	private boolean enableBboxBuilder;
 	private boolean enableLinestringBuilder;
@@ -67,7 +67,7 @@ public class PostgreSqlCopyFilesetBuilder implements Sink, EntityProcessor {
 	 * @param storeType
 	 *            The node location storage type used by the geometry builders.
 	 */
-	public PostgreSqlCopyFilesetBuilder(
+	public CopyFilesetBuilder(
 			CopyFileset copyFileset, boolean enableBboxBuilder,
 			boolean enableLinestringBuilder, NodeLocationStoreType storeType) {
 		this.enableBboxBuilder = enableBboxBuilder;
@@ -240,7 +240,7 @@ public class PostgreSqlCopyFilesetBuilder implements Sink, EntityProcessor {
 	
 	
 	/**
-	 * Releases all database resources.
+	 * Releases all resources.
 	 */
 	public void release() {
 		writerContainer.release();

@@ -2,9 +2,13 @@
 package org.openstreetmap.osmosis.core.pgsql.v0_6;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
+import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
+import org.openstreetmap.osmosis.core.database.DatabasePreferences;
+import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.CopyFilesetLoader;
 import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.NodeLocationStoreType;
-import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.PostgreSqlCopyFilesetBuilder;
+import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.CopyFilesetBuilder;
 import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.TempCopyFileset;
+import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
 
 /**
@@ -13,15 +17,20 @@ import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.TempCopyFileset;
  * 
  * @author Brett Henderson
  */
-public class PostgreSqlCopyWriter {
+public class PostgreSqlCopyWriter implements Sink {
 	
-	private PostgreSqlCopyFilesetBuilder copyFilesetBuilder;
+	private CopyFilesetBuilder copyFilesetBuilder;
+	private CopyFilesetLoader copyFilesetLoader;
 	private TempCopyFileset copyFileset;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param loginCredentials
+	 *            Contains all information required to connect to the database.
+	 * @param preferences
+	 *            Contains preferences configuring database behaviour.
 	 * @param enableBboxBuilder
 	 *            If true, the way bbox geometry is built during processing
 	 *            instead of relying on the database to build them after import.
@@ -36,12 +45,15 @@ public class PostgreSqlCopyWriter {
 	 *            The node location storage type used by the geometry builders.
 	 */
 	public PostgreSqlCopyWriter(
-			boolean enableBboxBuilder,
-			boolean enableLinestringBuilder, NodeLocationStoreType storeType) {
+			DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
+			boolean enableBboxBuilder, boolean enableLinestringBuilder, NodeLocationStoreType storeType) {
+		
 		copyFileset = new TempCopyFileset();
 		
 		copyFilesetBuilder =
-			new PostgreSqlCopyFilesetBuilder(copyFileset, enableBboxBuilder, enableLinestringBuilder, storeType);
+			new CopyFilesetBuilder(copyFileset, enableBboxBuilder, enableLinestringBuilder, storeType);
+		copyFilesetLoader = new CopyFilesetLoader(loginCredentials, preferences, copyFileset, !enableBboxBuilder,
+				!enableLinestringBuilder);
 	}
 	
 	
@@ -58,7 +70,7 @@ public class PostgreSqlCopyWriter {
 	 */
 	public void complete() {
 		copyFilesetBuilder.complete();
-		
+		copyFilesetLoader.run();
 	}
 	
 	

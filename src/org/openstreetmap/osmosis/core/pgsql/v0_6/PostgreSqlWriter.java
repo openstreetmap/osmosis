@@ -32,7 +32,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.pgsql.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.pgsql.common.SchemaVersionValidator;
 import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.ActionDao;
-import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.DatabaseCapabilityChecker;
+import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.IndexManager;
 import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.NodeMapper;
 import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.NodeLocationStoreType;
 import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.RelationMapper;
@@ -55,57 +55,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	
 	private static final Logger LOG = Logger.getLogger(PostgreSqlWriter.class.getName());
 	
-	
-	private static final String[] PRE_LOAD_SQL = {
-		"ALTER TABLE users DROP CONSTRAINT pk_users",
-		"ALTER TABLE nodes DROP CONSTRAINT pk_nodes",
-		"ALTER TABLE ways DROP CONSTRAINT pk_ways",
-		"ALTER TABLE way_nodes DROP CONSTRAINT pk_way_nodes",
-		"ALTER TABLE relations DROP CONSTRAINT pk_relations",
-		"DROP INDEX idx_node_tags_node_id",
-		"DROP INDEX idx_nodes_geom",
-		"DROP INDEX idx_way_tags_way_id",
-		"DROP INDEX idx_relation_tags_relation_id",
-		"DROP INDEX idx_way_nodes_node_id"
-	};
-	private static final String[] PRE_LOAD_SQL_WAY_BBOX = {
-		"DROP INDEX idx_ways_bbox"
-	};
-	private static final String[] PRE_LOAD_SQL_WAY_LINESTRING = {
-		"DROP INDEX idx_ways_linestring"
-	};
-	
-	private static final String[] POST_LOAD_SQL = {
-		"ALTER TABLE ONLY users ADD CONSTRAINT pk_users PRIMARY KEY (id)",
-		"ALTER TABLE ONLY nodes ADD CONSTRAINT pk_nodes PRIMARY KEY (id)",
-		"ALTER TABLE ONLY ways ADD CONSTRAINT pk_ways PRIMARY KEY (id)",
-		"ALTER TABLE ONLY way_nodes ADD CONSTRAINT pk_way_nodes PRIMARY KEY (way_id, sequence_id)",
-		"ALTER TABLE ONLY relations ADD CONSTRAINT pk_relations PRIMARY KEY (id)",
-		"CREATE INDEX idx_node_tags_node_id ON node_tags USING btree (node_id)",
-		"CREATE INDEX idx_nodes_geom ON nodes USING gist (geom)",
-		"CREATE INDEX idx_way_tags_way_id ON way_tags USING btree (way_id)",
-		"CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id)",
-		"CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id)"
-	};
-	private static final String[] POST_LOAD_SQL_WAY_BBOX = {
-		"CREATE INDEX idx_ways_bbox ON ways USING gist (bbox)"
-	};
-	private static final String[] POST_LOAD_SQL_WAY_LINESTRING = {
-		"CREATE INDEX idx_ways_linestring ON ways USING gist (linestring)"
-	};
-	private static final String POST_LOAD_SQL_POPULATE_WAY_BBOX =
-		"UPDATE ways SET bbox = ("
-		+ "SELECT Envelope(Collect(geom)) FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id"
-		+ " WHERE way_nodes.way_id = ways.id"
-		+ ")";
-	private static final String POST_LOAD_SQL_POPULATE_WAY_LINESTRING =
-		"UPDATE ways w SET linestring = ("
-		+ "SELECT MakeLine(c.geom) AS way_line FROM ("
-		+ "SELECT n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id"
-		+ " WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id"
-		+ ") c"
-		+ ")";
-	
 	// These constants define how many rows of each data type will be inserted
 	// with single insert statements.
 	private static final int INSERT_BULK_ROW_COUNT_NODE = 1000;
@@ -122,7 +71,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private boolean enableBboxBuilder;
 	private boolean enableLinestringBuilder;
 	private SchemaVersionValidator schemaVersionValidator;
-	private DatabaseCapabilityChecker capabilityChecker;
+	private IndexManager indexManager;
 	private List<Node> nodeBuffer;
 	private List<DbFeature<Tag>> nodeTagBuffer;
 	private List<Way> wayBuffer;
@@ -193,7 +142,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		this.enableLinestringBuilder = enableLinestringBuilder;
 		
 		schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
-		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
+		indexManager = new IndexManager(dbCtx, !enableBboxBuilder, !enableLinestringBuilder);
 		
 		nodeBuffer = new ArrayList<Node>();
 		nodeTagBuffer = new ArrayList<DbFeature<Tag>>();
@@ -270,26 +219,8 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 					dbCtx.prepareStatement(relationMemberBuilder.getSqlInsert(1)));
 			
 			// Drop all constraints and indexes.
-			LOG.fine("Running pre-load SQL statements.");
-			for (int i = 0; i < PRE_LOAD_SQL.length; i++) {
-				LOG.finer("SQL: " + PRE_LOAD_SQL[i]);
-				dbCtx.executeStatement(PRE_LOAD_SQL[i]);
-			}
-			if (capabilityChecker.isWayBboxSupported()) {
-				LOG.fine("Running pre-load bbox SQL statements.");
-				for (int i = 0; i < PRE_LOAD_SQL_WAY_BBOX.length; i++) {
-					LOG.finer("SQL: " + PRE_LOAD_SQL_WAY_BBOX[i]);
-					dbCtx.executeStatement(PRE_LOAD_SQL_WAY_BBOX[i]);
-				}
-			}
-			if (capabilityChecker.isWayLinestringSupported()) {
-				LOG.fine("Running pre-load linestring SQL statements.");
-				for (int i = 0; i < PRE_LOAD_SQL_WAY_LINESTRING.length; i++) {
-					LOG.finer("SQL: " + PRE_LOAD_SQL_WAY_LINESTRING[i]);
-					dbCtx.executeStatement(PRE_LOAD_SQL_WAY_LINESTRING[i]);
-				}
-			}
-			LOG.fine("Pre-load SQL statements complete.");
+			indexManager.prepareForLoad();
+			
 			LOG.fine("Loading data.");
 			
 			initialized = true;
@@ -829,33 +760,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		LOG.fine("Data load complete.");
 		
 		// Add all constraints and indexes.
-		LOG.fine("Running post-load SQL.");
-		for (int i = 0; i < POST_LOAD_SQL.length; i++) {
-			LOG.finer("SQL: " + POST_LOAD_SQL[i]);
-			dbCtx.executeStatement(POST_LOAD_SQL[i]);
-		}
-		if (capabilityChecker.isWayBboxSupported()) {
-			LOG.fine("Running post-load bbox SQL statements.");
-			if (!enableBboxBuilder) {
-				LOG.finer("SQL: " + POST_LOAD_SQL_POPULATE_WAY_BBOX);
-				dbCtx.executeStatement(POST_LOAD_SQL_POPULATE_WAY_BBOX);
-			}
-			for (int i = 0; i < POST_LOAD_SQL_WAY_BBOX.length; i++) {
-				LOG.finer("SQL: " + POST_LOAD_SQL_WAY_BBOX[i]);
-				dbCtx.executeStatement(POST_LOAD_SQL_WAY_BBOX[i]);
-			}
-		}
-		if (capabilityChecker.isWayLinestringSupported()) {
-			LOG.fine("Running post-load linestring SQL statements.");
-			if (!enableLinestringBuilder) {
-				LOG.finer("SQL: " + POST_LOAD_SQL_POPULATE_WAY_LINESTRING);
-				dbCtx.executeStatement(POST_LOAD_SQL_POPULATE_WAY_LINESTRING);
-			}
-			for (int i = 0; i < POST_LOAD_SQL_WAY_LINESTRING.length; i++) {
-				LOG.finer("SQL: " + POST_LOAD_SQL_WAY_LINESTRING[i]);
-				dbCtx.executeStatement(POST_LOAD_SQL_WAY_LINESTRING[i]);
-			}
-		}
+		indexManager.completeAfterLoad();
 		
 		LOG.fine("Committing changes.");
 		dbCtx.commit();

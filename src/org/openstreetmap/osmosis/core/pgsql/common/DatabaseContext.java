@@ -61,7 +61,7 @@ public class DatabaseContext {
 	 * 
 	 * @return The database connection.
 	 */
-	private Connection getConnection() {
+	public Connection getConnection() {
 		if (connection == null) {
 			try {
 				LOG.finer("Creating a new database connection.");

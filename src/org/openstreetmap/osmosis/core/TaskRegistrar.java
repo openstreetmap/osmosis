@@ -58,6 +58,7 @@ import org.openstreetmap.osmosis.core.merge.v0_6.ReplicationFileMergerInitialize
 import org.openstreetmap.osmosis.core.misc.v0_6.NullChangeWriterFactory;
 import org.openstreetmap.osmosis.core.misc.v0_6.NullWriterFactory;
 import org.openstreetmap.osmosis.core.pgsql.v0_6.PostgreSqlChangeWriterFactory;
+import org.openstreetmap.osmosis.core.pgsql.v0_6.PostgreSqlCopyWriterFactory;
 import org.openstreetmap.osmosis.core.pgsql.v0_6.PostgreSqlDumpWriterFactory;
 import org.openstreetmap.osmosis.core.pgsql.v0_6.PostgreSqlDatasetReaderFactory;
 import org.openstreetmap.osmosis.core.pgsql.v0_6.PostgreSqlTruncatorFactory;
@@ -201,6 +202,8 @@ public class TaskRegistrar {
 		factoryRegister.register("rc", new ReadDatasetFactory());
 		factoryRegister.register("write-pgsql", new PostgreSqlWriterFactory());
 		factoryRegister.register("wp", new PostgreSqlWriterFactory());
+		factoryRegister.register("fast-write-pgsql", new PostgreSqlCopyWriterFactory());
+		factoryRegister.register("fwp", new PostgreSqlCopyWriterFactory());
 		factoryRegister.register("truncate-pgsql", new PostgreSqlTruncatorFactory());
 		factoryRegister.register("tp", new PostgreSqlTruncatorFactory());
 		factoryRegister.register("write-pgsql-dump", new PostgreSqlDumpWriterFactory());
@@ -281,6 +284,7 @@ public class TaskRegistrar {
 		factoryRegister.register("dataset-dump-0.6", new DumpDatasetFactory());
 		factoryRegister.register("read-customdb-0.6", new ReadDatasetFactory());
 		factoryRegister.register("write-pgsql-0.6", new PostgreSqlWriterFactory());
+		factoryRegister.register("fast-write-pgsql-0.6", new PostgreSqlCopyWriterFactory());
 		factoryRegister.register("truncate-pgsql-0.6", new PostgreSqlTruncatorFactory());
 		factoryRegister.register("write-pgsql-dump-0.6", new PostgreSqlDumpWriterFactory());
 		factoryRegister.register("read-pgsql-0.6", new PostgreSqlDatasetReaderFactory());
