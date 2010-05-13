@@ -1,3 +1,8 @@
+0.36
+Removed 0.5 support.
+Added the --fast-write-pgsql task which uses PostgreSQL COPY commands to insert data.
+All write-pgsql tasks now default to the TempFile node location type store instead of in memory.
+
 0.35
 Registered --fast-read-xml as a task instead of requiring --fast-read-xml-0.6 to be specified.
 Fixed the completeRelations option on the --bounding-box and --bounding-polygon tasks to work as expected and documented.
