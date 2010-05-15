@@ -3,7 +3,7 @@ package org.openstreetmap.osmosis.core.pgsql.v0_6;
 
 import java.io.File;
 
-import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.NodeLocationStoreType;
+import org.openstreetmap.osmosis.core.pgsql.common.NodeLocationStoreType;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskConfiguration;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;

@@ -1,5 +1,5 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.pgsql.v0_6.impl;
+package org.openstreetmap.osmosis.core.pgsql.common;
 
 import org.openstreetmap.osmosis.core.lifecycle.Releasable;
 

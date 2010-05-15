@@ -4,8 +4,8 @@ package org.openstreetmap.osmosis.core.pgsql.v0_6;
 import java.io.File;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
+import org.openstreetmap.osmosis.core.pgsql.common.NodeLocationStoreType;
 import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.DirectoryCopyFileset;
-import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.NodeLocationStoreType;
 import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.CopyFilesetBuilder;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 

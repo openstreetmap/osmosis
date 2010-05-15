@@ -4,7 +4,7 @@ package org.openstreetmap.osmosis.core.pgsql.v0_6;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.database.DatabaseTaskManagerFactory;
-import org.openstreetmap.osmosis.core.pgsql.v0_6.impl.NodeLocationStoreType;
+import org.openstreetmap.osmosis.core.pgsql.common.NodeLocationStoreType;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskConfiguration;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
 import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkManager;

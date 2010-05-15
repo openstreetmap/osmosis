@@ -4,6 +4,10 @@ package org.openstreetmap.osmosis.core.pgsql.v0_6.impl;
 import org.junit.Assert;
 import org.junit.Test;
 
+import org.openstreetmap.osmosis.core.pgsql.common.InMemoryNodeLocationStore;
+import org.openstreetmap.osmosis.core.pgsql.common.NodeLocation;
+import org.openstreetmap.osmosis.core.pgsql.common.NodeLocationStore;
+import org.openstreetmap.osmosis.core.pgsql.common.PersistentNodeLocationStore;
 import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
 

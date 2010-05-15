@@ -19,6 +19,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.lifecycle.CompletableContainer;
 import org.openstreetmap.osmosis.core.pgsql.common.CopyFileWriter;
+import org.openstreetmap.osmosis.core.pgsql.common.NodeLocationStoreType;
 import org.openstreetmap.osmosis.core.pgsql.common.PointBuilder;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
