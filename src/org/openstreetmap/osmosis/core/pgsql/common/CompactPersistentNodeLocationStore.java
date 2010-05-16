@@ -3,11 +3,8 @@ package org.openstreetmap.osmosis.core.pgsql.common;
 
 import org.openstreetmap.osmosis.core.store.IndexedObjectStore;
 import org.openstreetmap.osmosis.core.store.IndexedObjectStoreReader;
+import org.openstreetmap.osmosis.core.store.NoSuchIndexElementException;
 import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactory;
-import org.openstreetmap.osmosis.core.store.StoreClassRegister;
-import org.openstreetmap.osmosis.core.store.StoreReader;
-import org.openstreetmap.osmosis.core.store.StoreWriter;
-import org.openstreetmap.osmosis.core.store.Storeable;
 
 
 /**
@@ -20,16 +17,16 @@ import org.openstreetmap.osmosis.core.store.Storeable;
  */
 public class CompactPersistentNodeLocationStore implements NodeLocationStore {
 
-	private IndexedObjectStore<PersistentNodeLocation> nodeLocations;
-	private IndexedObjectStoreReader<PersistentNodeLocation> nodeLocationsReader;
+	private IndexedObjectStore<CompactPersistentNodeLocation> nodeLocations;
+	private IndexedObjectStoreReader<CompactPersistentNodeLocation> nodeLocationsReader;
 	
 	
 	/**
 	 * Creates a new instance.
 	 */
 	public CompactPersistentNodeLocationStore() {
-		nodeLocations = new IndexedObjectStore<PersistentNodeLocation>(
-				new SingleClassObjectSerializationFactory(PersistentNodeLocation.class),
+		nodeLocations = new IndexedObjectStore<CompactPersistentNodeLocation>(
+				new SingleClassObjectSerializationFactory(CompactPersistentNodeLocation.class),
 				"nodeLocation");
 	}
 	
@@ -39,7 +36,7 @@ public class CompactPersistentNodeLocationStore implements NodeLocationStore {
 	 */
 	@Override
 	public void addLocation(long nodeId, NodeLocation nodeLocation) {
-		nodeLocations.add(nodeId, new PersistentNodeLocation(nodeLocation));
+		nodeLocations.add(nodeId, new CompactPersistentNodeLocation(nodeLocation));
 	}
 
 	
@@ -48,15 +45,17 @@ public class CompactPersistentNodeLocationStore implements NodeLocationStore {
 	 */
 	@Override
 	public NodeLocation getNodeLocation(long nodeId) {
-		PersistentNodeLocation persistentNodeLocation;
-		
 		if (nodeLocationsReader == null) {
+			nodeLocations.complete();
 			nodeLocationsReader = nodeLocations.createReader();
 		}
 		
-		persistentNodeLocation = nodeLocationsReader.get(nodeId);
-		
-		return persistentNodeLocation.getNodeLocation();
+		try {
+			return nodeLocationsReader.get(nodeId).getNodeLocation();
+			
+		} catch (NoSuchIndexElementException e) {
+			return new NodeLocation();
+		}
 	}
 
 	
@@ -70,55 +69,5 @@ public class CompactPersistentNodeLocationStore implements NodeLocationStore {
 		}
 		
 		nodeLocations.release();
-	}
-	
-	
-	private static class PersistentNodeLocation implements Storeable {
-
-		private NodeLocation nodeLocation;
-		
-		
-		/**
-		 * Creates a new instance.
-		 * 
-		 * @param nodeLocation The node location details.
-		 */
-		public PersistentNodeLocation(NodeLocation nodeLocation) {
-			this.nodeLocation = nodeLocation;
-		}
-
-
-		/**
-		 * Creates a new instance.
-		 * 
-		 * @param sr
-		 *            The store to read state from.
-		 * @param scr
-		 *            Maintains the mapping between classes and their identifiers within the store.
-		 */
-		@SuppressWarnings("unused") // Used by the persistent store via reflection.
-		public PersistentNodeLocation(StoreReader sr, StoreClassRegister scr) {
-			nodeLocation = new NodeLocation(sr.readDouble(), sr.readDouble());
-		}
-
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void store(StoreWriter writer,
-				StoreClassRegister storeClassRegister) {
-			writer.writeDouble(nodeLocation.getLongitude());
-			writer.writeDouble(nodeLocation.getLatitude());
-		}
-		
-		
-		/**
-		 * Gets the node location details.
-		 * @return The node location.
-		 */
-		public NodeLocation getNodeLocation() {
-			return nodeLocation;
-		}
 	}
 }
