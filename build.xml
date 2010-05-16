@@ -153,9 +153,6 @@
 		</zip>
 		<mkdir dir="distrib/tgzs"/>
 		<tar destfile="distrib/tgzs/${project.name}-${project.version}.tgz" compression="gzip" longfile="gnu">
-			<tarfileset prefix="${project.name}-${project.version}" dir="." mode="755">
-				<include name="bin/*"/>
-			</tarfileset>
 			<tarfileset prefix="${project.name}-${project.version}" dir=".">
 				<exclude name="build/"/>
 				<exclude name="build_support/"/>
@@ -163,11 +160,11 @@
 				<exclude name="eclipse/"/>
 				<exclude name="debian/"/>
 			</tarfileset>
-		</tar>
-		<tar destfile="distrib/tgzs/${project.name}-bin-${project.version}.tgz" compression="gzip" longfile="gnu">
 			<tarfileset prefix="${project.name}-${project.version}" dir="." mode="755">
 				<include name="bin/*"/>
 			</tarfileset>
+		</tar>
+		<tar destfile="distrib/tgzs/${project.name}-bin-${project.version}.tgz" compression="gzip" longfile="gnu">
 			<tarfileset prefix="${project.name}-${project.version}" dir=".">
 				<exclude name="build/"/>
 				<exclude name="build_support/"/>
@@ -184,6 +181,9 @@
 				<exclude name="ivy.xml"/>
 				<exclude name=".*"/>
 				<exclude name="doc/api/"/>
+			</tarfileset>
+			<tarfileset prefix="${project.name}-${project.version}" dir="." mode="755">
+				<include name="bin/*"/>
 			</tarfileset>
 		</tar>
 	</target>
