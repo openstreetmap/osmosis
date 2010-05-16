@@ -1,7 +1,9 @@
 0.36
 Removed 0.5 support.
 Added the --fast-write-pgsql task which uses PostgreSQL COPY commands to insert data.
-All write-pgsql tasks now default to the TempFile node location type store instead of in memory.
+Added the CompactTempFile node location store type which allows efficient pgsql geometry building for small data sets.
+All write-pgsql tasks now default to the CompactTempFile node location type store instead of in memory.
+Fixed regression in tar builds to make the launch scripts executable again.
 
 0.35
 Registered --fast-read-xml as a task instead of requiring --fast-read-xml-0.6 to be specified.
