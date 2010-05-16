@@ -21,7 +21,7 @@ public class PostgreSqlWriterFactory extends DatabaseTaskManagerFactory {
 	private static final String ARG_NODE_LOCATION_STORE_TYPE = "nodeLocationStoreType";
 	private static final boolean DEFAULT_ENABLE_BBOX_BUILDER = false;
 	private static final boolean DEFAULT_ENABLE_LINESTRING_BUILDER = false;
-	private static final String DEFAULT_NODE_LOCATION_STORE_TYPE = "TempFile";
+	private static final String DEFAULT_NODE_LOCATION_STORE_TYPE = "CompactTempFile";
 	
 	/**
 	 * {@inheritDoc}

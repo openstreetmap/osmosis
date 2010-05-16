@@ -90,7 +90,7 @@ public class PostgreSqlTest {
 	 * @throws IOException
 	 *             if any file operations fail.
 	 */
-	//@Test
+	@Test
 	public void testFastLoadAndDump() throws IOException {
 		File authFile;
 		File inputFile;
