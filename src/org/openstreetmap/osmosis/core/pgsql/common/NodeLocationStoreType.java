@@ -17,5 +17,12 @@ public enum NodeLocationStoreType {
 	/**
 	 * A temporary file based node location store holds all information in a temporary file on disk.
 	 */
-	TempFile
+	TempFile,
+	
+	/**
+	 * A temporary file based node location store holds all information in a
+	 * temporary file on disk. This is optimised for small datasets, and is less
+	 * efficient for large datasets.
+	 */
+	CompactTempFile
 }

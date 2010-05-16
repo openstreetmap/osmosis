@@ -9,6 +9,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.pgsql.common.CompactPersistentNodeLocationStore;
 import org.openstreetmap.osmosis.core.pgsql.common.InMemoryNodeLocationStore;
 import org.openstreetmap.osmosis.core.pgsql.common.NodeLocation;
 import org.openstreetmap.osmosis.core.pgsql.common.NodeLocationStore;
@@ -45,6 +46,8 @@ public class WayGeometryBuilder implements Releasable {
 			locationStore = new InMemoryNodeLocationStore();
 		} else if (NodeLocationStoreType.TempFile.equals(storeType)) {
 			locationStore = new PersistentNodeLocationStore();
+		} else if (NodeLocationStoreType.CompactTempFile.equals(storeType)) {
+			locationStore = new CompactPersistentNodeLocationStore();
 		} else {
 			throw new OsmosisRuntimeException("The store type " + storeType + " is not recognized.");
 		}
