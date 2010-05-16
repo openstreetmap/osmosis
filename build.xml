@@ -126,7 +126,6 @@
 		<zip destfile="distrib/zips/${project.name}-${project.version}.zip">
 			<zipfileset prefix="${project.name}-${project.version}" dir=".">
 				<exclude name="build/"/>
-				<exclude name="build_support/"/>
 				<exclude name="distrib/"/>
 				<exclude name="eclipse/"/>
 				<exclude name="debian/"/>
@@ -155,7 +154,6 @@
 		<tar destfile="distrib/tgzs/${project.name}-${project.version}.tgz" compression="gzip" longfile="gnu">
 			<tarfileset prefix="${project.name}-${project.version}" dir=".">
 				<exclude name="build/"/>
-				<exclude name="build_support/"/>
 				<exclude name="distrib/"/>
 				<exclude name="eclipse/"/>
 				<exclude name="debian/"/>
