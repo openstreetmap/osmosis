@@ -1,3 +1,8 @@
+0.35.1
+Fixed launch scripts in the bin folder to be executable.
+Included missing build_support folder in source distribution.
+Removed unnecessary libraries from the binary distribution.
+
 0.35
 Registered --fast-read-xml as a task instead of requiring --fast-read-xml-0.6 to be specified.
 Fixed the completeRelations option on the --bounding-box and --bounding-polygon tasks to work as expected and documented.
