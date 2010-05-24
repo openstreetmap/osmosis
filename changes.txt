@@ -4,6 +4,7 @@ Added the --fast-write-pgsql task which uses PostgreSQL COPY commands to insert 
 Added the CompactTempFile node location store type which allows efficient pgsql geometry building for small data sets.
 All write-pgsql tasks now default to the CompactTempFile node location type store instead of in memory.
 Fixed regression in tar builds to make the launch scripts executable again.
+Updated the pgsql schema (now version 5) to add a primary key to the relation_members table to allow more efficient updates.
 
 0.35
 Registered --fast-read-xml as a task instead of requiring --fast-read-xml-0.6 to be specified.

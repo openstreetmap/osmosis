@@ -19,5 +19,5 @@ public final class PostgreSqlVersionConstants {
 	/**
 	 * Defines the schema version number currently supported.
 	 */
-	public static final int SCHEMA_VERSION = 4;
+	public static final int SCHEMA_VERSION = 5;
 }

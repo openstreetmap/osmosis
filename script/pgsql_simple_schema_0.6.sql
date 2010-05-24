@@ -104,7 +104,7 @@ CREATE TABLE relation_tags (
 
 
 -- Configure the schema version.
-INSERT INTO schema_info (version) VALUES (4);
+INSERT INTO schema_info (version) VALUES (5);
 
 
 -- Add primary keys to tables.
@@ -119,6 +119,8 @@ ALTER TABLE ONLY ways ADD CONSTRAINT pk_ways PRIMARY KEY (id);
 ALTER TABLE ONLY way_nodes ADD CONSTRAINT pk_way_nodes PRIMARY KEY (way_id, sequence_id);
 
 ALTER TABLE ONLY relations ADD CONSTRAINT pk_relations PRIMARY KEY (id);
+
+ALTER TABLE ONLY relation_members ADD CONSTRAINT pk_relation_members PRIMARY KEY (relation_id, sequence_id);
 
 
 -- Add indexes to tables.
