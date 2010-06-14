@@ -28,7 +28,7 @@ import org.openstreetmap.osmosis.core.util.FileBasedLock;
 import org.openstreetmap.osmosis.core.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.core.xml.common.DateParser;
 import org.openstreetmap.osmosis.core.xml.v0_6.XmlChangeReader;
-import org.openstreetmap.osmosis.extract.mysql.common.TimestampTracker;
+import org.openstreetmap.osmosis.extract.apidb.common.TimestampTracker;
 
 
 /**

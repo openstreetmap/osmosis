@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="Osmosis.Ivy" default="init-ivy" basedir="."
+	xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<description>
+		Installs and configures the ivy build dependencies system.
+	</description>
+
+	<property name="ivy.version" value="2.1.0" />
+	<property name="ivy.jar.dir" value="${build-support.dir}/ivy" />
+	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy-${ivy.version}.jar" />
+
+	<target name="download-ivy" unless="ivy.available" description="Downloads the ivy library from public repositories.">
+		<!-- Delete any existing ivy files -->
+		<delete dir="${ivy.jar.dir}"/>
+		
+		<mkdir dir="${ivy.jar.dir}" />
+		
+		<!--
+			Download Ivy from web site so that it can be used even without any
+			special installation
+		-->
+		<get
+			src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar"
+			dest="${ivy.jar.file}" usetimestamp="true"/>
+	</target>
+
+	<target name="init-ivy" description="Registers ivy with ant and initializes it.">
+		<!-- Determine if the ivy jar is already available. -->
+		<available property="ivy.available" file="${ivy.jar.file}" />
+		<!-- Download ivy.  This will only execute if the ivy.available property is not set. -->
+		<antcall target="download-ivy" />
+		<!--
+			Try to load ivy in case the user has not already
+			dropped it into ant's lib dir (note that the latter copy will always
+			take precedence). We will not fail as long as local lib dir exists
+			(it may be empty) and ivy is in at least one of ant's lib dir or the
+			local lib dir.
+		-->
+		<path id="ivy.lib.path">
+			<fileset dir="${ivy.jar.dir}" includes="*.jar" />
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant"
+			classpathref="ivy.lib.path" />
+		
+		<!-- Override the shared repo location to point at the svn-based ivy repo. -->
+		<property name="ivy.shared.default.root" location="build_support/repo"/>
+		<ivy:configure />
+	</target>
+	
+	<target name="resolve-uptodate" depends="init-ivy" description="Checks if the ivy configuration has changed since the last resolve check.">
+		<uptodate property="resolve.uptodate" srcfile="${ivy.dep.file}" targetfile="${ivy.lib.dir}/resolve.tstamp"/>
+	</target>
+	
+	<target name="resolve" depends="init-ivy" unless="resolve.uptodate" description="Downloads all program dependencies using ivy.">
+		<ivy:resolve file="${ivy.dep.file}" conf="${ivy.configurations}" />
+		
+		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact]-[revision].[ext]" sync="true" conf="${ivy.configurations}" />
+		
+		<ivy:report todir="report/ivy"/>
+		
+		<!-- Create the timestamp file for the resolve-uptodate target to check.  If this file is newer than ivy.xml then no
+		resolve will be performed. -->
+		<touch file="${ivy.lib.dir}/resolve.tstamp"/>
+	</target>
+	
+	<target name="resolve-message" if="resolve.uptodate">
+		<echo>Dependencies libraries are already available, to force a refresh run "ant resolve".</echo>
+	</target>
+	
+	<target name="conditional-resolve" depends="resolve-uptodate, resolve-message, resolve" description="Invokes resolve only if the libraries are out of date."/>
+	
+	<target name="publish" depends="resolve, build">
+		<ivy:deliver pubrevision="${project.version}"/>
+		<ivy:publish resolver="local" pubrevision="${project.version}" overwrite="true"/>
+	</target>
+	
+	<target name="clean-cache" depends="init-ivy" description="Clean the ivy cache.">
+		<ivy:cleancache />
+	</target>
+	
+	<target name="clean-ivy" description="Clean the ivy installation.">
+		<delete dir="${ivy.jar.dir}"/>
+	</target>
+</project>

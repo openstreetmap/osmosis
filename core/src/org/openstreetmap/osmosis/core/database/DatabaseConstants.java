@@ -3,7 +3,7 @@ package org.openstreetmap.osmosis.core.database;
 
 
 /**
- * Defines common constants shared between MySQL tasks.
+ * Defines common constants shared between database tasks.
  * 
  * @author Brett Henderson
  */

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="Osmosis-Package" default="all" basedir=".">
+	
+	<!-- Global properties for the build. -->
+	<property name="project.name" value="osmosis-package"/>
+	<property name="project.version.suffix" value=""/> <!-- Can be overridden to include extra info such as svn revision number. -->
+	<property name="project.version" value="0.36-SNAPSHOT${project.version.suffix}"/>
+	
+	<!-- Include common build components. -->
+	<property name="build-support.dir" location="../build-support"/>
+	<import file="../build-support/build-ivy.xml"/>
+	
+	<target name="init" description="Perform initialisation required by all other build steps.">
+		<!-- Create the time stamp -->
+		<tstamp/>
+	</target>	
+	
+	<target name="build" depends="init, conditional-resolve" description="Builds the distribution package.">
+		<!-- Create the distribution archives. -->
+		<mkdir dir="distrib/zips"/>
+		<zip destfile="distrib/zips/${project.name}-${project.version}.zip">
+			<zipfileset prefix="${project.name}-${project.version}" dir=".">
+				<exclude name="distrib/"/>
+				<exclude name="lib/compile/"/>
+				<exclude name="lib/runtime/"/>
+				<exclude name="lib/test/"/>
+				<exclude name="report/"/>
+				<exclude name="build*.xml"/>
+				<exclude name="ivy.xml"/>
+				<exclude name=".*"/>
+			</zipfileset>
+		</zip>
+		<mkdir dir="distrib/tgzs"/>
+		<tar destfile="distrib/tgzs/${project.name}-${project.version}.tgz" compression="gzip" longfile="gnu">
+			<tarfileset prefix="${project.name}-${project.version}" dir=".">
+				<exclude name="distrib/"/>
+				<exclude name="lib/compile/"/>
+				<exclude name="lib/runtime/"/>
+				<exclude name="lib/test/"/>
+				<exclude name="report/"/>
+				<exclude name="build*.xml"/>
+				<exclude name="ivy.xml"/>
+				<exclude name=".*"/>
+			</tarfileset>
+			<tarfileset prefix="${project.name}-${project.version}" dir="." mode="755">
+				<include name="bin/*"/>
+			</tarfileset>
+		</tar>
+	</target>
+	
+	<target name="dist" depends="build"/>
+	
+	<!-- Executes all major build targets. -->
+	<target name="all" depends="dist"/>
+	
+	<target name="clean" description="Clean up the project tree.">
+		<!-- Delete generated directory trees. -->
+		<delete dir="distrib"/>
+		<delete dir="report"/>
+	</target>
+</project>

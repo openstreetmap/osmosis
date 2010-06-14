@@ -8,7 +8,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.task.common.RunnableTask;
 import org.openstreetmap.osmosis.core.util.FileBasedLock;
 import org.openstreetmap.osmosis.core.util.ResourceFileManager;
-import org.openstreetmap.osmosis.extract.mysql.common.TimestampTracker;
+import org.openstreetmap.osmosis.extract.apidb.common.TimestampTracker;
 
 
 /**

@@ -1,8 +1,12 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
@@ -57,12 +61,6 @@ import org.openstreetmap.osmosis.core.merge.v0_6.ReplicationFileMergerFactory;
 import org.openstreetmap.osmosis.core.merge.v0_6.ReplicationFileMergerInitializerFactory;
 import org.openstreetmap.osmosis.core.misc.v0_6.NullChangeWriterFactory;
 import org.openstreetmap.osmosis.core.misc.v0_6.NullWriterFactory;
-import org.openstreetmap.osmosis.core.pgsql.v0_6.PostgreSqlChangeWriterFactory;
-import org.openstreetmap.osmosis.core.pgsql.v0_6.PostgreSqlCopyWriterFactory;
-import org.openstreetmap.osmosis.core.pgsql.v0_6.PostgreSqlDumpWriterFactory;
-import org.openstreetmap.osmosis.core.pgsql.v0_6.PostgreSqlDatasetReaderFactory;
-import org.openstreetmap.osmosis.core.pgsql.v0_6.PostgreSqlTruncatorFactory;
-import org.openstreetmap.osmosis.core.pgsql.v0_6.PostgreSqlWriterFactory;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactoryRegister;
 import org.openstreetmap.osmosis.core.plugin.PluginLoader;
@@ -200,18 +198,6 @@ public class TaskRegistrar {
 		factoryRegister.register("dd", new DumpDatasetFactory());
 		factoryRegister.register("read-customdb", new ReadDatasetFactory());
 		factoryRegister.register("rc", new ReadDatasetFactory());
-		factoryRegister.register("write-pgsql", new PostgreSqlWriterFactory());
-		factoryRegister.register("wp", new PostgreSqlWriterFactory());
-		factoryRegister.register("fast-write-pgsql", new PostgreSqlCopyWriterFactory());
-		factoryRegister.register("fwp", new PostgreSqlCopyWriterFactory());
-		factoryRegister.register("truncate-pgsql", new PostgreSqlTruncatorFactory());
-		factoryRegister.register("tp", new PostgreSqlTruncatorFactory());
-		factoryRegister.register("write-pgsql-dump", new PostgreSqlDumpWriterFactory());
-		factoryRegister.register("wpd", new PostgreSqlDumpWriterFactory());
-		factoryRegister.register("read-pgsql", new PostgreSqlDatasetReaderFactory());
-		factoryRegister.register("rp", new PostgreSqlDatasetReaderFactory());
-		factoryRegister.register("write-pgsql-change", new PostgreSqlChangeWriterFactory());
-		factoryRegister.register("wpc", new PostgreSqlChangeWriterFactory());
 		factoryRegister.register("used-node", new UsedNodeFilterFactory());
 		factoryRegister.register("un", new UsedNodeFilterFactory());
 		factoryRegister.register("tag-filter", new TagFilterFactory());
@@ -283,12 +269,6 @@ public class TaskRegistrar {
 		factoryRegister.register("dataset-bounding-box-0.6", new DatasetBoundingBoxFilterFactory());
 		factoryRegister.register("dataset-dump-0.6", new DumpDatasetFactory());
 		factoryRegister.register("read-customdb-0.6", new ReadDatasetFactory());
-		factoryRegister.register("write-pgsql-0.6", new PostgreSqlWriterFactory());
-		factoryRegister.register("fast-write-pgsql-0.6", new PostgreSqlCopyWriterFactory());
-		factoryRegister.register("truncate-pgsql-0.6", new PostgreSqlTruncatorFactory());
-		factoryRegister.register("write-pgsql-dump-0.6", new PostgreSqlDumpWriterFactory());
-		factoryRegister.register("read-pgsql-0.6", new PostgreSqlDatasetReaderFactory());
-		factoryRegister.register("write-pgsql-change-0.6", new PostgreSqlChangeWriterFactory());
 		factoryRegister.register("used-node-0.6", new UsedNodeFilterFactory());
 		factoryRegister.register("tag-filter-0.6", new TagFilterFactory());
 		factoryRegister.register("node-key-0.6", new NodeKeyFilterFactory());
@@ -313,12 +293,55 @@ public class TaskRegistrar {
 		factoryRegister.register("append-change-0.6", new ChangeAppenderFactory());
 		factoryRegister.register("replicate-apidb-0.6", new ApidbFileReplicatorFactory());
 		factoryRegister.register("simplify-change-0.6", new ChangeSimplifierFactory());
+		
+		// Register the built-in plugins.
+		loadBuiltInPlugins();
 
-		// Register the plugins.
+		// Register the plugins specified on the command line.
 		for (String plugin : plugins) {
 			loadPlugin(plugin);
 		}
+		
+		// Register the plugins loaded via JPF.
 		loadJPFPlugins();
+	}
+
+
+	private void loadBuiltInPlugins() {
+		final String pluginResourceName = "osmosis-plugins.conf";
+		
+		InputStream pluginInputStream;
+		BufferedReader pluginReader;
+		
+		pluginInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(pluginResourceName);
+		if (pluginInputStream == null) {
+			throw new OsmosisRuntimeException("Cannot find plugin configuration resource " + pluginResourceName + ".");
+		}
+		
+		try {
+			pluginReader = new BufferedReader(new InputStreamReader(pluginInputStream));
+			
+			for (;;) {
+				String plugin;
+				
+				plugin = pluginReader.readLine();
+				if (plugin == null) {
+					break;
+				}
+				
+				loadPlugin(plugin);
+			}
+			
+		} catch (IOException e) {
+			throw new OsmosisRuntimeException("Unable to load the plugin configuration from resource "
+					+ pluginResourceName + ".", e);
+		} finally {
+			try {
+				pluginInputStream.close();
+			} catch (IOException e) {
+				LOG.warning("Unable to close plugin resource " + pluginResourceName + ".");
+			}
+		}
 	}
 
 
