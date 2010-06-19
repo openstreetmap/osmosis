@@ -118,7 +118,7 @@
 		<taskdef uri="antlib:com.puppycrawl.tools.checkstyle" resource="checkstyletask.properties" classpathref="classpath.test" />
 		
 		<mkdir dir="report"/>
-		<cs:checkstyle config="${build_support}/checkstyle.xml">
+		<cs:checkstyle config="${build-support.dir}/checkstyle.xml">
 			<fileset dir="src" includes="**/*.java"/>
 			<fileset dir="test" includes="**/*.java"/>
 			<formatter type="plain"/>
