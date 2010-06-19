@@ -8,6 +8,13 @@ import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainerFactory;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainerFactory;
+import org.openstreetmap.osmosis.core.database.DbFeatureHistory;
+import org.openstreetmap.osmosis.core.database.DbFeatureHistoryRowMapper;
+import org.openstreetmap.osmosis.core.database.DbFeatureRowMapper;
+import org.openstreetmap.osmosis.core.database.DbOrderedFeature;
+import org.openstreetmap.osmosis.core.database.DbOrderedFeatureHistoryComparator;
+import org.openstreetmap.osmosis.core.database.DbOrderedFeatureRowMapper;
+import org.openstreetmap.osmosis.core.database.RowMapperListener;
 import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;

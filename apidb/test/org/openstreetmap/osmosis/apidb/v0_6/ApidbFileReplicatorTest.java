@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.openstreetmap.osmosis.apidb.v0_6.impl.DatabaseUtilities;
 import org.openstreetmap.osmosis.core.Osmosis;
-import org.openstreetmap.osmosis.core.apidb.v0_6.impl.DatabaseUtilities;
 
 import data.util.DataFileUtilities;
 

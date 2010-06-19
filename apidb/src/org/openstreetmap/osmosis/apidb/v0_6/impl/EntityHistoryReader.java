@@ -4,6 +4,8 @@ package org.openstreetmap.osmosis.apidb.v0_6.impl;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.database.DbFeature;
+import org.openstreetmap.osmosis.core.database.DbFeatureHistory;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableContainer;

@@ -4,6 +4,7 @@ package org.openstreetmap.osmosis.apidb.v0_6.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.openstreetmap.osmosis.core.database.RowMapperListener;
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.springframework.jdbc.core.RowCallbackHandler;

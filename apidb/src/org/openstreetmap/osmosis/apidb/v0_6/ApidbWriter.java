@@ -8,15 +8,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.ChangesetManager;
-import org.openstreetmap.osmosis.apidb.v0_6.impl.DbFeature;
-import org.openstreetmap.osmosis.apidb.v0_6.impl.DbFeatureHistory;
-import org.openstreetmap.osmosis.apidb.v0_6.impl.DbOrderedFeature;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.MemberTypeRenderer;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.SchemaVersionValidator;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.UserManager;
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityProcessor;
@@ -25,6 +22,9 @@ import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
+import org.openstreetmap.osmosis.core.database.DbFeature;
+import org.openstreetmap.osmosis.core.database.DbFeatureHistory;
+import org.openstreetmap.osmosis.core.database.DbOrderedFeature;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
@@ -35,6 +35,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 import org.openstreetmap.osmosis.core.util.TileCalculator;
+
 
 /**
  * An OSM data sink for storing all data to a database. This task is intended for writing to an

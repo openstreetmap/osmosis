@@ -4,6 +4,7 @@ package org.openstreetmap.osmosis.apidb.v0_6.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.openstreetmap.osmosis.core.database.RowMapperListener;
 import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;

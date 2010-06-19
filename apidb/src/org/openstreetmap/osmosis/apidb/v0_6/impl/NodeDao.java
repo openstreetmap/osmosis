@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainerFactory;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainerFactory;
+import org.openstreetmap.osmosis.core.database.RowMapperListener;
 import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.springframework.jdbc.core.JdbcTemplate;

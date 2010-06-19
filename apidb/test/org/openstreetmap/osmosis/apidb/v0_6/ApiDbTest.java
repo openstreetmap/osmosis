@@ -1,5 +1,5 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.apidb.v0_6;
+package org.openstreetmap.osmosis.apidb.v0_6;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,8 +11,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import org.junit.Test;
+import org.openstreetmap.osmosis.apidb.v0_6.impl.DatabaseUtilities;
 import org.openstreetmap.osmosis.core.Osmosis;
-import org.openstreetmap.osmosis.core.apidb.v0_6.impl.DatabaseUtilities;
 
 import data.util.DataFileUtilities;
 

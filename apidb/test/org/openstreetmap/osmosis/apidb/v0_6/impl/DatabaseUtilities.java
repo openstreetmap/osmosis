@@ -1,10 +1,10 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.apidb.v0_6.impl;
+package org.openstreetmap.osmosis.apidb.v0_6.impl;
 
 import java.io.File;
 
+import org.openstreetmap.osmosis.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.Osmosis;
-import org.openstreetmap.osmosis.core.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.database.AuthenticationPropertiesLoader;
 import org.openstreetmap.osmosis.core.database.DatabaseConstants;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
