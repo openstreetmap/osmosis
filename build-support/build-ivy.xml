@@ -48,10 +48,6 @@
 		<ivy:configure />
 	</target>
 	
-	<target name="resolve-uptodate" depends="init-ivy" description="Checks if the ivy configuration has changed since the last resolve check.">
-		<uptodate property="resolve.uptodate" srcfile="${ivy.dep.file}" targetfile="${ivy.lib.dir}/resolve.tstamp"/>
-	</target>
-	
 	<target name="resolve" depends="init-ivy" unless="resolve.uptodate" description="Downloads all program dependencies using ivy.">
 		<ivy:resolve file="${ivy.dep.file}" conf="${ivy.configurations}" />
 		
@@ -63,12 +59,6 @@
 		resolve will be performed. -->
 		<touch file="${ivy.lib.dir}/resolve.tstamp"/>
 	</target>
-	
-	<target name="resolve-message" if="resolve.uptodate">
-		<echo>Dependencies libraries are already available, to force a refresh run "ant resolve".</echo>
-	</target>
-	
-	<target name="conditional-resolve" depends="resolve-uptodate, resolve-message, resolve" description="Invokes resolve only if the libraries are out of date."/>
 	
 	<target name="publish" depends="resolve, build">
 		<ivy:deliver pubrevision="${project.version}"/>

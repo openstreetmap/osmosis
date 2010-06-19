@@ -27,7 +27,7 @@
 		<tstamp/>
 	</target>	
 	
-	<target name="build_src" depends="init, conditional-resolve" description="Compile source code into class files.">
+	<target name="build_src" depends="init, resolve" description="Compile source code into class files.">
 		<!-- Update the version number in the main class. -->
 		<replaceregexp
 			byline="true"
