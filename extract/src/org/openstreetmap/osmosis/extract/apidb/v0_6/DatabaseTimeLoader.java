@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.openstreetmap.osmosis.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 
 

@@ -5,5 +5,31 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Apidb"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Core"/>
+	<classpathentry kind="lib" path="lib/test/antlr-2.7.6.jar"/>
+	<classpathentry kind="lib" path="lib/test/aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/checkstyle-5.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-beanutils-core-1.7.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-cli-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-codec-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-collections-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-compress-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-dbcp-1.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-lang-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-pool-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/test/google-collections-0.9.jar"/>
+	<classpathentry kind="lib" path="lib/test/jpf-1.5.jar"/>
+	<classpathentry kind="lib" path="lib/test/junit-4.4.jar"/>
+	<classpathentry kind="lib" path="lib/test/mysql-connector-java-5.1.10.jar"/>
+	<classpathentry kind="lib" path="lib/test/plexus-classworlds-2.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/postgresql-8.4-701.jdbc4.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-beans-2.5.6.SEC01.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-context-2.5.6.SEC01.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-core-2.5.6.SEC01.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-jdbc-2.5.6.SEC01.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-tx-2.5.6.SEC01.jar"/>
+	<classpathentry kind="lib" path="lib/test/stax2-api-3.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/test/woodstox-core-lgpl-4.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/test/xercesImpl-2.9.1.jar"/>
 	<classpathentry kind="output" path="eclipse"/>
 </classpath>
