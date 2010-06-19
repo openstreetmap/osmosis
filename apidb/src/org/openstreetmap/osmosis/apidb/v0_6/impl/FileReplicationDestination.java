@@ -4,6 +4,7 @@ package org.openstreetmap.osmosis.apidb.v0_6.impl;
 import java.io.File;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
+import org.openstreetmap.osmosis.core.replication.ReplicationFileSequenceFormatter;
 import org.openstreetmap.osmosis.core.util.AtomicFileCreator;
 import org.openstreetmap.osmosis.core.util.FileBasedLock;
 import org.openstreetmap.osmosis.core.xml.common.CompressionMethod;

@@ -5,13 +5,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.openstreetmap.osmosis.core.apidb.v0_6.impl.FileReplicationStatePersistor;
-import org.openstreetmap.osmosis.core.apidb.v0_6.impl.ReplicationFileSequenceFormatter;
-import org.openstreetmap.osmosis.core.apidb.v0_6.impl.ReplicationState;
-import org.openstreetmap.osmosis.core.apidb.v0_6.impl.ReplicationStatePersister;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.merge.v0_6.impl.ReplicationDownloaderConfiguration;
 import org.openstreetmap.osmosis.core.merge.v0_6.impl.ReplicationFileMergerConfiguration;
+import org.openstreetmap.osmosis.core.replication.FileReplicationStatePersistor;
+import org.openstreetmap.osmosis.core.replication.ReplicationFileSequenceFormatter;
+import org.openstreetmap.osmosis.core.replication.ReplicationState;
+import org.openstreetmap.osmosis.core.replication.ReplicationStatePersister;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeForStreamableApplierComparator;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeSorter;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;

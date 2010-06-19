@@ -3,8 +3,8 @@ package org.openstreetmap.osmosis.core.merge.v0_6;
 
 import java.io.File;
 
-import org.openstreetmap.osmosis.core.apidb.v0_6.impl.ReplicationState;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
+import org.openstreetmap.osmosis.core.replication.ReplicationState;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeForStreamableApplierComparator;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeSorter;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;

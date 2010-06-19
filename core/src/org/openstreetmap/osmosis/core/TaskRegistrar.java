@@ -26,13 +26,6 @@ import org.java.plugin.registry.ExtensionPoint;
 import org.java.plugin.registry.ManifestProcessingException;
 import org.java.plugin.registry.PluginDescriptor;
 import org.java.plugin.standard.StandardPluginLocation;
-import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbChangeReaderFactory;
-import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbChangeWriterFactory;
-import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbCurrentReaderFactory;
-import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbFileReplicatorFactory;
-import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbReaderFactory;
-import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbTruncatorFactory;
-import org.openstreetmap.osmosis.core.apidb.v0_6.ApidbWriterFactory;
 import org.openstreetmap.osmosis.core.buffer.v0_6.ChangeBufferFactory;
 import org.openstreetmap.osmosis.core.buffer.v0_6.EntityBufferFactory;
 import org.openstreetmap.osmosis.core.change.v0_6.ChangeApplierFactory;
@@ -222,22 +215,8 @@ public class TaskRegistrar {
 		factoryRegister.register("mrf", new ReplicationFileMergerFactory());
 		factoryRegister.register("merge-replication-files-init", new ReplicationFileMergerInitializerFactory());
 		factoryRegister.register("mrfi", new ReplicationFileMergerInitializerFactory());
-		factoryRegister.register("read-apidb", new ApidbReaderFactory());
-		factoryRegister.register("rd", new ApidbReaderFactory());
-		factoryRegister.register("read-apidb-change", new ApidbChangeReaderFactory());
-		factoryRegister.register("rdc", new ApidbChangeReaderFactory());
-		factoryRegister.register("read-apidb-current", new ApidbCurrentReaderFactory());
-		factoryRegister.register("rdcur", new ApidbCurrentReaderFactory());
-		factoryRegister.register("write-apidb", new ApidbWriterFactory());
-		factoryRegister.register("wd", new ApidbWriterFactory());
-		factoryRegister.register("write-apidb-change", new ApidbChangeWriterFactory());
-		factoryRegister.register("wdc", new ApidbChangeWriterFactory());
-		factoryRegister.register("truncate-apidb", new ApidbTruncatorFactory());
-		factoryRegister.register("td", new ApidbTruncatorFactory());
 		factoryRegister.register("append-change", new ChangeAppenderFactory());
 		factoryRegister.register("apc", new ChangeAppenderFactory());
-		factoryRegister.register("replicate-apidb", new ApidbFileReplicatorFactory());
-		factoryRegister.register("repa", new ApidbFileReplicatorFactory());
 		factoryRegister.register("simplify-change", new ChangeSimplifierFactory());
 		factoryRegister.register("simc", new ChangeSimplifierFactory());
 		
@@ -284,14 +263,7 @@ public class TaskRegistrar {
 		factoryRegister.register("tag-sort-0.6", new TagSorterFactory());
 		factoryRegister.register("tag-sort-change-0.6", new ChangeTagSorterFactory());
 		factoryRegister.register("remove-tags-0.6", new TagRemoverFactory());
-		factoryRegister.register("read-apidb-0.6", new ApidbReaderFactory());
-		factoryRegister.register("read-apidb-change-0.6", new ApidbChangeReaderFactory());
-		factoryRegister.register("read-apidb-current-0.6", new ApidbCurrentReaderFactory());
-		factoryRegister.register("write-apidb-0.6", new ApidbWriterFactory());
-		factoryRegister.register("write-apidb-change-0.6", new ApidbChangeWriterFactory());
-		factoryRegister.register("truncate-apidb-0.6", new ApidbTruncatorFactory());
 		factoryRegister.register("append-change-0.6", new ChangeAppenderFactory());
-		factoryRegister.register("replicate-apidb-0.6", new ApidbFileReplicatorFactory());
 		factoryRegister.register("simplify-change-0.6", new ChangeSimplifierFactory());
 		
 		// Register the built-in plugins.

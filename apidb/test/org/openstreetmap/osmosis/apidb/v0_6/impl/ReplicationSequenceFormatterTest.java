@@ -3,6 +3,7 @@ package org.openstreetmap.osmosis.core.apidb.v0_6.impl;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.openstreetmap.osmosis.core.replication.ReplicationSequenceFormatter;
 
 
 /**
