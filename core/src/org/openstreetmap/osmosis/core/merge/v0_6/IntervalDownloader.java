@@ -22,13 +22,13 @@ import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
 import org.openstreetmap.osmosis.core.merge.v0_6.impl.ChangesetFileNameFormatter;
 import org.openstreetmap.osmosis.core.merge.v0_6.impl.IntervalDownloaderConfiguration;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskRunner;
+import org.openstreetmap.osmosis.core.replication.TimestampTracker;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableChangeSource;
 import org.openstreetmap.osmosis.core.util.FileBasedLock;
 import org.openstreetmap.osmosis.core.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.core.xml.common.DateParser;
 import org.openstreetmap.osmosis.core.xml.v0_6.XmlChangeReader;
-import org.openstreetmap.osmosis.extract.apidb.common.TimestampTracker;
 
 
 /**

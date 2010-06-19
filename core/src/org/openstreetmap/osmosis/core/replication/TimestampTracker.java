@@ -1,5 +1,5 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.extract.apidb.common;
+package org.openstreetmap.osmosis.core.replication;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
