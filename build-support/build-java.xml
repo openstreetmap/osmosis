@@ -159,7 +159,7 @@
 	<target name="build" depends="build_binary"/>
 	
 	<!-- Executes all major build targets. -->
-	<target name="all" depends="build, checkstyle, test"/>
+	<target name="all" depends="build, checkstyle, test, publish"/>
 	
 	<target name="clean" description="Clean up the project tree.">
 		<!-- Delete the generated directory trees. -->
