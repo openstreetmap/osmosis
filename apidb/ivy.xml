@@ -24,7 +24,7 @@
     </publications>
     
     <dependencies>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-core" rev="${project.version}" conf="compile->default"/>
+    	<dependency org="org.openstreetmap.osmosis" name="osmosis-core" rev="${project.version}" conf="compile->default" changing="true"/>
     	<dependency org="postgresql" name="postgresql" rev="8.4-701.jdbc4" conf="compile->default"/>
     	<dependency org="mysql" name="mysql-connector-java" rev="5.1.10" conf="compile->default"/>
         

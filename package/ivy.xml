@@ -24,7 +24,7 @@
     </publications>
     
     <dependencies>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-core" rev="${project.version}" conf="runtime->default"/>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-pgsnapshot" rev="${project.version}" conf="runtime->default"/>
+    	<dependency org="org.openstreetmap.osmosis" name="osmosis-core" rev="${project.version}" conf="runtime->default" changing="true"/>
+    	<dependency org="org.openstreetmap.osmosis" name="osmosis-pgsnapshot" rev="${project.version}" conf="runtime->default" changing="true"/>
     </dependencies>
 </ivy-module>
