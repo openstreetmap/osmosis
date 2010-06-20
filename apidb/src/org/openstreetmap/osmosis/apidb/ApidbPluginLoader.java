@@ -11,7 +11,6 @@ import org.openstreetmap.osmosis.apidb.v0_6.ApidbFileReplicatorFactory;
 import org.openstreetmap.osmosis.apidb.v0_6.ApidbReaderFactory;
 import org.openstreetmap.osmosis.apidb.v0_6.ApidbTruncatorFactory;
 import org.openstreetmap.osmosis.apidb.v0_6.ApidbWriterFactory;
-import org.openstreetmap.osmosis.core.merge.v0_6.ChangeAppenderFactory;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
 import org.openstreetmap.osmosis.core.plugin.PluginLoader;
 
@@ -47,12 +46,12 @@ public class ApidbPluginLoader implements PluginLoader {
 		factoryMap.put("replicate-apidb", new ApidbFileReplicatorFactory());
 		factoryMap.put("repa", new ApidbFileReplicatorFactory());
 		
+		factoryMap.put("read-apidb-0.6", new ApidbReaderFactory());
 		factoryMap.put("read-apidb-change-0.6", new ApidbChangeReaderFactory());
 		factoryMap.put("read-apidb-current-0.6", new ApidbCurrentReaderFactory());
 		factoryMap.put("write-apidb-0.6", new ApidbWriterFactory());
 		factoryMap.put("write-apidb-change-0.6", new ApidbChangeWriterFactory());
 		factoryMap.put("truncate-apidb-0.6", new ApidbTruncatorFactory());
-		factoryMap.put("append-change-0.6", new ChangeAppenderFactory());
 		factoryMap.put("replicate-apidb-0.6", new ApidbFileReplicatorFactory());
 		
 		return factoryMap;
