@@ -1,7 +1,9 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.filter.v0_6;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,7 +13,6 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
@@ -48,7 +49,7 @@ public class PolygonFilterTest {
 		// All nodes have an empty tags list.
 		tags = new ArrayList<Tag>();
 		
-		polygonFile = new File("test/org/openstreetmap/osmosis/core/filter/v0_6/testPolygon.txt");
+		polygonFile = new File(getClass().getResource("testPolygon.txt").getFile());
 		entityInspector = new SinkEntityInspector();
 		// polyAreaFilter has a notch out of the Northeast corner.
 		polyAreaFilter = new PolygonFilter(IdTrackerType.IdList, polygonFile, false, false, false);
