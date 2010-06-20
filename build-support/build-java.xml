@@ -25,7 +25,7 @@
 	<target name="init" description="Perform initialisation required by all other build steps.">
 		<!-- Create the time stamp -->
 		<tstamp/>
-	</target>	
+	</target>
 	
 	<target name="build_src" depends="init, resolve" description="Compile source code into class files.">
 		<!-- Update the version number in the main class. -->
