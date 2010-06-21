@@ -15,7 +15,7 @@ import org.openstreetmap.osmosis.replication.v0_6.ReplicationFileMergerInitializ
 
 
 /**
- * The plugin loader for the XML tasks.
+ * The plugin loader for the replication tasks.
  * 
  * @author Brett Henderson
  */
