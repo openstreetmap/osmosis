@@ -47,6 +47,15 @@
 		<property name="ivy.shared.default.root" location="build_support/repo"/>
 		<ivy:configure />
 		
+		<!-- Retrieve ivy details from the config file. -->
+		<ivy:info />
+		
+		<!-- Set the project name based on the ivy name. -->
+		<property name="project.name" value="${ivy.module}"/>
+		<echo message="****************************************"/>
+		<echo message="Project: ${project.name}"/>
+		<echo message="****************************************"/>
+		
 		<property name="ivy.initialized" value="true"/>
 	</target>
 	

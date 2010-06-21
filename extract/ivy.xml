@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
 	
-    <info organisation="org.openstreetmap.osmosis" module="${project.name}"/>
+    <info organisation="org.openstreetmap.osmosis" module="osmosis-extract"/>
     
     <configurations>
 		<conf name="default" visibility="public" description="runtime dependencies and master artifact can be used with this conf" extends="runtime,master"/>

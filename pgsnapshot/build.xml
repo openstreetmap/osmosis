@@ -2,7 +2,6 @@
 <project name="Osmosis-PgSnapshot" default="all" basedir=".">
 	
 	<!-- Global properties for the build. -->
-	<property name="project.name" value="osmosis-pgsnapshot"/>
 	<property name="project.version.suffix" value=""/> <!-- Can be overridden to include extra info such as svn revision number. -->
 	<property name="project.version" value="0.36-SNAPSHOT${project.version.suffix}"/>
 	
