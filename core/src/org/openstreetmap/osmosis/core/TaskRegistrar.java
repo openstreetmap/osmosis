@@ -39,10 +39,6 @@ import org.openstreetmap.osmosis.core.filter.v0_6.TagFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.UsedNodeFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyValueFilterFactory;
-import org.openstreetmap.osmosis.core.merge.v0_6.ChangeAppenderFactory;
-import org.openstreetmap.osmosis.core.merge.v0_6.ChangeMergerFactory;
-import org.openstreetmap.osmosis.core.merge.v0_6.ChangeSimplifierFactory;
-import org.openstreetmap.osmosis.core.merge.v0_6.EntityMergerFactory;
 import org.openstreetmap.osmosis.core.misc.v0_6.NullChangeWriterFactory;
 import org.openstreetmap.osmosis.core.misc.v0_6.NullWriterFactory;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
@@ -137,10 +133,6 @@ public class TaskRegistrar {
 		factoryRegister.register("b", new EntityBufferFactory());
 		factoryRegister.register("buffer-change", new ChangeBufferFactory());
 		factoryRegister.register("bc", new ChangeBufferFactory());
-		factoryRegister.register("merge", new EntityMergerFactory());
-		factoryRegister.register("m", new EntityMergerFactory());
-		factoryRegister.register("merge-change", new ChangeMergerFactory());
-		factoryRegister.register("mc", new ChangeMergerFactory());
 		factoryRegister.register("bounding-polygon", new PolygonFilterFactory());
 		factoryRegister.register("bp", new PolygonFilterFactory());
 		factoryRegister.register("report-entity", new EntityReporterFactory());
@@ -169,10 +161,6 @@ public class TaskRegistrar {
 		factoryRegister.register("wk", new WayKeyFilterFactory());
 		factoryRegister.register("way-key-value", new WayKeyValueFilterFactory());
 		factoryRegister.register("wkv", new WayKeyValueFilterFactory());
-		factoryRegister.register("append-change", new ChangeAppenderFactory());
-		factoryRegister.register("apc", new ChangeAppenderFactory());
-		factoryRegister.register("simplify-change", new ChangeSimplifierFactory());
-		factoryRegister.register("simc", new ChangeSimplifierFactory());
 		
 		factoryRegister.register("apply-change-0.6", new ChangeApplierFactory());
 		factoryRegister.register("bounding-box-0.6", new BoundingBoxFilterFactory());
@@ -183,8 +171,6 @@ public class TaskRegistrar {
 		factoryRegister.register("write-null-change-0.6", new NullChangeWriterFactory());
 		factoryRegister.register("buffer-0.6", new EntityBufferFactory());
 		factoryRegister.register("buffer-change-0.6", new ChangeBufferFactory());
-		factoryRegister.register("merge-0.6", new EntityMergerFactory());
-		factoryRegister.register("merge-change-0.6", new ChangeMergerFactory());
 		factoryRegister.register("bounding-polygon-0.6", new PolygonFilterFactory());
 		factoryRegister.register("report-entity-0.6", new EntityReporterFactory());
 		factoryRegister.register("report-integrity-0.6", new IntegrityReporterFactory());
@@ -202,8 +188,6 @@ public class TaskRegistrar {
 		factoryRegister.register("tag-sort-0.6", new TagSorterFactory());
 		factoryRegister.register("tag-sort-change-0.6", new ChangeTagSorterFactory());
 		factoryRegister.register("remove-tags-0.6", new TagRemoverFactory());
-		factoryRegister.register("append-change-0.6", new ChangeAppenderFactory());
-		factoryRegister.register("simplify-change-0.6", new ChangeSimplifierFactory());
 		
 		// Register the built-in plugins.
 		loadBuiltInPlugins();
