@@ -6,8 +6,8 @@ import java.util.Date;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openstreetmap.osmosis.apidb.v0_6.impl.DatabaseUtilities;
 import org.openstreetmap.osmosis.extract.apidb.common.Configuration;
+
 
 /**
  * Tests the operation of the database system time loader.
