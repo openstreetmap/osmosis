@@ -16,7 +16,7 @@ import org.openstreetmap.osmosis.core.plugin.PluginLoader;
 
 
 /**
- * The plugin loader for the PostgreSQL Snapshot Schema tasks.
+ * The plugin loader for the API Schema tasks.
  * 
  * @author Brett Henderson
  */

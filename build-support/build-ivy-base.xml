@@ -55,6 +55,7 @@
 		<echo message="****************************************"/>
 		<echo message="Project: ${project.name}"/>
 		<echo message="****************************************"/>
+		<sleep seconds="1"/>
 		
 		<property name="ivy.initialized" value="true"/>
 	</target>
