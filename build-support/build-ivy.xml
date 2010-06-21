@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="Osmosis.Ivy" default="init-ivy" basedir="."
+	xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<description>
+		Extends the basic ivy functionality with re-usable tasks for all projects.
+	</description>
+	
+	<!-- Include common build components. -->
+	<property name="build-support.dir" location="."/>
+	<import file="${build-support.dir}/build-ivy-base.xml"/>
+
+	<target name="resolve" depends="init-ivy" description="Downloads all program dependencies using ivy.">
+		<ivy:resolve file="${ivy.dep.file}" conf="${ivy.configurations}" />
+		
+		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact]-[revision].[ext]" sync="true" conf="${ivy.configurations}" />
+		
+		<ivy:report todir="report/ivy"/>
+	</target>
+	
+	<target name="publish" depends="resolve, build">
+		<ivy:deliver pubrevision="${project.version}"/>
+		<ivy:publish resolver="local" pubrevision="${project.version}" overwrite="true"/>
+	</target>
+</project>

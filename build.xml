@@ -1,251 +1,32 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="Osmosis" default="all" basedir="."
-	xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
-	
-	<description>
-		Builds the Osmosis data replication library.
-	</description>
-	
-	<!-- Global properties for the build. -->
-	<property name="project.name" value="osmosis"/>
-	<property name="project.version.suffix" value=""/> <!-- Can be overriden to include extra info such as svn revision number. -->
-	<property name="project.version" value="0.36-SNAPSHOT${project.version.suffix}"/>
-	
-	<import file="build_support/build-ivy.xml"/>
-	
-	<!-- Define classpaths for each of the lib directories. -->
-	<path id="classpath.compile">
-		<fileset dir="lib/compile" includes="**/*.jar"/>
-	</path>
-	<path id="classpath.default">
-		<fileset dir="lib/default" includes="**/*.jar"/>
-	</path>
-	<path id="classpath.test">
-		<fileset dir="lib/test" includes="**/*.jar"/>
-	</path>
-	
-	<target name="init" description="Perform initialisation required by all other build steps.">
-		<!-- Create the time stamp -->
-		<tstamp/>
-	</target>	
-	
-	<target name="build_src" depends="init, conditional-resolve" description="Compile source code into class files.">
-		<!-- Update the version number in the main class. -->
-		<replaceregexp
-			byline="true"
-			file="src/org/openstreetmap/osmosis/core/OsmosisConstants.java"
-			match="String VERSION = &quot;(.*)&quot;"
-			replace="String VERSION = &quot;${project.version}&quot;"
-		/>
-		<replaceregexp
-					byline="true"
-					file="src/org/openstreetmap/osmosis/core/plugin/plugin.xml"
-					match="id=&quot;org.openstreetmap.osmosis.core.plugin.Core&quot; version=&quot;(.*)&quot;"
-					replace="id=&quot;org.openstreetmap.osmosis.core.plugin.Core&quot; version=&quot;${project.version}&quot;"
-				/>
-		<!-- Create the build directory structure. -->
-		<mkdir dir="build"/>
-		<mkdir dir="build/src"/>
-		<!-- Compile the java code from src into build/src -->
-		<javac srcdir="src" destdir="build/src" debug="on" debuglevel="lines,vars,source" classpathref="classpath.compile"/>
-		<!-- Copy all resource files from src into build/src -->
-		<copy todir="build/src">
-			<fileset dir="src">
-				<exclude name="**/*.java"/>
-			</fileset>
-		</copy>
-		<!-- Put a version number file in the build/src directory. -->
-		<touch file="build/src/version-${project.version}"/>
-	</target>
-	
-	<target name="build_test" depends="build_src" description="Compile test source code into class files.">
-		<!-- Create the build directory structure. -->
-		<mkdir dir="build/test"/>
-		
-		<!-- Copy the test data into the test data input directory -->
-		<copy todir="test/data/input">
-			<fileset dir="test/data/template"/>
-		</copy>
-		<!-- Replace the version tag in all test data. -->
-		<replace token="%VERSION%" value="${project.version}" dir="test/data/input"/>
-		
-		<!-- Compile the java test code with the main project classes as a dependency. -->
-		<javac srcdir="test" destdir="build/test" debug="on" debuglevel="lines,vars,source">
-			<classpath>
-				<path refid="classpath.test"/>
-				<path location="build/src"/>
-			</classpath>
-		</javac>
-		<!-- Copy all resource files from the test directory into the build test directory. -->
-		<copy todir="build/test">
-			<fileset dir="test">
-				<exclude name="**/*.java"/>
-			</fileset>
-		</copy>
-	</target>
-	
-	<target name="build_binary" depends="build_src" description="Generates the binaries for the distribution.">
-		<!-- Create the binary directory -->
-		<mkdir dir="build/binary"/>
-		
-		<!-- Create a manifest for the jar file. -->
-		<manifest file="build/binary/jar.txt">
-			<attribute name="Main-Class" value="org.openstreetmap.osmosis.core.Osmosis"/>
-			<attribute name="Built-By" value="${user.name}"/>
-			<attribute name="Implementation-Title" value="Osmosis Library"/>
-			<attribute name="Implementation-Version" value="${project.version} (${TODAY})"/> 
-			<attribute name="Implementation-Vendor" value="Brett Henderson"/>
-		</manifest>
-		
-		<!-- Create the jar archive. -->
-		<jar
-			destfile="build/binary/${project.name}.jar"
-			basedir="build/src"
-			manifest="build/binary/jar.txt"/>
-		
-		<!-- Copy the jar to the root directory where it can be run. -->
-		<copy
-			file="build/binary/${project.name}.jar"
-			todir="."/>
-		
-		<!-- Copy the jar to the distrib directory where it will be found by ivy. -->
-		<mkdir dir="distrib"/>
-		<copy
-			file="build/binary/${project.name}.jar"
-			tofile="distrib/jars/${project.name}-${project.version}.jar"/>
-	</target>
-	
-	<!-- Produces javadoc output from the source code. -->
-	<target name="javadoc" depends="init" description="Products javadoc documentation from the source code.">
-		<javadoc packagenames="*" sourcepath="src" destdir="doc/api" classpathref="classpath.compile"/>
-	</target>
-	
-	<target name="dist" depends="build_binary,javadoc" description="Generate the distribution.">
-		<!-- Create the distribution archives. -->
-		<mkdir dir="distrib/zips"/>
-		<zip destfile="distrib/zips/${project.name}-${project.version}.zip">
-			<zipfileset prefix="${project.name}-${project.version}" dir=".">
-				<exclude name="build/"/>
-				<exclude name="distrib/"/>
-				<exclude name="eclipse/"/>
-				<exclude name="debian/"/>
-			</zipfileset>
-		</zip>
-		<zip destfile="distrib/zips/${project.name}-bin-${project.version}.zip">
-			<zipfileset prefix="${project.name}-${project.version}" dir=".">
-				<exclude name="build/"/>
-				<exclude name="build_support/"/>
-				<exclude name="distrib/"/>
-				<exclude name="eclipse/"/>
-				<exclude name="debian/"/>
-				<exclude name="src/"/>
-				<exclude name="test/"/>
-				<exclude name="ivy/"/>
-				<exclude name="lib/compile/"/>
-				<exclude name="lib/runtime/"/>
-				<exclude name="lib/test/"/>
-				<exclude name="repo/"/>
-				<exclude name="build*.xml"/>
-				<exclude name="ivy.xml"/>
-				<exclude name=".*"/>
-				<exclude name="doc/api/"/>
-			</zipfileset>
-		</zip>
-		<mkdir dir="distrib/tgzs"/>
-		<tar destfile="distrib/tgzs/${project.name}-${project.version}.tgz" compression="gzip" longfile="gnu">
-			<tarfileset prefix="${project.name}-${project.version}" dir=".">
-				<exclude name="build/"/>
-				<exclude name="distrib/"/>
-				<exclude name="eclipse/"/>
-				<exclude name="debian/"/>
-			</tarfileset>
-			<tarfileset prefix="${project.name}-${project.version}" dir="." mode="755">
-				<include name="bin/*"/>
-			</tarfileset>
-		</tar>
-		<tar destfile="distrib/tgzs/${project.name}-bin-${project.version}.tgz" compression="gzip" longfile="gnu">
-			<tarfileset prefix="${project.name}-${project.version}" dir=".">
-				<exclude name="build/"/>
-				<exclude name="build_support/"/>
-				<exclude name="distrib/"/>
-				<exclude name="eclipse/"/>
-				<exclude name="debian/"/>
-				<exclude name="src/"/>
-				<exclude name="test/"/>
-				<exclude name="ivy/"/>
-				<exclude name="lib/compile/"/>
-				<exclude name="lib/runtime/"/>
-				<exclude name="lib/test/"/>
-				<exclude name="repo/"/>
-				<exclude name="build*.xml"/>
-				<exclude name="ivy.xml"/>
-				<exclude name=".*"/>
-				<exclude name="doc/api/"/>
-			</tarfileset>
-			<tarfileset prefix="${project.name}-${project.version}" dir="." mode="755">
-				<include name="bin/*"/>
-			</tarfileset>
-		</tar>
-	</target>
-	
-	<!-- Performs checkstyle analysis of all source files in the project. -->
-	<target name="checkstyle">
-		<taskdef uri="antlib:com.puppycrawl.tools.checkstyle" resource="checkstyletask.properties" classpathref="classpath.test" />
-		
-		<mkdir dir="report"/>
-		<cs:checkstyle config="build_support/checkstyle.xml">
-			<fileset dir="src" includes="**/*.java"/>
-			<fileset dir="test" includes="**/*.java"/>
-			<formatter type="plain"/>
-			<formatter type="xml" toFile="report/checkstyle.xml"/>
-		</cs:checkstyle>
-	</target>
-	
-	<!-- Runs all of the unit tests in the application. -->
-	<target name="test" depends="build_test" description="Run automated test cases.">
-		<mkdir dir="report/test"/>
-		
-		<!-- Determine the location of the database authorisation file.  This can be overridden outside the build if necessary. -->
-		<property name="db.apidb.authfile" location="test/data/input/v0_6/apidb-authfile.txt"/>
-		<property name="db.pgsql.authfile" location="test/data/input/v0_6/pgsql-authfile.txt"/>
-		
-		<junit fork="no" maxmemory="512m" printsummary="on" haltonerror="off" haltonfailure="off" filtertrace="on" failureproperty="test.failure">
-			<formatter type="plain" usefile="true"/>
-			<formatter type="xml" usefile="true"/>
-			<classpath>
-				<path refid="classpath.test"/>
-				<path location="build/src"/>
-				<path location="build/test"/>
-			</classpath>
-			<sysproperty key="db.apidb.authfile" value="${db.apidb.authfile}"/>
-			<sysproperty key="db.pgsql.authfile" value="${db.pgsql.authfile}"/>
-			<batchtest todir="report/test">
-				<fileset dir="build/test">
-					<include name="**/*Test*.class"/>
-					<exclude name="**/*TestSuite*.class"/>
-					<exclude name="**/*$*.class"/>
-				</fileset>
-			</batchtest>
-		</junit>
+	xmlns:ivy="antlib:org.apache.ivy.ant">
 
-		<fail message="One or more junit tests failed." if="test.failure" />
+	<property name="build-support.dir" location="build-support"/>
+	<import file="${build-support.dir}/build-ivy-base.xml"/>
+	
+	<target name="find-projects" depends="init-ivy" description="Locate all of the sub-projects.">
+		<ivy:buildlist reference="build-path">
+			<fileset dir=".">
+				<include name="**/build.xml"/>
+				<exclude name="build.xml"/>
+			</fileset>
+		</ivy:buildlist>
 	</target>
 	
-	<!-- Executes all major build targets. -->
-	<target name="all" depends="dist, checkstyle, test"/>
+	<target name="clean" depends="find-projects">
+		<subant target="clean" buildpathref="build-path" />
+	</target>
 	
-	<target name="clean" description="Clean up the project tree.">
-		<!-- Delete the build, report and dist directory trees. -->
-		<delete dir="build"/>
-		<delete dir="report"/>
-		<delete dir="distrib"/>
-		<!-- Delete the doc/api directory tree. -->
-		<delete dir="doc/api"/>
-		<!-- Delete the generated test data files. -->
-		<delete>
-			<fileset dir="test/data/input">
-				<include name="**/*"/>
-			</fileset>
-		</delete>
+	<target name="publish" depends="find-projects">
+		<subant target="publish" buildpathref="build-path" />
+	</target>
+	
+	<target name="test" depends="find-projects">
+		<subant target="test" buildpathref="build-path" />
+	</target>
+	
+	<target name="all" depends="find-projects">
+		<subant target="all" buildpathref="build-path" />
 	</target>
 </project>

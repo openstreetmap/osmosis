@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="Osmosis.Ivy.Base" default="init-ivy" basedir="."
+	xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<description>
+		Installs and configures the ivy build dependencies system.
+	</description>
+
+	<property name="ivy.version" value="2.1.0" />
+	<property name="ivy.jar.dir" value="${build-support.dir}/ivy" />
+	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy-${ivy.version}.jar" />
+
+	<target name="download-ivy" unless="ivy.available" description="Downloads the ivy library from public repositories.">
+		<!-- Delete any existing ivy files -->
+		<delete dir="${ivy.jar.dir}"/>
+		
+		<mkdir dir="${ivy.jar.dir}" />
+		
+		<!--
+			Download Ivy from web site so that it can be used even without any
+			special installation
+		-->
+		<get
+			src="http://repo1.maven.org/maven2/org/apache/ivy/ivy/${ivy.version}/ivy-${ivy.version}.jar"
+			dest="${ivy.jar.file}" usetimestamp="true"/>
+	</target>
+
+	<target name="init-ivy" description="Registers ivy with ant and initializes it." unless="ivy.initialized">
+		<!-- Determine if the ivy jar is already available. -->
+		<available property="ivy.available" file="${ivy.jar.file}" />
+		<!-- Download ivy.  This will only execute if the ivy.available property is not set. -->
+		<antcall target="download-ivy" />
+		<!--
+			Try to load ivy in case the user has not already
+			dropped it into ant's lib dir (note that the latter copy will always
+			take precedence). We will not fail as long as local lib dir exists
+			(it may be empty) and ivy is in at least one of ant's lib dir or the
+			local lib dir.
+		-->
+		<path id="ivy.lib.path">
+			<fileset dir="${ivy.jar.dir}" includes="*.jar" />
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant"
+			classpathref="ivy.lib.path" />
+		
+		<!-- Override the shared repo location to point at the svn-based ivy repo. -->
+		<property name="ivy.shared.default.root" location="build_support/repo"/>
+		<ivy:configure />
+		
+		<!-- Retrieve ivy details from the config file. -->
+		<ivy:info />
+		
+		<!-- Set the project name based on the ivy name. -->
+		<property name="project.name" value="${ivy.module}"/>
+		<echo message="****************************************"/>
+		<echo message="Project: ${project.name}"/>
+		<echo message="****************************************"/>
+		
+		<property name="ivy.initialized" value="true"/>
+	</target>
+	
+	<target name="clean-cache" depends="init-ivy" description="Clean the ivy cache.">
+		<ivy:cleancache />
+	</target>
+	
+	<target name="clean-ivy" description="Clean the ivy installation.">
+		<delete dir="${ivy.jar.dir}"/>
+	</target>
+</project>
