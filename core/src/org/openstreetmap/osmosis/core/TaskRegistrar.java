@@ -32,6 +32,7 @@ import org.openstreetmap.osmosis.core.filter.v0_6.DatasetBoundingBoxFilterFactor
 import org.openstreetmap.osmosis.core.filter.v0_6.NodeKeyFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.NodeKeyValueFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.TagFilterFactory;
+import org.openstreetmap.osmosis.core.filter.v0_6.TagRemoverFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.UsedNodeFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyValueFilterFactory;
@@ -51,7 +52,6 @@ import org.openstreetmap.osmosis.core.sort.v0_6.ChangeTagSorterFactory;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntitySorterFactory;
 import org.openstreetmap.osmosis.core.sort.v0_6.TagSorterFactory;
-import org.openstreetmap.osmosis.core.tagremove.v0_6.TagRemoverFactory;
 import org.openstreetmap.osmosis.core.tee.v0_6.ChangeTeeFactory;
 import org.openstreetmap.osmosis.core.tee.v0_6.EntityTeeFactory;
 
