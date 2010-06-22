@@ -30,5 +30,7 @@
 	<classpathentry kind="lib" path="lib/test/stax2-api-3.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/test/woodstox-core-lgpl-4.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/test/xercesImpl-2.9.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Xml"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Dataset"/>
 	<classpathentry kind="output" path="eclipse"/>
 </classpath>
