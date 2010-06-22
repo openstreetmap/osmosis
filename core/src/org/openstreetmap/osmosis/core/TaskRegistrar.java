@@ -28,13 +28,6 @@ import org.java.plugin.registry.PluginDescriptor;
 import org.java.plugin.standard.StandardPluginLocation;
 import org.openstreetmap.osmosis.core.buffer.v0_6.ChangeBufferFactory;
 import org.openstreetmap.osmosis.core.buffer.v0_6.EntityBufferFactory;
-import org.openstreetmap.osmosis.core.filter.v0_6.NodeKeyFilterFactory;
-import org.openstreetmap.osmosis.core.filter.v0_6.NodeKeyValueFilterFactory;
-import org.openstreetmap.osmosis.core.filter.v0_6.TagFilterFactory;
-import org.openstreetmap.osmosis.core.filter.v0_6.TagRemoverFactory;
-import org.openstreetmap.osmosis.core.filter.v0_6.UsedNodeFilterFactory;
-import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyFilterFactory;
-import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyValueFilterFactory;
 import org.openstreetmap.osmosis.core.misc.v0_6.NullChangeWriterFactory;
 import org.openstreetmap.osmosis.core.misc.v0_6.NullWriterFactory;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
@@ -134,18 +127,6 @@ public class TaskRegistrar {
 		factoryRegister.register("t", new EntityTeeFactory());
 		factoryRegister.register("tee-change", new ChangeTeeFactory());
 		factoryRegister.register("tc", new ChangeTeeFactory());
-		factoryRegister.register("used-node", new UsedNodeFilterFactory());
-		factoryRegister.register("un", new UsedNodeFilterFactory());
-		factoryRegister.register("tag-filter", new TagFilterFactory());
-		factoryRegister.register("tf", new TagFilterFactory());
-		factoryRegister.register("node-key", new NodeKeyFilterFactory());
-		factoryRegister.register("nk", new NodeKeyFilterFactory());
-		factoryRegister.register("node-key-value", new NodeKeyValueFilterFactory());
-		factoryRegister.register("nkv", new NodeKeyValueFilterFactory());
-		factoryRegister.register("way-key", new WayKeyFilterFactory());
-		factoryRegister.register("wk", new WayKeyFilterFactory());
-		factoryRegister.register("way-key-value", new WayKeyValueFilterFactory());
-		factoryRegister.register("wkv", new WayKeyValueFilterFactory());
 		
 		factoryRegister.register("sort-0.6", entitySorterFactory06);
 		factoryRegister.register("sort-change-0.6", changeSorterFactory06);
@@ -159,15 +140,8 @@ public class TaskRegistrar {
 		factoryRegister.register("log-change-progress-0.6", new ChangeProgressLoggerFactory());
 		factoryRegister.register("tee-0.6", new EntityTeeFactory());
 		factoryRegister.register("tee-change-0.6", new ChangeTeeFactory());
-		factoryRegister.register("used-node-0.6", new UsedNodeFilterFactory());
-		factoryRegister.register("tag-filter-0.6", new TagFilterFactory());
-		factoryRegister.register("node-key-0.6", new NodeKeyFilterFactory());
-		factoryRegister.register("node-key-value-0.6", new NodeKeyValueFilterFactory());
-		factoryRegister.register("way-key-0.6", new WayKeyFilterFactory());
-		factoryRegister.register("way-key-value-0.6", new WayKeyValueFilterFactory());
 		factoryRegister.register("tag-sort-0.6", new TagSorterFactory());
 		factoryRegister.register("tag-sort-change-0.6", new ChangeTagSorterFactory());
-		factoryRegister.register("remove-tags-0.6", new TagRemoverFactory());
 		
 		// Register the built-in plugins.
 		loadBuiltInPlugins();
