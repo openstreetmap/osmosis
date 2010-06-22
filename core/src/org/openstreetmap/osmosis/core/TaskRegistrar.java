@@ -28,11 +28,9 @@ import org.java.plugin.registry.PluginDescriptor;
 import org.java.plugin.standard.StandardPluginLocation;
 import org.openstreetmap.osmosis.core.buffer.v0_6.ChangeBufferFactory;
 import org.openstreetmap.osmosis.core.buffer.v0_6.EntityBufferFactory;
-import org.openstreetmap.osmosis.core.filter.v0_6.BoundingBoxFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.DatasetBoundingBoxFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.NodeKeyFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.NodeKeyValueFilterFactory;
-import org.openstreetmap.osmosis.core.filter.v0_6.PolygonFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.TagFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.UsedNodeFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyFilterFactory;
@@ -113,8 +111,6 @@ public class TaskRegistrar {
 		changeSorterFactory06.registerComparator("seekable", new ChangeForSeekableApplierComparator(), false);
 
 		// Register factories.
-		factoryRegister.register("bounding-box", new BoundingBoxFilterFactory());
-		factoryRegister.register("bb", new BoundingBoxFilterFactory());
 		factoryRegister.register("sort", entitySorterFactory06);
 		factoryRegister.register("s", entitySorterFactory06);
 		factoryRegister.register("sort-change", changeSorterFactory06);
@@ -127,8 +123,6 @@ public class TaskRegistrar {
 		factoryRegister.register("b", new EntityBufferFactory());
 		factoryRegister.register("buffer-change", new ChangeBufferFactory());
 		factoryRegister.register("bc", new ChangeBufferFactory());
-		factoryRegister.register("bounding-polygon", new PolygonFilterFactory());
-		factoryRegister.register("bp", new PolygonFilterFactory());
 		factoryRegister.register("report-entity", new EntityReporterFactory());
 		factoryRegister.register("re", new EntityReporterFactory());
 		factoryRegister.register("report-integrity", new IntegrityReporterFactory());
@@ -156,14 +150,12 @@ public class TaskRegistrar {
 		factoryRegister.register("way-key-value", new WayKeyValueFilterFactory());
 		factoryRegister.register("wkv", new WayKeyValueFilterFactory());
 		
-		factoryRegister.register("bounding-box-0.6", new BoundingBoxFilterFactory());
 		factoryRegister.register("sort-0.6", entitySorterFactory06);
 		factoryRegister.register("sort-change-0.6", changeSorterFactory06);
 		factoryRegister.register("write-null-0.6", new NullWriterFactory());
 		factoryRegister.register("write-null-change-0.6", new NullChangeWriterFactory());
 		factoryRegister.register("buffer-0.6", new EntityBufferFactory());
 		factoryRegister.register("buffer-change-0.6", new ChangeBufferFactory());
-		factoryRegister.register("bounding-polygon-0.6", new PolygonFilterFactory());
 		factoryRegister.register("report-entity-0.6", new EntityReporterFactory());
 		factoryRegister.register("report-integrity-0.6", new IntegrityReporterFactory());
 		factoryRegister.register("log-progress-0.6", new EntityProgressLoggerFactory());

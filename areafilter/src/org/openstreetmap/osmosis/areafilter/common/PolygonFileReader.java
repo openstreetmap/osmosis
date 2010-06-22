@@ -1,5 +1,5 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.filter.common;
+package org.openstreetmap.osmosis.areafilter.common;
 
 import java.awt.geom.Area;
 import java.awt.geom.Path2D;

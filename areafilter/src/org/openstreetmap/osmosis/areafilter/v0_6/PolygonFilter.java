@@ -1,15 +1,15 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.filter.v0_6;
+package org.openstreetmap.osmosis.areafilter.v0_6;
 
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 
+import org.openstreetmap.osmosis.areafilter.common.PolygonFileReader;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.filter.common.IdTrackerType;
-import org.openstreetmap.osmosis.core.filter.common.PolygonFileReader;
 
 
 /**
