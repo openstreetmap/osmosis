@@ -1,5 +1,5 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.filter.v0_6;
+package org.openstreetmap.osmosis.tagfilter.v0_6;
 
 import java.util.HashSet;
 
@@ -10,28 +10,30 @@ import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
-import org.openstreetmap.osmosis.core.domain.v0_6.Node;
+import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.core.task.v0_6.SinkSource;
 
 
 /**
- * A class filtering everything but allowed nodes.
- *
- * @author Aurelien Jacobs
+ * A simple class to filter way entities by their tags.
+ * 
+ * @author Brett Henderson
+ * @author Karl Newman
+ * @author Christoph Sommer 
  */
-public class NodeKeyValueFilter implements SinkSource, EntityProcessor {
+public class WayKeyValueFilter implements SinkSource, EntityProcessor {
 	private Sink sink;
 	private HashSet<String> allowedKeyValues;
-
+	
 	/**
 	 * Creates a new instance.
-	 *
+	 * 
 	 * @param keyValueList
 	 *            Comma-separated list of allowed key-value combinations,
-	 *            e.g. "place.city,place.town"
+	 *            e.g. "highway.motorway,highway.motorway_link" 
 	 */
-	public NodeKeyValueFilter(String keyValueList) {
+	public WayKeyValueFilter(String keyValueList) {
 
 		allowedKeyValues = new HashSet<String>();
 		String[] keyValues = keyValueList.split(",");
@@ -40,8 +42,8 @@ public class NodeKeyValueFilter implements SinkSource, EntityProcessor {
 		}
 
 	}
-
-
+	
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -50,8 +52,8 @@ public class NodeKeyValueFilter implements SinkSource, EntityProcessor {
 		// for the entity type.
 		entityContainer.process(this);
 	}
-
-
+	
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -65,10 +67,18 @@ public class NodeKeyValueFilter implements SinkSource, EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(NodeContainer container) {
-		Node node = container.getEntity();
+		sink.process(container);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void process(WayContainer container) {
+		Way way = container.getEntity();
 
 		boolean matchesFilter = false;
-		for (Tag tag : node.getTags()) {
+		for (Tag tag : way.getTags()) {
 			String keyValue = tag.getKey() + "." + tag.getValue();
 			if (allowedKeyValues.contains(keyValue)) {
 				matchesFilter = true;
@@ -80,21 +90,13 @@ public class NodeKeyValueFilter implements SinkSource, EntityProcessor {
 			sink.process(container);
 		}
 	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void process(WayContainer container) {
-		// Do nothing.
-	}
-
-
+	
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	public void process(RelationContainer container) {
-		// Do nothing.
+		sink.process(container);
 	}
 
 
@@ -104,16 +106,16 @@ public class NodeKeyValueFilter implements SinkSource, EntityProcessor {
 	public void complete() {
 		sink.complete();
 	}
-
-
+	
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	public void release() {
 		sink.release();
 	}
-
-
+	
+	
 	/**
 	 * {@inheritDoc}
 	 */

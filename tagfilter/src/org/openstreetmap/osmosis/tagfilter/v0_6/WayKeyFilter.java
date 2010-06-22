@@ -1,5 +1,5 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.filter.v0_6;
+package org.openstreetmap.osmosis.tagfilter.v0_6;
 
 import java.util.HashSet;
 
@@ -16,34 +16,33 @@ import org.openstreetmap.osmosis.core.task.v0_6.SinkSource;
 
 
 /**
- * A simple class to filter way entities by their tags.
+ * A simple class to filter way entities by their tag keys.
+ * Based on work by Brett Henderson, Karl Newman, Christoph Sommer, Aurelien Jacobs
  * 
- * @author Brett Henderson
- * @author Karl Newman
- * @author Christoph Sommer 
+ * @author Andrew Byrd
  */
-public class WayKeyValueFilter implements SinkSource, EntityProcessor {
+public class WayKeyFilter implements SinkSource, EntityProcessor {
 	private Sink sink;
-	private HashSet<String> allowedKeyValues;
-	
+	private HashSet<String> allowedKeys;
+
 	/**
 	 * Creates a new instance.
-	 * 
-	 * @param keyValueList
-	 *            Comma-separated list of allowed key-value combinations,
-	 *            e.g. "highway.motorway,highway.motorway_link" 
+	 *
+	 * @param keyList
+	 *            Comma-separated list of allowed keys,
+	 *            e.g. "highway,place"
 	 */
-	public WayKeyValueFilter(String keyValueList) {
+	public WayKeyFilter(String keyList) {
 
-		allowedKeyValues = new HashSet<String>();
-		String[] keyValues = keyValueList.split(",");
-		for (int i = 0; i < keyValues.length; i++) {
-			allowedKeyValues.add(keyValues[i]);
+		allowedKeys = new HashSet<String>();
+		String[] keys = keyList.split(",");
+		for (int i = 0; i < keys.length; i++) {
+			allowedKeys.add(keys[i]);
 		}
 
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -52,8 +51,8 @@ public class WayKeyValueFilter implements SinkSource, EntityProcessor {
 		// for the entity type.
 		entityContainer.process(this);
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -70,7 +69,7 @@ public class WayKeyValueFilter implements SinkSource, EntityProcessor {
 		sink.process(container);
 	}
 	
-	
+    
 	/**
 	 * {@inheritDoc}
 	 */
@@ -79,8 +78,7 @@ public class WayKeyValueFilter implements SinkSource, EntityProcessor {
 
 		boolean matchesFilter = false;
 		for (Tag tag : way.getTags()) {
-			String keyValue = tag.getKey() + "." + tag.getValue();
-			if (allowedKeyValues.contains(keyValue)) {
+			if (allowedKeys.contains(tag.getKey())) {
 				matchesFilter = true;
 				break;
 			}
@@ -98,7 +96,7 @@ public class WayKeyValueFilter implements SinkSource, EntityProcessor {
 	public void process(RelationContainer container) {
 		sink.process(container);
 	}
-
+    
 
 	/**
 	 * {@inheritDoc}
@@ -106,16 +104,16 @@ public class WayKeyValueFilter implements SinkSource, EntityProcessor {
 	public void complete() {
 		sink.complete();
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void release() {
 		sink.release();
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */

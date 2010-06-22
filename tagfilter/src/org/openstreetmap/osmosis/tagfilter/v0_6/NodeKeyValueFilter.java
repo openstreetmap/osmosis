@@ -1,5 +1,5 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.filter.v0_6;
+package org.openstreetmap.osmosis.tagfilter.v0_6;
 
 import java.util.HashSet;
 
@@ -10,34 +10,33 @@ import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
-import org.openstreetmap.osmosis.core.domain.v0_6.Way;
+import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.core.task.v0_6.SinkSource;
 
 
 /**
- * A simple class to filter way entities by their tag keys.
- * Based on work by Brett Henderson, Karl Newman, Christoph Sommer, Aurelien Jacobs
- * 
- * @author Andrew Byrd
+ * A class filtering everything but allowed nodes.
+ *
+ * @author Aurelien Jacobs
  */
-public class WayKeyFilter implements SinkSource, EntityProcessor {
+public class NodeKeyValueFilter implements SinkSource, EntityProcessor {
 	private Sink sink;
-	private HashSet<String> allowedKeys;
+	private HashSet<String> allowedKeyValues;
 
 	/**
 	 * Creates a new instance.
 	 *
-	 * @param keyList
-	 *            Comma-separated list of allowed keys,
-	 *            e.g. "highway,place"
+	 * @param keyValueList
+	 *            Comma-separated list of allowed key-value combinations,
+	 *            e.g. "place.city,place.town"
 	 */
-	public WayKeyFilter(String keyList) {
+	public NodeKeyValueFilter(String keyValueList) {
 
-		allowedKeys = new HashSet<String>();
-		String[] keys = keyList.split(",");
-		for (int i = 0; i < keys.length; i++) {
-			allowedKeys.add(keys[i]);
+		allowedKeyValues = new HashSet<String>();
+		String[] keyValues = keyValueList.split(",");
+		for (int i = 0; i < keyValues.length; i++) {
+			allowedKeyValues.add(keyValues[i]);
 		}
 
 	}
@@ -66,19 +65,12 @@ public class WayKeyFilter implements SinkSource, EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(NodeContainer container) {
-		sink.process(container);
-	}
-	
-    
-	/**
-	 * {@inheritDoc}
-	 */
-	public void process(WayContainer container) {
-		Way way = container.getEntity();
+		Node node = container.getEntity();
 
 		boolean matchesFilter = false;
-		for (Tag tag : way.getTags()) {
-			if (allowedKeys.contains(tag.getKey())) {
+		for (Tag tag : node.getTags()) {
+			String keyValue = tag.getKey() + "." + tag.getValue();
+			if (allowedKeyValues.contains(keyValue)) {
 				matchesFilter = true;
 				break;
 			}
@@ -88,15 +80,23 @@ public class WayKeyFilter implements SinkSource, EntityProcessor {
 			sink.process(container);
 		}
 	}
-	
-	
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void process(WayContainer container) {
+		// Do nothing.
+	}
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void process(RelationContainer container) {
-		sink.process(container);
+		// Do nothing.
 	}
-    
+
 
 	/**
 	 * {@inheritDoc}

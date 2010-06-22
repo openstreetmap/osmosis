@@ -1,5 +1,5 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.filter.v0_6;
+package org.openstreetmap.osmosis.tagfilter.v0_6;
 
 import org.openstreetmap.osmosis.core.pipeline.common.TaskConfiguration;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
@@ -14,7 +14,7 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkSourceManager;
  * @author Brett Henderson
  * @author Christoph Sommer
  */
-public class NodeKeyFilterFactory extends TaskManagerFactory {
+public class WayKeyFilterFactory extends TaskManagerFactory {
 	/**
 	 * {@inheritDoc}
 	 */
@@ -23,7 +23,7 @@ public class NodeKeyFilterFactory extends TaskManagerFactory {
 		String keyList = getStringArgument(taskConfig, "keyList");
 		return new SinkSourceManager(
 			taskConfig.getId(),
-			new NodeKeyFilter(keyList),
+			new WayKeyFilter(keyList),
 			taskConfig.getPipeArgs()
 		);
 	}

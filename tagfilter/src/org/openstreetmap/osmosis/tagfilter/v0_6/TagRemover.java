@@ -1,5 +1,5 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.filter.v0_6;
+package org.openstreetmap.osmosis.tagfilter.v0_6;
 
 import java.util.HashSet;
 import java.util.Iterator;

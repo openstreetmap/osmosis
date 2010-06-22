@@ -1,16 +1,16 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.filter;
+package org.openstreetmap.osmosis.tagfilter;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openstreetmap.osmosis.core.filter.v0_6.NodeKeyFilterFactory;
-import org.openstreetmap.osmosis.core.filter.v0_6.NodeKeyValueFilterFactory;
-import org.openstreetmap.osmosis.core.filter.v0_6.TagFilterFactory;
-import org.openstreetmap.osmosis.core.filter.v0_6.TagRemoverFactory;
-import org.openstreetmap.osmosis.core.filter.v0_6.UsedNodeFilterFactory;
-import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyFilterFactory;
-import org.openstreetmap.osmosis.core.filter.v0_6.WayKeyValueFilterFactory;
+import org.openstreetmap.osmosis.tagfilter.v0_6.NodeKeyFilterFactory;
+import org.openstreetmap.osmosis.tagfilter.v0_6.NodeKeyValueFilterFactory;
+import org.openstreetmap.osmosis.tagfilter.v0_6.TagFilterFactory;
+import org.openstreetmap.osmosis.tagfilter.v0_6.TagRemoverFactory;
+import org.openstreetmap.osmosis.tagfilter.v0_6.UsedNodeFilterFactory;
+import org.openstreetmap.osmosis.tagfilter.v0_6.WayKeyFilterFactory;
+import org.openstreetmap.osmosis.tagfilter.v0_6.WayKeyValueFilterFactory;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
 import org.openstreetmap.osmosis.core.plugin.PluginLoader;
 
