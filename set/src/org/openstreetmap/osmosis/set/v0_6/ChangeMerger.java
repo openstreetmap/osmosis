@@ -5,11 +5,11 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdThenVersionComparator;
+import org.openstreetmap.osmosis.core.sort.v0_6.SortedHistoryChangePipeValidator;
 import org.openstreetmap.osmosis.core.store.DataPostbox;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.task.v0_6.MultiChangeSinkRunnableChangeSource;
 import org.openstreetmap.osmosis.set.v0_6.impl.DataPostboxChangeSink;
-import org.openstreetmap.osmosis.set.v0_6.impl.SortedHistoryChangePipeValidator;
 
 
 /**

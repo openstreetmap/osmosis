@@ -5,6 +5,8 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
+import org.openstreetmap.osmosis.core.sort.v0_6.SortedDeltaChangePipeValidator;
+import org.openstreetmap.osmosis.core.sort.v0_6.SortedEntityPipeValidator;
 import org.openstreetmap.osmosis.core.store.DataPostbox;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
@@ -12,8 +14,6 @@ import org.openstreetmap.osmosis.core.task.v0_6.MultiSinkMultiChangeSinkRunnable
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.set.v0_6.impl.DataPostboxChangeSink;
 import org.openstreetmap.osmosis.set.v0_6.impl.DataPostboxSink;
-import org.openstreetmap.osmosis.set.v0_6.impl.SortedDeltaChangePipeValidator;
-import org.openstreetmap.osmosis.set.v0_6.impl.SortedEntityPipeValidator;
 
 
 /**

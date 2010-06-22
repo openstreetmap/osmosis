@@ -3,7 +3,7 @@ package org.openstreetmap.osmosis.set.v0_6;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.set.v0_6.impl.ChangeSimplifierImpl;
-import org.openstreetmap.osmosis.set.v0_6.impl.SortedHistoryChangePipeValidator;
+import org.openstreetmap.osmosis.core.sort.v0_6.SortedHistoryChangePipeValidator;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSinkChangeSource;
 

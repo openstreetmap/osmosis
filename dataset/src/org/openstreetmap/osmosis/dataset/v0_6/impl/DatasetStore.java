@@ -21,6 +21,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.lifecycle.CompletableContainer;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableContainer;
+import org.openstreetmap.osmosis.core.sort.v0_6.SortedEntityPipeValidator;
 import org.openstreetmap.osmosis.core.store.ComparableComparator;
 import org.openstreetmap.osmosis.core.store.IndexStore;
 import org.openstreetmap.osmosis.core.store.IndexStoreReader;
