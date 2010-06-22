@@ -1,12 +1,12 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.merge.v0_6;
+package org.openstreetmap.osmosis.set.v0_6;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
-import org.openstreetmap.osmosis.core.merge.v0_6.impl.DataPostboxChangeSink;
+import org.openstreetmap.osmosis.set.v0_6.impl.DataPostboxChangeSink;
 import org.openstreetmap.osmosis.core.store.DataPostbox;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.task.v0_6.MultiChangeSinkRunnableChangeSource;

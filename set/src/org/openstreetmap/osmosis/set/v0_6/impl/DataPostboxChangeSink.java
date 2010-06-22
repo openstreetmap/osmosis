@@ -1,18 +1,18 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.merge.v0_6.impl;
+package org.openstreetmap.osmosis.set.v0_6.impl;
 
-import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
+import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.store.DataPostbox;
-import org.openstreetmap.osmosis.core.task.v0_6.Sink;
+import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 
 
 /**
- * A sink that writes all of its data to a postbox to be read by another thread.
+ * A change sink that writes all of its data to a postbox to be read by another thread.
  * 
  * @author Brett Henderson
  */
-public class DataPostboxSink implements Sink {
-	private DataPostbox<EntityContainer> postbox;
+public class DataPostboxChangeSink implements ChangeSink {
+	private DataPostbox<ChangeContainer> postbox;
 	
 	
 	/**
@@ -21,7 +21,7 @@ public class DataPostboxSink implements Sink {
 	 * @param postbox
 	 *            The postbox to write all incoming data into.
 	 */
-	public DataPostboxSink(DataPostbox<EntityContainer> postbox) {
+	public DataPostboxChangeSink(DataPostbox<ChangeContainer> postbox) {
 		this.postbox = postbox;
 	}
 
@@ -30,8 +30,8 @@ public class DataPostboxSink implements Sink {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void process(EntityContainer entity) {
-		postbox.put(entity);
+	public void process(ChangeContainer change) {
+		postbox.put(change);
 	}
 
 

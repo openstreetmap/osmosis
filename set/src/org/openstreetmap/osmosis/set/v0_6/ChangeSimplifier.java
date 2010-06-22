@@ -1,9 +1,9 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.merge.v0_6;
+package org.openstreetmap.osmosis.set.v0_6;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
-import org.openstreetmap.osmosis.core.merge.v0_6.impl.ChangeSimplifierImpl;
-import org.openstreetmap.osmosis.core.merge.v0_6.impl.SortedHistoryChangePipeValidator;
+import org.openstreetmap.osmosis.set.v0_6.impl.ChangeSimplifierImpl;
+import org.openstreetmap.osmosis.set.v0_6.impl.SortedHistoryChangePipeValidator;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSinkChangeSource;
 

@@ -1,5 +1,5 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.merge.v0_6;
+package org.openstreetmap.osmosis.set.v0_6;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,15 +9,15 @@ import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskConfiguration;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
-import org.openstreetmap.osmosis.core.pipeline.v0_6.MultiSinkRunnableSourceManager;
+import org.openstreetmap.osmosis.core.pipeline.v0_6.MultiChangeSinkRunnableChangeSourceManager;
 
 
 /**
- * The task manager factory for an entity merger.
+ * The task manager factory for a change merger.
  * 
  * @author Brett Henderson
  */
-public class EntityMergerFactory extends TaskManagerFactory {
+public class ChangeMergerFactory extends TaskManagerFactory {
 	private static final String ARG_CONFLICT_RESOLUTION_METHOD = "conflictResolutionMethod";
 	private static final String DEFAULT_CONFLICT_RESOLUTION_METHOD = "version";
 	private static final String ALTERNATIVE_CONFLICT_RESOLUTION_METHOD_1 = "timestamp";
@@ -51,9 +51,9 @@ public class EntityMergerFactory extends TaskManagerFactory {
 					+ " has value \"" + conflictResolutionMethod + "\" which is unrecognised.");
 		}
 		
-		return new MultiSinkRunnableSourceManager(
+		return new MultiChangeSinkRunnableChangeSourceManager(
 			taskConfig.getId(),
-			new EntityMerger(CONFLICT_RESOLUTION_METHOD_MAP.get(conflictResolutionMethod), 10),
+			new ChangeMerger(CONFLICT_RESOLUTION_METHOD_MAP.get(conflictResolutionMethod), 10),
 			taskConfig.getPipeArgs()
 		);
 	}

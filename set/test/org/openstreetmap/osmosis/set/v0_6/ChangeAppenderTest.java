@@ -1,5 +1,5 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.merge.v0_6;
+package org.openstreetmap.osmosis.set.v0_6;
 
 import java.io.File;
 import java.io.IOException;

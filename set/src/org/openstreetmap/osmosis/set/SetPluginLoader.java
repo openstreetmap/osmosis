@@ -1,13 +1,13 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.core.merge;
+package org.openstreetmap.osmosis.set;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openstreetmap.osmosis.core.merge.v0_6.ChangeAppenderFactory;
-import org.openstreetmap.osmosis.core.merge.v0_6.ChangeMergerFactory;
-import org.openstreetmap.osmosis.core.merge.v0_6.ChangeSimplifierFactory;
-import org.openstreetmap.osmosis.core.merge.v0_6.EntityMergerFactory;
+import org.openstreetmap.osmosis.set.v0_6.ChangeAppenderFactory;
+import org.openstreetmap.osmosis.set.v0_6.ChangeMergerFactory;
+import org.openstreetmap.osmosis.set.v0_6.ChangeSimplifierFactory;
+import org.openstreetmap.osmosis.set.v0_6.EntityMergerFactory;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
 import org.openstreetmap.osmosis.core.plugin.PluginLoader;
 
