@@ -25,6 +25,7 @@
     
     <dependencies>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-core" rev="${project.version}" conf="compile->default" changing="true"/>
+    	<dependency org="org.openstreetmap.osmosis" name="osmosis-set" rev="${project.version}" conf="compile->default" changing="true"/>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-xml" rev="${project.version}" conf="compile->default" changing="true"/>
         
         <dependency org="junit" name="junit" rev="4.4" conf="test->default"/>

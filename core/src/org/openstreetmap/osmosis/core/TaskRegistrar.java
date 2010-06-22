@@ -28,8 +28,6 @@ import org.java.plugin.registry.PluginDescriptor;
 import org.java.plugin.standard.StandardPluginLocation;
 import org.openstreetmap.osmosis.core.buffer.v0_6.ChangeBufferFactory;
 import org.openstreetmap.osmosis.core.buffer.v0_6.EntityBufferFactory;
-import org.openstreetmap.osmosis.core.change.v0_6.ChangeApplierFactory;
-import org.openstreetmap.osmosis.core.change.v0_6.ChangeDeriverFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.BoundingBoxFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.DatasetBoundingBoxFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.NodeKeyFilterFactory;
@@ -115,12 +113,8 @@ public class TaskRegistrar {
 		changeSorterFactory06.registerComparator("seekable", new ChangeForSeekableApplierComparator(), false);
 
 		// Register factories.
-		factoryRegister.register("apply-change", new ChangeApplierFactory());
-		factoryRegister.register("ac", new ChangeApplierFactory());
 		factoryRegister.register("bounding-box", new BoundingBoxFilterFactory());
 		factoryRegister.register("bb", new BoundingBoxFilterFactory());
-		factoryRegister.register("derive-change", new ChangeDeriverFactory());
-		factoryRegister.register("dc", new ChangeDeriverFactory());
 		factoryRegister.register("sort", entitySorterFactory06);
 		factoryRegister.register("s", entitySorterFactory06);
 		factoryRegister.register("sort-change", changeSorterFactory06);
@@ -162,9 +156,7 @@ public class TaskRegistrar {
 		factoryRegister.register("way-key-value", new WayKeyValueFilterFactory());
 		factoryRegister.register("wkv", new WayKeyValueFilterFactory());
 		
-		factoryRegister.register("apply-change-0.6", new ChangeApplierFactory());
 		factoryRegister.register("bounding-box-0.6", new BoundingBoxFilterFactory());
-		factoryRegister.register("derive-change-0.6", new ChangeDeriverFactory());
 		factoryRegister.register("sort-0.6", entitySorterFactory06);
 		factoryRegister.register("sort-change-0.6", changeSorterFactory06);
 		factoryRegister.register("write-null-0.6", new NullWriterFactory());

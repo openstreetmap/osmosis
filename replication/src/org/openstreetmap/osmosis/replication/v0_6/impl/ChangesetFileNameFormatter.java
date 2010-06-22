@@ -1,5 +1,5 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.set.v0_6.impl;
+package org.openstreetmap.osmosis.replication.v0_6.impl;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

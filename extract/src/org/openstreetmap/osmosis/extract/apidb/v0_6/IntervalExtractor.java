@@ -6,9 +6,9 @@ import java.util.Date;
 
 import org.openstreetmap.osmosis.apidb.v0_6.ApidbChangeReader;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.merge.v0_6.impl.ChangesetFileNameFormatter;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeTagSorter;
 import org.openstreetmap.osmosis.extract.apidb.common.Configuration;
+import org.openstreetmap.osmosis.replication.v0_6.impl.ChangesetFileNameFormatter;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlChangeWriter;
 

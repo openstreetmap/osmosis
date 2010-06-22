@@ -19,15 +19,15 @@ import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
-import org.openstreetmap.osmosis.core.merge.v0_6.ChangeMerger;
-import org.openstreetmap.osmosis.core.merge.v0_6.impl.ChangesetFileNameFormatter;
-import org.openstreetmap.osmosis.core.merge.v0_6.impl.IntervalDownloaderConfiguration;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskRunner;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableChangeSource;
 import org.openstreetmap.osmosis.core.time.DateParser;
 import org.openstreetmap.osmosis.core.util.FileBasedLock;
 import org.openstreetmap.osmosis.replication.common.TimestampTracker;
+import org.openstreetmap.osmosis.replication.v0_6.impl.ChangesetFileNameFormatter;
+import org.openstreetmap.osmosis.replication.v0_6.impl.IntervalDownloaderConfiguration;
+import org.openstreetmap.osmosis.set.v0_6.ChangeMerger;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlChangeReader;
 

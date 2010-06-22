@@ -16,13 +16,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.merge.v0_6.impl.ReplicationDownloaderConfiguration;
 import org.openstreetmap.osmosis.core.task.common.RunnableTask;
 import org.openstreetmap.osmosis.core.util.FileBasedLock;
 import org.openstreetmap.osmosis.core.util.PropertiesPersister;
 import org.openstreetmap.osmosis.replication.common.ReplicationSequenceFormatter;
 import org.openstreetmap.osmosis.replication.common.ReplicationState;
 import org.openstreetmap.osmosis.replication.common.ServerStateReader;
+import org.openstreetmap.osmosis.replication.v0_6.impl.ReplicationDownloaderConfiguration;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlChangeReader;
 
