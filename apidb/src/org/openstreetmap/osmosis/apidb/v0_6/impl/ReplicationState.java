@@ -11,8 +11,8 @@ import org.openstreetmap.osmosis.core.store.StoreClassRegister;
 import org.openstreetmap.osmosis.core.store.StoreReader;
 import org.openstreetmap.osmosis.core.store.StoreWriter;
 import org.openstreetmap.osmosis.core.store.Storeable;
-import org.openstreetmap.osmosis.core.xml.common.DateFormatter;
-import org.openstreetmap.osmosis.core.xml.common.DateParser;
+import org.openstreetmap.osmosis.core.time.DateFormatter;
+import org.openstreetmap.osmosis.core.time.DateParser;
 
 
 /**
