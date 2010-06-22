@@ -28,7 +28,6 @@ import org.java.plugin.registry.PluginDescriptor;
 import org.java.plugin.standard.StandardPluginLocation;
 import org.openstreetmap.osmosis.core.buffer.v0_6.ChangeBufferFactory;
 import org.openstreetmap.osmosis.core.buffer.v0_6.EntityBufferFactory;
-import org.openstreetmap.osmosis.core.filter.v0_6.DatasetBoundingBoxFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.NodeKeyFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.NodeKeyValueFilterFactory;
 import org.openstreetmap.osmosis.core.filter.v0_6.TagFilterFactory;
@@ -135,8 +134,6 @@ public class TaskRegistrar {
 		factoryRegister.register("t", new EntityTeeFactory());
 		factoryRegister.register("tee-change", new ChangeTeeFactory());
 		factoryRegister.register("tc", new ChangeTeeFactory());
-		factoryRegister.register("dataset-bounding-box", new DatasetBoundingBoxFilterFactory());
-		factoryRegister.register("dbb", new DatasetBoundingBoxFilterFactory());
 		factoryRegister.register("used-node", new UsedNodeFilterFactory());
 		factoryRegister.register("un", new UsedNodeFilterFactory());
 		factoryRegister.register("tag-filter", new TagFilterFactory());
@@ -162,7 +159,6 @@ public class TaskRegistrar {
 		factoryRegister.register("log-change-progress-0.6", new ChangeProgressLoggerFactory());
 		factoryRegister.register("tee-0.6", new EntityTeeFactory());
 		factoryRegister.register("tee-change-0.6", new ChangeTeeFactory());
-		factoryRegister.register("dataset-bounding-box-0.6", new DatasetBoundingBoxFilterFactory());
 		factoryRegister.register("used-node-0.6", new UsedNodeFilterFactory());
 		factoryRegister.register("tag-filter-0.6", new TagFilterFactory());
 		factoryRegister.register("node-key-0.6", new NodeKeyFilterFactory());
