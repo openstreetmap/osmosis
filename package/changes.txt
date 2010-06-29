@@ -5,6 +5,7 @@ Added the CompactTempFile node location store type which allows efficient pgsql 
 All write-pgsql tasks now default to the CompactTempFile node location type store instead of in memory.
 Fixed regression in tar builds to make the launch scripts executable again.
 Updated the pgsql schema (now version 5) to add a primary key to the relation_members table to allow more efficient updates.
+Updated apidb support to the latest schema 20100513171259.
 
 0.35
 Registered --fast-read-xml as a task instead of requiring --fast-read-xml-0.6 to be specified.
