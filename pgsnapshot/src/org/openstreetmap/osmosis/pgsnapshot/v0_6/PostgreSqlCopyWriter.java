@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6;
 
+import java.util.logging.Logger;
+
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
@@ -20,6 +22,8 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
  * @author Brett Henderson
  */
 public class PostgreSqlCopyWriter implements Sink {
+	
+	private static final Logger LOG = Logger.getLogger(PostgreSqlCopyWriter.class.getName());
 	
 	private CopyFilesetBuilder copyFilesetBuilder;
 	private CopyFilesetLoader copyFilesetLoader;
@@ -58,6 +62,8 @@ public class PostgreSqlCopyWriter implements Sink {
 			DatabaseContext dbCtx;
 			DatabaseCapabilityChecker capabilityChecker;
 			
+			LOG.fine("Initializing the database and temporary processing files.");
+			
 			dbCtx = new DatabaseContext(loginCredentials);
 			
 			try {
@@ -70,6 +76,8 @@ public class PostgreSqlCopyWriter implements Sink {
 					new CopyFilesetBuilder(copyFileset, populateBbox, populateLinestring, storeType);
 				
 				copyFilesetLoader = new CopyFilesetLoader(loginCredentials, preferences, copyFileset);
+				
+				LOG.fine("Processing input data, building geometries and creating database load files.");
 				
 			} finally {
 				dbCtx.release();
@@ -96,8 +104,11 @@ public class PostgreSqlCopyWriter implements Sink {
 	public void complete() {
 		initialize();
 		
+		LOG.fine("All data has been received, beginning database load.");
 		copyFilesetBuilder.complete();
 		copyFilesetLoader.run();
+		
+		LOG.fine("Processing complete.");
 	}
 	
 	
