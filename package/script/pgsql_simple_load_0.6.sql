@@ -3,13 +3,11 @@ ALTER TABLE nodes DROP CONSTRAINT pk_nodes;
 ALTER TABLE ways DROP CONSTRAINT pk_ways;
 ALTER TABLE way_nodes DROP CONSTRAINT pk_way_nodes;
 ALTER TABLE relations DROP CONSTRAINT pk_relations;
-DROP INDEX idx_nodes_action;
+ALTER TABLE relation_members DROP CONSTRAINT pk_relation_members;
 DROP INDEX idx_node_tags_node_id;
 DROP INDEX idx_nodes_geom;
-DROP INDEX idx_ways_action;
 DROP INDEX idx_way_tags_way_id;
 DROP INDEX idx_way_nodes_node_id;
-DROP INDEX idx_relations_action;
 DROP INDEX idx_relation_tags_relation_id;
 DROP INDEX idx_ways_bbox;
 DROP INDEX idx_ways_linestring;
@@ -43,13 +41,10 @@ ALTER TABLE ONLY nodes ADD CONSTRAINT pk_nodes PRIMARY KEY (id);
 ALTER TABLE ONLY ways ADD CONSTRAINT pk_ways PRIMARY KEY (id);
 ALTER TABLE ONLY way_nodes ADD CONSTRAINT pk_way_nodes PRIMARY KEY (way_id, sequence_id);
 ALTER TABLE ONLY relations ADD CONSTRAINT pk_relations PRIMARY KEY (id);
-CREATE INDEX idx_nodes_action ON nodes USING btree (action);
 CREATE INDEX idx_node_tags_node_id ON node_tags USING btree (node_id);
 CREATE INDEX idx_nodes_geom ON nodes USING gist (geom);
-CREATE INDEX idx_ways_action ON ways USING btree (action);
 CREATE INDEX idx_way_tags_way_id ON way_tags USING btree (way_id);
 CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id);
-CREATE INDEX idx_relations_action ON relations USING btree (action);
 CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id);
 
 -- Comment these out if the COPY files include bbox or linestring column values.
