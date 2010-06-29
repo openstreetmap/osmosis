@@ -17,16 +17,7 @@ SELECT DropGeometryColumn('ways', 'bbox');
 SELECT DropGeometryColumn('ways', 'linestring');
 
 -- Import the table data from the data files using the fast COPY method.
--- COPY nodes FROM E'C:\\tmp\\pgimport\\nodes.txt';
--- COPY node_tags FROM E'C:\\tmp\\pgimport\\node_tags.txt';
--- COPY ways FROM E'C:\\tmp\\pgimport\\ways.txt';
--- COPY way_tags FROM E'C:\\tmp\\pgimport\\way_tags.txt';
--- COPY way_nodes FROM E'C:\\tmp\\pgimport\\way_nodes.txt';
--- COPY relations FROM E'C:\\tmp\\pgimport\\relations.txt';
--- COPY relation_tags FROM E'C:\\tmp\\pgimport\\relation_tags.txt';
--- COPY relation_members FROM E'C:\\tmp\\pgimport\\relation_members.txt';
-
--- or do it this way
+\copy users FROM 'users.txt'
 \copy nodes FROM 'nodes.txt'
 \copy node_tags FROM 'node_tags.txt'
 \copy ways FROM 'ways.txt'
