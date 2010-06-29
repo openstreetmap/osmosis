@@ -17,7 +17,7 @@
 	<target name="build" depends="init, resolve" description="Builds the distribution package.">
 		<!-- Create the distribution archives. -->
 		<mkdir dir="distrib/zips"/>
-		<zip destfile="distrib/zips/${project.name}-${project.version}.zip">
+		<zip destfile="distrib/zips/osmosis-${project.version}.zip">
 			<zipfileset prefix="${project.name}-${project.version}" dir=".">
 				<exclude name="distrib/"/>
 				<exclude name="lib/compile/"/>
@@ -30,7 +30,7 @@
 			</zipfileset>
 		</zip>
 		<mkdir dir="distrib/tgzs"/>
-		<tar destfile="distrib/tgzs/${project.name}-${project.version}.tgz" compression="gzip" longfile="gnu">
+		<tar destfile="distrib/tgzs/osmosis-${project.version}.tgz" compression="gzip" longfile="gnu">
 			<tarfileset prefix="${project.name}-${project.version}" dir=".">
 				<exclude name="distrib/"/>
 				<exclude name="lib/compile/"/>

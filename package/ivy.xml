@@ -19,8 +19,8 @@
     </configurations>
     
     <publications>
-    	<artifact name="${project.name}" type="zip" ext="zip" conf="master"/>
-    	<artifact name="${project.name}" type="tgz" ext="tgz" conf="master"/>
+    	<artifact name="osmosis" type="zip" ext="zip" conf="master"/>
+    	<artifact name="osmosis" type="tgz" ext="tgz" conf="master"/>
     </publications>
     
     <dependencies>
