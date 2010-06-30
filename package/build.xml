@@ -18,7 +18,7 @@
 		<!-- Create the distribution archives. -->
 		<mkdir dir="distrib/zips"/>
 		<zip destfile="distrib/zips/osmosis-${project.version}.zip">
-			<zipfileset prefix="${project.name}-${project.version}" dir=".">
+			<zipfileset prefix="osmosis-${project.version}" dir=".">
 				<exclude name="distrib/"/>
 				<exclude name="lib/compile/"/>
 				<exclude name="lib/runtime/"/>
@@ -31,7 +31,7 @@
 		</zip>
 		<mkdir dir="distrib/tgzs"/>
 		<tar destfile="distrib/tgzs/osmosis-${project.version}.tgz" compression="gzip" longfile="gnu">
-			<tarfileset prefix="${project.name}-${project.version}" dir=".">
+			<tarfileset prefix="osmosis-${project.version}" dir=".">
 				<exclude name="distrib/"/>
 				<exclude name="lib/compile/"/>
 				<exclude name="lib/runtime/"/>
