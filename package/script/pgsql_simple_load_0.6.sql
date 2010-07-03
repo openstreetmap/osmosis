@@ -32,6 +32,7 @@ ALTER TABLE ONLY nodes ADD CONSTRAINT pk_nodes PRIMARY KEY (id);
 ALTER TABLE ONLY ways ADD CONSTRAINT pk_ways PRIMARY KEY (id);
 ALTER TABLE ONLY way_nodes ADD CONSTRAINT pk_way_nodes PRIMARY KEY (way_id, sequence_id);
 ALTER TABLE ONLY relations ADD CONSTRAINT pk_relations PRIMARY KEY (id);
+ALTER TABLE ONLY relation_members ADD CONSTRAINT pk_relation_members PRIMARY KEY (relation_id, sequence_id);
 CREATE INDEX idx_node_tags_node_id ON node_tags USING btree (node_id);
 CREATE INDEX idx_nodes_geom ON nodes USING gist (geom);
 CREATE INDEX idx_way_tags_way_id ON way_tags USING btree (way_id);
