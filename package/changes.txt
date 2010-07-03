@@ -6,6 +6,7 @@ All write-pgsql tasks now default to the CompactTempFile node location type stor
 Fixed regression in tar builds to make the launch scripts executable again.
 Updated the pgsql schema (now version 5) to add a primary key to the relation_members table to allow more efficient updates.
 Updated apidb support to the latest schema 20100513171259.
+Updated pgsql dataset bounding box queries to force more efficient query plans by disabling inefficient join types.
 
 0.35
 Registered --fast-read-xml as a task instead of requiring --fast-read-xml-0.6 to be specified.

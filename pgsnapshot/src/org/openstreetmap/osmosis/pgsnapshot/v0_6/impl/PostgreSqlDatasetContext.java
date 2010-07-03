@@ -245,7 +245,14 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 		bounds.add(new Bound(right, left, top, bottom, "Osmosis " + OsmosisConstants.VERSION));
 		
 		try {
+			// PostgreSQL sometimes incorrectly chooses to perform full table scans, these options
+			// prevent this. Note that this is not recommended practice according to documentation
+			// but fixing this would require modifying the table statistics gathering
+			// configuration to produce better plans.
+			dbCtx.executeStatement("SET enable_seqscan = false");
+			dbCtx.executeStatement("SET enable_mergejoin = false");
 			dbCtx.executeStatement("SET enable_hashjoin = false");
+			
 			// Create a temporary table capable of holding node ids.
 			LOG.finer("Creating node id temp table.");
 			dbCtx.executeStatement("CREATE TEMPORARY TABLE box_node_list (id bigint PRIMARY KEY) ON COMMIT DROP");
@@ -393,6 +400,11 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 				preparedStatement = null;
 				LOG.finer(rowCount + " rows affected.");
 			}
+			
+			// Analyse the temporary tables to give the query planner the best chance of producing good queries.
+			dbCtx.executeStatement("ANALYZE box_node_list");
+			dbCtx.executeStatement("ANALYZE box_way_list");
+			dbCtx.executeStatement("ANALYZE box_relation_list");
 			
 			// Create iterators for the selected records for each of the entity types.
 			LOG.finer("Iterating over results.");
