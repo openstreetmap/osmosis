@@ -31,6 +31,8 @@ public final class IdTrackerFactory {
 			return new BitSetIdTracker();
 		} else if (IdTrackerType.IdList.equals(idTrackerType)) {
 			return new ListIdTracker();
+		} else if (IdTrackerType.Dynamic.equals(idTrackerType)) {
+			return new DynamicIdTracker();
 		} else {
 			throw new OsmosisRuntimeException("The IdTrackerType " + idTrackerType + " is not recognised.");
 		}

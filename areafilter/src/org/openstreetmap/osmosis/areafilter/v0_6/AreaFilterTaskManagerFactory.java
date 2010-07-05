@@ -15,7 +15,7 @@ import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
  */
 public abstract class AreaFilterTaskManagerFactory extends TaskManagerFactory {
 	private static final String ARG_ID_TRACKER_TYPE = "idTrackerType";
-	private static final IdTrackerType DEFAULT_ID_TRACKER_TYPE = IdTrackerType.IdList;
+	private static final IdTrackerType DEFAULT_ID_TRACKER_TYPE = IdTrackerType.Dynamic;
 	
 	
 	/**

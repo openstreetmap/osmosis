@@ -17,6 +17,8 @@ public abstract class IdTrackerBase {
 	private static final int TEST_VAL_1 = -100;
 	private static final int TEST_VAL_2 = 0;
 	private static final int TEST_VAL_3 = 100;
+	private static final int TEST_VAL_4 = 10000;
+	private static final int TEST_VAL_5 = 10000;
 
 	private IdTracker idt;
 
@@ -62,9 +64,13 @@ public abstract class IdTrackerBase {
 		idt.set(TEST_VAL_1);
 		idt.set(TEST_VAL_2);
 		idt.set(TEST_VAL_3);
+		idt.set(TEST_VAL_4);
+		idt.set(TEST_VAL_5);
 		assertTrue(idt.get(TEST_VAL_1));
 		assertTrue(idt.get(TEST_VAL_2));
 		assertTrue(idt.get(TEST_VAL_3));
+		assertTrue(idt.get(TEST_VAL_4));
+		assertTrue(idt.get(TEST_VAL_5));
 	}
 
 
@@ -73,12 +79,16 @@ public abstract class IdTrackerBase {
 	 */
 	@Test
 	public final void testSet3() {
+		idt.set(TEST_VAL_5);
+		idt.set(TEST_VAL_4);
 		idt.set(TEST_VAL_3);
 		idt.set(TEST_VAL_2);
 		idt.set(TEST_VAL_1);
 		assertTrue(idt.get(TEST_VAL_1));
 		assertTrue(idt.get(TEST_VAL_2));
 		assertTrue(idt.get(TEST_VAL_3));
+		assertTrue(idt.get(TEST_VAL_4));
+		assertTrue(idt.get(TEST_VAL_5));
 	}
 
 
@@ -88,11 +98,15 @@ public abstract class IdTrackerBase {
 	@Test
 	public final void testSet4() {
 		idt.set(TEST_VAL_2);
+		idt.set(TEST_VAL_5);
 		idt.set(TEST_VAL_3);
+		idt.set(TEST_VAL_4);
 		idt.set(TEST_VAL_1);
 		assertTrue(idt.get(TEST_VAL_1));
 		assertTrue(idt.get(TEST_VAL_2));
 		assertTrue(idt.get(TEST_VAL_3));
+		assertTrue(idt.get(TEST_VAL_4));
+		assertTrue(idt.get(TEST_VAL_5));
 	}
 
 
@@ -104,10 +118,14 @@ public abstract class IdTrackerBase {
 		idt.set(TEST_VAL_1);
 		idt.set(TEST_VAL_2);
 		idt.set(TEST_VAL_3);
+		idt.set(TEST_VAL_4);
+		idt.set(TEST_VAL_5);
 		idt.set(TEST_VAL_1);
 		assertTrue(idt.get(TEST_VAL_1));
 		assertTrue(idt.get(TEST_VAL_2));
 		assertTrue(idt.get(TEST_VAL_3));
+		assertTrue(idt.get(TEST_VAL_4));
+		assertTrue(idt.get(TEST_VAL_5));
 	}
 
 
@@ -120,9 +138,13 @@ public abstract class IdTrackerBase {
 		assertTrue(idt.get(TEST_VAL_2));
 		idt.set(TEST_VAL_1);
 		idt.set(TEST_VAL_3);
+		idt.set(TEST_VAL_4);
+		idt.set(TEST_VAL_5);
 		assertTrue(idt.get(TEST_VAL_1));
 		assertTrue(idt.get(TEST_VAL_2));
 		assertTrue(idt.get(TEST_VAL_3));
+		assertTrue(idt.get(TEST_VAL_4));
+		assertTrue(idt.get(TEST_VAL_5));
 	}
 
 
