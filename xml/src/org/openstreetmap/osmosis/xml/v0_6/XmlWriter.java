@@ -24,6 +24,19 @@ public class XmlWriter extends BaseXmlWriter implements Sink {
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param writer
+	 *            The writer to send all data to.
+	 */
+	public XmlWriter(BufferedWriter writer) {
+		super(writer);
+		
+		osmWriter = new OsmWriter("osm", 0, true);
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
 	 * @param file
 	 *            The file to write.
 	 * @param compressionMethod

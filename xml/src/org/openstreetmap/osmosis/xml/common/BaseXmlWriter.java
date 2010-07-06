@@ -23,6 +23,7 @@ public abstract class BaseXmlWriter {
 	private static Logger log = Logger.getLogger(BaseXmlWriter.class.getName());
 	
 	
+	private boolean writerProvided;
 	private File file;
 	private boolean initialized;
 	private BufferedWriter writer;
@@ -30,7 +31,19 @@ public abstract class BaseXmlWriter {
 	
 	
 	/**
-	 * Creates a new instance.
+	 * Creates a new instance to write to the provided writer.
+	 * 
+	 * @param writer The writer to receive data.  This writer will not be closed on completion.
+	 */
+	public BaseXmlWriter(BufferedWriter writer) {
+		this.writer = writer;
+		
+		writerProvided = true;
+	}
+	
+	
+	/**
+	 * Creates a new instance to write to the specified file.
 	 * 
 	 * @param file
 	 *            The file to write.
@@ -40,6 +53,8 @@ public abstract class BaseXmlWriter {
 	public BaseXmlWriter(File file, CompressionMethod compressionMethod) {
 		this.file = file;
 		this.compressionMethod = compressionMethod;
+		
+		writerProvided = false;
 	}
 	
 	
@@ -101,37 +116,39 @@ public abstract class BaseXmlWriter {
 	 */
 	protected void initialize() {
 		if (!initialized) {
-			OutputStream outStream = null;
-			
-			try {
-				OutputStreamWriter outStreamWriter;
+			if (!writerProvided) {
+				OutputStream outStream = null;
 				
-				// make "-" an alias for /dev/stdout
-				if (file.getName().equals("-")) {
-					outStream = System.out;
-				} else {
-					outStream = new FileOutputStream(file);
-				}
-				
-				outStream =
-					new CompressionActivator(compressionMethod).createCompressionOutputStream(outStream);
-				
-				outStreamWriter = new OutputStreamWriter(outStream, "UTF-8");
-				
-				writer = new BufferedWriter(outStreamWriter);
-				
-				outStream = null;
-				
-			} catch (IOException e) {
-				throw new OsmosisRuntimeException("Unable to open file for writing.", e);
-			} finally {
-				if (outStream != null) {
-					try {
-						outStream.close();
-					} catch (Exception e) {
-						log.log(Level.SEVERE, "Unable to close output stream.", e);
+				try {
+					OutputStreamWriter outStreamWriter;
+					
+					// make "-" an alias for /dev/stdout
+					if (file.getName().equals("-")) {
+						outStream = System.out;
+					} else {
+						outStream = new FileOutputStream(file);
 					}
+					
+					outStream =
+						new CompressionActivator(compressionMethod).createCompressionOutputStream(outStream);
+					
+					outStreamWriter = new OutputStreamWriter(outStream, "UTF-8");
+					
+					writer = new BufferedWriter(outStreamWriter);
+					
 					outStream = null;
+					
+				} catch (IOException e) {
+					throw new OsmosisRuntimeException("Unable to open file for writing.", e);
+				} finally {
+					if (outStream != null) {
+						try {
+							outStream.close();
+						} catch (Exception e) {
+							log.log(Level.SEVERE, "Unable to close output stream.", e);
+						}
+						outStream = null;
+					}
 				}
 			}
 			
@@ -156,17 +173,22 @@ public abstract class BaseXmlWriter {
 		initialize();
 		
 		try {
-			if (writer != null) {
-				endElementWriter();
-				
-				writer.close();
+			if (!writerProvided) {
+				try {
+					if (writer != null) {
+						endElementWriter();
+						
+						writer.close();
+					}
+					
+				} catch (IOException e) {
+					throw new OsmosisRuntimeException("Unable to complete writing to the xml stream.", e);
+				} finally {
+					writer = null;
+				}
 			}
-			
-		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to complete writing to the xml stream.", e);
 		} finally {
 			initialized = false;
-			writer = null;
 		}
 	}
 	
@@ -176,16 +198,21 @@ public abstract class BaseXmlWriter {
 	 */
 	public void release() {
 		try {
-			try {
-				if (writer != null) {
-					writer.close();
+			if (!writerProvided) {
+				try {
+					try {
+						if (writer != null) {
+							writer.close();
+						}
+					} catch (IOException e) {
+						log.log(Level.SEVERE, "Unable to close writer.", e);
+					}
+				} finally {
+					writer = null;
 				}
-			} catch (IOException e) {
-				log.log(Level.SEVERE, "Unable to close writer.", e);
 			}
 		} finally {
 			initialized = false;
-			writer = null;
 		}
 	}
 }
