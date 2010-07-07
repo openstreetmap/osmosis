@@ -8,19 +8,26 @@ package org.openstreetmap.osmosis.core.database;
  */
 public class DatabaseLoginCredentials {
 
+	private String datasourceJndiLocation;
     private String host;
-
     private String database;
-
     private String user;
-
     private String password;
-
     private boolean forceUtf8;
-
     private boolean profileSql;
-
     private DatabaseType dbType;
+    
+    
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param datasourceJndiLocation
+	 *            The location of the data source in JNDI.
+	 */
+    public DatabaseLoginCredentials(String datasourceJndiLocation) {
+    	this.datasourceJndiLocation = datasourceJndiLocation;
+    }
+    
 
     /**
 	 * Creates a new instance.
@@ -52,6 +59,18 @@ public class DatabaseLoginCredentials {
         this.profileSql = profileSql;
         this.dbType = dbType;
     }
+    
+    
+	/**
+	 * Gets the location of the datasource in JNDI. If null, new connections
+	 * will need to be created using other parameters.
+	 * 
+	 * @return The datasource location in JNDI.
+	 */
+    public String getDatasourceJndiLocation() {
+    	return datasourceJndiLocation;
+    }
+    
 
     /**
      * Returns the host.

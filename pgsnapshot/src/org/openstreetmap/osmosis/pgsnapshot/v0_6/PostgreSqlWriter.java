@@ -140,7 +140,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		this.enableBboxBuilder = enableBboxBuilder;
 		this.enableLinestringBuilder = enableLinestringBuilder;
 		
-		schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
+		schemaVersionValidator = new SchemaVersionValidator(dbCtx, preferences);
 		indexManager = new IndexManager(dbCtx, !enableBboxBuilder, !enableLinestringBuilder);
 		
 		nodeBuffer = new ArrayList<Node>();

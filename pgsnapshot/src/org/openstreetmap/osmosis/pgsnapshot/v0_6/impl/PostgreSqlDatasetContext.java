@@ -101,7 +101,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			
 			dbCtx = new DatabaseContext(loginCredentials);
 			
-			new SchemaVersionValidator(loginCredentials, preferences).validateVersion(
+			new SchemaVersionValidator(dbCtx, preferences).validateVersion(
 					PostgreSqlVersionConstants.SCHEMA_VERSION);
 			
 			capabilityChecker = new DatabaseCapabilityChecker(dbCtx);

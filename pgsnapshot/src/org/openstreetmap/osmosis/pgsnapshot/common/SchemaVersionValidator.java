@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 
 
@@ -27,15 +26,14 @@ public class SchemaVersionValidator {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param loginCredentials
-	 *            Contains all information required to connect to the database.
+	 * @param dbCtx
+	 *            The database context to use for accessing the database.
 	 * @param preferences
 	 *            The database preferences.
 	 */
-	public SchemaVersionValidator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
+	public SchemaVersionValidator(DatabaseContext dbCtx, DatabasePreferences preferences) {
+		this.dbCtx = dbCtx;
 		this.preferences = preferences;
-		
-		dbCtx = new DatabaseContext(loginCredentials);
 	}
 	
 	
@@ -90,17 +88,7 @@ public class SchemaVersionValidator {
 				
 			} catch (SQLException e) {
 				throw new OsmosisRuntimeException("Unable to read the schema version from the schema info table.", e);
-			} finally {
-				cleanup();
 			}
 		}
-	}
-	
-	
-	/**
-	 * Releases all resources allocated during execution.
-	 */
-	private void cleanup() {
-		dbCtx.release();
 	}
 }

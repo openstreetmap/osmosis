@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
@@ -38,11 +37,11 @@ public class ChangeWriter {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param loginCredentials
-	 *            Contains all information required to connect to the database.
+	 * @param dbCtx
+	 *            The database context to use for accessing the database.
 	 */
-	public ChangeWriter(DatabaseLoginCredentials loginCredentials) {
-		dbCtx = new DatabaseContext(loginCredentials);
+	public ChangeWriter(DatabaseContext dbCtx) {
+		this.dbCtx = dbCtx;
 		
 		actionDao = new ActionDao(dbCtx);
 		userDao = new UserDao(dbCtx, actionDao);
@@ -194,7 +193,7 @@ public class ChangeWriter {
 
 
 	/**
-	 * Flushes all changes to the database.
+	 * Performs post-change database updates.
 	 */
 	public void complete() {
 		ReleasableStatementContainer statementContainer;
@@ -213,15 +212,12 @@ public class ChangeWriter {
 		
 		// Clear all action records.
 		actionDao.truncate();
-		
-		dbCtx.commit();
 	}
 
 
 	/**
-	 * Releases all database resources.
+	 * Releases all resources.
 	 */
 	public void release() {
-		dbCtx.release();
 	}
 }

@@ -8,6 +8,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 import org.openstreetmap.osmosis.pgsnapshot.common.SchemaVersionValidator;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.impl.ActionChangeWriter;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.impl.ChangeWriter;
@@ -26,6 +27,7 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	
 	private ChangeWriter changeWriter;
 	private Map<ChangeAction, ActionChangeWriter> actionWriterMap;
+	private DatabaseContext dbCtx;
 	private SchemaVersionValidator schemaVersionValidator;
 	
 	
@@ -38,13 +40,14 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	 *            Contains preferences configuring database behaviour.
 	 */
 	public PostgreSqlChangeWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
-		changeWriter = new ChangeWriter(loginCredentials);
+		dbCtx = new DatabaseContext(loginCredentials);
+		changeWriter = new ChangeWriter(dbCtx);
 		actionWriterMap = new HashMap<ChangeAction, ActionChangeWriter>();
 		actionWriterMap.put(ChangeAction.Create, new ActionChangeWriter(changeWriter, ChangeAction.Create));
 		actionWriterMap.put(ChangeAction.Modify, new ActionChangeWriter(changeWriter, ChangeAction.Modify));
 		actionWriterMap.put(ChangeAction.Delete, new ActionChangeWriter(changeWriter, ChangeAction.Delete));
 		
-		schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
+		schemaVersionValidator = new SchemaVersionValidator(dbCtx, preferences);
 	}
 	
 	
@@ -74,6 +77,8 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	 */
 	public void complete() {
 		changeWriter.complete();
+		
+		dbCtx.commit();
 	}
 	
 	
@@ -82,5 +87,7 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	 */
 	public void release() {
 		changeWriter.release();
+		
+		dbCtx.release();
 	}
 }

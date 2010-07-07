@@ -46,7 +46,7 @@ public class PostgreSqlTruncator implements RunnableTask {
 	public PostgreSqlTruncator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		
-		schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
+		schemaVersionValidator = new SchemaVersionValidator(dbCtx, preferences);
 	}
 	
 	

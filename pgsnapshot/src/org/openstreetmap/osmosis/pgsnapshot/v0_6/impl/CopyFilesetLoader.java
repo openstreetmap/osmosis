@@ -106,7 +106,7 @@ public class CopyFilesetLoader implements Runnable {
     	try {
 			IndexManager indexManager;
 			
-			new SchemaVersionValidator(loginCredentials, preferences)
+			new SchemaVersionValidator(dbCtx, preferences)
 				.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
     		
     		indexManager = new IndexManager(dbCtx, false, false);
