@@ -173,11 +173,11 @@ public abstract class BaseXmlWriter {
 		initialize();
 		
 		try {
+			endElementWriter();
+			
 			if (!writerProvided) {
 				try {
 					if (writer != null) {
-						endElementWriter();
-						
 						writer.close();
 					}
 					
