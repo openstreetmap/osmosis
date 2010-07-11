@@ -29,6 +29,8 @@
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-dataset" rev="${project.version}" conf="test->default" changing="true"/>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-xml" rev="${project.version}" conf="test->default" changing="true"/>
     	
+    	<dependency org="org.springframework" name="spring-jdbc" rev="3.0.3.RELEASE" conf="compile->default"/>
+        <dependency org="commons-dbcp" name="commons-dbcp" rev="1.2.2" conf="compile->default"/>
     	<dependency org="postgresql" name="postgresql" rev="8.4-701.jdbc4" conf="compile->default"/>
         <dependency org="org.postgis" name="postgis-jdbc" rev="1.3.3" conf="compile->default">
         	<exclude module="postgis-stubs"/>

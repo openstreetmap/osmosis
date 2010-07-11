@@ -30,14 +30,10 @@
         	<exclude module="stax-api"/>
         </dependency>
         <dependency org="org.apache.commons" name="commons-compress" rev="1.0" conf="compile->default"/>
-        <dependency org="org.springframework" name="spring-jdbc" rev="2.5.6.SEC01" conf="compile->default"/>
-        <dependency org="commons-codec" name="commons-codec" rev="1.4" conf="compile->default"/>
-        <dependency org="commons-dbcp" name="commons-dbcp" rev="1.2.2" conf="compile->default"/>
         <dependency org="xerces" name="xercesImpl" rev="2.9.1" conf="compile->default">
         	<!-- All necessary APIs are included in the JDK. -->
         	<exclude module="xml-apis"/>
         </dependency>
-        <dependency org="org.codehaus.plexus" name="plexus-classworlds" rev="2.2.2" conf="compile->default"/>
         
         <dependency org="junit" name="junit" rev="4.4" conf="test->default"/>
     	<dependency org="checkstyle" name="checkstyle" rev="5.0" conf="test->default"/>

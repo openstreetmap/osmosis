@@ -20,16 +20,18 @@
 	<classpathentry kind="lib" path="lib/test/jpf-1.5.jar"/>
 	<classpathentry kind="lib" path="lib/test/junit-4.4.jar"/>
 	<classpathentry kind="lib" path="lib/test/mysql-connector-java-5.1.10.jar"/>
-	<classpathentry kind="lib" path="lib/test/plexus-classworlds-2.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/test/postgresql-8.4-701.jdbc4.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-beans-2.5.6.SEC01.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-context-2.5.6.SEC01.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-core-2.5.6.SEC01.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-jdbc-2.5.6.SEC01.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-tx-2.5.6.SEC01.jar"/>
 	<classpathentry kind="lib" path="lib/test/stax2-api-3.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/test/woodstox-core-lgpl-4.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/test/xercesImpl-2.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-aop-3.0.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-asm-3.0.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-beans-3.0.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-context-3.0.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-core-3.0.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-expression-3.0.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-jdbc-3.0.3.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-tx-3.0.3.RELEASE.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Replication"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Xml"/>
 	<classpathentry kind="output" path="eclipse"/>
