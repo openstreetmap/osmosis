@@ -8,7 +8,6 @@
 	<classpathentry kind="lib" path="lib/test/commons-collections-2.0.jar"/>
 	<classpathentry kind="lib" path="lib/test/jpf-1.5.jar"/>
 	<classpathentry kind="lib" path="lib/test/junit-4.4.jar"/>
-	<classpathentry kind="lib" path="lib/test/stax2-api-3.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/test/woodstox-core-lgpl-4.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/test/xercesImpl-2.9.1.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-compress-1.0.jar"/>
@@ -16,5 +15,6 @@
 	<classpathentry kind="lib" path="lib/test/commons-cli-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-lang-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/test/google-collections-0.9.jar"/>
+	<classpathentry kind="lib" path="lib/test/stax2-api-3.0.2.jar"/>
 	<classpathentry kind="output" path="eclipse"/>
 </classpath>
