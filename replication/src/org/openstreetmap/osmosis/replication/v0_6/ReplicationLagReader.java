@@ -20,7 +20,7 @@ import org.openstreetmap.osmosis.replication.v0_6.impl.ReplicationDownloaderConf
  * the number of seconds the local replication directory is behind the HTTP server
  * and prints it to stdout.
  * 
- * @author Peter Körner
+ * @author Peter Koerner
  */
 public class ReplicationLagReader implements RunnableTask {
 	private static final Logger LOG = Logger.getLogger(ReplicationLagReader.class.getName());

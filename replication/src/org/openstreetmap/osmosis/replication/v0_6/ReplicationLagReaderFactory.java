@@ -12,7 +12,7 @@ import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
 /**
  * The task manager factory for a replication lag reader.
  * 
- * @author Peter Körner
+ * @author Peter Koerner
  */
 public class ReplicationLagReaderFactory extends TaskManagerFactory {
 	private static final String ARG_HUMAN_READABLE = "humanReadable";
