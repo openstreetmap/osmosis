@@ -12,6 +12,7 @@ import org.openstreetmap.osmosis.replication.v0_6.ReplicationDownloaderFactory;
 import org.openstreetmap.osmosis.replication.v0_6.ReplicationDownloaderInitializerFactory;
 import org.openstreetmap.osmosis.replication.v0_6.ReplicationFileMergerFactory;
 import org.openstreetmap.osmosis.replication.v0_6.ReplicationFileMergerInitializerFactory;
+import org.openstreetmap.osmosis.replication.v0_6.ReplicationLagReaderFactory;
 
 
 /**
@@ -42,6 +43,9 @@ public class ReplicationPluginLoader implements PluginLoader {
 		factoryMap.put("mrf", new ReplicationFileMergerFactory());
 		factoryMap.put("merge-replication-files-init", new ReplicationFileMergerInitializerFactory());
 		factoryMap.put("mrfi", new ReplicationFileMergerInitializerFactory());
+		
+		factoryMap.put("read-replication-lag", new ReplicationLagReaderFactory());
+		factoryMap.put("rrl", new ReplicationLagReaderFactory());
 		
 		factoryMap.put("read-change-interval-0.6", new IntervalDownloaderFactory());
 		factoryMap.put("read-change-interval-init-0.6", new IntervalDownloaderInitializerFactory());

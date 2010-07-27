@@ -1,0 +1,35 @@
+#!/bin/sh
+# -*- sh -*-
+
+# load the munin plugin helper
+. $MUNIN_LIBDIR/plugins/plugin.sh
+
+# if no workingDirectory has been configures
+if [ ! $workingDirectory ]; then
+	# exit with an error
+	echo "no workingDirectory configured" >&2
+	exit 1
+fi
+
+# path to osmosis binary
+[ $osmosis ]  || osmosis="osmosis"
+
+# configuration section
+if [ "$1" = "config" ]; then
+
+	echo 'graph_title OSM PostGIS Database Replag'
+	echo 'graph_args --base 1000'
+	echo 'graph_vlabel seconds behind main database'
+	echo 'graph_category osm'
+	
+	echo 'lag.label replication lag'
+	echo 'lag.draw LINE'
+	
+	exit 0
+fi
+
+# invoke osmosis to calculate the replication lag
+lag=$($osmosis --read-replication-lag workingDirectory="$workingDirectory" 2>/dev/null)
+echo "lag.value=$lag"
+
+exit 0
