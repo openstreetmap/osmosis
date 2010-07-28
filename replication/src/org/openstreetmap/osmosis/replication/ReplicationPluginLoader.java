@@ -43,7 +43,6 @@ public class ReplicationPluginLoader implements PluginLoader {
 		factoryMap.put("mrf", new ReplicationFileMergerFactory());
 		factoryMap.put("merge-replication-files-init", new ReplicationFileMergerInitializerFactory());
 		factoryMap.put("mrfi", new ReplicationFileMergerInitializerFactory());
-		
 		factoryMap.put("read-replication-lag", new ReplicationLagReaderFactory());
 		factoryMap.put("rrl", new ReplicationLagReaderFactory());
 		
@@ -53,6 +52,7 @@ public class ReplicationPluginLoader implements PluginLoader {
 		factoryMap.put("read-replication-interval-init-0.6", new ReplicationDownloaderInitializerFactory());
 		factoryMap.put("merge-replication-files-0.6", new ReplicationFileMergerFactory());
 		factoryMap.put("merge-replication-files-init-0.6", new ReplicationFileMergerInitializerFactory());
+		factoryMap.put("read-replication-lag-0.6", new ReplicationLagReaderFactory());
 		
 		return factoryMap;
 	}
