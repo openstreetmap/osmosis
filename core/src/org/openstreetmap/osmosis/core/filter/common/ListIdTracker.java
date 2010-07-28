@@ -19,10 +19,6 @@ import org.openstreetmap.osmosis.core.util.LongAsInt;
  */
 public class ListIdTracker implements IdTracker {
 	/**
-	 * The internal list is initialised to this size.
-	 */
-	private static final int INITIAL_LIST_SIZE = 1024;
-	/**
 	 * The internal list size is multiplied by this factor when more space is
 	 * required.
 	 */
@@ -47,7 +43,13 @@ public class ListIdTracker implements IdTracker {
 	 * Creates a new instance.
 	 */
 	public ListIdTracker() {
-		idList = new int[INITIAL_LIST_SIZE];
+		// This is being initialised with a very small array size because this class is now also
+		// used within the DynamicIdTracker which relies on the ListIdTracker being efficient for
+		// small amounts of data.
+		// When storing large amounts of data, the overhead of extending the array more often in the
+		// early stages is relatively small compared to the overall processing. For small amounts of
+		// data, the size efficiency is most important.
+		idList = new int[1];
 		idOffset = 0;
 		maxIdAdded = Integer.MIN_VALUE;
 		sorted = true;
@@ -62,6 +64,9 @@ public class ListIdTracker implements IdTracker {
 		int newListLength;
 		
 		newListLength = (int) (idList.length * LIST_SIZE_EXTENSION_FACTOR);
+		if (newListLength == idList.length) {
+			newListLength++;
+		}
 		
 		newIdList = new int[newListLength];
 		
