@@ -8,6 +8,7 @@ Updated the pgsql schema (now version 5) to add a primary key to the relation_me
 Updated apidb support to the latest schema 20100513171259.
 Updated pgsql dataset bounding box queries to force more efficient query plans by disabling inefficient join types.
 Added a new dynamic idTrackerType implementation selected by default to the area filtering tasks to simplify usage.
+Added the --read-replication-lag task which indicates how far behind the server a local replication is.
 
 0.35
 Registered --fast-read-xml as a task instead of requiring --fast-read-xml-0.6 to be specified.
