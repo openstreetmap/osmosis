@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="Osmosis-Xml" default="all" basedir=".">
-	
-	<!-- Global properties for the build. -->
-	<property name="project.version.suffix" value=""/> <!-- Can be overridden to include extra info such as svn revision number. -->
-	<property name="project.version" value="0.36-SNAPSHOT${project.version.suffix}"/>
+<project name="Osmosis.Xml" default="all" basedir=".">
 	
 	<!-- Include common java build. -->
 	<property name="build-support.dir" location="../build-support"/>
-	<import file="${build-support.dir}/build-java.xml"/>
+	<import file="${build-support.dir}/script/build-java.xml"/>
 </project>

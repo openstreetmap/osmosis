@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="Osmosis.Java" default="init-ivy" basedir="."
+<project name="Osmosis.Build.Java" default="init-ivy" basedir="."
 	xmlns:ivy="antlib:org.apache.ivy.ant"
 	xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
 	
@@ -8,8 +8,8 @@
 	</description>
 	
 	<!-- Include common build components. -->
-	<property name="build-support.dir" location="."/>
-	<import file="${build-support.dir}/build-ivy.xml"/>
+	<property name="build-support.dir" location="../"/>
+	<import file="${build-support.dir}/script/build-ivy.xml"/>
 	
 	<!-- Define classpaths for each of the lib directories. -->
 	<path id="classpath.compile">
@@ -22,12 +22,7 @@
 		<fileset dir="lib/test" includes="**/*.jar"/>
 	</path>
 	
-	<target name="init" description="Perform initialisation required by all other build steps.">
-		<!-- Create the time stamp -->
-		<tstamp/>
-	</target>
-	
-	<target name="build_src" depends="init, resolve" description="Compile source code into class files.">
+	<target name="build_src" depends="resolve" description="Compile source code into class files.">
 		<!-- Update the version number in the main class. -->
 		<replaceregexp
 			byline="true"

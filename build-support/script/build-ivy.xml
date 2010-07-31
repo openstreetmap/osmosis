@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="Osmosis.Ivy" default="init-ivy" basedir="."
+<project name="Osmosis.Build.Ivy" default="init-ivy" basedir="."
 	xmlns:ivy="antlib:org.apache.ivy.ant">
 
 	<description>
@@ -7,8 +7,8 @@
 	</description>
 	
 	<!-- Include common build components. -->
-	<property name="build-support.dir" location="."/>
-	<import file="${build-support.dir}/build-ivy-base.xml"/>
+	<property name="build-support.dir" location="../"/>
+	<import file="${build-support.dir}/script/build-ivy-base.xml"/>
 
 	<target name="resolve" depends="init-ivy" description="Downloads all program dependencies using ivy.">
 		<ivy:resolve file="${ivy.dep.file}" conf="${ivy.configurations}" />

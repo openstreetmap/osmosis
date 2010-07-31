@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<project name="Osmosis.Ivy.Base" default="init-ivy" basedir="."
+<project name="Osmosis.Build.Ivy.Base" default="init-ivy" basedir="."
 	xmlns:ivy="antlib:org.apache.ivy.ant">
 
 	<description>
 		Installs and configures the ivy build dependencies system.
 	</description>
+	
+	<!-- Include common build components. -->
+	<property name="build-support.dir" location="../"/>
+	<import file="${build-support.dir}/script/build-init.xml"/>
 
 	<property name="ivy.version" value="2.1.0" />
 	<property name="ivy.jar.dir" value="${build-support.dir}/ivy" />
@@ -25,7 +29,7 @@
 			dest="${ivy.jar.file}" usetimestamp="true"/>
 	</target>
 
-	<target name="init-ivy" description="Registers ivy with ant and initializes it." unless="ivy.initialized">
+	<target name="init-ivy" depends="init" description="Registers ivy with ant and initializes it." unless="ivy.initialized">
 		<!-- Determine if the ivy jar is already available. -->
 		<available property="ivy.available" file="${ivy.jar.file}" />
 		<!-- Download ivy.  This will only execute if the ivy.available property is not set. -->

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="Osmosis.Build.Init">
+
+	<description>
+		Initialises the ant environment.
+	</description>
+
+	<target name="init" description="Perform initialisation required by all other build steps.">
+		<!-- Create the time stamp -->
+		<tstamp/>
+
+		<!-- Load properties file defining configuration settings for the build. -->
+		<property name="build.properties" location="${build-support.dir}/config/ant-build.properties"/>
+		<property name="build-common.properties" location="${build-support.dir}/config/ant-build-common.properties"/>
+		<loadproperties srcFile="${build.properties}"/>
+		<loadproperties srcFile="${build-common.properties}"/>
+
+		<!--
+			Build the project version based on the prefix (defined in properties file) and suffix
+			which is optionally provided by the build environment.
+		-->
+		<property name="project.version.suffix" value=""/> <!-- Can be overridden to include extra info such as svn revision number. -->
+		<property name="project.version" value="${project.version.prefix}${project.version.suffix}" />
+	</target>
+</project>

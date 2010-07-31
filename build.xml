@@ -3,7 +3,7 @@
 	xmlns:ivy="antlib:org.apache.ivy.ant">
 
 	<property name="build-support.dir" location="build-support"/>
-	<import file="${build-support.dir}/build-ivy-base.xml"/>
+	<import file="${build-support.dir}/script/build-ivy-base.xml"/>
 	
 	<target name="find-projects" depends="init-ivy" description="Locate all of the sub-projects.">
 		<ivy:buildlist reference="build-path">
