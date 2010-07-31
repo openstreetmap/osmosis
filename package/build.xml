@@ -5,12 +5,7 @@
 	<property name="build-support.dir" location="../build-support"/>
 	<import file="${build-support.dir}/script/build-ivy.xml"/>
 	
-	<target name="init" description="Perform initialisation required by all other build steps.">
-		<!-- Create the time stamp -->
-		<tstamp/>
-	</target>	
-	
-	<target name="build" depends="init, resolve" description="Builds the distribution package.">
+	<target name="build" depends="resolve" description="Builds the distribution package.">
 		<!-- Create the distribution archives. -->
 		<mkdir dir="distrib/zips"/>
 		<zip destfile="distrib/zips/osmosis-${project.version}.zip">
