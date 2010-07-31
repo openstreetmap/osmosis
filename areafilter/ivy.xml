@@ -28,10 +28,10 @@
     	
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-xml" rev="${project.version}" conf="test->default" changing="true"/>
     	
-    	<dependency org="postgresql" name="postgresql" rev="8.4-701.jdbc4" conf="compile->default"/>
-    	<dependency org="mysql" name="mysql-connector-java" rev="5.1.10" conf="compile->default"/>
+    	<dependency org="postgresql" name="postgresql" rev="${dependency.version.postgresql}" conf="compile->default"/>
+    	<dependency org="mysql" name="mysql-connector-java" rev="${dependency.version.mysql}" conf="compile->default"/>
         
-        <dependency org="junit" name="junit" rev="4.4" conf="test->default"/>
-    	<dependency org="checkstyle" name="checkstyle" rev="5.0" conf="test->default"/>
+        <dependency org="junit" name="junit" rev="${dependency.version.junit}" conf="test->default"/>
+    	<dependency org="checkstyle" name="checkstyle" rev="${dependency.version.checkstyle}" conf="test->default"/>
     </dependencies>
 </ivy-module>

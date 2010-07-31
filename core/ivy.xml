@@ -24,23 +24,23 @@
     </publications>
     
     <dependencies>
-        <dependency org="net.sf.jpf" name="jpf" rev="1.5" conf="compile->default"/>
-        <dependency org="org.codehaus.woodstox" name="woodstox-core-lgpl" rev="4.0.3" conf="compile->default">
+        <dependency org="net.sf.jpf" name="jpf" rev="${dependency.version.jpf}" conf="compile->default"/>
+        <dependency org="org.codehaus.woodstox" name="woodstox-core-lgpl" rev="${dependency.version.woodstox-core}" conf="compile->default">
 			<!-- Stax is included in the JDK from java 1.6 onwards. -->
         	<exclude module="stax-api"/>
         </dependency>
         <!-- Include this explicitly to increase the version number.  The default transitively included one has incorrect sha-1 checksums. -->
-        <dependency org="org.codehaus.woodstox" name="stax2-api" rev="3.0.2" conf="compile->default">
+        <dependency org="org.codehaus.woodstox" name="stax2-api" rev="${dependency.version.woodstox-stax2}" conf="compile->default">
 			<!-- Stax is included in the JDK from java 1.6 onwards. -->
         	<exclude module="stax-api"/>
         </dependency>
-        <dependency org="org.apache.commons" name="commons-compress" rev="1.0" conf="compile->default"/>
-        <dependency org="xerces" name="xercesImpl" rev="2.9.1" conf="compile->default">
+        <dependency org="org.apache.commons" name="commons-compress" rev="${dependency.version.commons-compress}" conf="compile->default"/>
+        <dependency org="xerces" name="xercesImpl" rev="${dependency.version.xerces}" conf="compile->default">
         	<!-- All necessary APIs are included in the JDK. -->
         	<exclude module="xml-apis"/>
         </dependency>
         
-        <dependency org="junit" name="junit" rev="4.4" conf="test->default"/>
-    	<dependency org="checkstyle" name="checkstyle" rev="5.0" conf="test->default"/>
+        <dependency org="junit" name="junit" rev="${dependency.version.junit}" conf="test->default"/>
+    	<dependency org="checkstyle" name="checkstyle" rev="${dependency.version.checkstyle}" conf="test->default"/>
     </dependencies>
 </ivy-module>

@@ -29,7 +29,7 @@
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-replication" rev="${project.version}" conf="compile->default" changing="true"/>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-xml" rev="${project.version}" conf="compile->default" changing="true"/>
         
-        <dependency org="junit" name="junit" rev="4.4" conf="test->default"/>
-    	<dependency org="checkstyle" name="checkstyle" rev="5.0" conf="test->default"/>
+        <dependency org="junit" name="junit" rev="${dependency.version.junit}" conf="test->default"/>
+    	<dependency org="checkstyle" name="checkstyle" rev="${dependency.version.checkstyle}" conf="test->default"/>
     </dependencies>
 </ivy-module>
