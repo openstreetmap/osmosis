@@ -14,7 +14,7 @@
 	<classpathentry kind="lib" path="lib/test/commons-lang-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/test/google-collections-0.9.jar"/>
 	<classpathentry kind="lib" path="lib/test/jpf-1.5.jar"/>
-	<classpathentry kind="lib" path="lib/test/junit-4.4.jar"/>
+	<classpathentry kind="lib" path="lib/test/junit-4.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/test/mysql-connector-java-5.1.10.jar"/>
 	<classpathentry kind="lib" path="lib/test/postgresql-8.4-701.jdbc4.jar"/>
 	<classpathentry kind="lib" path="lib/test/woodstox-core-lgpl-4.0.3.jar"/>
