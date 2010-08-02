@@ -267,7 +267,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			Way filteredWay;
 			
 			filteredWayContainer = wayContainer.getWriteableInstance();
-			filteredWay = wayContainer.getEntity();
+			filteredWay = filteredWayContainer.getEntity();
 			
 			// Remove node references for nodes that are unavailable.
 			for (Iterator<WayNode> i = filteredWay.getWayNodes().iterator(); i.hasNext();) {
