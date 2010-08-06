@@ -88,15 +88,17 @@ public class DatabaseContext2 {
     }
     
     
-    /**
+	/**
 	 * Invokes the provided callback code within a transaction.
 	 * 
 	 * @param txnCallback
 	 *            The logic to be invoked within a transaction.
+	 * @param <T>
+	 *            The return type of the transaction callback.
 	 * 
 	 * @return The result.
 	 */
-    public Object executeWithinTransaction(TransactionCallback txnCallback) {
+    public <T> Object executeWithinTransaction(TransactionCallback<T> txnCallback) {
     	return txnTemplate.execute(txnCallback);
     }
 
