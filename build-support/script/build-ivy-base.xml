@@ -48,7 +48,7 @@
 			classpathref="ivy.lib.path" />
 		
 		<!-- Override the shared repo location to point at the svn-based ivy repo. -->
-		<property name="ivy.shared.default.root" location="build_support/repo"/>
+		<property name="ivy.shared.default.root" location="${build-support.dir}/repo"/>
 		<ivy:configure />
 		
 		<!-- Retrieve ivy details from the config file. -->
