@@ -63,7 +63,7 @@ public class CopyFilesetLoader implements Runnable {
 	 * @param tableName
 	 *            The table to load the data into.
 	 */
-    public void loadCopyFile(DatabaseContext dbCtx, File copyFile, String tableName) {
+    private void loadCopyFile(DatabaseContext dbCtx, File copyFile, String tableName) {
     	CopyManager copyManager;
     	InputStream inStream = null;
     	

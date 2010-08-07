@@ -3,17 +3,12 @@ package org.openstreetmap.osmosis.pgsnapshot.common;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
@@ -40,7 +35,7 @@ public class DatabaseContext {
 	}
 	
 	
-	private DatabaseLoginCredentials loginCredentials;
+	private DataSourceManager dataSourceManager;
 	private Connection connection;
 	private boolean autoCommit;
 	private Statement statement;
@@ -53,52 +48,9 @@ public class DatabaseContext {
 	 *            Contains all information required to connect to the database.
 	 */
 	public DatabaseContext(DatabaseLoginCredentials loginCredentials) {
-		this.loginCredentials = loginCredentials;
+		dataSourceManager = new DataSourceManager(loginCredentials);
 		
 		autoCommit = false;
-	}
-	
-	
-	private Connection getConnectionFromDriverManager() {
-		try {
-			return DriverManager.getConnection(
-				"jdbc:postgresql://" + loginCredentials.getHost() + "/"
-				+ loginCredentials.getDatabase(),
-		    	// + "?logLevel=2"
-		    	loginCredentials.getUser(),
-		    	loginCredentials.getPassword()
-		    );
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to establish a new database connection.", e);
-		}
-	}
-	
-	
-	private Connection getConnectionFromDatasource() {
-		InitialContext cxt;
-		DataSource ds;
-		String jndiLocation;
-		
-		jndiLocation = loginCredentials.getDatasourceJndiLocation();
-		
-		try {
-			cxt = new InitialContext();
-		} catch (NamingException e) {
-			throw new OsmosisRuntimeException("Unable to create an initial JNDI context.", e);
-		}
-		
-		try {
-			ds = (DataSource) cxt.lookup(jndiLocation);
-		} catch (NamingException e) {
-			throw new OsmosisRuntimeException("Unable to locate the datasource (" + jndiLocation + ")", e);
-		}
-
-		try {
-			return ds.getConnection();
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to obtain a connection from the datasource.", e);
-		}
 	}
 	
 	
@@ -110,20 +62,8 @@ public class DatabaseContext {
 	 */
 	public Connection getConnection() {
 		if (connection == null) {
-			String jndiLocation;
 			
-			jndiLocation = loginCredentials.getDatasourceJndiLocation();
-			
-			if (jndiLocation != null) {
-				LOG.finer("Creating a new database connection from JNDI.");
-				
-				connection = getConnectionFromDatasource();
-				
-			} else {
-				LOG.finer("Creating a new database connection using DriverManager.");
-				
-				connection = getConnectionFromDriverManager();
-			}
+			connection = dataSourceManager.getConnection();
 			
 			try {
 				connection.setAutoCommit(autoCommit);
@@ -395,6 +335,8 @@ public class DatabaseContext {
 			
 			connection = null;
 		}
+		
+		dataSourceManager.release();
 	}
 	
 	

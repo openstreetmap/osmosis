@@ -29,6 +29,8 @@
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-dataset" rev="${project.version}" conf="test->default" changing="true"/>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-xml" rev="${project.version}" conf="test->default" changing="true"/>
     	
+    	<dependency org="org.openstreetmap.osmosis" name="osmosis-hstore" rev="${dependency.version.osmosis-hstore}" conf="test->default" changing="true"/>
+    	
     	<dependency org="org.springframework" name="spring-jdbc" rev="${dependency.version.spring}" conf="compile->default"/>
         <dependency org="commons-dbcp" name="commons-dbcp" rev="${dependency.version.commons-dbcp}" conf="compile->default"/>
     	<dependency org="postgresql" name="postgresql" rev="${dependency.version.postgresql}" conf="compile->default"/>
