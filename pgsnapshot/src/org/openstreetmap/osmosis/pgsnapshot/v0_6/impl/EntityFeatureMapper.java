@@ -1,8 +1,9 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.Map;
+
+import org.springframework.jdbc.core.RowMapper;
 
 
 /**
@@ -41,8 +42,19 @@ public abstract class EntityFeatureMapper<T> {
 	
 	
 	/**
+	 * Returns the row mapper implementation for this entity type.
+	 * 
+	 * @return The row mapper.
+	 */
+	public abstract RowMapper<T> getRowMapper();
+	
+	
+	/**
 	 * The SQL SELECT statement for retrieving entity feature details.
 	 * 
+	 * @param tablePrefix
+	 *            The prefix for the entity table name. This allows another table to be queried if
+	 *            necessary such as a temporary results table.
 	 * @param filterByEntityId
 	 *            If true, a WHERE clause will be added filtering by the entity
 	 *            id column.
@@ -52,7 +64,7 @@ public abstract class EntityFeatureMapper<T> {
 	 *            depending on implementation.
 	 * @return The SQL string.
 	 */
-	public abstract String getSqlSelect(boolean filterByEntityId, boolean orderBy);
+	public abstract String getSqlSelect(String tablePrefix, boolean filterByEntityId, boolean orderBy);
 
 
 	/**
@@ -77,25 +89,12 @@ public abstract class EntityFeatureMapper<T> {
 	
 	
 	/**
-	 * Creates a new entity based upon the current row in the result set.
+	 * Sets values as bind variable parameters to an insert query.
 	 * 
-	 * @param resultSet
-	 *            The result set to read from.
-	 * @return The newly built entity object.
-	 */
-	public abstract T buildEntity(ResultSet resultSet);
-	
-	
-	/**
-	 * Sets entity values as bind variable parameters to an entity insert query.
-	 * 
-	 * @param statement
-	 *            The prepared statement to add the values to.
-	 * @param initialIndex
-	 *            The offset index of the first variable to set.
-	 * @param entityFeature
+	 * @param args
+	 *            The bind variable arguments to be updated.
+	 * @param feature
 	 *            The entity containing the data to be inserted.
-	 * @return The current parameter offset.
 	 */
-	public abstract int populateEntityParameters(PreparedStatement statement, int initialIndex, T entityFeature);
+	public abstract void populateParameters(Map<String, Object> args, T feature);
 }

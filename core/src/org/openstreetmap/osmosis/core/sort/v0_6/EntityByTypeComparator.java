@@ -3,7 +3,7 @@ package org.openstreetmap.osmosis.core.sort.v0_6;
 
 import java.util.Comparator;
 
-import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
+import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 
 
 /**
@@ -11,13 +11,13 @@ import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
  * 
  * @author Brett Henderson
  */
-public class EntityByTypeComparator implements Comparator<EntityContainer> {
+public class EntityByTypeComparator implements Comparator<Entity> {
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public int compare(EntityContainer o1, EntityContainer o2) {
+	public int compare(Entity o1, Entity o2) {
 		// Perform a type comparison.
-		return o1.getEntity().getType().compareTo(o2.getEntity().getType());
+		return o1.getType().compareTo(o2.getType());
 	}
 }

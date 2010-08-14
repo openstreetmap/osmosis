@@ -26,7 +26,8 @@ public class SortedHistoryChangePipeValidator implements ChangeSinkChangeSource 
 	 * Creates a new instance.
 	 */
 	public SortedHistoryChangePipeValidator() {
-		comparator = new ChangeAsEntityComparator(new EntityByTypeThenIdThenVersionComparator());
+		comparator = new ChangeAsEntityComparator(new EntityContainerComparator(
+				new EntityByTypeThenIdThenVersionComparator()));
 	}
 	
 	

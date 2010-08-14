@@ -1,17 +1,24 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.database.DbFeature;
 import org.openstreetmap.osmosis.core.database.DbOrderedFeature;
+import org.openstreetmap.osmosis.core.database.FeaturePopulator;
+import org.openstreetmap.osmosis.core.database.SortingStoreRowMapperListener;
+import org.openstreetmap.osmosis.core.database.WayNodeCollectionLoader;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
+import org.openstreetmap.osmosis.core.sort.common.FileBasedSort;
+import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactory;
+import org.openstreetmap.osmosis.core.store.StoreReleasingIterator;
+import org.openstreetmap.osmosis.core.store.UpcastIterator;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.openstreetmap.osmosis.pgsnapshot.common.RowMapperRowCallbackListener;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 
 /**
@@ -37,10 +44,10 @@ public class WayDao extends EntityDao<Way> {
 		+ " )"
 		+ " WHERE w.id  = ?";
 	
+	private SimpleJdbcTemplate jdbcTemplate;
 	private DatabaseCapabilityChecker capabilityChecker;
 	private EntityFeatureDao<WayNode, DbOrderedFeature<WayNode>> wayNodeDao;
-	private PreparedStatement updateWayBboxStatement;
-	private PreparedStatement updateWayLinestringStatement;
+	private WayNodeMapper wayNodeMapper;
 	
 	
 	/**
@@ -51,11 +58,18 @@ public class WayDao extends EntityDao<Way> {
 	 * @param actionDao
 	 *            The dao to use for adding action records to the database.
 	 */
-	public WayDao(DatabaseContext dbCtx, ActionDao actionDao) {
-		super(dbCtx, new WayMapper(), actionDao);
+	public WayDao(DatabaseContext2 dbCtx, ActionDao actionDao) {
+		super(dbCtx.getSimpleJdbcTemplate(), new WayMapper(), actionDao);
 		
+		jdbcTemplate = dbCtx.getSimpleJdbcTemplate();
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
-		wayNodeDao = new EntityFeatureDao<WayNode, DbOrderedFeature<WayNode>>(dbCtx, new WayNodeMapper());
+		wayNodeMapper = new WayNodeMapper();
+		wayNodeDao = new EntityFeatureDao<WayNode, DbOrderedFeature<WayNode>>(jdbcTemplate, wayNodeMapper);
+	}
+	
+	
+	private void loadFeatures(long entityId, Way entity) {
+		entity.getWayNodes().addAll(wayNodeDao.getAllRaw(entityId));
 	}
 	
 	
@@ -63,8 +77,14 @@ public class WayDao extends EntityDao<Way> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void loadFeatures(long entityId, Way entity) {
-		entity.getWayNodes().addAll(wayNodeDao.getAllRaw(entityId));
+	public Way getEntity(long entityId) {
+		Way entity;
+		
+		entity = super.getEntity(entityId);
+		
+		loadFeatures(entityId, entity);
+		
+		return entity;
 	}
 
 
@@ -97,36 +117,10 @@ public class WayDao extends EntityDao<Way> {
 	 */
 	private void updateWayGeometries(long wayId) {
 		if (capabilityChecker.isWayBboxSupported()) {
-			if (updateWayBboxStatement == null) {
-				updateWayBboxStatement = prepareStatement(SQL_UPDATE_WAY_BBOX);
-			}
-			
-			try {
-				int prmIndex;
-				
-				prmIndex = 1;
-				updateWayBboxStatement.setLong(prmIndex++, wayId);
-				updateWayBboxStatement.executeUpdate();
-				
-			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Update bbox failed for way " + wayId + ".");
-			}
+			jdbcTemplate.update(SQL_UPDATE_WAY_BBOX, wayId);
 		}
 		if (capabilityChecker.isWayLinestringSupported()) {
-			if (updateWayLinestringStatement == null) {
-				updateWayLinestringStatement = prepareStatement(SQL_UPDATE_WAY_LINESTRING);
-			}
-			
-			try {
-				int prmIndex;
-				
-				prmIndex = 1;
-				updateWayLinestringStatement.setLong(prmIndex++, wayId);
-				updateWayLinestringStatement.executeUpdate();
-				
-			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Update linestring failed for way " + wayId + ".");
-			}
+			jdbcTemplate.update(SQL_UPDATE_WAY_LINESTRING, wayId);
 		}
 	}
 	
@@ -170,13 +164,68 @@ public class WayDao extends EntityDao<Way> {
 		
 		super.removeEntity(entityId);
 	}
+	
+	
+	private ReleasableIterator<DbOrderedFeature<WayNode>> getWayNodes(String tablePrefix) {
+		
+		FileBasedSort<DbOrderedFeature<WayNode>> sortingStore =
+			new FileBasedSort<DbOrderedFeature<WayNode>>(
+				new SingleClassObjectSerializationFactory(DbOrderedFeature.class),
+				new DbOrderedFeatureComparator<WayNode>(), true);
+		
+		try {
+			String sql;
+			SortingStoreRowMapperListener<DbOrderedFeature<WayNode>> storeListener;
+			RowMapperRowCallbackListener<DbOrderedFeature<WayNode>> rowCallbackListener;
+			ReleasableIterator<DbOrderedFeature<WayNode>> resultIterator;
+			
+			sql = wayNodeMapper.getSqlSelect(tablePrefix, false, false);
+			
+			// Sends all received data into the object store.
+			storeListener = new SortingStoreRowMapperListener<DbOrderedFeature<WayNode>>(sortingStore);
+			// Converts result set rows into objects and passes them into the store.
+			rowCallbackListener = new RowMapperRowCallbackListener<DbOrderedFeature<WayNode>>(wayNodeMapper
+					.getRowMapper(), storeListener);
+			
+			// Perform the query passing the row mapper chain to process rows in a streamy fashion.
+			jdbcTemplate.getJdbcOperations().query(sql, rowCallbackListener);
+			
+			// Open a iterator on the store that will release the store upon completion.
+			resultIterator =
+				new StoreReleasingIterator<DbOrderedFeature<WayNode>>(sortingStore.iterate(), sortingStore);
+			
+			// The store itself shouldn't be released now that it has been attached to the iterator.
+			sortingStore = null;
+			
+			return resultIterator;
+			
+		} finally {
+			if (sortingStore != null) {
+				sortingStore.release();
+			}
+		}
+	}
 
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ReleasableIterator<Way> iterate() {
-		return new WayReader(getDatabaseContext());
+	protected List<FeaturePopulator<Way>> getFeaturePopulators(String tablePrefix) {
+		ReleasableIterator<DbFeature<WayNode>> wayNodeIterator;
+		List<FeaturePopulator<Way>> featurePopulators;
+		
+		featurePopulators = new ArrayList<FeaturePopulator<Way>>();
+		
+		// Get the way nodes for the selected entities.
+		wayNodeIterator = new UpcastIterator<DbFeature<WayNode>, DbOrderedFeature<WayNode>>(getWayNodes(tablePrefix));
+		
+		// Wrap the way node source into a feature populator that can attach them to their
+		// owning ways.
+		featurePopulators.add(
+				new FeaturePopulatorImpl<Way, WayNode, DbFeature<WayNode>>(
+						wayNodeIterator, new WayNodeCollectionLoader()));
+		
+		return featurePopulators;
 	}
 }

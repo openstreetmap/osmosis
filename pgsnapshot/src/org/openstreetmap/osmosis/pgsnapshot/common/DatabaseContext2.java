@@ -1,6 +1,11 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.common;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +16,8 @@ import javax.sql.DataSource;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
+import org.postgresql.copy.CopyManager;
+import org.postgresql.core.BaseConnection;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -30,7 +37,7 @@ import org.springframework.transaction.support.TransactionTemplate;
  */
 public class DatabaseContext2 {
 
-    private static final Logger LOG = Logger.getLogger(DatabaseContext.class.getName());
+    private static final Logger LOG = Logger.getLogger(DatabaseContext2.class.getName());
 
     private DataSourceManager dataSourceManager;
     private DataSource dataSource;
@@ -229,6 +236,73 @@ public class DatabaseContext2 {
             }
         }
     }
+
+
+	/**
+	 * Loads a table from a COPY file.
+	 * 
+	 * @param copyFile
+	 *            The file to be loaded.
+	 * @param tableName
+	 *            The table to load the data into.
+	 * @param columns
+	 *            The columns to be loaded (optional).
+	 */
+    public void loadCopyFile(File copyFile, String tableName, String ... columns) {
+    	CopyManager copyManager;
+    	InputStream inStream = null;
+    	
+    	try {
+    		StringBuilder copyStatement;
+    		InputStream bufferedInStream;
+    		Connection conn;
+    		
+    		copyStatement = new StringBuilder();
+    		copyStatement.append("COPY ");
+    		copyStatement.append(tableName);
+    		if (columns.length > 0) {
+    			copyStatement.append('(');
+    			for (int i = 0; i < columns.length; i++) {
+    				if (i > 0) {
+    					copyStatement.append(',');
+    				}
+    				copyStatement.append(columns[i]);
+    			}
+    			copyStatement.append(')');
+    		}
+    		copyStatement.append(" FROM STDIN");
+    		
+    		inStream = new FileInputStream(copyFile);
+    		bufferedInStream = new BufferedInputStream(inStream, 65536);
+    		
+    		conn = DataSourceUtils.getConnection(dataSource);
+    		try {
+	    		copyManager = new CopyManager(conn.unwrap(BaseConnection.class));
+	    		
+	    		copyManager.copyIn(copyStatement.toString(), bufferedInStream);
+    		} finally {
+    			DataSourceUtils.releaseConnection(conn, dataSource);
+    		}
+			
+    		inStream.close();
+			inStream = null;
+			
+    	} catch (IOException e) {
+    		throw new OsmosisRuntimeException("Unable to process COPY file " + copyFile + ".", e);
+    	} catch (SQLException e) {
+    		throw new OsmosisRuntimeException("Unable to process COPY file " + copyFile + ".", e);
+    	} finally {
+    		if (inStream != null) {
+				try {
+					inStream.close();
+				} catch (IOException e) {
+					LOG.log(Level.SEVERE, "Unable to close COPY file.", e);
+				}
+				inStream = null;
+			}
+    	}
+    }
+    
 
     /**
      * Enforces cleanup of any remaining resources during garbage collection. This is a safeguard

@@ -81,65 +81,6 @@ public class PostgreSqlTest {
 		// Success so delete the output file.
 		outputFile.delete();
 	}
-
-
-	/**
-	 * A basic test loading an osm file into a pgsql database using the COPY
-	 * file approach, then dumping it again and verifying that it is identical.
-	 * 
-	 * @throws IOException
-	 *             if any file operations fail.
-	 */
-	@Test
-	public void testFastLoadAndDump() throws IOException {
-		File authFile;
-		File inputFile;
-		File outputFile;
-		
-		// Generate input files.
-		authFile = getAuthFile();
-		inputFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
-		outputFile = File.createTempFile("test", ".osm");
-		
-		// Remove all existing data from the database.
-		Osmosis.run(
-			new String [] {
-				"-q",
-				"--truncate-pgsql-0.6",
-				"authFile=" + authFile.getPath()
-			}
-		);
-		
-		// Load the database with a dataset.
-		Osmosis.run(
-			new String [] {
-				"-q",
-				"--read-xml-0.6",
-				inputFile.getPath(),
-				"--fast-write-pgsql-0.6",
-				"authFile=" + authFile.getPath()
-			}
-		);
-		
-		// Dump the database to an osm file.
-		Osmosis.run(
-			new String [] {
-				"-q",
-				"--read-pgsql-0.6",
-				"authFile=" + authFile.getPath(),
-				"--dataset-dump-0.6",
-				"--tag-sort-0.6",
-				"--write-xml-0.6",
-				outputFile.getPath()
-			}
-		);
-		
-		// Validate that the output file matches the input file.
-		fileUtils.compareFiles(inputFile, outputFile);
-		
-		// Success so delete the output file.
-		outputFile.delete();
-	}
 	
 	
 	/**

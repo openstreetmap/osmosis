@@ -24,12 +24,9 @@ public class TempCopyFileset implements CopyFileset, Releasable {
 	private ArrayList<File> tmpFiles;
 	private File userFile;
 	private File nodeFile;
-	private File nodeTagFile;
 	private File wayFile;
-	private File wayTagFile;
 	private File wayNodeFile;
 	private File relationFile;
-	private File relationTagFile;
 	private File relationMemberFile;
 	private boolean initialized;
 	
@@ -63,12 +60,9 @@ public class TempCopyFileset implements CopyFileset, Releasable {
 		if (!initialized) {
 			userFile = createTempFile("u");
 			nodeFile = createTempFile("n");
-			nodeTagFile = createTempFile("nt");
 			wayFile = createTempFile("w");
-			wayTagFile = createTempFile("wt");
 			wayNodeFile = createTempFile("wn");
 			relationFile = createTempFile("r");
-			relationTagFile = createTempFile("rt");
 			relationMemberFile = createTempFile("rm");
 			
 			initialized = true;
@@ -84,17 +78,6 @@ public class TempCopyFileset implements CopyFileset, Releasable {
 		initialize();
 		
 		return nodeFile;
-	}
-
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public File getNodeTagFile() {
-		initialize();
-		
-		return nodeTagFile;
 	}
 
 
@@ -117,17 +100,6 @@ public class TempCopyFileset implements CopyFileset, Releasable {
 		initialize();
 		
 		return relationMemberFile;
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public File getRelationTagFile() {
-		initialize();
-		
-		return relationTagFile;
 	}
 
 
@@ -161,17 +133,6 @@ public class TempCopyFileset implements CopyFileset, Releasable {
 		initialize();
 		
 		return wayNodeFile;
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public File getWayTagFile() {
-		initialize();
-		
-		return wayTagFile;
 	}
 
 

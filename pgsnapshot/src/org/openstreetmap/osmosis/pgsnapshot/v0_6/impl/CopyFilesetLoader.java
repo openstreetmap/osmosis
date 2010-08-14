@@ -1,23 +1,13 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.SQLException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
 import org.openstreetmap.osmosis.pgsnapshot.common.SchemaVersionValidator;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.PostgreSqlVersionConstants;
-import org.postgresql.copy.CopyManager;
-import org.postgresql.core.BaseConnection;
 
 
 /**
@@ -28,6 +18,24 @@ import org.postgresql.core.BaseConnection;
 public class CopyFilesetLoader implements Runnable {
 	
 	private static final Logger LOG = Logger.getLogger(CopyFilesetLoader.class.getName());
+	
+	
+	private static String[] appendColumn(String[] columns, String newColumn) {
+		String[] result;
+		
+		result = new String[columns.length + 1];
+		
+		System.arraycopy(columns, 0, result, 0, columns.length);
+		result[columns.length] = newColumn;
+		
+		return result;
+	}
+	
+	
+	private static final String[] COMMON_COLUMNS = {"id", "version", "user_id", "tstamp", "changeset_id", "tags"};
+	private static final String[] NODE_COLUMNS = appendColumn(COMMON_COLUMNS, "geom");
+	private static final String[] WAY_COLUMNS = COMMON_COLUMNS;
+	private static final String[] RELATION_COLUMNS = COMMON_COLUMNS;
 	
 	
 	private DatabaseLoginCredentials loginCredentials;
@@ -51,63 +59,32 @@ public class CopyFilesetLoader implements Runnable {
 		this.preferences = preferences;
 		this.copyFileset = copyFileset;
 	}
-
-
-	/**
-	 * Loads a table from a COPY file.
-	 * 
-	 * @param dbCtx
-	 *            The database connection.
-	 * @param copyFile
-	 *            The file to be loaded.
-	 * @param tableName
-	 *            The table to load the data into.
-	 */
-    private void loadCopyFile(DatabaseContext dbCtx, File copyFile, String tableName) {
-    	CopyManager copyManager;
-    	InputStream inStream = null;
-    	
-    	try {
-    		InputStream bufferedInStream;
-    		
-    		inStream = new FileInputStream(copyFile);
-    		bufferedInStream = new BufferedInputStream(inStream, 65536);
-    		
-    		copyManager = new CopyManager((BaseConnection) dbCtx.getConnection());
-    		
-    		copyManager.copyIn("COPY " + tableName + " FROM STDIN", bufferedInStream);
-			
-    		inStream.close();
-			inStream = null;
-			
-    	} catch (IOException e) {
-    		throw new OsmosisRuntimeException("Unable to process COPY file " + copyFile + ".", e);
-    	} catch (SQLException e) {
-    		throw new OsmosisRuntimeException("Unable to process COPY file " + copyFile + ".", e);
-    	} finally {
-    		if (inStream != null) {
-				try {
-					inStream.close();
-				} catch (Exception e) {
-					LOG.log(Level.SEVERE, "Unable to close COPY file.", e);
-				}
-				inStream = null;
-			}
-    	}
-    }
     
 
     /**
      * Reads all data from the database and send it to the sink.
      */
     public void run() {
-    	DatabaseContext dbCtx = new DatabaseContext(loginCredentials);
+    	DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials);
     	
     	try {
+    		DatabaseCapabilityChecker capabilityChecker;
 			IndexManager indexManager;
+			String[] wayColumns;
 			
-			new SchemaVersionValidator(dbCtx, preferences)
+			dbCtx.beginTransaction();
+			
+			capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
+			new SchemaVersionValidator(dbCtx.getSimpleJdbcTemplate(), preferences)
 				.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
+			
+			wayColumns = WAY_COLUMNS;
+			if (capabilityChecker.isWayBboxSupported()) {
+				wayColumns = appendColumn(wayColumns, "bbox");
+			}
+			if (capabilityChecker.isWayLinestringSupported()) {
+				wayColumns = appendColumn(wayColumns, "linestring");
+			}
     		
     		indexManager = new IndexManager(dbCtx, false, false);
     		
@@ -115,23 +92,17 @@ public class CopyFilesetLoader implements Runnable {
 			indexManager.prepareForLoad();
     		
     		LOG.finer("Loading users.");
-    		loadCopyFile(dbCtx, copyFileset.getUserFile(), "users");
+    		dbCtx.loadCopyFile(copyFileset.getUserFile(), "users");
     		LOG.finer("Loading nodes.");
-    		loadCopyFile(dbCtx, copyFileset.getNodeFile(), "nodes");
-    		LOG.finer("Loading node tags.");
-    		loadCopyFile(dbCtx, copyFileset.getNodeTagFile(), "node_tags");
+    		dbCtx.loadCopyFile(copyFileset.getNodeFile(), "nodes", NODE_COLUMNS);
     		LOG.finer("Loading ways.");
-    		loadCopyFile(dbCtx, copyFileset.getWayFile(), "ways");
-    		LOG.finer("Loading way tags.");
-    		loadCopyFile(dbCtx, copyFileset.getWayTagFile(), "way_tags");
+    		dbCtx.loadCopyFile(copyFileset.getWayFile(), "ways", wayColumns);
     		LOG.finer("Loading way nodes.");
-    		loadCopyFile(dbCtx, copyFileset.getWayNodeFile(), "way_nodes");
+    		dbCtx.loadCopyFile(copyFileset.getWayNodeFile(), "way_nodes");
     		LOG.finer("Loading relations.");
-    		loadCopyFile(dbCtx, copyFileset.getRelationFile(), "relations");
-    		LOG.finer("Loading relation tags.");
-    		loadCopyFile(dbCtx, copyFileset.getRelationTagFile(), "relation_tags");
+    		dbCtx.loadCopyFile(copyFileset.getRelationFile(), "relations", RELATION_COLUMNS);
     		LOG.finer("Loading relation members.");
-    		loadCopyFile(dbCtx, copyFileset.getRelationMemberFile(), "relation_members");
+    		dbCtx.loadCopyFile(copyFileset.getRelationMemberFile(), "relation_members");
     		LOG.finer("Committing changes.");
     		
     		LOG.fine("Data load complete.");
@@ -139,12 +110,10 @@ public class CopyFilesetLoader implements Runnable {
     		// Add all constraints and indexes.
     		indexManager.completeAfterLoad();
     		
-    		LOG.fine("Committing changes.");
-    		dbCtx.commit();
+    		dbCtx.commitTransaction();
     		
     		LOG.fine("Vacuuming database.");
-    		dbCtx.setAutoCommit(true);
-    		dbCtx.executeStatement("VACUUM ANALYZE");
+    		dbCtx.getSimpleJdbcTemplate().update("VACUUM ANALYZE");
     		
     		LOG.fine("Complete.");
     		

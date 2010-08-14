@@ -28,27 +28,11 @@ public interface CopyFileset {
 
 
 	/**
-	 * Gets the node tag table file.
-	 * 
-	 * @return The node tag table file.
-	 */
-	File getNodeTagFile();
-
-
-	/**
 	 * Gets the way table file.
 	 * 
 	 * @return The way table file.
 	 */
 	File getWayFile();
-
-
-	/**
-	 * Gets the way tag table file.
-	 * 
-	 * @return The way tag table file.
-	 */
-	File getWayTagFile();
 
 
 	/**
@@ -65,14 +49,6 @@ public interface CopyFileset {
 	 * @return The relation table file.
 	 */
 	File getRelationFile();
-
-
-	/**
-	 * Gets the relation tag table file.
-	 * 
-	 * @return The relation tag table file.
-	 */
-	File getRelationTagFile();
 
 
 	/**

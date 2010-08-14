@@ -5,6 +5,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
+import org.openstreetmap.osmosis.core.sort.v0_6.EntityContainerComparator;
 import org.openstreetmap.osmosis.core.sort.v0_6.SortedDeltaChangePipeValidator;
 import org.openstreetmap.osmosis.core.sort.v0_6.SortedEntityPipeValidator;
 import org.openstreetmap.osmosis.core.store.DataPostbox;
@@ -164,12 +165,12 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 		boolean completed = false;
 		
 		try {
-			EntityByTypeThenIdComparator comparator;
+			EntityContainerComparator comparator;
 			EntityContainer base = null;
 			ChangeContainer change = null;
 			
 			// Create a comparator for comparing two entities by type and identifier.
-			comparator = new EntityByTypeThenIdComparator();
+			comparator = new EntityContainerComparator(new EntityByTypeThenIdComparator());
 			
 			// We continue in the comparison loop while both sources still have data.
 			while ((base != null || basePostbox.hasNext()) && (change != null || changePostbox.hasNext())) {

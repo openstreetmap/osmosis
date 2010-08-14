@@ -15,6 +15,8 @@ import org.openstreetmap.osmosis.core.database.DbOrderedFeature;
 import org.openstreetmap.osmosis.core.database.DbOrderedFeatureHistoryComparator;
 import org.openstreetmap.osmosis.core.database.DbOrderedFeatureRowMapper;
 import org.openstreetmap.osmosis.core.database.RowMapperListener;
+import org.openstreetmap.osmosis.core.database.SortingStoreRowMapperListener;
+import org.openstreetmap.osmosis.core.database.WayNodeCollectionLoader;
 import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;

@@ -1,13 +1,14 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
+import org.springframework.jdbc.core.RowMapper;
 
 
 /**
@@ -77,8 +78,16 @@ public class RelationMapper extends EntityMapper<Relation> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int populateEntityParameters(PreparedStatement statement, int initialIndex, Relation relation) {
-		// Populate the entity level parameters.
-		return populateCommonEntityParameters(statement, initialIndex, relation);
+	public void populateEntityParameters(Map<String, Object> args, Relation entity) {
+		populateCommonEntityParameters(args, entity);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public RowMapper<Relation> getRowMapper() {
+		return new RelationRowMapper();
 	}
 }

@@ -15,7 +15,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.SinkSource;
  */
 public class SortedEntityPipeValidator implements SinkSource {
 	private Sink sink;
-	private EntityByTypeThenIdComparator comparator;
+	private EntityContainerComparator comparator;
 	private EntityContainer previousEntityContainer;
 	
 	
@@ -23,7 +23,7 @@ public class SortedEntityPipeValidator implements SinkSource {
 	 * Creates a new instance.
 	 */
 	public SortedEntityPipeValidator() {
-		comparator = new EntityByTypeThenIdComparator();
+		comparator = new EntityContainerComparator(new EntityByTypeThenIdComparator());
 	}
 	
 	

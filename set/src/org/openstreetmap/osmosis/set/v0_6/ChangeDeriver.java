@@ -6,6 +6,7 @@ import org.openstreetmap.osmosis.core.change.v0_6.impl.TimestampSetter;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
+import org.openstreetmap.osmosis.core.sort.v0_6.EntityContainerComparator;
 import org.openstreetmap.osmosis.core.store.DataPostbox;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
@@ -83,13 +84,13 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 		boolean completed = false;
 		
 		try {
-			EntityByTypeThenIdComparator comparator;
+			EntityContainerComparator comparator;
 			EntityContainer fromEntityContainer = null;
 			EntityContainer toEntityContainer = null;
 			TimestampSetter timestampSetter;
 			
 			// Create a comparator for comparing two entities by type and identifier.
-			comparator = new EntityByTypeThenIdComparator();
+			comparator = new EntityContainerComparator(new EntityByTypeThenIdComparator());
 			
 			// Create an object for setting the current timestamp on entities being deleted.
 			timestampSetter = new TimestampSetter();

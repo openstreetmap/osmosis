@@ -3,6 +3,8 @@ package org.openstreetmap.osmosis.apidb.v0_6.impl;
 
 import org.openstreetmap.osmosis.core.database.DbFeature;
 import org.openstreetmap.osmosis.core.database.DbFeatureHistory;
+import org.openstreetmap.osmosis.core.database.FeatureCollectionLoader;
+import org.openstreetmap.osmosis.core.database.FeaturePopulator;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.store.PeekableIterator;

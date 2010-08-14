@@ -32,6 +32,6 @@ public class TimeDao implements SystemTimeLoader {
 	 * @return The timestamp.
 	 */
 	public Date getSystemTime() {
-		return (Date) jdbcTemplate.queryForObject("SELECT now() AS SystemTime", Date.class);
+		return jdbcTemplate.queryForObject("SELECT now() AS SystemTime", Date.class);
 	}
 }

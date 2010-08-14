@@ -1,17 +1,16 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
-import org.postgis.Geometry;
-import org.postgis.PGgeometry;
+import org.springframework.jdbc.core.RowMapper;
 
 
 /**
@@ -118,43 +117,16 @@ public class WayMapper extends EntityMapper<Way> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int populateEntityParameters(PreparedStatement statement, int initialIndex, Way way) {
-		// Populate the entity level parameters.
-		return populateCommonEntityParameters(statement, initialIndex, way);
+	public void populateEntityParameters(Map<String, Object> args, Way entity) {
+		populateCommonEntityParameters(args, entity);
 	}
-	
-	
+
+
 	/**
-	 * Sets entity values as bind variable parameters to an entity insert query.
-	 * 
-	 * @param statement
-	 *            The prepared statement to add the values to.
-	 * @param initialIndex
-	 *            The offset index of the first variable to set.
-	 * @param way
-	 *            The entity containing the data to be inserted.
-	 * @param geometries
-	 *            The geometries to store against the way.
-	 * @return The current parameter offset.
+	 * {@inheritDoc}
 	 */
-	public int populateEntityParameters(
-			PreparedStatement statement, int initialIndex, Way way, List<Geometry> geometries) {
-		int prmIndex;
-		
-		prmIndex = populateEntityParameters(statement, initialIndex, way);
-		
-		try {
-			for (int i = 0; i < geometries.size(); i++) {
-				statement.setObject(prmIndex++, new PGgeometry(geometries.get(i)));
-			}
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException(
-				"Unable to set the bbox for way " + way.getId() + ".",
-				e
-			);
-		}
-		
-		return prmIndex;
+	@Override
+	public RowMapper<Way> getRowMapper() {
+		return new WayRowMapper();
 	}
 }

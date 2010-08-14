@@ -6,13 +6,13 @@ import java.util.logging.Logger;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
+import org.openstreetmap.osmosis.core.task.v0_6.Sink;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
 import org.openstreetmap.osmosis.pgsnapshot.common.NodeLocationStoreType;
+import org.openstreetmap.osmosis.pgsnapshot.v0_6.impl.CopyFilesetBuilder;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.impl.CopyFilesetLoader;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.impl.DatabaseCapabilityChecker;
-import org.openstreetmap.osmosis.pgsnapshot.v0_6.impl.CopyFilesetBuilder;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.impl.TempCopyFileset;
-import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
 
 /**
@@ -59,29 +59,29 @@ public class PostgreSqlCopyWriter implements Sink {
 	
 	private void initialize() {
 		if (!initialized) {
-			DatabaseContext dbCtx;
+			DatabaseContext2 dbCtx;
 			DatabaseCapabilityChecker capabilityChecker;
 			
 			LOG.fine("Initializing the database and temporary processing files.");
 			
-			dbCtx = new DatabaseContext(loginCredentials);
-			
+			dbCtx = new DatabaseContext2(loginCredentials);
 			try {
 				capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 
 				populateBbox = capabilityChecker.isWayBboxSupported();
-				populateLinestring = capabilityChecker.isWayLinestringSupported();				
-
-				copyFilesetBuilder =
-					new CopyFilesetBuilder(copyFileset, populateBbox, populateLinestring, storeType);
-				
-				copyFilesetLoader = new CopyFilesetLoader(loginCredentials, preferences, copyFileset);
-				
-				LOG.fine("Processing input data, building geometries and creating database load files.");
-				
+				populateLinestring = capabilityChecker.isWayLinestringSupported();
 			} finally {
 				dbCtx.release();
 			}
+
+			copyFilesetBuilder =
+				new CopyFilesetBuilder(copyFileset, populateBbox, populateLinestring, storeType);
+			
+			copyFilesetLoader = new CopyFilesetLoader(loginCredentials, preferences, copyFileset);
+			
+			LOG.fine("Processing input data, building geometries and creating database load files.");
+			
+			
 			
 			initialized = true;
 		}

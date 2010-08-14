@@ -5,6 +5,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
+import org.openstreetmap.osmosis.core.sort.v0_6.EntityContainerComparator;
 import org.openstreetmap.osmosis.core.sort.v0_6.SortedEntityPipeValidator;
 import org.openstreetmap.osmosis.core.store.DataPostbox;
 import org.openstreetmap.osmosis.core.task.v0_6.MultiSinkRunnableSource;
@@ -93,12 +94,12 @@ public class EntityMerger implements MultiSinkRunnableSource {
 		boolean completed = false;
 		
 		try {
-			EntityByTypeThenIdComparator comparator;
+			EntityContainerComparator comparator;
 			EntityContainer entityContainer0 = null;
 			EntityContainer entityContainer1 = null;
 			
 			// Create a comparator for comparing two entities by type and identifier.
-			comparator = new EntityByTypeThenIdComparator();
+			comparator = new EntityContainerComparator(new EntityByTypeThenIdComparator());
 			
 			// We continue in the comparison loop while both sources still have data.
 			while (

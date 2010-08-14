@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
+import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 
 
 /**
@@ -13,30 +13,30 @@ import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
  * 
  * @author Brett Henderson
  */
-public class EntityByTypeThenIdComparator implements Comparator<EntityContainer> {
-	private Comparator<EntityContainer> comparator;
+public class EntityByTypeThenIdComparator implements Comparator<Entity> {
+	private Comparator<Entity> comparator;
 
 
 	/**
 	 * Creates a new instance.
 	 */
 	public EntityByTypeThenIdComparator() {
-		List<Comparator<EntityContainer>> entityComparators;
+		List<Comparator<Entity>> entityComparators;
 
 		// Build the sequence of entity comparisons.
-		entityComparators = new ArrayList<Comparator<EntityContainer>>();
+		entityComparators = new ArrayList<Comparator<Entity>>();
 		entityComparators.add(new EntityByTypeComparator());
 		entityComparators.add(new EntityByIdComparator());
 
 		// Combine all entity comparisons into a single logical comparison.
-		comparator = new StackableComparator<EntityContainer>(entityComparators);
+		comparator = new StackableComparator<Entity>(entityComparators);
 	}
 
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public int compare(EntityContainer o1, EntityContainer o2) {
+	public int compare(Entity o1, Entity o2) {
 		return comparator.compare(o1, o2);
 	}
 }

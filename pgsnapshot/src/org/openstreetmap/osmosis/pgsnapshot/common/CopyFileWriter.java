@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 import org.postgis.Geometry;
 import org.postgis.binary.BinaryWriter;
+import org.postgresql.util.PGobject;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.lifecycle.Completable;
@@ -246,6 +247,26 @@ public class CopyFileWriter implements Completable {
             } else {	
 			    writer.write(postgisBinaryWriter.writeHexed(data));
             }
+			
+		} catch (IOException e) {
+			throw new OsmosisRuntimeException("Unable to write value (" + data + ")", e);
+		}
+	}
+	
+	
+	/**
+	 * Writes data to the output file.
+	 * 
+	 * @param data
+	 *            The data to be written.
+	 */
+	public void writeField(PGobject data) {
+		initialize();
+		
+		try {
+			separateField();
+			
+			writer.write(escapeString(data.getValue()));
 			
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to write value (" + data + ")", e);

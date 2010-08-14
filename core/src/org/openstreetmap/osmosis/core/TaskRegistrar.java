@@ -42,6 +42,7 @@ import org.openstreetmap.osmosis.core.sort.v0_6.ChangeForStreamableApplierCompar
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeSorterFactory;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeTagSorterFactory;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
+import org.openstreetmap.osmosis.core.sort.v0_6.EntityContainerComparator;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntitySorterFactory;
 import org.openstreetmap.osmosis.core.sort.v0_6.TagSorterFactory;
 import org.openstreetmap.osmosis.core.tee.v0_6.ChangeTeeFactory;
@@ -97,7 +98,8 @@ public class TaskRegistrar {
 
 		// Configure factories that require additional information.
 		entitySorterFactory06 = new EntitySorterFactory();
-		entitySorterFactory06.registerComparator("TypeThenId", new EntityByTypeThenIdComparator(), true);
+		entitySorterFactory06.registerComparator("TypeThenId", new EntityContainerComparator(
+				new EntityByTypeThenIdComparator()), true);
 		changeSorterFactory06 = new ChangeSorterFactory();
 		changeSorterFactory06.registerComparator("streamable", new ChangeForStreamableApplierComparator(), true);
 		changeSorterFactory06.registerComparator("seekable", new ChangeForSeekableApplierComparator(), false);

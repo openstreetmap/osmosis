@@ -1,13 +1,11 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Map;
 
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DbOrderedFeature;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
+import org.springframework.jdbc.core.RowMapper;
 
 
 /**
@@ -39,12 +37,16 @@ public class WayNodeMapper extends EntityFeatureMapper<DbOrderedFeature<WayNode>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getSqlSelect(boolean filterByEntityId, boolean orderBy) {
+	public String getSqlSelect(String tablePrefix, boolean filterByEntityId, boolean orderBy) {
 		StringBuilder resultSql;
 		
 		resultSql = new StringBuilder();
 		resultSql.append("SELECT way_id AS entity_id, node_id, sequence_id FROM ");
 		resultSql.append("way_nodes f");
+		if (!tablePrefix.isEmpty()) {
+			resultSql.append(" INNER JOIN ").append(tablePrefix).append(getParentEntityName())
+				.append("s e ON f.entity_id = e.id");
+		}
 		if (filterByEntityId) {
 			resultSql.append(" WHERE entity_id = ?");
 		}
@@ -79,7 +81,7 @@ public class WayNodeMapper extends EntityFeatureMapper<DbOrderedFeature<WayNode>
 			if (row > 0) {
 				resultSql.append(", ");
 			}
-			resultSql.append("(?, ?, ?)");
+			resultSql.append("(:wayId, :nodeId, :sequenceId)");
 		}
 		
 		return resultSql.toString();
@@ -101,54 +103,24 @@ public class WayNodeMapper extends EntityFeatureMapper<DbOrderedFeature<WayNode>
 		
 		return resultSql.toString();
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DbOrderedFeature<WayNode> buildEntity(ResultSet resultSet) {
-		try {
-			return new DbOrderedFeature<WayNode>(
-				resultSet.getLong("entity_id"),
-				new WayNode(
-					resultSet.getLong("node_id")
-				),
-				resultSet.getInt("sequence_id")
-			);
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to build a way node from the current recordset row.", e);
-		}
+	public void populateParameters(Map<String, Object> args, DbOrderedFeature<WayNode> feature) {
+		args.put("wayId", feature.getEntityId());
+		args.put("nodeId", feature.getFeature().getNodeId());
+		args.put("sequenceId", feature.getSequenceId());
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int populateEntityParameters(
-			PreparedStatement statement, int initialIndex, DbOrderedFeature<WayNode> entityFeature) {
-		try {
-			int prmIndex;
-			WayNode wayNode;
-			
-			wayNode = entityFeature.getFeature();
-			
-			prmIndex = initialIndex;
-			
-			statement.setLong(prmIndex++, entityFeature.getEntityId());
-			statement.setLong(prmIndex++, wayNode.getNodeId());
-			statement.setInt(prmIndex++, entityFeature.getSequenceId());
-			
-			return prmIndex;
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException(
-				"Unable to populate way node parameters for way "
-					+ entityFeature.getEntityId() + ".",
-				e
-			);
-		}
+	public RowMapper<DbOrderedFeature<WayNode>> getRowMapper() {
+		return new WayNodeRowMapper();
 	}
 }

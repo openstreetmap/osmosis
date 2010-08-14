@@ -26,7 +26,7 @@ public class SortedDeltaChangePipeValidator implements ChangeSinkChangeSource {
 	 * Creates a new instance.
 	 */
 	public SortedDeltaChangePipeValidator() {
-		comparator = new ChangeAsEntityComparator(new EntityByTypeThenIdComparator());
+		comparator = new ChangeAsEntityComparator(new EntityContainerComparator(new EntityByTypeThenIdComparator()));
 	}
 	
 	

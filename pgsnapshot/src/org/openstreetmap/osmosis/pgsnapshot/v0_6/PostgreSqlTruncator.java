@@ -5,9 +5,9 @@ import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
-import org.openstreetmap.osmosis.pgsnapshot.common.SchemaVersionValidator;
 import org.openstreetmap.osmosis.core.task.common.RunnableTask;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.openstreetmap.osmosis.pgsnapshot.common.SchemaVersionValidator;
 
 
 /**
@@ -31,7 +31,7 @@ public class PostgreSqlTruncator implements RunnableTask {
 	};
 	
 	
-	private DatabaseContext dbCtx;
+	private DatabaseContext2 dbCtx;
 	private SchemaVersionValidator schemaVersionValidator;
 	
 	
@@ -44,9 +44,9 @@ public class PostgreSqlTruncator implements RunnableTask {
 	 *            Contains preferences configuring database behaviour.
 	 */
 	public PostgreSqlTruncator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
-		dbCtx = new DatabaseContext(loginCredentials);
+		dbCtx = new DatabaseContext2(loginCredentials);
 		
-		schemaVersionValidator = new SchemaVersionValidator(dbCtx, preferences);
+		schemaVersionValidator = new SchemaVersionValidator(dbCtx.getSimpleJdbcTemplate(), preferences);
 	}
 	
 	
@@ -57,22 +57,23 @@ public class PostgreSqlTruncator implements RunnableTask {
 		try {
 			schemaVersionValidator.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
 			
+			dbCtx.beginTransaction();
+			
 			LOG.fine("Truncating tables.");
 			for (int i = 0; i < SQL_TABLE_NAMES.length; i++) {
 				if (dbCtx.doesTableExist(SQL_TABLE_NAMES[i])) {
 					LOG.finer("Truncating table " + SQL_TABLE_NAMES[i] + ".");
-					dbCtx.executeStatement("TRUNCATE " + SQL_TABLE_NAMES[i]);
+					dbCtx.getSimpleJdbcTemplate().update("TRUNCATE " + SQL_TABLE_NAMES[i]);
 				} else {
 					LOG.finer("Skipping table " + SQL_TABLE_NAMES[i] + " which doesn't exist in the current schema.");
 				}
 			}
 			
 			LOG.fine("Committing changes.");
-			dbCtx.commit();
+			dbCtx.commitTransaction();
 			
 			LOG.fine("Vacuuming database.");
-			dbCtx.setAutoCommit(true);
-			dbCtx.executeStatement("VACUUM ANALYZE");
+			dbCtx.getSimpleJdbcTemplate().update("VACUUM ANALYZE");
 			LOG.fine("Complete.");
 			
 		} finally {

@@ -28,7 +28,8 @@ public class ChangeForStreamableApplierComparator implements Comparator<ChangeCo
 	 */
 	public ChangeForStreamableApplierComparator() {
 		// We have an existing entity comparator that performs the same ordering so simply adapt it.
-		comparator = new ChangeAsEntityComparator(new EntityByTypeThenIdThenVersionComparator());
+		comparator = new ChangeAsEntityComparator(new EntityContainerComparator(
+				new EntityByTypeThenIdThenVersionComparator()));
 	}
 	
 	

@@ -3,7 +3,8 @@ package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
 import java.util.logging.Logger;
 
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 
 /**
@@ -69,7 +70,7 @@ public class IndexManager {
 		+ ")";
 	
 	
-	private DatabaseContext dbCtx;
+	private SimpleJdbcTemplate jdbcTemplate;
 	private DatabaseCapabilityChecker capabilityChecker;
 	private boolean populateBbox;
 	private boolean populateLinestring;
@@ -87,11 +88,11 @@ public class IndexManager {
 	 *            If true, the linestring column on the way table will be
 	 *            populated after load.
 	 */
-	public IndexManager(DatabaseContext dbCtx, boolean populateBbox, boolean populateLinestring) {
-		this.dbCtx = dbCtx;
+	public IndexManager(DatabaseContext2 dbCtx, boolean populateBbox, boolean populateLinestring) {
 		this.populateBbox = populateBbox;
 		this.populateLinestring = populateLinestring;
 		
+		jdbcTemplate = dbCtx.getSimpleJdbcTemplate();
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 	}
 	
@@ -103,20 +104,20 @@ public class IndexManager {
 		LOG.fine("Running pre-load SQL statements.");
 		for (int i = 0; i < PRE_LOAD_SQL.length; i++) {
 			LOG.finer("SQL: " + PRE_LOAD_SQL[i]);
-			dbCtx.executeStatement(PRE_LOAD_SQL[i]);
+			jdbcTemplate.update(PRE_LOAD_SQL[i]);
 		}
 		if (capabilityChecker.isWayBboxSupported()) {
 			LOG.fine("Running pre-load bbox SQL statements.");
 			for (int i = 0; i < PRE_LOAD_SQL_WAY_BBOX.length; i++) {
 				LOG.finer("SQL: " + PRE_LOAD_SQL_WAY_BBOX[i]);
-				dbCtx.executeStatement(PRE_LOAD_SQL_WAY_BBOX[i]);
+				jdbcTemplate.update(PRE_LOAD_SQL_WAY_BBOX[i]);
 			}
 		}
 		if (capabilityChecker.isWayLinestringSupported()) {
 			LOG.fine("Running pre-load linestring SQL statements.");
 			for (int i = 0; i < PRE_LOAD_SQL_WAY_LINESTRING.length; i++) {
 				LOG.finer("SQL: " + PRE_LOAD_SQL_WAY_LINESTRING[i]);
-				dbCtx.executeStatement(PRE_LOAD_SQL_WAY_LINESTRING[i]);
+				jdbcTemplate.update(PRE_LOAD_SQL_WAY_LINESTRING[i]);
 			}
 		}
 		LOG.fine("Pre-load SQL statements complete.");
@@ -130,28 +131,28 @@ public class IndexManager {
 		LOG.fine("Running post-load SQL.");
 		for (int i = 0; i < POST_LOAD_SQL.length; i++) {
 			LOG.finer("SQL: " + POST_LOAD_SQL[i]);
-			dbCtx.executeStatement(POST_LOAD_SQL[i]);
+			jdbcTemplate.update(POST_LOAD_SQL[i]);
 		}
 		if (capabilityChecker.isWayBboxSupported()) {
 			LOG.fine("Running post-load bbox SQL statements.");
 			if (populateBbox) {
 				LOG.finer("SQL: " + POST_LOAD_SQL_POPULATE_WAY_BBOX);
-				dbCtx.executeStatement(POST_LOAD_SQL_POPULATE_WAY_BBOX);
+				jdbcTemplate.update(POST_LOAD_SQL_POPULATE_WAY_BBOX);
 			}
 			for (int i = 0; i < POST_LOAD_SQL_WAY_BBOX.length; i++) {
 				LOG.finer("SQL: " + POST_LOAD_SQL_WAY_BBOX[i]);
-				dbCtx.executeStatement(POST_LOAD_SQL_WAY_BBOX[i]);
+				jdbcTemplate.update(POST_LOAD_SQL_WAY_BBOX[i]);
 			}
 		}
 		if (capabilityChecker.isWayLinestringSupported()) {
 			LOG.fine("Running post-load linestring SQL statements.");
 			if (populateLinestring) {
 				LOG.finer("SQL: " + POST_LOAD_SQL_POPULATE_WAY_LINESTRING);
-				dbCtx.executeStatement(POST_LOAD_SQL_POPULATE_WAY_LINESTRING);
+				jdbcTemplate.update(POST_LOAD_SQL_POPULATE_WAY_LINESTRING);
 			}
 			for (int i = 0; i < POST_LOAD_SQL_WAY_LINESTRING.length; i++) {
 				LOG.finer("SQL: " + POST_LOAD_SQL_WAY_LINESTRING[i]);
-				dbCtx.executeStatement(POST_LOAD_SQL_WAY_LINESTRING[i]);
+				jdbcTemplate.update(POST_LOAD_SQL_WAY_LINESTRING[i]);
 			}
 		}
 	}

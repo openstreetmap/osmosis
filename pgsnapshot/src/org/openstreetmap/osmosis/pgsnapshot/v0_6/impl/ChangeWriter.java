@@ -2,20 +2,23 @@
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
 import java.sql.CallableStatement;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
-import org.openstreetmap.osmosis.pgsnapshot.common.NoSuchRecordException;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.openstreetmap.osmosis.pgsnapshot.common.NoSuchRecordException;
+import org.springframework.jdbc.core.CallableStatementCreator;
+import org.springframework.jdbc.core.SqlParameter;
 
 
 /**
@@ -25,7 +28,7 @@ import org.openstreetmap.osmosis.core.task.common.ChangeAction;
  */
 public class ChangeWriter {
 	
-	private DatabaseContext dbCtx;
+	private DatabaseContext2 dbCtx;
 	private ActionDao actionDao;
 	private UserDao userDao;
 	private NodeDao nodeDao;
@@ -40,7 +43,7 @@ public class ChangeWriter {
 	 * @param dbCtx
 	 *            The database context to use for accessing the database.
 	 */
-	public ChangeWriter(DatabaseContext dbCtx) {
+	public ChangeWriter(DatabaseContext2 dbCtx) {
 		this.dbCtx = dbCtx;
 		
 		actionDao = new ActionDao(dbCtx);
@@ -196,19 +199,13 @@ public class ChangeWriter {
 	 * Performs post-change database updates.
 	 */
 	public void complete() {
-		ReleasableStatementContainer statementContainer;
-		CallableStatement updateStatement;
-		
-		statementContainer = new ReleasableStatementContainer();
-		try {
-			updateStatement = statementContainer.add(dbCtx.prepareCall("{call osmosisUpdate()}"));
-			updateStatement.executeUpdate();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to invoke the osmosis update stored function.", e);
-		} finally {
-			statementContainer.release();
-		}
+		dbCtx.getJdbcTemplate().call(
+				new CallableStatementCreator() {
+					@Override
+					public CallableStatement createCallableStatement(Connection con) throws SQLException {
+						return con.prepareCall("{call osmosisUpdate()}");
+					}
+				}, new ArrayList<SqlParameter>());
 		
 		// Clear all action records.
 		actionDao.truncate();
@@ -219,5 +216,6 @@ public class ChangeWriter {
 	 * Releases all resources.
 	 */
 	public void release() {
+		// Nothing to do.
 	}
 }

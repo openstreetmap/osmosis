@@ -1,10 +1,9 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.apidb.v0_6.impl;
+package org.openstreetmap.osmosis.core.database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.openstreetmap.osmosis.core.database.RowMapperListener;
 import org.openstreetmap.osmosis.core.sort.common.FileBasedSort;
 import org.openstreetmap.osmosis.core.store.Storeable;
 

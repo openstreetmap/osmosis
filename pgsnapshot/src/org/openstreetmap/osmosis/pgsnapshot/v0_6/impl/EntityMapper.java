@@ -1,15 +1,18 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
+import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
+import org.openstreetmap.osmosis.hstore.PGHStore;
+import org.springframework.jdbc.core.RowMapper;
 
 
 /**
@@ -44,6 +47,14 @@ public abstract class EntityMapper<T extends Entity> {
 	 * @return The entity type class.
 	 */
 	public abstract Class<T> getEntityClass();
+	
+	
+	/**
+	 * Returns the row mapper implementation for this entity type.
+	 * 
+	 * @return The row mapper.
+	 */
+	public abstract RowMapper<T> getRowMapper();
 	
 	
 	/**
@@ -89,16 +100,32 @@ public abstract class EntityMapper<T extends Entity> {
 	 * @return The SQL string.
 	 */
 	public String getSqlSelect(boolean filterByEntityId, boolean orderByEntityId) {
+		return getSqlSelect("", filterByEntityId, orderByEntityId);
+	}
+
+
+	/**
+	 * The SQL SELECT statement for retrieving entity details.
+	 * 
+	 * @param tablePrefix
+	 *            The prefix for the entity table name. This allows another table to be queried if
+	 *            necessary such as a temporary results table.
+	 * @param filterByEntityId
+	 *            If true, a WHERE clause will be added filtering by the entity id column.
+	 * @param orderByEntityId
+	 *            If true, an ORDER BY clause will be added ordering by the entity id column.
+	 * @return The SQL string.
+	 */
+	public String getSqlSelect(String tablePrefix, boolean filterByEntityId, boolean orderByEntityId) {
 		StringBuilder resultSql;
 		
 		resultSql = new StringBuilder();
-		resultSql.append("SELECT e.id, e.version, e.user_id, u.name AS user_name, e.tstamp, e.changeset_id");
+		resultSql.append("SELECT e.id, e.version, e.user_id, u.name AS user_name, e.tstamp, e.changeset_id, e.tags");
 		for (String fieldName : Arrays.asList(getTypeSpecificFieldNames())) {
 			resultSql.append(", ").append(fieldName);
 		}
 		resultSql.append(" FROM ");
-		resultSql.append(getEntityName());
-		resultSql.append("s e");
+		resultSql.append(tablePrefix).append(getEntityName()).append("s e");
 		resultSql.append(" LEFT OUTER JOIN users u ON e.user_id = u.id");
 		if (filterByEntityId) {
 			resultSql.append(" WHERE e.id = ?");
@@ -126,7 +153,7 @@ public abstract class EntityMapper<T extends Entity> {
 		
 		resultSql = new StringBuilder();
 		resultSql.append("INSERT INTO ").append(getEntityName()).append("s");
-		resultSql.append("(id, version, user_id, tstamp, changeset_id");
+		resultSql.append("(id, version, user_id, tstamp, changeset_id, tags");
 		for (String fieldName : Arrays.asList(typeSpecificFieldNames)) {
 			resultSql.append(", ").append(fieldName);
 		}
@@ -135,9 +162,9 @@ public abstract class EntityMapper<T extends Entity> {
 			if (row > 0) {
 				resultSql.append(", ");
 			}
-			resultSql.append("(?, ?, ?, ?, ?");
+			resultSql.append("(:id, :version, :userId, :timestamp, :changesetId, :tags");
 			for (int i = 0; i < typeSpecificFieldNames.length; i++) {
-				resultSql.append(", ?");
+				resultSql.append(", :").append(typeSpecificFieldNames[i]);
 			}
 			resultSql.append(")");
 		}
@@ -159,12 +186,13 @@ public abstract class EntityMapper<T extends Entity> {
 		
 		resultSql = new StringBuilder();
 		resultSql.append("UPDATE ").append(getEntityName())
-				.append("s SET id = ?, version = ?, user_id = ?, tstamp = ?, changeset_id = ?");
+				.append("s SET id = :id, version = :version, user_id = :userId,"
+						+ " tstamp = :timestamp, changeset_id = :changesetId, tags = :tags");
 		for (String fieldName : Arrays.asList(getTypeSpecificFieldNames())) {
-			resultSql.append(", ").append(fieldName).append(" = ?");
+			resultSql.append(", ").append(fieldName).append(" = :").append(fieldName);
 		}
 		if (filterByEntityId) {
-			resultSql.append(" WHERE id = ?");
+			resultSql.append(" WHERE id = :id");
 		}
 		
 		return resultSql.toString();
@@ -185,7 +213,7 @@ public abstract class EntityMapper<T extends Entity> {
 		resultSql = new StringBuilder();
 		resultSql.append("DELETE FROM ").append(getEntityName()).append("s");
 		if (filterByEntityId) {
-			resultSql.append(" WHERE id = ?");
+			resultSql.append(" WHERE id = :id");
 		}
 		
 		return resultSql.toString();
@@ -230,24 +258,18 @@ public abstract class EntityMapper<T extends Entity> {
 			throw new OsmosisRuntimeException("Unable to build a user from the current recordset row.", e);
 		}
 	}
-	
-	
+
+
 	/**
-	 * Sets common entity values as bind variable parameters to an entity insert
-	 * query.
+	 * Sets common entity values as bind variable parameters to an entity insert query.
 	 * 
-	 * @param statement
-	 *            The prepared statement to add the values to.
-	 * @param initialIndex
-	 *            The offset index of the first variable to set.
+	 * @param args
+	 *            The bind variable arguments to be updated.
 	 * @param entity
 	 *            The entity containing the data to be inserted.
-	 * @return The current parameter offset.
 	 */
-	protected int populateCommonEntityParameters(PreparedStatement statement, int initialIndex, Entity entity) {
-		int prmIndex;
-		
-		prmIndex = initialIndex;
+	protected void populateCommonEntityParameters(Map<String, Object> args, Entity entity) {
+		PGHStore tags;
 		
 		// We can't write an entity with a null timestamp.
 		if (entity.getTimestamp() == null) {
@@ -255,33 +277,27 @@ public abstract class EntityMapper<T extends Entity> {
 					"Entity(" + entity.getType() + ") " + entity.getId() + " does not have a timestamp set.");
 		}
 		
-		try {
-			statement.setLong(prmIndex++, entity.getId());
-			statement.setInt(prmIndex++, entity.getVersion());
-			statement.setInt(prmIndex++, entity.getUser().getId());
-			statement.setTimestamp(prmIndex++, new Timestamp(entity.getTimestamp().getTime()));
-			statement.setLong(prmIndex++, entity.getChangesetId());
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException(
-				"Unable to set a prepared statement parameter for entity("
-					+ entity.getType() + ") " + entity.getId() + ".", e);
+		tags = new PGHStore();
+		for (Tag tag : entity.getTags()) {
+			tags.put(tag.getKey(), tag.getValue());
 		}
 		
-		return prmIndex;
+		args.put("id", entity.getId());
+		args.put("version", entity.getVersion());
+		args.put("userId", entity.getUser().getId());
+		args.put("timestamp", new Timestamp(entity.getTimestamp().getTime()));
+		args.put("changesetId", entity.getChangesetId());
+		args.put("tags", tags);
 	}
 	
 	
 	/**
 	 * Sets entity values as bind variable parameters to an entity insert query.
 	 * 
-	 * @param statement
-	 *            The prepared statement to add the values to.
-	 * @param initialIndex
-	 *            The offset index of the first variable to set.
+	 * @param args
+	 *            The bind variable arguments to be updated.
 	 * @param entity
 	 *            The entity containing the data to be inserted.
-	 * @return The current parameter offset.
 	 */
-	public abstract int populateEntityParameters(PreparedStatement statement, int initialIndex, T entity);
+	public abstract void populateEntityParameters(Map<String, Object> args, T entity);
 }

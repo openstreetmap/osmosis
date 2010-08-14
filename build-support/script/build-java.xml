@@ -157,6 +157,8 @@
 	<target name="all" depends="build, checkstyle, test, publish"/>
 	
 	<target name="clean" description="Clean up the project tree.">
+		<!-- Delete ivy resolved libraries. -->
+		<delete dir="lib"/>
 		<!-- Delete the generated directory trees. -->
 		<delete dir="build"/>
 		<delete dir="report"/>

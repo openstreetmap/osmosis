@@ -1,126 +1,68 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.openstreetmap.osmosis.core.database.DbFeature;
+import org.openstreetmap.osmosis.core.database.FeaturePopulator;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
-import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
+import org.openstreetmap.osmosis.core.lifecycle.ReleasableContainer;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
-import org.openstreetmap.osmosis.core.store.PeekableIterator;
-import org.openstreetmap.osmosis.core.store.PersistentIterator;
-import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactory;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 
 
 /**
- * Reads instances of an entity type from a database ordered by the identifier.
- * It combines the output of the entity feature table readers to produce fully
- * configured entity objects.
+ * Provides a single iterator based on data provided by underlying iterators from each of the
+ * underlying entity and feature iterators. Each underlying iterator provides one component of the
+ * overall entity.
  * 
- * @author Brett Henderson
  * @param <T>
- *            The entity type to be supported.
+ *            The type of entity provided by this iterator.
  */
 public class EntityReader<T extends Entity> implements ReleasableIterator<T> {
 	
-	private ReleasableIterator<T> entityReader;
-	private PeekableIterator<DbFeature<Tag>> entityTagReader;
-	private T nextValue;
 	private boolean nextValueLoaded;
+	private ReleasableContainer releasableContainer;
+	private ReleasableIterator<T> entityIterator;
+	private List<FeaturePopulator<T>> featurePopulators;
+	private T nextValue;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param dbCtx
-	 *            The database context to use for accessing the database.
-	 * @param entityMapper
-	 *            The database mapper for the entity type.
+	 * @param entityIterator
+	 *            The entity source.
+	 * @param featurePopulators
+	 *            Populators to add entity specific features to the generated entities.
 	 */
-	public EntityReader(DatabaseContext dbCtx, EntityMapper<T> entityMapper) {
-		// The postgres jdbc driver doesn't appear to allow concurrent result
-		// sets on the same connection so only the last opened result set may be
-		// streamed. The rest of the result sets must be persisted first.
-		entityReader = new PersistentIterator<T>(
-			new SingleClassObjectSerializationFactory(entityMapper.getEntityClass()),
-			new EntityTableReader<T>(dbCtx, entityMapper),
-			"ent",
-			true
-		);
-		entityTagReader = new PeekableIterator<DbFeature<Tag>>(
-			new PersistentIterator<DbFeature<Tag>>(
-				new SingleClassObjectSerializationFactory(DbFeature.class),
-				new EntityFeatureTableReader<Tag, DbFeature<Tag>>(dbCtx, new TagMapper(entityMapper.getEntityName())),
-				"enttag",
-				true
-			)
-		);
+	public EntityReader(ReleasableIterator<T> entityIterator, List<FeaturePopulator<T>> featurePopulators) {
+		releasableContainer = new ReleasableContainer();
+		
+		this.entityIterator = releasableContainer.add(entityIterator);
+		for (FeaturePopulator<T> featurePopulator : featurePopulators) {
+			releasableContainer.add(featurePopulator);
+		}
+		this.featurePopulators = featurePopulators;
 	}
 	
 	
 	/**
-	 * Creates a new instance.
+	 * Consolidates the output of all readers so that entities are fully
+	 * populated.
 	 * 
-	 * @param dbCtx
-	 *            The database context to use for accessing the database.
-	 * @param entityMapper
-	 *            The database mapper for the entity type.
-	 * @param constraintTable
-	 *            The table containing a column named id defining the list of
-	 *            entities to be returned.
+	 * @return An entity record where the entity is fully populated.
 	 */
-	public EntityReader(DatabaseContext dbCtx, EntityMapper<T> entityMapper, String constraintTable) {
-		// The postgres jdbc driver doesn't appear to allow concurrent result
-		// sets on the same connection so only the last opened result set may be
-		// streamed. The rest of the result sets must be persisted first.
-		entityReader = new PersistentIterator<T>(
-			new SingleClassObjectSerializationFactory(entityMapper.getEntityClass()),
-			new EntityTableReader<T>(dbCtx, entityMapper, constraintTable),
-			"nod",
-			true
-		);
-		entityTagReader = new PeekableIterator<DbFeature<Tag>>(
-			new PersistentIterator<DbFeature<Tag>>(
-				new SingleClassObjectSerializationFactory(DbFeature.class),
-				new EntityFeatureTableReader<Tag, DbFeature<Tag>>(
-						dbCtx, new TagMapper(entityMapper.getEntityName()), constraintTable),
-				"enttag",
-				true
-			)
-		);
-	}
-	
-	
-	/**
-	 * Populates the entity with the its features. These features will be read
-	 * from related tables.
-	 * 
-	 * @param entity
-	 *            The entity to be populated.
-	 */
-	protected void populateEntityFeatures(T entity) {
-		long entityId;
+	private T readNextEntity() {
+		T entity;
 		
-		entityId = entity.getId();
+		entity = entityIterator.next();
 		
-		// Skip all tags that are from a lower entity.
-		while (entityTagReader.hasNext()) {
-			DbFeature<Tag> dbTag;
-			
-			dbTag = entityTagReader.peekNext();
-			
-			if (dbTag.getEntityId() < entityId) {
-				entityTagReader.next();
-			} else {
-				break;
-			}
+		// Add entity type specific features to the entity.
+		for (FeaturePopulator<T> populator : featurePopulators) {
+			populator.populateFeatures(entity);
 		}
 		
-		// Load all tags matching this version of the node.
-		while (entityTagReader.hasNext() && entityTagReader.peekNext().getEntityId() == entityId) {
-			entity.getTags().add(entityTagReader.next().getFeature());
-		}
+		return entity;
 	}
 	
 	
@@ -128,14 +70,8 @@ public class EntityReader<T extends Entity> implements ReleasableIterator<T> {
 	 * {@inheritDoc}
 	 */
 	public boolean hasNext() {
-		if (!nextValueLoaded && entityReader.hasNext()) {
-			T entity;
-			
-			entity = entityReader.next();
-			
-			populateEntityFeatures(entity);
-			
-			nextValue = entity;
+		if (!nextValueLoaded && entityIterator.hasNext()) {
+			nextValue = readNextEntity();
 			nextValueLoaded = true;
 		}
 		
@@ -172,7 +108,6 @@ public class EntityReader<T extends Entity> implements ReleasableIterator<T> {
 	 * {@inheritDoc}
 	 */
 	public void release() {
-		entityReader.release();
-		entityTagReader.release();
+		releasableContainer.release();
 	}
 }

@@ -1,13 +1,13 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
 
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.database.FeaturePopulator;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
-import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 
 /**
@@ -37,9 +37,8 @@ public class NodeDao extends EntityDao<Node> {
 		+ " )";
 	
 	
+	private SimpleJdbcTemplate jdbcTemplate;
 	private DatabaseCapabilityChecker capabilityChecker;
-	private PreparedStatement updateWayBboxStatement;
-	private PreparedStatement updateWayLinestringStatement;
 	
 	
 	/**
@@ -50,19 +49,11 @@ public class NodeDao extends EntityDao<Node> {
 	 * @param actionDao
 	 *            The dao to use for adding action records to the database.
 	 */
-	public NodeDao(DatabaseContext dbCtx, ActionDao actionDao) {
-		super(dbCtx, new NodeMapper(), actionDao);
+	public NodeDao(DatabaseContext2 dbCtx, ActionDao actionDao) {
+		super(dbCtx.getSimpleJdbcTemplate(), new NodeMapper(), actionDao);
 		
+		jdbcTemplate = dbCtx.getSimpleJdbcTemplate();
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void loadFeatures(long entityId, Node entity) {
-		// Nodes have no additional features.
 	}
 	
 	
@@ -74,46 +65,20 @@ public class NodeDao extends EntityDao<Node> {
 		super.modifyEntity(entity);
 		
 		if (capabilityChecker.isWayBboxSupported()) {
-			if (updateWayBboxStatement == null) {
-				updateWayBboxStatement = prepareStatement(SQL_UPDATE_WAY_BBOX);
-			}
-			
-			try {
-				int prmIndex;
-				
-				prmIndex = 1;
-				updateWayBboxStatement.setLong(prmIndex++, entity.getId());
-				updateWayBboxStatement.executeUpdate();
-				
-			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Update bbox failed for node " + entity.getId() + ".");
-			}
+			jdbcTemplate.update(SQL_UPDATE_WAY_BBOX, entity.getId());
 		}
 		
 		if (capabilityChecker.isWayLinestringSupported()) {
-			if (updateWayLinestringStatement == null) {
-				updateWayLinestringStatement = prepareStatement(SQL_UPDATE_WAY_LINESTRING);
-			}
-			
-			try {
-				int prmIndex;
-				
-				prmIndex = 1;
-				updateWayLinestringStatement.setLong(prmIndex++, entity.getId());
-				updateWayLinestringStatement.executeUpdate();
-				
-			} catch (SQLException e) {
-				throw new OsmosisRuntimeException("Update linestring failed for node " + entity.getId() + ".");
-			}
+			jdbcTemplate.update(SQL_UPDATE_WAY_LINESTRING, entity.getId());
 		}
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ReleasableIterator<Node> iterate() {
-		return new NodeReader(getDatabaseContext());
+	protected List<FeaturePopulator<Node>> getFeaturePopulators(String tablePrefix) {
+		return Collections.emptyList();
 	}
 }

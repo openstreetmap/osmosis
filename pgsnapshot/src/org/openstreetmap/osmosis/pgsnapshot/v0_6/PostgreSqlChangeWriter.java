@@ -8,12 +8,12 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
+import org.openstreetmap.osmosis.core.task.common.ChangeAction;
+import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
 import org.openstreetmap.osmosis.pgsnapshot.common.SchemaVersionValidator;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.impl.ActionChangeWriter;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.impl.ChangeWriter;
-import org.openstreetmap.osmosis.core.task.common.ChangeAction;
-import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 
 
 /**
@@ -27,8 +27,9 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	
 	private ChangeWriter changeWriter;
 	private Map<ChangeAction, ActionChangeWriter> actionWriterMap;
-	private DatabaseContext dbCtx;
+	private DatabaseContext2 dbCtx;
 	private SchemaVersionValidator schemaVersionValidator;
+	private boolean initialized;
 	
 	
 	/**
@@ -40,14 +41,25 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	 *            Contains preferences configuring database behaviour.
 	 */
 	public PostgreSqlChangeWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
-		dbCtx = new DatabaseContext(loginCredentials);
+		dbCtx = new DatabaseContext2(loginCredentials);
 		changeWriter = new ChangeWriter(dbCtx);
 		actionWriterMap = new HashMap<ChangeAction, ActionChangeWriter>();
 		actionWriterMap.put(ChangeAction.Create, new ActionChangeWriter(changeWriter, ChangeAction.Create));
 		actionWriterMap.put(ChangeAction.Modify, new ActionChangeWriter(changeWriter, ChangeAction.Modify));
 		actionWriterMap.put(ChangeAction.Delete, new ActionChangeWriter(changeWriter, ChangeAction.Delete));
 		
-		schemaVersionValidator = new SchemaVersionValidator(dbCtx, preferences);
+		schemaVersionValidator = new SchemaVersionValidator(dbCtx.getSimpleJdbcTemplate(), preferences);
+		
+		initialized = false;
+	}
+	
+	
+	private void initialize() {
+		if (!initialized) {
+			dbCtx.beginTransaction();
+			
+			initialized = true;
+		}
 	}
 	
 	
@@ -56,6 +68,8 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	 */
 	public void process(ChangeContainer change) {
 		ChangeAction action;
+		
+		initialize();
 		
 		// Verify that the schema version is supported.
 		schemaVersionValidator.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
@@ -76,9 +90,11 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	 * {@inheritDoc}
 	 */
 	public void complete() {
+		initialize();
+		
 		changeWriter.complete();
 		
-		dbCtx.commit();
+		dbCtx.commitTransaction();
 	}
 	
 	

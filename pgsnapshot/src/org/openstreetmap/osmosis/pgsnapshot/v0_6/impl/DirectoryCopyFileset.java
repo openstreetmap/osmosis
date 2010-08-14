@@ -14,12 +14,9 @@ import java.io.File;
 public class DirectoryCopyFileset implements CopyFileset {
 	private static final String USER_SUFFIX = "users.txt";
 	private static final String NODE_SUFFIX = "nodes.txt";
-	private static final String NODE_TAG_SUFFIX = "node_tags.txt";
 	private static final String WAY_SUFFIX = "ways.txt";
-	private static final String WAY_TAG_SUFFIX = "way_tags.txt";
 	private static final String WAY_NODE_SUFFIX = "way_nodes.txt";
 	private static final String RELATION_SUFFIX = "relations.txt";
-	private static final String RELATION_TAG_SUFFIX = "relation_tags.txt";
 	private static final String RELATION_MEMBER_SUFFIX = "relation_members.txt";
 	
 	
@@ -50,15 +47,6 @@ public class DirectoryCopyFileset implements CopyFileset {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public File getNodeTagFile() {
-		return new File(directory, NODE_TAG_SUFFIX);
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public File getRelationFile() {
 		return new File(directory, RELATION_SUFFIX);
 	}
@@ -70,15 +58,6 @@ public class DirectoryCopyFileset implements CopyFileset {
 	@Override
 	public File getRelationMemberFile() {
 		return new File(directory, RELATION_MEMBER_SUFFIX);
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public File getRelationTagFile() {
-		return new File(directory, RELATION_TAG_SUFFIX);
 	}
 
 
@@ -106,14 +85,5 @@ public class DirectoryCopyFileset implements CopyFileset {
 	@Override
 	public File getWayNodeFile() {
 		return new File(directory, WAY_NODE_SUFFIX);
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public File getWayTagFile() {
-		return new File(directory, WAY_TAG_SUFFIX);
 	}
 }

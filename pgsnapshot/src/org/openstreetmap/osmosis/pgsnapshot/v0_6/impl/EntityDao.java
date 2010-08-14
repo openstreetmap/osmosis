@@ -1,22 +1,23 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.database.DbFeature;
+import org.openstreetmap.osmosis.core.database.FeaturePopulator;
+import org.openstreetmap.osmosis.core.database.SortingStoreRowMapperListener;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
-import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
+import org.openstreetmap.osmosis.core.lifecycle.ReleasableContainer;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
-import org.openstreetmap.osmosis.pgsnapshot.common.BaseDao;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
+import org.openstreetmap.osmosis.core.sort.common.FileBasedSort;
+import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
+import org.openstreetmap.osmosis.core.sort.v0_6.EntitySubClassComparator;
+import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactory;
+import org.openstreetmap.osmosis.core.store.StoreReleasingIterator;
 import org.openstreetmap.osmosis.pgsnapshot.common.NoSuchRecordException;
+import org.openstreetmap.osmosis.pgsnapshot.common.RowMapperRowCallbackListener;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 
 /**
@@ -26,36 +27,37 @@ import org.openstreetmap.osmosis.pgsnapshot.common.NoSuchRecordException;
  * @param <T>
  *            The entity type to be supported.
  */
-public abstract class EntityDao<T extends Entity> extends BaseDao {
-	private static final Logger LOG = Logger.getLogger(EntityDao.class.getName());
+public abstract class EntityDao<T extends Entity> {
 	
-	private EntityFeatureDao<Tag, DbFeature<Tag>> tagDao;
+	private SimpleJdbcTemplate jdbcTemplate;
 	private ActionDao actionDao;
 	private EntityMapper<T> entityMapper;
-	private PreparedStatement countStatement;
-	private PreparedStatement getStatement;
-	private PreparedStatement insertStatement;
-	private PreparedStatement updateStatement;
-	private PreparedStatement deleteStatement;
 	
 	
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param dbCtx
-	 *            The database context to use for accessing the database.
+	 * @param jdbcTemplate
+	 *            Provides access to the database.
 	 * @param entityMapper
 	 *            Provides entity type specific JDBC support.
 	 * @param actionDao
 	 *            The dao to use for adding action records to the database.
 	 */
-	protected EntityDao(DatabaseContext dbCtx, EntityMapper<T> entityMapper, ActionDao actionDao) {
-		super(dbCtx);
-		
+	protected EntityDao(SimpleJdbcTemplate jdbcTemplate, EntityMapper<T> entityMapper, ActionDao actionDao) {
+		this.jdbcTemplate = jdbcTemplate;
 		this.entityMapper = entityMapper;
 		this.actionDao = actionDao;
-		
-		tagDao = new EntityFeatureDao<Tag, DbFeature<Tag>>(dbCtx, new TagMapper(entityMapper.getEntityName()));
+	}
+	
+	
+	/**
+	 * Gets the entity mapper implementation.
+	 * 
+	 * @return The entity mapper.
+	 */
+	protected EntityMapper<T> getEntityMapper() {
+		return entityMapper;
 	}
 	
 	
@@ -67,46 +69,7 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	 * @return True if the entity exists in the database.
 	 */
 	public boolean exists(long entityId) {
-		ResultSet resultSet = null;
-		
-		if (countStatement == null) {
-			countStatement = prepareStatement(entityMapper.getSqlSelectCount(true));
-		}
-		
-		try {
-			boolean result;
-			
-			countStatement.setLong(1, entityId);
-			
-			resultSet = countStatement.executeQuery();
-			
-			if (!resultSet.next()) {
-				throw new OsmosisRuntimeException(
-						"Entity count query didn't return any rows.");
-			}
-			result = resultSet.getLong("count") > 0;
-			
-			resultSet.close();
-			resultSet = null;
-			
-			return result;
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException(
-				"Count query failed for "
-					+ entityMapper.getEntityName() + " " + entityId + ".",
-				e
-			);
-		} finally {
-			if (resultSet != null) {
-				try {
-					resultSet.close();
-				} catch (SQLException e) {
-					// We are already in an error condition so log and continue.
-					LOG.log(Level.WARNING, "Unable to close result set.", e);
-				}
-			}
-		}
+		return jdbcTemplate.queryForInt(entityMapper.getSqlSelectCount(true), entityId) > 0;
 	}
 	
 	
@@ -118,85 +81,18 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	 * @return The loaded entity.
 	 */
 	public T getEntity(long entityId) {
-		ResultSet resultSet = null;
 		T entity;
 		
-		if (getStatement == null) {
-			getStatement = prepareStatement(entityMapper.getSqlSelect(true, true));
+		entity = jdbcTemplate.queryForObject(entityMapper.getSqlSelect(true, false), entityMapper.getRowMapper(),
+				entityId);
+		
+		if (entity == null) {
+			throw new NoSuchRecordException(entityMapper.getEntityName()
+					+ " " + entityId + " doesn't exist.");
 		}
 		
-		try {
-			getStatement.setLong(1, entityId);
-			
-			resultSet = getStatement.executeQuery();
-			
-			if (!resultSet.next()) {
-				throw new NoSuchRecordException(entityMapper.getEntityName()
-						+ " " + entityId + " doesn't exist.");
-			}
-			entity = entityMapper.parseRecord(resultSet);
-			
-			resultSet.close();
-			resultSet = null;
-			
-			for (DbFeature<Tag> dbTag : tagDao.getAll(entityId)) {
-				entity.getTags().add(dbTag.getFeature());
-			}
-			
-			// Add the type specific features.
-			loadFeatures(entityId, entity);
-			
-			return entity;
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException(
-				"Query failed for "
-					+ entityMapper.getEntityName() + " " + entityId + ".",
-				e
-			);
-		} finally {
-			if (resultSet != null) {
-				try {
-					resultSet.close();
-				} catch (SQLException e) {
-					// We are already in an error condition so log and continue.
-					LOG.log(Level.WARNING, "Unable to close result set.", e);
-				}
-			}
-		}
+		return entity;
 	}
-	
-	
-	/**
-	 * Adds the specified tags to the database.
-	 * 
-	 * @param entityId
-	 *            The identifier of the entity to add these features to.
-	 * @param tags
-	 *            The features to add.
-	 */
-	private void addTags(long entityId, Collection<Tag> tags) {
-		Collection<DbFeature<Tag>> dbList;
-		
-		dbList = new ArrayList<DbFeature<Tag>>(tags.size());
-		
-		for (Tag tag : tags) {
-			dbList.add(new DbFeature<Tag>(entityId, tag));
-		}
-		
-		tagDao.addAll(dbList);
-	}
-	
-	
-	/**
-	 * Adds the type specific features to the entity.
-	 * 
-	 * @param entityId
-	 *            The entity id.
-	 * @param entity
-	 *            The entity requiring features to be added.
-	 */
-	protected abstract void loadFeatures(long entityId, T entity);
 	
 	
 	/**
@@ -206,23 +102,12 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	 *            The entity to add.
 	 */
 	public void addEntity(T entity) {
-		if (insertStatement == null) {
-			insertStatement = prepareStatement(entityMapper.getSqlInsert(1));
-		}
+		Map<String, Object> args;
 		
-		try {
-			entityMapper.populateEntityParameters(insertStatement, 1, entity);
-			insertStatement.executeUpdate();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException(
-				"Insert failed for " + entityMapper.getEntityName()
-				+ " " + entity.getId() + ".",
-				e
-			);
-		}
+		args = new HashMap<String, Object>();
+		entityMapper.populateEntityParameters(args, entity);
 		
-		addTags(entity.getId(), entity.getTags());
+		jdbcTemplate.update(entityMapper.getSqlInsert(1), args);
 		
 		actionDao.addAction(entityMapper.getEntityType(), ChangesetAction.CREATE, entity.getId());
 	}
@@ -235,30 +120,12 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	 *            The entity to update.
 	 */
 	public void modifyEntity(T entity) {
-		if (updateStatement == null) {
-			updateStatement = prepareStatement(entityMapper.getSqlUpdate(true));
-		}
+		Map<String, Object> args;
 		
-		try {
-			int prmIndex;
-			
-			prmIndex = 1;
-			
-			prmIndex = entityMapper.populateEntityParameters(updateStatement, prmIndex, entity);
-			updateStatement.setLong(prmIndex++, entity.getId());
-			updateStatement.executeUpdate();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException(
-				"Update failed for "
-					+ entityMapper.getEntityName() + " "
-					+ entity.getId() + ".",
-				e
-			);
-		}
+		args = new HashMap<String, Object>();
+		entityMapper.populateEntityParameters(args, entity);
 		
-		tagDao.removeList(entity.getId());
-		addTags(entity.getId(), entity.getTags());
+		jdbcTemplate.update(entityMapper.getSqlUpdate(true), args);
 		
 		actionDao.addAction(entityMapper.getEntityType(), ChangesetAction.MODIFY, entity.getId());
 	}
@@ -271,29 +138,108 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	 *            The id of the entity to remove.
 	 */
 	public void removeEntity(long entityId) {
-		int prmIndex;
+		Map<String, Object> args;
 		
-		tagDao.removeList(entityId);
+		args = new HashMap<String, Object>();
+		args.put("id", entityId);
 		
-		if (deleteStatement == null) {
-			deleteStatement = prepareStatement(entityMapper.getSqlDelete(true));
-		}
-		
-		try {
-			prmIndex = 1;
-			deleteStatement.setLong(prmIndex++, entityId);
-			deleteStatement.executeUpdate();
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException(
-				"Delete failed for "
-					+ entityMapper.getEntityName() + " "
-					+ entityId + ".",
-				e
-			);
-		}
+		jdbcTemplate.update(entityMapper.getSqlDelete(true), args);
 		
 		actionDao.addAction(entityMapper.getEntityType(), ChangesetAction.DELETE, entityId);
+	}
+	
+	
+	private ReleasableIterator<T> getFeaturelessEntity(String tablePrefix) {
+		FileBasedSort<T> sortingStore;
+		
+		sortingStore =
+			new FileBasedSort<T>(
+				new SingleClassObjectSerializationFactory(entityMapper.getEntityClass()),
+				new EntitySubClassComparator<T>(new EntityByTypeThenIdComparator()), true);
+		
+		try {
+			String sql;
+			SortingStoreRowMapperListener<T> storeListener;
+			RowMapperRowCallbackListener<T> rowCallbackListener;
+			ReleasableIterator<T> resultIterator;
+			
+			sql = entityMapper.getSqlSelect(tablePrefix, false, false);
+			
+			// Sends all received data into the object store.
+			storeListener = new SortingStoreRowMapperListener<T>(sortingStore);
+			// Converts result set rows into objects and passes them into the store.
+			rowCallbackListener = new RowMapperRowCallbackListener<T>(entityMapper.getRowMapper(), storeListener);
+			
+			// Perform the query passing the row mapper chain to process rows in a streamy fashion.
+			jdbcTemplate.getJdbcOperations().query(sql, rowCallbackListener);
+			
+			// Open a iterator on the store that will release the store upon completion.
+			resultIterator = new StoreReleasingIterator<T>(sortingStore.iterate(), sortingStore);
+			
+			// The store itself shouldn't be released now that it has been attached to the iterator.
+			sortingStore = null;
+			
+			return resultIterator;
+			
+		} finally {
+			if (sortingStore != null) {
+				sortingStore.release();
+			}
+		}
+	}
+	
+	
+	/**
+	 * Gets the feature populators for the entity type.
+	 * 
+	 * @param tablePrefix
+	 *            The prefix for the entity table name. This allows another table to be queried if
+	 *            necessary such as a temporary results table.
+	 * @return The feature populators.
+	 */
+	protected abstract List<FeaturePopulator<T>> getFeaturePopulators(String tablePrefix);
+	
+	
+	/**
+	 * Returns an iterator providing access to all entities in the database.
+	 * 
+	 * @param tablePrefix
+	 *            The prefix for the entity table name. This allows another table to be queried if
+	 *            necessary such as a temporary results table.
+	 * @return The entity iterator.
+	 */
+	public ReleasableIterator<T> iterate(String tablePrefix) {
+		ReleasableContainer releasableContainer;
+		
+		releasableContainer = new ReleasableContainer();
+		
+		try {
+			ReleasableIterator<T> entityIterator;
+			List<FeaturePopulator<T>> featurePopulators;
+			
+			// Create the featureless entity iterator but also store it temporarily in the
+			// releasable container so that it will get freed if we fail during retrieval of feature
+			// populators.
+			entityIterator = releasableContainer.add(getFeaturelessEntity(tablePrefix));
+			
+			// Retrieve the feature populators also adding them to the temporary releasable container.
+			featurePopulators = getFeaturePopulators(tablePrefix);
+			for (FeaturePopulator<T> featurePopulator : featurePopulators) {
+				releasableContainer.add(featurePopulator);
+			}
+			
+			// Build an entity reader capable of merging all sources together.
+			entityIterator = new EntityReader<T>(entityIterator, getFeaturePopulators(tablePrefix));
+			
+			// The sources are now all attached to the history reader so we don't want to release
+			// them in the finally block.
+			releasableContainer.clear();
+			
+			return entityIterator;
+			
+		} finally {
+			releasableContainer.release();
+		}
 	}
 	
 	
@@ -302,5 +248,7 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	 * 
 	 * @return The entity iterator.
 	 */
-	public abstract ReleasableIterator<T> iterate();
+	public ReleasableIterator<T> iterate() {
+		return iterate("");
+	}
 }

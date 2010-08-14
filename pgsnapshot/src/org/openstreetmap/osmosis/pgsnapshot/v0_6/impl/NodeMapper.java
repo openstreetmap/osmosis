@@ -1,16 +1,17 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.pgsnapshot.common.PointBuilder;
 import org.postgis.PGgeometry;
 import org.postgis.Point;
+import org.springframework.jdbc.core.RowMapper;
 
 
 /**
@@ -93,29 +94,24 @@ public class NodeMapper extends EntityMapper<Node> {
 			throw new OsmosisRuntimeException("Unable to build a node from the current recordset row.", e);
 		}
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int populateEntityParameters(PreparedStatement statement, int initialIndex, Node node) {
-		int prmIndex;
+	public void populateEntityParameters(Map<String, Object> args, Node entity) {
+		populateCommonEntityParameters(args, entity);
 		
-		// Populate the entity level parameters.
-		prmIndex = populateCommonEntityParameters(statement, initialIndex, node);
-		
-		try {
-			// Set the node level parameters.
-			statement.setObject(
-					prmIndex++,
-					new PGgeometry(pointBuilder.createPoint(node.getLatitude(), node.getLongitude())));
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException(
-					"Unable to set a prepared statement parameter for node " + node.getId() + ".", e);
-		}
-		
-		return prmIndex;
+		args.put("geom", new PGgeometry(pointBuilder.createPoint(entity.getLatitude(), entity.getLongitude())));
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public RowMapper<Node> getRowMapper() {
+		return new NodeRowMapper();
 	}
 }

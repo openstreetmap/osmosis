@@ -1,13 +1,11 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Map;
 
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DbOrderedFeature;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
+import org.springframework.jdbc.core.RowMapper;
 
 
 /**
@@ -50,12 +48,16 @@ public class RelationMemberMapper extends EntityFeatureMapper<DbOrderedFeature<R
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getSqlSelect(boolean filterByEntityId, boolean orderBy) {
+	public String getSqlSelect(String tablePrefix, boolean filterByEntityId, boolean orderBy) {
 		StringBuilder resultSql;
 		
 		resultSql = new StringBuilder();
 		resultSql.append("SELECT relation_id AS entity_id, member_id, member_type, member_role, sequence_id FROM ");
 		resultSql.append("relation_members f");
+		if (!tablePrefix.isEmpty()) {
+			resultSql.append(" INNER JOIN ").append(tablePrefix).append(getParentEntityName())
+				.append("s e ON f.entity_id = e.id");
+		}
 		if (filterByEntityId) {
 			resultSql.append(" WHERE entity_id = ?");
 		}
@@ -90,7 +92,7 @@ public class RelationMemberMapper extends EntityFeatureMapper<DbOrderedFeature<R
 			if (row > 0) {
 				resultSql.append(", ");
 			}
-			resultSql.append("(?, ?, ?, ?, ?)");
+			resultSql.append("(:relationId, :memberId, :memberType, :memberRole, :sequenceId)");
 		}
 		
 		return resultSql.toString();
@@ -112,58 +114,30 @@ public class RelationMemberMapper extends EntityFeatureMapper<DbOrderedFeature<R
 		
 		return resultSql.toString();
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public DbOrderedFeature<RelationMember> buildEntity(ResultSet resultSet) {
-		try {
-			return new DbOrderedFeature<RelationMember>(
-				resultSet.getLong("entity_id"),
-				new RelationMember(
-					resultSet.getLong("member_id"),
-					memberTypeValueMapper.getEntityType(resultSet.getString("member_type")),
-					resultSet.getString("member_role")
-				),
-				resultSet.getInt("sequence_id")
-			);
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to build a relation member from the current recordset row.", e);
-		}
+	public void populateParameters(Map<String, Object> args, DbOrderedFeature<RelationMember> feature) {
+		RelationMember relationMember;
+		
+		relationMember = feature.getFeature();
+		
+		args.put("relationId", feature.getEntityId());
+		args.put("memberId", relationMember.getMemberId());
+		args.put("memberType", memberTypeValueMapper.getMemberType(relationMember.getMemberType()));
+		args.put("memberRole", relationMember.getMemberRole());
+		args.put("sequenceId", feature.getSequenceId());
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int populateEntityParameters(
-			PreparedStatement statement, int initialIndex, DbOrderedFeature<RelationMember> entityFeature) {
-		try {
-			int prmIndex;
-			RelationMember relationMember;
-			
-			relationMember = entityFeature.getFeature();
-			
-			prmIndex = initialIndex;
-			
-			statement.setLong(prmIndex++, entityFeature.getEntityId());
-			statement.setLong(prmIndex++, relationMember.getMemberId());
-			statement.setString(prmIndex++, memberTypeValueMapper.getMemberType(relationMember.getMemberType()));
-			statement.setString(prmIndex++, relationMember.getMemberRole());
-			statement.setInt(prmIndex++, entityFeature.getSequenceId());
-			
-			return prmIndex;
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException(
-				"Unable to populate relation member parameters for relation "
-					+ entityFeature.getEntityId() + ".",
-				e
-			);
-		}
+	public RowMapper<DbOrderedFeature<RelationMember>> getRowMapper() {
+		return new RelationMemberRowMapper();
 	}
 }

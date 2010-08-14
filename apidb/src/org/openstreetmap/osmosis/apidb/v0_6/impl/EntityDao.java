@@ -17,6 +17,7 @@ import org.openstreetmap.osmosis.core.database.DbFeatureHistoryComparator;
 import org.openstreetmap.osmosis.core.database.DbFeatureHistoryRowMapper;
 import org.openstreetmap.osmosis.core.database.DbFeatureRowMapper;
 import org.openstreetmap.osmosis.core.database.RowMapperListener;
+import org.openstreetmap.osmosis.core.database.SortingStoreRowMapperListener;
 import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;

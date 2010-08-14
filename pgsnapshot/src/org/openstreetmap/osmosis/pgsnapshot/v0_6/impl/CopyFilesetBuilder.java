@@ -10,6 +10,7 @@ import org.openstreetmap.osmosis.core.container.v0_6.EntityProcessor;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
+import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
@@ -22,6 +23,7 @@ import org.openstreetmap.osmosis.pgsnapshot.common.CopyFileWriter;
 import org.openstreetmap.osmosis.pgsnapshot.common.NodeLocationStoreType;
 import org.openstreetmap.osmosis.pgsnapshot.common.PointBuilder;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
+import org.openstreetmap.osmosis.hstore.PGHStore;
 
 
 /**
@@ -39,12 +41,9 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 	private MemberTypeValueMapper memberTypeValueMapper;
 	private CopyFileWriter userWriter;
 	private CopyFileWriter nodeWriter;
-	private CopyFileWriter nodeTagWriter;
 	private CopyFileWriter wayWriter;
-	private CopyFileWriter wayTagWriter;
 	private CopyFileWriter wayNodeWriter;
 	private CopyFileWriter relationWriter;
-	private CopyFileWriter relationTagWriter;
 	private CopyFileWriter relationMemberWriter;
 	private PointBuilder pointBuilder;
 	private Set<Integer> userSet;
@@ -78,12 +77,9 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 		
 		userWriter = writerContainer.add(new CopyFileWriter(copyFileset.getUserFile()));
 		nodeWriter = writerContainer.add(new CopyFileWriter(copyFileset.getNodeFile()));
-		nodeTagWriter = writerContainer.add(new CopyFileWriter(copyFileset.getNodeTagFile()));
 		wayWriter = writerContainer.add(new CopyFileWriter(copyFileset.getWayFile()));
-		wayTagWriter = writerContainer.add(new CopyFileWriter(copyFileset.getWayTagFile()));
 		wayNodeWriter = writerContainer.add(new CopyFileWriter(copyFileset.getWayNodeFile()));
 		relationWriter = writerContainer.add(new CopyFileWriter(copyFileset.getRelationFile()));
-		relationTagWriter = writerContainer.add(new CopyFileWriter(copyFileset.getRelationTagFile()));
 		relationMemberWriter = writerContainer.add(new CopyFileWriter(copyFileset.getRelationMemberFile()));
 		
 		pointBuilder = new PointBuilder();
@@ -126,6 +122,18 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 	}
 	
 	
+	private PGHStore buildTags(Entity entity) {
+		PGHStore tags;
+		
+		tags = new PGHStore();
+		for (Tag tag : entity.getTags()) {
+			tags.put(tag.getKey(), tag.getValue());
+		}
+		
+		return tags;
+	}
+	
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -139,15 +147,9 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 		nodeWriter.writeField(node.getUser().getId());
 		nodeWriter.writeField(node.getTimestamp());
 		nodeWriter.writeField(node.getChangesetId());
+		nodeWriter.writeField(buildTags(node));
 		nodeWriter.writeField(pointBuilder.createPoint(node.getLatitude(), node.getLongitude()));
 		nodeWriter.endRecord();
-		
-		for (Tag tag : node.getTags()) {
-			nodeTagWriter.writeField(node.getId());
-			nodeTagWriter.writeField(tag.getKey());
-			nodeTagWriter.writeField(tag.getValue());
-			nodeTagWriter.endRecord();
-		}
 		
 		if (enableBboxBuilder || enableLinestringBuilder) {
 			wayGeometryBuilder.addNodeLocation(node);
@@ -171,6 +173,7 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 			wayWriter.writeField(way.getUser().getId());
 			wayWriter.writeField(way.getTimestamp());
 			wayWriter.writeField(way.getChangesetId());
+			wayWriter.writeField(buildTags(way));
 			if (enableBboxBuilder) {
 				wayWriter.writeField(wayGeometryBuilder.createWayBbox(way));
 			}
@@ -178,13 +181,6 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 				wayWriter.writeField(wayGeometryBuilder.createWayLinestring(way));
 			}
 			wayWriter.endRecord();
-			
-			for (Tag tag : way.getTags()) {
-				wayTagWriter.writeField(way.getId());
-				wayTagWriter.writeField(tag.getKey());
-				wayTagWriter.writeField(tag.getValue());
-				wayTagWriter.endRecord();
-			}
 			
 			sequenceId = 0;
 			for (WayNode wayNode : way.getWayNodes()) {
@@ -211,14 +207,8 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 		relationWriter.writeField(relation.getUser().getId());
 		relationWriter.writeField(relation.getTimestamp());
 		relationWriter.writeField(relation.getChangesetId());
+		relationWriter.writeField(buildTags(relation));
 		relationWriter.endRecord();
-		
-		for (Tag tag : relation.getTags()) {
-			relationTagWriter.writeField(relation.getId());
-			relationTagWriter.writeField(tag.getKey());
-			relationTagWriter.writeField(tag.getValue());
-			relationTagWriter.endRecord();
-		}
 		
 		memberSequenceId = 0;
 		for (RelationMember member : relation.getMembers()) {

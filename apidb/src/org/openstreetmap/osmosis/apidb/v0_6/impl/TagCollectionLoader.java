@@ -3,6 +3,7 @@ package org.openstreetmap.osmosis.apidb.v0_6.impl;
 
 import java.util.Collection;
 
+import org.openstreetmap.osmosis.core.database.FeatureCollectionLoader;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 

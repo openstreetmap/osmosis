@@ -5,6 +5,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdThenVersionComparator;
+import org.openstreetmap.osmosis.core.sort.v0_6.EntityContainerComparator;
 import org.openstreetmap.osmosis.core.sort.v0_6.SortedHistoryChangePipeValidator;
 import org.openstreetmap.osmosis.core.store.DataPostbox;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
@@ -92,12 +93,12 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 		boolean completed = false;
 		
 		try {
-			EntityByTypeThenIdThenVersionComparator comparator;
+			EntityContainerComparator comparator;
 			ChangeContainer changeContainer0 = null;
 			ChangeContainer changeContainer1 = null;
 			
 			// Create a comparator for comparing two entities by type and identifier.
-			comparator = new EntityByTypeThenIdThenVersionComparator();
+			comparator = new EntityContainerComparator(new EntityByTypeThenIdThenVersionComparator());
 			
 			// We continue in the comparison loop while both sources still have data.
 			while (

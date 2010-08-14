@@ -9,15 +9,13 @@ package org.openstreetmap.osmosis.pgsnapshot.v0_6;
  */
 public final class PostgreSqlVersionConstants {
 	
-	/**
-	 * This class cannot be instantiated.
-	 */
 	private PostgreSqlVersionConstants() {
+		// This class cannot be instantiated.
 	}
 	
 	
 	/**
 	 * Defines the schema version number currently supported.
 	 */
-	public static final int SCHEMA_VERSION = 5;
+	public static final int SCHEMA_VERSION = 6;
 }

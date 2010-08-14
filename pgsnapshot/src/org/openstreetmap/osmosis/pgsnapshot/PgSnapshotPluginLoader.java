@@ -11,7 +11,6 @@ import org.openstreetmap.osmosis.pgsnapshot.v0_6.PostgreSqlCopyWriterFactory;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.PostgreSqlDatasetReaderFactory;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.PostgreSqlDumpWriterFactory;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.PostgreSqlTruncatorFactory;
-import org.openstreetmap.osmosis.pgsnapshot.v0_6.PostgreSqlWriterFactory;
 
 
 /**
@@ -30,10 +29,8 @@ public class PgSnapshotPluginLoader implements PluginLoader {
 		
 		factoryMap = new HashMap<String, TaskManagerFactory>();
 		
-		factoryMap.put("write-pgsql", new PostgreSqlWriterFactory());
-		factoryMap.put("wp", new PostgreSqlWriterFactory());
-		factoryMap.put("fast-write-pgsql", new PostgreSqlCopyWriterFactory());
-		factoryMap.put("fwp", new PostgreSqlCopyWriterFactory());
+		factoryMap.put("write-pgsql", new PostgreSqlCopyWriterFactory());
+		factoryMap.put("wp", new PostgreSqlCopyWriterFactory());
 		factoryMap.put("truncate-pgsql", new PostgreSqlTruncatorFactory());
 		factoryMap.put("tp", new PostgreSqlTruncatorFactory());
 		factoryMap.put("write-pgsql-dump", new PostgreSqlDumpWriterFactory());
@@ -43,8 +40,7 @@ public class PgSnapshotPluginLoader implements PluginLoader {
 		factoryMap.put("write-pgsql-change", new PostgreSqlChangeWriterFactory());
 		factoryMap.put("wpc", new PostgreSqlChangeWriterFactory());
 		
-		factoryMap.put("write-pgsql-0.6", new PostgreSqlWriterFactory());
-		factoryMap.put("fast-write-pgsql-0.6", new PostgreSqlCopyWriterFactory());
+		factoryMap.put("write-pgsql-0.6", new PostgreSqlCopyWriterFactory());
 		factoryMap.put("truncate-pgsql-0.6", new PostgreSqlTruncatorFactory());
 		factoryMap.put("write-pgsql-dump-0.6", new PostgreSqlDumpWriterFactory());
 		factoryMap.put("read-pgsql-0.6", new PostgreSqlDatasetReaderFactory());
