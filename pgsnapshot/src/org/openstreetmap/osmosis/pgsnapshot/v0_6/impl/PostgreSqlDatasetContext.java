@@ -20,7 +20,6 @@ import org.openstreetmap.osmosis.core.container.v0_6.WayContainerIterator;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
-import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
@@ -226,7 +225,6 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 		List<Bound> bounds;
 		Point[] bboxPoints;
 		Polygon bboxPolygon;
-		MemberTypeValueMapper memberTypeValueMapper;
 		int rowCount;
 		List<ReleasableIterator<EntityContainer>> resultSets;
 		
@@ -259,10 +257,6 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 		bboxPoints[3] = new Point(right, bottom);
 		bboxPoints[4] = new Point(left, bottom);
 		bboxPolygon = polygonBuilder.createPolygon(bboxPoints);
-		
-		// Instantiate the mapper for converting between entity types and
-		// member type values.
-		memberTypeValueMapper = new MemberTypeValueMapper();
 		
 		// Select all nodes inside the box into the node temp table.
 		LOG.finer("Selecting all nodes inside bounding box.");
@@ -344,14 +338,12 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 				+ " INNER JOIN ("
 				+ "    SELECT relation_id FROM ("
 				+ "        SELECT rm.relation_id AS relation_id FROM relation_members rm"
-				+ "        INNER JOIN bbox_nodes n ON rm.member_id = n.id WHERE rm.member_type = ? "
+				+ "        INNER JOIN bbox_nodes n ON rm.member_id = n.id WHERE rm.member_type = 'N' "
 				+ "        UNION "
 				+ "        SELECT rm.relation_id AS relation_id FROM relation_members rm"
-				+ "        INNER JOIN bbox_ways w ON rm.member_id = w.id WHERE rm.member_type = ?"
+				+ "        INNER JOIN bbox_ways w ON rm.member_id = w.id WHERE rm.member_type = 'W'"
 				+ "     ) rids GROUP BY relation_id"
-				+ ") rids ON r.id = rids.relation_id",
-				memberTypeValueMapper.getMemberType(EntityType.Node),
-				memberTypeValueMapper.getMemberType(EntityType.Way)
+				+ ") rids ON r.id = rids.relation_id"
 		);
 		LOG.finer(rowCount + " rows affected.");
 		
@@ -367,16 +359,13 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			LOG.finer("Selecting parent relations of selected relations.");
 			rowCount = jdbcTemplate.update(
 				"INSERT INTO bbox_relations "
-					+ "SELECT r.* FROM relations r"
-					+ " INNER JOIN ("
-					+ "    SELECT relation_id FROM ("
-					+ "        SELECT rm.relation_id FROM relation_members rm"
-					+ "        INNER JOIN bbox_relations r ON rm.member_id = r.id WHERE rm.member_type = ? "
-					+ "        EXCEPT "
-					+ "        SELECT id AS relation_id FROM bbox_relations"
-					+ "    ) rids GROUP BY relation_id"
-					+ " ) rids ON r.id = rids.relation_id",
-				memberTypeValueMapper.getMemberType(EntityType.Relation)
+					+ "SELECT r.* FROM relations r INNER JOIN ("
+					+ "    SELECT rm.relation_id FROM relation_members rm"
+					+ "    INNER JOIN bbox_relations br ON rm.member_id = br.id"
+					+ "    WHERE rm.member_type = 'R' AND NOT EXISTS ("
+					+ "        SELECT * FROM bbox_relations br2 WHERE rm.relation_id = br2.id"
+					+ "    ) GROUP BY rm.relation_id"
+					+ ") rids ON r.id = rids.relation_id"
 			);
 			LOG.finer(rowCount + " rows affected.");
 		} while (rowCount > 0);
@@ -390,12 +379,11 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			rowCount = jdbcTemplate.update(
 				"INSERT INTO bbox_nodes "
 					+ "SELECT n.* FROM nodes n INNER JOIN ("
-					+ "    SELECT node_id FROM ("
-					+ "        SELECT wn.node_id FROM way_nodes wn"
-					+ "        INNER JOIN bbox_ways bw ON wn.way_id = bw.id "
-					+ "        EXCEPT "
-					+ "        SELECT id AS node_id FROM bbox_nodes"
-					+ "    ) nids GROUP BY node_id"
+					+ "    SELECT wn.node_id FROM way_nodes wn"
+					+ "    INNER JOIN bbox_ways bw ON wn.way_id = bw.id"
+					+ "    WHERE NOT EXISTS ("
+					+ "        SELECT * FROM bbox_nodes bn WHERE wn.node_id = bn.id"
+					+ "    ) GROUP BY wn.node_id"
 					+ ") nids ON n.id = nids.node_id"
 			);
 			LOG.finer(rowCount + " rows affected.");
