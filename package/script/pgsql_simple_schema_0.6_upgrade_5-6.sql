@@ -148,5 +148,8 @@ DROP FUNCTION build_node_tags();
 DROP FUNCTION build_way_tags();
 DROP FUNCTION build_relation_tags();
 
+-- Add an index allowing relation_members to be queried by member id and type.
+CREATE INDEX idx_relation_members_member_id_and_type ON relation_members USING btree (member_id, member_type);
+
 -- Update the schema version.
 UPDATE schema_info SET version = 6;
