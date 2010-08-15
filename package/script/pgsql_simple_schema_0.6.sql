@@ -36,18 +36,11 @@ CREATE TABLE nodes (
     version int NOT NULL,
     user_id int NOT NULL,
     tstamp timestamp without time zone NOT NULL,
-    changeset_id bigint NOT NULL
+    changeset_id bigint NOT NULL,
+    tags hstore
 );
 -- Add a postgis point column holding the location of the node.
 SELECT AddGeometryColumn('nodes', 'geom', 4326, 'POINT', 2);
-
-
--- Create a table for node tags.
-CREATE TABLE node_tags (
-    node_id bigint NOT NULL,
-    k text NOT NULL,
-    v text NOT NULL
-);
 
 
 -- Create a table for ways.
@@ -56,7 +49,8 @@ CREATE TABLE ways (
     version int NOT NULL,
     user_id int NOT NULL,
     tstamp timestamp without time zone NOT NULL,
-    changeset_id bigint NOT NULL
+    changeset_id bigint NOT NULL,
+    tags hstore
 );
 
 
@@ -68,21 +62,14 @@ CREATE TABLE way_nodes (
 );
 
 
--- Create a table for way tags.
-CREATE TABLE way_tags (
-    way_id bigint NOT NULL,
-    k text NOT NULL,
-    v text
-);
-
-
 -- Create a table for relations.
 CREATE TABLE relations (
     id bigint NOT NULL,
     version int NOT NULL,
     user_id int NOT NULL,
     tstamp timestamp without time zone NOT NULL,
-    changeset_id bigint NOT NULL
+    changeset_id bigint NOT NULL,
+    tags hstore
 );
 
 -- Create a table for representing relation member relationships.
@@ -95,16 +82,8 @@ CREATE TABLE relation_members (
 );
 
 
--- Create a table for relation tags.
-CREATE TABLE relation_tags (
-    relation_id bigint NOT NULL,
-    k text NOT NULL,
-    v text NOT NULL
-);
-
-
 -- Configure the schema version.
-INSERT INTO schema_info (version) VALUES (5);
+INSERT INTO schema_info (version) VALUES (6);
 
 
 -- Add primary keys to tables.
@@ -124,13 +103,11 @@ ALTER TABLE ONLY relation_members ADD CONSTRAINT pk_relation_members PRIMARY KEY
 
 
 -- Add indexes to tables.
-CREATE INDEX idx_node_tags_node_id ON node_tags USING btree (node_id);
 CREATE INDEX idx_nodes_geom ON nodes USING gist (geom);
 
-CREATE INDEX idx_way_tags_way_id ON way_tags USING btree (way_id);
 CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id);
 
-CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id);
+CREATE INDEX idx_relation_members_member_id_and_type ON relation_members USING btree (member_id, member_type);
 
 
 -- Create stored procedures.
