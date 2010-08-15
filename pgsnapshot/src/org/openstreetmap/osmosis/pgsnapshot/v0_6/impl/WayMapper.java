@@ -1,14 +1,10 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -91,27 +87,6 @@ public class WayMapper extends EntityMapper<Way> {
 		
 		return fieldNames.toArray(new String[]{});
 	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Way parseRecord(ResultSet resultSet) {
-		try {
-			return new Way(
-				resultSet.getLong("id"),
-				resultSet.getInt("version"),
-				new Date(resultSet.getTimestamp("tstamp").getTime()),
-				buildUser(resultSet),
-				resultSet.getLong("changeset_id")
-			);
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to build a way from the current recordset row.", e);
-		}
-	}
-	
 	
 	/**
 	 * {@inheritDoc}

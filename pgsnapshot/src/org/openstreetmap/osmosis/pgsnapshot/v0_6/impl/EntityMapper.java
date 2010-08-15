@@ -1,15 +1,12 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Map;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
-import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.hstore.PGHStore;
 import org.springframework.jdbc.core.RowMapper;
@@ -217,46 +214,6 @@ public abstract class EntityMapper<T extends Entity> {
 		}
 		
 		return resultSql.toString();
-	}
-	
-	
-	/**
-	 * Creates a new entity based upon the current row in the result set.
-	 * 
-	 * @param resultSet
-	 *            The result set to read from.
-	 * @return The newly built entity object.
-	 */
-	public abstract T parseRecord(ResultSet resultSet);
-	
-	
-	/**
-	 * Creates a new user record based upon the current result set row.
-	 * 
-	 * @param resultSet
-	 *            The result set to read from.
-	 * @return The newly build user object.
-	 */
-	protected OsmUser buildUser(ResultSet resultSet) {
-		try {
-			int userId;
-			OsmUser user;
-			
-			userId = resultSet.getInt("user_id");
-			if (userId == OsmUser.NONE.getId()) {
-				user = OsmUser.NONE;
-			} else {
-				user = new OsmUser(
-					userId,
-					resultSet.getString("user_name")
-				);
-			}
-			
-			return user;
-			
-		} catch (SQLException e) {
-			throw new OsmosisRuntimeException("Unable to build a user from the current recordset row.", e);
-		}
 	}
 
 
