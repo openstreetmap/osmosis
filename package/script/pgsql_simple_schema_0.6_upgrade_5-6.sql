@@ -148,6 +148,11 @@ DROP FUNCTION build_node_tags();
 DROP FUNCTION build_way_tags();
 DROP FUNCTION build_relation_tags();
 
+-- Drop the now redundant tag tables.
+DROP TABLE node_tags;
+DROP TABLE way_tags;
+DROP TABLE relation_tags;
+
 -- Add an index allowing relation_members to be queried by member id and type.
 CREATE INDEX idx_relation_members_member_id_and_type ON relation_members USING btree (member_id, member_type);
 
