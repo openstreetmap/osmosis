@@ -95,6 +95,8 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			dbCtx = new DatabaseContext2(loginCredentials);
 			jdbcTemplate = dbCtx.getSimpleJdbcTemplate();
 			
+			dbCtx.beginTransaction();
+			
 			new SchemaVersionValidator(jdbcTemplate, preferences).validateVersion(
 					PostgreSqlVersionConstants.SCHEMA_VERSION);
 			
@@ -244,16 +246,6 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 		jdbcTemplate.update("SET enable_mergejoin = false");
 		jdbcTemplate.update("SET enable_hashjoin = false");
 		
-		// Create a temporary table capable of holding node ids.
-		LOG.finer("Creating node id temp table.");
-		jdbcTemplate.update("CREATE TEMPORARY TABLE box_node_list (id bigint PRIMARY KEY) ON COMMIT DROP");
-		// Create a temporary table capable of holding way ids.
-		LOG.finer("Creating way id temp table.");
-		jdbcTemplate.update("CREATE TEMPORARY TABLE box_way_list (id bigint PRIMARY KEY) ON COMMIT DROP");
-		// Create a temporary table capable of holding relation ids.
-		LOG.finer("Creating relation id temp table.");
-		jdbcTemplate.update("CREATE TEMPORARY TABLE box_relation_list (id bigint PRIMARY KEY) ON COMMIT DROP");
-		
 		// Build a polygon representing the bounding box.
 		// Sample box for query testing may be:
 		// GeomFromText('POLYGON((144.93912192855174 -37.82981987499741,
@@ -273,22 +265,30 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 		memberTypeValueMapper = new MemberTypeValueMapper();
 		
 		// Select all nodes inside the box into the node temp table.
-		LOG.finer("Selecting all node ids inside bounding box.");
-		rowCount = jdbcTemplate.update("INSERT INTO box_node_list SELECT id FROM nodes WHERE (geom && ?)",
+		LOG.finer("Selecting all nodes inside bounding box.");
+		rowCount = jdbcTemplate.update(
+				"CREATE TEMPORARY TABLE bbox_nodes ON COMMIT DROP AS"
+				+ " SELECT * FROM nodes WHERE (geom && ?)",
 				new PGgeometry(bboxPolygon));
-		LOG.finer(rowCount + " rows affected.");
+		
+		LOG.finer("Adding a primary key to the temporary nodes table.");
+		jdbcTemplate.update("ALTER TABLE ONLY bbox_nodes ADD CONSTRAINT pk_bbox_nodes PRIMARY KEY (id)");
+		
+		LOG.finer("Updating query analyzer statistics on the temporary nodes table.");
+		jdbcTemplate.update("ANALYZE bbox_nodes");
 		
 		// Select all ways inside the bounding box into the way temp table.
 		if (capabilityChecker.isWayLinestringSupported()) {
-			LOG.finer("Selecting all way ids inside bounding box using way linestring geometry.");
+			LOG.finer("Selecting all ways inside bounding box using way linestring geometry.");
 			// We have full way geometry available so select ways
 			// overlapping the requested bounding box.
-			rowCount = jdbcTemplate.update("INSERT INTO box_way_list "
-					+ "SELECT id FROM ways w where w.linestring && ?",
+			rowCount = jdbcTemplate.update(
+					"CREATE TEMPORARY TABLE bbox_ways ON COMMIT DROP AS"
+					+ " SELECT * FROM ways WHERE (linestring && ?)",
 					new PGgeometry(bboxPolygon));
 			
 		} else if (capabilityChecker.isWayBboxSupported()) {
-			LOG.finer("Selecting all way ids inside bounding box using dynamically built"
+			LOG.finer("Selecting all ways inside bounding box using dynamically built"
 					+ " way linestring with way bbox indexing.");
 			// The inner query selects the way id and node coordinates for
 			// all ways constrained by the way bounding box which is
@@ -299,15 +299,16 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			// inside the bounding box. These aren't indexed but the inner
 			// query way bbox constraint will minimise the unnecessary data.
 			rowCount = jdbcTemplate.update(
-				"INSERT INTO box_way_list "
-					+ "SELECT way_id FROM ("
-					+ "SELECT c.way_id AS way_id, MakeLine(c.geom) AS way_line FROM ("
-					+ "SELECT w.id AS way_id, n.geom AS geom FROM nodes n"
+				"CREATE TEMPORARY TABLE bbox_ways ON COMMIT DROP AS"
+					+ " SELECT w.* FROM ("
+					+ "SELECT c.id, c.version, c.user_id, c.tstamp, c.changeset_id, c.tags,"
+					+ " MakeLine(c.geom) AS way_line FROM ("
+					+ "SELECT w.*, n.geom AS geom FROM nodes n"
 					+ " INNER JOIN way_nodes wn ON n.id = wn.node_id"
 					+ " INNER JOIN ways w ON wn.way_id = w.id"
 					+ " WHERE (w.bbox && ?) ORDER BY wn.way_id, wn.sequence_id"
 					+ ") c "
-					+ "GROUP BY c.way_id"
+					+ "GROUP BY c.id, c.version, c.user_id, c.tstamp, c.changeset_id, c.tags"
 					+ ") w "
 					+ "WHERE (w.way_line && ?)",
 					new PGgeometry(bboxPolygon),
@@ -319,59 +320,89 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			// No way bbox support is available so select ways containing
 			// the selected nodes.
 			rowCount = jdbcTemplate.update(
-				"INSERT INTO box_way_list "
-					+ "SELECT wn.way_id FROM way_nodes wn INNER JOIN box_node_list n ON wn.node_id = n.id"
-					+ " GROUP BY wn.way_id"
+				"CREATE TEMPORARY TABLE bbox_ways ON COMMIT DROP AS"
+					+ " SELECT w.id, w.version, w.user_id, w.tstamp, w.changeset_id, w.tags FROM ways w"
+					+ " INNER JOIN ("
+					+ " SELECT wn.way_id FROM way_nodes wn"
+					+ " INNER JOIN bbox_nodes n ON wn.node_id = n.id GROUP BY wn.way_id"
+					+ ") wids ON w.id = wids.way_id"
 			);
 		}
 		LOG.finer(rowCount + " rows affected.");
 		
+		LOG.finer("Adding a primary key to the temporary ways table.");
+		jdbcTemplate.update("ALTER TABLE ONLY bbox_ways ADD CONSTRAINT pk_bbox_ways PRIMARY KEY (id)");
+		
+		LOG.finer("Updating query analyzer statistics on the temporary ways table.");
+		jdbcTemplate.update("ANALYZE bbox_ways");
+		
 		// Select all relations containing the nodes or ways into the relation table.
 		LOG.finer("Selecting all relation ids containing selected nodes or ways.");
 		rowCount = jdbcTemplate.update(
-			"INSERT INTO box_relation_list ("
-				+ "SELECT rm.relation_id AS relation_id FROM relation_members rm"
-				+ " INNER JOIN box_node_list n ON rm.member_id = n.id WHERE rm.member_type = ? "
-				+ "UNION "
-				+ "SELECT rm.relation_id AS relation_id FROM relation_members rm"
-				+ " INNER JOIN box_way_list w ON rm.member_id = w.id WHERE rm.member_type = ?"
-				+ ")",
+			"CREATE TEMPORARY TABLE bbox_relations ON COMMIT DROP AS"
+				+ " SELECT r.* FROM relations r"
+				+ " INNER JOIN ("
+				+ "    SELECT relation_id FROM ("
+				+ "        SELECT rm.relation_id AS relation_id FROM relation_members rm"
+				+ "        INNER JOIN bbox_nodes n ON rm.member_id = n.id WHERE rm.member_type = ? "
+				+ "        UNION "
+				+ "        SELECT rm.relation_id AS relation_id FROM relation_members rm"
+				+ "        INNER JOIN bbox_ways w ON rm.member_id = w.id WHERE rm.member_type = ?"
+				+ "     ) rids GROUP BY relation_id"
+				+ ") rids ON r.id = rids.relation_id",
 				memberTypeValueMapper.getMemberType(EntityType.Node),
 				memberTypeValueMapper.getMemberType(EntityType.Way)
 		);
 		LOG.finer(rowCount + " rows affected.");
+		
+		LOG.finer("Adding a primary key to the temporary relations table.");
+		jdbcTemplate.update("ALTER TABLE ONLY bbox_relations ADD CONSTRAINT pk_bbox_relations PRIMARY KEY (id)");
+		
+		LOG.finer("Updating query analyzer statistics on the temporary relations table.");
+		jdbcTemplate.update("ANALYZE bbox_relations");
 		
 		// Include all relations containing the current relations into the
 		// relation table and repeat until no more inclusions occur.
 		do {
 			LOG.finer("Selecting parent relations of selected relations.");
 			rowCount = jdbcTemplate.update(
-				"INSERT INTO box_relation_list "
-					+ "SELECT rm.relation_id AS relation_id FROM relation_members rm"
-					+ " INNER JOIN box_relation_list r ON rm.member_id = r.id WHERE rm.member_type = ? "
-					+ "EXCEPT "
-					+ "SELECT id AS relation_id FROM box_relation_list",
+				"INSERT INTO bbox_relations "
+					+ "SELECT r.* FROM relations r"
+					+ " INNER JOIN ("
+					+ "    SELECT relation_id FROM ("
+					+ "        SELECT rm.relation_id FROM relation_members rm"
+					+ "        INNER JOIN bbox_relations r ON rm.member_id = r.id WHERE rm.member_type = ? "
+					+ "        EXCEPT "
+					+ "        SELECT id AS relation_id FROM bbox_relations"
+					+ "    ) rids GROUP BY relation_id"
+					+ " ) rids ON r.id = rids.relation_id",
 				memberTypeValueMapper.getMemberType(EntityType.Relation)
 			);
 			LOG.finer(rowCount + " rows affected.");
 		} while (rowCount > 0);
 		
+		LOG.finer("Updating query analyzer statistics on the temporary relations table.");
+		jdbcTemplate.update("ANALYZE bbox_relations");
+		
 		// If complete ways is set, select all nodes contained by the ways into the node temp table.
 		if (completeWays) {
-			LOG.finer("Selecting all node ids for selected ways.");
+			LOG.finer("Selecting all nodes for selected ways.");
 			rowCount = jdbcTemplate.update(
-				"INSERT INTO box_node_list "
-					+ "SELECT wn.node_id AS id FROM way_nodes wn INNER JOIN box_way_list bw ON wn.way_id = bw.id "
-					+ "EXCEPT "
-					+ "SELECT id AS node_id FROM box_node_list"
+				"INSERT INTO bbox_nodes "
+					+ "SELECT n.* FROM nodes n INNER JOIN ("
+					+ "    SELECT node_id FROM ("
+					+ "        SELECT wn.node_id FROM way_nodes wn"
+					+ "        INNER JOIN bbox_ways bw ON wn.way_id = bw.id "
+					+ "        EXCEPT "
+					+ "        SELECT id AS node_id FROM bbox_nodes"
+					+ "    ) nids GROUP BY node_id"
+					+ ") nids ON n.id = nids.node_id"
 			);
 			LOG.finer(rowCount + " rows affected.");
 		}
 		
-		// Analyse the temporary tables to give the query planner the best chance of producing good queries.
-		jdbcTemplate.update("ANALYZE box_node_list");
-		jdbcTemplate.update("ANALYZE box_way_list");
-		jdbcTemplate.update("ANALYZE box_relation_list");
+		LOG.finer("Updating query analyzer statistics on the temporary nodes table.");
+		jdbcTemplate.update("ANALYZE bbox_nodes");
 		
 		// Create iterators for the selected records for each of the entity types.
 		LOG.finer("Iterating over results.");
@@ -381,13 +412,13 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 						new BoundContainerIterator(new ReleasableAdaptorForIterator<Bound>(bounds.iterator()))));
 		resultSets.add(
 				new UpcastIterator<EntityContainer, NodeContainer>(
-						new NodeContainerIterator(nodeDao.iterate("bbox"))));
+						new NodeContainerIterator(nodeDao.iterate("bbox_"))));
 		resultSets.add(
 				new UpcastIterator<EntityContainer, WayContainer>(
-						new WayContainerIterator(wayDao.iterate("bbox"))));
+						new WayContainerIterator(wayDao.iterate("bbox_"))));
 		resultSets.add(
 				new UpcastIterator<EntityContainer, RelationContainer>(
-						new RelationContainerIterator(relationDao.iterate("bbox"))));
+						new RelationContainerIterator(relationDao.iterate("bbox_"))));
 		
 		// Merge all readers into a single result iterator and return.			
 		return new MultipleSourceIterator<EntityContainer>(resultSets);
@@ -399,6 +430,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	 */
 	@Override
 	public void complete() {
+		dbCtx.commitTransaction();
 	}
 	
 	

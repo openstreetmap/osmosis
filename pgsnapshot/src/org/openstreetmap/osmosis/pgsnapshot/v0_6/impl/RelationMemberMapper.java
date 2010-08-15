@@ -56,7 +56,7 @@ public class RelationMemberMapper extends EntityFeatureMapper<DbOrderedFeature<R
 		resultSql.append("relation_members f");
 		if (!tablePrefix.isEmpty()) {
 			resultSql.append(" INNER JOIN ").append(tablePrefix).append(getParentEntityName())
-				.append("s e ON f.entity_id = e.id");
+				.append("s e ON f.").append(getParentEntityName()).append("_id = e.id");
 		}
 		if (filterByEntityId) {
 			resultSql.append(" WHERE entity_id = ?");

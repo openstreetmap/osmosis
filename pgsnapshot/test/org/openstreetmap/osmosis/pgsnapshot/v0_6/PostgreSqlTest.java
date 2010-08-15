@@ -228,4 +228,65 @@ public class PostgreSqlTest {
 		// Success so delete the output file.
 		actualResultFile.delete();
 	}
+
+
+	/**
+	 * A test loading an osm file into a pgsql database, then reading it via a
+	 * dataset bounding box covering the entire planet and verifying the output
+	 * is as expected.
+	 * 
+	 * @throws IOException
+	 *             if any file operations fail.
+	 */
+	@Test
+	public void testDatasetBoundingBox() throws IOException {
+		File authFile;
+		File inputFile;
+		File outputFile;
+		
+		// Generate input files.
+		authFile = getAuthFile();
+		inputFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
+		outputFile = File.createTempFile("test", ".osm");
+		
+		// Remove all existing data from the database.
+		Osmosis.run(
+			new String [] {
+				"-q",
+				"--truncate-pgsql-0.6",
+				"authFile=" + authFile.getPath()
+			}
+		);
+		
+		// Load the database with a dataset.
+		Osmosis.run(
+			new String [] {
+				"-q",
+				"--read-xml-0.6",
+				inputFile.getPath(),
+				"--write-pgsql-0.6",
+				"authFile=" + authFile.getPath()
+			}
+		);
+		
+		// Dump the database to an osm file.
+		Osmosis.run(
+			new String [] {
+				"-q",
+				"--read-pgsql-0.6",
+				"authFile=" + authFile.getPath(),
+				"--dataset-bounding-box-0.6",
+				"completeWays=true",
+				"--tag-sort-0.6",
+				"--write-xml-0.6",
+				outputFile.getPath()
+			}
+		);
+		
+		// Validate that the output file matches the input file.
+		fileUtils.compareFiles(inputFile, outputFile);
+		
+		// Success so delete the output file.
+		outputFile.delete();
+	}
 }
