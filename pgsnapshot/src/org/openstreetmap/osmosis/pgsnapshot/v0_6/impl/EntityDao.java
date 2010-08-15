@@ -229,7 +229,7 @@ public abstract class EntityDao<T extends Entity> {
 			}
 			
 			// Build an entity reader capable of merging all sources together.
-			entityIterator = new EntityReader<T>(entityIterator, getFeaturePopulators(tablePrefix));
+			entityIterator = new EntityReader<T>(entityIterator, featurePopulators);
 			
 			// The sources are now all attached to the history reader so we don't want to release
 			// them in the finally block.
