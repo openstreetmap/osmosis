@@ -210,5 +210,11 @@ SELECT build_way_nodes();
 -- Remove the way nodes function.
 DROP FUNCTION build_way_nodes();
 
+-- Organise data according to geographical location. 
+CLUSTER VERBOSE nodes USING idx_nodes_geom;
+CLUSTER VERBOSE ways USING idx_ways_linestring;
+
 -- Update the schema version.
 UPDATE schema_info SET version = 6;
+
+VACUUM ANALYZE;
