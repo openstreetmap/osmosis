@@ -1,6 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -22,15 +23,20 @@ public class WayRowMapper extends EntityRowMapper<Way> {
 	@Override
 	public Way mapRow(ResultSet rs, int rowNumber) throws SQLException {
 		Way way;
+		Array nodeIdArray;
 		Long[] nodeIds;
 		List<WayNode> wayNodes;
 		
 		way = new Way(mapCommonEntityData(rs));
 		
-		nodeIds = (Long[]) rs.getArray("nodes").getArray();
-		wayNodes = way.getWayNodes();
-		for (long nodeId : nodeIds) {
-			wayNodes.add(new WayNode(nodeId));
+		nodeIdArray = rs.getArray("nodes");
+		
+		if (nodeIdArray != null) {
+			nodeIds = (Long[]) nodeIdArray.getArray();
+			wayNodes = way.getWayNodes();
+			for (long nodeId : nodeIds) {
+				wayNodes.add(new WayNode(nodeId));
+			}
 		}
 		
 		return way;
