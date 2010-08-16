@@ -2,22 +2,14 @@
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import org.openstreetmap.osmosis.core.database.DbFeature;
 import org.openstreetmap.osmosis.core.database.DbOrderedFeature;
 import org.openstreetmap.osmosis.core.database.FeaturePopulator;
-import org.openstreetmap.osmosis.core.database.SortingStoreRowMapperListener;
-import org.openstreetmap.osmosis.core.database.WayNodeCollectionLoader;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
-import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
-import org.openstreetmap.osmosis.core.sort.common.FileBasedSort;
-import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactory;
-import org.openstreetmap.osmosis.core.store.StoreReleasingIterator;
-import org.openstreetmap.osmosis.core.store.UpcastIterator;
 import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
-import org.openstreetmap.osmosis.pgsnapshot.common.RowMapperRowCallbackListener;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 
@@ -164,47 +156,6 @@ public class WayDao extends EntityDao<Way> {
 		
 		super.removeEntity(entityId);
 	}
-	
-	
-	private ReleasableIterator<DbOrderedFeature<WayNode>> getWayNodes(String tablePrefix) {
-		
-		FileBasedSort<DbOrderedFeature<WayNode>> sortingStore =
-			new FileBasedSort<DbOrderedFeature<WayNode>>(
-				new SingleClassObjectSerializationFactory(DbOrderedFeature.class),
-				new DbOrderedFeatureComparator<WayNode>(), true);
-		
-		try {
-			String sql;
-			SortingStoreRowMapperListener<DbOrderedFeature<WayNode>> storeListener;
-			RowMapperRowCallbackListener<DbOrderedFeature<WayNode>> rowCallbackListener;
-			ReleasableIterator<DbOrderedFeature<WayNode>> resultIterator;
-			
-			sql = wayNodeMapper.getSqlSelect(tablePrefix, false, false);
-			
-			// Sends all received data into the object store.
-			storeListener = new SortingStoreRowMapperListener<DbOrderedFeature<WayNode>>(sortingStore);
-			// Converts result set rows into objects and passes them into the store.
-			rowCallbackListener = new RowMapperRowCallbackListener<DbOrderedFeature<WayNode>>(wayNodeMapper
-					.getRowMapper(), storeListener);
-			
-			// Perform the query passing the row mapper chain to process rows in a streamy fashion.
-			jdbcTemplate.getJdbcOperations().query(sql, rowCallbackListener);
-			
-			// Open a iterator on the store that will release the store upon completion.
-			resultIterator =
-				new StoreReleasingIterator<DbOrderedFeature<WayNode>>(sortingStore.iterate(), sortingStore);
-			
-			// The store itself shouldn't be released now that it has been attached to the iterator.
-			sortingStore = null;
-			
-			return resultIterator;
-			
-		} finally {
-			if (sortingStore != null) {
-				sortingStore.release();
-			}
-		}
-	}
 
 
 	/**
@@ -212,20 +163,6 @@ public class WayDao extends EntityDao<Way> {
 	 */
 	@Override
 	protected List<FeaturePopulator<Way>> getFeaturePopulators(String tablePrefix) {
-		ReleasableIterator<DbFeature<WayNode>> wayNodeIterator;
-		List<FeaturePopulator<Way>> featurePopulators;
-		
-		featurePopulators = new ArrayList<FeaturePopulator<Way>>();
-		
-		// Get the way nodes for the selected entities.
-		wayNodeIterator = new UpcastIterator<DbFeature<WayNode>, DbOrderedFeature<WayNode>>(getWayNodes(tablePrefix));
-		
-		// Wrap the way node source into a feature populator that can attach them to their
-		// owning ways.
-		featurePopulators.add(
-				new FeaturePopulatorImpl<Way, WayNode, DbFeature<WayNode>>(
-						wayNodeIterator, new WayNodeCollectionLoader()));
-		
-		return featurePopulators;
+		return Collections.emptyList();
 	}
 }

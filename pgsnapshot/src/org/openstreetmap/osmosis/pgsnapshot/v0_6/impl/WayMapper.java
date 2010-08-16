@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
+import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.springframework.jdbc.core.RowMapper;
 
 
@@ -78,6 +79,8 @@ public class WayMapper extends EntityMapper<Way> {
 		
 		fieldNames = new ArrayList<String>();
 		
+		fieldNames.add("nodes");
+		
 		if (supportBboxColumn) {
 			fieldNames.add("bbox");
 		}
@@ -93,7 +96,19 @@ public class WayMapper extends EntityMapper<Way> {
 	 */
 	@Override
 	public void populateEntityParameters(Map<String, Object> args, Way entity) {
+		List<WayNode> wayNodes;
+		long[] nodeIds;
+		
 		populateCommonEntityParameters(args, entity);
+		
+		wayNodes = entity.getWayNodes();
+		
+		nodeIds = new long[wayNodes.size()];
+		for (int i = 0; i < nodeIds.length; i++) {
+			nodeIds[i] = wayNodes.get(i).getNodeId();
+		}
+		
+		args.put("nodes", new WayNodesArray(nodeIds));
 	}
 
 

@@ -1,7 +1,9 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
@@ -163,8 +165,14 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 	public void process(WayContainer wayContainer) {
 		Way way;
 		int sequenceId;
+		List<Long> nodeIds;
 		
 		way = wayContainer.getEntity();
+		
+		nodeIds = new ArrayList<Long>(way.getWayNodes().size());
+		for (WayNode wayNode : way.getWayNodes()) {
+			nodeIds.add(wayNode.getNodeId());
+		}
 		
 		// Ignore ways with a single node because they can't be loaded into postgis.
 		if (way.getWayNodes().size() > 1) {
@@ -174,6 +182,7 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 			wayWriter.writeField(way.getTimestamp());
 			wayWriter.writeField(way.getChangesetId());
 			wayWriter.writeField(buildTags(way));
+			wayWriter.writeField(nodeIds);
 			if (enableBboxBuilder) {
 				wayWriter.writeField(wayGeometryBuilder.createWayBbox(way));
 			}

@@ -133,6 +133,50 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION build_way_nodes() RETURNS void AS $$
+DECLARE
+	previousId ways.id%TYPE;
+	currentId ways.id%TYPE;
+	result bigint[];
+	wayNodeRow way_nodes%ROWTYPE;
+BEGIN
+	SET enable_seqscan = false;
+	SET enable_mergejoin = false;
+	SET enable_hashjoin = false;
+	
+	FOR wayNodeRow IN SELECT * FROM way_nodes ORDER BY way_id, sequence_id LOOP
+		currentId := wayNodeRow.way_id;
+		
+		IF currentId <> previousId THEN
+			IF previousId IS NOT NULL THEN
+				IF result IS NOT NULL THEN
+					UPDATE ways SET nodes = result WHERE id = previousId;
+					IF ((currentId / 100000) <> (previousId / 100000)) THEN
+						RAISE INFO 'way id: %', previousId;
+					END IF;
+					result := NULL;
+				END IF;
+			END IF;
+		END IF;
+		
+		IF result IS NULL THEN
+			result = ARRAY[wayNodeRow.node_id];
+		ELSE
+			result = array_append(result, wayNodeRow.node_id);
+		END IF;
+		
+		previousId := currentId;
+	END LOOP;
+	
+	IF previousId IS NOT NULL THEN
+		IF result IS NOT NULL THEN
+			UPDATE ways SET nodes = result WHERE id = previousId;
+			result := NULL;
+		END IF;
+	END IF;
+END;
+$$ LANGUAGE plpgsql;
+
 -- Add hstore columns to entity tables.
 ALTER TABLE nodes ADD COLUMN tags hstore;
 ALTER TABLE ways ADD COLUMN tags hstore;
@@ -143,7 +187,7 @@ SELECT build_node_tags();
 SELECT build_way_tags();
 SELECT build_relation_tags();
 
--- Remove the functions.
+-- Remove the hstore functions.
 DROP FUNCTION build_node_tags();
 DROP FUNCTION build_way_tags();
 DROP FUNCTION build_relation_tags();
@@ -155,6 +199,16 @@ DROP TABLE relation_tags;
 
 -- Add an index allowing relation_members to be queried by member id and type.
 CREATE INDEX idx_relation_members_member_id_and_type ON relation_members USING btree (member_id, member_type);
+
+-- Add the nodes column to the ways table.
+ALTER TABLE ways ADD COLUMN nodes bigint[];
+
+-- Populate the new nodes column on the ways table.
+SELECT build_way_nodes();
+--UPDATE ways w SET nodes = ARRAY(SELECT wn.node_id FROM way_nodes wn WHERE w.id = wn.way_id ORDER BY sequence_id);
+
+-- Remove the way nodes function.
+DROP FUNCTION build_way_nodes();
 
 -- Update the schema version.
 UPDATE schema_info SET version = 6;

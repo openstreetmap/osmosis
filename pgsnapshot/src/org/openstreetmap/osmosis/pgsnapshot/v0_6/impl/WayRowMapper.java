@@ -3,8 +3,10 @@ package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
+import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 
 
 /**
@@ -19,6 +21,18 @@ public class WayRowMapper extends EntityRowMapper<Way> {
 	 */
 	@Override
 	public Way mapRow(ResultSet rs, int rowNumber) throws SQLException {
-		return new Way(mapCommonEntityData(rs));
+		Way way;
+		Long[] nodeIds;
+		List<WayNode> wayNodes;
+		
+		way = new Way(mapCommonEntityData(rs));
+		
+		nodeIds = (Long[]) rs.getArray("nodes").getArray();
+		wayNodes = way.getWayNodes();
+		for (long nodeId : nodeIds) {
+			wayNodes.add(new WayNode(nodeId));
+		}
+		
+		return way;
 	}
 }

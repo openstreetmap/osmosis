@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -267,6 +268,33 @@ public class CopyFileWriter implements Completable {
 			separateField();
 			
 			writer.write(escapeString(data.getValue()));
+			
+		} catch (IOException e) {
+			throw new OsmosisRuntimeException("Unable to write value (" + data + ")", e);
+		}
+	}
+	
+	
+	/**
+	 * Writes data to the output file.
+	 * 
+	 * @param data
+	 *            The data to be written.
+	 */
+	public void writeField(List<Long> data) {
+		initialize();
+		
+		try {
+			separateField();
+			
+			writer.write("{");
+			for (int i = 0; i < data.size(); i++) {
+				if (i > 0) {
+					writer.write(",");
+				}
+				writer.write(Long.toString(data.get(i)));
+			}
+			writer.write("}");
 			
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to write value (" + data + ")", e);

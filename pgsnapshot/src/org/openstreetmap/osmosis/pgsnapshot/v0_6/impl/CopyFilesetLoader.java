@@ -34,7 +34,7 @@ public class CopyFilesetLoader implements Runnable {
 	
 	private static final String[] COMMON_COLUMNS = {"id", "version", "user_id", "tstamp", "changeset_id", "tags"};
 	private static final String[] NODE_COLUMNS = appendColumn(COMMON_COLUMNS, "geom");
-	private static final String[] WAY_COLUMNS = COMMON_COLUMNS;
+	private static final String[] WAY_COLUMNS = appendColumn(COMMON_COLUMNS, "nodes");
 	private static final String[] RELATION_COLUMNS = COMMON_COLUMNS;
 	
 	
