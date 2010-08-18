@@ -4,3 +4,6 @@ SELECT AddGeometryColumn('ways', 'bbox', 4326, 'GEOMETRY', 2);
 
 -- Add an index to the bbox column.
 CREATE INDEX idx_ways_bbox ON ways USING gist (bbox);
+
+-- Cluster table by geographical location.
+CLUSTER ways USING idx_ways_bbox;

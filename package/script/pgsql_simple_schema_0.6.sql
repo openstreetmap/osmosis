@@ -50,7 +50,8 @@ CREATE TABLE ways (
     user_id int NOT NULL,
     tstamp timestamp without time zone NOT NULL,
     changeset_id bigint NOT NULL,
-    tags hstore
+    tags hstore,
+    nodes bigint[]
 );
 
 
@@ -108,6 +109,10 @@ CREATE INDEX idx_nodes_geom ON nodes USING gist (geom);
 CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id);
 
 CREATE INDEX idx_relation_members_member_id_and_type ON relation_members USING btree (member_id, member_type);
+
+
+-- Cluster tables by geographical location.
+CLUSTER nodes USING idx_nodes_geom;
 
 
 -- Create stored procedures.
