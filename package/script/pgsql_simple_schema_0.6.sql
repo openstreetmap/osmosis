@@ -115,7 +115,22 @@ CREATE INDEX idx_relation_members_member_id_and_type ON relation_members USING b
 CLUSTER nodes USING idx_nodes_geom;
 
 
--- Create stored procedures.
+-- Create the function that provides "unnest" functionality while remaining compatible with 8.3.
+CREATE OR REPLACE FUNCTION array_to_rows(bigint[]) RETURNS SETOF bigint AS $$
+DECLARE
+	in_array alias FOR $1;
+	out_bigint bigint;
+BEGIN
+	FOR i IN 1..array_upper(in_array,1) LOOP
+	RETURN NEXT in_array[i];
+	END LOOP;
+
+RETURN;
+END;
+$$ LANGUAGE 'plpgsql' STABLE;
+
+
+-- Create customisable hook function that is called within the replication update transaction.
 CREATE FUNCTION osmosisUpdate() RETURNS void AS $$
 DECLARE
 BEGIN

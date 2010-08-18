@@ -379,7 +379,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			rowCount = jdbcTemplate.update(
 				"INSERT INTO bbox_nodes "
 					+ "SELECT n.* FROM nodes n INNER JOIN ("
-					+ "    SELECT node_id FROM (SELECT unnest(nodes) AS node_id FROM bbox_ways) bw"
+					+ "    SELECT node_id FROM (SELECT array_to_rows(nodes) AS node_id FROM bbox_ways) bw"
 					+ "    WHERE NOT EXISTS ("
 					+ "        SELECT * FROM bbox_nodes bn WHERE bw.node_id = bn.id"
 					+ "    ) GROUP BY bw.node_id"

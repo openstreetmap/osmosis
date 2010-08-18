@@ -214,6 +214,21 @@ DROP FUNCTION build_way_nodes();
 CLUSTER nodes USING idx_nodes_geom;
 CLUSTER ways USING idx_ways_linestring;
 
+-- Create the function that provides "unnest" functionality while remaining compatible with 8.3.
+CREATE OR REPLACE FUNCTION array_to_rows(bigint[]) RETURNS SETOF bigint AS $$
+DECLARE
+	in_array alias FOR $1;
+	out_bigint bigint;
+BEGIN
+	FOR i IN 1..array_upper(in_array,1) LOOP
+	RETURN NEXT in_array[i];
+	END LOOP;
+
+RETURN;
+END;
+$$ LANGUAGE 'plpgsql' STABLE;
+
+
 -- Update the schema version.
 UPDATE schema_info SET version = 6;
 
