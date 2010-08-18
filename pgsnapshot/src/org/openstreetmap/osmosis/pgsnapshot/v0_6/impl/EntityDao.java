@@ -17,6 +17,7 @@ import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactor
 import org.openstreetmap.osmosis.core.store.StoreReleasingIterator;
 import org.openstreetmap.osmosis.pgsnapshot.common.NoSuchRecordException;
 import org.openstreetmap.osmosis.pgsnapshot.common.RowMapperRowCallbackListener;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 
@@ -83,12 +84,12 @@ public abstract class EntityDao<T extends Entity> {
 	public T getEntity(long entityId) {
 		T entity;
 		
-		entity = jdbcTemplate.queryForObject(entityMapper.getSqlSelect(true, false), entityMapper.getRowMapper(),
-				entityId);
-		
-		if (entity == null) {
+		try {
+			entity = jdbcTemplate.queryForObject(entityMapper.getSqlSelect(true, false), entityMapper.getRowMapper(),
+					entityId);
+		} catch (EmptyResultDataAccessException e) {
 			throw new NoSuchRecordException(entityMapper.getEntityName()
-					+ " " + entityId + " doesn't exist.");
+					+ " " + entityId + " doesn't exist.", e);
 		}
 		
 		return entity;

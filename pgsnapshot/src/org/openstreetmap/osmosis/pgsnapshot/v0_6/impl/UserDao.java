@@ -4,6 +4,7 @@ package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
 import org.openstreetmap.osmosis.pgsnapshot.common.NoSuchRecordException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 
@@ -49,10 +50,10 @@ public class UserDao {
 	public OsmUser getUser(long userId) {
 		OsmUser user;
 		
-		user = jdbcTemplate.queryForObject(SELECT_USER, rowMapper, userId);
-		
-		if (user == null) {
-			throw new NoSuchRecordException("User " + userId + " doesn't exist.");
+		try {
+			user = jdbcTemplate.queryForObject(SELECT_USER, rowMapper, userId);
+		} catch (EmptyResultDataAccessException e) {
+			throw new NoSuchRecordException("User " + userId + " doesn't exist.", e);
 		}
 		
 		return user;
