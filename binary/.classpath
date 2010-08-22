@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/test/antlr-2.7.6.jar"/>
+	<classpathentry kind="lib" path="lib/test/checkstyle-5.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-beanutils-core-1.7.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-cli-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-collections-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-compress-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-lang-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="lib" path="lib/test/google-collections-0.9.jar"/>
+	<classpathentry kind="lib" path="lib/test/jpf-1.5.jar"/>
+	<classpathentry kind="lib" path="lib/test/junit-4.8.1.jar"/>
+	<classpathentry kind="lib" path="lib/test/stax2-api-3.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/woodstox-core-lgpl-4.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/test/xercesImpl-2.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/test/protobuf-java-2.3.0.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Core"/>
+	<classpathentry kind="output" path="eclipse"/>
+</classpath>
