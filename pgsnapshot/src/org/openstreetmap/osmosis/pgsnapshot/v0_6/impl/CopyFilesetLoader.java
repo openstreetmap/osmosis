@@ -112,6 +112,9 @@ public class CopyFilesetLoader implements Runnable {
     		
     		dbCtx.commitTransaction();
     		
+    		LOG.fine("Clustering database.");
+    		dbCtx.getSimpleJdbcTemplate().update("CLUSTER");
+    		
     		LOG.fine("Vacuuming database.");
     		dbCtx.getSimpleJdbcTemplate().update("VACUUM ANALYZE");
     		

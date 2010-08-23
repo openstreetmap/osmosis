@@ -28,7 +28,8 @@ public class IndexManager {
 		"DROP INDEX idx_nodes_geom",
 		"DROP INDEX idx_way_tags_way_id",
 		"DROP INDEX idx_relation_tags_relation_id",
-		"DROP INDEX idx_way_nodes_node_id"
+		"DROP INDEX idx_way_nodes_node_id",
+		"DROP INDEX idx_relation_members_member_id_and_type"
 	};
 	private static final String[] PRE_LOAD_SQL_WAY_BBOX = {
 		"DROP INDEX idx_ways_bbox"
@@ -48,7 +49,8 @@ public class IndexManager {
 		"CREATE INDEX idx_nodes_geom ON nodes USING gist (geom)",
 		"CREATE INDEX idx_way_tags_way_id ON way_tags USING btree (way_id)",
 		"CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id)",
-		"CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id)"
+		"CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id)",
+		"CREATE INDEX idx_relation_members_member_id_and_type ON relation_members USING btree (member_id, member_type)"
 	};
 	private static final String[] POST_LOAD_SQL_WAY_BBOX = {
 		"CREATE INDEX idx_ways_bbox ON ways USING gist (bbox)"

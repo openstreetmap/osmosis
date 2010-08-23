@@ -9,6 +9,7 @@ DROP INDEX idx_nodes_geom;
 DROP INDEX idx_way_tags_way_id;
 DROP INDEX idx_way_nodes_node_id;
 DROP INDEX idx_relation_tags_relation_id;
+DROP INDEX idx_relation_members_member_id_and_type;
 DROP INDEX idx_ways_bbox;
 DROP INDEX idx_ways_linestring;
 
@@ -38,6 +39,7 @@ CREATE INDEX idx_nodes_geom ON nodes USING gist (geom);
 CREATE INDEX idx_way_tags_way_id ON way_tags USING btree (way_id);
 CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id);
 CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id);
+CREATE INDEX idx_relation_members_member_id_and_type ON relation_members USING btree (member_id, member_type);
 
 -- Comment these out if the COPY files include bbox or linestring column values.
 SELECT AddGeometryColumn('ways', 'bbox', 4326, 'GEOMETRY', 2);
@@ -62,6 +64,9 @@ UPDATE ways w SET linestring = (
 -- Index the way bounding box column.
 CREATE INDEX idx_ways_bbox ON ways USING gist (bbox);
 CREATE INDEX idx_ways_linestring ON ways USING gist (linestring);
+
+-- Update all clustered tables because it doesn't happen implicitly.
+CLUSTER;
 
 -- Perform database maintenance due to large database changes.
 VACUUM ANALYZE;
