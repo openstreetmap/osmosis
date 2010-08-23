@@ -24,10 +24,7 @@ public class IndexManager {
 		"ALTER TABLE way_nodes DROP CONSTRAINT pk_way_nodes",
 		"ALTER TABLE relations DROP CONSTRAINT pk_relations",
 		"ALTER TABLE relation_members DROP CONSTRAINT pk_relation_members",
-		"DROP INDEX idx_node_tags_node_id",
 		"DROP INDEX idx_nodes_geom",
-		"DROP INDEX idx_way_tags_way_id",
-		"DROP INDEX idx_relation_tags_relation_id",
 		"DROP INDEX idx_way_nodes_node_id",
 		"DROP INDEX idx_relation_members_member_id_and_type"
 	};
@@ -45,10 +42,7 @@ public class IndexManager {
 		"ALTER TABLE ONLY way_nodes ADD CONSTRAINT pk_way_nodes PRIMARY KEY (way_id, sequence_id)",
 		"ALTER TABLE ONLY relations ADD CONSTRAINT pk_relations PRIMARY KEY (id)",
 		"ALTER TABLE ONLY relation_members ADD CONSTRAINT pk_relation_members PRIMARY KEY (relation_id, sequence_id)",
-		"CREATE INDEX idx_node_tags_node_id ON node_tags USING btree (node_id)",
 		"CREATE INDEX idx_nodes_geom ON nodes USING gist (geom)",
-		"CREATE INDEX idx_way_tags_way_id ON way_tags USING btree (way_id)",
-		"CREATE INDEX idx_relation_tags_relation_id ON relation_tags USING btree (relation_id)",
 		"CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id)",
 		"CREATE INDEX idx_relation_members_member_id_and_type ON relation_members USING btree (member_id, member_type)"
 	};
