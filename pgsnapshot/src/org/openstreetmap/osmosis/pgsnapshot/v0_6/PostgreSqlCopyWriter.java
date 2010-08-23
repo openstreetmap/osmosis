@@ -7,7 +7,7 @@ import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 import org.openstreetmap.osmosis.pgsnapshot.common.NodeLocationStoreType;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.impl.CopyFilesetBuilder;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.impl.CopyFilesetLoader;
@@ -59,12 +59,12 @@ public class PostgreSqlCopyWriter implements Sink {
 	
 	private void initialize() {
 		if (!initialized) {
-			DatabaseContext2 dbCtx;
+			DatabaseContext dbCtx;
 			DatabaseCapabilityChecker capabilityChecker;
 			
 			LOG.fine("Initializing the database and temporary processing files.");
 			
-			dbCtx = new DatabaseContext2(loginCredentials);
+			dbCtx = new DatabaseContext(loginCredentials);
 			try {
 				capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 
@@ -80,8 +80,6 @@ public class PostgreSqlCopyWriter implements Sink {
 			copyFilesetLoader = new CopyFilesetLoader(loginCredentials, preferences, copyFileset);
 			
 			LOG.fine("Processing input data, building geometries and creating database load files.");
-			
-			
 			
 			initialized = true;
 		}
@@ -104,8 +102,9 @@ public class PostgreSqlCopyWriter implements Sink {
 	public void complete() {
 		initialize();
 		
-		LOG.fine("All data has been received, beginning database load.");
 		copyFilesetBuilder.complete();
+		
+		LOG.fine("All data has been received, beginning database load.");
 		copyFilesetLoader.run();
 		
 		LOG.fine("Processing complete.");

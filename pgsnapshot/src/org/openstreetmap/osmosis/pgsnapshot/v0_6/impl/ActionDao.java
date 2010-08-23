@@ -1,7 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 
@@ -24,7 +24,7 @@ public class ActionDao {
 	 * @param dbCtx
 	 *            The database context to use for accessing the database.
 	 */
-	public ActionDao(DatabaseContext2 dbCtx) {
+	public ActionDao(DatabaseContext dbCtx) {
 		jdbcTemplate = dbCtx.getSimpleJdbcTemplate();
 		
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);

@@ -16,7 +16,7 @@ import org.openstreetmap.osmosis.core.sort.common.FileBasedSort;
 import org.openstreetmap.osmosis.core.store.SingleClassObjectSerializationFactory;
 import org.openstreetmap.osmosis.core.store.StoreReleasingIterator;
 import org.openstreetmap.osmosis.core.store.UpcastIterator;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 import org.openstreetmap.osmosis.pgsnapshot.common.RowMapperRowCallbackListener;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
@@ -41,7 +41,7 @@ public class RelationDao extends EntityDao<Relation> {
 	 * @param actionDao
 	 *            The dao to use for adding action records to the database.
 	 */
-	public RelationDao(DatabaseContext2 dbCtx, ActionDao actionDao) {
+	public RelationDao(DatabaseContext dbCtx, ActionDao actionDao) {
 		super(dbCtx.getSimpleJdbcTemplate(), new RelationMapper(), actionDao);
 		
 		jdbcTemplate = dbCtx.getSimpleJdbcTemplate();

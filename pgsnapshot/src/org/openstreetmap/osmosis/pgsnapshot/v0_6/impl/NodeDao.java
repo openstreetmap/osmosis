@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.openstreetmap.osmosis.core.database.FeaturePopulator;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 
@@ -49,7 +49,7 @@ public class NodeDao extends EntityDao<Node> {
 	 * @param actionDao
 	 *            The dao to use for adding action records to the database.
 	 */
-	public NodeDao(DatabaseContext2 dbCtx, ActionDao actionDao) {
+	public NodeDao(DatabaseContext dbCtx, ActionDao actionDao) {
 		super(dbCtx.getSimpleJdbcTemplate(), new NodeMapper(), actionDao);
 		
 		jdbcTemplate = dbCtx.getSimpleJdbcTemplate();

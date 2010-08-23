@@ -10,7 +10,7 @@ import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 import org.openstreetmap.osmosis.pgsnapshot.common.SchemaVersionValidator;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.impl.ActionChangeWriter;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.impl.ChangeWriter;
@@ -27,7 +27,7 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	
 	private ChangeWriter changeWriter;
 	private Map<ChangeAction, ActionChangeWriter> actionWriterMap;
-	private DatabaseContext2 dbCtx;
+	private DatabaseContext dbCtx;
 	private SchemaVersionValidator schemaVersionValidator;
 	private boolean initialized;
 	
@@ -41,7 +41,7 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	 *            Contains preferences configuring database behaviour.
 	 */
 	public PostgreSqlChangeWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
-		dbCtx = new DatabaseContext2(loginCredentials);
+		dbCtx = new DatabaseContext(loginCredentials);
 		changeWriter = new ChangeWriter(dbCtx);
 		actionWriterMap = new HashMap<ChangeAction, ActionChangeWriter>();
 		actionWriterMap.put(ChangeAction.Create, new ActionChangeWriter(changeWriter, ChangeAction.Create));

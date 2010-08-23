@@ -15,7 +15,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 import org.openstreetmap.osmosis.pgsnapshot.common.NoSuchRecordException;
 import org.springframework.jdbc.core.CallableStatementCreator;
 import org.springframework.jdbc.core.SqlParameter;
@@ -28,7 +28,7 @@ import org.springframework.jdbc.core.SqlParameter;
  */
 public class ChangeWriter {
 	
-	private DatabaseContext2 dbCtx;
+	private DatabaseContext dbCtx;
 	private ActionDao actionDao;
 	private UserDao userDao;
 	private NodeDao nodeDao;
@@ -43,7 +43,7 @@ public class ChangeWriter {
 	 * @param dbCtx
 	 *            The database context to use for accessing the database.
 	 */
-	public ChangeWriter(DatabaseContext2 dbCtx) {
+	public ChangeWriter(DatabaseContext dbCtx) {
 		this.dbCtx = dbCtx;
 		
 		actionDao = new ActionDao(dbCtx);

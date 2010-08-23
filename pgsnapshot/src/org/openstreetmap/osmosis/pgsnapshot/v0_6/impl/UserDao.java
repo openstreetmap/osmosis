@@ -2,7 +2,7 @@
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 import org.openstreetmap.osmosis.pgsnapshot.common.NoSuchRecordException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
@@ -31,7 +31,7 @@ public class UserDao {
 	 * @param actionDao
 	 *            The dao to use for adding action records to the database.
 	 */
-	public UserDao(DatabaseContext2 dbCtx, ActionDao actionDao) {
+	public UserDao(DatabaseContext dbCtx, ActionDao actionDao) {
 		this.actionDao = actionDao;
 		
 		jdbcTemplate = dbCtx.getSimpleJdbcTemplate();

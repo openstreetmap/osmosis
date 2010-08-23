@@ -3,7 +3,7 @@ package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
 import java.util.logging.Logger;
 
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 
@@ -90,7 +90,7 @@ public class IndexManager {
 	 *            If true, the linestring column on the way table will be
 	 *            populated after load.
 	 */
-	public IndexManager(DatabaseContext2 dbCtx, boolean populateBbox, boolean populateLinestring) {
+	public IndexManager(DatabaseContext dbCtx, boolean populateBbox, boolean populateLinestring) {
 		this.populateBbox = populateBbox;
 		this.populateLinestring = populateLinestring;
 		

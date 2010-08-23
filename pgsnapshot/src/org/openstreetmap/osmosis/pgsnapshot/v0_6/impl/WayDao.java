@@ -9,7 +9,7 @@ import org.openstreetmap.osmosis.core.database.DbOrderedFeature;
 import org.openstreetmap.osmosis.core.database.FeaturePopulator;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 
@@ -50,7 +50,7 @@ public class WayDao extends EntityDao<Way> {
 	 * @param actionDao
 	 *            The dao to use for adding action records to the database.
 	 */
-	public WayDao(DatabaseContext2 dbCtx, ActionDao actionDao) {
+	public WayDao(DatabaseContext dbCtx, ActionDao actionDao) {
 		super(dbCtx.getSimpleJdbcTemplate(), new WayMapper(), actionDao);
 		
 		jdbcTemplate = dbCtx.getSimpleJdbcTemplate();

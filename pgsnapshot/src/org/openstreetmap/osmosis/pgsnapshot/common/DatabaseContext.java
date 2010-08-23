@@ -35,9 +35,9 @@ import org.springframework.transaction.support.TransactionTemplate;
  * 
  * @author Brett Henderson
  */
-public class DatabaseContext2 {
+public class DatabaseContext {
 
-    private static final Logger LOG = Logger.getLogger(DatabaseContext2.class.getName());
+    private static final Logger LOG = Logger.getLogger(DatabaseContext.class.getName());
 
     private DataSourceManager dataSourceManager;
     private DataSource dataSource;
@@ -53,7 +53,7 @@ public class DatabaseContext2 {
      * 
      * @param loginCredentials Contains all information required to connect to the database.
      */
-    public DatabaseContext2(DatabaseLoginCredentials loginCredentials) {
+    public DatabaseContext(DatabaseLoginCredentials loginCredentials) {
     	dataSourceManager = new DataSourceManager(loginCredentials);
     	dataSource = dataSourceManager.getDataSource();
     	txnManager = new DataSourceTransactionManager(dataSource);

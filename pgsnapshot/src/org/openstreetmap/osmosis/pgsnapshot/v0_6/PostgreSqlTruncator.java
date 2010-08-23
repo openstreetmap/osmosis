@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.task.common.RunnableTask;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 import org.openstreetmap.osmosis.pgsnapshot.common.SchemaVersionValidator;
 
 
@@ -31,7 +31,7 @@ public class PostgreSqlTruncator implements RunnableTask {
 	};
 	
 	
-	private DatabaseContext2 dbCtx;
+	private DatabaseContext dbCtx;
 	private SchemaVersionValidator schemaVersionValidator;
 	
 	
@@ -44,7 +44,7 @@ public class PostgreSqlTruncator implements RunnableTask {
 	 *            Contains preferences configuring database behaviour.
 	 */
 	public PostgreSqlTruncator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
-		dbCtx = new DatabaseContext2(loginCredentials);
+		dbCtx = new DatabaseContext(loginCredentials);
 		
 		schemaVersionValidator = new SchemaVersionValidator(dbCtx.getSimpleJdbcTemplate(), preferences);
 	}

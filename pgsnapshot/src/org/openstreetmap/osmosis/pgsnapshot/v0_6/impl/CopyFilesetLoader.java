@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 import org.openstreetmap.osmosis.pgsnapshot.common.SchemaVersionValidator;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.PostgreSqlVersionConstants;
 
@@ -65,7 +65,7 @@ public class CopyFilesetLoader implements Runnable {
      * Reads all data from the database and send it to the sink.
      */
     public void run() {
-    	DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials);
+    	DatabaseContext dbCtx = new DatabaseContext(loginCredentials);
     	
     	try {
     		DatabaseCapabilityChecker capabilityChecker;

@@ -1,7 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 
 
 /**
@@ -10,7 +10,7 @@ import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
  * @author Brett Henderson
  */
 public class DatabaseCapabilityChecker {
-	private DatabaseContext2 dbCtx;
+	private DatabaseContext dbCtx;
 	private boolean initialized;
 	private boolean isActionSupported;
 	private boolean isWayBboxSupported;
@@ -22,7 +22,7 @@ public class DatabaseCapabilityChecker {
 	 * 
 	 * @param dbCtx The database context to use for accessing the database.
 	 */
-	public DatabaseCapabilityChecker(DatabaseContext2 dbCtx) {
+	public DatabaseCapabilityChecker(DatabaseContext dbCtx) {
 		this.dbCtx = dbCtx;
 		
 		initialized = false;

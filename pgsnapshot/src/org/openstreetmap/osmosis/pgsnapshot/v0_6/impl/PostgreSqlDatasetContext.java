@@ -27,7 +27,7 @@ import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.store.MultipleSourceIterator;
 import org.openstreetmap.osmosis.core.store.ReleasableAdaptorForIterator;
 import org.openstreetmap.osmosis.core.store.UpcastIterator;
-import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext2;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 import org.openstreetmap.osmosis.pgsnapshot.common.PolygonBuilder;
 import org.openstreetmap.osmosis.pgsnapshot.common.SchemaVersionValidator;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.PostgreSqlVersionConstants;
@@ -54,7 +54,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	private DatabasePreferences preferences;
 	private DatabaseCapabilityChecker capabilityChecker;
 	private boolean initialized;
-	private DatabaseContext2 dbCtx;
+	private DatabaseContext dbCtx;
 	private SimpleJdbcTemplate jdbcTemplate;
 	private UserDao userDao;
 	private NodeDao nodeDao;
@@ -91,7 +91,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 		if (dbCtx == null) {
 			ActionDao actionDao;
 			
-			dbCtx = new DatabaseContext2(loginCredentials);
+			dbCtx = new DatabaseContext(loginCredentials);
 			jdbcTemplate = dbCtx.getSimpleJdbcTemplate();
 			
 			dbCtx.beginTransaction();
