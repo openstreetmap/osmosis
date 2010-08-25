@@ -215,18 +215,21 @@ CLUSTER nodes USING idx_nodes_geom;
 CLUSTER ways USING idx_ways_linestring;
 
 -- Create the function that provides "unnest" functionality while remaining compatible with 8.3.
-CREATE OR REPLACE FUNCTION array_to_rows(bigint[]) RETURNS SETOF bigint AS $$
+CREATE OR REPLACE FUNCTION unnest_bbox_way_nodes() RETURNS void AS $$
 DECLARE
-	in_array alias FOR $1;
-	out_bigint bigint;
+	previousId ways.id%TYPE;
+	currentId ways.id%TYPE;
+	result bigint[];
+	wayNodeRow way_nodes%ROWTYPE;
+	wayNodes ways.nodes%TYPE;
 BEGIN
-	FOR i IN 1..array_upper(in_array,1) LOOP
-	RETURN NEXT in_array[i];
+	FOR wayNodes IN SELECT bw.nodes FROM bbox_ways bw LOOP
+		FOR i IN 1 .. array_upper(wayNodes, 1) LOOP
+			INSERT INTO bbox_way_nodes (id) VALUES (wayNodes[i]);
+		END LOOP;
 	END LOOP;
-
-RETURN;
 END;
-$$ LANGUAGE 'plpgsql' STABLE;
+$$ LANGUAGE plpgsql;
 
 
 -- Update the schema version.

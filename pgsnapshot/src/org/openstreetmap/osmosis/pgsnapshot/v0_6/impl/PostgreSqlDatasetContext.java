@@ -376,15 +376,20 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 		// If complete ways is set, select all nodes contained by the ways into the node temp table.
 		if (completeWays) {
 			LOG.finer("Selecting all nodes for selected ways.");
-			rowCount = jdbcTemplate.update(
-				"INSERT INTO bbox_nodes "
-					+ "SELECT n.* FROM nodes n INNER JOIN ("
-					+ "    SELECT node_id FROM (SELECT array_to_rows(nodes) AS node_id FROM bbox_ways) bw"
-					+ "    WHERE NOT EXISTS ("
-					+ "        SELECT * FROM bbox_nodes bn WHERE bw.node_id = bn.id"
-					+ "    ) GROUP BY bw.node_id"
-					+ ") nids ON n.id = nids.node_id"
+			jdbcTemplate.update("CREATE TEMPORARY TABLE bbox_way_nodes (id bigint)");
+			jdbcTemplate.queryForList("SELECT unnest_bbox_way_nodes()");
+			jdbcTemplate.update(
+					"CREATE TEMPORARY TABLE bbox_missing_way_nodes AS "
+					+ "SELECT buwn.id FROM (SELECT DISTINCT bwn.id FROM bbox_way_nodes bwn) buwn "
+					+ "WHERE NOT EXISTS ("
+					+ "    SELECT * FROM bbox_nodes WHERE id = buwn.id"
+					+ ");"
 			);
+			jdbcTemplate.update("ALTER TABLE ONLY bbox_missing_way_nodes"
+					+ " ADD CONSTRAINT pk_bbox_missing_way_nodes PRIMARY KEY (id)");
+			jdbcTemplate.update("ANALYZE bbox_missing_way_nodes");
+			rowCount = jdbcTemplate.update("INSERT INTO bbox_nodes "
+					+ "SELECT n.* FROM nodes n INNER JOIN bbox_missing_way_nodes bwn ON n.id = bwn.id;");
 			LOG.finer(rowCount + " rows affected.");
 		}
 		
