@@ -376,10 +376,10 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 		// If complete ways is set, select all nodes contained by the ways into the node temp table.
 		if (completeWays) {
 			LOG.finer("Selecting all nodes for selected ways.");
-			jdbcTemplate.update("CREATE TEMPORARY TABLE bbox_way_nodes (id bigint)");
+			jdbcTemplate.update("CREATE TEMPORARY TABLE bbox_way_nodes (id bigint) ON COMMIT DROP");
 			jdbcTemplate.queryForList("SELECT unnest_bbox_way_nodes()");
 			jdbcTemplate.update(
-					"CREATE TEMPORARY TABLE bbox_missing_way_nodes AS "
+					"CREATE TEMPORARY TABLE bbox_missing_way_nodes ON COMMIT DROP AS "
 					+ "SELECT buwn.id FROM (SELECT DISTINCT bwn.id FROM bbox_way_nodes bwn) buwn "
 					+ "WHERE NOT EXISTS ("
 					+ "    SELECT * FROM bbox_nodes WHERE id = buwn.id"
