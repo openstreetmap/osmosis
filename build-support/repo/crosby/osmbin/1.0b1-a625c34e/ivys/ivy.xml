@@ -1,11 +1,7 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ivy-module version="2.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
-	
-    <info organisation="org.openstreetmap.osmosis" module="osmosis-binary"/>
-    
-    <configurations>
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="1.0" xmlns:m="http://ant.apache.org/ivy/maven">
+	<info organisation="crosby" module="osmbin" revision="1.0b1-a625c34e"/>
+	<configurations>
 		<conf name="default" visibility="public" description="runtime dependencies and master artifact can be used with this conf" extends="runtime,master"/>
 		<conf name="master" visibility="public" description="contains only the artifact published by this module itself, with no transitive dependencies"/>
 		<conf name="compile" visibility="public" description="this is the default scope, used if none is specified. Compile dependencies are available in all classpaths."/>
@@ -16,20 +12,8 @@
 		<conf name="sources" visibility="public" description="this configuration contains the source artifact of this module, if any."/>
 		<conf name="javadoc" visibility="public" description="this configuration contains the javadoc artifact of this module, if any."/>
 		<conf name="optional" visibility="public" description="contains all optional dependencies"/>
-		<conf name="distribution" visibility="public" description="contains distribution packages"/>
-    </configurations>
-    
-    <publications>
-    	<artifact name="${project.name}" type="jar" ext="jar" conf="master"/>
-    </publications>
-    
-    <dependencies>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-core" rev="${project.version}" conf="compile->default" changing="true"/>
-    	
-    	<dependency org="com.google.protobuf" name="protobuf-java" rev="${dependency.version.protobuf}" conf="compile->default"/>
-    	<dependency org="crosby" name="osmbin" rev="${dependency.version.osmbin}" conf="compile->default" changing="true"/>
-        
-        <dependency org="junit" name="junit" rev="${dependency.version.junit}" conf="test->default"/>
-    	<dependency org="checkstyle" name="checkstyle" rev="${dependency.version.checkstyle}" conf="test->default"/>
-    </dependencies>
+	</configurations>
+	<publications>
+		<artifact name="osmbin" type="jar" ext="jar" conf="master"/>
+	</publications>
 </ivy-module>
