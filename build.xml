@@ -10,7 +10,6 @@
 			<fileset dir=".">
 				<include name="**/build.xml"/>
 				<exclude name="build.xml"/>
-				<exclude name="binary/**"/>
 			</fileset>
 		</ivy:buildlist>
 	</target>
