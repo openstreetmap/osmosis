@@ -1,3 +1,8 @@
+0.37
+Updated the pgsql schema (now version 6) to move all tags into hstore columns, add a ways.nodes column and CLUSTER the nodes and ways tables.  Significant performance increases.
+Fixed a bug in --bounding-box and --bounding-polygon preventing use of clipIncompleteEntities after a --tee task.
+Added --read-bin and --write-bin tasks supporting the new binary data format.
+
 0.36
 Removed 0.5 support.
 Added the --fast-write-pgsql task which uses PostgreSQL COPY commands to insert data.

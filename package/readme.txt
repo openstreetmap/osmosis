@@ -24,25 +24,16 @@ To perform a complete osmosis rebuild, the following command may be run from the
 
 ant all
 
-The "all" ant target performs all steps including creation of new distribution files, javadoc generation, and unit tests.
-To just recompile the main osmosis jar file, run the following command.
-
-ant build_binary
+The "all" ant target performs all steps including creation of new distribution files, checkstyle analysis and unit tests.
 
 Sometimes old files can be left hanging around causing problems.  It may be necessary to run the following command
 to clean up any old files.
 
 ant clean
 
-If you wish to rebuild the distribution zip and/or tar.gz files, the following command may be used.
+If you wish to rebuild all artefacts without running unit tests, the following command may be used.
 
-ant dist
-
-If any project dependencies are modified or if osmosis is downloaded directly from svn, the project dependencies
-will not be available.  This is because the ivy tool is used to manage project dependencies.
-To download all dependencies, run the following command.
-
-ant resolve
+ant publish
 
 HELP
 Osmosis documentation is available at:
