@@ -1,7 +1,6 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.set.v0_6;
 
-import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
@@ -13,8 +12,10 @@ import org.openstreetmap.osmosis.core.sort.v0_6.SortedDuplicateEntityPipeValidat
  */
 public class FlattenFilter extends SortedDuplicateEntityPipeValidator {
 	private Sink sink;
-	private EntityContainer previousContainer;
+	
 	private Sink flattener = new Sink() {
+		private EntityContainer previousContainer;
+		
 		/**
 		 * Process a node, way or relation.
 		 * 
@@ -69,42 +70,6 @@ public class FlattenFilter extends SortedDuplicateEntityPipeValidator {
 	 */
 	public FlattenFilter() {
 		super.setSink(flattener);
-	}
-
-
-	/**
-	 * Process the bound.
-	 * 
-	 * @param boundContainer
-	 *            The bound to be processed.
-	 */
-	public void process(BoundContainer boundContainer) {
-		/* By default, pass it on unchanged */
-		sink.process(boundContainer);
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void complete() {
-		/*
-		 * If we've stored entities temporarily, we now need to forward the
-		 * stored ones to the output.
-		 */
-		if (previousContainer != null) {
-			sink.process(previousContainer);
-		}
-
-		sink.complete();
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void release() {
-		sink.release();
 	}
 
 
