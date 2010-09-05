@@ -121,7 +121,44 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
             builder.setDense(bi);
             parentbuilder.addPrimitivegroup(builder);
         }
+        
+        public void serializeNonDense(
+            Osmformat.PrimitiveBlock.Builder parentbuilder, List<Node> nodes) {
+          if (nodes.size() == 0)
+            return;
+          // System.out.format("%d Nodes   ",nodes.size());
+          StringTable stable = getStringTable();
+          Osmformat.PrimitiveGroup.Builder builder = Osmformat.PrimitiveGroup
+          .newBuilder();
+          long lastlat = 0, lastlon = 0, lastid = 0;
+          for (Node i : nodes) {
+            long id = i.getId();
+            int lat = mapDegrees(i.getLatitude());
+            int lon = mapDegrees(i.getLongitude());
+            Osmformat.Node.Builder bi = Osmformat.Node.newBuilder();
+            bi.setId(id);
+            lastid = id;
+            bi.setLon(lon);
+            lastlon = lon;
+            bi.setLat(lat);
+            lastlat = lat;
+            for (Tag t : i.getTags()) {
+              bi.addKeys(stable.getIndex(t.getKey()));
+              bi.addVals(stable.getIndex(t.getValue()));
+            }
+            if (omit_metadata) {
+              // Nothing.
+            } else {
+              bi.setInfo(serializeMetadata(i));
+            }
+            builder.addNodes(bi);
+          }
+          parentbuilder.addPrimitivegroup(builder);
+        }
+    
     }
+
+    
 
     class WayGroup extends Prim<Way> implements PrimGroupWriterInterface {
         public void serialize(Osmformat.PrimitiveBlock.Builder parentbuilder) {
