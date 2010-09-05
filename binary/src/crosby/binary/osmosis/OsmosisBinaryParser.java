@@ -1,6 +1,7 @@
 package crosby.binary.osmosis;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.OsmosisConstants;
@@ -21,6 +22,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
 import crosby.binary.Osmformat;
 import crosby.binary.BinaryParser;
+import crosby.binary.Osmformat.DenseInfo;
 import crosby.binary.file.BlockReaderAdapter;
 
 public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdapter {
@@ -72,6 +74,13 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
         long last_id = 0, last_lat = 0, last_lon = 0;
         
         int j = 0 ; // Index into the keysvals array.
+
+        // Stuff for dense info
+        long lasttimestamp = 0, lastchangeset = 0;
+        int lastuser_sid = 0, lastuid = 0;
+        DenseInfo di = null;
+        if (nodes.hasDenseinfo())
+          di = nodes.getDenseinfo();
         
         for (int i = 0; i < nodes.getIdCount(); i++) {
             Node tmp;
@@ -92,10 +101,17 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
                 }
                 j++; // Skip over the '0' delimiter.
             }
-            if (nodes.getInfoCount() > 0) {
-                Osmformat.Info info = nodes.getInfo(i);
-                tmp = new Node(id, info.getVersion(), getDate(info),
-                        getUser(info), info.getChangeset(), tags, latf, lonf);
+            if (di != null) {
+              int uid = di.getUid(i) + lastuid; lastuid = uid;
+              int user_sid = di.getUserSid(i) + lastuser_sid; lastuser_sid = user_sid;
+              long timestamp = di.getTimestamp(i) + lasttimestamp; lasttimestamp = timestamp;
+              int version = di.getVersion(i); 
+              long changeset = di.getChangeset(i) + lastchangeset; lastchangeset = changeset;
+
+              Date date = new Date(date_granularity * (long) timestamp);
+
+              OsmUser user = uid == -1 ? OsmUser.NONE :  new OsmUser(uid,getStringById(user_sid));
+              tmp = new Node(id, version, date, user, changeset, tags, latf, lonf);
             } else {
                 tmp = new Node(id, NOVERSION, NODATE, OsmUser.NONE,
                         NOCHANGESET, tags, latf, lonf);

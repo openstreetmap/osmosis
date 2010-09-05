@@ -3,6 +3,8 @@ package crosby.binary.osmosis;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityProcessor;
@@ -23,6 +25,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
 import crosby.binary.BinarySerializer;
 import crosby.binary.Osmformat;
+import crosby.binary.Osmformat.DenseInfo;
 import crosby.binary.StringTable;
 import crosby.binary.Osmformat.Relation.MemberType;
 import crosby.binary.file.BlockOutputStream;
@@ -53,7 +56,33 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
             }
         }
 
-        public Osmformat.Info.Builder serializeMetadata(Entity e) {
+        public void serializeMetadataDense(DenseInfo.Builder b, List<? extends Entity> contents) {
+          if (omit_metadata) {
+            return;
+          }
+
+          long lasttimestamp = 0, lastchangeset = 0;
+          int lastuser_sid = 0, lastuid = 0;
+          StringTable stable = getStringTable();
+          for (Entity e : contents) {
+
+            //if (e.getUser() != OsmUser.NONE) {
+            int uid = e.getUser().getId();
+            int user_sid = stable.getIndex(e.getUser().getName());
+            //}
+            int timestamp = (int)(e.getTimestamp().getTime() / date_granularity);
+            int version = e.getVersion();
+            long changeset = e.getChangesetId();
+
+            b.addVersion(version);
+            b.addTimestamp(timestamp-lasttimestamp); lasttimestamp = timestamp;
+            b.addChangeset(changeset-lastchangeset); lastchangeset = changeset;
+            b.addUid(uid-lastuid); lastuid = uid;
+            b.addUserSid(user_sid-lastuser_sid); lastuser_sid = user_sid;
+          }
+        }
+         
+       public Osmformat.Info.Builder serializeMetadata(Entity e) {
             StringTable stable = getStringTable();
             Osmformat.Info.Builder b = Osmformat.Info.newBuilder();
             if (omit_metadata) {
@@ -94,7 +123,15 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
             for (Node i : contents) {
               doesBlockHaveTags = doesBlockHaveTags || (!i.getTags().isEmpty());
             }
-            for (Node i : contents) {
+            if (omit_metadata) {
+              ;// Nothing
+            } else {
+              Osmformat.DenseInfo.Builder bdi = Osmformat.DenseInfo.newBuilder();
+              serializeMetadataDense(bdi,contents);
+              bi.setDenseinfo(bdi);
+            }
+              
+              for (Node i : contents) {
                 long id = i.getId();
                 int lat = mapDegrees(i.getLatitude());
                 int lon = mapDegrees(i.getLongitude());
@@ -104,11 +141,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
                 lastlon = lon;
                 bi.addLat(lat - lastlat);
                 lastlat = lat;
-                if (omit_metadata) {
-                    // Nothing.
-                } else {
-                    bi.addInfo(serializeMetadata(i));
-                }
+
                 // Then we must include tag information.
                 if (doesBlockHaveTags) {
                   for (Tag t : i.getTags()) {
