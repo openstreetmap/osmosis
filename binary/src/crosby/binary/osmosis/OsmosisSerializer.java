@@ -89,6 +89,11 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
 
             long lastlat = 0, lastlon = 0, lastid = 0;
             Osmformat.DenseNodes.Builder bi = Osmformat.DenseNodes.newBuilder();
+            boolean doesBlockHaveTags = false;
+            // Does anything in this block have tags?
+            for (Node i : contents) {
+              doesBlockHaveTags = doesBlockHaveTags || (!i.getTags().isEmpty());
+            }
             for (Node i : contents) {
                 long id = i.getId();
                 int lat = mapDegrees(i.getLatitude());
@@ -104,11 +109,14 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
                 } else {
                     bi.addInfo(serializeMetadata(i));
                 }
-                for (Tag t : i.getTags()) {
-                    bi.addKeysVals(stable.getIndex(t.getKey()));
-                    bi.addKeysVals(stable.getIndex(t.getValue()));
+                // Then we must include tag information.
+                if (doesBlockHaveTags) {
+                  for (Tag t : i.getTags()) {
+                      bi.addKeysVals(stable.getIndex(t.getKey()));
+                      bi.addKeysVals(stable.getIndex(t.getValue()));
+                  }
+                  bi.addKeysVals(0); // Add delimiter.
                 }
-                bi.addKeysVals(0); // Add delimiter.
             }
             builder.setDense(bi);
             parentbuilder.addPrimitivegroup(builder);

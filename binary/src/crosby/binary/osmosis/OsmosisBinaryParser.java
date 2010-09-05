@@ -58,6 +58,7 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
             long id = nodes.getId(i) + last_id;
             last_id = id;
             double latf = parseLat(lat), lonf = parseLon(lon);
+            // If empty, assume that nothing here has keys or vals.
             if (nodes.getKeysValsCount() > 0) {
                 while (nodes.getKeysVals(j) != 0) {
                     int keyid = nodes.getKeysVals(j++);
