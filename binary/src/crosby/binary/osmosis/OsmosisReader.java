@@ -17,8 +17,9 @@ public class OsmosisReader implements RunnableSource {
      * @param input 
      */
     OsmosisReader(InputStream input) {
-        if (input == null)
+        if (input == null) {
             throw new Error("Null input");
+        }
         this.input = input;
         parser = new OsmosisBinaryParser();
     }

@@ -39,10 +39,11 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
      * @return The OsmUser object */
     OsmUser getUser(Osmformat.Info info) {
         // System.out.println(info);
-        if (info.hasUid() && info.hasUserSid())
+        if (info.hasUid() && info.hasUserSid()) {
             return new OsmUser(info.getUid(), getStringById(info.getUserSid()));
-        else
+        } else {
             return OsmUser.NONE;
+        }
     }
 
     /** The magic number used to indicate no version number metadata for this entity. */
@@ -54,8 +55,9 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
     protected void parseNodes(List<Osmformat.Node> nodes) {
       for (Osmformat.Node i : nodes) {
         List<Tag> tags = new ArrayList<Tag>();
-        for (int j = 0; j < i.getKeysCount(); j++)
+        for (int j = 0; j < i.getKeysCount(); j++) {
           tags.add(new Tag(getStringById(i.getKeys(j)), getStringById(i.getVals(j))));
+        }
         // long id, int version, Date timestamp, OsmUser user,
         // long changesetId, Collection<Tag> tags,
         // double latitude, double longitude
@@ -80,15 +82,15 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
     protected void parseDense(Osmformat.DenseNodes nodes) {
         long last_id = 0, last_lat = 0, last_lon = 0;
         
-        int j = 0 ; // Index into the keysvals array.
+        int j = 0; // Index into the keysvals array.
 
         // Stuff for dense info
         long lasttimestamp = 0, lastchangeset = 0;
         int lastuser_sid = 0, lastuid = 0;
         DenseInfo di = null;
-        if (nodes.hasDenseinfo())
+        if (nodes.hasDenseinfo()) {
           di = nodes.getDenseinfo();
-        
+        }
         for (int i = 0; i < nodes.getIdCount(); i++) {
             Node tmp;
             List<Tag> tags = new ArrayList<Tag>(0);
@@ -104,7 +106,7 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
                 while (nodes.getKeysVals(j) != 0) {
                     int keyid = nodes.getKeysVals(j++);
                     int valid = nodes.getKeysVals(j++);
-                    tags.add(new Tag(getStringById(keyid),getStringById(valid)));
+                    tags.add(new Tag(getStringById(keyid), getStringById(valid)));
                 }
                 j++; // Skip over the '0' delimiter.
             }
@@ -117,8 +119,13 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
 
               Date date = new Date(date_granularity * (long) timestamp);
 
-              OsmUser user = uid == -1 ? OsmUser.NONE :  new OsmUser(uid,getStringById(user_sid));
-              tmp = new Node(id, version, date, user, changeset, tags, latf, lonf);
+              OsmUser user;
+              if (uid == -1) {
+                user = OsmUser.NONE;
+              } else {
+                user = new OsmUser(uid, getStringById(user_sid));
+              }
+            tmp = new Node(id, version, date, user, changeset, tags, latf, lonf);
             } else {
                 tmp = new Node(id, NOVERSION, NODATE, OsmUser.NONE,
                         NOCHANGESET, tags, latf, lonf);
@@ -131,9 +138,10 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
     protected void parseWays(List<Osmformat.Way> ways) {
         for (Osmformat.Way i : ways) {
             List<Tag> tags = new ArrayList<Tag>();
-            for (int j = 0; j < i.getKeysCount(); j++)
+            for (int j = 0; j < i.getKeysCount(); j++) {
                 tags.add(new Tag(getStringById(i.getKeys(j)), getStringById(i.getVals(j))));
-
+            }
+                
             long last_id = 0;
             List<WayNode> nodes = new ArrayList<WayNode>();
             for (long j : i.getRefsList()) {
@@ -163,8 +171,9 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
     protected void parseRelations(List<Osmformat.Relation> rels) {
         for (Osmformat.Relation i : rels) {
             List<Tag> tags = new ArrayList<Tag>();
-            for (int j = 0; j < i.getKeysCount(); j++)
+            for (int j = 0; j < i.getKeysCount(); j++) {
                 tags.add(new Tag(getStringById(i.getKeys(j)), getStringById(i.getVals(j))));
+            }
 
             long id = i.getId();
 
@@ -176,14 +185,15 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
                 String role = getStringById(i.getRolesSid(j));
                 EntityType etype = null;
 
-                if (i.getTypes(j) == Osmformat.Relation.MemberType.NODE)
+                if (i.getTypes(j) == Osmformat.Relation.MemberType.NODE) {
                     etype = EntityType.Node;
-                else if (i.getTypes(j) == Osmformat.Relation.MemberType.WAY)
+                } else if (i.getTypes(j) == Osmformat.Relation.MemberType.WAY) {
                     etype = EntityType.Way;
-                else if (i.getTypes(j) == Osmformat.Relation.MemberType.RELATION)
+                } else if (i.getTypes(j) == Osmformat.Relation.MemberType.RELATION) {
                     etype = EntityType.Relation;
-                else
+                } else {
                     assert false; // TODO; Illegal file?
+                }
 
                 nodes.add(new RelationMember(mid, etype, role));
             }
@@ -213,8 +223,12 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
         double bottomf = block.getBbox().getBottom() * multiplier;
 
         for (String s : block.getRequiredFeaturesList()) {
-            if (s.equals("OsmSchema-V0.6")) continue; // OK.
-            if (s.equals("DenseNodes")) continue; // OK.
+            if (s.equals("OsmSchema-V0.6")) {
+              continue; // We can parse this.
+            }
+            if (s.equals("DenseNodes")) {
+              continue; // We can parse this.
+            }
            throw new Error("File requires unknown feature: " + s);
         }
         

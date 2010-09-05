@@ -65,8 +65,9 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
                     stable.incr(tag.getKey());
                     stable.incr(tag.getValue());
                 }
-                if (omit_metadata == false)
+                if (!omit_metadata) {
                     stable.incr(i.getUser().getName());
+                }
             }
         }
 
@@ -130,8 +131,8 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
          * @param parentbuilder Add to this PrimitiveBlock.
          */
         public void serializeDense(Osmformat.PrimitiveBlock.Builder parentbuilder) {
-            if (contents.size() == 0)
-                return;
+            if (contents.size() == 0) {
+              return;
             }
             // System.out.format("%d Dense   ",nodes.size());
             Osmformat.PrimitiveGroup.Builder builder = Osmformat.PrimitiveGroup
@@ -184,8 +185,9 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
          */
         public void serializeNonDense(
             Osmformat.PrimitiveBlock.Builder parentbuilder) {
-          if (contents.size() == 0)
+          if (contents.size() == 0) {
             return;
+          }
           // System.out.format("%d Nodes   ",nodes.size());
           StringTable stable = getStringTable();
           Osmformat.PrimitiveGroup.Builder builder = Osmformat.PrimitiveGroup
@@ -202,9 +204,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
               bi.addKeys(stable.getIndex(t.getKey()));
               bi.addVals(stable.getIndex(t.getValue()));
             }
-            if (omit_metadata) {
-              // Nothing.
-            } else {
+            if (!omit_metadata) {
               bi.setInfo(serializeMetadata(i));
             }
             builder.addNodes(bi);
