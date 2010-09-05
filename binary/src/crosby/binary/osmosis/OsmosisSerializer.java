@@ -130,18 +130,14 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
           StringTable stable = getStringTable();
           Osmformat.PrimitiveGroup.Builder builder = Osmformat.PrimitiveGroup
           .newBuilder();
-          long lastlat = 0, lastlon = 0, lastid = 0;
           for (Node i : nodes) {
             long id = i.getId();
             int lat = mapDegrees(i.getLatitude());
             int lon = mapDegrees(i.getLongitude());
             Osmformat.Node.Builder bi = Osmformat.Node.newBuilder();
             bi.setId(id);
-            lastid = id;
             bi.setLon(lon);
-            lastlon = lon;
             bi.setLat(lat);
-            lastlat = lat;
             for (Tag t : i.getTags()) {
               bi.addKeys(stable.getIndex(t.getKey()));
               bi.addVals(stable.getIndex(t.getValue()));
