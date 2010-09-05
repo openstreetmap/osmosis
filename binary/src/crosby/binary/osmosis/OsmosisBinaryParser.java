@@ -41,7 +41,32 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
     final int NOVERSION = -1;
     final int NOCHANGESET = -1;
 
+    
+    protected void parseNodes(List<Osmformat.Node> nodes) {
+      for (Osmformat.Node i : nodes) {
+        List<Tag> tags = new ArrayList<Tag>();
+        for (int j = 0; j < i.getKeysCount(); j++)
+          tags.add(new Tag(getStringById(i.getKeys(j)), getStringById(i.getVals(j))));
 
+        // long id, int version, Date timestamp, OsmUser user,
+        // long changesetId, Collection<Tag> tags,
+        // double latitude, double longitude
+        Node tmp;
+        long id = i.getId();
+        double latf = parseLat(i.getLat()), lonf = parseLon(i.getLon());
+
+        if (i.hasInfo()) {
+          Osmformat.Info info = i.getInfo();
+          tmp = new Node(id, info.getVersion(), getDate(info),
+              getUser(info), info.getChangeset(), tags, latf, lonf);
+        } else {
+          tmp = new Node(id, NOVERSION, NODATE, OsmUser.NONE,
+              NOCHANGESET, tags, latf, lonf);
+        }
+        sink.process(new NodeContainer(tmp));
+
+      }
+    }
     
     protected void parseDense(Osmformat.DenseNodes nodes) {
         long last_id = 0, last_lat = 0, last_lon = 0;
