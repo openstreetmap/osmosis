@@ -25,13 +25,18 @@ import crosby.binary.BinaryParser;
 import crosby.binary.Osmformat.DenseInfo;
 import crosby.binary.file.BlockReaderAdapter;
 
+/** Class that reads and parses binary files and sends the contained entities to the sink. */
 public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdapter {
 
+    @Override
     public void complete() {
         sink.complete();
         sink.release();
     }
 
+    /** Get the osmosis object representing a the user in a given Info protobuf.
+     * @param info The info protobuf.
+     * @return The OsmUser object */
     OsmUser getUser(Osmformat.Info info) {
         // System.out.println(info);
         if (info.hasUid() && info.hasUserSid())
@@ -40,16 +45,17 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
             return OsmUser.NONE;
     }
 
-    final int NOVERSION = -1;
-    final int NOCHANGESET = -1;
+    /** The magic number used to indicate no version number metadata for this entity. */
+    static final int NOVERSION = -1;
+    /** The magic number used to indicate no changeset metadata for this entity. */
+    static final int NOCHANGESET = -1;
 
-    
+    @Override
     protected void parseNodes(List<Osmformat.Node> nodes) {
       for (Osmformat.Node i : nodes) {
         List<Tag> tags = new ArrayList<Tag>();
         for (int j = 0; j < i.getKeysCount(); j++)
           tags.add(new Tag(getStringById(i.getKeys(j)), getStringById(i.getVals(j))));
-
         // long id, int version, Date timestamp, OsmUser user,
         // long changesetId, Collection<Tag> tags,
         // double latitude, double longitude
@@ -70,6 +76,7 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
       }
     }
     
+    @Override
     protected void parseDense(Osmformat.DenseNodes nodes) {
         long last_id = 0, last_lat = 0, last_lon = 0;
         
@@ -120,6 +127,7 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
         }
     }
 
+    @Override
     protected void parseWays(List<Osmformat.Way> ways) {
         for (Osmformat.Way i : ways) {
             List<Tag> tags = new ArrayList<Tag>();
@@ -151,6 +159,7 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
         }
     }
 
+    @Override
     protected void parseRelations(List<Osmformat.Relation> rels) {
         for (Osmformat.Relation i : rels) {
             List<Tag> tags = new ArrayList<Tag>();
@@ -195,6 +204,7 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
         }
     }
 
+    @Override
     public void parse(Osmformat.HeaderBlock block) {
         double multiplier = .000000001;
         double rightf = block.getBbox().getRight() * multiplier;
@@ -213,8 +223,11 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
         sink.process(new BoundContainer(bounds));
     }
 
-    public void setSink(Sink sink_) {
-        sink = sink_;
+    /** Set the sink which will be sent the data.
+     * @param sink 
+     * */
+    public void setSink(Sink sink) {
+       this.sink = sink;
     }
 
     private Sink sink;

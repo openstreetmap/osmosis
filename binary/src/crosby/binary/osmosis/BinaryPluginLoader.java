@@ -6,6 +6,7 @@ import java.util.Map;
 import org.openstreetmap.osmosis.core.plugin.PluginLoader;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
 
+/** Register the binary reading and writing functions. */
 public class BinaryPluginLoader implements PluginLoader {
   @Override
   public Map<String, TaskManagerFactory> loadTaskFactories() {

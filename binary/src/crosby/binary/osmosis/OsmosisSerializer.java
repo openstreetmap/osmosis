@@ -32,24 +32,31 @@ import crosby.binary.file.BlockOutputStream;
 import crosby.binary.file.FileBlock;
 
 public class OsmosisSerializer extends BinarySerializer implements Sink {
+  /** Additional configuration flag for whether to serialize into DenseNodes/DenseInfo? */
   protected boolean use_dense = true;
   
-  
+  /** Construct a serializer that writes to the target BlockOutputStream */
   public OsmosisSerializer(BlockOutputStream output) {
         super(output);
-    }
+  }
 
-    public void configUseDense(boolean use_dense) {
-      this.use_dense = use_dense;
-    }
+  /** Change the flag of whether to use the dense format. */
+  public void configUseDense(boolean use_dense) {
+    this.use_dense = use_dense;
+  }
 
+  /** Base class containing common code needed for serializing each type of primitives. */
     abstract class Prim<T extends Entity> {
-        ArrayList<T> contents = new ArrayList<T>();
+      /** Queue that tracks the list of all primitives. */
+      ArrayList<T> contents = new ArrayList<T>();
 
+      /** Add to the queue.
+       * @param item The entity to add */
         public void add(T item) {
             contents.add(item);
         }
 
+        /** Add all of the tags of all entities in the queue to the stringtable. */
         public void addStringsToStringtable() {
             StringTable stable = getStringTable();
             for (T i : contents) {
@@ -120,11 +127,12 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         /**
          *  Serialize all nodes in the 'dense' format.
          * 
-         * @param parentbuilder
+         * @param parentbuilder Add to this PrimitiveBlock.
          */
         public void serializeDense(Osmformat.PrimitiveBlock.Builder parentbuilder) {
             if (contents.size() == 0)
                 return;
+            }
             // System.out.format("%d Dense   ",nodes.size());
             Osmformat.PrimitiveGroup.Builder builder = Osmformat.PrimitiveGroup
                     .newBuilder();
@@ -169,6 +177,11 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
             parentbuilder.addPrimitivegroup(builder);
         }
         
+        /**
+         *  Serialize all nodes in the non-dense format.
+         * 
+         * @param parentbuilder Add to this PrimitiveBlock.
+         */
         public void serializeNonDense(
             Osmformat.PrimitiveBlock.Builder parentbuilder) {
           if (contents.size() == 0)

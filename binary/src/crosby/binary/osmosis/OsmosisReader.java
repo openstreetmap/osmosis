@@ -8,8 +8,14 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
 import crosby.binary.file.BlockInputStream;
 
+/** Glue code that implements a task that connects an InputStream a containing binary-format data to a Sink. 
+ * @author crosby
+ *
+ */
 public class OsmosisReader implements RunnableSource {
-
+    /** Make a reader based on a target input stream. 
+     * @param input 
+     */
     OsmosisReader(InputStream input) {
         if (input == null)
             throw new Error("Null input");
@@ -31,7 +37,8 @@ public class OsmosisReader implements RunnableSource {
             e.printStackTrace();
         }
     }
-
+    /** Store the input stream we're using. */
     InputStream input;
+    /** The binary parser object. */
     OsmosisBinaryParser parser;
 }
