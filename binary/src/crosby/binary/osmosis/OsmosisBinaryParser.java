@@ -3,6 +3,7 @@ package crosby.binary.osmosis;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
@@ -160,11 +161,11 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
         double bottomf = block.getBbox().getBottom() * multiplier;
 
         for (String s : block.getRequiredFeaturesList()) {
-            if (s.equals("DenseNodes")) continue; // OK.
+            if (s.equals("OsmSchema-V0.6")) continue; // OK.
             throw new Error("File requires unknown feature: " + s);
         }
         
-        String source = "http://www.openstreetmap.org/api/0.6";
+        String source = OsmosisConstants.VERSION;
         Bound bounds = new Bound(rightf, leftf, topf, bottomf, source);
         sink.process(new BoundContainer(bounds));
     }

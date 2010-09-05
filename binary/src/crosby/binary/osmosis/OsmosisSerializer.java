@@ -287,7 +287,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         bbox.setTop(mapRawDegrees(entity.getTop()));
 
         headerblock.setBbox(bbox);
-        headerblock.addRequiredFeatures("DenseNodes");
+        headerblock.addRequiredFeatures("OsmSchema-V0.6");
         Osmformat.HeaderBlock message = headerblock.build();
         try {
             output.write(FileBlock.newInstance("OSMHeader", message
