@@ -204,7 +204,8 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
 
         for (String s : block.getRequiredFeaturesList()) {
             if (s.equals("OsmSchema-V0.6")) continue; // OK.
-            throw new Error("File requires unknown feature: " + s);
+            if (s.equals("DenseNodes")) continue; // OK.
+           throw new Error("File requires unknown feature: " + s);
         }
         
         String source = OsmosisConstants.VERSION;

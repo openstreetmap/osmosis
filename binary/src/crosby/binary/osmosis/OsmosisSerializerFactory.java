@@ -38,6 +38,8 @@ public class OsmosisSerializerFactory extends TaskManagerFactory {
                     "batchlimit", 8000));
             task.configOmit(this.getBooleanArgument(taskConfig, "omitmetadata",
                     false));
+            task.configUseDense(this.getBooleanArgument(taskConfig, "usedense",
+                true));
             task.configGranularity(this.getIntegerArgument(taskConfig,
                     "granularity", 100));
 

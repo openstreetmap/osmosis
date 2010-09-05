@@ -32,8 +32,15 @@ import crosby.binary.file.BlockOutputStream;
 import crosby.binary.file.FileBlock;
 
 public class OsmosisSerializer extends BinarySerializer implements Sink {
-    public OsmosisSerializer(BlockOutputStream output) {
+  protected boolean use_dense = true;
+  
+  
+  public OsmosisSerializer(BlockOutputStream output) {
         super(output);
+    }
+
+    public void configUseDense(boolean use_dense) {
+      this.use_dense = use_dense;
     }
 
     abstract class Prim<T extends Entity> {
@@ -103,12 +110,19 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
 
     class NodeGroup extends Prim<Node> implements PrimGroupWriterInterface {
 
+      public void serialize(Osmformat.PrimitiveBlock.Builder parentbuilder) {
+          if (use_dense) 
+            serializeDense(parentbuilder);
+          else
+            serializeNonDense(parentbuilder);
+      }
+        
         /**
          *  Serialize all nodes in the 'dense' format.
          * 
          * @param parentbuilder
          */
-        public void serialize(Osmformat.PrimitiveBlock.Builder parentbuilder) {
+        public void serializeDense(Osmformat.PrimitiveBlock.Builder parentbuilder) {
             if (contents.size() == 0)
                 return;
             // System.out.format("%d Dense   ",nodes.size());
@@ -156,14 +170,14 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         }
         
         public void serializeNonDense(
-            Osmformat.PrimitiveBlock.Builder parentbuilder, List<Node> nodes) {
-          if (nodes.size() == 0)
+            Osmformat.PrimitiveBlock.Builder parentbuilder) {
+          if (contents.size() == 0)
             return;
           // System.out.format("%d Nodes   ",nodes.size());
           StringTable stable = getStringTable();
           Osmformat.PrimitiveGroup.Builder builder = Osmformat.PrimitiveGroup
           .newBuilder();
-          for (Node i : nodes) {
+          for (Node i : contents) {
             long id = i.getId();
             int lat = mapDegrees(i.getLatitude());
             int lon = mapDegrees(i.getLongitude());
@@ -362,6 +376,8 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
 
         headerblock.setBbox(bbox);
         headerblock.addRequiredFeatures("OsmSchema-V0.6");
+        if (use_dense)
+          headerblock.addRequiredFeatures("DenseNodes");
         Osmformat.HeaderBlock message = headerblock.build();
         try {
             output.write(FileBlock.newInstance("OSMHeader", message
