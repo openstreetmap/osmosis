@@ -1,7 +1,6 @@
 package crosby.binary.osmosis;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
@@ -19,13 +18,9 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-
 import crosby.binary.Osmformat;
 import crosby.binary.BinaryParser;
 import crosby.binary.file.BlockReaderAdapter;
-import crosby.binary.file.FileBlock;
-import crosby.binary.file.FileBlockPosition;
 
 public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdapter {
 
