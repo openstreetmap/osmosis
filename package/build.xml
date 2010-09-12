@@ -31,8 +31,9 @@
 				<exclude name="build*.xml"/>
 				<exclude name="ivy.xml"/>
 				<exclude name=".*"/>
+				<exclude name="bin/*"/>
 			</tarfileset>
-			<tarfileset prefix="${project.name}-${project.version}" dir="." mode="755">
+			<tarfileset prefix="osmosis-${project.version}" dir="." mode="755">
 				<include name="bin/*"/>
 			</tarfileset>
 		</tar>
