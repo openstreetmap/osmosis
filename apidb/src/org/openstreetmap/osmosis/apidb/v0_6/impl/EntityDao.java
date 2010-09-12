@@ -436,6 +436,8 @@ public abstract class EntityDao<T extends Entity> {
 		
 		namedParamJdbcTemplate.update(sql.toString(), parameterSource);
 		
+		jdbcTemplate.update("ALTER TABLE ONLY " + selectedEntityTableName
+				+ " ADD CONSTRAINT pk_" + selectedEntityTableName + " PRIMARY KEY (id, version)");
 		jdbcTemplate.update("ANALYZE " + selectedEntityTableName);
 		
 		if (LOG.isLoggable(Level.FINER)) {
