@@ -233,6 +233,8 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
         }
         
         String source = OsmosisConstants.VERSION;
+        if (block.hasSource())
+          source = block.getSource();
         Bound bounds = new Bound(rightf, leftf, topf, bottomf, source);
         sink.process(new BoundContainer(bounds));
     }
