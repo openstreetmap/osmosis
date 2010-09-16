@@ -118,11 +118,11 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
 
     class NodeGroup extends Prim<Node> implements PrimGroupWriterInterface {
 
-      public void serialize(Osmformat.PrimitiveBlock.Builder parentbuilder) {
+      public Osmformat.PrimitiveGroup serialize() {
           if (use_dense) 
-            serializeDense(parentbuilder);
+            return serializeDense();
           else
-            serializeNonDense(parentbuilder);
+            return serializeNonDense();
       }
         
         /**
@@ -130,9 +130,9 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
          * 
          * @param parentbuilder Add to this PrimitiveBlock.
          */
-        public void serializeDense(Osmformat.PrimitiveBlock.Builder parentbuilder) {
+        public Osmformat.PrimitiveGroup serializeDense() {
             if (contents.size() == 0) {
-              return;
+              return null;
             }
             // System.out.format("%d Dense   ",nodes.size());
             Osmformat.PrimitiveGroup.Builder builder = Osmformat.PrimitiveGroup
@@ -175,7 +175,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
                 }
             }
             builder.setDense(bi);
-            parentbuilder.addPrimitivegroup(builder);
+            return builder.build();
         }
         
         /**
@@ -183,10 +183,9 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
          * 
          * @param parentbuilder Add to this PrimitiveBlock.
          */
-        public void serializeNonDense(
-            Osmformat.PrimitiveBlock.Builder parentbuilder) {
+        public Osmformat.PrimitiveGroup serializeNonDense() {
           if (contents.size() == 0) {
-            return;
+            return null;
           }
           // System.out.format("%d Nodes   ",nodes.size());
           StringTable stable = getStringTable();
@@ -209,7 +208,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
             }
             builder.addNodes(bi);
           }
-          parentbuilder.addPrimitivegroup(builder);
+          return builder.build();
         }
     
     }
@@ -217,7 +216,10 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
     
 
     class WayGroup extends Prim<Way> implements PrimGroupWriterInterface {
-        public void serialize(Osmformat.PrimitiveBlock.Builder parentbuilder) {
+      public Osmformat.PrimitiveGroup serialize() {
+        if (contents.size() == 0)
+          return null;
+
             // System.out.format("%d Ways  ",contents.size());
             StringTable stable = getStringTable();
             Osmformat.PrimitiveGroup.Builder builder = Osmformat.PrimitiveGroup
@@ -242,7 +244,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
                 }
                 builder.addWays(bi);
             }
-            parentbuilder.addPrimitivegroup(builder);
+            return builder.build();
         }
     }
 
@@ -256,8 +258,11 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
                     stable.incr(j.getMemberRole());
         }
 
-        public void serialize(Osmformat.PrimitiveBlock.Builder parentbuilder) {
-            // System.out.format("%d Relations  ",contents.size());
+        public Osmformat.PrimitiveGroup serialize() {
+          if (contents.size() == 0)
+            return null;
+
+          // System.out.format("%d Relations  ",contents.size());
             StringTable stable = getStringTable();
             Osmformat.PrimitiveGroup.Builder builder = Osmformat.PrimitiveGroup
                     .newBuilder();
@@ -293,7 +298,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
                 }
                 builder.addRelations(bi);
             }
-            parentbuilder.addPrimitivegroup(builder);
+            return builder.build();
         }
     }
 
