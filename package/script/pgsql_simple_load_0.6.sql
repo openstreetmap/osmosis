@@ -17,12 +17,9 @@ SELECT DropGeometryColumn('ways', 'linestring');
 -- Import the table data from the data files using the fast COPY method.
 \copy users FROM 'users.txt'
 \copy nodes FROM 'nodes.txt'
-\copy node_tags FROM 'node_tags.txt'
 \copy ways FROM 'ways.txt'
-\copy way_tags FROM 'way_tags.txt'
 \copy way_nodes FROM 'way_nodes.txt'
 \copy relations FROM 'relations.txt'
-\copy relation_tags FROM 'relation_tags.txt'
 \copy relation_members FROM 'relation_members.txt'
 
 -- Add the primary keys and indexes back again (except the way bbox index).
@@ -53,14 +50,15 @@ UPDATE ways w SET linestring = (
 		FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id
 		WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id
 	) c
-)
+);
 
 -- Index the way bounding box column.
 CREATE INDEX idx_ways_bbox ON ways USING gist (bbox);
 CREATE INDEX idx_ways_linestring ON ways USING gist (linestring);
 
 -- Update all clustered tables because it doesn't happen implicitly.
-CLUSTER;
+CLUSTER nodes USING idx_nodes_geom;
+CLUSTER ways USING idx_ways_linestring;
 
 -- Perform database maintenance due to large database changes.
 VACUUM ANALYZE;
