@@ -315,7 +315,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			// the selected nodes.
 			rowCount = jdbcTemplate.update(
 				"CREATE TEMPORARY TABLE bbox_ways ON COMMIT DROP AS"
-					+ " SELECT w.id, w.version, w.user_id, w.tstamp, w.changeset_id, w.tags FROM ways w"
+					+ " SELECT w.* FROM ways w"
 					+ " INNER JOIN ("
 					+ " SELECT wn.way_id FROM way_nodes wn"
 					+ " INNER JOIN bbox_nodes n ON wn.node_id = n.id GROUP BY wn.way_id"
