@@ -30,6 +30,6 @@ fi
 
 # invoke osmosis to calculate the replication lag
 lag=$($osmosis --read-replication-lag workingDirectory="$workingDirectory" 2>/dev/null)
-echo "lag.value=$lag"
+echo "lag.value $lag"
 
 exit 0

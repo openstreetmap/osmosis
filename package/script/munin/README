@@ -1,7 +1,7 @@
 to activate the munin plugins
- - copy "osm-replication-lag" to "/usr/share/munin/plugins"
- - make "/usr/share/munin/plugins/osm-replication-lag" executable
- - symlink "/usr/share/munin/plugins/osm-replication-lag" to "/etc/munin/plugins"
- - copy "osm-replication.conf" to "/etc/munin/plugin-conf.d"
- - edit "/etc/munin/plugin-conf.d/osm-replication.conf" and set the workingDirectory
+ - copy "osm_replication_lag" to "/usr/share/munin/plugins"
+ - make "/usr/share/munin/plugins/osm_replication_lag" executable
+ - symlink "/usr/share/munin/plugins/osm_replication_lag" to "/etc/munin/plugins"
+ - copy "osm_replication.conf" to "/etc/munin/plugin-conf.d"
+ - edit "/etc/munin/plugin-conf.d/osm_replication.conf" and set the workingDirectory
  - restart the munin-node
