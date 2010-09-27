@@ -1,3 +1,4 @@
+// This software is released into the Public Domain.  See copying.txt for details.
 package crosby.binary.osmosis;
 
 import java.util.ArrayList;
@@ -20,13 +21,12 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
-import crosby.binary.Osmformat;
 import crosby.binary.BinaryParser;
+import crosby.binary.Osmformat;
 import crosby.binary.Osmformat.DenseInfo;
-import crosby.binary.file.BlockReaderAdapter;
 
 /** Class that reads and parses binary files and sends the contained entities to the sink. */
-public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdapter {
+public class OsmosisBinaryParser extends BinaryParser {
 
     @Override
     public void complete() {
@@ -80,13 +80,13 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
     
     @Override
     protected void parseDense(Osmformat.DenseNodes nodes) {
-        long last_id = 0, last_lat = 0, last_lon = 0;
+        long lastId = 0, lastLat = 0, lastLon = 0;
         
         int j = 0; // Index into the keysvals array.
 
         // Stuff for dense info
         long lasttimestamp = 0, lastchangeset = 0;
-        int lastuser_sid = 0, lastuid = 0;
+        int lastuserSid = 0, lastuid = 0;
         DenseInfo di = null;
         if (nodes.hasDenseinfo()) {
           di = nodes.getDenseinfo();
@@ -94,12 +94,12 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
         for (int i = 0; i < nodes.getIdCount(); i++) {
             Node tmp;
             List<Tag> tags = new ArrayList<Tag>(0);
-            long lat = nodes.getLat(i) + last_lat;
-            last_lat = lat;
-            long lon = nodes.getLon(i) + last_lon;
-            last_lon = lon;
-            long id = nodes.getId(i) + last_id;
-            last_id = id;
+            long lat = nodes.getLat(i) + lastLat;
+            lastLat = lat;
+            long lon = nodes.getLon(i) + lastLon;
+            lastLon = lon;
+            long id = nodes.getId(i) + lastId;
+            lastId = id;
             double latf = parseLat(lat), lonf = parseLon(lon);
             // If empty, assume that nothing here has keys or vals.
             if (nodes.getKeysValsCount() > 0) {
@@ -112,18 +112,18 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
             }
             if (di != null) {
               int uid = di.getUid(i) + lastuid; lastuid = uid;
-              int user_sid = di.getUserSid(i) + lastuser_sid; lastuser_sid = user_sid;
+              int userSid = di.getUserSid(i) + lastuserSid; lastuserSid = userSid;
               long timestamp = di.getTimestamp(i) + lasttimestamp; lasttimestamp = timestamp;
               int version = di.getVersion(i); 
               long changeset = di.getChangeset(i) + lastchangeset; lastchangeset = changeset;
 
-              Date date = new Date(date_granularity * (long) timestamp);
+              Date date = new Date(date_granularity * timestamp);
 
               OsmUser user;
               if (uid == -1) {
                 user = OsmUser.NONE;
               } else {
-                user = new OsmUser(uid, getStringById(user_sid));
+                user = new OsmUser(uid, getStringById(userSid));
               }
             tmp = new Node(id, version, date, user, changeset, tags, latf, lonf);
             } else {
@@ -142,11 +142,11 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
                 tags.add(new Tag(getStringById(i.getKeys(j)), getStringById(i.getVals(j))));
             }
                 
-            long last_id = 0;
+            long lastId = 0;
             List<WayNode> nodes = new ArrayList<WayNode>();
             for (long j : i.getRefsList()) {
-                nodes.add(new WayNode(j + last_id));
-                last_id = j + last_id;
+                nodes.add(new WayNode(j + lastId));
+                lastId = j + lastId;
             }
 
             long id = i.getId();
@@ -177,11 +177,11 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
 
             long id = i.getId();
 
-            long last_mid = 0;
+            long lastMid = 0;
             List<RelationMember> nodes = new ArrayList<RelationMember>();
             for (int j = 0; j < i.getMemidsCount(); j++) {
-                long mid = last_mid + i.getMemids(j);
-                last_mid = mid;
+                long mid = lastMid + i.getMemids(j);
+                lastMid = mid;
                 String role = getStringById(i.getRolesSid(j));
                 EntityType etype = null;
 
@@ -233,8 +233,9 @@ public class OsmosisBinaryParser extends BinaryParser implements BlockReaderAdap
         }
         
         String source = OsmosisConstants.VERSION;
-        if (block.hasSource())
-          source = block.getSource();
+        if (block.hasSource()) {
+        	source = block.getSource();
+        }
         Bound bounds = new Bound(rightf, leftf, topf, bottomf, source);
         sink.process(new BoundContainer(bounds));
     }

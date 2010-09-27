@@ -1,3 +1,4 @@
+// This software is released into the Public Domain.  See copying.txt for details.
 package crosby.binary.osmosis;
 
 import java.io.IOException;
@@ -34,16 +35,21 @@ import crosby.binary.file.FileBlock;
 
 public class OsmosisSerializer extends BinarySerializer implements Sink {
   /** Additional configuration flag for whether to serialize into DenseNodes/DenseInfo? */
-  protected boolean use_dense = true;
+  protected boolean useDense = true;
   
-  /** Construct a serializer that writes to the target BlockOutputStream */
+  /** Construct a serializer that writes to the target BlockOutputStream. */
   public OsmosisSerializer(BlockOutputStream output) {
         super(output);
   }
 
-  /** Change the flag of whether to use the dense format. */
-  public void configUseDense(boolean use_dense) {
-    this.use_dense = use_dense;
+  /**
+	 * Change the flag of whether to use the dense format.
+	 * 
+	 * @param useDense
+	 *            The new use dense value.
+	 */
+  public void setUseDense(boolean useDense) {
+    this.useDense = useDense;
   }
 
   /** Base class containing common code needed for serializing each type of primitives. */
@@ -73,32 +79,36 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         }
 
         public void serializeMetadataDense(DenseInfo.Builder b, List<? extends Entity> contents) {
-          if (omit_metadata) {
-            return;
-          }
+			if (omit_metadata) {
+				return;
+			}
 
-          long lasttimestamp = 0, lastchangeset = 0;
-          int lastuser_sid = 0, lastuid = 0;
-          StringTable stable = getStringTable();
-          for (Entity e : contents) {
+			long lasttimestamp = 0, lastchangeset = 0;
+			int lastuserSid = 0, lastuid = 0;
+			StringTable stable = getStringTable();
+			for (Entity e : contents) {
 
-            //if (e.getUser() != OsmUser.NONE) {
-            int uid = e.getUser().getId();
-            int user_sid = stable.getIndex(e.getUser().getName());
-            //}
-            int timestamp = (int)(e.getTimestamp().getTime() / date_granularity);
-            int version = e.getVersion();
-            long changeset = e.getChangesetId();
+				// if (e.getUser() != OsmUser.NONE) {
+				int uid = e.getUser().getId();
+				int userSid = stable.getIndex(e.getUser().getName());
+				// }
+				int timestamp = (int) (e.getTimestamp().getTime() / date_granularity);
+				int version = e.getVersion();
+				long changeset = e.getChangesetId();
 
-            b.addVersion(version);
-            b.addTimestamp(timestamp-lasttimestamp); lasttimestamp = timestamp;
-            b.addChangeset(changeset-lastchangeset); lastchangeset = changeset;
-            b.addUid(uid-lastuid); lastuid = uid;
-            b.addUserSid(user_sid-lastuser_sid); lastuser_sid = user_sid;
-          }
+				b.addVersion(version);
+				b.addTimestamp(timestamp - lasttimestamp);
+				lasttimestamp = timestamp;
+				b.addChangeset(changeset - lastchangeset);
+				lastchangeset = changeset;
+				b.addUid(uid - lastuid);
+				lastuid = uid;
+				b.addUserSid(userSid - lastuserSid);
+				lastuserSid = userSid;
+			}
         }
          
-       public Osmformat.Info.Builder serializeMetadata(Entity e) {
+        public Osmformat.Info.Builder serializeMetadata(Entity e) {
             StringTable stable = getStringTable();
             Osmformat.Info.Builder b = Osmformat.Info.newBuilder();
             if (omit_metadata) {
@@ -111,7 +121,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
                 b
                         .setTimestamp((int) (e.getTimestamp().getTime() / date_granularity));
                 b.setVersion(e.getVersion());
-                b.setChangeset((long) e.getChangesetId());
+                b.setChangeset(e.getChangesetId());
             }
             return b;
         }
@@ -120,7 +130,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
     class NodeGroup extends Prim<Node> implements PrimGroupWriterInterface {
 
       public Osmformat.PrimitiveGroup serialize() {
-          if (use_dense) 
+          if (useDense) 
             return serializeDense();
           else
             return serializeNonDense();
@@ -147,11 +157,9 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
             for (Node i : contents) {
               doesBlockHaveTags = doesBlockHaveTags || (!i.getTags().isEmpty());
             }
-            if (omit_metadata) {
-              ;// Nothing
-            } else {
+            if (!omit_metadata) {
               Osmformat.DenseInfo.Builder bdi = Osmformat.DenseInfo.newBuilder();
-              serializeMetadataDense(bdi,contents);
+              serializeMetadataDense(bdi, contents);
               bi.setDenseinfo(bdi);
             }
               
@@ -398,7 +406,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         
         headerblock.setBbox(bbox);
         headerblock.addRequiredFeatures("OsmSchema-V0.6");
-        if (use_dense)
+        if (useDense)
           headerblock.addRequiredFeatures("DenseNodes");
         Osmformat.HeaderBlock message = headerblock.build();
         try {

@@ -1,3 +1,4 @@
+// This software is released into the Public Domain.  See copying.txt for details.
 package crosby.binary.osmosis;
 
 import java.util.HashMap;

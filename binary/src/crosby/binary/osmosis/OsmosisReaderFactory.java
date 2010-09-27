@@ -1,3 +1,4 @@
+// This software is released into the Public Domain.  See copying.txt for details.
 package crosby.binary.osmosis;
 
 import java.io.File;
@@ -9,11 +10,7 @@ import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
 import org.openstreetmap.osmosis.core.pipeline.v0_6.RunnableSourceManager;
 
-/**
- * The task manager factory for an xml reader.
- * 
- * @author Brett Henderson
- */
+
 public class OsmosisReaderFactory extends TaskManagerFactory {
     private static final String ARG_FILE_NAME = "file";
     private static final String DEFAULT_FILE_NAME = "dump.osm";
