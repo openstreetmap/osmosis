@@ -16,7 +16,7 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.RunnableSourceManager;
  */
 public class OsmosisReaderFactory extends TaskManagerFactory {
     private static final String ARG_FILE_NAME = "file";
-    private static final String DEFAULT_FILE_NAME = "dump.osm";
+    private static final String DEFAULT_FILE_NAME = "dump.osmbin";
 
     /**
      * {@inheritDoc}
