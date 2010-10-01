@@ -11,6 +11,9 @@ import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
 import org.openstreetmap.osmosis.core.pipeline.v0_6.RunnableSourceManager;
 
 
+/**
+ * The task manager factory for a binary (PBF) reader.
+ */
 public class OsmosisReaderFactory extends TaskManagerFactory {
     private static final String ARG_FILE_NAME = "file";
     private static final String DEFAULT_FILE_NAME = "dump.osm";

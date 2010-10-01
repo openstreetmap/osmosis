@@ -12,6 +12,9 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkManager;
 
 import crosby.binary.file.BlockOutputStream;
 
+/**
+ * The task manager factory for a binary (PBF) writer.
+ */
 public class OsmosisSerializerFactory extends TaskManagerFactory {
     private static final String ARG_FILE_NAME = "file";
     private static final String DEFAULT_FILE_NAME = "dump.osmbin";
