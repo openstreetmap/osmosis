@@ -295,14 +295,15 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			rowCount = jdbcTemplate.update(
 				"CREATE TEMPORARY TABLE bbox_ways ON COMMIT DROP AS"
 					+ " SELECT w.* FROM ("
-					+ "SELECT c.id, c.version, c.user_id, c.tstamp, c.changeset_id, c.tags,"
-					+ " MakeLine(c.geom) AS way_line FROM ("
+					+ "SELECT c.id AS id, First(c.version) AS version, First(c.user_id) AS user_id,"
+					+ " First(c.tstamp) AS tstamp, First(c.changeset_id) AS changeset_id, First(c.tags) AS tags,"
+					+ " First(c.nodes) AS nodes, MakeLine(c.geom) AS way_line FROM ("
 					+ "SELECT w.*, n.geom AS geom FROM nodes n"
 					+ " INNER JOIN way_nodes wn ON n.id = wn.node_id"
 					+ " INNER JOIN ways w ON wn.way_id = w.id"
 					+ " WHERE (w.bbox && ?) ORDER BY wn.way_id, wn.sequence_id"
 					+ ") c "
-					+ "GROUP BY c.id, c.version, c.user_id, c.tstamp, c.changeset_id, c.tags"
+					+ "GROUP BY c.id"
 					+ ") w "
 					+ "WHERE (w.way_line && ?)",
 					new PGgeometry(bboxPolygon),
