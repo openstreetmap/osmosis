@@ -14,13 +14,15 @@ public class BinaryPluginLoader implements PluginLoader {
           Map<String, TaskManagerFactory> factoryMap;
           
           factoryMap = new HashMap<String, TaskManagerFactory>();
+          factoryMap.put("read-pbf", new OsmosisReaderFactory());
           factoryMap.put("read-bin", new OsmosisReaderFactory());
           factoryMap.put("rb", new OsmosisReaderFactory());
+          factoryMap.put("write-pbf", new OsmosisSerializerFactory());
           factoryMap.put("write-bin", new OsmosisSerializerFactory());
           factoryMap.put("wb", new OsmosisReaderFactory());
 
-          factoryMap.put("read-bin-0.6", new OsmosisReaderFactory());
-          factoryMap.put("write-bin-0.6", new OsmosisSerializerFactory());
+          factoryMap.put("read-pbf-0.6", new OsmosisReaderFactory());
+          factoryMap.put("write-pbf-0.6", new OsmosisSerializerFactory());
           return factoryMap;
     }
   } 
