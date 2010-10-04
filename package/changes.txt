@@ -1,8 +1,10 @@
 0.37
 Updated the pgsql schema (now version 6) to move all tags into hstore columns, add a ways.nodes column and CLUSTER the nodes and ways tables.  Significant performance increases.
 Fixed a bug in --bounding-box and --bounding-polygon preventing use of clipIncompleteEntities after a --tee task.
-Added --read-bin and --write-bin tasks supporting the new binary data format.
+Added --read-pbf and --write-pbf tasks supporting the new Google Protocol Buffer based binary data format.
 Added a new --flatten task for removing multiple versions of single entities from an entity stream.
+Fixed bugs in the --bounding-box and --bounding-polygon idTrackerType=Dynamic option.
+Enhanced the apidb replication read queries by adding temp table primary keys to fix performance regressions with PostgreSQL 8.4.
 
 0.36
 Removed 0.5 support.
