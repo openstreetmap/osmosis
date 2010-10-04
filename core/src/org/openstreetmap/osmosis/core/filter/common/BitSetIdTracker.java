@@ -61,14 +61,17 @@ public class BitSetIdTracker implements IdTracker {
 	 */
 	public boolean get(long id) {
 		int intId;
+		boolean result;
 		
 		intId = LongAsInt.longToInt(id);
 		
 		if (intId >= 0) {
-			return positiveSet.get(intId);
+			result = positiveSet.get(intId);
 		} else {
-			return negativeSet.get(intId);
+			result = negativeSet.get(intId);
 		}
+		
+		return result;
 	}
 	
 	

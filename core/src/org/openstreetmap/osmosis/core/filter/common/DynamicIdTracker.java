@@ -72,7 +72,7 @@ public class DynamicIdTracker implements IdTracker {
 			if (intervalSize == 0) {
 				if (createIfMissing) {
 					segment = new DynamicIdTrackerSegment(base);
-					segments.add(segment);
+					segments.add(intervalBegin, segment);
 				}
 				
 				searchComplete = true;
@@ -197,6 +197,7 @@ public class DynamicIdTracker implements IdTracker {
 	private static class SegmentIdIterator implements Iterator<Long> {
 		private Iterator<DynamicIdTrackerSegment> segments;
 		private Iterator<Long> currentSegmentIds;
+		private int currentSegmentBase;
 		
 		
 		/**
@@ -218,7 +219,10 @@ public class DynamicIdTracker implements IdTracker {
 			for (;;) {
 				if (currentSegmentIds == null) {
 					if (segments.hasNext()) {
-						currentSegmentIds = segments.next().iterator();
+						DynamicIdTrackerSegment segment = segments.next();
+						
+						currentSegmentIds = segment.iterator();
+						currentSegmentBase = segment.getBase();
 					} else {
 						return false;
 					}
@@ -239,7 +243,7 @@ public class DynamicIdTracker implements IdTracker {
 		@Override
 		public Long next() {
 			if (hasNext()) {
-				return currentSegmentIds.next();
+				return currentSegmentIds.next() + currentSegmentBase;
 				
 			} else {
 				throw new NoSuchElementException();
