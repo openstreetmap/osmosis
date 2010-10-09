@@ -6,7 +6,7 @@
 	<import file="${build-support.dir}/script/build-java.xml"/>
 	
 	<!-- Override the normal build to perform some pre-compilation steps. -->
-	<target name="build" depends="_update_version, _build"/>
+	<target name="build" depends="init, _update_version, _build"/>
 	
 	<target name="_update_version" description="Modifies some source code files to include the project version.">
 		<!-- Update the version number in the main class. -->
