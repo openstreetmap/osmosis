@@ -4,4 +4,28 @@
 	<!-- Include common java build. -->
 	<property name="build-support.dir" location="../build-support"/>
 	<import file="${build-support.dir}/script/build-java.xml"/>
+	
+	<!-- Override the normal build to perform some pre-compilation steps. -->
+	<target name="build" depends="_build, _update_version"/>
+	
+	<target name="_update_version" description="Modifies some source code files to include the project version.">
+		<!-- Update the version number in the main class. -->
+		<copy file="src/org/openstreetmap/osmosis/core/OsmosisConstants.java.template"
+			tofile="src/org/openstreetmap/osmosis/core/OsmosisConstants.java"/>
+		<replaceregexp
+			byline="true"
+			file="src/org/openstreetmap/osmosis/core/OsmosisConstants.java"
+			match="String VERSION = &quot;(.*)&quot;"
+			replace="String VERSION = &quot;${project.version}&quot;"
+		/>
+		<!-- Update the version number in the plugin descriptor. -->
+		<copy file="src/org/openstreetmap/osmosis/core/plugin/plugin.xml.template"
+			tofile="src/org/openstreetmap/osmosis/core/plugin/plugin.xml"/>
+		<replaceregexp
+			byline="true"
+			file="src/org/openstreetmap/osmosis/core/plugin/plugin.xml"
+			match="id=&quot;org.openstreetmap.osmosis.core.plugin.Core&quot; version=&quot;(.*)&quot;"
+			replace="id=&quot;org.openstreetmap.osmosis.core.plugin.Core&quot; version=&quot;${project.version}&quot;"
+		/>
+	</target>
 </project>

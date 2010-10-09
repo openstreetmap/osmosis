@@ -23,19 +23,6 @@
 	</path>
 	
 	<target name="build_src" depends="resolve" description="Compile source code into class files.">
-		<!-- Update the version number in the main class. -->
-		<replaceregexp
-			byline="true"
-			file="src/org/openstreetmap/osmosis/core/OsmosisConstants.java"
-			match="String VERSION = &quot;(.*)&quot;"
-			replace="String VERSION = &quot;${project.version}&quot;"
-		/>
-		<replaceregexp
-					byline="true"
-					file="src/org/openstreetmap/osmosis/core/plugin/plugin.xml"
-					match="id=&quot;org.openstreetmap.osmosis.core.plugin.Core&quot; version=&quot;(.*)&quot;"
-					replace="id=&quot;org.openstreetmap.osmosis.core.plugin.Core&quot; version=&quot;${project.version}&quot;"
-				/>
 		<!-- Create the build directory structure. -->
 		<mkdir dir="build"/>
 		<mkdir dir="build/src"/>
@@ -77,7 +64,7 @@
 		</copy>
 	</target>
 	
-	<target name="build_binary" depends="build_src" description="Generates the binaries for the distribution.">
+	<target name="_build" depends="build_src" description="Generates the binaries for the distribution.">
 		<!-- Create the binary directory -->
 		<mkdir dir="build/binary"/>
 		
@@ -151,12 +138,7 @@
 		<fail message="One or more junit tests failed." if="test.failure" />
 	</target>
 	
-	<target name="build" depends="build_binary"/>
-	
-	<!-- Executes all major build targets. -->
-	<target name="all" depends="build, checkstyle, test, publish"/>
-	
-	<target name="clean" description="Clean up the project tree.">
+	<target name="_clean">
 		<!-- Delete ivy resolved libraries. -->
 		<delete dir="lib"/>
 		<!-- Delete the generated directory trees. -->
@@ -172,4 +154,9 @@
 			</fileset>
 		</delete>
 	</target>
+	
+	<!-- Public Targets -->
+	<target name="all" depends="build, checkstyle, test, publish" description="Executes all major build targets."/>
+	<target name="clean" depends="_clean" description="Clean up the project tree."/>
+	<target name="build" depends="_build" description="Builds the main project target."/>
 </project>

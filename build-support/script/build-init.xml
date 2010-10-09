@@ -9,17 +9,29 @@
 		<!-- Create the time stamp -->
 		<tstamp/>
 
+		<!-- Create the build directory. -->
+		<mkdir dir="build"/>
+
 		<!-- Load properties file defining configuration settings for the build. -->
 		<property name="build.properties" location="${build-support.dir}/config/ant-build.properties"/>
 		<property name="build-common.properties" location="${build-support.dir}/config/ant-build-common.properties"/>
 		<loadproperties srcFile="${build.properties}"/>
 		<loadproperties srcFile="${build-common.properties}"/>
 
+		<!-- Determine the SVN revision number. -->
+		<property name="svn.basedir" location="${basedir}/.."/>
+		<exec executable="svnversion" output="build/version.txt" failonerror="true">
+			<arg value="-n"/>
+			<arg value="${svn.basedir}"/>
+		</exec>
+		<replace file="build/version.txt" token=":" value="-"/>
+		<loadfile property="svn.version" srcfile="build/version.txt"/>
+
 		<!--
-			Build the project version based on the prefix (defined in properties file) and suffix
-			which is optionally provided by the build environment.
+			Build the project version.
+			It is assumed to be a development snapshot version.
+			Release versions will be overridden explicitly.
 		-->
-		<property name="project.version.suffix" value=""/> <!-- Can be overridden to include extra info such as svn revision number. -->
-		<property name="project.version" value="${project.version.prefix}${project.version.suffix}" />
+		<property name="project.version" value="SNAPSHOT-r${svn.version}"/>
 	</target>
 </project>
