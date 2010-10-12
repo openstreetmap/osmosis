@@ -51,8 +51,7 @@ public class OsmosisSerializerFactory extends TaskManagerFactory {
                     "deflate"));
 
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new Error("Failed to initialize Osmosis pbf serializer.",e);
         }
 
         return new SinkManager(taskConfig.getId(), task, taskConfig
