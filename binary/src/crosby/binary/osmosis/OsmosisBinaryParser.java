@@ -40,6 +40,8 @@ public class OsmosisBinaryParser extends BinaryParser {
     OsmUser getUser(Osmformat.Info info) {
         // System.out.println(info);
         if (info.hasUid() && info.hasUserSid()) {
+            if (info.getUid()< 0)
+              return OsmUser.NONE;
             return new OsmUser(info.getUid(), getStringById(info.getUserSid()));
         } else {
             return OsmUser.NONE;
@@ -120,7 +122,7 @@ public class OsmosisBinaryParser extends BinaryParser {
               Date date = new Date(date_granularity * timestamp);
 
               OsmUser user;
-              if (uid == -1) {
+              if (uid < 0) {
                 user = OsmUser.NONE;
               } else {
                 user = new OsmUser(uid, getStringById(userSid));
