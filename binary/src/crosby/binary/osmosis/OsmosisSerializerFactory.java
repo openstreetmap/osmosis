@@ -17,7 +17,7 @@ import crosby.binary.file.BlockOutputStream;
  */
 public class OsmosisSerializerFactory extends TaskManagerFactory {
     private static final String ARG_FILE_NAME = "file";
-    private static final String DEFAULT_FILE_NAME = "dump.osmbin";
+    private static final String DEFAULT_FILE_NAME = "dump.osm.pbf";
 
     @Override
     protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
