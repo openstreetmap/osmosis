@@ -36,7 +36,9 @@ import crosby.binary.file.FileBlock;
 public class OsmosisSerializer extends BinarySerializer implements Sink {
   /** Additional configuration flag for whether to serialize into DenseNodes/DenseInfo? */
   protected boolean useDense = true;
-  
+
+  static int warncount = 0;
+
   /** Construct a serializer that writes to the target BlockOutputStream. */
   public OsmosisSerializer(BlockOutputStream output) {
         super(output);
@@ -77,7 +79,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
                 }
             }
         }
-
+        final static int MAXWARN = 100;
         public void serializeMetadataDense(DenseInfo.Builder b, List<? extends Entity> contents) {
 			if (omit_metadata) {
 				return;
@@ -88,10 +90,12 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
 			StringTable stable = getStringTable();
 			for (Entity e : contents) {
 
-				// if (e.getUser() != OsmUser.NONE) {
+            if (e.getUser() == OsmUser.NONE && warncount  < MAXWARN) {
+              System.out.println("Attention: Data being output lacks metadata. Please use omitmetadata=true");              
+              warncount++;
+            }
 				int uid = e.getUser().getId();
 				int userSid = stable.getIndex(e.getUser().getName());
-				// }
 				int timestamp = (int) (e.getTimestamp().getTime() / date_granularity);
 				int version = e.getVersion();
 				long changeset = e.getChangesetId();
@@ -114,6 +118,10 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
             if (omit_metadata) {
                 // Nothing
             } else {
+                if (e.getUser() == OsmUser.NONE && warncount  < MAXWARN) {
+                  System.out.println("Attention: Data being output lacks metadata. Please use omitmetadata=true");              
+                  warncount++;
+                }
                 if (e.getUser() != OsmUser.NONE) {
                     b.setUid(e.getUser().getId());
                     b.setUserSid(stable.getIndex(e.getUser().getName()));
