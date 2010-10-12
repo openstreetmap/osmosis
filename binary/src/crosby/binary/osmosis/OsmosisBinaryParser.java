@@ -112,6 +112,7 @@ public class OsmosisBinaryParser extends BinaryParser {
                 }
                 j++; // Skip over the '0' delimiter.
             }
+            // Handle dense info.
             if (di != null) {
               int uid = di.getUid(i) + lastuid; lastuid = uid;
               int userSid = di.getUserSid(i) + lastuserSid; lastuserSid = userSid;

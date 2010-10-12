@@ -126,8 +126,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
                     b.setUid(e.getUser().getId());
                     b.setUserSid(stable.getIndex(e.getUser().getName()));
                 }
-                b
-                        .setTimestamp((int) (e.getTimestamp().getTime() / date_granularity));
+                b.setTimestamp((int) (e.getTimestamp().getTime() / date_granularity));
                 b.setVersion(e.getVersion());
                 b.setChangeset(e.getChangesetId());
             }
