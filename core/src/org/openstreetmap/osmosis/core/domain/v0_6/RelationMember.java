@@ -5,7 +5,6 @@ import org.openstreetmap.osmosis.core.store.StoreClassRegister;
 import org.openstreetmap.osmosis.core.store.StoreReader;
 import org.openstreetmap.osmosis.core.store.StoreWriter;
 import org.openstreetmap.osmosis.core.store.Storeable;
-import org.openstreetmap.osmosis.core.util.LongAsInt;
 
 
 /**
@@ -15,7 +14,7 @@ import org.openstreetmap.osmosis.core.util.LongAsInt;
  */
 public class RelationMember implements Comparable<RelationMember>, Storeable {
 	
-	private int memberId;
+	private long memberId;
 	private EntityType memberType;
 	private String memberRole;
 	
@@ -31,7 +30,7 @@ public class RelationMember implements Comparable<RelationMember>, Storeable {
 	 *            The role that this member forms within the relation.
 	 */
 	public RelationMember(long memberId, EntityType memberType, String memberRole) {
-		this.memberId = LongAsInt.longToInt(memberId);
+		this.memberId = memberId;
 		this.memberType = memberType;
 		this.memberRole = memberRole;
 		if (memberType == null) {
@@ -54,7 +53,7 @@ public class RelationMember implements Comparable<RelationMember>, Storeable {
 	 */
 	public RelationMember(StoreReader sr, StoreClassRegister scr) {
 		this(
-			sr.readInteger(),
+			sr.readLong(),
 			EntityType.valueOf(sr.readString()),
 			sr.readString()
 		);
@@ -65,7 +64,7 @@ public class RelationMember implements Comparable<RelationMember>, Storeable {
 	 * {@inheritDoc}
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
-		sw.writeInteger(memberId);
+		sw.writeLong(memberId);
 		sw.writeString(memberType.toString());
 		sw.writeString(memberRole);
 	}

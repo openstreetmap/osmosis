@@ -6,8 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.openstreetmap.osmosis.core.util.LongAsInt;
-
 
 /**
  * Implements the IdTracker interface using a combination of BitSet and ListId trackers. It breaks
@@ -33,10 +31,12 @@ public class DynamicIdTracker implements IdTracker {
 	}
 	
 	
-	private int calculateOffset(int id) {
+	private int calculateOffset(long id) {
 		int offset;
 		
-		offset = id % SEGMENT_SIZE;
+		// A long modulo an integer is an integer.
+		offset = (int) (id % SEGMENT_SIZE);
+		
 		// If the number is negative, we need to shift the number relative to the base of the
 		// segment.
 		if (offset < 0) {
@@ -47,7 +47,7 @@ public class DynamicIdTracker implements IdTracker {
 	}
 	
 	
-	private DynamicIdTrackerSegment getSegment(int base, boolean createIfMissing) {
+	private DynamicIdTrackerSegment getSegment(long base, boolean createIfMissing) {
 		int intervalBegin;
 		int intervalEnd;
 		DynamicIdTrackerSegment segment;
@@ -137,14 +137,12 @@ public class DynamicIdTracker implements IdTracker {
 	 */
 	@Override
 	public boolean get(long id) {
-		int integerId;
 		int offset;
-		int base;
+		long base;
 		DynamicIdTrackerSegment segment;
 		
-		integerId = LongAsInt.longToInt(id);
-		offset = calculateOffset(integerId);
-		base = integerId - offset;
+		offset = calculateOffset(id);
+		base = id - offset;
 		segment = getSegment(base, false);
 		
 		if (segment != null) {
@@ -160,14 +158,12 @@ public class DynamicIdTracker implements IdTracker {
 	 */
 	@Override
 	public void set(long id) {
-		int integerId;
 		int offset;
-		int base;
+		long base;
 		DynamicIdTrackerSegment segment;
 		
-		integerId = LongAsInt.longToInt(id);
-		offset = calculateOffset(integerId);
-		base = integerId - offset;
+		offset = calculateOffset(id);
+		base = id - offset;
 		segment = getSegment(base, true);
 		
 		segment.set(offset);
@@ -197,7 +193,7 @@ public class DynamicIdTracker implements IdTracker {
 	private static class SegmentIdIterator implements Iterator<Long> {
 		private Iterator<DynamicIdTrackerSegment> segments;
 		private Iterator<Long> currentSegmentIds;
-		private int currentSegmentBase;
+		private long currentSegmentBase;
 		
 		
 		/**

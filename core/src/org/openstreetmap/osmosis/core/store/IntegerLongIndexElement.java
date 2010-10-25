@@ -1,9 +1,6 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.store;
 
-import org.openstreetmap.osmosis.core.util.LongAsInt;
-
-
 
 /**
  * A single index element for an int-long index.
@@ -20,7 +17,7 @@ public class IntegerLongIndexElement implements IndexElement<Integer> {
 	/**
 	 * The data value.
 	 */
-	private int value;
+	private long value;
 	
 	
 	/**
@@ -33,7 +30,7 @@ public class IntegerLongIndexElement implements IndexElement<Integer> {
 	 */
 	public IntegerLongIndexElement(int id, long value) {
 		this.id = id;
-		this.value = LongAsInt.longToInt(value);
+		this.value = value;
 	}
 	
 	
@@ -47,7 +44,7 @@ public class IntegerLongIndexElement implements IndexElement<Integer> {
 	 *            within the store.
 	 */
 	public IntegerLongIndexElement(StoreReader sr, StoreClassRegister scr) {
-		this(sr.readInteger(), sr.readInteger());
+		this(sr.readInteger(), sr.readLong());
 	}
 	
 	
@@ -56,7 +53,7 @@ public class IntegerLongIndexElement implements IndexElement<Integer> {
 	 */
 	public void store(StoreWriter writer, StoreClassRegister storeClassRegister) {
 		writer.writeInteger(id);
-		writer.writeInteger(value);
+		writer.writeLong(value);
 	}
 	
 	

@@ -5,7 +5,6 @@ import org.openstreetmap.osmosis.core.store.StoreClassRegister;
 import org.openstreetmap.osmosis.core.store.StoreReader;
 import org.openstreetmap.osmosis.core.store.StoreWriter;
 import org.openstreetmap.osmosis.core.store.Storeable;
-import org.openstreetmap.osmosis.core.util.LongAsInt;
 
 
 /**
@@ -15,7 +14,7 @@ import org.openstreetmap.osmosis.core.util.LongAsInt;
  */
 public class WayNode implements Comparable<WayNode>, Storeable {
 	
-	private int nodeId;
+	private long nodeId;
 	
 	
 	/**
@@ -25,7 +24,7 @@ public class WayNode implements Comparable<WayNode>, Storeable {
 	 *            The unique identifier of the node being referred to.
 	 */
 	public WayNode(long nodeId) {
-		this.nodeId = LongAsInt.longToInt(nodeId);
+		this.nodeId = nodeId;
 	}
 	
 	
@@ -39,7 +38,7 @@ public class WayNode implements Comparable<WayNode>, Storeable {
 	 *            within the store.
 	 */
 	public WayNode(StoreReader sr, StoreClassRegister scr) {
-		this(sr.readInteger());
+		this(sr.readLong());
 	}
 	
 	
@@ -47,7 +46,7 @@ public class WayNode implements Comparable<WayNode>, Storeable {
 	 * {@inheritDoc}
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
-		sw.writeInteger(nodeId);
+		sw.writeLong(nodeId);
 	}
 	
 	

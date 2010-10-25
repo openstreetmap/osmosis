@@ -25,7 +25,7 @@ import org.openstreetmap.osmosis.core.util.LongAsInt;
  */
 public class CommonEntityData implements Storeable {
 	
-	private int id;
+	private long id;
 	private int version;
 	private int changesetId;
 	private TimestampContainer timestampContainer;
@@ -139,7 +139,7 @@ public class CommonEntityData implements Storeable {
 	 */
 	private void init(long newId, TimestampContainer newTimestampContainer, OsmUser newUser, int newVersion,
 			long newChangesetId) {
-		this.id = LongAsInt.longToInt(newId);
+		this.id = newId;
 		this.timestampContainer = newTimestampContainer;
 		this.user = newUser;
 		this.version = newVersion;
@@ -167,7 +167,7 @@ public class CommonEntityData implements Storeable {
 	 */
 	public CommonEntityData(StoreReader sr, StoreClassRegister scr) {
 		this(
-			sr.readInteger(),
+			sr.readLong(),
 			sr.readCharacter(),
 			readTimestampContainer(sr, scr),
 			new OsmUser(sr, scr),
@@ -181,7 +181,7 @@ public class CommonEntityData implements Storeable {
 	 * {@inheritDoc}
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
-		sw.writeInteger(id);
+		sw.writeLong(id);
 		
 		sw.writeCharacter(IntAsChar.intToChar(version));
 		
@@ -256,7 +256,7 @@ public class CommonEntityData implements Storeable {
 	public void setId(long id) {
 		assertWriteable();
 		
-		this.id = LongAsInt.longToInt(id);
+		this.id = id;
 	}
 	
 	

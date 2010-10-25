@@ -13,7 +13,7 @@ import java.util.Iterator;
 public class DynamicIdTrackerSegment implements Comparable<DynamicIdTrackerSegment>, Iterable<Long> {
 	private static final int BITSET_THRESHOLD = DynamicIdTracker.SEGMENT_SIZE / 32;
 	
-	private int base;
+	private long base;
 	private char setCount;
 	private IdTracker idTracker;
 	private boolean bitsetEnabled;
@@ -25,7 +25,7 @@ public class DynamicIdTrackerSegment implements Comparable<DynamicIdTrackerSegme
 	 * @param base
 	 *            The minimum value represented by this segment.
 	 */
-	public DynamicIdTrackerSegment(int base) {
+	public DynamicIdTrackerSegment(long base) {
 		this.base = base;
 		
 		idTracker = new ListIdTracker();
@@ -38,7 +38,7 @@ public class DynamicIdTrackerSegment implements Comparable<DynamicIdTrackerSegme
 	 * 
 	 * @return The base.
 	 */
-	public int getBase() {
+	public long getBase() {
 		return base;
 	}
 	
@@ -48,7 +48,7 @@ public class DynamicIdTrackerSegment implements Comparable<DynamicIdTrackerSegme
 	 * 
 	 * @return The set count.
 	 */
-	public int getSetCount() {
+	public long getSetCount() {
 		return setCount;
 	}
 	
@@ -95,7 +95,17 @@ public class DynamicIdTrackerSegment implements Comparable<DynamicIdTrackerSegme
 	 */
 	@Override
 	public int compareTo(DynamicIdTrackerSegment o) {
-		return base - o.base;
+		long result;
+		
+		result = base - o.base;
+		
+		if (result == 0) {
+			return 0;
+		} else if (result > 0) {
+			return 1;
+		} else {
+			return -1;
+		}
 	}
 
 

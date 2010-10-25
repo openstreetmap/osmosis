@@ -177,7 +177,7 @@ public abstract class EntityBuilder<T extends Entity> implements Storeable {
 	protected EntityBuilder<T> initialize(
 			long newId, int newVersion, TimestampContainer newTimestampContainer,
 			OsmUser newUser, long newChangesetId) {
-		this.id = LongAsInt.longToInt(newId);
+		this.id = newId;
 		this.timestampContainer = newTimestampContainer;
 		this.user = newUser;
 		this.changesetId = LongAsInt.longToInt(newChangesetId);
