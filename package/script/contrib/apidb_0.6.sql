@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Started on 2010-06-24 22:44:23 BST
+-- Started on 2010-10-16 10:53:56 BST
 
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
@@ -3095,7 +3095,9 @@ CREATE TABLE oauth_tokens (
     allow_write_diary boolean DEFAULT false NOT NULL,
     allow_write_api boolean DEFAULT false NOT NULL,
     allow_read_gpx boolean DEFAULT false NOT NULL,
-    allow_write_gpx boolean DEFAULT false NOT NULL
+    allow_write_gpx boolean DEFAULT false NOT NULL,
+    callback_url character varying(255),
+    verifier character varying(20)
 );
 
 
@@ -4354,7 +4356,7 @@ COPY oauth_nonces (id, nonce, "timestamp", created_at, updated_at) FROM stdin;
 -- Data for Name: oauth_tokens; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY oauth_tokens (id, user_id, type, client_application_id, token, secret, authorized_at, invalidated_at, created_at, updated_at, allow_read_prefs, allow_write_prefs, allow_write_diary, allow_write_api, allow_read_gpx, allow_write_gpx) FROM stdin;
+COPY oauth_tokens (id, user_id, type, client_application_id, token, secret, authorized_at, invalidated_at, created_at, updated_at, allow_read_prefs, allow_write_prefs, allow_write_diary, allow_write_api, allow_read_gpx, allow_write_gpx, callback_url, verifier) FROM stdin;
 \.
 
 
@@ -4448,6 +4450,7 @@ COPY schema_migrations (version) FROM stdin;
 51
 52
 20100513171259
+20100910084426
 \.
 
 
@@ -5753,7 +5756,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2010-06-24 22:44:25 BST
+-- Completed on 2010-10-16 10:53:57 BST
 
 --
 -- PostgreSQL database dump complete
