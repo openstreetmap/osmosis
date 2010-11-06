@@ -11,12 +11,12 @@ REM # OSMOSIS_OPTIONS - The options to apply to all osmosis invocations, typical
 REM if [ -f /etc/osmosis ] ; then
 REM   . /etc/osmosis
 REM fi
-IF EXIST %ALLUSERSPROFILE%\osmosis.bat CALL %ALLUSERSPROFILE%\osmosis.bat
+IF EXIST %ALLUSERSPROFILE%\osmosis.bat CALL "%ALLUSERSPROFILE%\osmosis.bat"
 
 REM if [ -f "$HOME/.osmosis" ] ; then
 REM   . "$HOME/.osmosis"
 REM fi
-IF EXIST %USERPROFILE%\osmosis.bat CALL %USERPROFILE%\osmosis.bat
+IF EXIST %USERPROFILE%\osmosis.bat CALL "%USERPROFILE%\osmosis.bat"
 
 
 REM if [ -z "$JAVACMD" ] ; then
