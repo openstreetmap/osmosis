@@ -1,3 +1,10 @@
+0.38
+Updated internal storage to use long instead of int identifiers to remove 2^31 node id limit.
+Updated apidb support to the latest schema 20100910084426.
+Fixed the --write-pbf short option --wb to point to the writer implementation instead of the reader.
+Added additional quoting to commands in the osmosis.bat launcher to fix issues with spaces in the installation path.
+Modified plugin loader code to support multiple osmosis-plugins.conf files to allow each plugin to provide its own.
+
 0.37
 Updated the pgsql schema (now version 6) to move all tags into hstore columns, add a ways.nodes column and CLUSTER the nodes and ways tables.  Significant performance increases.
 Fixed a bug in --bounding-box and --bounding-polygon preventing use of clipIncompleteEntities after a --tee task.
