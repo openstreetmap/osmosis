@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -161,37 +162,47 @@ public class TaskRegistrar {
 	private void loadBuiltInPlugins() {
 		final String pluginResourceName = "osmosis-plugins.conf";
 		
-		InputStream pluginInputStream;
-		BufferedReader pluginReader;
-		
-		pluginInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(pluginResourceName);
-		if (pluginInputStream == null) {
-			throw new OsmosisRuntimeException("Cannot find plugin configuration resource " + pluginResourceName + ".");
-		}
-		
 		try {
-			pluginReader = new BufferedReader(new InputStreamReader(pluginInputStream));
-			
-			for (;;) {
-				String plugin;
+			for (URL pluginConfigurationUrl : Collections.list(Thread.currentThread()
+					.getContextClassLoader().getResources(pluginResourceName))) {
+				InputStream pluginInputStream;
+				BufferedReader pluginReader;
 				
-				plugin = pluginReader.readLine();
-				if (plugin == null) {
-					break;
+				LOG.finer("Loading plugin configuration file from url " + pluginConfigurationUrl + ".");
+				
+				pluginInputStream = pluginConfigurationUrl.openStream();
+				if (pluginInputStream == null) {
+					throw new OsmosisRuntimeException("Cannot open URL " + pluginConfigurationUrl + ".");
 				}
 				
-				loadPlugin(plugin);
+				try {
+					pluginReader = new BufferedReader(new InputStreamReader(pluginInputStream));
+					
+					for (;;) {
+						String plugin;
+						
+						plugin = pluginReader.readLine();
+						if (plugin == null) {
+							break;
+						}
+						
+						LOG.finer("Loading plugin via loader " + plugin + ".");
+						
+						loadPlugin(plugin);
+					}
+				} finally {
+					try {
+						pluginInputStream.close();
+					} catch (IOException e) {
+						LOG.warning("Unable to close plugin resource " + pluginResourceName + ".");
+					}
+				}
 			}
 			
 		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to load the plugin configuration from resource "
-					+ pluginResourceName + ".", e);
-		} finally {
-			try {
-				pluginInputStream.close();
-			} catch (IOException e) {
-				LOG.warning("Unable to close plugin resource " + pluginResourceName + ".");
-			}
+			throw new OsmosisRuntimeException(
+					"Unable to load the plugins based on " + pluginResourceName
+							+ " resources.");
 		}
 	}
 
