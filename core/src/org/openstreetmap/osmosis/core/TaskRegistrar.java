@@ -27,27 +27,9 @@ import org.java.plugin.registry.ExtensionPoint;
 import org.java.plugin.registry.ManifestProcessingException;
 import org.java.plugin.registry.PluginDescriptor;
 import org.java.plugin.standard.StandardPluginLocation;
-import org.openstreetmap.osmosis.core.buffer.v0_6.ChangeBufferFactory;
-import org.openstreetmap.osmosis.core.buffer.v0_6.EntityBufferFactory;
-import org.openstreetmap.osmosis.core.misc.v0_6.NullChangeWriterFactory;
-import org.openstreetmap.osmosis.core.misc.v0_6.NullWriterFactory;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactoryRegister;
 import org.openstreetmap.osmosis.core.plugin.PluginLoader;
-import org.openstreetmap.osmosis.core.progress.v0_6.ChangeProgressLoggerFactory;
-import org.openstreetmap.osmosis.core.progress.v0_6.EntityProgressLoggerFactory;
-import org.openstreetmap.osmosis.core.report.v0_6.EntityReporterFactory;
-import org.openstreetmap.osmosis.core.report.v0_6.IntegrityReporterFactory;
-import org.openstreetmap.osmosis.core.sort.v0_6.ChangeForSeekableApplierComparator;
-import org.openstreetmap.osmosis.core.sort.v0_6.ChangeForStreamableApplierComparator;
-import org.openstreetmap.osmosis.core.sort.v0_6.ChangeSorterFactory;
-import org.openstreetmap.osmosis.core.sort.v0_6.ChangeTagSorterFactory;
-import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
-import org.openstreetmap.osmosis.core.sort.v0_6.EntityContainerComparator;
-import org.openstreetmap.osmosis.core.sort.v0_6.EntitySorterFactory;
-import org.openstreetmap.osmosis.core.sort.v0_6.TagSorterFactory;
-import org.openstreetmap.osmosis.core.tee.v0_6.ChangeTeeFactory;
-import org.openstreetmap.osmosis.core.tee.v0_6.EntityTeeFactory;
 
 
 /**
@@ -94,58 +76,6 @@ public class TaskRegistrar {
 	 *            The class names of all plugins to be loaded.
 	 */
 	public void initialize(List<String> plugins) {
-		EntitySorterFactory entitySorterFactory06;
-		ChangeSorterFactory changeSorterFactory06;
-
-		// Configure factories that require additional information.
-		entitySorterFactory06 = new EntitySorterFactory();
-		entitySorterFactory06.registerComparator("TypeThenId", new EntityContainerComparator(
-				new EntityByTypeThenIdComparator()), true);
-		changeSorterFactory06 = new ChangeSorterFactory();
-		changeSorterFactory06.registerComparator("streamable", new ChangeForStreamableApplierComparator(), true);
-		changeSorterFactory06.registerComparator("seekable", new ChangeForSeekableApplierComparator(), false);
-
-		// Register factories.
-		factoryRegister.register("sort", entitySorterFactory06);
-		factoryRegister.register("s", entitySorterFactory06);
-		factoryRegister.register("sort-change", changeSorterFactory06);
-		factoryRegister.register("sc", changeSorterFactory06);
-		factoryRegister.register("write-null", new NullWriterFactory());
-		factoryRegister.register("wn", new NullWriterFactory());
-		factoryRegister.register("write-null-change", new NullChangeWriterFactory());
-		factoryRegister.register("wnc", new NullChangeWriterFactory());
-		factoryRegister.register("buffer", new EntityBufferFactory());
-		factoryRegister.register("b", new EntityBufferFactory());
-		factoryRegister.register("buffer-change", new ChangeBufferFactory());
-		factoryRegister.register("bc", new ChangeBufferFactory());
-		factoryRegister.register("report-entity", new EntityReporterFactory());
-		factoryRegister.register("re", new EntityReporterFactory());
-		factoryRegister.register("report-integrity", new IntegrityReporterFactory());
-		factoryRegister.register("ri", new IntegrityReporterFactory());
-		factoryRegister.register("log-progress", new EntityProgressLoggerFactory());
-		factoryRegister.register("lp", new EntityProgressLoggerFactory());
-		factoryRegister.register("log-progress-change", new ChangeProgressLoggerFactory());
-		factoryRegister.register("lpc", new ChangeProgressLoggerFactory());
-		factoryRegister.register("tee", new EntityTeeFactory());
-		factoryRegister.register("t", new EntityTeeFactory());
-		factoryRegister.register("tee-change", new ChangeTeeFactory());
-		factoryRegister.register("tc", new ChangeTeeFactory());
-		
-		factoryRegister.register("sort-0.6", entitySorterFactory06);
-		factoryRegister.register("sort-change-0.6", changeSorterFactory06);
-		factoryRegister.register("write-null-0.6", new NullWriterFactory());
-		factoryRegister.register("write-null-change-0.6", new NullChangeWriterFactory());
-		factoryRegister.register("buffer-0.6", new EntityBufferFactory());
-		factoryRegister.register("buffer-change-0.6", new ChangeBufferFactory());
-		factoryRegister.register("report-entity-0.6", new EntityReporterFactory());
-		factoryRegister.register("report-integrity-0.6", new IntegrityReporterFactory());
-		factoryRegister.register("log-progress-0.6", new EntityProgressLoggerFactory());
-		factoryRegister.register("log-change-progress-0.6", new ChangeProgressLoggerFactory());
-		factoryRegister.register("tee-0.6", new EntityTeeFactory());
-		factoryRegister.register("tee-change-0.6", new ChangeTeeFactory());
-		factoryRegister.register("tag-sort-0.6", new TagSorterFactory());
-		factoryRegister.register("tag-sort-change-0.6", new ChangeTagSorterFactory());
-		
 		// Register the built-in plugins.
 		loadBuiltInPlugins();
 
