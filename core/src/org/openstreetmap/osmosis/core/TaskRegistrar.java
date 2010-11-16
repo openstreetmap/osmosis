@@ -186,9 +186,12 @@ public class TaskRegistrar {
 							break;
 						}
 						
-						LOG.finer("Loading plugin via loader " + plugin + ".");
-						
-						loadPlugin(plugin);
+						plugin = plugin.trim();
+						if (!plugin.isEmpty()) {
+							LOG.finer("Loading plugin via loader " + plugin + ".");
+							
+							loadPlugin(plugin);
+						}
 					}
 				} finally {
 					try {
