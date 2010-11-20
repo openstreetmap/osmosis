@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="Osmosis.PgSimple" default="all" basedir=".">
+	
+	<!-- Include common java build. -->
+	<property name="build-support.dir" location="../build-support"/>
+	<import file="${build-support.dir}/script/build-java.xml"/>
+	
+	<!-- Disable tests until continuous integration has a database configured. -->
+	<target name="test"/>
+</project>

@@ -1,0 +1,18 @@
+Both the pgsimple and pgsnapshot schemas are PostgreSQL schemas utilising postgis extensions that are capable of storing snapshots of OSM data.
+No history is maintained.
+They can be populated by osmosis and kept up to date with osmosis daily, hourly and minute changesets.
+
+The pgsimple and pgsnapshot schemas are forked versions of the same schema.
+Up to version 5 of the schema they were known as the "simple" schema.
+The pgsimple schema is the "simple" schema and is unchanged.
+Since version 6, the pgsnapshot schema has deviated to include all tag information in hstore "tags" columns inside the parent entity tables.
+
+The purpose of the pgsimple schema is to provide a simplistic and generic schema for storing OSM data in a PostGIS format.
+The purpose of the pgsnapshot schema is similar but maximises performance through CLUSTERed indexes and embedded tag data.  It imposes additional programming complexity.
+
+The following scripts are available for both schemas:
+pgxxx_schema_0.x.sql - The schema creation script.
+pgxxx_schema_0.x_bbox.sql - A script for adding way bbox column support.
+pgxxx_schema_0.x_linestring.sql - A script for adding way linestring column support.
+pgxxx_schema_0.x_action.sql - A script for adding an action table which is populated during changeset processing to allow derivative tables to be kept up to date.
+pgxxx_load_0.x.sql - A script for importing PostgreSQL "COPY" files as produced by the osmosis --write-pgxxx-dump tasks.

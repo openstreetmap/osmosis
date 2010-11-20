@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
 	
-    <info organisation="org.openstreetmap.osmosis" module="osmosis-package"/>
+    <info organisation="org.openstreetmap.osmosis" module="osmosis-pgsimple"/>
     
     <configurations>
 		<conf name="default" visibility="public" description="runtime dependencies and master artifact can be used with this conf" extends="runtime,master"/>
@@ -16,27 +16,27 @@
 		<conf name="sources" visibility="public" description="this configuration contains the source artifact of this module, if any."/>
 		<conf name="javadoc" visibility="public" description="this configuration contains the javadoc artifact of this module, if any."/>
 		<conf name="optional" visibility="public" description="contains all optional dependencies"/>
+		<conf name="distribution" visibility="public" description="contains distribution packages"/>
     </configurations>
     
     <publications>
-    	<artifact name="osmosis" type="zip" ext="zip" conf="master"/>
-    	<artifact name="osmosis" type="tgz" ext="tgz" conf="master"/>
+    	<artifact name="${project.name}" type="jar" ext="jar" conf="master"/>
     </publications>
     
     <dependencies>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-apidb" rev="${project.version}" conf="runtime->default" changing="true"/>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-areafilter" rev="${project.version}" conf="runtime->default" changing="true"/>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-binary" rev="${project.version}" conf="runtime->default" changing="true"/>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-core" rev="${project.version}" conf="runtime->default" changing="true"/>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-dataset" rev="${project.version}" conf="runtime->default" changing="true"/>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-extract" rev="${project.version}" conf="runtime->default" changing="true"/>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-pgsimple" rev="${project.version}" conf="runtime->default" changing="true"/>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-pgsnapshot" rev="${project.version}" conf="runtime->default" changing="true"/>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-replication" rev="${project.version}" conf="runtime->default" changing="true"/>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-set" rev="${project.version}" conf="runtime->default" changing="true"/>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-tagfilter" rev="${project.version}" conf="runtime->default" changing="true"/>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-xml" rev="${project.version}" conf="runtime->default" changing="true"/>
+    	<dependency org="org.openstreetmap.osmosis" name="osmosis-core" rev="${project.version}" conf="compile->default" changing="true"/>
     	
-    	<dependency org="org.codehaus.plexus" name="plexus-classworlds" rev="${dependency.version.classworlds}" conf="runtime->default"/>
+    	<dependency org="org.openstreetmap.osmosis" name="osmosis-dataset" rev="${project.version}" conf="test->default" changing="true"/>
+    	<dependency org="org.openstreetmap.osmosis" name="osmosis-xml" rev="${project.version}" conf="test->default" changing="true"/>
+    	
+    	<!--<dependency org="org.springframework" name="spring-jdbc" rev="${dependency.version.spring}" conf="compile->default"/>-->
+        <!--<dependency org="commons-dbcp" name="commons-dbcp" rev="${dependency.version.commons-dbcp}" conf="compile->default"/>-->
+    	<dependency org="postgresql" name="postgresql" rev="${dependency.version.postgresql}" conf="compile->default"/>
+        <dependency org="org.postgis" name="postgis-jdbc" rev="${dependency.version.postgis}" conf="compile->default">
+        	<exclude module="postgis-stubs"/>
+        </dependency>
+        
+        <dependency org="junit" name="junit" rev="${dependency.version.junit}" conf="test->default"/>
+    	<dependency org="checkstyle" name="checkstyle" rev="${dependency.version.checkstyle}" conf="test->default"/>
     </dependencies>
 </ivy-module>

@@ -1,3 +1,6 @@
+0.39
+Added the pgsimp tasks which are the old 0.36 version pgsql tasks supporting the old style separate tags tables.
+
 0.38
 Updated internal storage to use long instead of int identifiers to remove 2^31 node id limit.
 Updated apidb support to the latest schema 20100910084426.
