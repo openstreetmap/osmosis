@@ -53,7 +53,8 @@ public class PolygonFilterFactory extends AreaFilterTaskManagerFactory {
 		
 		return new SinkSourceManager(
 			taskConfig.getId(),
-			new PolygonFilter(idTrackerType, file, clipIncompleteEntities, completeWays, completeRelations, cascadingRelations),
+			new PolygonFilter(idTrackerType, file, clipIncompleteEntities, completeWays, completeRelations, 
+                cascadingRelations),
 			taskConfig.getPipeArgs()
 		);
 	}

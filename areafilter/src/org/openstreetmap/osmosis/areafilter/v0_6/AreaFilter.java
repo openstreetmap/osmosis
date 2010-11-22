@@ -46,7 +46,8 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
     private boolean cascadingRelations;
 	private SimpleObjectStore<WayContainer> allWays;
 	private SimpleObjectStore<NodeContainer> allNodes;
-	private SimpleObjectStore<RelationContainer> allRelations; // this duplicates as a container for held-back relations in the cascadingRelations case.
+    // this duplicates as a container for held-back relations in the cascadingRelations case:
+	private SimpleObjectStore<RelationContainer> allRelations; 
 	
 	
 	/**
