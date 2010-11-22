@@ -19,9 +19,11 @@ public class PolygonFilterFactory extends AreaFilterTaskManagerFactory {
 	private static final String ARG_CLIP_INCOMPLETE_ENTITIES = "clipIncompleteEntities";
 	private static final String ARG_COMPLETE_WAYS = "completeWays";
 	private static final String ARG_COMPLETE_RELATIONS = "completeRelations";
+	private static final String ARG_CASCADING_RELATIONS = "cascadingRelations";
 	private static final boolean DEFAULT_CLIP_INCOMPLETE_ENTITIES = false;
 	private static final boolean DEFAULT_COMPLETE_WAYS = false;
 	private static final boolean DEFAULT_COMPLETE_RELATIONS = false;
+	private static final boolean DEFAULT_CASCADING_RELATIONS = false;
 
 	
 	/**
@@ -35,6 +37,7 @@ public class PolygonFilterFactory extends AreaFilterTaskManagerFactory {
 		boolean clipIncompleteEntities;
 		boolean completeWays;
 		boolean completeRelations;
+		boolean cascadingRelations;
 		
 		// Get the task arguments.
 		idTrackerType = getIdTrackerType(taskConfig);
@@ -43,13 +46,14 @@ public class PolygonFilterFactory extends AreaFilterTaskManagerFactory {
 				taskConfig, ARG_CLIP_INCOMPLETE_ENTITIES, DEFAULT_CLIP_INCOMPLETE_ENTITIES);
 		completeWays = getBooleanArgument(taskConfig, ARG_COMPLETE_WAYS, DEFAULT_COMPLETE_WAYS);
 		completeRelations = getBooleanArgument(taskConfig, ARG_COMPLETE_RELATIONS, DEFAULT_COMPLETE_RELATIONS);
+		cascadingRelations = getBooleanArgument(taskConfig, ARG_CASCADING_RELATIONS, DEFAULT_CASCADING_RELATIONS);
 		
 		// Create a file object from the file name provided.
 		file = new File(fileName);
 		
 		return new SinkSourceManager(
 			taskConfig.getId(),
-			new PolygonFilter(idTrackerType, file, clipIncompleteEntities, completeWays, completeRelations),
+			new PolygonFilter(idTrackerType, file, clipIncompleteEntities, completeWays, completeRelations, cascadingRelations),
 			taskConfig.getPipeArgs()
 		);
 	}

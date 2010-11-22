@@ -39,6 +39,9 @@ public class BoundingBoxFilter extends AreaFilter {
 	 * @param completeRelations
 	 *            Include all relations referenced by other relations which have members inside the
 	 *            filtered area.
+	 * @param cascadingRelations
+	 *            Include all relations that reference other relations which have members inside the
+	 *            filtered area. This is less costly than completeRelations.
 	 */
 	public BoundingBoxFilter(IdTrackerType idTrackerType,
 	        double left,
@@ -47,8 +50,9 @@ public class BoundingBoxFilter extends AreaFilter {
 	        double bottom,
 	        boolean clipIncompleteEntities,
 	        boolean completeWays,
-	        boolean completeRelations) {
-		super(idTrackerType, clipIncompleteEntities, completeWays, completeRelations);
+	        boolean completeRelations,
+	        boolean cascadingRelations) {
+		super(idTrackerType, clipIncompleteEntities, completeWays, completeRelations, cascadingRelations);
 		
 		this.bound = new Bound(right, left, top, bottom, "");
 	}

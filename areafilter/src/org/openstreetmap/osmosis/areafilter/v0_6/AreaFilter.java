@@ -43,9 +43,10 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	private boolean completeWays;
 	private boolean completeRelations;
 	private boolean storeEntities;
+    private boolean cascadingRelations;
 	private SimpleObjectStore<WayContainer> allWays;
 	private SimpleObjectStore<NodeContainer> allNodes;
-	private SimpleObjectStore<RelationContainer> allRelations;
+	private SimpleObjectStore<RelationContainer> allRelations; // this duplicates as a container for held-back relations in the cascadingRelations case.
 	
 	
 	/**
@@ -63,15 +64,21 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	 * @param completeRelations
 	 *            Include all relations referenced by other relations which have
 	 *            members inside the filtered area.
+	 * @param cascadingRelations
+	 *            Make sure that a relation referencing a relation which is included
+	 *            will also be included.
 	 */
 	public AreaFilter(
 			IdTrackerType idTrackerType, boolean clipIncompleteEntities, boolean completeWays,
-			boolean completeRelations) {
+			boolean completeRelations, boolean cascadingRelations) {
 		this.clipIncompleteEntities = clipIncompleteEntities;
 		// Allowing complete relations without complete ways is very difficult and not allowed for
 		// now.
 		this.completeWays = completeWays || completeRelations;
 		this.completeRelations = completeRelations;
+        // cascadingRelations is a subset of completeRelations so you won't need it if you have
+        // completeRelations set.
+        this.cascadingRelations = cascadingRelations && !completeRelations; 
 		
 		availableNodes = IdTrackerFactory.createInstance(idTrackerType);
 		requiredNodes = IdTrackerFactory.createInstance(idTrackerType);
@@ -91,7 +98,12 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			allRelations =
 				new SimpleObjectStore<RelationContainer>(
 						new SingleClassObjectSerializationFactory(RelationContainer.class), "afr", true);
-		}
+		} 
+        if (cascadingRelations) {
+            allRelations = 
+				new SimpleObjectStore<RelationContainer>(
+						new SingleClassObjectSerializationFactory(RelationContainer.class), "afr", true);
+        }
 	}
 	
 	
@@ -200,16 +212,16 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	public void process(RelationContainer container) {
 		Relation relation;
 		boolean inArea;
+        boolean referencesOtherRelation;
+        boolean holdBackRelation;
 		
 		relation = container.getEntity();
-
-		// Check if we're storing entities for later.
-		if (storeEntities) {
-			allRelations.add(container);
-		}
 		
 		// First look through all the node and way members to see if any are within the filtered area
 		inArea = false;
+        referencesOtherRelation = false;
+        holdBackRelation = false;
+
 		for (RelationMember member : relation.getMembers()) {
 			switch (member.getMemberType()) {
 			case Node:
@@ -220,6 +232,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 				break;
 			case Relation:
 				inArea = availableRelations.get(member.getMemberId());
+                referencesOtherRelation = true;
 				break;
 			default:
 				break;
@@ -229,13 +242,22 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 				break;
 			}
 		}
+
+        if (!inArea && cascadingRelations && referencesOtherRelation) {
+            holdBackRelation = true;
+        }
+
+		// Check if we're storing entities for later.
+		if (storeEntities || holdBackRelation) {
+			allRelations.add(container);
+        }
 		
 		// If the relation has at least one member in the filtered area.
 		if (inArea) {
 			availableRelations.set(relation.getId());
 			
 			// If we're not storing entities, we pass it on immediately.
-			if (!storeEntities) {
+			if (!storeEntities && !holdBackRelation) {
 				emitRelation(container);
 			}
 		}
@@ -590,7 +612,16 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			pumpNodesToSink();
 			pumpWaysToSink();
 			pumpRelationsToSink();
-		}
+		} else if (cascadingRelations) {
+			// Select all parents of current relations.
+			selectParentRelations();
+			availableRelations.setAll(requiredRelations);
+			
+			// nodes, ways, and relations *not* referencing other relations will already have
+            // been written in this mode. we only pump the remaining ones, relations that 
+            // reference other relations. this may result in an un-ordered relation stream.
+			pumpRelationsToSink();
+        }
 		
 		sink.complete();
 	}

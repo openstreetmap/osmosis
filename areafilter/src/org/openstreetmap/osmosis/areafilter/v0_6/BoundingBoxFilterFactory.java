@@ -25,6 +25,7 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 	private static final String ARG_CLIP_INCOMPLETE_ENTITIES = "clipIncompleteEntities";
 	private static final String ARG_COMPLETE_WAYS = "completeWays";
 	private static final String ARG_COMPLETE_RELATIONS = "completeRelations";
+	private static final String ARG_CASCADING_RELATIONS = "cascadingRelations";
 	private static final double DEFAULT_LEFT = -180;
 	private static final double DEFAULT_RIGHT = 180;
 	private static final double DEFAULT_TOP = 90;
@@ -33,6 +34,7 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 	private static final boolean DEFAULT_CLIP_INCOMPLETE_ENTITIES = false;
 	private static final boolean DEFAULT_COMPLETE_WAYS = false;
 	private static final boolean DEFAULT_COMPLETE_RELATIONS = false;
+	private static final boolean DEFAULT_CASCADING_RELATIONS = false;
 
 	
 	private double xToLon(int zoom, int x) {
@@ -79,6 +81,7 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 		boolean clipIncompleteEntities;
 		boolean completeWays;
 		boolean completeRelations;
+		boolean cascadingRelations;
 		int zoom;
 		
 		// Get the task arguments.
@@ -91,6 +94,7 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 				taskConfig, ARG_CLIP_INCOMPLETE_ENTITIES, DEFAULT_CLIP_INCOMPLETE_ENTITIES);
 		completeWays = getBooleanArgument(taskConfig, ARG_COMPLETE_WAYS, DEFAULT_COMPLETE_WAYS);
 		completeRelations = getBooleanArgument(taskConfig, ARG_COMPLETE_RELATIONS, DEFAULT_COMPLETE_RELATIONS);
+		cascadingRelations = getBooleanArgument(taskConfig, ARG_CASCADING_RELATIONS, DEFAULT_CASCADING_RELATIONS);
 		
 		zoom = getIntegerArgument(taskConfig, ARG_ZOOM, DEFAULT_ZOOM);
 		if (doesArgumentExist(taskConfig, ARG_X1)) {
@@ -107,7 +111,7 @@ public class BoundingBoxFilterFactory extends AreaFilterTaskManagerFactory {
 		return new SinkSourceManager(
 			taskConfig.getId(),
 			new BoundingBoxFilter(idTrackerType, left, right, top, bottom, clipIncompleteEntities, completeWays,
-					completeRelations),
+					completeRelations, cascadingRelations),
 			taskConfig.getPipeArgs()
 		);
 	}
