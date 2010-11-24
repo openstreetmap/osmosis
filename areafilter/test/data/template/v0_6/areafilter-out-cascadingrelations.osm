@@ -1,17 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <osm version="0.6" generator="Osmosis %VERSION%">
-  <bound box="-90.00000,-180.00000,90.00000,180.00000" origin="Osmosis %VERSION%"/>
+  <bound box="-10.00000,-10.00000,10.00000,10.00000" origin="Osmosis %VERSION%"/>
   <node id="1" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11" lat="-1" lon="1">
     <tag k="name" v="inAreaNode1"/>
   </node>
   <node id="2" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11" lat="-1" lon="1">
     <tag k="name" v="inAreaNode2"/>
-  </node>
-  <node id="3" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11" lat="-11" lon="11">
-    <tag k="name" v="outAreaNode1"/>
-  </node>
-  <node id="4" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11" lat="-11" lon="11">
-    <tag k="name" v="outAreaNode2"/>
   </node>
   <way id="1" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11">
     <nd ref="1"/>
@@ -19,16 +13,6 @@
     <nd ref="3"/>
     <tag k="name" v="inAreaWay1"/>
   </way>
-  <way id="2" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11">
-    <nd ref="3"/>
-    <nd ref="4"/>
-    <tag k="name" v="outAreaWay1"/>
-  </way>
-  <relation id="1" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11">
-    <member type="relation" ref="5" role="relationrole"/>
-    <tag k="name" v="inAreaRelation1"/>
-    <tag k="comment" v="this relation is pulled in by relation 5"/>
-  </relation>
   <relation id="2" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11">
     <member type="node" ref="1" role="noderole"/>
     <tag k="name" v="inAreaRelation2"/>
@@ -37,14 +21,14 @@
     <member type="way" ref="1" role="wayrole"/>
     <tag k="name" v="inAreaRelation3"/>
   </relation>
-  <relation id="4" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11">
-    <member type="way" ref="2" role="wayrole"/>
-    <tag k="name" v="outAreaRelation4"/>
-  </relation>
   <relation id="5" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11">
-    <member type="relation" ref="1" role="relationrole"/>
     <member type="relation" ref="2" role="relationrole"/>
     <member type="relation" ref="4" role="relationrole"/>
     <tag k="name" v="inAreaRelation5"/>
+  </relation>
+  <relation id="1" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11">
+    <member type="relation" ref="5" role="relationrole"/>
+    <tag k="name" v="inAreaRelation1"/>
+    <tag k="comment" v="this relation is pulled in by relation 5"/>
   </relation>
 </osm>

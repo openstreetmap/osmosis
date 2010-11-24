@@ -77,9 +77,9 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 		// now.
 		this.completeWays = completeWays || completeRelations;
 		this.completeRelations = completeRelations;
-        // cascadingRelations is a subset of completeRelations so you won't need it if you have
-        // completeRelations set.
-        this.cascadingRelations = cascadingRelations && !completeRelations; 
+        // cascadingRelations is included for free with any of the complete options so you don't
+        // need it if those are set.
+        this.cascadingRelations = cascadingRelations && !completeRelations && !completeWays;
 		
 		availableNodes = IdTrackerFactory.createInstance(idTrackerType);
 		requiredNodes = IdTrackerFactory.createInstance(idTrackerType);
@@ -99,8 +99,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			allRelations =
 				new SimpleObjectStore<RelationContainer>(
 						new SingleClassObjectSerializationFactory(RelationContainer.class), "afr", true);
-		} 
-        if (cascadingRelations) {
+		} else if (cascadingRelations) {
             allRelations = 
 				new SimpleObjectStore<RelationContainer>(
 						new SingleClassObjectSerializationFactory(RelationContainer.class), "afr", true);

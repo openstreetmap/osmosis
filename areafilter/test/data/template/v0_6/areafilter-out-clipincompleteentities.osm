@@ -12,16 +12,16 @@
     <nd ref="2"/>
     <tag k="name" v="inAreaWay1"/>
   </way>
-  <relation id="1" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11">
-    <member type="node" ref="1" role="noderole"/>
-    <tag k="name" v="inAreaRelation1"/>
-  </relation>
   <relation id="2" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11">
-    <member type="way" ref="1" role="wayrole"/>
+    <member type="node" ref="1" role="noderole"/>
     <tag k="name" v="inAreaRelation2"/>
   </relation>
-  <relation id="4" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11">
-    <member type="relation" ref="1" role="relationrole"/>
+  <relation id="3" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11">
+    <member type="way" ref="1" role="wayrole"/>
     <tag k="name" v="inAreaRelation3"/>
+  </relation>
+  <relation id="5" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11">
+    <member type="relation" ref="2" role="relationrole"/>
+    <tag k="name" v="inAreaRelation5"/>
   </relation>
 </osm>
