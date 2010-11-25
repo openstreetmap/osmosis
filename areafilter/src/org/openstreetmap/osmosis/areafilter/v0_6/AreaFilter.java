@@ -243,7 +243,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			}
 		}
 
-        if (!inArea && cascadingRelations && referencesOtherRelation) {
+        if (cascadingRelations && referencesOtherRelation && (!inArea || clipIncompleteEntities)) {
             holdBackRelation = true;
         }
 
