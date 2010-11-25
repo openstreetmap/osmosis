@@ -42,7 +42,6 @@
     <tag k="name" v="outAreaRelation4"/>
   </relation>
   <relation id="5" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11">
-    <member type="relation" ref="1" role="relationrole"/>
     <member type="relation" ref="2" role="relationrole"/>
     <member type="relation" ref="4" role="relationrole"/>
     <tag k="name" v="inAreaRelation5"/>

@@ -28,7 +28,7 @@
   </relation>
   <relation id="1" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11">
     <member type="relation" ref="5" role="relationrole"/>
-    <tag k="name" v="inAreaRelation1"/>
     <tag k="comment" v="this relation is pulled in by relation 5"/>
+    <tag k="name" v="inAreaRelation1"/>
   </relation>
 </osm>
