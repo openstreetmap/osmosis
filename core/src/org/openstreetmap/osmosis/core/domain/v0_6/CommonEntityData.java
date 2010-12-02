@@ -156,6 +156,24 @@ public class CommonEntityData implements Storeable {
 	}
 	
 	
+	private static OsmUser readOsmUser(StoreReader sr, StoreClassRegister scr) {
+		OsmUser user;
+		
+		// We could follow the same approach as timestamps and use a boolean to
+		// indicate the existence of a user or not. But most entities have a
+		// user so this would increase the space consumed on disk. So I'm taking
+		// a small hit in instantiating unnecessary OsmUser objects when no user
+		// is available.
+		user = new OsmUser(sr, scr);
+		
+		if (user.equals(OsmUser.NONE)) {
+			return OsmUser.NONE;
+		} else {
+			return user;
+		}
+	}
+	
+	
 	/**
 	 * Creates a new instance.
 	 * 
@@ -170,7 +188,7 @@ public class CommonEntityData implements Storeable {
 			sr.readLong(),
 			sr.readCharacter(),
 			readTimestampContainer(sr, scr),
-			new OsmUser(sr, scr),
+			readOsmUser(sr, scr),
 			sr.readInteger(),
 			new TagCollectionImpl(sr, scr)
 		);
@@ -193,6 +211,7 @@ public class CommonEntityData implements Storeable {
 		}
 		
 		user.store(sw, scr);
+		
 		sw.writeInteger(changesetId);
 		
 		tags.store(sw, scr);
