@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.OsmosisConstants;
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
@@ -40,8 +41,9 @@ public class OsmosisBinaryParser extends BinaryParser {
     OsmUser getUser(Osmformat.Info info) {
         // System.out.println(info);
         if (info.hasUid() && info.hasUserSid()) {
-            if (info.getUid()< 0)
+            if (info.getUid() < 0) {
               return OsmUser.NONE;
+            }
             return new OsmUser(info.getUid(), getStringById(info.getUserSid()));
         } else {
             return OsmUser.NONE;
@@ -232,7 +234,7 @@ public class OsmosisBinaryParser extends BinaryParser {
             if (s.equals("DenseNodes")) {
               continue; // We can parse this.
             }
-           throw new Error("File requires unknown feature: " + s);
+           throw new OsmosisRuntimeException("File requires unknown feature: " + s);
         }
         
         String source = OsmosisConstants.VERSION;
@@ -243,9 +245,10 @@ public class OsmosisBinaryParser extends BinaryParser {
         sink.process(new BoundContainer(bounds));
     }
 
-    /** Set the sink which will be sent the data.
-     * @param sink 
-     * */
+    
+    /**
+     * {@inheritDoc}
+     */
     public void setSink(Sink sink) {
        this.sink = sink;
     }

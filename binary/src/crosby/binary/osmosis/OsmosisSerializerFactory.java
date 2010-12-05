@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskConfiguration;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
@@ -51,7 +52,7 @@ public class OsmosisSerializerFactory extends TaskManagerFactory {
                     "deflate"));
 
         } catch (FileNotFoundException e) {
-            throw new Error("Failed to initialize Osmosis pbf serializer.",e);
+        	throw new OsmosisRuntimeException("Failed to initialize Osmosis pbf serializer.", e);
         }
 
         return new SinkManager(taskConfig.getId(), task, taskConfig

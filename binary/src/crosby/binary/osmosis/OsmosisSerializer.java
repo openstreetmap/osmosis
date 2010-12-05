@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisConstants;
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityProcessor;
@@ -33,15 +36,28 @@ import crosby.binary.Osmformat.Relation.MemberType;
 import crosby.binary.file.BlockOutputStream;
 import crosby.binary.file.FileBlock;
 
+/**
+ * Receives data from the Osmosis pipeline and stores it in the PBF format.
+ */
 public class OsmosisSerializer extends BinarySerializer implements Sink {
+	private static final Logger LOG = Logger.getLogger(OsmosisSerializer.class.getName());
+	
   /** Additional configuration flag for whether to serialize into DenseNodes/DenseInfo? */
   protected boolean useDense = true;
 
+  /**
+   * Tracks the number of warnings that have occurred during serialisation.
+   */
   static int warncount = 0;
 
-  /** Construct a serializer that writes to the target BlockOutputStream. */
+	/**
+	 * Construct a serializer that writes to the target BlockOutputStream.
+	 * 
+	 * @param output
+	 *            The PBF block stream to send serialized data.
+	 */
   public OsmosisSerializer(BlockOutputStream output) {
-        super(output);
+	  super(output);
   }
 
   /**
@@ -55,7 +71,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
   }
 
   /** Base class containing common code needed for serializing each type of primitives. */
-    abstract class Prim<T extends Entity> {
+    private abstract class Prim<T extends Entity> {
       /** Queue that tracks the list of all primitives. */
       ArrayList<T> contents = new ArrayList<T>();
 
@@ -79,8 +95,8 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
                 }
             }
         }
-        final static int MAXWARN = 100;
-        public void serializeMetadataDense(DenseInfo.Builder b, List<? extends Entity> contents) {
+        private static final int MAXWARN = 100;
+        public void serializeMetadataDense(DenseInfo.Builder b, List<? extends Entity> entities) {
 			if (omit_metadata) {
 				return;
 			}
@@ -88,10 +104,10 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
 			long lasttimestamp = 0, lastchangeset = 0;
 			int lastuserSid = 0, lastuid = 0;
 			StringTable stable = getStringTable();
-			for (Entity e : contents) {
+			for (Entity e : entities) {
 
             if (e.getUser() == OsmUser.NONE && warncount  < MAXWARN) {
-              System.out.println("Attention: Data being output lacks metadata. Please use omitmetadata=true");              
+              LOG.warning("Attention: Data being output lacks metadata. Please use omitmetadata=true");
               warncount++;
             }
 				int uid = e.getUser().getId();
@@ -115,11 +131,9 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         public Osmformat.Info.Builder serializeMetadata(Entity e) {
             StringTable stable = getStringTable();
             Osmformat.Info.Builder b = Osmformat.Info.newBuilder();
-            if (omit_metadata) {
-                // Nothing
-            } else {
+            if (!omit_metadata) {
                 if (e.getUser() == OsmUser.NONE && warncount  < MAXWARN) {
-                  System.out.println("Attention: Data being output lacks metadata. Please use omitmetadata=true");              
+                  LOG.warning("Attention: Data being output lacks metadata. Please use omitmetadata=true");
                   warncount++;
                 }
                 if (e.getUser() != OsmUser.NONE) {
@@ -134,19 +148,18 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         }
     }
 
-    class NodeGroup extends Prim<Node> implements PrimGroupWriterInterface {
+    private class NodeGroup extends Prim<Node> implements PrimGroupWriterInterface {
 
       public Osmformat.PrimitiveGroup serialize() {
-          if (useDense) 
+          if (useDense) {
             return serializeDense();
-          else
+          } else {
             return serializeNonDense();
+          }
       }
         
         /**
          *  Serialize all nodes in the 'dense' format.
-         * 
-         * @param parentbuilder Add to this PrimitiveBlock.
          */
         public Osmformat.PrimitiveGroup serializeDense() {
             if (contents.size() == 0) {
@@ -231,10 +244,11 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
 
     
 
-    class WayGroup extends Prim<Way> implements PrimGroupWriterInterface {
+    private class WayGroup extends Prim<Way> implements PrimGroupWriterInterface {
       public Osmformat.PrimitiveGroup serialize() {
-        if (contents.size() == 0)
+        if (contents.size() == 0) {
           return null;
+        }
 
             // System.out.format("%d Ways  ",contents.size());
             StringTable stable = getStringTable();
@@ -253,9 +267,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
                     bi.addKeys(stable.getIndex(t.getKey()));
                     bi.addVals(stable.getIndex(t.getValue()));
                 }
-                if (omit_metadata) {
-                    // Nothing.
-                } else {
+                if (!omit_metadata) {
                     bi.setInfo(serializeMetadata(i));
                 }
                 builder.addWays(bi);
@@ -264,19 +276,22 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         }
     }
 
-    class RelationGroup extends Prim<Relation> implements
+    private class RelationGroup extends Prim<Relation> implements
             PrimGroupWriterInterface {
         public void addStringsToStringtable() {
             StringTable stable = getStringTable();
             super.addStringsToStringtable();
-            for (Relation i : contents)
-                for (RelationMember j : i.getMembers())
+            for (Relation i : contents) {
+                for (RelationMember j : i.getMembers()) {
                     stable.incr(j.getMemberRole());
+                }
+            }
         }
 
         public Osmformat.PrimitiveGroup serialize() {
-          if (contents.size() == 0)
+          if (contents.size() == 0) {
             return null;
+          }
 
           // System.out.format("%d Relations  ",contents.size());
             StringTable stable = getStringTable();
@@ -285,21 +300,22 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
             for (Relation i : contents) {
                 Osmformat.Relation.Builder bi = Osmformat.Relation.newBuilder();
                 bi.setId(i.getId());
-                RelationMember arr[] = new RelationMember[i.getMembers().size()];
+                RelationMember[] arr = new RelationMember[i.getMembers().size()];
                 i.getMembers().toArray(arr);
                 long lastid = 0;
                 for (RelationMember j : i.getMembers()) {
                     long id = j.getMemberId();
                     bi.addMemids(id - lastid);
                     lastid = id;
-                    if (j.getMemberType() == EntityType.Node)
+                    if (j.getMemberType() == EntityType.Node) {
                         bi.addTypes(MemberType.NODE);
-                    else if (j.getMemberType() == EntityType.Way)
+                    } else if (j.getMemberType() == EntityType.Way) {
                         bi.addTypes(MemberType.WAY);
-                    else if (j.getMemberType() == EntityType.Relation)
+                    } else if (j.getMemberType() == EntityType.Relation) {
                         bi.addTypes(MemberType.RELATION);
-                    else
+                    } else {
                         assert (false); // Software bug: Unknown entity.
+                    }
                     bi.addRolesSid(stable.getIndex(j.getMemberRole()));
                 }
 
@@ -307,9 +323,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
                     bi.addKeys(stable.getIndex(t.getKey()));
                     bi.addVals(stable.getIndex(t.getValue()));
                 }
-                if (omit_metadata) {
-                    // Nothing.
-                } else {
+                if (!omit_metadata) {
                     bi.setInfo(serializeMetadata(i));
                 }
                 builder.addRelations(bi);
@@ -319,16 +333,15 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
     }
 
     /* One list for each type */
-    NodeGroup bounds;
-    WayGroup ways;
-    NodeGroup nodes;
-    RelationGroup relations;
+    private WayGroup ways;
+    private NodeGroup nodes;
+    private RelationGroup relations;
 
     private Processor processor = new Processor();
 
     /**
      * Buffer up events into groups that are all of the same type, or all of the
-     * same length, then process each buffer
+     * same length, then process each buffer.
      */
     public class Processor implements EntityProcessor {
         @Override
@@ -339,10 +352,15 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
             processBounds(bound.getEntity());
         }
 
+		/**
+		 * Check if we've reached the batch size limit and process the batch if
+		 * we have.
+		 */
         public void checkLimit() {
             total_entities++;
-            if (++batch_size < batch_limit)
+            if (++batch_size < batch_limit) {
                 return;
+            }
             switchTypes();
             processBatch();
         }
@@ -398,6 +416,9 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void processBounds(Bound entity) {
         Osmformat.HeaderBlock.Builder headerblock = Osmformat.HeaderBlock
                 .newBuilder();
@@ -413,21 +434,21 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         
         headerblock.setBbox(bbox);
         headerblock.addRequiredFeatures("OsmSchema-V0.6");
-        if (useDense)
+        if (useDense) {
           headerblock.addRequiredFeatures("DenseNodes");
+        }
         Osmformat.HeaderBlock message = headerblock.build();
         try {
             output.write(FileBlock.newInstance("OSMHeader", message
                     .toByteString(), null));
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            throw new Error(e);
+        	throw new OsmosisRuntimeException("Unable to write OSM header.", e);
         }
-        // output.
-        // TODO:
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void process(EntityContainer entityContainer) {
         entityContainer.process(processor);
     }
@@ -439,8 +460,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
             processBatch();
             flush();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        	throw new OsmosisRuntimeException("Unable to complete the PBF file.", e);
         }
     }
 
@@ -449,8 +469,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         try {
             close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        	LOG.log(Level.WARNING, "Unable to release PBF file resources during release.", e);
         }
 
     }
