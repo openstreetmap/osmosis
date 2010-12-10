@@ -1,7 +1,9 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.store;
 
-import java.util.LinkedList;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Queue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -24,8 +26,8 @@ public class DataPostbox<T> {
 	private int chunkSize;
 	private Lock lock;
 	private Condition dataWaitCondition;
-	private Queue<T> centralQueue;
-	private Queue<T> inboundQueue;
+	private Collection<T> centralQueue;
+	private Collection<T> inboundQueue;
 	private Queue<T> outboundQueue;
 	private boolean released;
 	private boolean complete;
@@ -57,9 +59,9 @@ public class DataPostbox<T> {
 		}
 		lock = new ReentrantLock();
 		dataWaitCondition = lock.newCondition();
-		centralQueue = new LinkedList<T>();
-		inboundQueue = new LinkedList<T>();
-		outboundQueue = new LinkedList<T>();
+		centralQueue = new ArrayList<T>();
+		inboundQueue = new ArrayList<T>();
+		outboundQueue = new ArrayDeque<T>();
 		released = false;
 		complete = false;
 		outputOkay = true;
