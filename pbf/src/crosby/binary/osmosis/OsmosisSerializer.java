@@ -412,7 +412,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
             groups.add(relations);
             relations = null;
         } else {
-            assert false;
+            // No data. Is this an empty file?
         }
     }
 
