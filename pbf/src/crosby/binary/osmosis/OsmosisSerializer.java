@@ -45,6 +45,9 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
   /** Additional configuration flag for whether to serialize into DenseNodes/DenseInfo? */
   protected boolean useDense = true;
 
+  /** Has the header been written yet? */
+  protected boolean headerWritten = false;
+  
   /**
    * Tracks the number of warnings that have occurred during serialisation.
    */
@@ -368,6 +371,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         @Override
         public void process(NodeContainer node) {
             if (nodes == null) {
+                writeEmptyHeaderIfNeeded();
                 // Need to switch types.
                 switchTypes();
                 nodes = new NodeGroup();
@@ -379,6 +383,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         @Override
         public void process(WayContainer way) {
             if (ways == null) {
+                writeEmptyHeaderIfNeeded();
                 switchTypes();
                 ways = new WayGroup();
             }
@@ -389,6 +394,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         @Override
         public void process(RelationContainer relation) {
             if (relations == null) {
+                writeEmptyHeaderIfNeeded();
                 switchTypes();
                 relations = new RelationGroup();
             }
@@ -412,7 +418,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
             groups.add(relations);
             relations = null;
         } else {
-            // No data. Is this an empty file?
+            return; // No data. Is this an empty file?
         }
     }
 
@@ -422,30 +428,48 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
     public void processBounds(Bound entity) {
         Osmformat.HeaderBlock.Builder headerblock = Osmformat.HeaderBlock
                 .newBuilder();
-
+        
         Osmformat.HeaderBBox.Builder bbox = Osmformat.HeaderBBox.newBuilder();
         bbox.setLeft(mapRawDegrees(entity.getLeft()));
         bbox.setBottom(mapRawDegrees(entity.getBottom()));
         bbox.setRight(mapRawDegrees(entity.getRight()));
         bbox.setTop(mapRawDegrees(entity.getTop()));
+        headerblock.setBbox(bbox);
 
         headerblock.setSource(entity.getOrigin());
-        headerblock.setWritingprogram(OsmosisConstants.VERSION);
-        
-        headerblock.setBbox(bbox);
-        headerblock.addRequiredFeatures("OsmSchema-V0.6");
-        if (useDense) {
-          headerblock.addRequiredFeatures("DenseNodes");
-        }
-        Osmformat.HeaderBlock message = headerblock.build();
-        try {
-            output.write(FileBlock.newInstance("OSMHeader", message
-                    .toByteString(), null));
-        } catch (IOException e) {
-        	throw new OsmosisRuntimeException("Unable to write OSM header.", e);
-        }
+        finishHeader(headerblock);
     }
 
+    /** Write empty header block when there's no bounds entity. */
+    public void writeEmptyHeaderIfNeeded() {
+      if (headerWritten) {
+        return;
+      }
+      Osmformat.HeaderBlock.Builder headerblock = Osmformat.HeaderBlock.newBuilder();
+      finishHeader(headerblock);
+    }
+
+    /** Write the header fields that are always needed.
+     * 
+     * @param headerblock Incomplete builder to complete and write.
+     * */
+    public void finishHeader(Osmformat.HeaderBlock.Builder headerblock) {
+      headerblock.setWritingprogram(OsmosisConstants.VERSION);
+      headerblock.addRequiredFeatures("OsmSchema-V0.6");
+      if (useDense) {
+        headerblock.addRequiredFeatures("DenseNodes");
+      }
+      Osmformat.HeaderBlock message = headerblock.build();
+      try {
+          output.write(FileBlock.newInstance("OSMHeader", message
+                  .toByteString(), null));
+      } catch (IOException e) {
+          throw new OsmosisRuntimeException("Unable to write OSM header.", e);
+      }
+      headerWritten = true;
+    }
+   
+    
     /**
      * {@inheritDoc}
      */
