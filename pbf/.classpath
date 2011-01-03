@@ -18,7 +18,7 @@
 	<classpathentry kind="lib" path="lib/test/woodstox-core-lgpl-4.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/test/xercesImpl-2.9.1.jar"/>
 	<classpathentry kind="lib" path="lib/test/protobuf-java-2.3.0.jar"/>
-	<classpathentry kind="lib" path="lib/test/osmbin-1.0-6d760534.jar"/>
+	<classpathentry kind="lib" path="lib/test/osmpbf-1.1-f0ea2798.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Core"/>
 	<classpathentry kind="output" path="eclipse"/>
 </classpath>

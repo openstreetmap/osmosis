@@ -27,7 +27,7 @@
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-core" rev="${project.version}" conf="compile->default" changing="true"/>
     	
     	<dependency org="com.google.protobuf" name="protobuf-java" rev="${dependency.version.protobuf}" conf="compile->default"/>
-    	<dependency org="crosby" name="osmbin" rev="${dependency.version.osmbin}" conf="compile->default" changing="true"/>
+    	<dependency org="crosby" name="osmpbf" rev="${dependency.version.osmpbf}" conf="compile->default" changing="true"/>
         
         <dependency org="junit" name="junit" rev="${dependency.version.junit}" conf="test->default"/>
     	<dependency org="checkstyle" name="checkstyle" rev="${dependency.version.checkstyle}" conf="test->default"/>
