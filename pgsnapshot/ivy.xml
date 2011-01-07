@@ -25,7 +25,7 @@
     
     <dependencies>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-core" rev="${project.version}" conf="compile->default" changing="true"/>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-hstore" rev="${dependency.version.osmosis-hstore}" conf="compile->default" changing="true"/>
+    	<dependency org="org.openstreetmap.osmosis" name="osmosis-hstore" rev="${project.version}" conf="compile->default" changing="true"/>
     	
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-dataset" rev="${project.version}" conf="test->default" changing="true"/>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-xml" rev="${project.version}" conf="test->default" changing="true"/>
