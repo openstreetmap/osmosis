@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivy-module version="1.0" xmlns:m="http://ant.apache.org/ivy/maven">
-	<info organisation="crosby" module="osmpbf" revision="1.1-f0ea2798"/>
+	<info organisation="crosby" module="osmpbf" revision="1.1.1-754a33af"/>
 	<configurations>
 		<conf name="default" visibility="public" description="runtime dependencies and master artifact can be used with this conf" extends="runtime,master"/>
 		<conf name="master" visibility="public" description="contains only the artifact published by this module itself, with no transitive dependencies"/>
