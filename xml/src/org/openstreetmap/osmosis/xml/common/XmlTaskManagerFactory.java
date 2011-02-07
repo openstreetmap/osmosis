@@ -33,27 +33,21 @@ public abstract class XmlTaskManagerFactory extends TaskManagerFactory {
 			TaskConfiguration taskConfig, String fileName) {
 		CompressionMethod result;
 		
-		if (doesArgumentExist(taskConfig, ARG_COMPRESSION_METHOD)) {
-			String rawValue;
-			
-			rawValue = getStringArgument(taskConfig, ARG_COMPRESSION_METHOD).toLowerCase();
-			
-			if ("none".equals(rawValue)) {
-				result = CompressionMethod.None;
-			} else if ("gzip".equals(rawValue)) {
-				result = CompressionMethod.GZip;
-			} else if ("bzip2".equals(rawValue)) {
-				result = CompressionMethod.BZip2;
-			} else {
-				throw new OsmosisRuntimeException(
-					"Argument " + ARG_COMPRESSION_METHOD + " for task " + taskConfig.getId()
-					+ " must be one of none, gzip, or bzip2.");
-			}
-			
-		} else {
-			result = new CompressionMethodDeriver().deriveCompressionMethod(fileName);
-		}
+		String rawValue = getStringArgument(taskConfig, ARG_COMPRESSION_METHOD, "auto").toLowerCase();
 		
+		if ("none".equals(rawValue)) {
+			result = CompressionMethod.None;
+		} else if ("gzip".equals(rawValue)) {
+			result = CompressionMethod.GZip;
+		} else if ("bzip2".equals(rawValue)) {
+			result = CompressionMethod.BZip2;
+		} else if ("auto".equals(rawValue)) {
+			result = new CompressionMethodDeriver().deriveCompressionMethod(fileName);
+		} else {
+			throw new OsmosisRuntimeException(
+				"Argument " + ARG_COMPRESSION_METHOD + " for task " + taskConfig.getId()
+				+ " must be one of none, gzip, bzip2 or auto.");
+		}		
 		return result;
 	}
 	
