@@ -29,10 +29,10 @@ REM Set "SAVEDIR" to the current directory
 set SAVEDIR=%CD%
 set MYAPP_HOME=%~dp0..
 REM Now make the MYAPP_HOME path absolute
-cd %MYAPP_HOME%
+cd /D %MYAPP_HOME%
 set MYAPP_HOME=%CD%
 REM Change back to the original directory
-cd %SAVEDIR%
+cd /D %SAVEDIR%
 
 set MAINCLASS=org.codehaus.classworlds.Launcher
 set PLEXUS_CP=%MYAPP_HOME%\lib\default\plexus-classworlds-2.2.2.jar
