@@ -29,11 +29,11 @@
 	<classpathentry kind="lib" path="lib/test/spring-expression-3.0.3.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-jdbc-3.0.3.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/test/spring-tx-3.0.3.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/test/osmosis-hstore-0.2.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-dbcp-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-pool-1.5.4.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Xml"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Dataset"/>
 	<classpathentry kind="lib" path="lib/test/stax2-api-3.0.2.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Hstore"/>
 	<classpathentry kind="output" path="eclipse"/>
 </classpath>
