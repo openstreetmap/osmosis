@@ -7,6 +7,9 @@ import org.openstreetmap.osmosis.core.container.v0_6.EntityProcessor;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
+import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
+import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
+import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.filter.common.IdTracker;
@@ -20,11 +23,12 @@ import org.openstreetmap.osmosis.core.task.v0_6.SinkSource;
 
 
 /**
- * Restricts output of nodes to those that are used in ways.
+ * Restricts output of nodes to those that are used in ways and relations.
  * 
  * @author Brett Henderson
  * @author Karl Newman
  * @author Christoph Sommer 
+ * @author Bartosz Fabianowski
  */
 public class UsedNodeFilter implements SinkSource, EntityProcessor {
 	private Sink sink;
@@ -101,6 +105,17 @@ public class UsedNodeFilter implements SinkSource, EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(RelationContainer container) {
+		Relation relation;
+
+		// mark all nodes as required
+		relation = container.getEntity();
+		for (RelationMember memberReference : relation.getMembers()) {
+			if (memberReference.getMemberType() == EntityType.Node) {
+				long nodeId = memberReference.getMemberId();
+				requiredNodes.set(nodeId);
+			}
+		}
+
 		allRelations.add(container);
 	}
 
