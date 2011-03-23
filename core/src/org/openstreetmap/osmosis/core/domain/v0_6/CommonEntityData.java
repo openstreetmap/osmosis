@@ -15,7 +15,6 @@ import org.openstreetmap.osmosis.core.store.StoreClassRegister;
 import org.openstreetmap.osmosis.core.store.StoreReader;
 import org.openstreetmap.osmosis.core.store.StoreWriter;
 import org.openstreetmap.osmosis.core.store.Storeable;
-import org.openstreetmap.osmosis.core.util.IntAsChar;
 import org.openstreetmap.osmosis.core.util.LongAsInt;
 
 
@@ -186,7 +185,7 @@ public class CommonEntityData implements Storeable {
 	public CommonEntityData(StoreReader sr, StoreClassRegister scr) {
 		this(
 			sr.readLong(),
-			sr.readCharacter(),
+			sr.readInteger(),
 			readTimestampContainer(sr, scr),
 			readOsmUser(sr, scr),
 			sr.readInteger(),
@@ -201,7 +200,7 @@ public class CommonEntityData implements Storeable {
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		sw.writeLong(id);
 		
-		sw.writeCharacter(IntAsChar.intToChar(version));
+		sw.writeInteger(version);
 		
 		if (getTimestamp() != null) {
 			sw.writeBoolean(true);
