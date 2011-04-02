@@ -1,6 +1,22 @@
 0.39
 Added the pgsimp tasks which are the old 0.36 version pgsql tasks supporting the old style separate tags tables.
 Added a new "cascadingRelations" flag to --bb and --bp which is less costly than "completeRelations" and makes sure that parent relations are emitted when a child relation of theirs is emitted even if that child happens to come after the parent in the stream. The list of relations on output may appear in a different order than on input.
+Fixed connection failure error handling in pgsql tasks to display the correct error message instead of a NullPointerException.
+Fixed serialisation logic to correctly identify and use the OsmUser.NONE singleton object.
+Fixed checkstyle errors in the PBF code.
+Renamed the PBF project to "pbf" instead of "binary".
+Improved performance in the DataPostbox class used for inter-thread messaging.
+Fixed PBF code to allow an empty file to be written.
+Updated PBF library dependency from version 1.0 to 1.1.
+Updated default PBF filename from dump.osmbin to dump.osm.pbf.
+Fixed PBF code to write a header block even if no bound entity exists.
+Added java code for PostgreSQL HStore support instead of only including a pre-compiled jar.
+Added a new "auto" option for the compressionMethod argument of XML tasks.
+Fixed the windows launch batch script to support installation to a different drive than the drive of the working directory.
+Fixed the UNIX launch shell script to support spaces in argument values.
+Enhanced --used-node to include nodes referenced by ways and relations, instead of just ways.
+Enhanced serialisation logic to support negative version numbers.  Note this increases the space used by serialisation slightly.
+Added a --used-way task.
 
 0.38
 Updated internal storage to use long instead of int identifiers to remove 2^31 node id limit.
