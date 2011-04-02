@@ -9,6 +9,7 @@ import org.openstreetmap.osmosis.tagfilter.v0_6.NodeKeyValueFilterFactory;
 import org.openstreetmap.osmosis.tagfilter.v0_6.TagFilterFactory;
 import org.openstreetmap.osmosis.tagfilter.v0_6.TagRemoverFactory;
 import org.openstreetmap.osmosis.tagfilter.v0_6.UsedNodeFilterFactory;
+import org.openstreetmap.osmosis.tagfilter.v0_6.UsedWayFilterFactory;
 import org.openstreetmap.osmosis.tagfilter.v0_6.WayKeyFilterFactory;
 import org.openstreetmap.osmosis.tagfilter.v0_6.WayKeyValueFilterFactory;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
@@ -33,6 +34,8 @@ public class TagFilterPluginLoader implements PluginLoader {
 		
 		factoryMap.put("used-node", new UsedNodeFilterFactory());
 		factoryMap.put("un", new UsedNodeFilterFactory());
+		factoryMap.put("used-way", new UsedWayFilterFactory());
+		factoryMap.put("uw", new UsedWayFilterFactory());
 		factoryMap.put("tag-filter", new TagFilterFactory());
 		factoryMap.put("tf", new TagFilterFactory());
 		factoryMap.put("node-key", new NodeKeyFilterFactory());
@@ -45,6 +48,7 @@ public class TagFilterPluginLoader implements PluginLoader {
 		factoryMap.put("wkv", new WayKeyValueFilterFactory());
 		
 		factoryMap.put("used-node-0.6", new UsedNodeFilterFactory());
+		factoryMap.put("used-way-0.6", new UsedWayFilterFactory());
 		factoryMap.put("tag-filter-0.6", new TagFilterFactory());
 		factoryMap.put("node-key-0.6", new NodeKeyFilterFactory());
 		factoryMap.put("node-key-value-0.6", new NodeKeyValueFilterFactory());
