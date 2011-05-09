@@ -125,7 +125,7 @@ public class XmlChangeUploader implements ChangeSink {
             // we do not use Authenticator.setDefault()
             // here to stay thread-safe.
             httpCon.setRequestProperty("Authorization", "Basic "
-                    + Base64.encodeBase64(
+                    + Base64.encodeBase64String(
                             (this.myUserName + ":"
                            + this.myPassword).getBytes("UTF8")));
 
@@ -207,7 +207,7 @@ public class XmlChangeUploader implements ChangeSink {
 
         // we do not use Authenticator.setDefault() here to stay thread-safe.
         httpCon.setRequestProperty("Authorization", "Basic "
-                + Base64.encodeBase64(
+                + Base64.encodeBase64String(
                         (this.myUserName + ":"
                        + this.myPassword).getBytes("UTF8")));
 
@@ -251,7 +251,7 @@ public class XmlChangeUploader implements ChangeSink {
 
         // we do not use Authenticator.setDefault() here to stay thread-safe.
         httpCon.setRequestProperty("Authorization", "Basic "
-                + Base64.encodeBase64(
+                + Base64.encodeBase64String(
                         (this.myUserName + ":"
                        + this.myPassword).getBytes("UTF8")));
 
