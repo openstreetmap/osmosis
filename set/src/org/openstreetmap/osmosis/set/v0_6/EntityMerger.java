@@ -1,8 +1,13 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.set.v0_6;
 
+import java.util.logging.Logger;
+
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
+import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
+import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityByTypeThenIdComparator;
 import org.openstreetmap.osmosis.core.sort.v0_6.EntityContainerComparator;
@@ -22,14 +27,16 @@ import org.openstreetmap.osmosis.set.v0_6.impl.DataPostboxSink;
  */
 public class EntityMerger implements MultiSinkRunnableSource {
 	
+	private static final Logger LOG = Logger.getLogger(EntityMerger.class.getName());
+
 	private Sink sink;
 	private DataPostbox<EntityContainer> postbox0;
 	private SortedEntityPipeValidator sortedEntityValidator0;
 	private DataPostbox<EntityContainer> postbox1;
 	private SortedEntityPipeValidator sortedEntityValidator1;
 	private ConflictResolutionMethod conflictResolutionMethod;
-	
-	
+	private BoundRemovedAction boundRemovedAction;
+
 	/**
 	 * Creates a new instance.
 	 * 
@@ -38,8 +45,13 @@ public class EntityMerger implements MultiSinkRunnableSource {
 	 *            contain the same entity.
 	 * @param inputBufferCapacity
 	 *            The size of the buffers to use for input sources.
+	 * @param boundRemovedAction
+	 *            The action to take if the merge operation removes 
+	 *            a bound entity.
 	 */
-	public EntityMerger(ConflictResolutionMethod conflictResolutionMethod, int inputBufferCapacity) {
+	public EntityMerger(ConflictResolutionMethod conflictResolutionMethod, int inputBufferCapacity, 
+			BoundRemovedAction boundRemovedAction) {
+		
 		this.conflictResolutionMethod = conflictResolutionMethod;
 		
 		postbox0 = new DataPostbox<EntityContainer>(inputBufferCapacity);
@@ -100,6 +112,42 @@ public class EntityMerger implements MultiSinkRunnableSource {
 			
 			// Create a comparator for comparing two entities by type and identifier.
 			comparator = new EntityContainerComparator(new EntityByTypeThenIdComparator());
+			
+			// BEGIN bound special handling
+			
+			// If there is a bound, it's going to be the first object 
+			// in a properly sorted stream
+			entityContainer0 = nextOrNull(postbox0);
+			entityContainer1 = nextOrNull(postbox1);
+					
+			// There's only need for special processing if there actually is some data
+			// on both streams - no data implies no bound
+			if (entityContainer0 != null && entityContainer1 != null) {
+				Bound bound0 = null;
+				Bound bound1 = null;
+				
+				// If there are any bounds upstream, eat them up
+				if (entityContainer0.getEntity().getType() == EntityType.Bound) {
+					bound0 = (Bound) entityContainer0.getEntity();
+					entityContainer0 = nextOrNull(postbox0);
+				}
+				if (entityContainer1.getEntity().getType() == EntityType.Bound) {
+					bound1 = (Bound) entityContainer1.getEntity();
+					entityContainer1 = nextOrNull(postbox1);
+				}
+
+				// Only post a bound downstream if both upstream sources had a bound.
+				// (Otherwise there's either nothing to post or the posted bound is going
+				// to be smaller than the actual data, which is bad)
+				if (bound0 != null && bound1 != null) {
+					sink.process(new BoundContainer(bound0.union(bound1)));
+				} else if ((bound0 != null && bound1 == null)
+						|| (bound0 == null && bound1 != null)) {
+					handleBoundRemoved(bound0 == null);
+				}
+			}
+			
+			// END bound special handling
 			
 			// We continue in the comparison loop while both sources still have data.
 			while (
@@ -198,5 +246,46 @@ public class EntityMerger implements MultiSinkRunnableSource {
 			
 			sink.release();
 		}
+	}
+		
+	private void handleBoundRemoved(boolean source0BoundMissing) {
+		
+		if (boundRemovedAction == BoundRemovedAction.Ignore) {
+			// Nothing to do
+			return;
+		}
+		
+		// Message for log or exception
+		String missingSourceID, otherSourceID;
+		
+		if (source0BoundMissing) {
+			missingSourceID = "0";
+			otherSourceID = "1";
+		} else {
+			missingSourceID = "1";
+			otherSourceID = "0";
+		}
+		
+		String message = String.format(
+				"Source %s of the merge task has an explicit bound set, but source %s has not. "
+				+ "Therefore the explicit bound has been removed from the merged stream.", 
+				missingSourceID, otherSourceID);
+		
+		// Now actually log or fail.
+		if (boundRemovedAction == BoundRemovedAction.Warn) {
+			LOG.warning(message);
+		} else if (boundRemovedAction == BoundRemovedAction.Fail) {
+			throw new OsmosisRuntimeException(message);
+		}
+	}
+
+
+	private static EntityContainer nextOrNull(DataPostbox<EntityContainer> postbox) {
+
+		if (postbox.hasNext()) {
+			return postbox.getNext();
+		}
+		
+		return null;
 	}
 }
