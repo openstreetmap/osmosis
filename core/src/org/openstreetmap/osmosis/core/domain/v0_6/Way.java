@@ -153,6 +153,19 @@ public class Way extends Entity implements Comparable<Way> {
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param originalWay
+	 *            The way to clone from.
+	 */
+	public Way(Way originalWay) {
+		super(originalWay);
+		
+		this.wayNodes = new ArrayList<WayNode>(wayNodes);
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
 	 * @param sr
 	 *            The store to read state from.
 	 * @param scr
@@ -341,8 +354,7 @@ public class Way extends Entity implements Comparable<Way> {
 	@Override
 	public Way getWriteableInstance() {
 		if (isReadOnly()) {
-			return new Way(getId(), getVersion(), getTimestampContainer(), getUser(), getChangesetId(), getTags(),
-					wayNodes);
+			return new Way(this);
 		} else {
 			return this;
 		}

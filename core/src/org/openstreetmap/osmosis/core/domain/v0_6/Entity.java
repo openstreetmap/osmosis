@@ -113,7 +113,18 @@ public abstract class Entity implements Storeable {
 	 *            The data to store in the entity. This instance is used directly and is not cloned.
 	 */
 	public Entity(CommonEntityData entityData) {
-		this.entityData = entityData;
+		this.entityData = entityData.getWriteableInstance();
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param originalEntity
+	 *            The entity to clone from.
+	 */
+	public Entity(Entity originalEntity) {
+		this.entityData = originalEntity.entityData.getWriteableInstance();
 	}
 	
 	

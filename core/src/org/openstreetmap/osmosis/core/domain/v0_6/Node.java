@@ -144,6 +144,19 @@ public class Node extends Entity implements Comparable<Node> {
 
 		init(latitude, longitude);
 	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param originalNode
+	 *            The node to clone from.
+	 */
+	private Node(Node originalNode) {
+		super(originalNode);
+		
+		init(originalNode.latitude, originalNode.longitude);
+	}
 
 
 	/**
@@ -337,8 +350,7 @@ public class Node extends Entity implements Comparable<Node> {
 	@Override
 	public Node getWriteableInstance() {
 		if (isReadOnly()) {
-			return new Node(getId(), getVersion(), getTimestampContainer(), getUser(), getChangesetId(), getTags(),
-					latitude, longitude);
+			return new Node(this);
 		} else {
 			return this;
 		}

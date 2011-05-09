@@ -465,12 +465,16 @@ public class CommonEntityData implements Storeable {
 
 
 	/**
-	 * Returns a writeable instance of this object. If the object is read-only a clone is created,
-	 * if it is already writeable then this object is returned.
+	 * Returns a writable instance of this object. If the object is read-only a clone is created,
+	 * if it is already writable then this object is returned.
 	 * 
-	 * @return A writeable instance of this object.
+	 * @return A writable instance of this object.
 	 */
 	public CommonEntityData getWriteableInstance() {
-		return new CommonEntityData(id, version, timestampContainer, user, changesetId, tags);
+		if (isReadOnly()) {
+			return new CommonEntityData(id, version, timestampContainer, user, changesetId, tags);
+		} else {
+			return this;
+		}
 	}
 }

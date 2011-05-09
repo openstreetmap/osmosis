@@ -152,6 +152,19 @@ public class Relation extends Entity implements Comparable<Relation> {
 	/**
 	 * Creates a new instance.
 	 * 
+	 * @param originalRelation
+	 *            The relation to clone from.
+	 */
+	public Relation(Relation originalRelation) {
+		super(originalRelation);
+		
+		this.members = new ArrayList<RelationMember>(members);
+	}
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
 	 * @param sr
 	 *            The store to read state from.
 	 * @param scr
@@ -331,8 +344,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	@Override
 	public Relation getWriteableInstance() {
 		if (isReadOnly()) {
-			return new Relation(getId(), getVersion(), getTimestampContainer(), getUser(), getChangesetId(), getTags(),
-					members);
+			return new Relation(this);
 		} else {
 			return this;
 		}
