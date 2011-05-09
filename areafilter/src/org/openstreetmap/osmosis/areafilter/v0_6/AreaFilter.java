@@ -212,14 +212,12 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	public void process(RelationContainer container) {
 		Relation relation;
 		boolean inArea;
-        boolean referencesOtherRelation;
         boolean holdBackRelation;
 		
 		relation = container.getEntity();
 		
 		// First look through all the node and way members to see if any are within the filtered area
 		inArea = false;
-        referencesOtherRelation = false;
         holdBackRelation = false;
 
 		for (RelationMember member : relation.getMembers()) {
@@ -232,7 +230,6 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 				break;
 			case Relation:
 				inArea = availableRelations.get(member.getMemberId());
-                referencesOtherRelation = true;
 				break;
 			default:
 				break;
