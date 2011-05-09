@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<psf version="2.0">
+<provider id="org.tigris.subversion.subclipse.core.svnnature">
+<project reference="0.9.3,http://svn.openstreetmap.org/applications/utils/osmosis/trunk/apidb,Osmosis-Apidb"/>
+<project reference="0.9.3,http://svn.openstreetmap.org/applications/utils/osmosis/trunk/areafilter,Osmosis-AreaFilter"/>
+<project reference="0.9.3,http://svn.openstreetmap.org/applications/utils/osmosis/trunk/build-support,Osmosis-BuildSupport"/>
+<project reference="0.9.3,http://svn.openstreetmap.org/applications/utils/osmosis/trunk/core,Osmosis-Core"/>
+<project reference="0.9.3,http://svn.openstreetmap.org/applications/utils/osmosis/trunk/dataset,Osmosis-Dataset"/>
+<project reference="0.9.3,http://svn.openstreetmap.org/applications/utils/osmosis/trunk/extract,Osmosis-Extract"/>
+<project reference="0.9.3,http://svn.openstreetmap.org/applications/utils/osmosis/trunk/hstore-jdbc,Osmosis-Hstore"/>
+<project reference="0.9.3,http://svn.openstreetmap.org/applications/utils/osmosis/trunk/package,Osmosis-Package"/>
+<project reference="0.9.3,http://svn.openstreetmap.org/applications/utils/osmosis/trunk/pbf,Osmosis-Pbf"/>
+<project reference="0.9.3,http://svn.openstreetmap.org/applications/utils/osmosis/trunk/pgsimple,Osmosis-PgSimple"/>
+<project reference="0.9.3,http://svn.openstreetmap.org/applications/utils/osmosis/trunk/pgsnapshot,Osmosis-PgSnapshot"/>
+<project reference="0.9.3,http://svn.openstreetmap.org/applications/utils/osmosis/trunk/replication,Osmosis-Replication"/>
+<project reference="0.9.3,http://svn.openstreetmap.org/applications/utils/osmosis/trunk/set,Osmosis-Set"/>
+<project reference="0.9.3,http://svn.openstreetmap.org/applications/utils/osmosis/trunk/tagfilter,Osmosis-TagFilter"/>
+<project reference="0.9.3,http://svn.openstreetmap.org/applications/utils/osmosis/trunk/xml,Osmosis-Xml"/>
+</provider>
+</psf>
