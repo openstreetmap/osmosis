@@ -18,6 +18,7 @@ import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
 import org.openstreetmap.osmosis.core.domain.common.TimestampFormat;
 import org.openstreetmap.osmosis.core.domain.common.UnparsedTimestampContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
+import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
@@ -237,7 +238,7 @@ public class FastXmlParser {
 		latitude = Double.parseDouble(reader.getAttributeValue(null, ATTRIBUTE_NAME_LATITUDE));
 		longitude = Double.parseDouble(reader.getAttributeValue(null, ATTRIBUTE_NAME_LONGITUDE));
 		
-		node = new Node(id, version, timestamp, user, changesetId, latitude, longitude);
+		node = new Node(new CommonEntityData(id, version, timestamp, user, changesetId), latitude, longitude);
 		
 		reader.nextTag();
 		while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
@@ -275,7 +276,7 @@ public class FastXmlParser {
 		user = readUser();
 		changesetId = readChangesetId();
 		
-		way = new Way(id, version, timestamp, user, changesetId);
+		way = new Way(new CommonEntityData(id, version, timestamp, user, changesetId));
 		
 		reader.nextTag();
 		while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
@@ -323,7 +324,7 @@ public class FastXmlParser {
 		user = readUser();
 		changesetId = readChangesetId();
 		
-		relation = new Relation(id, version, timestamp, user, changesetId);
+		relation = new Relation(new CommonEntityData(id, version, timestamp, user, changesetId));
 		
 		reader.nextTag();
 		while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {

@@ -3,6 +3,7 @@ package org.openstreetmap.osmosis.xml.v0_6.impl;
 
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
+import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
@@ -81,7 +82,7 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 		
 		user = buildUser(rawUserId, rawUserName);
 		
-		relation = new Relation(id, version, timestampContainer, user, changesetId);
+		relation = new Relation(new CommonEntityData(id, version, timestampContainer, user, changesetId));
 	}
 	
 	

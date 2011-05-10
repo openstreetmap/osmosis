@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 
 
@@ -60,11 +61,13 @@ public class RelationMapper extends EntityMapper<Relation> {
 	public Relation parseRecord(ResultSet resultSet) {
 		try {
 			return new Relation(
-				resultSet.getLong("id"),
-				resultSet.getInt("version"),
-				new Date(resultSet.getTimestamp("tstamp").getTime()),
-				buildUser(resultSet),
-				resultSet.getLong("changeset_id")
+				new CommonEntityData(
+					resultSet.getLong("id"),
+					resultSet.getInt("version"),
+					new Date(resultSet.getTimestamp("tstamp").getTime()),
+					buildUser(resultSet),
+					resultSet.getLong("changeset_id")
+				)
 			);
 			
 		} catch (SQLException e) {

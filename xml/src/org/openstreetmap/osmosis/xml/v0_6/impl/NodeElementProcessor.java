@@ -5,6 +5,7 @@ import org.xml.sax.Attributes;
 
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
+import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
@@ -84,7 +85,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 		
 		user = buildUser(rawUserId, rawUserName);
 		
-		node = new Node(id, version, timestampContainer, user, changesetId, latitude, longitude);
+		node = new Node(new CommonEntityData(id, version, timestampContainer, user, changesetId), latitude, longitude);
 	}
 	
 	

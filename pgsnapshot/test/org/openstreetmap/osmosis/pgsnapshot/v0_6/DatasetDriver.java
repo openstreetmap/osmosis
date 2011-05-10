@@ -11,6 +11,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.Dataset;
 import org.openstreetmap.osmosis.core.container.v0_6.DatasetContext;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityManager;
+import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
@@ -64,7 +65,7 @@ public class DatasetDriver implements DatasetSink {
 			nodeManager.removeEntity(6);
 			
 			// Add node 7 using the NONE user.
-			node = new Node(7, 16, buildDate("2008-01-02 18:19:20"), OsmUser.NONE, 93, -11, -12);
+			node = new Node(new CommonEntityData(7, 16, buildDate("2008-01-02 18:19:20"), OsmUser.NONE, 93), -11, -12);
 			node.getTags().addAll(
 					Arrays.asList(new Tag[]{new Tag("created_by", "Me7"), new Tag("change", "new node")}));
 			nodeManager.addEntity(node);

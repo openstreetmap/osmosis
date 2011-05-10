@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
+import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
@@ -44,7 +45,10 @@ public class BoundingBoxFilterTest {
 	 */
 	@Before
 	public void setUp() {
+		OsmUser user;
 		List<Tag> tags;
+		
+		user = new OsmUser(12, "OsmosisTest");
 		
 		// All nodes have an empty tags list.
 		tags = new ArrayList<Tag>();
@@ -64,12 +68,12 @@ public class BoundingBoxFilterTest {
 		simpleAreaFilter.setSink(entityInspector);
 		intersectingBound = new Bound(30, 10, 30, 10, "intersecting");
 		nonIntersectingBound = new Bound(-30, -50, 10, -10, "nonintersecting");
-		inAreaNode = new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 10, 10);
-		outOfAreaNode = new Node(1235, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 30, 30);
-		edgeNodeEast = new Node(1236, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 10, 20);
-		edgeNodeWest = new Node(1237, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 10, -20);
-		edgeNodeNorth = new Node(1238, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 20, 10);
-		edgeNodeSouth = new Node(1239, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, -20, 10);
+		inAreaNode = new Node(new CommonEntityData(1234, 0, new Date(), user, 0, tags), 10, 10);
+		outOfAreaNode = new Node(new CommonEntityData(1235, 0, new Date(), user, 0, tags), 30, 30);
+		edgeNodeEast = new Node(new CommonEntityData(1236, 0, new Date(), user, 0, tags), 10, 20);
+		edgeNodeWest = new Node(new CommonEntityData(1237, 0, new Date(), user, 0, tags), 10, -20);
+		edgeNodeNorth = new Node(new CommonEntityData(1238, 0, new Date(), user, 0, tags), 20, 10);
+		edgeNodeSouth = new Node(new CommonEntityData(1239, 0, new Date(), user, 0, tags), -20, 10);
 	}
 
 

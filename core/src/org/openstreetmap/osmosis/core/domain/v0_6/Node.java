@@ -40,6 +40,7 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            The geographic latitude.
 	 * @param longitude
 	 *            The geographic longitude.
+	 * @deprecated As of 0.40, replaced by Node(entityData, latitude, longitude).
 	 */
 	public Node(
 			long id, int version, Date timestamp, OsmUser user, long changesetId, double latitude, double longitude) {
@@ -65,6 +66,7 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            The geographic latitude.
 	 * @param longitude
 	 *            The geographic longitude.
+	 * @deprecated As of 0.40, replaced by Node(entityData, latitude, longitude).
 	 */
 	public Node(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
 			double latitude, double longitude) {
@@ -110,6 +112,7 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            The geographic latitude.
 	 * @param longitude
 	 *            The geographic longitude.
+	 * @deprecated As of 0.40, replaced by Node(entityData, latitude, longitude).
 	 */
 	public Node(long id, int version, Date timestamp, OsmUser user, long changesetId, Collection<Tag> tags,
 			double latitude, double longitude) {
@@ -137,6 +140,7 @@ public class Node extends Entity implements Comparable<Node> {
 	 *            The geographic latitude.
 	 * @param longitude
 	 *            The geographic longitude.
+	 * @deprecated As of 0.40, replaced by Node(entityData, latitude, longitude).
 	 */
 	public Node(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
 			Collection<Tag> tags, double latitude, double longitude) {

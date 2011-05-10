@@ -3,6 +3,7 @@ package org.openstreetmap.osmosis.xml.v0_6.impl;
 
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
 import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
+import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
@@ -81,7 +82,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 		
 		user = buildUser(rawUserId, rawUserName);
 		
-		way = new Way(id, version, timestampContainer, user, changesetId);
+		way = new Way(new CommonEntityData(id, version, timestampContainer, user, changesetId));
 	}
 	
 	

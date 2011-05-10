@@ -37,6 +37,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *            The user that last modified this entity.
 	 * @param changesetId
 	 *            The id of the changeset that this version of the entity was created by.
+	 * @deprecated As of 0.40, replaced by Relation(entityData).
 	 */
 	public Relation(long id, int version, Date timestamp, OsmUser user, long changesetId) {
 		// Chain to the more-specific constructor
@@ -58,6 +59,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *            The user that last modified this entity.
 	 * @param changesetId
 	 *            The id of the changeset that this version of the entity was created by.
+	 * @deprecated As of 0.40, replaced by Relation(entityData).
 	 */
 	public Relation(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId) {
 		super(id, version, timestampContainer, user, changesetId);
@@ -96,6 +98,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *            The tags to apply to the object.
 	 * @param members
 	 *            The members to apply to the object.
+	 * @deprecated As of 0.40, replaced by Relation(entityData, members).
 	 */
 	public Relation(
 			long id, int version, Date timestamp, OsmUser user, long changesetId, Collection<Tag> tags,
@@ -123,6 +126,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *            The tags to apply to the object.
 	 * @param members
 	 *            The members to apply to the object.
+	 * @deprecated As of 0.40, replaced by Relation(entityData, members).
 	 */
 	public Relation(
 			long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
@@ -155,7 +159,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 * @param originalRelation
 	 *            The relation to clone from.
 	 */
-	public Relation(Relation originalRelation) {
+	private Relation(Relation originalRelation) {
 		super(originalRelation);
 		
 		this.members = new ArrayList<RelationMember>(members);

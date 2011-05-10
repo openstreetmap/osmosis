@@ -36,6 +36,7 @@ public abstract class Entity implements Storeable {
 	 *            The user that last modified this entity.
 	 * @param changesetId
 	 *            The id of the changeset that this version of the entity was created by.
+	 * @deprecated As of 0.40, replaced by Entity(entityData).
 	 */
 	public Entity(long id, int version, Date timestamp, OsmUser user, long changesetId) {
 		entityData = new CommonEntityData(id, version, timestamp, user, changesetId);
@@ -56,6 +57,7 @@ public abstract class Entity implements Storeable {
 	 *            The user that last modified this entity.
 	 * @param changesetId
 	 *            The id of the changeset that this version of the entity was created by.
+	 * @deprecated As of 0.40, replaced by Entity(entityData).
 	 */
 	public Entity(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId) {
 		entityData = new CommonEntityData(id, version, timestampContainer, user, changesetId);
@@ -77,6 +79,7 @@ public abstract class Entity implements Storeable {
 	 *            The id of the changeset that this version of the entity was created by.
 	 * @param tags
 	 *            The tags to apply to the object.
+	 * @deprecated As of 0.40, replaced by Entity(entityData).
 	 */
 	public Entity(long id, int version, Date timestamp, OsmUser user, long changesetId, Collection<Tag> tags) {
 		entityData = new CommonEntityData(id, version, timestamp, user, changesetId, tags);
@@ -99,6 +102,7 @@ public abstract class Entity implements Storeable {
 	 *            The id of the changeset that this version of the entity was created by.
 	 * @param tags
 	 *            The tags to apply to the object.
+	 * @deprecated As of 0.40, replaced by Entity(entityData).
 	 */
 	public Entity(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
 			Collection<Tag> tags) {
@@ -123,7 +127,7 @@ public abstract class Entity implements Storeable {
 	 * @param originalEntity
 	 *            The entity to clone from.
 	 */
-	public Entity(Entity originalEntity) {
+	protected Entity(Entity originalEntity) {
 		this.entityData = originalEntity.entityData.getWriteableInstance();
 	}
 	

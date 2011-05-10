@@ -12,6 +12,7 @@ import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
+import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
@@ -71,11 +72,11 @@ public class OsmosisBinaryParser extends BinaryParser {
 
         if (i.hasInfo()) {
           Osmformat.Info info = i.getInfo();
-          tmp = new Node(id, info.getVersion(), getDate(info),
-              getUser(info), info.getChangeset(), tags, latf, lonf);
+          tmp = new Node(new CommonEntityData(id, info.getVersion(), getDate(info),
+              getUser(info), info.getChangeset(), tags), latf, lonf);
         } else {
-          tmp = new Node(id, NOVERSION, NODATE, OsmUser.NONE,
-              NOCHANGESET, tags, latf, lonf);
+          tmp = new Node(new CommonEntityData(id, NOVERSION, NODATE, OsmUser.NONE,
+              NOCHANGESET, tags), latf, lonf);
         }
         sink.process(new NodeContainer(tmp));
 
@@ -130,10 +131,10 @@ public class OsmosisBinaryParser extends BinaryParser {
               } else {
                 user = new OsmUser(uid, getStringById(userSid));
               }
-            tmp = new Node(id, version, date, user, changeset, tags, latf, lonf);
+              tmp = new Node(new CommonEntityData(id, version, date, user, changeset, tags), latf, lonf);
             } else {
-                tmp = new Node(id, NOVERSION, NODATE, OsmUser.NONE,
-                        NOCHANGESET, tags, latf, lonf);
+                tmp = new Node(new CommonEntityData(id, NOVERSION, NODATE, OsmUser.NONE,
+                        NOCHANGESET, tags), latf, lonf);
             }
             sink.process(new NodeContainer(tmp));
         }
@@ -162,11 +163,11 @@ public class OsmosisBinaryParser extends BinaryParser {
             Way tmp;
             if (i.hasInfo()) {
                 Osmformat.Info info = i.getInfo();
-                tmp = new Way(id, info.getVersion(), getDate(info),
-                        getUser(info), info.getChangeset(), tags, nodes);
+                tmp = new Way(new CommonEntityData(id, info.getVersion(), getDate(info),
+                        getUser(info), info.getChangeset(), tags), nodes);
             } else {
-                tmp = new Way(id, NOVERSION, NODATE, OsmUser.NONE, NOCHANGESET,
-                        tags, nodes);
+                tmp = new Way(new CommonEntityData(id, NOVERSION, NODATE, OsmUser.NONE, NOCHANGESET,
+                        tags), nodes);
             }
             sink.process(new WayContainer(tmp));
         }
@@ -209,11 +210,11 @@ public class OsmosisBinaryParser extends BinaryParser {
             Relation tmp;
             if (i.hasInfo()) {
                 Osmformat.Info info = i.getInfo();
-                tmp = new Relation(id, info.getVersion(), getDate(info),
-                        getUser(info), info.getChangeset(), tags, nodes);
+                tmp = new Relation(new CommonEntityData(id, info.getVersion(), getDate(info),
+                        getUser(info), info.getChangeset(), tags), nodes);
             } else {
-                tmp = new Relation(id, NOVERSION, NODATE, OsmUser.NONE,
-                        NOCHANGESET, tags, nodes);
+                tmp = new Relation(new CommonEntityData(id, NOVERSION, NODATE, OsmUser.NONE,
+                        NOCHANGESET, tags), nodes);
             }
             sink.process(new RelationContainer(tmp));
         }

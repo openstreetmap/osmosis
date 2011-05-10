@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.openstreetmap.osmosis.core.buffer.v0_6.EntityBuffer;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
+import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.misc.v0_6.NullWriter;
@@ -73,7 +74,7 @@ public final class DataPostboxLoadInjector implements Runnable {
 		private NodeContainer nodeContainer;
 
 		public Writer() {
-			node = new Node(1, 2, new Date(), OsmUser.NONE, 3, 10, 10);
+			node = new Node(new CommonEntityData(1, 2, new Date(), OsmUser.NONE, 3), 10, 10);
 			nodeContainer = new NodeContainer(node);
 		}
 

@@ -12,6 +12,7 @@ import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
+import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
@@ -263,7 +264,7 @@ public class MergeBoundTest {
 		private Node createNode() {
 			double lon = (bound.getRight() - bound.getLeft()) / 2;
 			double lat = (bound.getTop() - bound.getBottom()) / 2;
-			return new Node(idGenerator.incrementAndGet(), 1, new Date(), OsmUser.NONE, 1, lat, lon);
+			return new Node(new CommonEntityData(idGenerator.incrementAndGet(), 1, new Date(), OsmUser.NONE, 1), lat, lon);
 		}
 	}
 }

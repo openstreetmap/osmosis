@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.pgsimple.common.PointBuilder;
 import org.postgis.PGgeometry;
@@ -80,11 +81,13 @@ public class NodeMapper extends EntityMapper<Node> {
 			point = (Point) geom.getGeometry();
 			
 			return new Node(
-				resultSet.getLong("id"),
-				resultSet.getInt("version"),
-				new Date(resultSet.getTimestamp("tstamp").getTime()),
-				buildUser(resultSet),
-				resultSet.getLong("changeset_id"),
+				new CommonEntityData(
+					resultSet.getLong("id"),
+					resultSet.getInt("version"),
+					new Date(resultSet.getTimestamp("tstamp").getTime()),
+					buildUser(resultSet),
+					resultSet.getLong("changeset_id")
+				),
 				point.y,
 				point.x
 			);

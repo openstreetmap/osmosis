@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.postgis.Geometry;
 import org.postgis.PGgeometry;
@@ -101,11 +102,13 @@ public class WayMapper extends EntityMapper<Way> {
 	public Way parseRecord(ResultSet resultSet) {
 		try {
 			return new Way(
-				resultSet.getLong("id"),
-				resultSet.getInt("version"),
-				new Date(resultSet.getTimestamp("tstamp").getTime()),
-				buildUser(resultSet),
-				resultSet.getLong("changeset_id")
+				new CommonEntityData(
+					resultSet.getLong("id"),
+					resultSet.getInt("version"),
+					new Date(resultSet.getTimestamp("tstamp").getTime()),
+					buildUser(resultSet),
+					resultSet.getLong("changeset_id")
+				)
 			);
 			
 		} catch (SQLException e) {

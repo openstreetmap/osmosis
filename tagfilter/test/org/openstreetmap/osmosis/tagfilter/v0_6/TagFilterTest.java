@@ -20,6 +20,7 @@ import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
+import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
@@ -60,28 +61,31 @@ public class TagFilterTest {
 	 */
 	@Before
 	public void setUp() {
+		OsmUser user;
 		List<Tag> tags;
+		
+		user = new OsmUser(12, "OsmosisTest");
 			
 		tags = Arrays.asList(new Tag("amenity", "bank"), new Tag("Akey", "Avalue"));
-		amenityNode = new Node(1101, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 1, 2);
+		amenityNode = new Node(new CommonEntityData(1101, 0, new Date(), user, 0, tags), 1, 2);
 		amenityNodeContainer = new NodeContainer(amenityNode);
 
 		tags = new ArrayList<Tag>();
-		taglessNode = new Node(1102, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 3, 4);
+		taglessNode = new Node(new CommonEntityData(1102, 0, new Date(), user, 0, tags), 3, 4);
 		taglessNodeContainer = new NodeContainer(taglessNode);
 
 		tags = Arrays.asList(new Tag("highway", "motorway"), new Tag("Bkey", "Bvalue"));
-		motorwayWay = new Way(2201, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, new ArrayList<WayNode>());
+		motorwayWay = new Way(new CommonEntityData(2201, 0, new Date(), user, 0, tags), new ArrayList<WayNode>());
 		motorwayWayContainer = new WayContainer(motorwayWay);
 
 		tags = Arrays.asList(new Tag("highway", "residential"), new Tag("Ckey", "Cvalue"));
 		residentialWay =
-			new Way(2202, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, new ArrayList<WayNode>());
+			new Way(new CommonEntityData(2202, 0, new Date(), user, 0, tags), new ArrayList<WayNode>());
 		residentialWayContainer = new WayContainer(residentialWay);
 
 		tags = Arrays.asList(new Tag("Dkey", "Dvalue"));
 		testRelation =
-			new Relation(3301, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, new ArrayList<RelationMember>());
+			new Relation(new CommonEntityData(3301, 0, new Date(), user, 0, tags), new ArrayList<RelationMember>());
 		testRelationContainer = new RelationContainer(testRelation);
 	}
 

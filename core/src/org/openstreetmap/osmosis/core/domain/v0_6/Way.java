@@ -39,6 +39,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            The user that last modified this entity.
 	 * @param changesetId
 	 *            The id of the changeset that this version of the entity was created by.
+	 * @deprecated As of 0.40, replaced by Way(entityData).
 	 */
 	public Way(long id, int version, Date timestamp, OsmUser user, long changesetId) {
 		// Chain to the more specific constructor
@@ -60,6 +61,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            The name of the user that last modified this entity.
 	 * @param changesetId
 	 *            The id of the changeset that this version of the entity was created by.
+	 * @deprecated As of 0.40, replaced by Way(entityData).
 	 */
 	public Way(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId) {
 		super(id, version, timestampContainer, user, changesetId);
@@ -98,6 +100,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            The tags to apply to the object.
 	 * @param wayNodes
 	 *            The way nodes to apply to the object
+	 * @deprecated As of 0.40, replaced by Way(entityData, wayNodes).
 	 */
 	public Way(long id, int version, Date timestamp, OsmUser user, long changesetId, Collection<Tag> tags,
 			List<WayNode> wayNodes) {
@@ -124,6 +127,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            The tags to apply to the object.
 	 * @param wayNodes
 	 *            The way nodes to apply to the object
+	 * @deprecated As of 0.40, replaced by Way(entityData, wayNodes).
 	 */
 	public Way(
 			long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
@@ -156,7 +160,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 * @param originalWay
 	 *            The way to clone from.
 	 */
-	public Way(Way originalWay) {
+	private Way(Way originalWay) {
 		super(originalWay);
 		
 		this.wayNodes = new ArrayList<WayNode>(wayNodes);

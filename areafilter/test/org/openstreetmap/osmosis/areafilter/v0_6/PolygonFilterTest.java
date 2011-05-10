@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
+import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
@@ -45,7 +46,10 @@ public class PolygonFilterTest {
 	 */
 	@Before
 	public void setUp() {
+		OsmUser user;
 		List<Tag> tags;
+		
+		user = new OsmUser(12, "OsmosisTest");
 		
 		// All nodes have an empty tags list.
 		tags = new ArrayList<Tag>();
@@ -58,9 +62,9 @@ public class PolygonFilterTest {
 		intersectingBound = new Bound(30, 0, 30, 0, "intersecting");
 		crossingIntersectingBound = new Bound(-10, 10, 30, -30, "crossing intersecting");
 		nonIntersectingBound = new Bound(30, 15, 30, 15, "nonintersecting");
-		inAreaNode = new Node(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 5, 10);
-		outOfAreaNode = new Node(1235, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 15, 15);
-		edgeNode = new Node(1236, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, tags, 15, 10);
+		inAreaNode = new Node(new CommonEntityData(1234, 0, new Date(), user, 0, tags), 5, 10);
+		outOfAreaNode = new Node(new CommonEntityData(1235, 0, new Date(), user, 0, tags), 15, 15);
+		edgeNode = new Node(new CommonEntityData(1236, 0, new Date(), user, 0, tags), 15, 10);
 	}
 
 
