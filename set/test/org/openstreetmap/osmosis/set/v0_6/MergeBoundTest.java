@@ -264,7 +264,9 @@ public class MergeBoundTest {
 		private Node createNode() {
 			double lon = (bound.getRight() - bound.getLeft()) / 2;
 			double lat = (bound.getTop() - bound.getBottom()) / 2;
-			return new Node(new CommonEntityData(idGenerator.incrementAndGet(), 1, new Date(), OsmUser.NONE, 1), lat, lon);
+			return new Node(
+					new CommonEntityData(idGenerator.incrementAndGet(), 1, new Date(), OsmUser.NONE, 1),
+					lat, lon);
 		}
 	}
 }
