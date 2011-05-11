@@ -95,7 +95,8 @@ public class OsmWriterTest {
 		testOsmWriter.process(
 				new NodeContainer(
 					new Node(
-						new CommonEntityData(1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, new ArrayList<Tag>()),
+						new CommonEntityData(
+								1234, 0, new Date(), new OsmUser(12, "OsmosisTest"), 0, new ArrayList<Tag>()),
 						20, 20)));
 		// Nothing to assert; just expect no exception
 	}

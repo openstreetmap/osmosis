@@ -90,7 +90,9 @@ public class NodeWriterTest {
 	@Test
 	public final void testProcessNormalNode() {
 		Node node =
-			new Node(new CommonEntityData(1234, 2, timestamp, new OsmUser(23, "someuser"), 0), 20.12345678, -21.98765432);
+			new Node(
+				new CommonEntityData(1234, 2, timestamp, new OsmUser(23, "someuser"), 0),
+				20.12345678, -21.98765432);
 		node.getTags().add(new Tag("nodekey", "nodevalue"));
 		testNodeWriter.process(node);
 		try {
