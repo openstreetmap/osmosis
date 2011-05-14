@@ -30,6 +30,7 @@ public class CommonEntityData implements Storeable {
 	private TimestampContainer timestampContainer;
 	private OsmUser user;
 	private TagCollection tags;
+	private MetaTagCollection metaTags;
 	private boolean readOnly;
 	
 	
@@ -72,6 +73,7 @@ public class CommonEntityData implements Storeable {
 			long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId) {
 		init(id, timestampContainer, user, version, changesetId);
 		tags = new TagCollectionImpl();
+		metaTags = new MetaTagCollectionImpl();
 	}
 	
 	
@@ -119,6 +121,7 @@ public class CommonEntityData implements Storeable {
 			Collection<Tag> tags) {
 		init(id, timestampContainer, user, version, changesetId);
 		this.tags = new TagCollectionImpl(tags);
+		metaTags = new MetaTagCollectionImpl();
 	}
 
 
@@ -191,6 +194,7 @@ public class CommonEntityData implements Storeable {
 			sr.readInteger(),
 			new TagCollectionImpl(sr, scr)
 		);
+		metaTags = new MetaTagCollectionImpl(sr, scr);
 	}
 	
 	
@@ -214,6 +218,7 @@ public class CommonEntityData implements Storeable {
 		sw.writeInteger(changesetId);
 		
 		tags.store(sw, scr);
+		metaTags.store(sw, scr);
 	}
 	
 	
@@ -418,10 +423,21 @@ public class CommonEntityData implements Storeable {
 	 * Returns the attached tags. If the class is read-only, the collection will
 	 * be read-only.
 	 * 
-	 * @return The tagList.
+	 * @return The tags.
 	 */
 	public Collection<Tag> getTags() {
 		return tags;
+	}
+
+
+	/**
+	 * Returns the attached meta tags. If the class is read-only, the collection will
+	 * be read-only.
+	 * 
+	 * @return The metaTags.
+	 */
+	public Collection<MetaTag> getMetaTags() {
+		return metaTags;
 	}
 
 
@@ -458,6 +474,7 @@ public class CommonEntityData implements Storeable {
 	public void makeReadOnly() {
 		if (!readOnly) {
 			tags = new UnmodifiableTagCollection(tags);
+			metaTags = new UnmodifiableMetaTagCollection(metaTags);
 			
 			readOnly = true;
 		}

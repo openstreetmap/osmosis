@@ -327,10 +327,21 @@ public abstract class Entity implements Storeable {
 	 * Returns the attached tags. If the class is read-only, the collection will
 	 * be read-only.
 	 * 
-	 * @return The tagList.
+	 * @return The tags.
 	 */
 	public Collection<Tag> getTags() {
 		return entityData.getTags();
+	}
+
+
+	/**
+	 * Returns the attached meta tags. If the class is read-only, the collection will
+	 * be read-only.
+	 * 
+	 * @return The meta tags.
+	 */
+	public Collection<MetaTag> getMetaTags() {
+		return entityData.getMetaTags();
 	}
 
 
