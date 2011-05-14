@@ -37,6 +37,6 @@
         </dependency>
         
         <dependency org="junit" name="junit" rev="${dependency.version.junit}" conf="test->default"/>
-    	<dependency org="checkstyle" name="checkstyle" rev="${dependency.version.checkstyle}" conf="test->default"/>
+    	<dependency org="com.puppycrawl.tools" name="checkstyle" rev="${dependency.version.checkstyle}" conf="test->default"/>
     </dependencies>
 </ivy-module>
