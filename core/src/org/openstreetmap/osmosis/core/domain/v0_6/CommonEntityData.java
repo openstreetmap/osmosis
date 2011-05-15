@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.common.SimpleTimestampContainer;
@@ -15,6 +17,7 @@ import org.openstreetmap.osmosis.core.store.StoreClassRegister;
 import org.openstreetmap.osmosis.core.store.StoreReader;
 import org.openstreetmap.osmosis.core.store.StoreWriter;
 import org.openstreetmap.osmosis.core.store.Storeable;
+import org.openstreetmap.osmosis.core.util.LazyHashMap;
 import org.openstreetmap.osmosis.core.util.LongAsInt;
 
 
@@ -30,7 +33,7 @@ public class CommonEntityData implements Storeable {
 	private TimestampContainer timestampContainer;
 	private OsmUser user;
 	private TagCollection tags;
-	private MetaTagCollection metaTags;
+	private Map<String, Object> metaTags;
 	private boolean readOnly;
 	
 	
@@ -73,7 +76,7 @@ public class CommonEntityData implements Storeable {
 			long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId) {
 		init(id, timestampContainer, user, version, changesetId);
 		tags = new TagCollectionImpl();
-		metaTags = new MetaTagCollectionImpl();
+		metaTags = new LazyHashMap<String, Object>();
 	}
 	
 	
@@ -121,7 +124,7 @@ public class CommonEntityData implements Storeable {
 			Collection<Tag> tags) {
 		init(id, timestampContainer, user, version, changesetId);
 		this.tags = new TagCollectionImpl(tags);
-		metaTags = new MetaTagCollectionImpl();
+		metaTags = new LazyHashMap<String, Object>();
 	}
 
 
@@ -194,7 +197,14 @@ public class CommonEntityData implements Storeable {
 			sr.readInteger(),
 			new TagCollectionImpl(sr, scr)
 		);
-		metaTags = new MetaTagCollectionImpl(sr, scr);
+		
+		int metaTagCount;
+		
+		metaTagCount = sr.readInteger();
+		metaTags = new LazyHashMap<String, Object>();
+		for (int i = 0; i < metaTagCount; i++) {
+			metaTags.put(sr.readString(), sr.readString());
+		}
 	}
 	
 	
@@ -218,7 +228,12 @@ public class CommonEntityData implements Storeable {
 		sw.writeInteger(changesetId);
 		
 		tags.store(sw, scr);
-		metaTags.store(sw, scr);
+		
+		sw.writeInteger(metaTags.size());
+		for (Entry<String, Object> tag : metaTags.entrySet()) {
+			sw.writeString(tag.getKey());
+			sw.writeString(tag.getValue().toString());
+		}
 	}
 	
 	
@@ -436,7 +451,7 @@ public class CommonEntityData implements Storeable {
 	 * 
 	 * @return The metaTags.
 	 */
-	public Collection<MetaTag> getMetaTags() {
+	public Map<String, Object> getMetaTags() {
 		return metaTags;
 	}
 
@@ -474,7 +489,7 @@ public class CommonEntityData implements Storeable {
 	public void makeReadOnly() {
 		if (!readOnly) {
 			tags = new UnmodifiableTagCollection(tags);
-			metaTags = new UnmodifiableMetaTagCollection(metaTags);
+			metaTags = Collections.unmodifiableMap(metaTags);
 			
 			readOnly = true;
 		}

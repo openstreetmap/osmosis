@@ -3,6 +3,7 @@ package org.openstreetmap.osmosis.core.domain.v0_6;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
 import org.openstreetmap.osmosis.core.domain.common.TimestampFormat;
@@ -340,7 +341,7 @@ public abstract class Entity implements Storeable {
 	 * 
 	 * @return The meta tags.
 	 */
-	public Collection<MetaTag> getMetaTags() {
+	public Map<String, Object> getMetaTags() {
 		return entityData.getMetaTags();
 	}
 
