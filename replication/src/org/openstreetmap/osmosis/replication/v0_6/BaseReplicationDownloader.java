@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -99,7 +100,10 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			byte[] buffer;
 			
 			// Open an input stream for the changeset file on the server.
-			inputStream = changesetUrl.openStream();
+			URLConnection connection = changesetUrl.openConnection();
+			connection.setReadTimeout(15*60*1000); // timeout 15 minutes
+			connection.setConnectTimeout(15*60*1000); // timeout 15 minutes
+			inputStream = connection.getInputStream();
 			source = new BufferedInputStream(inputStream, 65536);
 			
 			// Create a temporary file to write the data to.

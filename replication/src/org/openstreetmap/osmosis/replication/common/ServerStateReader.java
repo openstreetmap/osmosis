@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,7 +85,10 @@ public class ServerStateReader {
 			Properties stateProperties;
 			ReplicationState state;
 			
-			stateStream = stateUrl.openStream();
+			URLConnection connection = stateUrl.openConnection();
+			connection.setReadTimeout(15*60*1000); // timeout 15 minutes
+			connection.setConnectTimeout(15*60*1000); // timeout 15 minutes
+			stateStream = connection.getInputStream();
 			
 			reader = new BufferedReader(new InputStreamReader(stateStream));
 			stateProperties = new Properties();
