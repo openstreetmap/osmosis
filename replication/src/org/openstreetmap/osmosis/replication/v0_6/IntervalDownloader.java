@@ -108,8 +108,8 @@ public class IntervalDownloader implements RunnableChangeSource {
 			Date result;
 			
 			URLConnection connection = timestampUrl.openConnection();
-			connection.setReadTimeout(15*60*1000); // timeout 15 minutes
-			connection.setConnectTimeout(15*60*1000); // timeout 15 minutes
+			connection.setReadTimeout(15 * 60 * 1000); // timeout 15 minutes
+			connection.setConnectTimeout(15 * 60 * 1000); // timeout 15 minutes
 			timestampStream = connection.getInputStream();
 			
 			reader = new BufferedReader(new InputStreamReader(timestampStream));
@@ -165,8 +165,8 @@ public class IntervalDownloader implements RunnableChangeSource {
 			
 			// Open an input stream for the changeset file on the server.
 			URLConnection connection = changesetUrl.openConnection();
-			connection.setReadTimeout(15*60*1000); // timeout 15 minutes
-			connection.setConnectTimeout(15*60*1000); // timeout 15 minutes
+			connection.setReadTimeout(15 * 60 * 1000); // timeout 15 minutes
+			connection.setConnectTimeout(15 * 60 * 1000); // timeout 15 minutes
 			inputStream = connection.getInputStream();
 			source = new BufferedInputStream(inputStream, 65536);
 			

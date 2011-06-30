@@ -86,8 +86,8 @@ public class ServerStateReader {
 			ReplicationState state;
 			
 			URLConnection connection = stateUrl.openConnection();
-			connection.setReadTimeout(15*60*1000); // timeout 15 minutes
-			connection.setConnectTimeout(15*60*1000); // timeout 15 minutes
+			connection.setReadTimeout(15 * 60 * 1000); // timeout 15 minutes
+			connection.setConnectTimeout(15 * 60 * 1000); // timeout 15 minutes
 			stateStream = connection.getInputStream();
 			
 			reader = new BufferedReader(new InputStreamReader(stateStream));
