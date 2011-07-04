@@ -18,7 +18,7 @@ public class OsmosisReader implements RunnableSource {
      * Make a reader based on a target input stream. 
      * @param input The input stream to read from. 
      */
-    OsmosisReader(InputStream input) {
+    public OsmosisReader(InputStream input) {
         if (input == null) {
             throw new Error("Null input");
         }
