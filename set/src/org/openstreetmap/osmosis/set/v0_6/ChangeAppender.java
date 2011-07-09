@@ -21,19 +21,20 @@ public class ChangeAppender implements MultiChangeSinkRunnableChangeSource {
 	
 	private List<DataPostbox<ChangeContainer>> sources;
 	private ChangeSink changeSink;
-	
-	
+
 	/**
 	 * Creates a new instance.
 	 * 
 	 * @param sourceCount
 	 *            The number of sources to be appended.
+	 * @param inputBufferCapacity
+	 *            The capacity of the buffer to use for each source, in objects.
 	 */
-	public ChangeAppender(int sourceCount) {
+	public ChangeAppender(int sourceCount, int inputBufferCapacity) {
 		sources = new ArrayList<DataPostbox<ChangeContainer>>(sourceCount);
 		
 		for (int i = 0; i < sourceCount; i++) {
-			sources.add(new DataPostbox<ChangeContainer>(10));
+			sources.add(new DataPostbox<ChangeContainer>(inputBufferCapacity));
 		}
 	}
 	

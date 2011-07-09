@@ -16,6 +16,8 @@ public class ChangeAppenderFactory extends TaskManagerFactory {
 	private static final String ARG_SOURCE_COUNT = "sourceCount";
 	private static final int DEFAULT_SOURCE_COUNT = 2;
 	
+	private static final String ARG_BUFFER_CAPACITY = "bufferCapacity";
+	private static final int DEFAULT_BUFFER_CAPACITY = 20;
 	
 	/**
 	 * {@inheritDoc}
@@ -26,9 +28,16 @@ public class ChangeAppenderFactory extends TaskManagerFactory {
 		
 		sourceCount = getIntegerArgument(taskConfig, ARG_SOURCE_COUNT, DEFAULT_SOURCE_COUNT);
 		
+		int bufferCapacity = getIntegerArgument(
+				taskConfig,
+				ARG_BUFFER_CAPACITY,
+				getDefaultIntegerArgument(taskConfig, DEFAULT_BUFFER_CAPACITY)
+			);
+
+		
 		return new MultiChangeSinkRunnableChangeSourceManager(
 			taskConfig.getId(),
-			new ChangeAppender(sourceCount),
+			new ChangeAppender(sourceCount, bufferCapacity),
 			taskConfig.getPipeArgs()
 		);
 	}

@@ -28,6 +28,9 @@ public class EntityMergerFactory extends TaskManagerFactory {
 	private static final String ARG_BOUND_REMOVED_ACTION = "boundRemovedAction";
 	private static final String DEFAULT_BOUND_REMOVED_ACTION = "warn";
 	
+	private static final String ARG_BUFFER_CAPACITY = "bufferCapacity";
+	private static final int DEFAULT_BUFFER_CAPACITY = 20;
+	
 	static {
 		CONFLICT_RESOLUTION_METHOD_MAP.put(
 				DEFAULT_CONFLICT_RESOLUTION_METHOD, ConflictResolutionMethod.Version);
@@ -53,6 +56,12 @@ public class EntityMergerFactory extends TaskManagerFactory {
 		boundRemovedAction = BoundRemovedAction.parse(
 				getStringArgument(taskConfig, ARG_BOUND_REMOVED_ACTION, DEFAULT_BOUND_REMOVED_ACTION));
 		
+		int bufferCapacity = getIntegerArgument(
+				taskConfig,
+				ARG_BUFFER_CAPACITY,
+				getDefaultIntegerArgument(taskConfig, DEFAULT_BUFFER_CAPACITY)
+			);
+		
 		if (!CONFLICT_RESOLUTION_METHOD_MAP.containsKey(conflictResolutionMethod)) {
 			throw new OsmosisRuntimeException(
 					"Argument " + ARG_CONFLICT_RESOLUTION_METHOD + " for task " + taskConfig.getId()
@@ -61,7 +70,7 @@ public class EntityMergerFactory extends TaskManagerFactory {
 		
 		return new MultiSinkRunnableSourceManager(
 			taskConfig.getId(),
-			new EntityMerger(CONFLICT_RESOLUTION_METHOD_MAP.get(conflictResolutionMethod),  10,
+			new EntityMerger(CONFLICT_RESOLUTION_METHOD_MAP.get(conflictResolutionMethod),  bufferCapacity,
 					boundRemovedAction),
 			taskConfig.getPipeArgs()
 		);

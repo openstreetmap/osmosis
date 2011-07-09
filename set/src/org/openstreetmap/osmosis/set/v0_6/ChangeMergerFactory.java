@@ -24,6 +24,9 @@ public class ChangeMergerFactory extends TaskManagerFactory {
 	private static final String ALTERNATIVE_CONFLICT_RESOLUTION_METHOD_2 = "lastSource";
 	private static final Map<String, ConflictResolutionMethod> CONFLICT_RESOLUTION_METHOD_MAP =
 		new HashMap<String, ConflictResolutionMethod>();
+
+	private static final String ARG_BUFFER_CAPACITY = "bufferCapacity";
+	private static final int DEFAULT_BUFFER_CAPACITY = 20;
 	
 	static {
 		CONFLICT_RESOLUTION_METHOD_MAP.put(
@@ -51,9 +54,15 @@ public class ChangeMergerFactory extends TaskManagerFactory {
 					+ " has value \"" + conflictResolutionMethod + "\" which is unrecognised.");
 		}
 		
+		int bufferCapacity = getIntegerArgument(
+				taskConfig,
+				ARG_BUFFER_CAPACITY,
+				getDefaultIntegerArgument(taskConfig, DEFAULT_BUFFER_CAPACITY)
+			);
+		
 		return new MultiChangeSinkRunnableChangeSourceManager(
 			taskConfig.getId(),
-			new ChangeMerger(CONFLICT_RESOLUTION_METHOD_MAP.get(conflictResolutionMethod), 10),
+			new ChangeMerger(CONFLICT_RESOLUTION_METHOD_MAP.get(conflictResolutionMethod), bufferCapacity),
 			taskConfig.getPipeArgs()
 		);
 	}
