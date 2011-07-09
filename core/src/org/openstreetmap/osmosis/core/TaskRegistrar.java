@@ -279,7 +279,14 @@ public class TaskRegistrar {
 			try {
 				for (int i = 0; i < plugins.length; i++) {
 					LOG.finest("Found plugin " + plugins[i].getAbsolutePath());
-					locations.add(StandardPluginLocation.create(plugins[i]));
+					PluginLocation location = StandardPluginLocation.create(plugins[i]);
+
+					if (location != null) {
+						locations.add(location);
+					} else {
+						LOG.warning("JPF Plugin " + plugins[i].getAbsolutePath()
+								+ " is malformed and cannot be loaded.");
+					}
 				}
 			} catch (MalformedURLException e) {
 				throw new OsmosisRuntimeException("Cannot create plugin location " + pluginDir.getAbsolutePath(), e);
