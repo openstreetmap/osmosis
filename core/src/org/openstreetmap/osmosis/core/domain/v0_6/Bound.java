@@ -59,14 +59,14 @@ public class Bound extends Entity implements Comparable<Bound> {
 		super(new CommonEntityData(0, 0, new Date(), OsmUser.NONE, 0)); // minimal underlying entity
 		
 		// Check if any coordinates are out of bounds
-		if (Double.compare(right, MAX_LONGITUDE) > 0
-		        || Double.compare(right, MIN_LONGITUDE) < 0
-		        || Double.compare(left, MAX_LONGITUDE) > 0
-		        || Double.compare(left, MIN_LONGITUDE) < 0
-		        || Double.compare(top, MAX_LATITUDE) > 0
-		        || Double.compare(top, MIN_LATITUDE) < 0
-		        || Double.compare(bottom, MAX_LATITUDE) > 0
-		        || Double.compare(bottom, MIN_LATITUDE) < 0) {
+		if (Double.compare(right, MAX_LONGITUDE + 1.0d) > 0
+		        || Double.compare(right, MIN_LONGITUDE - 1.0d) < 0
+		        || Double.compare(left, MAX_LONGITUDE + 1.0d) > 0
+		        || Double.compare(left, MIN_LONGITUDE - 1.0d) < 0
+		        || Double.compare(top, MAX_LATITUDE + 1.0d) > 0
+		        || Double.compare(top, MIN_LATITUDE - 1.0d) < 0
+		        || Double.compare(bottom, MAX_LATITUDE + 1.0d) > 0
+		        || Double.compare(bottom, MIN_LATITUDE - 1.0d) < 0) {
 			throw new IllegalArgumentException("Bound coordinates outside of valid range");
 		}
 		if (Double.compare(top, bottom) < 0) {
