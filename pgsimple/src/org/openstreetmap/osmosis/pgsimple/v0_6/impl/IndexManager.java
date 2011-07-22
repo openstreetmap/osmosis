@@ -62,7 +62,7 @@ public class IndexManager {
 		+ ")";
 	private static final String POST_LOAD_SQL_POPULATE_WAY_LINESTRING =
 		"UPDATE ways w SET linestring = ("
-		+ "SELECT MakeLine(c.geom) AS way_line FROM ("
+		+ "SELECT ST_MakeLine(c.geom) AS way_line FROM ("
 		+ "SELECT n.geom AS geom FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id"
 		+ " WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id"
 		+ ") c"

@@ -318,7 +318,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 				preparedStatement = dbCtx.prepareStatement(
 					"INSERT INTO box_way_list "
 						+ "SELECT way_id FROM ("
-						+ "SELECT c.way_id AS way_id, MakeLine(c.geom) AS way_line FROM ("
+						+ "SELECT c.way_id AS way_id, ST_MakeLine(c.geom) AS way_line FROM ("
 						+ "SELECT w.id AS way_id, n.geom AS geom FROM nodes n"
 						+ " INNER JOIN way_nodes wn ON n.id = wn.node_id"
 						+ " INNER JOIN ways w ON wn.way_id = w.id"

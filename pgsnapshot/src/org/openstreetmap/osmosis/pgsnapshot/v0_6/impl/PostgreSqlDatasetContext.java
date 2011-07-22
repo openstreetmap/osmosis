@@ -297,7 +297,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 					+ " SELECT w.* FROM ("
 					+ "SELECT c.id AS id, First(c.version) AS version, First(c.user_id) AS user_id,"
 					+ " First(c.tstamp) AS tstamp, First(c.changeset_id) AS changeset_id, First(c.tags) AS tags,"
-					+ " First(c.nodes) AS nodes, MakeLine(c.geom) AS way_line FROM ("
+					+ " First(c.nodes) AS nodes, ST_MakeLine(c.geom) AS way_line FROM ("
 					+ "SELECT w.*, n.geom AS geom FROM nodes n"
 					+ " INNER JOIN way_nodes wn ON n.id = wn.node_id"
 					+ " INNER JOIN ways w ON wn.way_id = w.id"
