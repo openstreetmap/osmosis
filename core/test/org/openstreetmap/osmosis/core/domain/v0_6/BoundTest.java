@@ -20,7 +20,7 @@ public class BoundTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testConstructor1() {
-		new Bound(180.0000000000001, -20, 20, -20, "not null");
+		new Bound(181.0000000000001, -20, 20, -20, "not null");
 		fail("Expected to throw an exception");
 	}
 
@@ -30,7 +30,7 @@ public class BoundTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testConstructor2() {
-		new Bound(-180.0000000000001, -20, 20, -20, "not null");
+		new Bound(-181.0000000000001, -20, 20, -20, "not null");
 		fail("Expected to throw an exception");
 	}
 
@@ -40,7 +40,7 @@ public class BoundTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testConstructor3() {
-		new Bound(20, 180.0000000000001, 20, -20, "not null");
+		new Bound(20, 181.0000000000001, 20, -20, "not null");
 		fail("Expected to throw an exception");
 	}
 
@@ -50,7 +50,7 @@ public class BoundTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testConstructor4() {
-		new Bound(20, -180.0000000000001, 20, -20, "not null");
+		new Bound(20, -181.0000000000001, 20, -20, "not null");
 		fail("Expected to throw an exception");
 	}
 
@@ -60,7 +60,7 @@ public class BoundTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testConstructor5() {
-		new Bound(20, -20, 90.0000000000001, -20, "not null");
+		new Bound(20, -20, 91.0000000000001, -20, "not null");
 		fail("Expected to throw an exception");
 	}
 
@@ -70,7 +70,7 @@ public class BoundTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testConstructor6() {
-		new Bound(20, -20, -90.0000000000001, -91, "not null");
+		new Bound(20, -20, -91.0000000000001, -20, "not null");
 		fail("Expected to throw an exception");
 	}
 
@@ -80,7 +80,7 @@ public class BoundTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testConstructor7() {
-		new Bound(20, -20, 91, 90.0000000000001, "not null");
+		new Bound(20, -20, 20, 91.0000000000001, "not null");
 		fail("Expected to throw an exception");
 	}
 
@@ -90,7 +90,7 @@ public class BoundTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public final void testConstructor8() {
-		new Bound(20, -20, 20, -90.0000000000001, "not null");
+		new Bound(20, -20, 20, -91.0000000000001, "not null");
 		fail("Expected to throw an exception");
 	}
 
