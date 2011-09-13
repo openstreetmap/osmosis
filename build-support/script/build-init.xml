@@ -4,34 +4,79 @@
 	<description>
 		Initialises the ant environment.
 	</description>
-
-	<target name="init" description="Perform initialisation required by all other build steps.">
+	
+	<target name="init-time">
 		<!-- Create the time stamp -->
 		<tstamp/>
-
+	</target>
+	
+	<target name="init-build">
 		<!-- Create the build directory. -->
 		<mkdir dir="build"/>
-
+	</target>
+	
+	<target name="init-properties">
 		<!-- Load properties file defining configuration settings for the build. -->
 		<property name="build.properties" location="${build-support.dir}/config/ant-build.properties"/>
 		<property name="build-common.properties" location="${build-support.dir}/config/ant-build-common.properties"/>
 		<loadproperties srcFile="${build.properties}"/>
 		<loadproperties srcFile="${build-common.properties}"/>
+	</target>
+	
+	<target name="init-check-for-scm">
+		<property name="checkout.basedir" location="${basedir}/.."/>
+		<echo message="checkout.basedir=${checkout.basedir}"/>
+		<echo message="checkout.basedir .git=${checkout.basedir}/.git"/>
 
+		<available file="${checkout.basedir}/.git" property="checkout.git"/>
+		<available file="${checkout.basedir}/.svn" property="checkout.svn"/>
+		<echo message="checkout.git=${checkout.git}"/>
+		<echo message="checkout.svn=${checkout.svn}"/>
+	</target>
+	
+	<target name="init-version-svn" if="${checkout.svn}">
 		<!-- Determine the SVN revision number. -->
-		<property name="svn.basedir" location="${basedir}/.."/>
 		<exec executable="svnversion" output="build/version.txt" failonerror="true">
 			<arg value="-n"/>
-			<arg value="${svn.basedir}"/>
+			<arg value="${checkout.basedir}"/>
 		</exec>
 		<replace file="build/version.txt" token=":" value="-"/>
 		<loadfile property="svn.version" srcfile="build/version.txt"/>
 
 		<!--
-			Build the project version.
+			Define the project version.
 			It is assumed to be a development snapshot version.
 			Release versions will be overridden explicitly.
 		-->
 		<property name="project.version" value="SNAPSHOT-r${svn.version}"/>
+	</target>
+	
+	<target name="init-version-git" if="${checkout.git}">
+		<!-- Determine the GIT revision. -->
+		<exec executable="git" output="build/version.txt" failonerror="true">
+			<arg value="describe"/>
+			<arg value="--tags"/>
+			<arg value="--always"/>
+		</exec>
+		<replaceregexp file="build/version.txt" match="\s+" replace=""/>
+		<loadfile property="git.version" srcfile="build/version.txt"/>
+
+		<!--
+			Define the project version.
+			It is assumed to be a development snapshot version.
+			Release versions will be overridden explicitly.
+		-->
+		<property name="project.version" value="SNAPSHOT-${git.version}"/>
+	</target>
+	
+	<target name="init-version-default">
+		<property name="project.version" value="SNAPSHOT-unknown"/>
+	</target>
+	
+	<target name="init-version" depends="init-check-for-scm, init-version-svn, init-version-git, init-version-default">
+	</target>
+
+	<target name="init" depends="init-time, init-build, init-properties, init-version" description="Perform initialisation required by all other build steps.">
+		<echo message="Project Version: ${project.version}"/>
 	</target>
 </project>
