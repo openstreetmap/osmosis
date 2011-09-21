@@ -222,12 +222,6 @@ public class OsmosisBinaryParser extends BinaryParser {
 
     @Override
     public void parse(Osmformat.HeaderBlock block) {
-        double multiplier = .000000001;
-        double rightf = block.getBbox().getRight() * multiplier;
-        double leftf = block.getBbox().getLeft() * multiplier;
-        double topf = block.getBbox().getTop() * multiplier;
-        double bottomf = block.getBbox().getBottom() * multiplier;
-
         for (String s : block.getRequiredFeaturesList()) {
             if (s.equals("OsmSchema-V0.6")) {
               continue; // We can parse this.
@@ -238,12 +232,21 @@ public class OsmosisBinaryParser extends BinaryParser {
            throw new OsmosisRuntimeException("File requires unknown feature: " + s);
         }
         
-        String source = OsmosisConstants.VERSION;
-        if (block.hasSource()) {
-        	source = block.getSource();
+        if (block.hasBbox()) {
+            String source = OsmosisConstants.VERSION;
+            if (block.hasSource()) {
+                source = block.getSource();
+            }
+
+            double multiplier = .000000001;
+            double rightf = block.getBbox().getRight() * multiplier;
+            double leftf = block.getBbox().getLeft() * multiplier;
+            double topf = block.getBbox().getTop() * multiplier;
+            double bottomf = block.getBbox().getBottom() * multiplier;
+
+            Bound bounds = new Bound(rightf, leftf, topf, bottomf, source);
+            sink.process(new BoundContainer(bounds));
         }
-        Bound bounds = new Bound(rightf, leftf, topf, bottomf, source);
-        sink.process(new BoundContainer(bounds));
     }
 
     
