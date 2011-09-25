@@ -41,10 +41,12 @@ public class BoundComputer implements SinkSource, EntityProcessor {
 	private boolean nodesSeen;
 	private String origin;
 
+
 	/**
 	 * Creates a new bounding box computer instance.
 	 * 
-	 * @param origin The origin for the bound to set.
+	 * @param origin
+	 *            The origin for the bound to set.
 	 */
 
 	public BoundComputer(String origin) {
@@ -56,6 +58,7 @@ public class BoundComputer implements SinkSource, EntityProcessor {
 		nodesSeen = false;
 		this.origin = origin;
 	}
+
 
 	@Override
 	public void process(EntityContainer entityContainer) {
@@ -71,10 +74,18 @@ public class BoundComputer implements SinkSource, EntityProcessor {
 			sink.process(new BoundContainer(new Bound(right, left, top, bottom, this.origin)));
 		}
 
-		ReleasableIterator<EntityContainer> iter = objects.iterate();
+		ReleasableIterator<EntityContainer> iter = null;
 
-		while (iter.hasNext()) {
-			sink.process(iter.next());
+		try {
+			iter = objects.iterate();
+
+			while (iter.hasNext()) {
+				sink.process(iter.next());
+			}
+		} finally {
+			if (iter != null) {
+				iter.release();
+			}
 		}
 
 		sink.complete();
@@ -83,6 +94,7 @@ public class BoundComputer implements SinkSource, EntityProcessor {
 
 	@Override
 	public void release() {
+		sink.release();
 		objects.release();
 	}
 
@@ -107,8 +119,8 @@ public class BoundComputer implements SinkSource, EntityProcessor {
 			left = Math.min(left, node.getLongitude());
 			right = Math.max(right, node.getLongitude());
 
+			bottom = Math.min(bottom, node.getLatitude());
 			top = Math.max(top, node.getLatitude());
-			bottom = Math.max(bottom, node.getLongitude());
 		} else {
 			left = node.getLongitude();
 			right = node.getLongitude();
@@ -116,6 +128,8 @@ public class BoundComputer implements SinkSource, EntityProcessor {
 			bottom = node.getLatitude();
 			nodesSeen = true;
 		}
+
+		objects.add(nodeContainer);
 	}
 
 
