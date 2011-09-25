@@ -1,3 +1,4 @@
+// This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.bound.v0_6;
 
 import org.openstreetmap.osmosis.core.OsmosisConstants;
@@ -7,7 +8,13 @@ import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
 import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkSourceManager;
 
+/**
+ * Task manager factory for the bound setter task.
+ * 
+ * @author Igor Podolskiy
+ */
 public class BoundSetterFactory extends TaskManagerFactory {
+	
 	private static final String ARG_LEFT = "left";
 	private static final String ARG_RIGHT = "right";
 	private static final String ARG_TOP = "top";
@@ -25,42 +32,45 @@ public class BoundSetterFactory extends TaskManagerFactory {
 	private static final double DEFAULT_TOP = 90;
 	private static final double DEFAULT_BOTTOM = -90;
 	private static final int DEFAULT_ZOOM = 12;
-	private static final String DEFAULT_ORIGIN = 
-		"Osmosis/" + OsmosisConstants.VERSION;
+	private static final String DEFAULT_ORIGIN = "Osmosis/" + OsmosisConstants.VERSION;
 
 	private static final boolean DEFAULT_REMOVE = false;
 
+
 	private double xToLon(int zoom, int x) {
-	    double unit = 360 / Math.pow(2, zoom);
-	    return -180 + x * unit;
+		double unit = 360 / Math.pow(2, zoom);
+		return -180 + x * unit;
 	}
-	
+
+
 	private double projectF(double lat) {
 		// Project latitude to mercator
-	    return Math.log(Math.tan(lat) + 1 / Math.cos(lat));
+		return Math.log(Math.tan(lat) + 1 / Math.cos(lat));
 	}
-	
+
+
 	private double projectMercToLat(double y) {
-	    return Math.toDegrees(Math.atan(Math.sinh(y)));
+		return Math.toDegrees(Math.atan(Math.sinh(y)));
 	}
-	
+
+
 	private double yToLat(int zoom, int y) {
 
 		// Convert zoom/y to mercator
-		
+
 		// Get maximum range of mercator coordinates
 		double limitY = projectF(Math.atan(Math.sinh(Math.PI)));
 		double limitY2 = projectF((Math.atan(Math.sinh(-Math.PI))));
 		double rangeY = limitY - limitY2;
 
- 
 		double unit = 1 / Math.pow(2, zoom);
-	    double relY = limitY - rangeY * y * unit;
-	    
-	    // Mercator to latitude
-	    return projectMercToLat(relY);	    
+		double relY = limitY - rangeY * y * unit;
+
+		// Mercator to latitude
+		return projectMercToLat(relY);
 	}
-	
+
+
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
 		double left;
@@ -71,9 +81,9 @@ public class BoundSetterFactory extends TaskManagerFactory {
 		Bound newBound = null;
 		String origin = null;
 		boolean remove;
-		
+
 		remove = getBooleanArgument(taskConfig, ARG_REMOVE, DEFAULT_REMOVE);
-		
+
 		if (!remove) {
 			origin = getStringArgument(taskConfig, ARG_ORIGIN, DEFAULT_ORIGIN);
 			left = getDoubleArgument(taskConfig, ARG_LEFT, DEFAULT_LEFT);
@@ -85,22 +95,19 @@ public class BoundSetterFactory extends TaskManagerFactory {
 			if (doesArgumentExist(taskConfig, ARG_X1)) {
 				int x1 = getIntegerArgument(taskConfig, ARG_X1);
 				left = xToLon(zoom, x1);
-				right = xToLon(zoom,
-						getIntegerArgument(taskConfig, ARG_X2, x1) + 1);
+				right = xToLon(zoom, getIntegerArgument(taskConfig, ARG_X2, x1) + 1);
 			}
 			if (doesArgumentExist(taskConfig, ARG_Y1)) {
 				int y1 = getIntegerArgument(taskConfig, ARG_Y1);
 				top = yToLat(zoom, y1);
-				bottom = yToLat(zoom,
-						getIntegerArgument(taskConfig, ARG_Y2, y1) + 1);
+				bottom = yToLat(zoom, getIntegerArgument(taskConfig, ARG_Y2, y1) + 1);
 			}
 
 			newBound = new Bound(right, left, top, bottom, origin);
 		}
 
-		return new SinkSourceManager(taskConfig.getId(),
-				new BoundSetter(remove, newBound), taskConfig.getPipeArgs());
+		return new SinkSourceManager(taskConfig.getId(), 
+				new BoundSetter(newBound), taskConfig.getPipeArgs());
 	}
-	
-	
+
 }
