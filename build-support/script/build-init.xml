@@ -57,6 +57,7 @@
 			<arg value="describe"/>
 			<arg value="--tags"/>
 			<arg value="--always"/>
+			<arg value="--dirty"/>
 		</exec>
 		<replaceregexp file="build/version.txt" match="\s+" replace=""/>
 		<loadfile property="git.version" srcfile="build/version.txt"/>
