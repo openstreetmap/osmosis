@@ -43,8 +43,9 @@
 		<mkdir dir="build/test"/>
 		
 		<!-- Copy the test data into the test data input directory -->
+		<mkdir dir="test/data/input"/>
 		<copy todir="test/data/input">
-			<fileset dir="test/data/template"/>
+			<fileset dir="test/data/template" erroronmissingdir="false"/>
 		</copy>
 		<!-- Replace the version tag in all test data. -->
 		<replace token="%VERSION%" value="${project.version}" dir="test/data/input"/>
@@ -102,7 +103,7 @@
 		<mkdir dir="report"/>
 		<cs:checkstyle config="${build-support.dir}/checkstyle.xml">
 			<fileset dir="src" includes="**/*.java"/>
-			<fileset dir="test" includes="**/*.java"/>
+			<fileset dir="test" includes="**/*.java" erroronmissingdir="false"/>
 			<formatter type="plain"/>
 			<formatter type="xml" toFile="report/checkstyle.xml"/>
 		</cs:checkstyle>
@@ -148,11 +149,7 @@
 		<!-- Delete the doc/api directory tree. -->
 		<delete dir="doc/api"/>
 		<!-- Delete the generated test data files. -->
-		<delete>
-			<fileset dir="test/data/input">
-				<include name="**/*"/>
-			</fileset>
-		</delete>
+		<delete dir="test/data/input"/>
 	</target>
 	
 	<!-- Public Targets -->
