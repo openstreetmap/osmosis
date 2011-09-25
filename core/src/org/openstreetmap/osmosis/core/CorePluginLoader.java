@@ -4,6 +4,8 @@ package org.openstreetmap.osmosis.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.openstreetmap.osmosis.core.bound.v0_6.BoundComputerFactory;
+import org.openstreetmap.osmosis.core.bound.v0_6.BoundSetterFactory;
 import org.openstreetmap.osmosis.core.buffer.v0_6.ChangeBufferFactory;
 import org.openstreetmap.osmosis.core.buffer.v0_6.EntityBufferFactory;
 import org.openstreetmap.osmosis.core.misc.v0_6.NullChangeWriterFactory;
@@ -41,9 +43,9 @@ public class CorePluginLoader implements PluginLoader {
 		Map<String, TaskManagerFactory> factoryMap;
 		EntitySorterFactory entitySorterFactory06;
 		ChangeSorterFactory changeSorterFactory06;
-		
+
 		factoryMap = new HashMap<String, TaskManagerFactory>();
-		
+
 		// Configure factories that require additional information.
 		entitySorterFactory06 = new EntitySorterFactory();
 		entitySorterFactory06.registerComparator("TypeThenId", new EntityContainerComparator(
@@ -77,7 +79,12 @@ public class CorePluginLoader implements PluginLoader {
 		factoryMap.put("t", new EntityTeeFactory());
 		factoryMap.put("tee-change", new ChangeTeeFactory());
 		factoryMap.put("tc", new ChangeTeeFactory());
-		
+
+		factoryMap.put("compute-bounding-box", new BoundComputerFactory());
+		factoryMap.put("cbb", new BoundComputerFactory());
+		factoryMap.put("set-bounding-box", new BoundSetterFactory());
+		factoryMap.put("sbb", new BoundSetterFactory());
+
 		factoryMap.put("sort-0.6", entitySorterFactory06);
 		factoryMap.put("sort-change-0.6", changeSorterFactory06);
 		factoryMap.put("write-null-0.6", new NullWriterFactory());
@@ -92,7 +99,7 @@ public class CorePluginLoader implements PluginLoader {
 		factoryMap.put("tee-change-0.6", new ChangeTeeFactory());
 		factoryMap.put("tag-sort-0.6", new TagSorterFactory());
 		factoryMap.put("tag-sort-change-0.6", new ChangeTagSorterFactory());
-		
+
 		return factoryMap;
 	}
 }
