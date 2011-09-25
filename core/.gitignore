@@ -1,0 +1,8 @@
+/build
+/distrib
+/eclipse
+/lib
+/report
+/test/data/input
+/src/org/openstreetmap/osmosis/core/OsmosisConstants.java
+/src/org/openstreetmap/osmosis/core/plugin/plugin.xml
