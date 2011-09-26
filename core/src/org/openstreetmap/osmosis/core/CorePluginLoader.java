@@ -100,6 +100,9 @@ public class CorePluginLoader implements PluginLoader {
 		factoryMap.put("tag-sort-0.6", new TagSorterFactory());
 		factoryMap.put("tag-sort-change-0.6", new ChangeTagSorterFactory());
 
+		factoryMap.put("compute-bounding-box-0.6", new BoundComputerFactory());
+		factoryMap.put("set-bounding-box-0.6", new BoundSetterFactory());
+		
 		return factoryMap;
 	}
 }
