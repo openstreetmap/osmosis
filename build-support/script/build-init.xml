@@ -52,8 +52,15 @@
 	</target>
 	
 	<target name="init-version-git" if="${checkout.git}">
+		<condition property="git.command" value="git.cmd">
+			<os family="windows" />
+		</condition>
+		<condition property="git.command" value="git">
+			<not><os family="windows" /></not>
+		</condition>
+
 		<!-- Determine the GIT revision. -->
-		<exec executable="git" output="build/version.txt" failonerror="true">
+		<exec executable="${git.command}" output="build/version.txt" failonerror="true">
 			<arg value="describe"/>
 			<arg value="--tags"/>
 			<arg value="--always"/>
