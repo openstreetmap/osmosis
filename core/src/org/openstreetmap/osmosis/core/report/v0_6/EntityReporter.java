@@ -43,6 +43,7 @@ public class EntityReporter implements Sink {
 	private FileWriter fileWriter;
 	private Map<String, UserStatistics> userMap;
 	private UserStatistics anonymousUser;
+	private UserStatistics totalUser;
 	
 	
 	/**
@@ -56,6 +57,7 @@ public class EntityReporter implements Sink {
 		
 		userMap = new HashMap<String, UserStatistics>();
 		anonymousUser = new UserStatistics("anonymous");
+		totalUser = new UserStatistics("Total");
 	}
 	
 	
@@ -90,14 +92,17 @@ public class EntityReporter implements Sink {
 				
 				public void process(NodeContainer node) {
 					processorUser.incrementNodeCount();
+					totalUser.incrementNodeCount();
 				}
 				
 				public void process(WayContainer way) {
 					processorUser.incrementWayCount();
+					totalUser.incrementWayCount();
 				}
 				
 				public void process(RelationContainer relation) {
 					processorUser.incrementRelationCount();
+					totalUser.incrementRelationCount();
 				}
 			}
 		);
@@ -179,6 +184,8 @@ public class EntityReporter implements Sink {
 		for (UserStatistics userStatistics : userList) {
 			writeUserLine(writer, userStatistics);
 		}
+		writer.newLine();
+		writeUserLine(writer, totalUser);
 	}
 	
 	
