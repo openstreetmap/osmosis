@@ -71,10 +71,8 @@
 
 		<!--
 			Define the project version.
-			It is assumed to be a development snapshot version.
-			Release versions will be overridden explicitly.
 		-->
-		<property name="project.version" value="SNAPSHOT-${git.version}"/>
+		<property name="project.version" value="${git.version}"/>
 	</target>
 	
 	<target name="init-version-default">
