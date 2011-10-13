@@ -9,10 +9,15 @@
 	<!-- Include common build components. -->
 	<property name="build-support.dir" location="../"/>
 	<import file="${build-support.dir}/script/build-init.xml"/>
-
-	<property name="ivy.version" value="2.1.0" />
-	<property name="ivy.jar.dir" value="${build-support.dir}/ivy" />
-	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy-${ivy.version}.jar" />
+	
+	<target name="ivy-availability" description="Checks if the ivy library is available">
+		<property name="ivy.version" value="${dependency.version.ivy}" />
+		<property name="ivy.jar.dir" value="${build-support.dir}/ivy" />
+		<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy-${ivy.version}.jar" />
+		
+		<!-- Determine if the ivy jar is already available. -->
+		<available property="ivy.available" file="${ivy.jar.file}" />
+	</target>
 
 	<target name="download-ivy" unless="ivy.available" description="Downloads the ivy library from public repositories.">
 		<!-- Delete any existing ivy files -->
@@ -29,11 +34,7 @@
 			dest="${ivy.jar.file}" usetimestamp="true"/>
 	</target>
 
-	<target name="init-ivy" depends="init" description="Registers ivy with ant and initializes it." unless="ivy.initialized">
-		<!-- Determine if the ivy jar is already available. -->
-		<available property="ivy.available" file="${ivy.jar.file}" />
-		<!-- Download ivy.  This will only execute if the ivy.available property is not set. -->
-		<antcall target="download-ivy" />
+	<target name="init-ivy" depends="init, ivy-availability, download-ivy" description="Registers ivy with ant and initializes it." unless="ivy.initialized">
 		<!--
 			Try to load ivy in case the user has not already
 			dropped it into ant's lib dir (note that the latter copy will always
