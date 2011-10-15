@@ -49,6 +49,7 @@
 		<replace token="%VERSION%" value="${project.version}" dir="src/test/resources/data/input"/>
 		
 		<!-- Compile the java test code with the main project classes as a dependency. -->
+		<mkdir dir="src/test/java"/>
 		<javac srcdir="src/test/java" destdir="build/test" debug="on" debuglevel="lines,vars,source" includeantruntime="false">
 			<classpath>
 				<path refid="classpath.test"/>
