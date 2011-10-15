@@ -3,6 +3,6 @@
 /eclipse
 /lib
 /report
-/test/data/input
-/src/org/openstreetmap/osmosis/core/OsmosisConstants.java
-/src/org/openstreetmap/osmosis/core/plugin/plugin.xml
+/src/test/resources/data/input
+/src/main/java/org/openstreetmap/osmosis/core/OsmosisConstants.java
+/src/main/resources/org/openstreetmap/osmosis/core/plugin/plugin.xml

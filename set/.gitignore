@@ -3,4 +3,4 @@
 /eclipse
 /lib
 /report
-/test/data/input
+/src/test/resources/data/input
