@@ -27,7 +27,7 @@
 		<mkdir dir="build"/>
 		<mkdir dir="build/src"/>
 		<!-- Compile the java code from src into build/src -->
-		<javac srcdir="src" destdir="build/src" debug="on" debuglevel="lines,vars,source" classpathref="classpath.compile"/>
+		<javac srcdir="src" destdir="build/src" debug="on" debuglevel="lines,vars,source" classpathref="classpath.compile" includeantruntime="false"/>
 		<!-- Copy all resource files from src into build/src -->
 		<copy todir="build/src">
 			<fileset dir="src">
@@ -51,7 +51,7 @@
 		<replace token="%VERSION%" value="${project.version}" dir="test/data/input"/>
 		
 		<!-- Compile the java test code with the main project classes as a dependency. -->
-		<javac srcdir="test" destdir="build/test" debug="on" debuglevel="lines,vars,source">
+		<javac srcdir="test" destdir="build/test" debug="on" debuglevel="lines,vars,source" includeantruntime="false">
 			<classpath>
 				<path refid="classpath.test"/>
 				<path location="build/src"/>
@@ -117,7 +117,7 @@
 		<property name="db.apidb.authfile" location="test/data/input/v0_6/apidb-authfile.txt"/>
 		<property name="db.pgsql.authfile" location="test/data/input/v0_6/pgsql-authfile.txt"/>
 		
-		<junit fork="no" maxmemory="512m" printsummary="on" haltonerror="off" haltonfailure="off" filtertrace="on" failureproperty="test.failure">
+		<junit fork="no" maxmemory="512m" printsummary="on" haltonerror="off" haltonfailure="off" filtertrace="on" failureproperty="test.failure" includeantruntime="false">
 			<formatter type="plain" usefile="true"/>
 			<formatter type="xml" usefile="true"/>
 			<classpath>
