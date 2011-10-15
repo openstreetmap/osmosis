@@ -35,6 +35,6 @@
 	<classpathentry kind="lib" path="lib/test/spring-tx-3.0.6.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/test/stax2-api-3.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/test/woodstox-core-lgpl-4.1.2.jar"/>
-	<classpathentry kind="lib" path="lib/test/xercesImpl-2.10.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/xercesImpl-2.9.1.jar"/>
 	<classpathentry kind="output" path="eclipse"/>
 </classpath>
