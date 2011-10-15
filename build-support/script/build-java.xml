@@ -145,7 +145,7 @@
 		<!-- Delete the doc/api directory tree. -->
 		<delete dir="doc/api"/>
 		<!-- Delete the generated test data files. -->
-		<delete dir="test/data/input"/>
+		<delete dir="src/test/resources/data/input"/>
 	</target>
 	
 	<!-- Public Targets -->

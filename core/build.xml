@@ -14,7 +14,7 @@
 			tofile="src/main/java/org/openstreetmap/osmosis/core/OsmosisConstants.java"/>
 		<replaceregexp
 			byline="true"
-			file="src/main/javaorg/openstreetmap/osmosis/core/OsmosisConstants.java"
+			file="src/main/java/org/openstreetmap/osmosis/core/OsmosisConstants.java"
 			match="String VERSION = &quot;(.*)&quot;"
 			replace="String VERSION = &quot;${project.version}&quot;"
 		/>
