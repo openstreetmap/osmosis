@@ -30,7 +30,7 @@
 		<javac srcdir="src/main/java" destdir="build/src" debug="on" debuglevel="lines,vars,source" classpathref="classpath.compile" includeantruntime="false"/>
 		<!-- Copy all resource files into build/src -->
 		<copy todir="build/src">
-			<fileset dir="src/main/resources"/>
+			<fileset dir="src/main/resources" erroronmissingdir="false"/>
 		</copy>
 		<!-- Put a version number file in the build/src directory. -->
 		<touch file="build/src/version-${project.version}"/>
