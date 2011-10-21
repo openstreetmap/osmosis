@@ -4,11 +4,10 @@ package org.openstreetmap.osmosis.xml.v0_6;
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.Before;
 import org.junit.Test;
-
 import org.openstreetmap.osmosis.core.Osmosis;
-
-import data.util.DataFileUtilities;
+import org.openstreetmap.osmosis.testutil.TestDataUtilities;
 
 
 /**
@@ -18,7 +17,16 @@ import data.util.DataFileUtilities;
  */
 public class XmlReaderWriterTest {
 	
-	private DataFileUtilities fileUtils = new DataFileUtilities();
+	private TestDataUtilities dataUtils;
+	
+	
+	/**
+	 * Test setup.
+	 */
+	@Before
+	public void setup() {
+		dataUtils = new TestDataUtilities();
+	}
 	
 	
 	/**
@@ -34,8 +42,8 @@ public class XmlReaderWriterTest {
 		File outputFile;
 		
 		// Generate input files.
-		inputFile = fileUtils.getDataFile("v0_6/xml-task-tests-v0_6.osm");
-		outputFile = File.createTempFile("test", ".osm");
+		inputFile = dataUtils.createDataFile("v0_6/xml-task-tests-v0_6.osm");
+		outputFile = dataUtils.createTempFile();
 		
 		// Run the pipeline.
 		Osmosis.run(
@@ -49,10 +57,10 @@ public class XmlReaderWriterTest {
 		);
 		
 		// Validate that the output file matches the input file.
-		fileUtils.compareFiles(inputFile, outputFile);
+		dataUtils.compareFiles(inputFile, outputFile);
 		
-		// Success so delete the output file.
-		outputFile.delete();
+		// Success so delete the temporary files.
+		dataUtils.deleteResources();
 	}
 	
 	
@@ -70,10 +78,10 @@ public class XmlReaderWriterTest {
 		File outputFile;
 		
 		// Generate input files.
-		uncompressedFile = fileUtils.getDataFile("v0_6/xml-task-tests-v0_6.osm");
-		inputFile = File.createTempFile("test", ".osm.gz");
-		outputFile = File.createTempFile("test", ".osm.gz");
-		fileUtils.compressFile(uncompressedFile, inputFile);
+		uncompressedFile = dataUtils.createDataFile("v0_6/xml-task-tests-v0_6.osm");
+		inputFile = dataUtils.createTempFile("test", ".osm.gz");
+		outputFile = dataUtils.createTempFile("test", ".osm.gz");
+		dataUtils.compressFile(uncompressedFile, inputFile);
 		
 		// Run the pipeline.
 		Osmosis.run(
@@ -87,10 +95,9 @@ public class XmlReaderWriterTest {
 		);
 		
 		// Validate that the output file matches the input file.
-		fileUtils.compareFiles(inputFile, outputFile);
+		dataUtils.compareFiles(inputFile, outputFile);
 		
-		// Success so delete the temp files.
-		outputFile.delete();
-		inputFile.delete();
+		// Success so delete the temporary files.
+		dataUtils.deleteResources();
 	}
 }

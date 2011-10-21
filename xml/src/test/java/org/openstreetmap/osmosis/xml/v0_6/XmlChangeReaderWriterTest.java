@@ -4,11 +4,11 @@ package org.openstreetmap.osmosis.xml.v0_6;
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import org.openstreetmap.osmosis.testutil.TestDataUtilities;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
-
-import data.util.DataFileUtilities;
 
 
 /**
@@ -19,7 +19,16 @@ import data.util.DataFileUtilities;
  */
 public class XmlChangeReaderWriterTest {
 	
-	private DataFileUtilities fileUtils = new DataFileUtilities();
+	private TestDataUtilities dataUtils;
+	
+	
+	/**
+	 * Test setup.
+	 */
+	@Before
+	public void setup() {
+		dataUtils = new TestDataUtilities();
+	}
 	
 	
 	/**
@@ -36,8 +45,8 @@ public class XmlChangeReaderWriterTest {
 		File inputFile;
 		File outputFile;
 		
-		inputFile = fileUtils.getDataFile("v0_6/xml-task-tests-v0_6.osc");
-		outputFile = File.createTempFile("test", ".osc");
+		inputFile = dataUtils.createDataFile("v0_6/xml-task-tests-v0_6.osc");
+		outputFile = dataUtils.createTempFile();
 		
 		// Create and connect the xml tasks.
 		xmlReader = new XmlChangeReader(inputFile, true, CompressionMethod.None);
@@ -48,9 +57,9 @@ public class XmlChangeReaderWriterTest {
 		xmlReader.run();
 		
 		// Validate that the output file matches the input file.
-		fileUtils.compareFiles(inputFile, outputFile);
+		dataUtils.compareFiles(inputFile, outputFile);
 		
-		// Success so delete the output file.
-		outputFile.delete();
+		// Success so delete the temporary files.
+		dataUtils.deleteResources();
 	}
 }
