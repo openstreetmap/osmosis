@@ -98,7 +98,7 @@ public class TestDataUtilities extends TemporaryFolder {
 	
 	
 	private void copyFiles(File from, File to) throws IOException {
-		byte buffer[];
+		byte[] buffer;
 		int bytesRead;
 		BufferedInputStream isFrom;
 		BufferedOutputStream osTo;
@@ -129,7 +129,8 @@ public class TestDataUtilities extends TemporaryFolder {
 		copyFiles(file1, file1Copy);
 		copyFiles(file2, file2Copy);
 		
-		Assert.fail("File " + file1Copy + " and file " + file2Copy + " are not equal at file offset " + failureoffset + ".");
+		Assert.fail("File " + file1Copy + " and file " + file2Copy + " are not equal at file offset " + failureoffset
+				+ ".");
 	}
 
 
