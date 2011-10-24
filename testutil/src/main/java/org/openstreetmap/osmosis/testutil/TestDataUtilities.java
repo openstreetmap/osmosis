@@ -95,6 +95,42 @@ public class TestDataUtilities extends TemporaryFolder {
 		// No system property is available so use the provided file name.
 		return createDataFile(dataFileName);
 	}
+	
+	
+	private void copyFiles(File from, File to) throws IOException {
+		byte buffer[];
+		int bytesRead;
+		BufferedInputStream isFrom;
+		BufferedOutputStream osTo;
+		
+		buffer = new byte[4096];
+		
+		isFrom = new BufferedInputStream(new FileInputStream(from));
+		osTo = new BufferedOutputStream(new FileOutputStream(to));
+		
+		while ((bytesRead = isFrom.read(buffer)) >= 0) {
+			osTo.write(buffer, 0, bytesRead);
+		}
+		
+		isFrom.close();
+		osTo.close();
+	}
+	
+	
+	private void handleInequalFiles(File file1, File file2, long failureoffset) throws IOException {
+		File file1Copy;
+		File file2Copy;
+		
+		// We must create copies of the files because the originals will be
+		// cleaned up at the completion of the test.
+		file1Copy = File.createTempFile("junit", null);
+		file2Copy = File.createTempFile("junit", null);
+		
+		copyFiles(file1, file1Copy);
+		copyFiles(file2, file2Copy);
+		
+		Assert.fail("File " + file1Copy + " and file " + file2Copy + " are not equal at file offset " + failureoffset + ".");
+	}
 
 
 	/**
@@ -122,7 +158,7 @@ public class TestDataUtilities extends TemporaryFolder {
 			byte2 = inStream2.read();
 
 			if (byte1 != byte2) {
-				Assert.fail("File " + file1 + " and file " + file2 + " are not equal at file offset " + offset + ".");
+				handleInequalFiles(file1, file2, offset);
 			}
 
 			offset++;
