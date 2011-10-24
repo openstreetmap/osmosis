@@ -36,17 +36,7 @@
 		<touch file="build/src/version-${project.version}"/>
 	</target>
 	
-	<target name="build_test_data" description="">
-		<!-- Copy the test data into the test data input directory -->
-		<mkdir dir="src/test/resources/data/input"/>
-		<copy todir="src/test/resources/data/input">
-			<fileset dir="src/test/resources/data/template" erroronmissingdir="false"/>
-		</copy>
-		<!-- Replace the version tag in all test data. -->
-		<replace token="%VERSION%" value="${project.version}" dir="src/test/resources/data/input"/>
-	</target>
-	
-	<target name="build_test" depends="build_src, build_test_data" description="Compile test source code into class files.">
+	<target name="build_test" depends="build_src" description="Compile test source code into class files.">
 		<!-- Create the build directory structure. -->
 		<mkdir dir="build/test"/>
 		
@@ -147,8 +137,6 @@
 		<delete dir="distrib"/>
 		<!-- Delete the doc/api directory tree. -->
 		<delete dir="doc/api"/>
-		<!-- Delete the generated test data files. -->
-		<delete dir="src/test/resources/data/input"/>
 	</target>
 	
 	<!-- Public Targets -->
