@@ -33,6 +33,7 @@
     	<dependency org="postgresql" name="postgresql" rev="${dependency.version.postgresql}" conf="compile->default"/>
     	<dependency org="mysql" name="mysql-connector-java" rev="${dependency.version.mysql}" conf="compile->default"/>
         
+        <dependency org="org.openstreetmap.osmosis" name="osmosis-testutil" rev="${project.version}" conf="test->default" changing="true"/>
         <dependency org="junit" name="junit" rev="${dependency.version.junit}" conf="test->default"/>
     	<dependency org="com.puppycrawl.tools" name="checkstyle" rev="${dependency.version.checkstyle}" conf="test->default"/>
     </dependencies>

@@ -6,6 +6,7 @@
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-TestUtil"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Xml"/>
 	<classpathentry kind="lib" path="lib/test/antlr-2.7.7.jar"/>
 	<classpathentry kind="lib" path="lib/test/checkstyle-5.4.jar"/>
