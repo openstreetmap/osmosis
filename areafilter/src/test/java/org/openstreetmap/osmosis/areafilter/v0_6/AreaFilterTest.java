@@ -6,17 +6,13 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.openstreetmap.osmosis.core.Osmosis;
-
-import data.util.DataFileUtilities;
+import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 
 
 /**
  * Tests the area filter implementation.
  */
-public class AreaFilterTest {
-
-	private DataFileUtilities fileUtils = new DataFileUtilities();
-	
+public class AreaFilterTest extends AbstractDataTest {
 	
 	/**
 	 * A basic test verifying that the area filter includes all data when the complete planet is selected.
@@ -31,9 +27,9 @@ public class AreaFilterTest {
 		File actualOutputFile;
 		
 		// Generate input files.
-		inputFile = fileUtils.getDataFile("v0_6/areafilter-in.osm");
-		expectedOutputFile = fileUtils.getDataFile("v0_6/areafilter-out-whole.osm");
-		actualOutputFile = File.createTempFile("test", ".osm");
+		inputFile = dataUtils.createDataFile("v0_6/areafilter-in.osm");
+		expectedOutputFile = dataUtils.createDataFile("v0_6/areafilter-out-whole.osm");
+		actualOutputFile = dataUtils.newFile();
 		
 		// Load the database with a dataset.
 		Osmosis.run(
@@ -49,10 +45,7 @@ public class AreaFilterTest {
 		);
 		
 		// Validate that the output file matches the input file.
-		fileUtils.compareFiles(expectedOutputFile, actualOutputFile);
-		
-		// Success so delete the output file.
-		actualOutputFile.delete();
+		dataUtils.compareFiles(expectedOutputFile, actualOutputFile);
 	}
 	
 	
@@ -69,9 +62,9 @@ public class AreaFilterTest {
 		File actualOutputFile;
 		
 		// Generate input files.
-		inputFile = fileUtils.getDataFile("v0_6/areafilter-in.osm");
-		expectedOutputFile = fileUtils.getDataFile("v0_6/areafilter-out-standard.osm");
-		actualOutputFile = File.createTempFile("test", ".osm");
+		inputFile = dataUtils.createDataFile("v0_6/areafilter-in.osm");
+		expectedOutputFile = dataUtils.createDataFile("v0_6/areafilter-out-standard.osm");
+		actualOutputFile = dataUtils.newFile();
 		
 		// Load the database with a dataset.
 		Osmosis.run(
@@ -87,10 +80,7 @@ public class AreaFilterTest {
 		);
 		
 		// Validate that the output file matches the input file.
-		fileUtils.compareFiles(expectedOutputFile, actualOutputFile);
-		
-		// Success so delete the output file.
-		actualOutputFile.delete();
+		dataUtils.compareFiles(expectedOutputFile, actualOutputFile);
 	}
 
 	/**
@@ -106,9 +96,9 @@ public class AreaFilterTest {
 		File actualOutputFile;
 		
 		// Generate input files.
-		inputFile = fileUtils.getDataFile("v0_6/areafilter-in.osm");
-		expectedOutputFile = fileUtils.getDataFile("v0_6/areafilter-out-cascadingrelations.osm");
-		actualOutputFile = File.createTempFile("test", ".osm");
+		inputFile = dataUtils.createDataFile("v0_6/areafilter-in.osm");
+		expectedOutputFile = dataUtils.createDataFile("v0_6/areafilter-out-cascadingrelations.osm");
+		actualOutputFile = dataUtils.newFile();
 		
 		// Load the database with a dataset.
 		Osmosis.run(
@@ -124,10 +114,7 @@ public class AreaFilterTest {
 		);
 		
 		// Validate that the output file matches the input file.
-		fileUtils.compareFiles(expectedOutputFile, actualOutputFile);
-		
-		// Success so delete the output file.
-		actualOutputFile.delete();
+		dataUtils.compareFiles(expectedOutputFile, actualOutputFile);
 	}
 	
 	
@@ -144,9 +131,9 @@ public class AreaFilterTest {
 		File actualOutputFile;
 		
 		// Generate input files.
-		inputFile = fileUtils.getDataFile("v0_6/areafilter-in.osm");
-		expectedOutputFile = fileUtils.getDataFile("v0_6/areafilter-out-completeways.osm");
-		actualOutputFile = File.createTempFile("test", ".osm");
+		inputFile = dataUtils.createDataFile("v0_6/areafilter-in.osm");
+		expectedOutputFile = dataUtils.createDataFile("v0_6/areafilter-out-completeways.osm");
+		actualOutputFile = dataUtils.newFile();
 		
 		// Load the database with a dataset.
 		Osmosis.run(
@@ -162,10 +149,7 @@ public class AreaFilterTest {
 		);
 		
 		// Validate that the output file matches the input file.
-		fileUtils.compareFiles(expectedOutputFile, actualOutputFile);
-		
-		// Success so delete the output file.
-		actualOutputFile.delete();
+		dataUtils.compareFiles(expectedOutputFile, actualOutputFile);
 	}
 	
 	
@@ -182,9 +166,9 @@ public class AreaFilterTest {
 		File actualOutputFile;
 		
 		// Generate input files.
-		inputFile = fileUtils.getDataFile("v0_6/areafilter-in.osm");
-		expectedOutputFile = fileUtils.getDataFile("v0_6/areafilter-out-completerelations.osm");
-		actualOutputFile = File.createTempFile("test", ".osm");
+		inputFile = dataUtils.createDataFile("v0_6/areafilter-in.osm");
+		expectedOutputFile = dataUtils.createDataFile("v0_6/areafilter-out-completerelations.osm");
+		actualOutputFile = dataUtils.newFile();
 		
 		// Load the database with a dataset.
 		Osmosis.run(
@@ -200,10 +184,7 @@ public class AreaFilterTest {
 		);
 		
 		// Validate that the output file matches the input file.
-		fileUtils.compareFiles(expectedOutputFile, actualOutputFile);
-		
-		// Success so delete the output file.
-		actualOutputFile.delete();
+		dataUtils.compareFiles(expectedOutputFile, actualOutputFile);
 	}
 	
 	
@@ -220,9 +201,9 @@ public class AreaFilterTest {
 		File actualOutputFile;
 		
 		// Generate input files.
-		inputFile = fileUtils.getDataFile("v0_6/areafilter-in.osm");
-		expectedOutputFile = fileUtils.getDataFile("v0_6/areafilter-out-clipincompleteentities.osm");
-		actualOutputFile = File.createTempFile("test", ".osm");
+		inputFile = dataUtils.createDataFile("v0_6/areafilter-in.osm");
+		expectedOutputFile = dataUtils.createDataFile("v0_6/areafilter-out-clipincompleteentities.osm");
+		actualOutputFile = dataUtils.newFile();
 		
 		// Load the database with a dataset.
 		Osmosis.run(
@@ -238,9 +219,6 @@ public class AreaFilterTest {
 		);
 		
 		// Validate that the output file matches the input file.
-		fileUtils.compareFiles(expectedOutputFile, actualOutputFile);
-		
-		// Success so delete the output file.
-		actualOutputFile.delete();
+		dataUtils.compareFiles(expectedOutputFile, actualOutputFile);
 	}
 }

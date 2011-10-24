@@ -6,8 +6,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.openstreetmap.osmosis.core.Osmosis;
-
-import data.util.DataFileUtilities;
+import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 
 
 /**
@@ -15,9 +14,7 @@ import data.util.DataFileUtilities;
  * 
  * @author Brett Henderson
  */
-public class ChangeAppenderTest {
-	private DataFileUtilities fileUtils = new DataFileUtilities();
-	
+public class ChangeAppenderTest extends AbstractDataTest  {
 	
 	/**
 	 * Tests appending two change files into a single file.
@@ -33,10 +30,10 @@ public class ChangeAppenderTest {
 		File actualOutputFile;
 		
 		// Generate files.
-		sourceFile1 = fileUtils.getDataFile("v0_6/append-change-in1.osc");
-		sourceFile2 = fileUtils.getDataFile("v0_6/append-change-in2.osc");
-		expectedOutputFile = fileUtils.getDataFile("v0_6/append-change-out.osc");
-		actualOutputFile = File.createTempFile("test", ".osm");
+		sourceFile1 = dataUtils.createDataFile("v0_6/append-change-in1.osc");
+		sourceFile2 = dataUtils.createDataFile("v0_6/append-change-in2.osc");
+		expectedOutputFile = dataUtils.createDataFile("v0_6/append-change-out.osc");
+		actualOutputFile = dataUtils.newFile();
 		
 		// Append the two source files into the destination file.
 		Osmosis.run(
@@ -53,9 +50,6 @@ public class ChangeAppenderTest {
 		);
 		
 		// Validate that the output file matches the expected result.
-		fileUtils.compareFiles(expectedOutputFile, actualOutputFile);
-		
-		// Success so delete the output file.
-		actualOutputFile.delete();
+		dataUtils.compareFiles(expectedOutputFile, actualOutputFile);
 	}
 }

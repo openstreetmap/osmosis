@@ -13,20 +13,20 @@ import java.util.TimeZone;
 import org.junit.Test;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.DatabaseUtilities;
 import org.openstreetmap.osmosis.core.Osmosis;
+import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 
-import data.util.DataFileUtilities;
 
 /**
  * Tests for PostgreSQL tasks.
  * 
  * @author Brett Henderson
  */
-public class ApiDbTest {
+public class ApiDbTest extends AbstractDataTest {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd_HH:mm:ss";
-
-    private final DataFileUtilities fileUtils = new DataFileUtilities();
-    private final DatabaseUtilities dbUtils = new DatabaseUtilities();
+	
+	private final DatabaseUtilities dbUtils = new DatabaseUtilities(dataUtils);
+	
 
     private String convertUTCTimeToLocalTime(String dateString) throws ParseException {
         DateFormat inFormat;
@@ -56,8 +56,8 @@ public class ApiDbTest {
 
         // Generate input files.
         authFile = dbUtils.getAuthorizationFile();
-        inputFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
-        outputFile = File.createTempFile("test", ".osm");
+        inputFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
+        outputFile = dataUtils.newFile();
 
         // Remove all existing data from the database.
         dbUtils.truncateDatabase();
@@ -84,10 +84,7 @@ public class ApiDbTest {
                 });
 
         // Validate that the output file matches the input file.
-        fileUtils.compareFiles(inputFile, outputFile);
-
-        // Success so delete the output file.
-        outputFile.delete();
+        dataUtils.compareFiles(inputFile, outputFile);
     }
 
     /**
@@ -104,7 +101,7 @@ public class ApiDbTest {
 
         // Generate input files.
         authFile = dbUtils.getAuthorizationFile();
-        inputFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
+        inputFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
         outputFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
@@ -129,10 +126,7 @@ public class ApiDbTest {
                 "--tag-sort-0.6", "--write-xml-0.6", outputFile.getPath() });
 
         // Validate that the output file matches the input file.
-        fileUtils.compareFiles(inputFile, outputFile);
-
-        // Success so delete the output file.
-        outputFile.delete();
+        dataUtils.compareFiles(inputFile, outputFile);
     }
 
     /**
@@ -151,9 +145,9 @@ public class ApiDbTest {
 
         // Generate input files.
         authFile = dbUtils.getAuthorizationFile();
-        snapshotFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
-        changesetFile = fileUtils.getDataFile("v0_6/db-changeset.osc");
-        expectedResultFile = fileUtils.getDataFile("v0_6/db-changeset-expected.osm");
+        snapshotFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
+        changesetFile = dataUtils.createDataFile("v0_6/db-changeset.osc");
+        expectedResultFile = dataUtils.createDataFile("v0_6/db-changeset-expected.osm");
         actualResultFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
@@ -187,10 +181,7 @@ public class ApiDbTest {
                 "--write-xml-0.6", actualResultFile.getPath() });
 
         // Validate that the dumped file matches the expected result.
-        fileUtils.compareFiles(expectedResultFile, actualResultFile);
-
-        // Success so delete the output file.
-        actualResultFile.delete();
+        dataUtils.compareFiles(expectedResultFile, actualResultFile);
     }
 
     /**
@@ -210,9 +201,9 @@ public class ApiDbTest {
 
         // Generate input files.
         authFile = dbUtils.getAuthorizationFile();
-        snapshotFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
-        changesetFile = fileUtils.getDataFile("v0_6/db-changeset.osc");
-        expectedResultFile = fileUtils.getDataFile("v0_6/db-snapshot-b.osm");
+        snapshotFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
+        changesetFile = dataUtils.createDataFile("v0_6/db-changeset.osc");
+        expectedResultFile = dataUtils.createDataFile("v0_6/db-snapshot-b.osm");
         actualResultFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
@@ -250,10 +241,7 @@ public class ApiDbTest {
                 actualResultFile.getPath() });
 
         // Validate that the dumped file matches the expected result.
-        fileUtils.compareFiles(expectedResultFile, actualResultFile);
-
-        // Success so delete the output file.
-        actualResultFile.delete();
+        dataUtils.compareFiles(expectedResultFile, actualResultFile);
     }
 
     /**
@@ -273,9 +261,9 @@ public class ApiDbTest {
 
         // Generate input files.
         authFile = dbUtils.getAuthorizationFile();
-        snapshotFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
-        changesetFile = fileUtils.getDataFile("v0_6/db-changeset.osc");
-        expectedResultFile = fileUtils.getDataFile("v0_6/db-changeset-b.osc");
+        snapshotFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
+        changesetFile = dataUtils.createDataFile("v0_6/db-changeset.osc");
+        expectedResultFile = dataUtils.createDataFile("v0_6/db-changeset-b.osc");
         actualResultFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
@@ -313,9 +301,6 @@ public class ApiDbTest {
                 });
 
         // Validate that the dumped file matches the expected result.
-        fileUtils.compareFiles(expectedResultFile, actualResultFile);
-
-        // Success so delete the output file.
-        actualResultFile.delete();
+        dataUtils.compareFiles(expectedResultFile, actualResultFile);
     }
 }

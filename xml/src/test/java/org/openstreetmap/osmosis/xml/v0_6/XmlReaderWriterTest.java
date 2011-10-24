@@ -4,10 +4,9 @@ package org.openstreetmap.osmosis.xml.v0_6;
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.openstreetmap.osmosis.core.Osmosis;
-import org.openstreetmap.osmosis.testutil.TestDataUtilities;
+import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 
 
 /**
@@ -15,19 +14,7 @@ import org.openstreetmap.osmosis.testutil.TestDataUtilities;
  * 
  * @author Brett Henderson
  */
-public class XmlReaderWriterTest {
-	
-	private TestDataUtilities dataUtils;
-	
-	
-	/**
-	 * Test setup.
-	 */
-	@Before
-	public void setup() {
-		dataUtils = new TestDataUtilities();
-	}
-	
+public class XmlReaderWriterTest extends AbstractDataTest {
 	
 	/**
 	 * A basic test reading and writing an osm file testing both reader and
@@ -43,7 +30,7 @@ public class XmlReaderWriterTest {
 		
 		// Generate input files.
 		inputFile = dataUtils.createDataFile("v0_6/xml-task-tests-v0_6.osm");
-		outputFile = dataUtils.createTempFile();
+		outputFile = dataUtils.newFile();
 		
 		// Run the pipeline.
 		Osmosis.run(
@@ -58,9 +45,6 @@ public class XmlReaderWriterTest {
 		
 		// Validate that the output file matches the input file.
 		dataUtils.compareFiles(inputFile, outputFile);
-		
-		// Success so delete the temporary files.
-		dataUtils.deleteResources();
 	}
 	
 	
@@ -74,13 +58,15 @@ public class XmlReaderWriterTest {
 	@Test
 	public void testSimpleCompressed() throws IOException {
 		File uncompressedFile;
+		File workingFolder;
 		File inputFile;
 		File outputFile;
 		
 		// Generate input files.
 		uncompressedFile = dataUtils.createDataFile("v0_6/xml-task-tests-v0_6.osm");
-		inputFile = dataUtils.createTempFile("test", ".osm.gz");
-		outputFile = dataUtils.createTempFile("test", ".osm.gz");
+		workingFolder = dataUtils.newFolder();
+		inputFile = new File(workingFolder, "testin.osm.gz");
+		outputFile = new File(workingFolder, "testout.osm.gz");
 		dataUtils.compressFile(uncompressedFile, inputFile);
 		
 		// Run the pipeline.
@@ -92,12 +78,9 @@ public class XmlReaderWriterTest {
 				"--write-xml-0.6",
 				outputFile.getPath()
 			}
-		);
-		
+);
+
 		// Validate that the output file matches the input file.
 		dataUtils.compareFiles(inputFile, outputFile);
-		
-		// Success so delete the temporary files.
-		dataUtils.deleteResources();
 	}
 }

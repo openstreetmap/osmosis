@@ -6,8 +6,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.openstreetmap.osmosis.core.Osmosis;
-
-import data.util.DataFileUtilities;
+import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 
 
 /**
@@ -15,12 +14,10 @@ import data.util.DataFileUtilities;
  * 
  * @author Brett Henderson
  */
-public class PostgreSqlTest {
-	private DataFileUtilities fileUtils = new DataFileUtilities();
-	
+public class PostgreSqlTest extends AbstractDataTest {
 	
 	private File getAuthFile() {
-		return fileUtils.getDataFile("db.pgsql.authfile", "v0_6/pgsql-authfile.txt");
+		return dataUtils.createDataFile("db.pgsql.authfile", "v0_6/pgsql-authfile.txt");
 	}
 	
 	
@@ -39,8 +36,8 @@ public class PostgreSqlTest {
 		
 		// Generate input files.
 		authFile = getAuthFile();
-		inputFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
-		outputFile = File.createTempFile("test", ".osm");
+		inputFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
+		outputFile = dataUtils.newFile();
 		
 		// Remove all existing data from the database.
 		Osmosis.run(
@@ -76,10 +73,7 @@ public class PostgreSqlTest {
 		);
 		
 		// Validate that the output file matches the input file.
-		fileUtils.compareFiles(inputFile, outputFile);
-		
-		// Success so delete the output file.
-		outputFile.delete();
+		dataUtils.compareFiles(inputFile, outputFile);
 	}
 
 
@@ -98,8 +92,8 @@ public class PostgreSqlTest {
 		
 		// Generate input files.
 		authFile = getAuthFile();
-		inputFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
-		outputFile = File.createTempFile("test", ".osm");
+		inputFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
+		outputFile = dataUtils.newFile();
 		
 		// Remove all existing data from the database.
 		Osmosis.run(
@@ -135,10 +129,7 @@ public class PostgreSqlTest {
 		);
 		
 		// Validate that the output file matches the input file.
-		fileUtils.compareFiles(inputFile, outputFile);
-		
-		// Success so delete the output file.
-		outputFile.delete();
+		dataUtils.compareFiles(inputFile, outputFile);
 	}
 	
 	
@@ -159,10 +150,10 @@ public class PostgreSqlTest {
 		
 		// Generate input files.
 		authFile = getAuthFile();
-		snapshotFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
-		changesetFile = fileUtils.getDataFile("v0_6/db-changeset.osc");
-		expectedResultFile = fileUtils.getDataFile("v0_6/db-changeset-expected.osm");
-		actualResultFile = File.createTempFile("test", ".osm");
+		snapshotFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
+		changesetFile = dataUtils.createDataFile("v0_6/db-changeset.osc");
+		expectedResultFile = dataUtils.createDataFile("v0_6/db-changeset-expected.osm");
+		actualResultFile = dataUtils.newFile();
 		
 		// Remove all existing data from the database.
 		Osmosis.run(
@@ -209,10 +200,7 @@ public class PostgreSqlTest {
 		);
 		
 		// Validate that the dumped file matches the expected result.
-		fileUtils.compareFiles(expectedResultFile, actualResultFile);
-		
-		// Success so delete the output file.
-		actualResultFile.delete();
+		dataUtils.compareFiles(expectedResultFile, actualResultFile);
 	}
 
 
@@ -232,9 +220,9 @@ public class PostgreSqlTest {
 		
 		// Generate input files.
 		authFile = getAuthFile();
-		snapshotFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
-		expectedResultFile = fileUtils.getDataFile("v0_6/db-dataset-expected.osm");
-		actualResultFile = File.createTempFile("test", ".osm");
+		snapshotFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
+		expectedResultFile = dataUtils.createDataFile("v0_6/db-dataset-expected.osm");
+		actualResultFile = dataUtils.newFile();
 		
 		// Remove all existing data from the database.
 		Osmosis.run(
@@ -282,9 +270,6 @@ public class PostgreSqlTest {
 		);
 		
 		// Validate that the dumped file matches the expected result.
-		fileUtils.compareFiles(expectedResultFile, actualResultFile);
-		
-		// Success so delete the output file.
-		actualResultFile.delete();
+		dataUtils.compareFiles(expectedResultFile, actualResultFile);
 	}
 }

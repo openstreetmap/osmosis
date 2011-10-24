@@ -4,10 +4,8 @@ package org.openstreetmap.osmosis.xml.v0_6;
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.Before;
 import org.junit.Test;
-
-import org.openstreetmap.osmosis.testutil.TestDataUtilities;
+import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 
 
@@ -17,19 +15,7 @@ import org.openstreetmap.osmosis.xml.common.CompressionMethod;
  * 
  * @author Brett Henderson
  */
-public class XmlChangeReaderWriterTest {
-	
-	private TestDataUtilities dataUtils;
-	
-	
-	/**
-	 * Test setup.
-	 */
-	@Before
-	public void setup() {
-		dataUtils = new TestDataUtilities();
-	}
-	
+public class XmlChangeReaderWriterTest extends AbstractDataTest {
 	
 	/**
 	 * A basic test reading and writing an osm file testing both reader and
@@ -46,7 +32,7 @@ public class XmlChangeReaderWriterTest {
 		File outputFile;
 		
 		inputFile = dataUtils.createDataFile("v0_6/xml-task-tests-v0_6.osc");
-		outputFile = dataUtils.createTempFile();
+		outputFile = dataUtils.newFile();
 		
 		// Create and connect the xml tasks.
 		xmlReader = new XmlChangeReader(inputFile, true, CompressionMethod.None);
@@ -58,8 +44,5 @@ public class XmlChangeReaderWriterTest {
 		
 		// Validate that the output file matches the input file.
 		dataUtils.compareFiles(inputFile, outputFile);
-		
-		// Success so delete the temporary files.
-		dataUtils.deleteResources();
 	}
 }

@@ -6,8 +6,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.openstreetmap.osmosis.core.Osmosis;
-
-import data.util.DataFileUtilities;
+import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 
 
 /**
@@ -15,9 +14,7 @@ import data.util.DataFileUtilities;
  * 
  * @author Brett Henderson
  */
-public class CustomDbTest {
-	private DataFileUtilities fileUtils = new DataFileUtilities();
-	
+public class CustomDbTest extends AbstractDataTest {
 	
 	/**
 	 * A basic test loading an osm file into a pgsql database, then dumping it
@@ -33,9 +30,9 @@ public class CustomDbTest {
 		File dataDir;
 		
 		// Generate input files.
-		inputFile = fileUtils.getDataFile("v0_6/customdb-snapshot.osm");
+		inputFile = dataUtils.createDataFile("v0_6/customdb-snapshot.osm");
 		outputFile = File.createTempFile("test", ".osm");
-		dataDir = fileUtils.createTempDirectory();
+		dataDir = dataUtils.newFolder();
 		
 		// Load the database with a dataset.
 		Osmosis.run(
@@ -62,10 +59,6 @@ public class CustomDbTest {
 		);
 		
 		// Validate that the output file matches the input file.
-		fileUtils.compareFiles(inputFile, outputFile);
-		
-		// Success so delete the temporary files.
-		outputFile.delete();
-		fileUtils.deleteTempDirectory(dataDir);
+		dataUtils.compareFiles(inputFile, outputFile);
 	}
 }

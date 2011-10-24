@@ -5,10 +5,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.junit.Test;
-
 import org.openstreetmap.osmosis.core.Osmosis;
-
-import data.util.DataFileUtilities;
+import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 
 
 /**
@@ -16,8 +14,7 @@ import data.util.DataFileUtilities;
  * 
  * @author Brett Henderson
  */
-public class TagRemoverTest {
-	private DataFileUtilities fileUtils = new DataFileUtilities();
+public class TagRemoverTest extends AbstractDataTest {
 	
 	/**
 	 * Tests tag removal functionality using full key names.
@@ -31,9 +28,9 @@ public class TagRemoverTest {
 		File outputFile;
 		File expectedResultFile;
 		
-		inputFile = fileUtils.getDataFile("v0_6/tag-remove-snapshot.osm");
-		expectedResultFile = fileUtils.getDataFile("v0_6/tag-remove-expected.osm");
-		outputFile = File.createTempFile("test", ".osm");
+		inputFile = dataUtils.createDataFile("v0_6/tag-remove-snapshot.osm");
+		expectedResultFile = dataUtils.createDataFile("v0_6/tag-remove-expected.osm");
+		outputFile = dataUtils.newFile();
 		
 		// Remove all created_by tags.
 		Osmosis.run(
@@ -49,10 +46,7 @@ public class TagRemoverTest {
 		);
 		
 		// Validate that the output file matches the input file.
-		fileUtils.compareFiles(expectedResultFile, outputFile);
-		
-		// Success so delete the output file.
-		outputFile.delete();
+		dataUtils.compareFiles(expectedResultFile, outputFile);
 	}
 	
 	
@@ -68,9 +62,9 @@ public class TagRemoverTest {
 		File outputFile;
 		File expectedResultFile;
 		
-		inputFile = fileUtils.getDataFile("v0_6/tag-remove-snapshot.osm");
-		expectedResultFile = fileUtils.getDataFile("v0_6/tag-remove-expected.osm");
-		outputFile = File.createTempFile("test", ".osm");
+		inputFile = dataUtils.createDataFile("v0_6/tag-remove-snapshot.osm");
+		expectedResultFile = dataUtils.createDataFile("v0_6/tag-remove-expected.osm");
+		outputFile = dataUtils.newFile();
 		
 		// Remove all created_by tags.
 		Osmosis.run(
@@ -86,9 +80,6 @@ public class TagRemoverTest {
 		);
 		
 		// Validate that the output file matches the input file.
-		fileUtils.compareFiles(expectedResultFile, outputFile);
-		
-		// Success so delete the output file.
-		outputFile.delete();
+		dataUtils.compareFiles(expectedResultFile, outputFile);
 	}
 }

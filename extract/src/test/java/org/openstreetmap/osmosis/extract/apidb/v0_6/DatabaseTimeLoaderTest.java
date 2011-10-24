@@ -7,6 +7,7 @@ import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openstreetmap.osmosis.extract.apidb.common.Configuration;
+import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 
 
 /**
@@ -14,8 +15,8 @@ import org.openstreetmap.osmosis.extract.apidb.common.Configuration;
  * 
  * @author Brett Henderson
  */
-public class DatabaseTimeLoaderTest {
-	private DatabaseUtilities dbUtils = new DatabaseUtilities();
+public class DatabaseTimeLoaderTest extends AbstractDataTest {
+	private DatabaseUtilities dbUtils = new DatabaseUtilities(dataUtils);
 	
 	
 	/**

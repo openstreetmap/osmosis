@@ -8,8 +8,7 @@ import org.openstreetmap.osmosis.core.Osmosis;
 import org.openstreetmap.osmosis.core.database.AuthenticationPropertiesLoader;
 import org.openstreetmap.osmosis.core.database.DatabaseConstants;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
-
-import data.util.DataFileUtilities;
+import org.openstreetmap.osmosis.testutil.TestDataUtilities;
 
 
 /**
@@ -21,14 +20,17 @@ public class DatabaseUtilities {
 	private static final String AUTHFILE = "v0_6/apidb-authfile.txt";
 	private static final String AUTHFILE_PROPERTY = "db.apidb.authfile";
 	
-	private DataFileUtilities fileUtils;
+	private TestDataUtilities dataUtils;
 	
 	
 	/**
 	 * Creates a new instance.
+	 * 
+	 * @param dataUtils
+	 *            The test data manager.
 	 */
-	public DatabaseUtilities() {
-		fileUtils = new DataFileUtilities();
+	public DatabaseUtilities(TestDataUtilities dataUtils) {
+		this.dataUtils = dataUtils;
 	}
 	
 
@@ -71,6 +73,6 @@ public class DatabaseUtilities {
 	 * @return The authorization file.
 	 */
     public File getAuthorizationFile() {
-    	return fileUtils.getDataFile(AUTHFILE_PROPERTY, AUTHFILE);
+    	return dataUtils.createDataFile(AUTHFILE_PROPERTY, AUTHFILE);
     }
 }

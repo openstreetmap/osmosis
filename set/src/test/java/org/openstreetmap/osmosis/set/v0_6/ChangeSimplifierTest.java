@@ -6,17 +6,13 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.openstreetmap.osmosis.core.Osmosis;
-
-import data.util.DataFileUtilities;
+import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 
 
 /**
  * Tests the change simplifier task.
  */
-public class ChangeSimplifierTest {
-	
-	private DataFileUtilities fileUtils = new DataFileUtilities();
-	
+public class ChangeSimplifierTest extends AbstractDataTest {
 	
 	/**
 	 * Tests that a set of changes is simplified correctly.
@@ -31,9 +27,9 @@ public class ChangeSimplifierTest {
 		File actualOutputFile;
 		
 		// Generate files.
-		sourceFile = fileUtils.getDataFile("v0_6/simplify-change-in.osc");
-		expectedOutputFile = fileUtils.getDataFile("v0_6/simplify-change-out.osc");
-		actualOutputFile = File.createTempFile("test", ".osm");
+		sourceFile = dataUtils.createDataFile("v0_6/simplify-change-in.osc");
+		expectedOutputFile = dataUtils.createDataFile("v0_6/simplify-change-out.osc");
+		actualOutputFile = dataUtils.newFile();
 		
 		// Append the two source files into the destination file.
 		Osmosis.run(
@@ -48,9 +44,6 @@ public class ChangeSimplifierTest {
 		);
 		
 		// Validate that the output file matches the expected result.
-		fileUtils.compareFiles(expectedOutputFile, actualOutputFile);
-		
-		// Success so delete the output file.
-		actualOutputFile.delete();
+		dataUtils.compareFiles(expectedOutputFile, actualOutputFile);
 	}
 }

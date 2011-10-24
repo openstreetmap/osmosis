@@ -7,17 +7,15 @@ import java.io.IOException;
 import org.junit.Test;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.DatabaseUtilities;
 import org.openstreetmap.osmosis.core.Osmosis;
-
-import data.util.DataFileUtilities;
+import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 
 
 /**
  * Tests the file-based database replicator.
  */
-public class ApidbFileReplicatorTest {
+public class ApidbFileReplicatorTest extends AbstractDataTest {
 
-    private final DataFileUtilities fileUtils = new DataFileUtilities();
-    private final DatabaseUtilities dbUtils = new DatabaseUtilities();
+    private final DatabaseUtilities dbUtils = new DatabaseUtilities(dataUtils);
 
 
     /**
@@ -35,10 +33,10 @@ public class ApidbFileReplicatorTest {
 
         // Generate input files.
         authFile = dbUtils.getAuthorizationFile();
-        snapshotFile = fileUtils.getDataFile("v0_6/db-snapshot.osm");
-        changesetFile = fileUtils.getDataFile("v0_6/db-replicate-changeset.osc");
-        outputFile = File.createTempFile("test", ".osm");
-        workingDirectory = fileUtils.createTempDirectory();
+        snapshotFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
+        changesetFile = dataUtils.createDataFile("v0_6/db-replicate-changeset.osc");
+        outputFile = dataUtils.newFile();
+        workingDirectory = dataUtils.newFolder();
 
         // Remove all existing data from the database.
         dbUtils.truncateDatabase();
@@ -108,9 +106,6 @@ public class ApidbFileReplicatorTest {
                 });
 
         // Validate that the replicated file matches the input file.
-        fileUtils.compareFiles(changesetFile, outputFile);
-
-        // Success so delete the temporary files.
-        fileUtils.deleteTempDirectory(workingDirectory);
+        dataUtils.compareFiles(changesetFile, outputFile);
     }
 }
