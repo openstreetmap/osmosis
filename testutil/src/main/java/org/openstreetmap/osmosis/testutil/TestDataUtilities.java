@@ -12,11 +12,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
 import org.junit.Assert;
+import org.junit.rules.TemporaryFolder;
 import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 
@@ -26,55 +25,9 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  * 
  * @author Brett Henderson
  */
-public class TestDataUtilities {
+public class TestDataUtilities extends TemporaryFolder {
 
 	private static final Charset UTF8 = Charset.forName("UTF-8");
-
-	private List<File> temporaryFiles;
-	private List<File> temporaryDirectories;
-
-
-	/**
-	 * Creates a new instance.
-	 */
-	public TestDataUtilities() {
-		temporaryFiles = new ArrayList<File>();
-		temporaryDirectories = new ArrayList<File>();
-	}
-
-
-	/**
-	 * Creates a temporary file and tracks it for later deletion.
-	 * 
-	 * @return A temporary file.
-	 */
-	public File createTempFile() {
-		return createTempFile("testdata", null);
-	}
-
-
-	/**
-	 * Creates a temporary file and tracks it for later deletion.
-	 * 
-	 * @param prefix
-	 *            The filename prefix. Must be at least three letters.
-	 * @param suffix
-	 *            The filename suffix. May be null.
-	 * @return A temporary file.
-	 */
-	public File createTempFile(String prefix, String suffix) {
-		File tmpFile;
-
-		try {
-			tmpFile = File.createTempFile(prefix, suffix);
-		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to create a temporary file.", e);
-		}
-
-		temporaryFiles.add(tmpFile);
-
-		return tmpFile;
-	}
 
 
 	/**
@@ -98,7 +51,7 @@ public class TestDataUtilities {
 					"/data/template/" + dataFileName), UTF8));
 
 			// Create a temporary file and open it.
-			tmpFile = createTempFile();
+			tmpFile = newFile();
 			dataWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tmpFile), UTF8));
 
 			// Copy all data into the temp file replacing the version string.
@@ -210,71 +163,5 @@ public class TestDataUtilities {
 
 		outStream.close();
 		inStream.close();
-	}
-
-
-	/**
-	 * Creates a temporary directory.
-	 * 
-	 * @return The created directory.
-	 * @throws IOException
-	 *             if an IO exception occurs.
-	 */
-	public File createTempDirectory() throws IOException {
-		File tmpDir;
-
-		tmpDir = File.createTempFile("test", null);
-		tmpDir.delete();
-
-		tmpDir = new File(tmpDir.getAbsolutePath() + File.separator);
-		if (!tmpDir.mkdir()) {
-			throw new OsmosisRuntimeException("Unable to create directory " + tmpDir + ".");
-		}
-
-		return tmpDir;
-	}
-
-
-	/**
-	 * Deletes a temporary directory and its contents.
-	 * 
-	 * @param tmpDir
-	 *            The directory to be deleted.
-	 */
-	private void deleteTempDirectory(File tmpDir) {
-		File[] files;
-
-		// Delete all files in the directory.
-		files = tmpDir.listFiles();
-		for (int i = 0; i < files.length; i++) {
-			if (files[i].isDirectory()) {
-				deleteTempDirectory(files[i]);
-			} else if (!files[i].delete()) {
-				throw new OsmosisRuntimeException("Unable to delete file " + files[i] + ".");
-			}
-		}
-
-		// Delete the directory itself.
-		if (!tmpDir.delete()) {
-			throw new OsmosisRuntimeException("Unable to delete directory " + tmpDir + ".");
-		}
-	}
-
-
-	/**
-	 * Cleans up all temporary files managed by this object.
-	 */
-	public void deleteResources() {
-		try {
-			for (File tmpFile : temporaryFiles) {
-				tmpFile.delete();
-			}
-			for (File tmpDir : temporaryDirectories) {
-				deleteTempDirectory(tmpDir);
-			}
-		} finally {
-			temporaryFiles.clear();
-			temporaryDirectories.clear();
-		}
 	}
 }
