@@ -50,7 +50,7 @@
 		</javac>
 		<!-- Copy all resource files from the test directory into the build test directory. -->
 		<copy todir="build/test">
-			<fileset dir="src/test/resources"/>
+			<fileset dir="src/test/resources" erroronmissingdir="false"/>
 		</copy>
 	</target>
 	
