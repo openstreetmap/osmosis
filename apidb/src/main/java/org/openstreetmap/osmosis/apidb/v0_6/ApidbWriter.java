@@ -48,40 +48,41 @@ public class ApidbWriter implements Sink, EntityProcessor {
     // These SQL strings are the prefix to statements that will be built based
     // on how many rows of data are to be inserted at a time.
 	private static final String INSERT_SQL_NODE_COLUMNS =
-		"INSERT INTO nodes(id, timestamp, version, visible, changeset_id, latitude, longitude, tile)";
+		"INSERT INTO nodes(node_id, timestamp, version, visible, changeset_id, latitude, longitude, tile)";
 	private static final String INSERT_SQL_NODE_PARAMS = "?, ?, ?, ?, ?, ?, ?, ?";
 	private static final int INSERT_PRM_COUNT_NODE = 8;
 
-    private static final String INSERT_SQL_NODE_TAG_COLUMNS = "INSERT INTO node_tags (id, k, v, version)";
+    private static final String INSERT_SQL_NODE_TAG_COLUMNS = "INSERT INTO node_tags (node_id, k, v, version)";
     private static final String INSERT_SQL_NODE_TAG_PARAMS = "?, ?, ?, ?";
 	private static final int INSERT_PRM_COUNT_NODE_TAG = 4;
 
     private static final String INSERT_SQL_WAY_COLUMNS =
-    	"INSERT INTO ways (id, timestamp, version, visible, changeset_id)";
+    	"INSERT INTO ways (way_id, timestamp, version, visible, changeset_id)";
     private static final String INSERT_SQL_WAY_PARAMS = "?, ?, ?, ?, ?";
 	private static final int INSERT_PRM_COUNT_WAY = 5;
 
-    private static final String INSERT_SQL_WAY_TAG_COLUMNS = "INSERT INTO way_tags (id, k, v, version)";
+    private static final String INSERT_SQL_WAY_TAG_COLUMNS = "INSERT INTO way_tags (way_id, k, v, version)";
     private static final String INSERT_SQL_WAY_TAG_PARAMS = "?, ?, ?, ?";
 	private static final int INSERT_PRM_COUNT_WAY_TAG = 4;
 
     private static final String INSERT_SQL_WAY_NODE_COLUMNS =
-    	"INSERT INTO way_nodes (id, node_id, sequence_id, version)";
+    	"INSERT INTO way_nodes (way_id, node_id, sequence_id, version)";
     private static final String INSERT_SQL_WAY_NODE_PARAMS = "?, ?, ?, ?";
 	private static final int INSERT_PRM_COUNT_WAY_NODE = 4;
 
     private static final String INSERT_SQL_RELATION_COLUMNS =
-    	"INSERT INTO relations (id, timestamp, version, visible, changeset_id)";
+    	"INSERT INTO relations (relation_id, timestamp, version, visible, changeset_id)";
     private static final String INSERT_SQL_RELATION_PARAMS =
     	"?, ?, ?, ?, ?";
 	private static final int INSERT_PRM_COUNT_RELATION = 5;
 
-    private static final String INSERT_SQL_RELATION_TAG_COLUMNS = "INSERT INTO relation_tags (id, k, v, version)";
+    private static final String INSERT_SQL_RELATION_TAG_COLUMNS =
+        "INSERT INTO relation_tags (relation_id, k, v, version)";
     private static final String INSERT_SQL_RELATION_TAG_PARAMS = "?, ?, ?, ?";
 	private static final int INSERT_PRM_COUNT_RELATION_TAG = 4;
 
     private static final String INSERT_SQL_RELATION_MEMBER_COLUMNS =
-    	"INSERT INTO relation_members (id, member_type, member_id, sequence_id, member_role, version)";
+    	"INSERT INTO relation_members (relation_id, member_type, member_id, sequence_id, member_role, version)";
     private static final String INSERT_SQL_RELATION_MEMBER_PARAMS_MYSQL =
     	"?, ?, ?, ?, ?, ?";
     private static final String INSERT_SQL_RELATION_MEMBER_PARAMS_PGSQL =
@@ -103,33 +104,36 @@ public class ApidbWriter implements Sink, EntityProcessor {
     private static final int LOAD_CURRENT_RELATION_ROW_COUNT = 100000;
 
     private static final String LOAD_CURRENT_NODES =
-    	"INSERT INTO current_nodes SELECT id, latitude, longitude, changeset_id, visible, timestamp, tile, version"
-            + " FROM nodes WHERE id >= ? AND id < ?";
+    	"INSERT INTO current_nodes SELECT node_id, latitude, longitude, changeset_id, visible, timestamp, tile, version"
+            + " FROM nodes WHERE node_id >= ? AND node_id < ?";
 
     private static final String LOAD_CURRENT_NODE_TAGS =
-    	"INSERT INTO current_node_tags SELECT id, k, v FROM node_tags WHERE id >= ? AND id < ?";
+    	"INSERT INTO current_node_tags SELECT node_id, k, v FROM node_tags WHERE node_id >= ? AND node_id < ?";
 
     private static final String LOAD_CURRENT_WAYS =
-    	"INSERT INTO current_ways SELECT id, changeset_id, timestamp, visible, version FROM ways"
-            + " WHERE id >= ? AND id < ?";
+    	"INSERT INTO current_ways SELECT way_id, changeset_id, timestamp, visible, version FROM ways"
+            + " WHERE way_id >= ? AND way_id < ?";
 
     private static final String LOAD_CURRENT_WAY_TAGS =
-    	"INSERT INTO current_way_tags SELECT id, k, v FROM way_tags WHERE id >= ? AND id < ?";
+    	"INSERT INTO current_way_tags SELECT way_id, k, v FROM way_tags"
+            + " WHERE way_id >= ? AND way_id < ?";
 
     private static final String LOAD_CURRENT_WAY_NODES =
-    	"INSERT INTO current_way_nodes SELECT id, node_id, sequence_id FROM way_nodes WHERE id >= ? AND id < ?";
+    	"INSERT INTO current_way_nodes SELECT way_id, node_id, sequence_id FROM way_nodes"
+            + " WHERE way_id >= ? AND way_id < ?";
 
     private static final String LOAD_CURRENT_RELATIONS =
-    	"INSERT INTO current_relations SELECT id, changeset_id, timestamp, visible, version"
-            + " FROM relations WHERE id >= ? AND id < ?";
+    	"INSERT INTO current_relations SELECT relation_id, changeset_id, timestamp, visible, version"
+            + " FROM relations WHERE relation_id >= ? AND relation_id < ?";
 
     private static final String LOAD_CURRENT_RELATION_TAGS =
-    	"INSERT INTO current_relation_tags SELECT id, k, v FROM relation_tags WHERE id >= ? AND id < ?";
+    	"INSERT INTO current_relation_tags SELECT relation_id, k, v FROM relation_tags"
+            + " WHERE relation_id >= ? AND relation_id < ?";
 
     private static final String LOAD_CURRENT_RELATION_MEMBERS =
-    	"INSERT INTO current_relation_members (id, member_id, member_role, member_type, sequence_id)"
-    		+ " SELECT id, member_id, member_role, member_type, sequence_id"
-            + " FROM relation_members WHERE id >= ? AND id < ?";
+    	"INSERT INTO current_relation_members (relation_id, member_id, member_role, member_type, sequence_id)"
+    		+ " SELECT relation_id, member_id, member_role, member_type, sequence_id"
+            + " FROM relation_members WHERE relation_id >= ? AND relation_id < ?";
 
     // These tables will be locked for exclusive access while loading data.
 	private static final List<String> LOCK_TABLES = Arrays.asList(new String[] {"nodes", "node_tags", "ways",

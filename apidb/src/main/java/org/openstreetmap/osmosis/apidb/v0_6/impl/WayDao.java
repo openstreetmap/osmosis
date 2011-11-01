@@ -94,12 +94,12 @@ public class WayDao extends EntityDao<Way> {
 			ReleasableIterator<DbFeatureHistory<DbOrderedFeature<WayNode>>> resultIterator;
 			
 			sql =
-				"SELECT wn.id, wn.node_id, wn.version, wn.sequence_id"
+				"SELECT wn.way_id AS id, wn.node_id, wn.version, wn.sequence_id"
 				+ " FROM "
 				+ "way_nodes wn"
 				+ " INNER JOIN "
 				+ selectedEntityStatement
-				+ " t ON wn.id = t.id AND wn.version = t.version";
+				+ " t ON wn.way_id = t.way_id AND wn.version = t.version";
 			
 			LOG.log(Level.FINER, "Way node history query: " + sql);
 			

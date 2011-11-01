@@ -38,7 +38,7 @@ public class ChangesetManager implements Releasable {
             + FixedPrecisionCoordinateConvertor.convertToFixed(-180) + ", "
             + FixedPrecisionCoordinateConvertor.convertToFixed(180) + ", NOW(), 0)";
 
-    private static final String SQL_INSERT_CHANGESET_TAG = "INSERT INTO changeset_tags (id, k, v)"
+    private static final String SQL_INSERT_CHANGESET_TAG = "INSERT INTO changeset_tags (changeset_id, k, v)"
             + " VALUES (?, 'created_by', 'Osmosis " + OsmosisConstants.VERSION + "'), (?, 'replication', 'true')";
     
     private static final String SQL_SELECT_CHANGESET_COUNT =
