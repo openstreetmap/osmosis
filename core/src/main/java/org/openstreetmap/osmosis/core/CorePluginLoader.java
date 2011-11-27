@@ -100,7 +100,7 @@ public class CorePluginLoader implements PluginLoader {
 		factoryMap.put("report-entity-0.6", new EntityReporterFactory());
 		factoryMap.put("report-integrity-0.6", new IntegrityReporterFactory());
 		factoryMap.put("log-progress-0.6", new EntityProgressLoggerFactory());
-		factoryMap.put("log-change-progress-0.6", new ChangeProgressLoggerFactory());
+		factoryMap.put("log-progress-change-0.6", new ChangeProgressLoggerFactory());
 		factoryMap.put("tee-0.6", new EntityTeeFactory());
 		factoryMap.put("tee-change-0.6", new ChangeTeeFactory());
 		factoryMap.put("read-empty-0.6", new EmptyReaderFactory());
