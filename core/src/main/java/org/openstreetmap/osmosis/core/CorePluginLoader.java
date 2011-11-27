@@ -8,6 +8,8 @@ import org.openstreetmap.osmosis.core.bound.v0_6.BoundComputerFactory;
 import org.openstreetmap.osmosis.core.bound.v0_6.BoundSetterFactory;
 import org.openstreetmap.osmosis.core.buffer.v0_6.ChangeBufferFactory;
 import org.openstreetmap.osmosis.core.buffer.v0_6.EntityBufferFactory;
+import org.openstreetmap.osmosis.core.misc.v0_6.EmptyChangeReaderFactory;
+import org.openstreetmap.osmosis.core.misc.v0_6.EmptyReaderFactory;
 import org.openstreetmap.osmosis.core.misc.v0_6.NullChangeWriterFactory;
 import org.openstreetmap.osmosis.core.misc.v0_6.NullWriterFactory;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
@@ -79,6 +81,10 @@ public class CorePluginLoader implements PluginLoader {
 		factoryMap.put("t", new EntityTeeFactory());
 		factoryMap.put("tee-change", new ChangeTeeFactory());
 		factoryMap.put("tc", new ChangeTeeFactory());
+		factoryMap.put("read-empty", new EmptyReaderFactory());
+		factoryMap.put("re", new EmptyReaderFactory());
+		factoryMap.put("read-empty-change", new EmptyChangeReaderFactory());
+		factoryMap.put("rec", new EmptyChangeReaderFactory());
 
 		factoryMap.put("compute-bounding-box", new BoundComputerFactory());
 		factoryMap.put("cbb", new BoundComputerFactory());
@@ -97,6 +103,8 @@ public class CorePluginLoader implements PluginLoader {
 		factoryMap.put("log-change-progress-0.6", new ChangeProgressLoggerFactory());
 		factoryMap.put("tee-0.6", new EntityTeeFactory());
 		factoryMap.put("tee-change-0.6", new ChangeTeeFactory());
+		factoryMap.put("read-empty-0.6", new EmptyReaderFactory());
+		factoryMap.put("read-empty-change-0.6", new EmptyChangeReaderFactory());
 		factoryMap.put("tag-sort-0.6", new TagSorterFactory());
 		factoryMap.put("tag-sort-change-0.6", new ChangeTagSorterFactory());
 
