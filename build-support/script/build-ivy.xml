@@ -13,7 +13,7 @@
 	<target name="resolve" depends="init-ivy" description="Downloads all program dependencies using ivy.">
 		<ivy:resolve file="${ivy.dep.file}" conf="${ivy.configurations}" />
 		
-		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact]-[revision].[ext]" sync="true" conf="${ivy.configurations}" />
+		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact]-[revision].[ext]" sync="true" conf="${ivy.configurations}" symlink="true" />
 		
 		<ivy:report todir="report/ivy"/>
 	</target>
