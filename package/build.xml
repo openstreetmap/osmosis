@@ -46,7 +46,9 @@
 	
 	<target name="clean" description="Clean up the project tree.">
 		<!-- Delete generated directory trees. -->
+		<delete dir="build"/>
 		<delete dir="distrib"/>
+		<delete dir="lib"/>
 		<delete dir="report"/>
 	</target>
 </project>
