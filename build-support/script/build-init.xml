@@ -34,7 +34,7 @@
 		<echo message="checkout.svn=${checkout.svn}"/>
 	</target>
 	
-	<target name="init-version-svn" if="${checkout.svn}">
+	<target name="init-version-svn" if="checkout.svn">
 		<!-- Determine the SVN revision number. -->
 		<exec executable="svnversion" output="build/version.txt" failonerror="true">
 			<arg value="-n"/>
@@ -51,7 +51,7 @@
 		<property name="project.version" value="SNAPSHOT-r${svn.version}"/>
 	</target>
 	
-	<target name="init-version-git" if="${checkout.git}">
+	<target name="init-version-git" if="checkout.git">
 		<condition property="git.command" value="git.cmd">
 			<os family="windows" />
 		</condition>
