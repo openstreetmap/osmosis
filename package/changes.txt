@@ -1,3 +1,24 @@
+0.40
+Fixed base64 encoding of user credentials sent by --upload-xml-change.
+Added support for merging Bound objects.
+Modified entity object creation to require use of CommonEntityData to simplify constructors.
+Added metatag facility to all entities to allow custom data to be passed through the pipeline.
+Added read timeout to replication retrieval code to prevent it blocking forever.
+Improved JPF loading code to avoid NullPointerException if encountering malformed plugins.
+Added ability to set input buffer size for all tasks using an input buffer.
+Relaxed Bound argument validation to allow points on all edges of the map to be included in bounding boxes.
+Modified PostGIS function calls to be PostGIS 2.0 compatible.
+Updated build scripts to support GIT.
+Do not emit bound entities when reading PBF files with no bbox information set.
+Add --compute-bounding-box and --set-bounding-box tasks for manipulating Bound entities.
+Added total object count display to --report-entity task.
+Updated all jar dependencies with exception of Xerces to latest versions.
+Modified project layouts to match Maven standard layout.
+Enhanced tests to dynamically generate test data instead of relying on ant-based data generation.
+Updated apidb tasks to support new rails3-based apidb schema (rename of id columns).
+Fixed name of --log-progress-change-0.6 task.  Was registered as --log-change-progress-0.6.
+Modified Ivy to symlink to jar files on supported platforms rather copy jars into projects.
+
 0.39
 Added the pgsimp tasks which are the old 0.36 version pgsql tasks supporting the old style separate tags tables.
 Added a new "cascadingRelations" flag to --bb and --bp which is less costly than "completeRelations" and makes sure that parent relations are emitted when a child relation of theirs is emitted even if that child happens to come after the parent in the stream. The list of relations on output may appear in a different order than on input.
