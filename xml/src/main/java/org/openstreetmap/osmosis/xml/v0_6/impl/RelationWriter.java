@@ -5,11 +5,9 @@ import java.io.Writer;
 import java.util.Collection;
 import java.util.List;
 
-import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
-import org.openstreetmap.osmosis.xml.common.ElementWriter;
 
 
 /**
@@ -17,7 +15,7 @@ import org.openstreetmap.osmosis.xml.common.ElementWriter;
  *
  * @author Brett Henderson
  */
-public class RelationWriter extends ElementWriter {
+public class RelationWriter extends EntityWriter {
     /**
      * Write the ordered list of members of a relation.
      */
@@ -51,25 +49,12 @@ public class RelationWriter extends ElementWriter {
 	 *            The relation to be processed.
 	 */
 	public void process(Relation relation) {
-		OsmUser user;
 		List<RelationMember> relationMembers;
 		Collection<Tag> tags;
 		
-		user = relation.getUser();
-		
 		beginOpenElement();
-		addAttribute("id", Long.toString(relation.getId()));
-		addAttribute("version", Integer.toString(relation.getVersion()));
-		addAttribute("timestamp", relation.getFormattedTimestamp(getTimestampFormat()));
-		
-		if (!user.equals(OsmUser.NONE)) {
-			addAttribute("uid", Integer.toString(user.getId()));
-			addAttribute("user", user.getName());
-		}
-		
-		if (relation.getChangesetId() != 0) {
-			addAttribute("changeset", Long.toString(relation.getChangesetId()));
-		}
+		addCommonAttributes(relation);
+		addMetatags(relation);
 		
 		relationMembers = relation.getMembers();
 		tags = relation.getTags();

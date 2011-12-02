@@ -70,7 +70,7 @@ public class LazyHashMap<K, V> implements Map<K, V> {
 		if (internalMap != null) {
 			return internalMap.entrySet();
 		} else {
-			return Collections.<K, V>emptyMap().entrySet();
+			return Collections.emptySet();
 		}
 	}
 
@@ -109,7 +109,7 @@ public class LazyHashMap<K, V> implements Map<K, V> {
 		if (internalMap != null) {
 			return internalMap.keySet();
 		} else {
-			return Collections.<K, V>emptyMap().keySet();
+			return Collections.emptySet();
 		}
 	}
 

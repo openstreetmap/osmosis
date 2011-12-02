@@ -5,11 +5,9 @@ import java.io.Writer;
 import java.util.Collection;
 import java.util.List;
 
-import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
-import org.openstreetmap.osmosis.xml.common.ElementWriter;
 
 
 /**
@@ -17,7 +15,7 @@ import org.openstreetmap.osmosis.xml.common.ElementWriter;
  *
  * @author Brett Henderson
  */
-public class WayWriter extends ElementWriter {
+public class WayWriter extends EntityWriter {
     /**
      * Write the ordered list of node-references of a way.
      */
@@ -51,25 +49,12 @@ public class WayWriter extends ElementWriter {
 	 *            The way to be processed.
 	 */
 	public void process(Way way) {
-		OsmUser user;
 		List<WayNode> wayNodes;
 		Collection<Tag> tags;
 		
-		user = way.getUser();
-		
 		beginOpenElement();
-		addAttribute("id", Long.toString(way.getId()));
-		addAttribute("version", Integer.toString(way.getVersion()));
-		addAttribute("timestamp", way.getFormattedTimestamp(getTimestampFormat()));
-		
-		if (!user.equals(OsmUser.NONE)) {
-			addAttribute("uid", Integer.toString(user.getId()));
-			addAttribute("user", user.getName());
-		}
-		
-		if (way.getChangesetId() != 0) {
-			addAttribute("changeset", Long.toString(way.getChangesetId()));
-		}
+		addCommonAttributes(way);
+		addMetatags(way);
 		
 		wayNodes = way.getWayNodes();
 		tags = way.getTags();

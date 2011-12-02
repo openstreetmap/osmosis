@@ -9,9 +9,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
-import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
-import org.openstreetmap.osmosis.xml.common.ElementWriter;
 
 
 /**
@@ -19,7 +17,7 @@ import org.openstreetmap.osmosis.xml.common.ElementWriter;
  *
  * @author Brett Henderson
  */
-public class NodeWriter extends ElementWriter {
+public class NodeWriter extends EntityWriter {
     /**
      * Write the tags of a node.
      */
@@ -55,27 +53,15 @@ public class NodeWriter extends ElementWriter {
 	 *            The node to be processed.
 	 */
 	public void process(Node node) {
-		OsmUser user;
 		Collection<Tag> tags;
 		
-		user = node.getUser();
-		
 		beginOpenElement();
-		addAttribute("id", Long.toString(node.getId()));
-		addAttribute("version", Integer.toString(node.getVersion()));
-		addAttribute("timestamp", node.getFormattedTimestamp(getTimestampFormat()));
-		
-		if (!user.equals(OsmUser.NONE)) {
-			addAttribute("uid", Integer.toString(user.getId()));
-			addAttribute("user", user.getName());
-		}
-		
-		if (node.getChangesetId() != 0) {
-			addAttribute("changeset", Long.toString(node.getChangesetId()));
-		}
+		addCommonAttributes(node);
 		
 		addAttribute("lat", numberFormat.format(node.getLatitude()));
 		addAttribute("lon", numberFormat.format(node.getLongitude()));
+		
+		addMetatags(node);
 		
 		tags = node.getTags();
 		
