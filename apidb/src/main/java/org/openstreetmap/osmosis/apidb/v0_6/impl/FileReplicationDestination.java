@@ -12,16 +12,16 @@ import org.openstreetmap.osmosis.xml.v0_6.XmlChangeWriter;
 
 
 /**
- * A file-based destination for replication data.  This writes files beginning at 1.osc.gz and increasing incrementally.
+ * A file-based destination for replication data. This writes files beginning at
+ * 1.osc.gz and increasing incrementally.
  */
 public class FileReplicationDestination implements ReplicationDestination {
-	
+
 	private static final String LOCK_FILE = "replicate.lock";
 	private static final String STATE_FILE = "state.txt";
 	private static final String SEQUENCE_STATE_FILE_SUFFIX = ".state.txt";
 	private static final String CHANGE_FILE_SUFFIX = ".osc.gz";
 	private static final CompressionMethod CHANGE_FILE_COMPRESSION = CompressionMethod.GZip;
-	
 
 	private File stateFile;
 	private FileBasedLock fileLock;
@@ -41,44 +41,46 @@ public class FileReplicationDestination implements ReplicationDestination {
 	 */
 	public FileReplicationDestination(File workingDirectory) {
 		stateFile = new File(workingDirectory, STATE_FILE);
-		
+
 		fileLock = new FileBasedLock(new File(workingDirectory, LOCK_FILE));
-		
+
 		statePersistor = new FileReplicationStatePersistor(stateFile);
-		
+
 		sequenceFormatter = new ReplicationFileSequenceFormatter(workingDirectory);
 	}
-	
-	
+
+
 	private void ensureLocked() {
 		if (!lockObtained) {
 			fileLock.lock();
 			lockObtained = true;
 		}
 	}
-	
-	
+
+
 	private File generateFormattedSequenceFile(String fileNameSuffix) {
 		File formattedSequenceNumber;
-		
-		// Generate the formatted sequence number.
+
+		/*
+		 * Generate the formatted sequence number. Note that this is relying on
+		 * the controlling Replicator class having already updated the sequence
+		 * number on the state object we previously returned through loadState.
+		 */
 		formattedSequenceNumber = sequenceFormatter.getFormattedName(state.getSequenceNumber(), fileNameSuffix);
-		
+
 		return formattedSequenceNumber;
 	}
-	
-	
+
+
 	private void initializeWriter() {
 		if (writer == null) {
 			ensureLocked();
-			
+
 			// Create an atomic file creator for the xml file.
 			atomicXmlFile = new AtomicFileCreator(generateFormattedSequenceFile(CHANGE_FILE_SUFFIX));
-			
+
 			// Create a writer writing to a new temporary file.
-			writer = new XmlChangeWriter(
-					atomicXmlFile.getTmpFile(),
-					CHANGE_FILE_COMPRESSION);
+			writer = new XmlChangeWriter(atomicXmlFile.getTmpFile(), CHANGE_FILE_COMPRESSION);
 		}
 	}
 
@@ -90,7 +92,7 @@ public class FileReplicationDestination implements ReplicationDestination {
 	public void process(ChangeContainer change) {
 		ensureLocked();
 		initializeWriter();
-		
+
 		writer.process(change);
 	}
 
@@ -101,30 +103,34 @@ public class FileReplicationDestination implements ReplicationDestination {
 	@Override
 	public void complete() {
 		ensureLocked();
-		
+
 		// We can't do anything if we haven't loaded state yet.
 		if (state != null) {
 			// We won't write an output file if we are initializing.
 			if (statePersistor.stateExists()) {
-				// When replicating, we will always write a file even if there is no data.
+				// When replicating, we will always write a file even if there
+				// is no data.
 				initializeWriter();
-				
+
 				// Close the output file and rename it to the final file.
 				writer.complete();
 				writer.release();
 				writer = null;
 				atomicXmlFile.renameTmpFileToCurrent();
 			}
-			
-			// The final step is to save the current state. This must be done last so that if a crash
-			// occurs during processing it starts from the same point as last time.
-			statePersistor.saveState(state);
-			
+
 			// Also the state to a sequence specific state file.
 			new FileReplicationStatePersistor(generateFormattedSequenceFile(SEQUENCE_STATE_FILE_SUFFIX))
 					.saveState(state);
+
+			/*
+			 * The final step is to save the current state. This must be done
+			 * last so that if a crash occurs during processing it starts from
+			 * the same point as last time.
+			 */
+			statePersistor.saveState(state);
 		}
-		
+
 		fileLock.unlock();
 		lockObtained = false;
 	}
@@ -139,7 +145,7 @@ public class FileReplicationDestination implements ReplicationDestination {
 			writer.release();
 			writer = null;
 		}
-		
+
 		fileLock.release();
 		lockObtained = false;
 	}
@@ -151,11 +157,11 @@ public class FileReplicationDestination implements ReplicationDestination {
 	@Override
 	public ReplicationState loadState() {
 		ensureLocked();
-		
+
 		if (state == null) {
 			state = statePersistor.loadState();
 		}
-		
+
 		return state;
 	}
 
@@ -166,13 +172,18 @@ public class FileReplicationDestination implements ReplicationDestination {
 	@Override
 	public void saveState(ReplicationState newState) {
 		ensureLocked();
-		
-		// The caller will usually be passing back the state object that was initially provided by
-		// this class, however when initialising a new one will need to be created externally.
+
+		/*
+		 * The caller will usually be passing back the state object that was
+		 * initially provided by this class, however when initialising a new one
+		 * will need to be created externally.
+		 */
 		state = newState;
-		
-		// Don't save the state to file at this point, we will write the state out during the
-		// complete call in order to simulate a transaction.
+
+		/*
+		 * Don't save the state to file at this point, we will write the state
+		 * out during the complete call in order to simulate a transaction.
+		 */
 	}
 
 
@@ -182,7 +193,7 @@ public class FileReplicationDestination implements ReplicationDestination {
 	@Override
 	public boolean stateExists() {
 		ensureLocked();
-		
+
 		return statePersistor.stateExists();
 	}
 }
