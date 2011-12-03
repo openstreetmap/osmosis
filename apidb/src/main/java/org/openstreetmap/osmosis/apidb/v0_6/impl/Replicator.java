@@ -219,14 +219,24 @@ public class Replicator {
 	 * Replicates the next set of changes from the database.
 	 */
 	public void replicate() {
-		// If we have already run once we begin replication, otherwise we initialise to the current
-		// database state.
-		if (destination.stateExists()) {
-			LOG.fine("Replication state exists, beginning replication.");
-			replicateImpl();
-		} else {
-			LOG.fine("Replication state does not exist, initializing.");
-			initialize();
+		try {
+			/*
+			 * If we have already run once we begin replication, otherwise we
+			 * initialise to the current database state.
+			 */
+			if (destination.stateExists()) {
+				LOG.fine("Replication state exists, beginning replication.");
+				replicateImpl();
+			} else {
+				LOG.fine("Replication state does not exist, initializing.");
+				initialize();
+			}
+			
+			// Commit changes.
+			destination.complete();
+			
+		} finally {
+			destination.release();
 		}
 	}
 	
@@ -235,56 +245,48 @@ public class Replicator {
 	 * Replicates the next set of changes from the database.
 	 */
 	private void replicateImpl() {
-		try {
-			ReplicationState state;
-			ReplicationQueryPredicates predicates;
-			Date systemTimestamp;
-			
-			// Determine the time of processing.
-			systemTimestamp = systemTimeLoader.getSystemTime();
-			if (LOG.isLoggable(Level.FINER)) {
-				LOG.finer("Loaded system time " + systemTimestamp + " from the database.");
-			}
-			
-			// Load the current replication state.
-			state = destination.loadState();
-			
-			// Increment the current replication sequence number.
-			state.setSequenceNumber(state.getSequenceNumber() + 1);
-			if (LOG.isLoggable(Level.FINER)) {
-				LOG.finer("Replication sequence number is " + state.getSequenceNumber() + ".");
-			}
-			
-			// If the maximum queried transaction id has reached the maximum transaction id then a new
-			// transaction snapshot must be obtained in order to get more data.
-			if (compareTxnIds(state.getTxnMaxQueried(), state.getTxnMax()) >= 0) {
-				obtainNewSnapshot(state);
-			}
-			
-			// Obtain the predicates to use during the query.
-			predicates = buildQueryPredicates(state);
-			
-			// Write the changes to the destination.
-			if (predicates.getBottomTransactionId() != predicates.getTopTransactionId()) {
-				copyChanges(source.getHistory(predicates), state);
-			}
-			
-			// If we have completely caught up to the database, we can update the timestamp to the
-			// database system timestamp. Otherwise we leave the timestamp set at the value
-			// determined while processing changes.
-			if (compareTxnIds(state.getTxnMaxQueried(), state.getTxnMax()) >= 0) {
-				state.setTimestamp(systemTimestamp);
-			}
-			
-			// Persist the updated replication state.
-			destination.saveState(state);
-			
-			// Commit changes.
-			destination.complete();
-			
-		} finally {
-			destination.release();
+		ReplicationState state;
+		ReplicationQueryPredicates predicates;
+		Date systemTimestamp;
+		
+		// Determine the time of processing.
+		systemTimestamp = systemTimeLoader.getSystemTime();
+		if (LOG.isLoggable(Level.FINER)) {
+			LOG.finer("Loaded system time " + systemTimestamp + " from the database.");
 		}
+		
+		// Load the current replication state.
+		state = destination.loadState();
+		
+		// Increment the current replication sequence number.
+		state.setSequenceNumber(state.getSequenceNumber() + 1);
+		if (LOG.isLoggable(Level.FINER)) {
+			LOG.finer("Replication sequence number is " + state.getSequenceNumber() + ".");
+		}
+		
+		// If the maximum queried transaction id has reached the maximum transaction id then a new
+		// transaction snapshot must be obtained in order to get more data.
+		if (compareTxnIds(state.getTxnMaxQueried(), state.getTxnMax()) >= 0) {
+			obtainNewSnapshot(state);
+		}
+		
+		// Obtain the predicates to use during the query.
+		predicates = buildQueryPredicates(state);
+		
+		// Write the changes to the destination.
+		if (predicates.getBottomTransactionId() != predicates.getTopTransactionId()) {
+			copyChanges(source.getHistory(predicates), state);
+		}
+		
+		// If we have completely caught up to the database, we can update the timestamp to the
+		// database system timestamp. Otherwise we leave the timestamp set at the value
+		// determined while processing changes.
+		if (compareTxnIds(state.getTxnMaxQueried(), state.getTxnMax()) >= 0) {
+			state.setTimestamp(systemTimestamp);
+		}
+		
+		// Persist the updated replication state.
+		destination.saveState(state);
 	}
 	
 	
@@ -292,26 +294,18 @@ public class Replicator {
 	 * Initialises the destination using the current state of the source.
 	 */
 	private void initialize() {
-		try {
-			TransactionSnapshot snapshot;
-			ReplicationState state;
-			Date systemTime;
-			
-			snapshot = snapshotLoader.getTransactionSnapshot();
-			systemTime = systemTimeLoader.getSystemTime();
-			
-			// Create a new state initialised with the current state of the database.
-			state = new ReplicationState(snapshot.getXMax(), snapshot.getXMax(), snapshot.getXIpList(),
-					new ArrayList<Long>(), systemTime, 0);
-			
-			// Initialize the replication state.
-			destination.saveState(state);
-			
-			// Commit changes.
-			destination.complete();
-			
-		} finally {
-			destination.release();
-		}
+		TransactionSnapshot snapshot;
+		ReplicationState state;
+		Date systemTime;
+		
+		snapshot = snapshotLoader.getTransactionSnapshot();
+		systemTime = systemTimeLoader.getSystemTime();
+		
+		// Create a new state initialised with the current state of the database.
+		state = new ReplicationState(snapshot.getXMax(), snapshot.getXMax(), snapshot.getXIpList(),
+				new ArrayList<Long>(), systemTime, 0);
+		
+		// Initialize the replication state.
+		destination.saveState(state);
 	}
 }
