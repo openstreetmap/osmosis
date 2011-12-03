@@ -267,7 +267,7 @@ public class Replicator {
 		// Perform replication up to the number of iterations, or infinitely if
 		// set to 0.
 		iterationTime = System.currentTimeMillis();
-		for (int iterationCount = 0; iterationCount <= 0 || iterationCount < iterations; iterationCount++) {
+		for (int iterationCount = 0; iterations <= 0 || iterationCount < iterations; iterationCount++) {
 			long requiredIterationTime;
 
 			// Calculate the time at which we're allowed to start our next
