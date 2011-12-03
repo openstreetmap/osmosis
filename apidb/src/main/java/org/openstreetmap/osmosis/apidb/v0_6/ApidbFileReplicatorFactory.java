@@ -16,7 +16,11 @@ import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
  */
 public class ApidbFileReplicatorFactory extends DatabaseTaskManagerFactory {
 	private static final String ARG_WORKING_DIRECTORY = "directory";
+	private static final String ARG_ITERATIONS = "iterations";
+	private static final String ARG_INTERVAL = "interval";
 	private static final String DEFAULT_WORKING_DIRECTORY = "replicate";
+	private static final int DEFAULT_ITERATIONS = 1;
+	private static final int DEFAULT_INTERVAL = 5000;
 	
 	
 	/**
@@ -28,19 +32,23 @@ public class ApidbFileReplicatorFactory extends DatabaseTaskManagerFactory {
 		DatabasePreferences preferences;
 		String workingDirectoryName;
 		File workingDirectory;
+		int iterations;
+		int interval;
 		
 		// Get the task arguments.
 		loginCredentials = getDatabaseLoginCredentials(taskConfig);
 		preferences = getDatabasePreferences(taskConfig);
 		workingDirectoryName = getStringArgument(
 				taskConfig, ARG_WORKING_DIRECTORY, DEFAULT_WORKING_DIRECTORY);
+		iterations = getIntegerArgument(taskConfig, ARG_ITERATIONS, DEFAULT_ITERATIONS);
+		interval = getIntegerArgument(taskConfig, ARG_INTERVAL, DEFAULT_INTERVAL);
 		
 		// Create a file object representing the directory from the name provided.
 		workingDirectory = new File(workingDirectoryName);
 		
 		return new RunnableTaskManager(
 			taskConfig.getId(),
-			new ApidbFileReplicator(loginCredentials, preferences, workingDirectory),
+			new ApidbFileReplicator(loginCredentials, preferences, workingDirectory, iterations, interval),
 			taskConfig.getPipeArgs()
 		);
 	}

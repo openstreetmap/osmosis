@@ -46,7 +46,7 @@ public class ReplicatorTest {
 		timeLoader = new MockSystemTimeLoader();
 		
 		// Instantiate the new replicator.
-		replicator = new Replicator(source, destination, snapshotLoader, timeLoader);
+		replicator = new Replicator(source, destination, snapshotLoader, timeLoader, 1, 0);
 		
 		// Provide initialisation data.
 		timeLoader.getTimes().add(buildDate("2009-10-11 12:13:14"));
@@ -98,7 +98,7 @@ public class ReplicatorTest {
 		timeLoader = new MockSystemTimeLoader();
 		
 		// Instantiate the new replicator.
-		replicator = new Replicator(source, destination, snapshotLoader, timeLoader);
+		replicator = new Replicator(source, destination, snapshotLoader, timeLoader, 1, 0);
 		
 		// We want the snapshot loader to return the same snapshot to simulate no database changes.
 		snapshotLoader.getSnapshots().add(new TransactionSnapshot("100:200:110,112"));
@@ -151,7 +151,7 @@ public class ReplicatorTest {
 		timeLoader = new MockSystemTimeLoader();
 		
 		// Instantiate the new replicator.
-		replicator = new Replicator(source, destination, snapshotLoader, timeLoader);
+		replicator = new Replicator(source, destination, snapshotLoader, timeLoader, 1, 0);
 		
 		// Set the snapshot loader to return a snapshot with higher xMax.
 		snapshotLoader.getSnapshots().add(new TransactionSnapshot("100:220"));
@@ -212,7 +212,7 @@ public class ReplicatorTest {
 		timeLoader = new MockSystemTimeLoader();
 		
 		// Instantiate the new replicator.
-		replicator = new Replicator(source, destination, snapshotLoader, timeLoader);
+		replicator = new Replicator(source, destination, snapshotLoader, timeLoader, 1, 0);
 		
 		// Set the snapshot loader to return a snapshot with higher xMax.
 		snapshotLoader.getSnapshots().add(new TransactionSnapshot("100:220:185"));
@@ -273,7 +273,7 @@ public class ReplicatorTest {
 		timeLoader = new MockSystemTimeLoader();
 		
 		// Instantiate the new replicator.
-		replicator = new Replicator(source, destination, snapshotLoader, timeLoader);
+		replicator = new Replicator(source, destination, snapshotLoader, timeLoader, 1, 0);
 		
 		// Set the snapshot loader to return a snapshot with higher xMax.
 		snapshotLoader.getSnapshots().add(new TransactionSnapshot("20000:30000:26000"));
