@@ -19,6 +19,20 @@ import org.openstreetmap.osmosis.xml.v0_6.impl.OsmChangeWriter;
 public class XmlChangeWriter extends BaseXmlWriter implements ChangeSink {
 
 	private OsmChangeWriter osmChangeWriter;
+	
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param writer
+	 *            The writer to send all data to.
+	 */
+	public XmlChangeWriter(BufferedWriter writer) {
+		super(writer);
+
+        osmChangeWriter = new OsmChangeWriter("osmChange", 0);
+	}
+	
 
 	/**
 	 * Creates a new instance.
