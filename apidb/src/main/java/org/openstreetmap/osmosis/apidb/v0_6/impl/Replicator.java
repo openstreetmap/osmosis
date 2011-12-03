@@ -304,7 +304,7 @@ public class Replicator {
 			state = new ReplicationState(snapshot.getXMax(), snapshot.getXMax(), snapshot.getXIpList(),
 					new ArrayList<Long>(), systemTime, 0);
 			
-			// Persist the updated replication state.
+			// Initialize the replication state.
 			destination.saveState(state);
 			
 			// Commit changes.

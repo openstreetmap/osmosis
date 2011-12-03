@@ -2,9 +2,11 @@
 package org.openstreetmap.osmosis.apidb.v0_6.impl;
 
 /**
- * Implementations of this interface provide persistence for replication state objects. This state
- * should be persisted after completion of the data replication, and preferably within the same
- * transaction to avoid duplicates in the face of failures.
+ * Implementations of this interface provide persistence for replication state
+ * objects. This state should be persisted after completion of the data
+ * replication so that uncommitted data is not lost, and preferably within the
+ * same transaction to avoid duplicate data being re-processed in the face of
+ * failures.
  */
 public interface ReplicationStatePersister {
 	/**
@@ -14,18 +16,19 @@ public interface ReplicationStatePersister {
 	 *            The state to be persisted.
 	 */
 	void saveState(ReplicationState state);
-	
-	
+
+
 	/**
 	 * Loads the existing state.
 	 * 
 	 * @return The state to be loaded.
 	 */
 	ReplicationState loadState();
-	
-	
+
+
 	/**
-	 * Checks if state currently exists. If no state exists it will need to be initialized.
+	 * Checks if state currently exists. If no state exists it will need to be
+	 * initialized.
 	 * 
 	 * @return True if state exists, false otherwise.
 	 */
