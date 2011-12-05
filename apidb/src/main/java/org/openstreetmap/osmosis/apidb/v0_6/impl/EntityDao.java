@@ -405,6 +405,7 @@ public abstract class EntityDao<T extends Entity> {
 		String selectedEntityTableName;
 		StringBuilder sql;
 		MapSqlParameterSource parameterSource;
+		ReleasableIterator<ChangeContainer> historyIterator;
 		
 		// PostgreSQL sometimes incorrectly chooses to perform full table scans, these options
 		// prevent this. Note that this is not recommended practice according to documentation
@@ -461,7 +462,13 @@ public abstract class EntityDao<T extends Entity> {
 					+ " " + entityName + " records located.");
 		}
 		
-		return getChangeHistory(selectedEntityTableName, new MapSqlParameterSource());
+		// Extract the data and obtain an iterator for the results.
+		historyIterator = getChangeHistory(selectedEntityTableName, new MapSqlParameterSource());
+		
+		// The temp table is no longer required and can be deleted.
+		jdbcTemplate.execute("DROP TABLE " + selectedEntityTableName);
+		
+		return historyIterator;
 	}
 
 
@@ -478,6 +485,7 @@ public abstract class EntityDao<T extends Entity> {
 		String selectedEntityTableName;
 		StringBuilder sql;
 		MapSqlParameterSource parameterSource;
+		ReleasableIterator<ChangeContainer> historyIterator;
 		
 		// PostgreSQL sometimes incorrectly chooses to perform full table scans, these options
 		// prevent this. Note that this is not recommended practice according to documentation
@@ -510,7 +518,13 @@ public abstract class EntityDao<T extends Entity> {
 		
 		jdbcTemplate.update("ANALYZE " + selectedEntityTableName);
 		
-		return getChangeHistory(selectedEntityTableName, new MapSqlParameterSource());
+		// Extract the data and obtain an iterator for the results.
+		historyIterator = getChangeHistory(selectedEntityTableName, new MapSqlParameterSource());
+		
+		// The temp table is no longer required and can be deleted.
+		jdbcTemplate.execute("DROP TABLE " + selectedEntityTableName);
+		
+		return historyIterator;
 	}
 	
 	
