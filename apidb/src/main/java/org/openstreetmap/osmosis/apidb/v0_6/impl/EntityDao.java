@@ -457,8 +457,8 @@ public abstract class EntityDao<T extends Entity> {
 		
 		if (LOG.isLoggable(Level.FINER)) {
 			LOG.log(Level.FINER,
-					jdbcTemplate.queryForInt("SELECT Count(id) FROM " + selectedEntityTableName) + " "
-					+ entityName + " records located.");
+					jdbcTemplate.queryForInt("SELECT Count(" + entityName + "_id) FROM " + selectedEntityTableName)
+					+ " " + entityName + " records located.");
 		}
 		
 		return getChangeHistory(selectedEntityTableName, new MapSqlParameterSource());
