@@ -248,9 +248,6 @@ public class Replicator {
 				initialize();
 			}
 
-			// Commit changes.
-			destination.complete();
-
 		} finally {
 			destination.release();
 		}
@@ -355,6 +352,9 @@ public class Replicator {
 
 		// Persist the updated replication state.
 		destination.saveState(state);
+
+		// Commit changes.
+		destination.complete();
 	}
 
 
@@ -376,5 +376,8 @@ public class Replicator {
 
 		// Initialize the replication state.
 		destination.saveState(state);
+
+		// Commit changes.
+		destination.complete();
 	}
 }
