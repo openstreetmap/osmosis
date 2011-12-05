@@ -96,6 +96,17 @@ public class ApidbFileReplicatorTest extends AbstractDataTest {
         		"directory=" + workingDirectory.getPath()
                 });
         
+        // Ensure that replication can run with multiple loops.
+        Osmosis.run(new String[] {
+        		"-q",
+        		"--replicate-apidb-0.6",
+        		"authFile=" + authFile.getPath(),
+                "allowIncorrectSchemaVersion=true",
+        		"directory=" + workingDirectory.getPath(),
+        		"iterations=2",
+        		"interval=0"
+                });
+        
         // Decompress the result file.
         Osmosis.run(new String[] {
         		"-q",
