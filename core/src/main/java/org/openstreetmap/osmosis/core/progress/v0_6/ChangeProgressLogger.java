@@ -1,6 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.progress.v0_6;
 
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
@@ -32,6 +33,14 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 	 */
 	public ChangeProgressLogger(int interval) {
 		progressTracker = new ProgressTracker(interval);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void initialize(Map<String, Object> metaData) {
+		progressTracker.initialize();
 	}
 	
 	

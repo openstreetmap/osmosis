@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.areafilter.v0_6;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
@@ -104,6 +105,14 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 				new SimpleObjectStore<RelationContainer>(
 						new SingleClassObjectSerializationFactory(RelationContainer.class), "afr", true);
         }
+	}
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		sink.initialize(metaData);
 	}
 	
 	

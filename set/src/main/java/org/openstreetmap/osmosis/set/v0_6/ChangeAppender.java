@@ -2,7 +2,9 @@
 package org.openstreetmap.osmosis.set.v0_6;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
@@ -75,9 +77,19 @@ public class ChangeAppender implements MultiChangeSinkRunnableChangeSource {
 	 */
 	@Override
 	public void run() {
-		boolean completed = false;
-		
 		try {
+			Map<String, Object> metaData;
+			
+			metaData = new HashMap<String, Object>();
+			
+			// Get the initialization data from each source in turn and merge
+			// it. If the same data exists in multiple sources the last will
+			// win.
+			for (DataPostbox<ChangeContainer> source : sources) {
+				metaData.putAll(source.outputInitialize());
+			}
+			changeSink.initialize(metaData);
+			
 			// Write the data from each source to the sink in turn.
 			for (DataPostbox<ChangeContainer> source : sources) {
 				while (source.hasNext()) {
@@ -87,16 +99,18 @@ public class ChangeAppender implements MultiChangeSinkRunnableChangeSource {
 			
 			changeSink.complete();
 			
-			completed = true;
+			// Complete all input sources.
+			for (DataPostbox<ChangeContainer> source : sources) {
+				source.outputComplete();
+			}
 		
 		} finally {
-			if (!completed) {
-				for (DataPostbox<ChangeContainer> source : sources) {
-					source.setOutputError();
-				}
-			}
-			
 			changeSink.release();
+
+			// Release all input sources.
+			for (DataPostbox<ChangeContainer> source : sources) {
+				source.outputRelease();
+			}
 		}
 	}
 }

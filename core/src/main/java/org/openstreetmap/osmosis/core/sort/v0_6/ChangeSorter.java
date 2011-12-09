@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.core.sort.v0_6;
 
 import java.util.Comparator;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
@@ -32,6 +33,14 @@ public class ChangeSorter implements ChangeSinkChangeSource {
 		fileBasedSort =
 			new FileBasedSort<ChangeContainer>(
 					new SingleClassObjectSerializationFactory(ChangeContainer.class), comparator, true);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void initialize(Map<String, Object> metaData) {
+		changeSink.initialize(metaData);
 	}
 	
 	

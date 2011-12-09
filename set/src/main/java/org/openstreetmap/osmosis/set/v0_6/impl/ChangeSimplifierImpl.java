@@ -3,6 +3,7 @@ package org.openstreetmap.osmosis.set.v0_6.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
@@ -59,6 +60,15 @@ public class ChangeSimplifierImpl implements ChangeSinkChangeSource {
 		changeSink.process(new ChangeContainer(changeEnd.getEntityContainer(), actionResult));
 		
 		currentChanges.clear();
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+    public void initialize(Map<String, Object> metaData) {
+		changeSink.initialize(metaData);
 	}
 	
 	

@@ -3,6 +3,7 @@ package org.openstreetmap.osmosis.tagfilter.v0_6;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
@@ -50,6 +51,14 @@ public class TagRemover implements SinkSource {
 	 */
 	public void setSink(Sink sink) {
 		this.sink = sink;
+	}
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		sink.initialize(metaData);
 	}
 
 

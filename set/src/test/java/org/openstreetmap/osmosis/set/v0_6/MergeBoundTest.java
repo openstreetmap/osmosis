@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.set.v0_6;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -224,7 +225,12 @@ public class MergeBoundTest {
 
 		@Override
 		public void run() {
-			sink.complete();
+			try {
+				sink.initialize(Collections.<String, Object>emptyMap());
+				sink.complete();
+			} finally {
+				sink.release();
+			}
 		}
 	}
 
@@ -254,11 +260,16 @@ public class MergeBoundTest {
 
 		@Override
 		public void run() {
-			if (publishBound) {
-				sink.process(new BoundContainer(bound));
+			try {
+				sink.initialize(Collections.<String, Object>emptyMap());
+				if (publishBound) {
+					sink.process(new BoundContainer(bound));
+				}
+				sink.process(new NodeContainer(createNode()));
+				sink.complete();
+			} finally {
+				sink.release();
 			}
-			sink.process(new NodeContainer(createNode()));
-			sink.complete();
 		}
 		
 		private Node createNode() {

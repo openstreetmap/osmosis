@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -468,6 +469,14 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
       }
       headerWritten = true;
     }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		// Do nothing.
+	}
    
     
     /**

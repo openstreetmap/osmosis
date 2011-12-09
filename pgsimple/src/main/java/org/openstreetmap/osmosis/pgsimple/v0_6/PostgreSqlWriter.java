@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
@@ -736,6 +737,14 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				}
 			}
 		}
+	}
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		// Do nothing.
 	}
 	
 	

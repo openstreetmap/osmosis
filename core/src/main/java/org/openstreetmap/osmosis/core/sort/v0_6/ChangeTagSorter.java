@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
@@ -22,6 +23,14 @@ import org.openstreetmap.osmosis.core.task.v0_6.ChangeSinkChangeSource;
  */
 public class ChangeTagSorter implements ChangeSinkChangeSource {
 	private ChangeSink changeSink;
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void initialize(Map<String, Object> metaData) {
+		changeSink.initialize(metaData);
+	}
 	
 	
 	/**

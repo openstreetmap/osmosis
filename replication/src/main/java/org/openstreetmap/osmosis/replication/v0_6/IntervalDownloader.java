@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -396,6 +397,8 @@ public class IntervalDownloader implements RunnableChangeSource {
 		fileLock = new FileBasedLock(new File(workingDirectory, LOCK_FILE));
 		
 		try {
+			changeSink.initialize(Collections.<String, Object>emptyMap());
+			
 			fileLock.lock();
 			
 			download();

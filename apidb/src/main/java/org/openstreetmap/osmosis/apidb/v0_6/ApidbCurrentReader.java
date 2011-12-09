@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.apidb.v0_6;
 
+import java.util.Collections;
+
 import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.apidb.common.DatabaseContext2;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.AllEntityDao;
@@ -62,6 +64,8 @@ public class ApidbCurrentReader implements RunnableSource {
     	try {
     		AllEntityDao entityDao;
     		ReleasableIterator<EntityContainer> reader;
+    		
+    		sink.initialize(Collections.<String, Object>emptyMap());
     		
 	        new SchemaVersionValidator(loginCredentials, preferences)
 	                .validateVersion(ApidbVersionConstants.SCHEMA_MIGRATIONS);

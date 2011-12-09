@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.set.v0_6.impl;
 
+import java.util.Map;
+
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.store.DataPostbox;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
@@ -23,6 +25,15 @@ public class DataPostboxSink implements Sink {
 	 */
 	public DataPostboxSink(DataPostbox<EntityContainer> postbox) {
 		this.postbox = postbox;
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+    public void initialize(Map<String, Object> metaData) {
+		postbox.initialize(metaData);
 	}
 
 

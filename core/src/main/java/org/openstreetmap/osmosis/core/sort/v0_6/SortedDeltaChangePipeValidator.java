@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.core.sort.v0_6;
 
 import java.util.Comparator;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
@@ -27,6 +28,14 @@ public class SortedDeltaChangePipeValidator implements ChangeSinkChangeSource {
 	 */
 	public SortedDeltaChangePipeValidator() {
 		comparator = new ChangeAsEntityComparator(new EntityContainerComparator(new EntityByTypeThenIdComparator()));
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void initialize(Map<String, Object> metaData) {
+		changeSink.initialize(metaData);
 	}
 	
 	

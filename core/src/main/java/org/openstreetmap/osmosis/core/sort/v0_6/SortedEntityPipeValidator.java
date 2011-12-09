@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.sort.v0_6;
 
+import java.util.Map;
+
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
@@ -24,6 +26,14 @@ public class SortedEntityPipeValidator implements SinkSource {
 	 */
 	public SortedEntityPipeValidator() {
 		comparator = new EntityContainerComparator(new EntityByTypeThenIdComparator());
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void initialize(Map<String, Object> metaData) {
+		sink.initialize(metaData);
 	}
 	
 	

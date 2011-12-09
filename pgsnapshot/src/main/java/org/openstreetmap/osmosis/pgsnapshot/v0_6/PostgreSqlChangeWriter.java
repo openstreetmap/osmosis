@@ -61,6 +61,14 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 			initialized = true;
 		}
 	}
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		// Do nothing.
+	}
 	
 	
 	/**

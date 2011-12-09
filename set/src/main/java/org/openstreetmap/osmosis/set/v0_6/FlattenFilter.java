@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.set.v0_6;
 
+import java.util.Map;
+
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
@@ -15,6 +17,12 @@ public class FlattenFilter extends SortedDuplicateEntityPipeValidator {
 	
 	private Sink flattener = new Sink() {
 		private EntityContainer previousContainer;
+	    
+	    
+		@Override
+	    public void initialize(Map<String, Object> metaData) {
+			sink.initialize(metaData);
+		}
 		
 		/**
 		 * Process a node, way or relation.

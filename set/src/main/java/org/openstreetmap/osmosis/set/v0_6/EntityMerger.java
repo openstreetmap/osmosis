@@ -1,6 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.set.v0_6;
 
+import java.util.Collections;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
@@ -103,8 +104,6 @@ public class EntityMerger implements MultiSinkRunnableSource {
 	 * {@inheritDoc}
 	 */
 	public void run() {
-		boolean completed = false;
-		
 		try {
 			EntityContainerComparator comparator;
 			EntityContainer entityContainer0 = null;
@@ -112,6 +111,13 @@ public class EntityMerger implements MultiSinkRunnableSource {
 			
 			// Create a comparator for comparing two entities by type and identifier.
 			comparator = new EntityContainerComparator(new EntityByTypeThenIdComparator());
+			
+			// We can't get meaningful data from the initialize data on the
+			// input streams, so pass empty meta data to the sink and discard
+			// the input meta data.
+			postbox0.outputInitialize();
+			postbox1.outputInitialize();
+			sink.initialize(Collections.<String, Object>emptyMap());
 			
 			// BEGIN bound special handling
 			
@@ -236,15 +242,14 @@ public class EntityMerger implements MultiSinkRunnableSource {
 			
 			sink.complete();
 			
-			completed = true;
+			postbox0.outputComplete();
+			postbox1.outputComplete();
 			
 		} finally {
-			if (!completed) {
-				postbox0.setOutputError();
-				postbox1.setOutputError();
-			}
-			
 			sink.release();
+			
+			postbox0.outputRelease();
+			postbox1.outputRelease();
 		}
 	}
 		

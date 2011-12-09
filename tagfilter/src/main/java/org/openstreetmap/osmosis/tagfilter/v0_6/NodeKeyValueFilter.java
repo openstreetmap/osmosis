@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.tagfilter.v0_6;
 
 import java.util.HashSet;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
@@ -39,6 +40,14 @@ public class NodeKeyValueFilter implements SinkSource, EntityProcessor {
 			allowedKeyValues.add(keyValues[i]);
 		}
 
+	}
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		sink.initialize(metaData);
 	}
 
 

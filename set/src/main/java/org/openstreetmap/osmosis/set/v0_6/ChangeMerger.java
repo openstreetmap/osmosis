@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.set.v0_6;
 
+import java.util.Collections;
+
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
@@ -90,8 +92,6 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 	 * {@inheritDoc}
 	 */
 	public void run() {
-		boolean completed = false;
-		
 		try {
 			EntityContainerComparator comparator;
 			ChangeContainer changeContainer0 = null;
@@ -99,6 +99,13 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 			
 			// Create a comparator for comparing two entities by type and identifier.
 			comparator = new EntityContainerComparator(new EntityByTypeThenIdThenVersionComparator());
+			
+			// We can't get meaningful data from the initialize data on the
+			// input streams, so pass empty meta data to the sink and discard
+			// the input meta data.
+			postbox0.outputInitialize();
+			postbox1.outputInitialize();
+			changeSink.initialize(Collections.<String, Object>emptyMap());
 			
 			// We continue in the comparison loop while both sources still have data.
 			while (
@@ -188,15 +195,14 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 			
 			changeSink.complete();
 			
-			completed = true;
+			postbox0.outputComplete();
+			postbox1.outputComplete();
 			
 		} finally {
-			if (!completed) {
-				postbox0.setOutputError();
-				postbox1.setOutputError();
-			}
-			
 			changeSink.release();
+			
+			postbox0.outputRelease();
+			postbox1.outputRelease();
 		}
 	}
 }

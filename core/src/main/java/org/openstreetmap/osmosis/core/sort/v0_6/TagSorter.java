@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
@@ -21,6 +22,14 @@ import org.openstreetmap.osmosis.core.task.v0_6.SinkSource;
  */
 public class TagSorter implements SinkSource {
 	private Sink sink;
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void initialize(Map<String, Object> metaData) {
+		sink.initialize(metaData);
+	}
 	
 	
 	/**

@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.ChangesetManager;
@@ -1031,7 +1032,15 @@ public class ApidbWriter implements Sink, EntityProcessor {
     		populateCurrentRelations();
         }
     }
-    
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		// Do nothing.
+	}
+
 
     /**
      * Writes any buffered data to the database and commits.

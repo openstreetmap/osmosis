@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.core.sort.v0_6;
 
 import java.util.Comparator;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
@@ -30,6 +31,14 @@ public class EntitySorter implements SinkSource {
 	 */
 	public EntitySorter(Comparator<EntityContainer> comparator) {
 		fileBasedSort = new FileBasedSort<EntityContainer>(new GenericObjectSerializationFactory(), comparator, true);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void initialize(Map<String, Object> metaData) {
+		sink.initialize(metaData);
 	}
 	
 	

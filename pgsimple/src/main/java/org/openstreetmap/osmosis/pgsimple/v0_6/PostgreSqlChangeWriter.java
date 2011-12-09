@@ -49,6 +49,14 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 		
 		schemaVersionValidator = new SchemaVersionValidator(dbCtx, preferences);
 	}
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		// Do nothing.
+	}
 	
 	
 	/**

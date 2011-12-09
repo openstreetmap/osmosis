@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.misc.v0_6;
 
+import java.util.Collections;
+
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableChangeSource;
 
@@ -29,6 +31,7 @@ public class EmptyChangeReader implements RunnableChangeSource {
 	@Override
 	public void run() {
 		try {
+			changeSink.initialize(Collections.<String, Object>emptyMap());
 			changeSink.complete();
 		} finally {
 			changeSink.release();
