@@ -18,6 +18,12 @@ import org.openstreetmap.osmosis.core.time.DateParser;
  * data is missed during replication, and none is repeated.
  */
 public class ReplicationState implements Storeable {
+	/**
+	 * The key used when passing an instance through the pipeline as metadata.
+	 */
+	public static final String META_DATA_KEY = "replication.state";
+	
+	
 	private Date timestamp;
 	private long sequenceNumber;
 
