@@ -1,6 +1,9 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.set.v0_6;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
@@ -162,15 +165,22 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 	 * sink.
 	 */
 	public void run() {
-		boolean completed = false;
-		
 		try {
 			EntityContainerComparator comparator;
 			EntityContainer base = null;
 			ChangeContainer change = null;
+			Map<String, Object> metaData;
 			
 			// Create a comparator for comparing two entities by type and identifier.
 			comparator = new EntityContainerComparator(new EntityByTypeThenIdComparator());
+			
+			// Initialise the pipeline with a combination of the metadata from
+			// both inputs. The change stream metadata will be applied second
+			// and will override any values with the same key.
+			metaData = new HashMap<String, Object>();
+			metaData.putAll(basePostbox.outputInitialize());
+			metaData.putAll(changePostbox.outputInitialize());
+			sink.initialize(metaData);
 			
 			// We continue in the comparison loop while both sources still have data.
 			while ((base != null || basePostbox.hasNext()) && (change != null || changePostbox.hasNext())) {
@@ -221,15 +231,14 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 			}
 			
 			sink.complete();
-			completed = true;
+			basePostbox.outputComplete();
+			changePostbox.outputComplete();
 			
 		} finally {
-			if (!completed) {
-				basePostbox.setOutputError();
-				changePostbox.setOutputError();
-			}
-			
 			sink.release();
+			
+			basePostbox.outputRelease();
+			changePostbox.outputRelease();
 		}
 	}
 }

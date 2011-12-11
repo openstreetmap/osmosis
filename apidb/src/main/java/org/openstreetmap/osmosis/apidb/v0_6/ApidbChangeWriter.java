@@ -50,6 +50,13 @@ public class ApidbChangeWriter implements ChangeSink {
     /**
      * {@inheritDoc}
      */
+    public void initialize(Map<String, Object> metaData) {
+		// Do nothing.
+	}
+
+    /**
+     * {@inheritDoc}
+     */
     public void process(ChangeContainer change) {
         ChangeAction action;
 

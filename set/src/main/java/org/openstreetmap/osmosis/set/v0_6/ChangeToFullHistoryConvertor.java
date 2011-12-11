@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.set.v0_6;
 
+import java.util.Map;
+
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
@@ -25,6 +27,14 @@ public class ChangeToFullHistoryConvertor implements ChangeSinkSource {
 	@Override
 	public void setSink(Sink sink) {
 		this.sink = sink;
+	}
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		sink.initialize(metaData);
 	}
 
 

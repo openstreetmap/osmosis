@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.dataset.v0_6;
 
 import java.io.File;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.dataset.v0_6.impl.DatasetStore;
@@ -34,6 +35,14 @@ public class WriteDataset implements Sink {
 	public WriteDataset(File directory, boolean enableWayTileIndex) {
 		fileManager = new PermanentFileDatasetStoreFileManager(directory);
 		store = new DatasetStore(fileManager, enableWayTileIndex);
+	}
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		store.initialize(metaData);
 	}
 	
 	

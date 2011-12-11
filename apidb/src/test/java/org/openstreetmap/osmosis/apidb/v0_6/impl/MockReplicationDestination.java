@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.apidb.v0_6.impl;
 
+import java.util.Map;
+
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 
@@ -73,6 +75,14 @@ public class MockReplicationDestination implements ReplicationDestination {
 	@Override
 	public boolean stateExists() {
 		return stateExists;
+	}
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		// Do nothing.
 	}
 
 

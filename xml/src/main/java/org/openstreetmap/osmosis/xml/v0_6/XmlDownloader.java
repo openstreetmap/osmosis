@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.Inflater;
@@ -178,6 +179,8 @@ public class XmlDownloader implements RunnableSource {
      */
     public void run() {
         try {
+        	mySink.initialize(Collections.<String, Object>emptyMap());
+        	
             SAXParser parser = createParser();
             InputStream inputStream =
             	getInputStream(myBaseUrl + "/map?bbox=" + myLeft + "," + myBottom + "," + myRight + "," + myTop);

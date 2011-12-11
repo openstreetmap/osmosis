@@ -2,7 +2,6 @@
 package org.openstreetmap.osmosis.core.task.v0_6;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
-import org.openstreetmap.osmosis.core.lifecycle.Completable;
 import org.openstreetmap.osmosis.core.task.common.Task;
 
 
@@ -11,8 +10,8 @@ import org.openstreetmap.osmosis.core.task.common.Task;
  * 
  * @author Brett Henderson
  */
-public interface ChangeSink extends Task, Completable {
-	
+public interface ChangeSink extends Task, Initializable {
+
 	/**
 	 * Process the change.
 	 * 

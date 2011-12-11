@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,6 +72,7 @@ public class FastXmlReader implements RunnableSource {
 			FastXmlParser parser = null;
 			
 			try {
+				sink.initialize(Collections.<String, Object>emptyMap());
 				
 				// make "-" an alias for /dev/stdin
 				if (file.getName().equals("-")) {
@@ -91,6 +93,7 @@ public class FastXmlReader implements RunnableSource {
 		        XMLStreamReader xpp = factory.createXMLStreamReader(inputStream);
 				
 				parser = new FastXmlParser(sink, xpp, enableDateParsing);
+				
 				parser.readOsm();
 				
 				sink.complete();

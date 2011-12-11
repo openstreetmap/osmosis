@@ -9,6 +9,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -164,6 +165,15 @@ public class XmlChangeUploader implements ChangeSink {
             this.myChangeWriter.begin();
         }
     }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		// Do nothing.
+	}
+    
 
     /**
      * {@inheritDoc}
@@ -304,5 +314,4 @@ public class XmlChangeUploader implements ChangeSink {
             }
         }
     }
-
 }

@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.pgsimple.v0_6;
 
 import java.io.File;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.pgsimple.common.NodeLocationStoreType;
@@ -48,6 +49,14 @@ public class PostgreSqlDumpWriter implements Sink {
 		
 		copyFilesetBuilder =
 			new CopyFilesetBuilder(copyFileset, enableBboxBuilder, enableLinestringBuilder, storeType);
+	}
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		// Do nothing.
 	}
 	
 	

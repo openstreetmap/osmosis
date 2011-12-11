@@ -4,6 +4,8 @@ package org.openstreetmap.osmosis.test.task.v0_6;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
@@ -22,6 +24,14 @@ public class SinkEntityInspector implements Sink {
 	 */
 	public SinkEntityInspector() {
 		processedEntities = new LinkedList<EntityContainer>();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void initialize(Map<String, Object> metaData) {
+		// Nothing to do here
 	}
 
 

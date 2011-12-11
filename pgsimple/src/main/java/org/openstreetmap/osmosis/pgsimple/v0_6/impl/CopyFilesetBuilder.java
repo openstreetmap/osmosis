@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.pgsimple.v0_6.impl;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
@@ -92,6 +93,14 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 		memberTypeValueMapper = new MemberTypeValueMapper();
 		
 		userSet = new HashSet<Integer>();
+	}
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		// Do nothing.
 	}
 	
 	

@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.dataset.v0_6;
 
+import java.util.Collections;
+
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.Dataset;
 import org.openstreetmap.osmosis.core.container.v0_6.DatasetContext;
@@ -77,6 +79,8 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 		// Pass all data within the bounding box to the sink.
 		bboxData = datasetReader.iterateBoundingBox(left, right, top, bottom, completeWays);
 		try {
+			sink.initialize(Collections.<String, Object>emptyMap());
+			
 			while (bboxData.hasNext()) {
 				sink.process(bboxData.next());
 			}
@@ -94,6 +98,8 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 	 */
 	@Override
 	public void release() {
+		sink.release();
+		
 		if (datasetReader != null) {
 			datasetReader.release();
 		}

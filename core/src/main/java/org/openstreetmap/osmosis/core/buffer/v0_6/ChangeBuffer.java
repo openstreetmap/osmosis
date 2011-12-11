@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.buffer.v0_6;
 
+import java.util.Map;
+
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.store.DataPostbox;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
@@ -28,6 +30,14 @@ public class ChangeBuffer implements ChangeSinkRunnableChangeSource {
 	 */
 	public ChangeBuffer(int bufferCapacity) {
 		buffer = new DataPostbox<ChangeContainer>(bufferCapacity);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void initialize(Map<String, Object> metaData) {
+		buffer.initialize(metaData);
 	}
 	
 	
@@ -67,23 +77,19 @@ public class ChangeBuffer implements ChangeSinkRunnableChangeSource {
 	 * Sends all input data to the sink.
 	 */
 	public void run() {
-		boolean completed = false;
-		
 		try {
+			changeSink.initialize(buffer.outputInitialize());
+			
 			while (buffer.hasNext()) {
 				changeSink.process(buffer.getNext());
 			}
 			
 			changeSink.complete();
-			completed = true;
+			buffer.outputComplete();
 			
 		} finally {
-			if (!completed) {
-				buffer.setOutputError();
-			}
-			
 			changeSink.release();
+			buffer.outputRelease();
 		}
 	}
-	
 }

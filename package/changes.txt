@@ -1,3 +1,6 @@
+0.40.1
+Fix the classworlds version in the Windows launcher.
+
 0.40
 Fixed base64 encoding of user credentials sent by --upload-xml-change.
 Added support for merging Bound objects.

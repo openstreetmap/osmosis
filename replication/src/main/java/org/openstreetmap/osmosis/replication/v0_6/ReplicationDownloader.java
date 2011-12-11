@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.replication.v0_6;
 
 import java.io.File;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeForStreamableApplierComparator;
@@ -53,7 +54,16 @@ public class ReplicationDownloader extends BaseReplicationDownloader implements 
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected void processInitialize(ReplicationState initialState) {
+	protected void processInitialize(Map<String, Object> metaData) {
+		changeSorter.initialize(metaData);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void processInitializeState(ReplicationState initialState) {
 		// Nothing to do.
 	}
 	
@@ -67,7 +77,11 @@ public class ReplicationDownloader extends BaseReplicationDownloader implements 
 		
 		xmlReader.setChangeSink(new ChangeSink() {
 			private ChangeSink suppressedChangeSink = localChangeSink;
-			
+
+			@Override
+			public void initialize(Map<String, Object> metaData) {
+				// Suppress the call.
+			}
 			@Override
 			public void process(ChangeContainer change) {
 				suppressedChangeSink.process(change);

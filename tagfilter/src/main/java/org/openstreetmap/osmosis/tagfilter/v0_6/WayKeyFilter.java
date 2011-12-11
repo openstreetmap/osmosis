@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.tagfilter.v0_6;
 
 import java.util.HashSet;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
@@ -40,6 +41,14 @@ public class WayKeyFilter implements SinkSource, EntityProcessor {
 			allowedKeys.add(keys[i]);
 		}
 
+	}
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		sink.initialize(metaData);
 	}
 
 

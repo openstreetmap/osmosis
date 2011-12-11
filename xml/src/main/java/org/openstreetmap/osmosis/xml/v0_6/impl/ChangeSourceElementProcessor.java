@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.xml.v0_6.impl;
 
+import java.util.Map;
+
 import org.xml.sax.Attributes;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
@@ -124,6 +126,14 @@ public class ChangeSourceElementProcessor extends BaseElementProcessor {
 		public ChangeSinkAdapter(ChangeSink changeSink, ChangeAction action) {
 			this.changeSink = changeSink;
 			this.action = action;
+		}
+	    
+	    
+	    /**
+	     * {@inheritDoc}
+	     */
+	    public void initialize(Map<String, Object> metaData) {
+			changeSink.initialize(metaData);
 		}
 		
 		

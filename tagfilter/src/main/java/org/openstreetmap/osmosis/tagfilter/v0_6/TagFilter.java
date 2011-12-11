@@ -119,6 +119,14 @@ public class TagFilter implements SinkSource {
         }
         return matched;    
     }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		sink.initialize(metaData);
+	}
 
 
     /**

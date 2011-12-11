@@ -3,6 +3,7 @@ package org.openstreetmap.osmosis.core.tee.v0_6;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
@@ -55,6 +56,16 @@ public class ChangeTee implements ChangeSinkMultiChangeSource {
 	 */
 	public int getChangeSourceCount() {
 		return sinkList.size();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void initialize(Map<String, Object> metaData) {
+		for (ProxyChangeSinkChangeSource sink : sinkList) {
+			sink.initialize(metaData);
+		}
 	}
 	
 	
@@ -114,6 +125,14 @@ public class ChangeTee implements ChangeSinkMultiChangeSource {
 		 */
 		public void setChangeSink(ChangeSink changeSink) {
 			this.changeSink = changeSink;
+		}
+
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void initialize(Map<String, Object> metaData) {
+			changeSink.initialize(metaData);
 		}
 		
 		

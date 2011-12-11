@@ -3,6 +3,7 @@ package org.openstreetmap.osmosis.xml.v0_6;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
@@ -46,6 +47,14 @@ public class XmlWriter extends BaseXmlWriter implements Sink {
 		super(file, compressionMethod);
 		
 		osmWriter = new OsmWriter("osm", 0, true);
+	}
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		// Do nothing.
 	}
 	
 	

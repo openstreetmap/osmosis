@@ -59,6 +59,14 @@ public class EntityReporter implements Sink {
 		anonymousUser = new UserStatistics("anonymous");
 		totalUser = new UserStatistics("Total");
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void initialize(Map<String, Object> metaData) {
+		// Do nothing.
+	}
 	
 	
 	/**

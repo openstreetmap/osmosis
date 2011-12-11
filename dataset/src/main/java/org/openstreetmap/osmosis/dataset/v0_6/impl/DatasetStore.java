@@ -1,6 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.dataset.v0_6.impl;
 
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -87,6 +88,10 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 		// Validate all input data to ensure it is sorted.
 		sortedPipeValidator = new SortedEntityPipeValidator();
 		sortedPipeValidator.setSink(new Sink() {
+			@Override
+		    public void initialize(Map<String, Object> metaData) {
+				throw new UnsupportedOperationException();
+			}
 			@Override
 			public void complete() {
 				throw new UnsupportedOperationException();
@@ -185,6 +190,14 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 				fileManager.getRelationRelationIndexFile()
 			)
 		);
+	}
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		// Do nothing.
 	}
 	
 	

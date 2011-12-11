@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.set.v0_6;
 
+import java.util.Collections;
+
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.change.v0_6.impl.TimestampSetter;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
@@ -81,8 +83,6 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 	 * Processes the input sources and sends the changes to the change sink.
 	 */
 	public void run() {
-		boolean completed = false;
-		
 		try {
 			EntityContainerComparator comparator;
 			EntityContainer fromEntityContainer = null;
@@ -94,6 +94,13 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 			
 			// Create an object for setting the current timestamp on entities being deleted.
 			timestampSetter = new TimestampSetter();
+			
+			// We can't get meaningful data from the initialize data on the
+			// input streams, so pass empty meta data to the sink and discard
+			// the input meta data.
+			fromPostbox.outputInitialize();
+			toPostbox.outputInitialize();
+			changeSink.initialize(Collections.<String, Object>emptyMap());
 			
 			// We continue in the comparison loop while both sources still have data.
 			while (
@@ -164,15 +171,14 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 			}
 			
 			changeSink.complete();
-			completed = true;
+			fromPostbox.outputComplete();
+			toPostbox.outputComplete();
 			
 		} finally {
-			if (!completed) {
-				fromPostbox.setOutputError();
-				toPostbox.setOutputError();
-			}
-			
 			changeSink.release();
+			
+			fromPostbox.outputRelease();
+			toPostbox.outputRelease();
 		}
 	}
 }

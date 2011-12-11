@@ -2,6 +2,7 @@
 package org.openstreetmap.osmosis.apidb.v0_6.impl;
 
 import java.io.File;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.util.AtomicFileCreator;
@@ -82,6 +83,14 @@ public class FileReplicationDestination implements ReplicationDestination {
 			// Create a writer writing to a new temporary file.
 			writer = new XmlChangeWriter(atomicXmlFile.getTmpFile(), CHANGE_FILE_COMPRESSION);
 		}
+	}
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		// Do nothing.
 	}
 
 

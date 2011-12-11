@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.bound.v0_6;
 
+import java.util.Map;
+
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityProcessor;
@@ -57,6 +59,12 @@ public class BoundComputer implements SinkSource, EntityProcessor {
 		right = 0;
 		nodesSeen = false;
 		this.origin = origin;
+	}
+
+
+	@Override
+	public void initialize(Map<String, Object> metaTags) {
+		sink.initialize(metaTags);
 	}
 
 

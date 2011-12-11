@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.set.v0_6;
 
+import java.util.Map;
+
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.set.v0_6.impl.ChangeSimplifierImpl;
 import org.openstreetmap.osmosis.core.sort.v0_6.SortedHistoryChangePipeValidator;
@@ -28,6 +30,15 @@ public class ChangeSimplifier implements ChangeSinkChangeSource {
 		changeSimplifier = new ChangeSimplifierImpl();
 		
 		orderingValidator.setChangeSink(changeSimplifier);
+	}
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+    public void initialize(Map<String, Object> metaData) {
+		orderingValidator.initialize(metaData);
 	}
 	
 	

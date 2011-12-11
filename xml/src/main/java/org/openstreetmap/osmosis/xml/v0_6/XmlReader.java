@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -90,6 +91,8 @@ public class XmlReader implements RunnableSource {
 		
 		try {
 			SAXParser parser;
+			
+			sink.initialize(Collections.<String, Object>emptyMap());
 			
 			// make "-" an alias for /dev/stdin
 			if (file.getName().equals("-")) {

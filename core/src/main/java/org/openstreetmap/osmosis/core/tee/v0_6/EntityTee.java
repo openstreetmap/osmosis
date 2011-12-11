@@ -3,6 +3,7 @@ package org.openstreetmap.osmosis.core.tee.v0_6;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
@@ -55,6 +56,16 @@ public class EntityTee implements SinkMultiSource {
 	 */
 	public int getSourceCount() {
 		return sinkList.size();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void initialize(Map<String, Object> metaData) {
+		for (ProxySinkSource sink : sinkList) {
+			sink.initialize(metaData);
+		}
 	}
 	
 	
@@ -114,6 +125,14 @@ public class EntityTee implements SinkMultiSource {
 		 */
 		public void setSink(Sink sink) {
 			this.sink = sink;
+		}
+
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public void initialize(Map<String, Object> metaData) {
+			sink.initialize(metaData);
 		}
 		
 		

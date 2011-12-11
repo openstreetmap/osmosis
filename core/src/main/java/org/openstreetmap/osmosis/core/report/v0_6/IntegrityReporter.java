@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -123,6 +124,14 @@ public class IntegrityReporter implements Sink, EntityProcessor {
 			write("Entity Type, Entity Id, Referred Type, Referred Id");
 			writeNewLine();
 		}
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void initialize(Map<String, Object> metaData) {
+		// Do nothing.
 	}
 	
 	

@@ -11,7 +11,9 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -269,6 +271,9 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			// Build the local state persister which is used for both loading and storing local state.
 			localStatePersistor = new PropertiesPersister(new File(workingDirectory, LOCAL_STATE_FILE));
 			
+			// Begin processing.
+			processInitialize(Collections.<String, Object>emptyMap());
+			
 			// If local state isn't available we need to copy server state to be the initial local state
 			// then exit.
 			if (localStatePersistor.exists()) {
@@ -281,7 +286,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			} else {
 				localState = serverState;
 				
-				processInitialize(localState);
+				processInitializeState(localState);
 			}
 			
 			// Commit downstream changes.
@@ -299,13 +304,24 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 	
 	
 	/**
+	 * This is called prior to any processing being performed. It allows any
+	 * setup activities to be performed.
+	 * 
+	 * @param metaData
+	 *            The meta data associated with this processing request (empty
+	 *            in the current implementation).
+	 */
+	protected abstract void processInitialize(Map<String, Object> metaData);
+	
+	
+	/**
 	 * Invoked once during the first execution run to allow initialisation based on the initial
 	 * replication state downloaded from the server.
 	 * 
 	 * @param initialState
 	 *            The first server state.
 	 */
-	protected abstract void processInitialize(ReplicationState initialState);
+	protected abstract void processInitializeState(ReplicationState initialState);
 	
 	
 	/**
