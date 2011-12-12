@@ -265,4 +265,17 @@ public class OsmHandlerTest {
 		Bound b = (Bound) entityInspector.getLastEntityContainer().getEntity();
 		assertEquals("someorigin", b.getOrigin());
 	}
+	
+	/**
+	 * Test the inheritance of generator to the origin.
+	 */
+	@Test
+	public void testBoundsOriginInheritance() {
+		parseString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+					+ "<osm version=\"0.6\" generator=\"somegenerator\">"
+					+ "<bounds minlat=\"-1.234\" minlon=\"-1.234\" maxlat=\"1.234\" maxlon=\"1.234\"/>"
+					+ "</osm>");
+		Bound b = (Bound) entityInspector.getLastEntityContainer().getEntity();
+		assertEquals("somegenerator", b.getOrigin());
+	}
 }

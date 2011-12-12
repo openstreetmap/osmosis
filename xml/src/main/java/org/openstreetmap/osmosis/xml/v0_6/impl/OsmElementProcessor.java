@@ -26,10 +26,8 @@ public class OsmElementProcessor extends SourceElementProcessor {
 	private static final String ELEMENT_NAME_WAY = "way";
 	private static final String ELEMENT_NAME_RELATION = "relation";
 	private static final String ATTRIBUTE_NAME_VERSION = "version";
+	private static final String ATTRIBUTE_NAME_GENERATOR = "generator";
 	
-	
-	private LegacyBoundElementProcessor legacyBoundElementProcessor;
-	private BoundsElementProcessor boundsElementProcessor;
 	private NodeElementProcessor nodeElementProcessor;
 	private WayElementProcessor wayElementProcessor;
 	private RelationElementProcessor relationElementProcessor;
@@ -37,6 +35,8 @@ public class OsmElementProcessor extends SourceElementProcessor {
 	private boolean foundBound = false;
 	private boolean foundEntities = false;
 	private boolean validateVersion;
+
+	private String generator;
 	
 	/**
 	 * Creates a new instance.
@@ -56,8 +56,6 @@ public class OsmElementProcessor extends SourceElementProcessor {
 		
 		this.validateVersion = validateVersion;
 
-		legacyBoundElementProcessor = new LegacyBoundElementProcessor(this, getSink(), enableDateParsing);
-		boundsElementProcessor = new BoundsElementProcessor(this, getSink(), enableDateParsing);
 		nodeElementProcessor = new NodeElementProcessor(this, getSink(), enableDateParsing);
 		wayElementProcessor = new WayElementProcessor(this, getSink(), enableDateParsing);
 		relationElementProcessor = new RelationElementProcessor(this, getSink(), enableDateParsing);
@@ -80,6 +78,8 @@ public class OsmElementProcessor extends SourceElementProcessor {
 				);
 			}
 		}
+		
+		generator = attributes.getValue(ATTRIBUTE_NAME_GENERATOR);
 	}
 	
 	
@@ -107,9 +107,9 @@ public class OsmElementProcessor extends SourceElementProcessor {
 			foundBound = true;
 			if (ELEMENT_NAME_BOUND_LEGACY.equals(qName)) {
 				LOG.warning("Legacy <bound> element encountered.");
-				return legacyBoundElementProcessor;
+				return new LegacyBoundElementProcessor(this, getSink(), true);
 			} else {
-				return boundsElementProcessor;
+				return new BoundsElementProcessor(this, getSink(), true, generator);
 			}
 		} else if (ELEMENT_NAME_NODE.equals(qName)) {
 			foundEntities = true;

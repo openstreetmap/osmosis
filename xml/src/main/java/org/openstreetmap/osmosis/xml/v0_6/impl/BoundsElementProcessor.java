@@ -23,6 +23,7 @@ public class BoundsElementProcessor extends SourceElementProcessor {
 	private static final String ATTRIBUTE_NAME_ORIGIN = "origin";
 
 	private Bound bound;
+	private String defaultOrigin;
 
 
 	/**
@@ -35,11 +36,15 @@ public class BoundsElementProcessor extends SourceElementProcessor {
 	 * @param enableDateParsing
 	 *            If true, dates will be parsed from xml data, else the current date will be used
 	 *            thus saving parsing time.
+	 * @param defaultOrigin
+	 * 			  The origin to set on the bound entity if there is no explicit origin defined.
 	 */
 	public BoundsElementProcessor(BaseElementProcessor parentProcessor,
 	        Sink sink,
-	        boolean enableDateParsing) {
+	        boolean enableDateParsing,
+	        String defaultOrigin) {
 		super(parentProcessor, sink, enableDateParsing);
+		this.defaultOrigin = defaultOrigin;
 	}
 
 
@@ -54,6 +59,9 @@ public class BoundsElementProcessor extends SourceElementProcessor {
 		double right = getRequiredDoubleValue(attributes, ATTRIBUTE_NAME_MAXLON);
 
 		String origin = attributes.getValue(ATTRIBUTE_NAME_ORIGIN);
+		if (origin == null) {
+			origin = defaultOrigin;
+		}
 		bound = new Bound(right, left, top, bottom, origin);
 	}
 
