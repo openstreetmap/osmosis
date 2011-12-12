@@ -6,11 +6,15 @@ import java.util.Locale;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
 import org.openstreetmap.osmosis.xml.common.ElementWriter;
 
+
 /**
  * @author KNewman
  * 
  */
 public class BoundWriter extends ElementWriter {
+
+	private boolean legacyBound;
+
 
 	/**
 	 * Creates a new instance.
@@ -19,9 +23,13 @@ public class BoundWriter extends ElementWriter {
 	 *            The name of the element to be written.
 	 * @param indentLevel
 	 *            The indent level of the element.
+	 * @param legacyBound
+	 *            If true, write the legacy <bound> element instead of the
+	 *            correct <bounds> one.
 	 */
-	public BoundWriter(String elementName, int indentLevel) {
+	public BoundWriter(String elementName, int indentLevel, boolean legacyBound) {
 		super(elementName, indentLevel);
+		this.legacyBound = legacyBound;
 	}
 
 
@@ -32,19 +40,43 @@ public class BoundWriter extends ElementWriter {
 	 *            The bound to be processed.
 	 */
 	public void process(Bound bound) {
+		if (legacyBound) {
+			processLegacy(bound);
+		} else {
+			processRegular(bound);
+		}
+	}
 
+
+	private void processRegular(Bound bound) {
+		beginOpenElement();
+		String format = "%.5f";
+		addAttribute("minlon", String.format(format, Locale.US, bound.getLeft()));
+		addAttribute("minlat", String.format(format, Locale.US, bound.getBottom()));
+		addAttribute("maxlon", String.format(format, Locale.US, bound.getRight()));
+		addAttribute("maxlat", String.format(format, Locale.US, bound.getTop()));
+		if (bound.getOrigin() != null) {
+			addAttribute("origin", bound.getOrigin());
+		}
+		endOpenElement(true);
+	}
+
+
+	private void processLegacy(Bound bound) {
 		// Only add the Bound if the origin string isn't empty
-		if (bound.getOrigin() != "") {
+		if (!"".equals(bound.getOrigin())) {
 			beginOpenElement();
-			// Write with the US locale (to force . instead of , as the decimal separator)
-			// Use only 5 decimal places (~1.2 meter resolution should be sufficient for Bound)
+			// Write with the US locale (to force . instead of , as the decimal
+			// separator)
+			// Use only 5 decimal places (~1.2 meter resolution should be
+			// sufficient for Bound)
 			addAttribute("box", String.format(
-			        Locale.US,
-			        "%.5f,%.5f,%.5f,%.5f",
-			        bound.getBottom(),
-			        bound.getLeft(),
-			        bound.getTop(),
-			        bound.getRight()));
+					Locale.US,
+					"%.5f,%.5f,%.5f,%.5f", 
+					bound.getBottom(), 
+					bound.getLeft(),
+					bound.getTop(), 
+					bound.getRight()));
 			addAttribute("origin", bound.getOrigin());
 			endOpenElement(true);
 		}

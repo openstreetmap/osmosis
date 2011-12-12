@@ -30,7 +30,7 @@ public class XmlWriter extends BaseXmlWriter implements Sink {
 	public XmlWriter(BufferedWriter writer) {
 		super(writer);
 		
-		osmWriter = new OsmWriter("osm", 0, true);
+		osmWriter = new OsmWriter("osm", 0, true, false);
 	}
 	
 	
@@ -45,7 +45,7 @@ public class XmlWriter extends BaseXmlWriter implements Sink {
 	public XmlWriter(File file, CompressionMethod compressionMethod) {
 		super(file, compressionMethod);
 		
-		osmWriter = new OsmWriter("osm", 0, true);
+		osmWriter = new OsmWriter("osm", 0, true, false);
 	}
 	
 	
