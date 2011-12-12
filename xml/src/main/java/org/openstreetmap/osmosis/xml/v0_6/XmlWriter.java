@@ -20,7 +20,6 @@ public class XmlWriter extends BaseXmlWriter implements Sink {
 	
 	private OsmWriter osmWriter;
 	
-	
 	/**
 	 * Creates a new instance.
 	 * 
@@ -47,7 +46,24 @@ public class XmlWriter extends BaseXmlWriter implements Sink {
 		
 		osmWriter = new OsmWriter("osm", 0, true, false);
 	}
-	
+
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param file
+	 *            The file to write.
+	 * @param compressionMethod
+	 *            Specifies the compression method to employ.
+	 * @param legacyBound
+	 *            If true, write the legacy <bound> element instead of the
+	 *            correct <bounds> one.
+	 */
+	public XmlWriter(File file, CompressionMethod compressionMethod, boolean legacyBound) {
+		super(file, compressionMethod);
+		
+		osmWriter = new OsmWriter("osm", 0, true, legacyBound);
+	}
+
 	
 	/**
 	 * {@inheritDoc}

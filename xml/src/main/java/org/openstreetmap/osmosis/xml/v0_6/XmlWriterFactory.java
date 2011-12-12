@@ -18,7 +18,9 @@ import org.openstreetmap.osmosis.xml.common.XmlTaskManagerFactory;
 public class XmlWriterFactory extends XmlTaskManagerFactory {
 	private static final String ARG_FILE_NAME = "file";
 	private static final String DEFAULT_FILE_NAME = "dump.osm";
-	
+
+	private static final String ARG_LEGACY_BOUND = "useLegacyBound";
+	private static final boolean DEFAULT_LEGACY_BOUND = false;
 	
 	/**
 	 * {@inheritDoc}
@@ -41,8 +43,10 @@ public class XmlWriterFactory extends XmlTaskManagerFactory {
 		// Create a file object from the file name provided.
 		file = new File(fileName);
 		
+		boolean legacyBound = getBooleanArgument(taskConfig, ARG_LEGACY_BOUND, DEFAULT_LEGACY_BOUND);
+		
 		// Build the task object.
-		task = new XmlWriter(file, compressionMethod);
+		task = new XmlWriter(file, compressionMethod, legacyBound);
 		
 		return new SinkManager(taskConfig.getId(), task, taskConfig.getPipeArgs());
 	}
