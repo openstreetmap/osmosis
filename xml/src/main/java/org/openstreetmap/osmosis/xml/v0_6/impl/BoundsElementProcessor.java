@@ -12,15 +12,10 @@ import org.openstreetmap.osmosis.xml.common.BaseElementProcessor;
 /**
  * Provides an element processor implementation for a node.
  * 
- * @author Karl Newman, Igor Podolskiy
+ * @author Karl Newman
+ * @author Igor Podolskiy
  */
 public class BoundsElementProcessor extends SourceElementProcessor {
-
-	private static final String ATTRIBUTE_NAME_MINLAT = "minlat";
-	private static final String ATTRIBUTE_NAME_MAXLAT = "maxlat";
-	private static final String ATTRIBUTE_NAME_MINLON = "minlon";
-	private static final String ATTRIBUTE_NAME_MAXLON = "maxlon";
-	private static final String ATTRIBUTE_NAME_ORIGIN = "origin";
 
 	private Bound bound;
 	private String defaultOrigin;
@@ -53,12 +48,12 @@ public class BoundsElementProcessor extends SourceElementProcessor {
 	 */
 	@Override
 	public void begin(Attributes attributes) {
-		double bottom = getRequiredDoubleValue(attributes, ATTRIBUTE_NAME_MINLAT);
-		double left = getRequiredDoubleValue(attributes, ATTRIBUTE_NAME_MINLON);
-		double top = getRequiredDoubleValue(attributes, ATTRIBUTE_NAME_MAXLAT);
-		double right = getRequiredDoubleValue(attributes, ATTRIBUTE_NAME_MAXLON);
+		double bottom = getRequiredDoubleValue(attributes, XmlConstants.ATTRIBUTE_NAME_MINLAT);
+		double left = getRequiredDoubleValue(attributes, XmlConstants.ATTRIBUTE_NAME_MINLON);
+		double top = getRequiredDoubleValue(attributes, XmlConstants.ATTRIBUTE_NAME_MAXLAT);
+		double right = getRequiredDoubleValue(attributes, XmlConstants.ATTRIBUTE_NAME_MAXLON);
 
-		String origin = attributes.getValue(ATTRIBUTE_NAME_ORIGIN);
+		String origin = attributes.getValue(XmlConstants.ATTRIBUTE_NAME_ORIGIN);
 		if (origin == null) {
 			origin = defaultOrigin;
 		}

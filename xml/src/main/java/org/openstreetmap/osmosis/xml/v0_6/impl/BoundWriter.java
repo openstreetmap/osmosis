@@ -6,9 +6,9 @@ import java.util.Locale;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
 import org.openstreetmap.osmosis.xml.common.ElementWriter;
 
-
 /**
  * @author KNewman
+ * @author Igor Podolskiy
  * 
  */
 public class BoundWriter extends ElementWriter {
@@ -49,15 +49,23 @@ public class BoundWriter extends ElementWriter {
 
 
 	private void processRegular(Bound bound) {
-		beginOpenElement();
 		String format = "%.5f";
-		addAttribute("minlon", String.format(format, Locale.US, bound.getLeft()));
-		addAttribute("minlat", String.format(format, Locale.US, bound.getBottom()));
-		addAttribute("maxlon", String.format(format, Locale.US, bound.getRight()));
-		addAttribute("maxlat", String.format(format, Locale.US, bound.getTop()));
+
+		beginOpenElement();
+		
+		addAttribute(XmlConstants.ATTRIBUTE_NAME_MINLON,
+				String.format(format, Locale.US, bound.getLeft()));
+		addAttribute(XmlConstants.ATTRIBUTE_NAME_MINLAT,
+				String.format(format, Locale.US, bound.getBottom()));
+		addAttribute(XmlConstants.ATTRIBUTE_NAME_MAXLON,
+				String.format(format, Locale.US, bound.getRight()));
+		addAttribute(XmlConstants.ATTRIBUTE_NAME_MAXLAT,
+				String.format(format, Locale.US, bound.getTop()));
+		
 		if (bound.getOrigin() != null) {
 			addAttribute("origin", bound.getOrigin());
 		}
+		
 		endOpenElement(true);
 	}
 
