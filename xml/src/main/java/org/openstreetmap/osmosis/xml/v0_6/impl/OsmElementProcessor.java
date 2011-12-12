@@ -27,7 +27,7 @@ public class OsmElementProcessor extends SourceElementProcessor {
 	private static final String ATTRIBUTE_NAME_VERSION = "version";
 	
 	
-	private BoundElementProcessor boundElementProcessor;
+	private LegacyBoundElementProcessor boundElementProcessor;
 	private NodeElementProcessor nodeElementProcessor;
 	private WayElementProcessor wayElementProcessor;
 	private RelationElementProcessor relationElementProcessor;
@@ -55,7 +55,7 @@ public class OsmElementProcessor extends SourceElementProcessor {
 		
 		this.validateVersion = validateVersion;
 		
-		boundElementProcessor = new BoundElementProcessor(this, getSink(), enableDateParsing);
+		boundElementProcessor = new LegacyBoundElementProcessor(this, getSink(), enableDateParsing);
 		nodeElementProcessor = new NodeElementProcessor(this, getSink(), enableDateParsing);
 		wayElementProcessor = new WayElementProcessor(this, getSink(), enableDateParsing);
 		relationElementProcessor = new RelationElementProcessor(this, getSink(), enableDateParsing);
