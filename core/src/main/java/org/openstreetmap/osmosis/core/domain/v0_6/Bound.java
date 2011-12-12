@@ -72,9 +72,6 @@ public class Bound extends Entity implements Comparable<Bound> {
 		if (Double.compare(top, bottom) < 0) {
 			throw new IllegalArgumentException("Bound top < bottom");
 		}
-		if (origin == null) {
-			throw new IllegalArgumentException("Bound origin is null");
-		}
 		this.right = right;
 		this.left = left;
 		this.top = top;
