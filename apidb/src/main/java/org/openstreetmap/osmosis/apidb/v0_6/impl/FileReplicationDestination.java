@@ -7,6 +7,7 @@ import java.util.Map;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.util.AtomicFileCreator;
 import org.openstreetmap.osmosis.core.util.FileBasedLock;
+import org.openstreetmap.osmosis.core.util.PropertiesPersister;
 import org.openstreetmap.osmosis.replication.common.ReplicationFileSequenceFormatter;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlChangeWriter;
@@ -27,7 +28,7 @@ public class FileReplicationDestination implements ReplicationDestination {
 	private File stateFile;
 	private FileBasedLock fileLock;
 	private boolean lockObtained;
-	private FileReplicationStatePersistor statePersistor;
+	private PropertiesPersister statePersistor;
 	private ReplicationState state;
 	private AtomicFileCreator atomicXmlFile;
 	private XmlChangeWriter writer;
@@ -45,7 +46,7 @@ public class FileReplicationDestination implements ReplicationDestination {
 
 		fileLock = new FileBasedLock(new File(workingDirectory, LOCK_FILE));
 
-		statePersistor = new FileReplicationStatePersistor(stateFile);
+		statePersistor = new PropertiesPersister(stateFile);
 
 		sequenceFormatter = new ReplicationFileSequenceFormatter(workingDirectory);
 	}
@@ -116,7 +117,7 @@ public class FileReplicationDestination implements ReplicationDestination {
 		// We can't do anything if we haven't loaded state yet.
 		if (state != null) {
 			// We won't write an output file if we are initializing.
-			if (statePersistor.stateExists()) {
+			if (statePersistor.exists()) {
 				// When replicating, we will always write a file even if there
 				// is no data.
 				initializeWriter();
@@ -129,15 +130,15 @@ public class FileReplicationDestination implements ReplicationDestination {
 			}
 
 			// Also the state to a sequence specific state file.
-			new FileReplicationStatePersistor(generateFormattedSequenceFile(SEQUENCE_STATE_FILE_SUFFIX))
-					.saveState(state);
+			new PropertiesPersister(generateFormattedSequenceFile(SEQUENCE_STATE_FILE_SUFFIX))
+					.store(state.store());
 
 			/*
 			 * The final step is to save the current state. This must be done
 			 * last so that if a crash occurs during processing it starts from
 			 * the same point as last time.
 			 */
-			statePersistor.saveState(state);
+			statePersistor.store(state.store());
 		}
 
 		fileLock.unlock();
@@ -168,7 +169,7 @@ public class FileReplicationDestination implements ReplicationDestination {
 		ensureLocked();
 
 		if (state == null) {
-			state = statePersistor.loadState();
+			state = new ReplicationState(statePersistor.loadMap());
 		}
 
 		return state;
@@ -203,6 +204,6 @@ public class FileReplicationDestination implements ReplicationDestination {
 	public boolean stateExists() {
 		ensureLocked();
 
-		return statePersistor.stateExists();
+		return statePersistor.exists();
 	}
 }

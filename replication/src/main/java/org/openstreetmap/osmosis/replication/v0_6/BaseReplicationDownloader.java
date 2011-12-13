@@ -14,7 +14,6 @@ import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -259,7 +258,6 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			ReplicationState serverState;
 			ReplicationState localState;
 			PropertiesPersister localStatePersistor;
-			Properties localStateProperties;
 			
 			// Instantiate utility objects.
 			configuration = new ReplicationDownloaderConfiguration(new File(workingDirectory, CONFIG_FILE));
@@ -277,8 +275,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			// If local state isn't available we need to copy server state to be the initial local state
 			// then exit.
 			if (localStatePersistor.exists()) {
-				localStateProperties = localStatePersistor.load();
-				localState = new ReplicationState(localStateProperties);
+				localState = new ReplicationState(localStatePersistor.loadMap());
 				
 				// Download and process the replication files.
 				localState = download(configuration, serverState, localState);
@@ -293,9 +290,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			processComplete();
 			
 			// Persist the local state.
-			localStateProperties = new Properties();
-			localState.store(localStateProperties);
-			localStatePersistor.store(localStateProperties);
+			localStatePersistor.store(localState.store());
 			
 		} finally {
 			processRelease();

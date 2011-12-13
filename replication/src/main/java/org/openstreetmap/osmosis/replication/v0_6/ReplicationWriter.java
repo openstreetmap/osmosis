@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
-import org.openstreetmap.osmosis.replication.common.FileReplicationStatePersistor;
+import org.openstreetmap.osmosis.core.util.PropertiesPersister;
 import org.openstreetmap.osmosis.replication.common.ReplicationFileSequenceFormatter;
 import org.openstreetmap.osmosis.replication.common.ReplicationState;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
@@ -29,7 +29,7 @@ public class ReplicationWriter implements ChangeSink {
 	private static final String STATE_FILE = "state.txt";
 
 	private ReplicationFileSequenceFormatter sequenceFormatter;
-	private FileReplicationStatePersistor statePersistor;
+	private PropertiesPersister statePersistor;
 	private ReplicationState state;
 	private XmlChangeWriter changeWriter;
 
@@ -46,7 +46,7 @@ public class ReplicationWriter implements ChangeSink {
 		sequenceFormatter = new ReplicationFileSequenceFormatter(workingDirectory);
 		
 		// Create the object used to persist current state.
-		statePersistor = new FileReplicationStatePersistor(new File(workingDirectory, STATE_FILE));
+		statePersistor = new PropertiesPersister(new File(workingDirectory, STATE_FILE));
 	}
 
 
@@ -64,8 +64,8 @@ public class ReplicationWriter implements ChangeSink {
 		state = (ReplicationState) metaData.get(ReplicationState.META_DATA_KEY);
 		
 		// Verify that the provided state is consistent with the existing state.
-		if (statePersistor.stateExists()) {
-			ReplicationState existingState = statePersistor.loadState();
+		if (statePersistor.exists()) {
+			ReplicationState existingState = new ReplicationState(statePersistor.loadMap());
 			long increment = state.getSequenceNumber() - existingState.getSequenceNumber();
 			if (increment < 0 || increment > 1) {
 				LOG.severe("Inconsistent sequence numbers.  Existing is "
@@ -111,10 +111,10 @@ public class ReplicationWriter implements ChangeSink {
 		
 		// Write the sequenced state file.
 		File stateFile = sequenceFormatter.getFormattedName(state.getSequenceNumber(), ".state.txt");
-		new FileReplicationStatePersistor(stateFile).saveState(state);
+		new PropertiesPersister(stateFile).store(state.store());
 		
 		// Write the global state file.
-		statePersistor.saveState(state);
+		statePersistor.store(state.store());
 		state = null;
 	}
 

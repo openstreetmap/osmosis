@@ -2,9 +2,8 @@
 package org.openstreetmap.osmosis.replication.v0_6;
 
 import java.io.File;
-import java.util.Properties;
-import java.util.logging.Logger;
 import java.text.MessageFormat;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.task.common.RunnableTask;
@@ -57,7 +56,6 @@ public class ReplicationLagReader implements RunnableTask {
 		ReplicationState serverState;
 		ReplicationState localState;
 		PropertiesPersister localStatePersistor;
-		Properties localStateProperties;
 		
 		// Instantiate utility objects.
 		configuration = new ReplicationDownloaderConfiguration(new File(workingDirectory, CONFIG_FILE));
@@ -75,8 +73,7 @@ public class ReplicationLagReader implements RunnableTask {
 		}
 		
 		// fetch the local state from the file
-		localStateProperties = localStatePersistor.load();
-		localState = new ReplicationState(localStateProperties);
+		localState = new ReplicationState(localStatePersistor.loadMap());
 		
 		// extract the time of the local and the remote state files
 		long local = localState.getTimestamp().getTime();

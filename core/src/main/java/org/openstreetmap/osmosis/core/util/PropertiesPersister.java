@@ -12,6 +12,8 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -81,6 +83,17 @@ public class PropertiesPersister {
 	
 	
 	/**
+	 * Load the properties from a file as a strongly typed Map.
+	 * 
+	 * @return The properties.
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Map<String, String> loadMap() {
+		return new HashMap<String, String>((Map) load());
+	}
+	
+	
+	/**
 	 * Stores the properties to the file overwriting any existing file contents.
 	 * 
 	 * @param properties
@@ -114,6 +127,19 @@ public class PropertiesPersister {
 				}
 			}
 		}
+	}
+	
+	
+	/**
+	 * Stores the properties to the file overwriting any existing file contents.
+	 * 
+	 * @param propertiesMap
+	 *            The properties.
+	 */
+	public void store(Map<String, String> propertiesMap) {
+		Properties properties = new Properties();
+		properties.putAll(propertiesMap);
+		store(properties);
 	}
 
 

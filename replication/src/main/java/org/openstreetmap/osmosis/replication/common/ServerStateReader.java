@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -83,6 +86,7 @@ public class ServerStateReader {
 		try {
 			BufferedReader reader;
 			Properties stateProperties;
+			Map<String, String> stateMap;
 			ReplicationState state;
 			
 			URLConnection connection = stateUrl.openConnection();
@@ -94,7 +98,12 @@ public class ServerStateReader {
 			stateProperties = new Properties();
 			stateProperties.load(reader);
 			
-			state = new ReplicationState(stateProperties);
+			stateMap = new HashMap<String, String>();
+			for (Entry<Object, Object> property : stateProperties.entrySet()) {
+				stateMap.put((String) property.getKey(), (String) property.getValue());
+			}
+			
+			state = new ReplicationState(stateMap);
 			
 			stateStream.close();
 			stateStream = null;
