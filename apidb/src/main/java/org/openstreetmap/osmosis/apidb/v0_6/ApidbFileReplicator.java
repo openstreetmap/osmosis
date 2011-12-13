@@ -1,12 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.apidb.v0_6;
 
-import java.io.File;
-
 import org.openstreetmap.osmosis.apidb.common.DatabaseContext2;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.AllEntityDao;
-import org.openstreetmap.osmosis.apidb.v0_6.impl.FileReplicationDestination;
-import org.openstreetmap.osmosis.apidb.v0_6.impl.ReplicationDestination;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.ReplicationSource;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.Replicator;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.SchemaVersionValidator;
@@ -16,7 +12,8 @@ import org.openstreetmap.osmosis.apidb.v0_6.impl.TransactionDao;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.TransactionSnapshotLoader;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
-import org.openstreetmap.osmosis.core.task.common.RunnableTask;
+import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
+import org.openstreetmap.osmosis.core.task.v0_6.RunnableChangeSource;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
@@ -24,13 +21,13 @@ import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 /**
  * Performs replication from an API database into change files.
  */
-public class ApidbFileReplicator implements RunnableTask {
+public class ApidbFileReplicator implements RunnableChangeSource {
 	
 	private DatabaseLoginCredentials loginCredentials;
 	private DatabasePreferences preferences;
-	private File workingDirectory;
 	private int iterations;
 	private int interval;
+	private ChangeSink changeSink;
 	
 	
 	/**
@@ -40,8 +37,6 @@ public class ApidbFileReplicator implements RunnableTask {
 	 *            Contains all information required to connect to the database.
 	 * @param preferences
 	 *            Contains preferences configuring database behaviour.
-	 * @param workingDirectory
-	 *            The directory to store all output files.
 	 * @param iterations
 	 *            The number of replication intervals to execute. 0 means
 	 *            infinite.
@@ -49,13 +44,21 @@ public class ApidbFileReplicator implements RunnableTask {
 	 *            The minimum number of milliseconds between intervals.
 	 */
     public ApidbFileReplicator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
-            File workingDirectory, int iterations, int interval) {
+            int iterations, int interval) {
     	this.loginCredentials = loginCredentials;
     	this.preferences = preferences;
-    	this.workingDirectory = workingDirectory;
     	this.iterations = iterations;
     	this.interval = interval;
     }
+
+
+    /**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void setChangeSink(ChangeSink changeSink) {
+		this.changeSink = changeSink;
+	}
     
     
     /**
@@ -67,7 +70,6 @@ public class ApidbFileReplicator implements RunnableTask {
     protected void runImpl(DatabaseContext2 dbCtx) {
 		Replicator replicator;
 		ReplicationSource source;
-		ReplicationDestination destination;
 		TransactionSnapshotLoader txnSnapshotLoader;
 		SystemTimeLoader systemTimeLoader;
 		
@@ -75,12 +77,10 @@ public class ApidbFileReplicator implements RunnableTask {
 				.validateVersion(ApidbVersionConstants.SCHEMA_MIGRATIONS);
 		
 		source = new AllEntityDao(dbCtx.getJdbcTemplate());
-		destination = new FileReplicationDestination(workingDirectory);
 		txnSnapshotLoader = new TransactionDao(dbCtx.getJdbcTemplate());
 		systemTimeLoader = new TimeDao(dbCtx.getJdbcTemplate());
 		
-		replicator = new Replicator(source, destination, txnSnapshotLoader, systemTimeLoader, iterations,
-				interval);
+		replicator = new Replicator(source, changeSink, txnSnapshotLoader, systemTimeLoader, iterations, interval);
 		
 		replicator.replicate();
     }

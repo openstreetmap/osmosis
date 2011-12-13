@@ -21,6 +21,18 @@ public class ReplicationState extends org.openstreetmap.osmosis.replication.comm
 
 
 	/**
+	 * Creates a new instance with all values set to defaults.
+	 */
+	public ReplicationState() {
+		super();
+		this.txnMax = 0;
+		this.txnMaxQueried = 0;
+		this.txnActive = new ArrayList<Long>();
+		this.txnReady = new ArrayList<Long>();
+	}
+
+
+	/**
 	 * Creates a new instance.
 	 * 
 	 * @param txnMax
@@ -53,7 +65,18 @@ public class ReplicationState extends org.openstreetmap.osmosis.replication.comm
 	 *            The properties to load state from.
 	 */
 	public ReplicationState(Map<String, String> properties) {
-		super(properties);
+		load(properties);
+	}
+	
+	
+	/**
+	 * Loads all state from the provided properties object.
+	 * 
+	 * @param properties
+	 *            The properties to be read.
+	 */
+	public void load(Map<String, String> properties) {
+		super.load(properties);
 		txnMax = Long.parseLong(properties.get("txnMax"));
 		txnMaxQueried = Long.parseLong(properties.get("txnMaxQueried"));
 		txnActive = fromString(properties.get("txnActiveList"));

@@ -47,7 +47,8 @@ public class ApidbFileReplicatorTest extends AbstractDataTest {
         		"--replicate-apidb-0.6",
         		"authFile=" + authFile.getPath(),
                 "allowIncorrectSchemaVersion=true",
-        		"directory=" + workingDirectory.getPath()
+        		"--write-replication",
+        		"workingDirectory=" + workingDirectory.getPath()
                 });
 
         // Load the database with a dataset.
@@ -66,7 +67,8 @@ public class ApidbFileReplicatorTest extends AbstractDataTest {
         		"--replicate-apidb-0.6",
         		"authFile=" + authFile.getPath(),
                 "allowIncorrectSchemaVersion=true",
-        		"directory=" + workingDirectory.getPath()
+        		"--write-replication",
+        		"workingDirectory=" + workingDirectory.getPath()
                 });
 
         // Apply the changeset file to the database.
@@ -84,7 +86,8 @@ public class ApidbFileReplicatorTest extends AbstractDataTest {
         		"--replicate-apidb-0.6",
         		"authFile=" + authFile.getPath(),
                 "allowIncorrectSchemaVersion=true",
-        		"directory=" + workingDirectory.getPath()
+        		"--write-replication",
+        		"workingDirectory=" + workingDirectory.getPath()
                 });
         
         // Ensure that replication runs successfully even if no data is available.
@@ -93,7 +96,8 @@ public class ApidbFileReplicatorTest extends AbstractDataTest {
         		"--replicate-apidb-0.6",
         		"authFile=" + authFile.getPath(),
                 "allowIncorrectSchemaVersion=true",
-        		"directory=" + workingDirectory.getPath()
+        		"--write-replication",
+        		"workingDirectory=" + workingDirectory.getPath()
                 });
         
         // Ensure that replication can run with multiple loops.
@@ -102,9 +106,10 @@ public class ApidbFileReplicatorTest extends AbstractDataTest {
         		"--replicate-apidb-0.6",
         		"authFile=" + authFile.getPath(),
                 "allowIncorrectSchemaVersion=true",
-        		"directory=" + workingDirectory.getPath(),
         		"iterations=2",
-        		"interval=0"
+        		"interval=0",
+        		"--write-replication",
+        		"workingDirectory=" + workingDirectory.getPath()
                 });
         
         // Decompress the result file.

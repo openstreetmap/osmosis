@@ -3,11 +3,13 @@ package org.openstreetmap.osmosis.replication.v0_6;
 
 import java.io.File;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
+import org.openstreetmap.osmosis.core.util.FileBasedLock;
 import org.openstreetmap.osmosis.core.util.PropertiesPersister;
 import org.openstreetmap.osmosis.replication.common.ReplicationFileSequenceFormatter;
 import org.openstreetmap.osmosis.replication.common.ReplicationState;
@@ -26,8 +28,11 @@ import org.openstreetmap.osmosis.xml.v0_6.XmlChangeWriter;
 public class ReplicationWriter implements ChangeSink {
 
 	private static final Logger LOG = Logger.getLogger(ReplicationWriter.class.getName());
+	private static final String LOCK_FILE = "replicate.lock";
 	private static final String STATE_FILE = "state.txt";
 
+	private FileBasedLock fileLock;
+	private boolean lockObtained;
 	private ReplicationFileSequenceFormatter sequenceFormatter;
 	private PropertiesPersister statePersistor;
 	private ReplicationState state;
@@ -41,6 +46,10 @@ public class ReplicationWriter implements ChangeSink {
 	 *            The directory containing configuration and tracking files.
 	 */
 	public ReplicationWriter(File workingDirectory) {
+		// Create the lock object used to ensure only a single process attempts
+		// to write to the data directory.
+		fileLock = new FileBasedLock(new File(workingDirectory, LOCK_FILE));
+		
 		// Build the sequence formatter which converts sequence numbers into a
 		// filename and creates the intermediate directories as required.
 		sequenceFormatter = new ReplicationFileSequenceFormatter(workingDirectory);
@@ -52,9 +61,13 @@ public class ReplicationWriter implements ChangeSink {
 
 	@Override
 	public void initialize(Map<String, Object> metaData) {
-		if (changeWriter != null) {
+		if (lockObtained) {
 			throw new OsmosisRuntimeException("initialize has already been called");
 		}
+		
+		// Lock the working directory.
+		fileLock.lock();
+		lockObtained = true;
 		
 		// Get the replication state from the upstream task.
 		if (!metaData.containsKey(ReplicationState.META_DATA_KEY)) {
@@ -63,19 +76,16 @@ public class ReplicationWriter implements ChangeSink {
 		}
 		state = (ReplicationState) metaData.get(ReplicationState.META_DATA_KEY);
 		
-		// Verify that the provided state is consistent with the existing state.
+		// Populate the state from the existing state if it exists.
 		if (statePersistor.exists()) {
-			ReplicationState existingState = new ReplicationState(statePersistor.loadMap());
-			long increment = state.getSequenceNumber() - existingState.getSequenceNumber();
-			if (increment < 0 || increment > 1) {
-				LOG.severe("Inconsistent sequence numbers.  Existing is "
-						+ existingState.getSequenceNumber() + ", new is " + state.getSequenceNumber());
-				throw new OsmosisRuntimeException(
-						"Sequence number must be equal to or one greater than previous sequence number");
-			}
+			state.load(statePersistor.loadMap());
 			
-		} else if (state.getSequenceNumber() > 0) {
-			throw new OsmosisRuntimeException("Initial sequence number must be 0");
+			// The current sequence number must now be incremented.
+			state.setSequenceNumber(state.getSequenceNumber() + 1);
+			
+			if (LOG.isLoggable(Level.FINER)) {
+				LOG.finer("Replication sequence number is " + state.getSequenceNumber() + ".");
+			}
 		}
 		
 		// Initialize a new change writer for the current sequence number.
@@ -88,6 +98,10 @@ public class ReplicationWriter implements ChangeSink {
 
 	@Override
 	public void process(ChangeContainer change) {
+		if (!lockObtained) {
+			throw new OsmosisRuntimeException("initialize has not been called");
+		}
+		
 		if (state.getSequenceNumber() == 0) {
 			throw new OsmosisRuntimeException("No changes can be included for replication sequence 0.");
 		}
@@ -98,7 +112,7 @@ public class ReplicationWriter implements ChangeSink {
 
 	@Override
 	public void complete() {
-		if (state == null) {
+		if (!lockObtained) {
 			throw new OsmosisRuntimeException("initialize has not been called");
 		}
 		
@@ -116,6 +130,10 @@ public class ReplicationWriter implements ChangeSink {
 		// Write the global state file.
 		statePersistor.store(state.store());
 		state = null;
+		
+		// Release the lock.
+		fileLock.unlock();
+		lockObtained = false;
 	}
 
 
@@ -126,5 +144,8 @@ public class ReplicationWriter implements ChangeSink {
 			changeWriter = null;
 		}
 		state = null;
+		
+		fileLock.release();
+		lockObtained = false;
 	}
 }

@@ -1,20 +1,23 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.apidb.v0_6.impl;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
+import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 
 
 /**
  * A mocked replication destination allowing the existing replication state to be loaded and the
- * current state maintained. All data processing calls such as process/complete/etc will be ignored.
+ * current state maintained. All data processing calls such as process will be ignored.
  */
-public class MockReplicationDestination implements ReplicationDestination {
+public class MockReplicationDestination implements ChangeSink {
 	
 	private boolean stateExists;
 	private ReplicationState currentState;
+	private Map<String, String> storedState;
 	
 	
 	/**
@@ -22,6 +25,7 @@ public class MockReplicationDestination implements ReplicationDestination {
 	 */
 	public MockReplicationDestination() {
 		stateExists = false;
+		storedState = new HashMap<String, String>();
 	}
 	
 	
@@ -32,49 +36,10 @@ public class MockReplicationDestination implements ReplicationDestination {
 	 *            The initial replication state.
 	 */
 	public MockReplicationDestination(ReplicationState initialState) {
-		this.currentState = new ReplicationState(
-				initialState.getTxnMax(),
-				initialState.getTxnMaxQueried(),
-				initialState.getTxnActive(),
-				initialState.getTxnReady(),
-				initialState.getTimestamp(),
-				initialState.getSequenceNumber());
+		this();
 		
+		initialState.store(storedState);
 		stateExists = true;
-	}
-	
-	
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ReplicationState loadState() {
-		if (!stateExists) {
-			throw new OsmosisRuntimeException("No state currently exists.");
-		}
-		
-		return currentState;
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void saveState(ReplicationState state) {
-		this.currentState = state;
-		
-		stateExists = true;
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean stateExists() {
-		return stateExists;
 	}
 
 
@@ -82,7 +47,19 @@ public class MockReplicationDestination implements ReplicationDestination {
      * {@inheritDoc}
      */
     public void initialize(Map<String, Object> metaData) {
-		// Do nothing.
+		// Get the replication state from the upstream task.
+		if (!metaData.containsKey(ReplicationState.META_DATA_KEY)) {
+			throw new OsmosisRuntimeException(
+					"No replication state has been provided in metadata key " + ReplicationState.META_DATA_KEY + ".");
+		}
+		currentState = (ReplicationState) metaData.get(ReplicationState.META_DATA_KEY);
+		
+		// Initialise the state from the stored state if it exists and increment
+		// the sequence number.
+		if (stateExists) {
+			currentState.load(storedState);
+			currentState.setSequenceNumber(currentState.getSequenceNumber() + 1);
+		}
 	}
 
 
@@ -100,7 +77,8 @@ public class MockReplicationDestination implements ReplicationDestination {
 	 */
 	@Override
 	public void complete() {
-		// Do nothing.
+		currentState.store(storedState);
+		stateExists = true;
 	}
 
 
@@ -110,5 +88,17 @@ public class MockReplicationDestination implements ReplicationDestination {
 	@Override
 	public void release() {
 		// Do nothing.
+	}
+	
+	
+	/**
+	 * Returns the current state object tracked internally. This will be a state
+	 * object provided by a caller in the initialize method. It will remain
+	 * available after complete and release have been called.
+	 * 
+	 * @return The current state.
+	 */
+	public ReplicationState getCurrentState() {
+		return currentState;
 	}
 }

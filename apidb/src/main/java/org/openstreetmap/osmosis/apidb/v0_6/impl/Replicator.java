@@ -1,15 +1,17 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.apidb.v0_6.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
+import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 
 
 /**
@@ -33,7 +35,7 @@ public class Replicator {
 	 */
 	private static final int TRANSACTION_QUERY_SIZE_MAX = 25000;
 
-	private ReplicationDestination destination;
+	private ChangeSink changeSink;
 	private ReplicationSource source;
 	private TransactionSnapshotLoader snapshotLoader;
 	private SystemTimeLoader systemTimeLoader;
@@ -46,7 +48,7 @@ public class Replicator {
 	 * 
 	 * @param source
 	 *            The source for all replication changes.
-	 * @param destination
+	 * @param changeSink
 	 *            The destination for all replicated changes.
 	 * @param snapshotLoader
 	 *            Loads transaction snapshots from the database.
@@ -58,11 +60,11 @@ public class Replicator {
 	 * @param interval
 	 *            The minimum number of milliseconds between intervals.
 	 */
-	public Replicator(ReplicationSource source, ReplicationDestination destination,
+	public Replicator(ReplicationSource source, ChangeSink changeSink,
 			TransactionSnapshotLoader snapshotLoader, SystemTimeLoader systemTimeLoader, int iterations,
 			int interval) {
 		this.source = source;
-		this.destination = destination;
+		this.changeSink = changeSink;
 		this.snapshotLoader = snapshotLoader;
 		this.systemTimeLoader = systemTimeLoader;
 		this.iterations = iterations;
@@ -87,8 +89,7 @@ public class Replicator {
 		state.setTxnMax(transactionSnapshot.getXMax());
 
 		// Any items in the old active transaction list but not in the new
-		// active transaction list
-		// must be added to the ready list.
+		// active transaction list must be added to the ready list.
 		for (Iterator<Long> i = state.getTxnActive().iterator(); i.hasNext();) {
 			Long id;
 
@@ -205,8 +206,7 @@ public class Replicator {
 			Date currentTimestamp;
 
 			// As we process, we must update the timestamp to match the latest
-			// record we have
-			// received.
+			// record we have received.
 			currentTimestamp = state.getTimestamp();
 
 			while (sourceIterator.hasNext()) {
@@ -220,7 +220,7 @@ public class Replicator {
 					currentTimestamp = nextTimestamp;
 				}
 
-				destination.process(change);
+				changeSink.process(change);
 			}
 
 			state.setTimestamp(currentTimestamp);
@@ -236,20 +236,10 @@ public class Replicator {
 	 */
 	public void replicate() {
 		try {
-			/*
-			 * If we have already run once we begin replication, otherwise we
-			 * initialise to the current database state.
-			 */
-			if (destination.stateExists()) {
-				LOG.fine("Replication state exists, beginning replication.");
-				replicateLoop();
-			} else {
-				LOG.fine("Replication state does not exist, initializing.");
-				initialize();
-			}
+			replicateLoop();
 
 		} finally {
-			destination.release();
+			changeSink.release();
 		}
 	}
 
@@ -264,8 +254,16 @@ public class Replicator {
 		// Perform replication up to the number of iterations, or infinitely if
 		// set to 0.
 		iterationTime = System.currentTimeMillis();
-		for (int iterationCount = 0; iterations <= 0 || iterationCount < iterations; iterationCount++) {
+		for (int iterationCount = 0; true; iterationCount++) {
 			long requiredIterationTime;
+
+			// Perform the replication interval.
+			replicateImpl();
+			
+			// Stop if we've reached the target number of iterations.
+			if (iterations > 0 || iterationCount >= iterations) {
+				break;
+			}
 
 			// Calculate the time at which we're allowed to start our next
 			// iteration.
@@ -296,9 +294,6 @@ public class Replicator {
 					throw new OsmosisRuntimeException("Unable to sleep until next replication iteration.", e);
 				}
 			}
-
-			// Perform the replication interval.
-			replicateImpl();
 		}
 	}
 
@@ -310,74 +305,66 @@ public class Replicator {
 		ReplicationState state;
 		ReplicationQueryPredicates predicates;
 		Date systemTimestamp;
+		Map<String, Object> metaData;
+		
+		// Create an initial replication state.
+		state = new ReplicationState();
+		
+		// Initialise the sink and provide it with a reference to the state
+		// object. A single state instance is shared by both ends of the
+		// pipeline.
+		metaData = new HashMap<String, Object>(1);
+		metaData.put(ReplicationState.META_DATA_KEY, state);
+		changeSink.initialize(metaData);
 
-		// Determine the time of processing.
+		// Update our view of the current database transaction state.
+		obtainNewSnapshot(state);
+
+		/*
+		 * Determine the time of processing. Note that we must do this after
+		 * obtaining the database transaction snapshot. A key rule in
+		 * replication is that the timestamp we specify in our replication state
+		 * is always equal to or later than all data timestamps. This allows
+		 * consumers to know that when they pick a timestamp to start
+		 * replicating from that *all* data created after that timestamp will be
+		 * included in subsequent replications.
+		 */
 		systemTimestamp = systemTimeLoader.getSystemTime();
 		if (LOG.isLoggable(Level.FINER)) {
 			LOG.finer("Loaded system time " + systemTimestamp + " from the database.");
 		}
-
-		// Load the current replication state.
-		state = destination.loadState();
-
-		// Increment the current replication sequence number.
-		state.setSequenceNumber(state.getSequenceNumber() + 1);
-		if (LOG.isLoggable(Level.FINER)) {
-			LOG.finer("Replication sequence number is " + state.getSequenceNumber() + ".");
-		}
-
-		// If the maximum queried transaction id has reached the maximum
-		// transaction id then a new
-		// transaction snapshot must be obtained in order to get more data.
-		if (compareTxnIds(state.getTxnMaxQueried(), state.getTxnMax()) >= 0) {
-			obtainNewSnapshot(state);
-		}
-
-		// Obtain the predicates to use during the query.
-		predicates = buildQueryPredicates(state);
-
-		// Write the changes to the destination.
-		if (predicates.getBottomTransactionId() != predicates.getTopTransactionId()) {
-			copyChanges(source.getHistory(predicates), state);
-		}
-
-		// If we have completely caught up to the database, we can update the
-		// timestamp to the
-		// database system timestamp. Otherwise we leave the timestamp set at
-		// the value
-		// determined while processing changes.
-		if (compareTxnIds(state.getTxnMaxQueried(), state.getTxnMax()) >= 0) {
+		
+		// If this is the first interval we are setting an initial state but not
+		// performing any replication.
+		if (state.getSequenceNumber() == 0) {
+			// We are starting from the current point so we are at the current
+			// database timestamp and transaction id.
 			state.setTimestamp(systemTimestamp);
+			state.setTxnMaxQueried(state.getTxnMax());
+			
+		} else {
+			// Obtain the predicates to use during the query.
+			predicates = buildQueryPredicates(state);
+	
+			// Write the changes to the destination.
+			if (predicates.getBottomTransactionId() != predicates.getTopTransactionId()) {
+				copyChanges(source.getHistory(predicates), state);
+			}
+	
+			/*
+			 * If we have completely caught up to the database, we update the
+			 * timestamp to the database system timestamp. Otherwise we leave
+			 * the timestamp set at the value determined while processing
+			 * changes. We update to the system timestamp when caught up to
+			 * ensure that a current timestamp is provided to consumers in the
+			 * case where no data has been created.
+			 */
+			if (compareTxnIds(state.getTxnMaxQueried(), state.getTxnMax()) >= 0) {
+				state.setTimestamp(systemTimestamp);
+			}
 		}
 
-		// Persist the updated replication state.
-		destination.saveState(state);
-
 		// Commit changes.
-		destination.complete();
-	}
-
-
-	/**
-	 * Initialises the destination using the current state of the source.
-	 */
-	private void initialize() {
-		TransactionSnapshot snapshot;
-		ReplicationState state;
-		Date systemTime;
-
-		snapshot = snapshotLoader.getTransactionSnapshot();
-		systemTime = systemTimeLoader.getSystemTime();
-
-		// Create a new state initialised with the current state of the
-		// database.
-		state = new ReplicationState(snapshot.getXMax(), snapshot.getXMax(), snapshot.getXIpList(),
-				new ArrayList<Long>(), systemTime, 0);
-
-		// Initialize the replication state.
-		destination.saveState(state);
-
-		// Commit changes.
-		destination.complete();
+		changeSink.complete();
 	}
 }

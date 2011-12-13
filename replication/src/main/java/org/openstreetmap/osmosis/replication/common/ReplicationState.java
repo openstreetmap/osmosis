@@ -26,6 +26,15 @@ public class ReplicationState {
 
 
 	/**
+	 * Creates a new instance with all values set to defaults.
+	 */
+	public ReplicationState() {
+		this.timestamp = new Date(0);
+		this.sequenceNumber = 0;
+	}
+
+
+	/**
 	 * Creates a new instance.
 	 * 
 	 * @param timestamp
