@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
 	
-    <info organisation="org.openstreetmap.osmosis" module="osmosis-apidb-replication"/>
+    <info organisation="org.openstreetmap.osmosis" module="osmosis-replication-http"/>
     
     <configurations>
 		<conf name="default" visibility="public" description="runtime dependencies and master artifact can be used with this conf" extends="runtime,master"/>
@@ -24,7 +24,6 @@
     </publications>
     
     <dependencies>
-    	<dependency org="org.openstreetmap.osmosis" name="osmosis-apidb" rev="${project.version}" conf="compile->default" changing="true"/>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-core" rev="${project.version}" conf="compile->default" changing="true"/>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-replication" rev="${project.version}" conf="compile->default" changing="true"/>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-xml" rev="${project.version}" conf="compile->default" changing="true"/>
