@@ -407,6 +407,7 @@ public class FastXmlParser {
 
 				if (reader.getEventType() == XMLStreamConstants.START_ELEMENT
 						&& reader.getLocalName().equals(ELEMENT_NAME_BOUND)) {
+					LOG.fine("Legacy <bound> element encountered.");
 					sink.process(new BoundContainer(readBound()));
 				}
 				

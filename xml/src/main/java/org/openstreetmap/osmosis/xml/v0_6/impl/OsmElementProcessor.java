@@ -106,7 +106,7 @@ public class OsmElementProcessor extends SourceElementProcessor {
 			}
 			foundBound = true;
 			if (ELEMENT_NAME_BOUND_LEGACY.equals(qName)) {
-				LOG.warning("Legacy <bound> element encountered.");
+				LOG.fine("Legacy <bound> element encountered.");
 				return new LegacyBoundElementProcessor(this, getSink(), true);
 			} else {
 				return new BoundsElementProcessor(this, getSink(), true, generator);
