@@ -9,7 +9,7 @@ Split current --replicate-apidb task into two halves.
  * Move into the Osmosis-Replicate project.
  * Starts web server (optional).
  * Web server responds to URL http://<server>:<port>/sequenceNumber with current state number.
- * Web server responds to URL http://<server>:<port>/sequenceNumber/uptodate with current state number and keeps sending updated state numbers as they become available.
+ * Web server responds to URL http://<server>:<port>/sequenceNumber/upToDate with current state number and keeps sending updated state numbers as they become available.
 
 Create a new --serve-replication task.
 * Connects to the above web server to track current sequence number.
