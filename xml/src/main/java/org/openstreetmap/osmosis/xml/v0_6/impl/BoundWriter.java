@@ -54,13 +54,13 @@ public class BoundWriter extends ElementWriter {
 		beginOpenElement();
 		
 		addAttribute(XmlConstants.ATTRIBUTE_NAME_MINLON,
-				String.format(format, Locale.US, bound.getLeft()));
+				String.format(Locale.US, format, bound.getLeft()));
 		addAttribute(XmlConstants.ATTRIBUTE_NAME_MINLAT,
-				String.format(format, Locale.US, bound.getBottom()));
+				String.format(Locale.US, format, bound.getBottom()));
 		addAttribute(XmlConstants.ATTRIBUTE_NAME_MAXLON,
-				String.format(format, Locale.US, bound.getRight()));
+				String.format(Locale.US, format, bound.getRight()));
 		addAttribute(XmlConstants.ATTRIBUTE_NAME_MAXLAT,
-				String.format(format, Locale.US, bound.getTop()));
+				String.format(Locale.US, format, bound.getTop()));
 		
 		if (bound.getOrigin() != null) {
 			addAttribute("origin", bound.getOrigin());
