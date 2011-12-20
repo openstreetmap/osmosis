@@ -23,15 +23,25 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 	private ChangeSink changeSink;
 	private ProgressTracker progressTracker;
 	
+	private String prefix;
+	
 	
 	/**
 	 * Creates a new instance.
 	 * 
 	 * @param interval
 	 *            The interval between logging progress reports in milliseconds.
+	 * @param label
+	 *            a label to prefix the logger with; may be null.
 	 */
-	public ChangeProgressLogger(int interval) {
+	public ChangeProgressLogger(int interval, String label) {
 		progressTracker = new ProgressTracker(interval);
+
+		if (label != null && !label.equals("")) {
+			prefix = "[" + label + "] ";
+		} else {
+			prefix = "";
+		}
 	}
 	
 	
@@ -47,7 +57,8 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 		
 		if (progressTracker.updateRequired()) {
 			LOG.info(
-					"Processing " + entity.getType() + " " + entity.getId() + " with action " + action + ", "
+					prefix 
+					+ "Processing " + entity.getType() + " " + entity.getId() + " with action " + action + ", "
 					+ progressTracker.getObjectsPerSecond() + " objects/second.");
 		}
 		
@@ -61,8 +72,11 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 	public void complete() {
 		LOG.info("Processing completion steps.");
 		
+		long start = System.currentTimeMillis();
 		changeSink.complete();
+		long duration = System.currentTimeMillis() - start;
 		
+		LOG.info("Completion steps took " + duration / 1000d + " seconds");
 		LOG.info("Processing complete.");
 	}
 	
