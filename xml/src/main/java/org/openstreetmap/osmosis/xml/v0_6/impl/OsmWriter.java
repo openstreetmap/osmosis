@@ -123,7 +123,11 @@ public class OsmWriter extends ElementWriter {
 			nodeWriter = new NodeWriter("node", indentLevel);
 			wayWriter = new WayWriter("way", indentLevel);
 			relationWriter = new RelationWriter("relation", indentLevel);
-			boundWriter = new BoundWriter("bound", indentLevel, legacyBound);
+			if (legacyBound) {
+				boundWriter = new BoundWriter("bound", indentLevel, legacyBound);
+			} else {
+				boundWriter = new BoundWriter("bounds", indentLevel, legacyBound);
+			}
 		}
 		
 		
