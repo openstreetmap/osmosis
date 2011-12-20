@@ -106,16 +106,6 @@ public class BoundTest {
 
 
 	/**
-	 * Test the constructor with null origin string.
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public final void testConstructor10() {
-		new Bound(20, -20, 20, -20, null);
-		fail("Expected to throw an exception");
-	}
-
-
-	/**
 	 * Test a valid constructor with only the origin string provided (covers full planet).
 	 */
 	@Test
