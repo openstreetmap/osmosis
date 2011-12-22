@@ -29,6 +29,8 @@
     	<dependency org="com.google.protobuf" name="protobuf-java" rev="${dependency.version.protobuf}" conf="compile->default"/>
     	<dependency org="crosby" name="osmpbf" rev="${dependency.version.osmpbf}" conf="compile->default" changing="true"/>
         
+        <dependency org="org.openstreetmap.osmosis" name="osmosis-xml" rev="${project.version}" conf="test->default" changing="true"/>
+        <dependency org="org.openstreetmap.osmosis" name="osmosis-testutil" rev="${project.version}" conf="test->default" changing="true"/>
         <dependency org="junit" name="junit" rev="${dependency.version.junit}" conf="test->default"/>
     	<dependency org="com.puppycrawl.tools" name="checkstyle" rev="${dependency.version.checkstyle}" conf="test->default"/>
     </dependencies>
