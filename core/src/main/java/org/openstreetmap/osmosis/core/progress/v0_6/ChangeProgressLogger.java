@@ -85,7 +85,7 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 		changeSink.complete();
 		long duration = System.currentTimeMillis() - start;
 		
-		LOG.info("Completion steps took " + duration / 1000d + " seconds");
+		LOG.info("Completion steps took " + duration / 1000d + " seconds.");
 		LOG.info("Processing complete.");
 	}
 	
