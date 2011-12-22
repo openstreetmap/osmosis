@@ -36,7 +36,7 @@ public final class DataPostboxLoadInjector implements Runnable {
 	
 	private DataPostboxLoadInjector() {
 		buffer = new EntityBuffer(10000);
-		progressLogger = new EntityProgressLogger(5000);
+		progressLogger = new EntityProgressLogger(5000, null);
 		buffer.setSink(progressLogger);
 		nullWriter = new NullWriter();
 		progressLogger.setSink(nullWriter);
