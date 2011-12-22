@@ -10,6 +10,32 @@ package org.openstreetmap.osmosis.xml.v0_6.impl;
 public final class XmlConstants {
 	
 	/**
+	 * The origin attribute.
+	 */
+	public static final String ATTRIBUTE_NAME_ORIGIN = "origin";
+
+	/**
+	 * The minlat attribute.
+	 */
+	public static final String ATTRIBUTE_NAME_MINLAT = "minlat";
+
+	/**
+	 * The maxlat attribute.
+	 */
+	public static final String ATTRIBUTE_NAME_MAXLAT = "maxlat";
+
+	/**
+	 * The minlon attribute.
+	 */
+	public static final String ATTRIBUTE_NAME_MINLON = "minlon";
+
+	/**
+	 * The maxlon attribute.
+	 */
+	public static final String ATTRIBUTE_NAME_MAXLON = "maxlon";
+
+
+	/**
 	 * This class cannot be instantiated.
 	 */
 	private XmlConstants() {

@@ -72,9 +72,6 @@ public class Bound extends Entity implements Comparable<Bound> {
 		if (Double.compare(top, bottom) < 0) {
 			throw new IllegalArgumentException("Bound top < bottom");
 		}
-		if (origin == null) {
-			throw new IllegalArgumentException("Bound origin is null");
-		}
 		this.right = right;
 		this.left = left;
 		this.top = top;
@@ -360,7 +357,7 @@ public class Bound extends Entity implements Comparable<Bound> {
 		
 		// Keep the origin string from this if it's not blank, otherwise use the origin string from
 		// the union Bound
-		if (this.getOrigin() != "") {
+		if (this.getOrigin() != null && !this.getOrigin().equals("")) {
 			newOrigin = getOrigin();
 		} else {
 			newOrigin = unionBound.getOrigin();
@@ -451,8 +448,23 @@ public class Bound extends Entity implements Comparable<Bound> {
 			return result;
 		}
 
-		result = this.getOrigin().compareTo(comparisonBound.getOrigin());
-		return result;
+		String myOrigin = this.getOrigin();
+		String otherOrigin = comparisonBound.getOrigin();
+		
+		// null origin is considered "less" than non-null origin
+		if (myOrigin == null) {
+			if (otherOrigin == null) {
+				return 0;
+			} else {
+				return -1;
+			}
+		} else {
+			if (otherOrigin == null) {
+				return 1;
+			} else {
+				return myOrigin.compareTo(otherOrigin);
+			}
+		}
 	}
 
 

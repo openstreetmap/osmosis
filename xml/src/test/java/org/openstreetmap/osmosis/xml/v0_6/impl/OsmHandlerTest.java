@@ -3,6 +3,7 @@ package org.openstreetmap.osmosis.xml.v0_6.impl;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
@@ -232,5 +233,49 @@ public class OsmHandlerTest {
 		        + " origin=\"someorigin\"/>"
 		        + OSM_SUFFIX);
 		fail("Expected to throw an exception");
+	}
+	
+	/**
+	 * Test the parsing of a bound element as returned by the OSM API
+	 * without an origin.
+	 */
+	@Test
+	public void testBoundsNoOrigin() {
+		parseString(OSM_PREFIX
+				+ "<bounds minlat=\"-1.234\" minlon=\"-1.234\" maxlat=\"1.234\" maxlon=\"1.234\"/>"
+				+ OSM_SUFFIX);
+		Bound b = (Bound) entityInspector.getLastEntityContainer().getEntity();
+		assertEquals(-1.234, b.getLeft(), 1E-6);
+		assertEquals(-1.234, b.getBottom(), 1E-6);
+		assertEquals(1.234, b.getRight(), 1E-6);
+		assertEquals(1.234, b.getTop(), 1E-6);
+		assertNull(b.getOrigin());
+	}
+	
+	/**
+	 * Test the parsing of a bound element as returned by the OSM API
+	 * with an origin.
+	 */
+	@Test
+	public void testBoundsWithOrigin() {
+		parseString(OSM_PREFIX
+				+ "<bounds minlat=\"-1\" minlon=\"-1\" maxlat=\"1\" maxlon=\"1\" " 
+				+ " origin=\"someorigin\"/>"
+				+ OSM_SUFFIX);
+		Bound b = (Bound) entityInspector.getLastEntityContainer().getEntity();
+		assertEquals("someorigin", b.getOrigin());
+	}
+	
+	/**
+	 * Test the inheritance of generator to the origin.
+	 */
+	@Test
+	public void testBoundsOriginInheritance() {
+		parseString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+					+ "<osm version=\"0.6\" generator=\"somegenerator\">"
+					+ "<bounds minlat=\"-1.234\" minlon=\"-1.234\" maxlat=\"1.234\" maxlon=\"1.234\"/>"
+					+ "</osm>");
+		Bound b = (Bound) entityInspector.getLastEntityContainer().getEntity();
+		assertEquals("somegenerator", b.getOrigin());
 	}
 }

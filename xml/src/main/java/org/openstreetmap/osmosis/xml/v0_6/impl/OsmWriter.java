@@ -37,15 +37,19 @@ public class OsmWriter extends ElementWriter {
 	 *            be rendered. This would typically be set to false if this
 	 *            element is embedded within a higher level element (eg.
 	 *            changesets)
+	 * @param legacyBound
+	 *            If true, write the legacy <bound> element instead of the
+	 *            correct <bounds> one.
+	 *        
 	 */
-	public OsmWriter(String elementName, int indentLevel, boolean renderAttributes) {
+	public OsmWriter(String elementName, int indentLevel, boolean renderAttributes, boolean legacyBound) {
 		super(elementName, indentLevel);
 		
 		this.renderAttributes = renderAttributes;
 		
 		// Create the sub-element writer which calls the appropriate element
 		// writer based on data type.
-		subElementWriter = new SubElementWriter(indentLevel + 1);
+		subElementWriter = new SubElementWriter(indentLevel + 1, legacyBound);
 	}
 	
 	
@@ -115,11 +119,15 @@ public class OsmWriter extends ElementWriter {
 		 * @param indentLevel
 		 *            The indent level of the sub-elements.
 		 */
-		public SubElementWriter(int indentLevel) {
+		public SubElementWriter(int indentLevel, boolean legacyBound) {
 			nodeWriter = new NodeWriter("node", indentLevel);
 			wayWriter = new WayWriter("way", indentLevel);
 			relationWriter = new RelationWriter("relation", indentLevel);
-			boundWriter = new BoundWriter("bound", indentLevel);
+			if (legacyBound) {
+				boundWriter = new BoundWriter("bound", indentLevel, legacyBound);
+			} else {
+				boundWriter = new BoundWriter("bounds", indentLevel, legacyBound);
+			}
 		}
 		
 		

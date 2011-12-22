@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <osm version="0.6" generator="Osmosis %VERSION%">
-  <bound box="-90.00000,-180.00000,90.00000,180.00000" origin="Osmosis %VERSION%"/>
+  <bounds minlon="-180.00000" minlat="-90.00000" maxlon="180.00000" maxlat="90.00000" origin="Osmosis %VERSION%"/>
   <node id="1" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" lat="-1" lon="-2">
     <tag k="other_tag_1" v="other tag before"/>
     <tag k="created_by" v="Me1"/>

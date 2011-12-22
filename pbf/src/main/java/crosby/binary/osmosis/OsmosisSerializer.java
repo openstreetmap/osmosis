@@ -437,7 +437,9 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         bbox.setTop(mapRawDegrees(entity.getTop()));
         headerblock.setBbox(bbox);
 
-        headerblock.setSource(entity.getOrigin());
+        if (entity.getOrigin() != null) {
+        	headerblock.setSource(entity.getOrigin());
+        }
         finishHeader(headerblock);
     }
 

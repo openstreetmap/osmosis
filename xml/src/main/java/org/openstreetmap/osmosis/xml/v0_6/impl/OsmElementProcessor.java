@@ -20,14 +20,14 @@ public class OsmElementProcessor extends SourceElementProcessor {
 	
 	private static final Logger LOG = Logger.getLogger(OsmElementProcessor.class.getName());
 	
-	private static final String ELEMENT_NAME_BOUND = "bound";
+	private static final String ELEMENT_NAME_BOUND_LEGACY = "bound";
+	private static final String ELEMENT_NAME_BOUNDS = "bounds";
 	private static final String ELEMENT_NAME_NODE = "node";
 	private static final String ELEMENT_NAME_WAY = "way";
 	private static final String ELEMENT_NAME_RELATION = "relation";
 	private static final String ATTRIBUTE_NAME_VERSION = "version";
+	private static final String ATTRIBUTE_NAME_GENERATOR = "generator";
 	
-	
-	private BoundElementProcessor boundElementProcessor;
 	private NodeElementProcessor nodeElementProcessor;
 	private WayElementProcessor wayElementProcessor;
 	private RelationElementProcessor relationElementProcessor;
@@ -35,7 +35,8 @@ public class OsmElementProcessor extends SourceElementProcessor {
 	private boolean foundBound = false;
 	private boolean foundEntities = false;
 	private boolean validateVersion;
-	
+
+	private String generator;
 	
 	/**
 	 * Creates a new instance.
@@ -54,8 +55,7 @@ public class OsmElementProcessor extends SourceElementProcessor {
 		super(parentProcessor, sink, enableDateParsing);
 		
 		this.validateVersion = validateVersion;
-		
-		boundElementProcessor = new BoundElementProcessor(this, getSink(), enableDateParsing);
+
 		nodeElementProcessor = new NodeElementProcessor(this, getSink(), enableDateParsing);
 		wayElementProcessor = new WayElementProcessor(this, getSink(), enableDateParsing);
 		relationElementProcessor = new RelationElementProcessor(this, getSink(), enableDateParsing);
@@ -78,6 +78,8 @@ public class OsmElementProcessor extends SourceElementProcessor {
 				);
 			}
 		}
+		
+		generator = attributes.getValue(ATTRIBUTE_NAME_GENERATOR);
 	}
 	
 	
@@ -95,7 +97,7 @@ public class OsmElementProcessor extends SourceElementProcessor {
 	 */
 	@Override
 	public ElementProcessor getChild(String uri, String localName, String qName) {
-		if (ELEMENT_NAME_BOUND.equals(qName)) {
+		if (ELEMENT_NAME_BOUNDS.equals(qName) || ELEMENT_NAME_BOUND_LEGACY.equals(qName)) {
 			if (foundEntities) {
 				throw new OsmosisRuntimeException("Bound element must come before any entities.");
 			}
@@ -103,7 +105,12 @@ public class OsmElementProcessor extends SourceElementProcessor {
 				throw new OsmosisRuntimeException("Only one bound element allowed.");
 			}
 			foundBound = true;
-			return boundElementProcessor;
+			if (ELEMENT_NAME_BOUND_LEGACY.equals(qName)) {
+				LOG.fine("Legacy <bound> element encountered.");
+				return new LegacyBoundElementProcessor(this, getSink(), true);
+			} else {
+				return new BoundsElementProcessor(this, getSink(), true, generator);
+			}
 		} else if (ELEMENT_NAME_NODE.equals(qName)) {
 			foundEntities = true;
 			return nodeElementProcessor;

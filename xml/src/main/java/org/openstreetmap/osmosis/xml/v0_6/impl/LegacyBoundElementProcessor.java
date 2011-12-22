@@ -14,7 +14,7 @@ import org.openstreetmap.osmosis.xml.common.BaseElementProcessor;
  * 
  * @author Karl Newman
  */
-public class BoundElementProcessor extends SourceElementProcessor {
+public class LegacyBoundElementProcessor extends SourceElementProcessor {
 	private static final String ATTRIBUTE_NAME_BOX = "box";
 	private static final String ATTRIBUTE_NAME_ORIGIN = "origin";
 
@@ -32,7 +32,7 @@ public class BoundElementProcessor extends SourceElementProcessor {
 	 *            If true, dates will be parsed from xml data, else the current date will be used
 	 *            thus saving parsing time.
 	 */
-	public BoundElementProcessor(BaseElementProcessor parentProcessor,
+	public LegacyBoundElementProcessor(BaseElementProcessor parentProcessor,
 	        Sink sink,
 	        boolean enableDateParsing) {
 		super(parentProcessor, sink, enableDateParsing);

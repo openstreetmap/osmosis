@@ -36,6 +36,7 @@ import org.openstreetmap.osmosis.xml.common.XmlTimestampFormat;
  * 
  * @author Jiri Klement
  * @author Brett Henderson
+ * @author Igor Podolskiy
  */
 public class FastXmlParser {
 	
@@ -48,6 +49,7 @@ public class FastXmlParser {
 	private static final String ELEMENT_NAME_MEMBER = "member";
 	private static final String ATTRIBUTE_NAME_ID = "id";
 	private static final String ATTRIBUTE_NAME_VERSION = "version";
+	private static final String ATTRIBUTE_NAME_GENERATOR = "generator";
 	private static final String ATTRIBUTE_NAME_TIMESTAMP = "timestamp";
 	private static final String ATTRIBUTE_NAME_USER_ID = "uid";
 	private static final String ATTRIBUTE_NAME_USER = "user";
@@ -63,6 +65,7 @@ public class FastXmlParser {
 	private static final String ATTRIBUTE_NAME_ORIGIN = "origin";
 	
 	private static final Logger LOG = Logger.getLogger(FastXmlParser.class.getName());
+	private static final Object ELEMENT_NAME_BOUNDS = "bounds";
 	
 	
 	/**
@@ -211,6 +214,39 @@ public class FastXmlParser {
 		return bound;
 	}
 	
+	private Bound readBounds(String defaultOrigin) throws Exception {
+		double bottom = getRequiredDoubleValue(XmlConstants.ATTRIBUTE_NAME_MINLAT);
+		double left = getRequiredDoubleValue(XmlConstants.ATTRIBUTE_NAME_MINLON);
+		double top = getRequiredDoubleValue(XmlConstants.ATTRIBUTE_NAME_MAXLAT);
+		double right = getRequiredDoubleValue(XmlConstants.ATTRIBUTE_NAME_MAXLON);
+
+		String origin = reader.getAttributeValue(null, ATTRIBUTE_NAME_ORIGIN);
+		if (origin == null) {
+			origin = defaultOrigin;
+		}
+		
+		reader.nextTag();
+		reader.nextTag();
+
+		return new Bound(right, left, top, bottom, origin);
+	}
+	
+	private double getRequiredDoubleValue(String attributeName) {
+		String valueString = reader.getAttributeValue(null, attributeName);
+
+		if (valueString == null) {
+			throw new OsmosisRuntimeException(String.format(
+					"Required attribute %s of the bounds element is missing", attributeName));
+		}
+		try {
+			return Double.parseDouble(valueString);
+		} catch (NumberFormatException e) {
+			throw new OsmosisRuntimeException(
+					String.format("Cannot parse the %s attribute of the bounds element", attributeName), 
+					e);
+		}
+	}
+	
 	private Tag readTag() throws Exception {
 		Tag tag = new Tag(reader.getAttributeValue(null, ATTRIBUTE_NAME_KEY),
 				reader.getAttributeValue(null, ATTRIBUTE_NAME_VALUE));
@@ -349,6 +385,8 @@ public class FastXmlParser {
 		
 		try {
 		
+			String generator = null;
+			
 			if (reader.nextTag() == XMLStreamConstants.START_ELEMENT && reader.getLocalName().equals("osm")) {
 
 				String fileVersion;
@@ -361,13 +399,21 @@ public class FastXmlParser {
 							+ " but received " + fileVersion + "."
 					);
 				}
+				
+				generator = reader.getAttributeValue(null, ATTRIBUTE_NAME_GENERATOR);
 
 				reader.nextTag();
 				
 
 				if (reader.getEventType() == XMLStreamConstants.START_ELEMENT
 						&& reader.getLocalName().equals(ELEMENT_NAME_BOUND)) {
+					LOG.fine("Legacy <bound> element encountered.");
 					sink.process(new BoundContainer(readBound()));
+				}
+				
+				if (reader.getEventType() == XMLStreamConstants.START_ELEMENT
+						&& reader.getLocalName().equals(ELEMENT_NAME_BOUNDS)) {
+					sink.process(new BoundContainer(readBounds(generator)));
 				}
 
 				while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {			

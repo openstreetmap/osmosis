@@ -50,7 +50,7 @@ public class BoundWriterTest {
 	 */
 	@Test
 	public final void testProcess1() {
-		BoundWriter bw = new BoundWriter("bound", 2);
+		BoundWriter bw = new BoundWriter("bound", 2, true);
 		bw.setWriter(testBufferedWriter);
 		bw.process(new Bound(20.123456, -21.987654, 22.555555, -23.234567, "originstring"));
 		try {
@@ -74,7 +74,7 @@ public class BoundWriterTest {
 	 */
 	@Test
 	public final void testProcess2() {
-		BoundWriter bw = new BoundWriter("bound", 2);
+		BoundWriter bw = new BoundWriter("bound", 2, true);
 		bw.setWriter(testBufferedWriter);
 		bw.process(new Bound(20.123456, -21.987654, 22.555555, -23.234567, ""));
 		try {
