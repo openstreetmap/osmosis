@@ -72,7 +72,7 @@ public class EntityProgressLogger implements SinkSource {
 		sink.complete();
 		long duration = System.currentTimeMillis() - start;
 		
-		LOG.info("Completion steps took " + duration / 1000d + " seconds");
+		LOG.info("Completion steps took " + duration / 1000d + " seconds.");
 		LOG.info("Processing complete.");
 	}
 	
