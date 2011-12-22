@@ -20,7 +20,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.filter.common.IdTrackerType;
-import org.openstreetmap.osmosis.test.task.v0_6.SinkEntityInspector;
+import org.openstreetmap.osmosis.testutil.v0_6.SinkEntityInspector;
 
 
 /**

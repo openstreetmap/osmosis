@@ -21,7 +21,7 @@ import org.xml.sax.SAXException;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
-import org.openstreetmap.osmosis.test.task.v0_6.SinkEntityInspector;
+import org.openstreetmap.osmosis.testutil.v0_6.SinkEntityInspector;
 
 
 /**

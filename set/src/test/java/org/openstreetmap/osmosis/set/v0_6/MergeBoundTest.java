@@ -20,7 +20,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
-import org.openstreetmap.osmosis.test.task.v0_6.SinkEntityInspector;
+import org.openstreetmap.osmosis.testutil.v0_6.SinkEntityInspector;
 
 
 /**

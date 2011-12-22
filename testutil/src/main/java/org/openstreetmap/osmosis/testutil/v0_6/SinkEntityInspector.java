@@ -1,5 +1,5 @@
 // This software is released into the Public Domain.  See copying.txt for details.
-package org.openstreetmap.osmosis.test.task.v0_6;
+package org.openstreetmap.osmosis.testutil.v0_6;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -25,13 +25,13 @@ public class SinkEntityInspector implements Sink {
 	public SinkEntityInspector() {
 		processedEntities = new LinkedList<EntityContainer>();
 	}
-    
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void initialize(Map<String, Object> metaData) {
-		// Do nothing.
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void initialize(Map<String, Object> metaData) {
+		// Nothing to do here
 	}
 
 
