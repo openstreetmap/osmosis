@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
 import org.openstreetmap.osmosis.core.plugin.PluginLoader;
+import org.openstreetmap.osmosis.replicationhttp.v0_6.ReplicationDataServerFactory;
 import org.openstreetmap.osmosis.replicationhttp.v0_6.ReplicationSequenceServerFactory;
 
 
@@ -24,10 +25,13 @@ public class ReplicationHttpPluginLoader implements PluginLoader {
 		Map<String, TaskManagerFactory> factoryMap;
 		
 		factoryMap = new HashMap<String, TaskManagerFactory>();
-		
+
+		factoryMap.put("serve-replication-data", new ReplicationDataServerFactory());
+		factoryMap.put("srd", new ReplicationDataServerFactory());
 		factoryMap.put("serve-replication-sequence", new ReplicationSequenceServerFactory());
 		factoryMap.put("srs", new ReplicationSequenceServerFactory());
 		
+		factoryMap.put("serve-replication-data-0.6", new ReplicationDataServerFactory());
 		factoryMap.put("serve-replication-sequence-0.6", new ReplicationSequenceServerFactory());
 		
 		return factoryMap;

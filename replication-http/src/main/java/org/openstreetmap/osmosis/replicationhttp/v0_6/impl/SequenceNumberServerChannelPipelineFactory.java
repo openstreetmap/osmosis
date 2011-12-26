@@ -9,7 +9,7 @@ package org.openstreetmap.osmosis.replicationhttp.v0_6.impl;
 public class SequenceNumberServerChannelPipelineFactory extends SequenceServerChannelPipelineFactory {
 
 	@Override
-	protected SequenceServerHandler createHandler() {
-		return new SequenceNumberServerHandler(getControl());
+	protected SequenceServerHandler createHandler(SequenceServerControl control) {
+		return new SequenceNumberServerHandler(control);
 	}
 }

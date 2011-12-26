@@ -14,7 +14,7 @@ import org.jboss.netty.handler.codec.http.HttpServerCodec;
  */
 public abstract class SequenceServerChannelPipelineFactory implements ChannelPipelineFactory {
 
-	private SequenceServerControl control;
+	private SequenceServerControl centralControl;
 
 
 	/**
@@ -24,30 +24,22 @@ public abstract class SequenceServerChannelPipelineFactory implements ChannelPip
 	 *            The new control object.
 	 */
 	public void setControl(SequenceServerControl control) {
-		this.control = control;
-	}
-
-
-	/**
-	 * Gets the server controller.
-	 * 
-	 * @return The controller.
-	 */
-	public SequenceServerControl getControl() {
-		return control;
+		this.centralControl = control;
 	}
 
 
 	/**
 	 * Creates a handler to be used for processing channel messages.
 	 * 
+	 * @param control
+	 *            The control object used to send event notifications.
 	 * @return The channel handler.
 	 */
-	protected abstract SequenceServerHandler createHandler();
+	protected abstract SequenceServerHandler createHandler(SequenceServerControl control);
 
 
 	@Override
 	public ChannelPipeline getPipeline() throws Exception {
-		return Channels.pipeline(new HttpServerCodec(), createHandler());
+		return Channels.pipeline(new HttpServerCodec(), createHandler(centralControl));
 	}
 }
