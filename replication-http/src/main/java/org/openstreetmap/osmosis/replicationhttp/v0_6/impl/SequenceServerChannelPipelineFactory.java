@@ -12,24 +12,42 @@ import org.jboss.netty.handler.codec.http.HttpServerCodec;
  * 
  * @author Brett Henderson
  */
-public class SequenceServerChannelPipelineFactory implements ChannelPipelineFactory {
+public abstract class SequenceServerChannelPipelineFactory implements ChannelPipelineFactory {
 
 	private SequenceServerControl control;
 
 
 	/**
-	 * Creates a new instance.
+	 * Provides handlers with access to server control functions.
 	 * 
 	 * @param control
-	 *            Provides the Netty handlers with access to the controller.
+	 *            The new control object.
 	 */
-	public SequenceServerChannelPipelineFactory(SequenceServerControl control) {
+	public void setControl(SequenceServerControl control) {
 		this.control = control;
 	}
 
 
+	/**
+	 * Gets the server controller.
+	 * 
+	 * @return The controller.
+	 */
+	public SequenceServerControl getControl() {
+		return control;
+	}
+
+
+	/**
+	 * Creates a handler to be used for processing channel messages.
+	 * 
+	 * @return The channel handler.
+	 */
+	protected abstract SequenceServerHandler createHandler();
+
+
 	@Override
 	public ChannelPipeline getPipeline() throws Exception {
-		return Channels.pipeline(new HttpServerCodec(), new SequenceServerHandler(control));
+		return Channels.pipeline(new HttpServerCodec(), createHandler());
 	}
 }

@@ -15,7 +15,6 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
-import org.jboss.netty.handler.codec.http.DefaultHttpChunk;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpRequest;
@@ -30,7 +29,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  * 
  * @author Brett Henderson
  */
-public class SequenceServerHandler extends SimpleChannelHandler {
+public abstract class SequenceServerHandler extends SimpleChannelHandler {
 
 	private static final Logger LOG = Logger.getLogger(SequenceServerHandler.class.getName());
 
@@ -73,9 +72,9 @@ public class SequenceServerHandler extends SimpleChannelHandler {
 			}
 		});
 	}
-	
-	
-	private void writeSequenceNumber(ChannelHandlerContext ctx, final MessageEvent e, final boolean follow) {
+
+
+	private void writeSequence(ChannelHandlerContext ctx, final MessageEvent e, final boolean follow) {
 		// Write the HTTP header to the client.
 		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 		response.addHeader("Content-Type", "text/plain");
@@ -89,11 +88,20 @@ public class SequenceServerHandler extends SimpleChannelHandler {
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception {
 				if (future.isSuccess()) {
-					control.sendSequenceNumber(e.getChannel(), follow);
+					control.sendSequence(e.getChannel(), follow);
 				}
 			}
 		});
 	}
+
+
+	/**
+	 * Gets the URI that all requests must provide. Note that this can only
+	 * consist of a single path element.
+	 * 
+	 * @return The URI.
+	 */
+	protected abstract String getUri();
 
 
 	@Override
@@ -111,10 +119,10 @@ public class SequenceServerHandler extends SimpleChannelHandler {
 		String[] uriElements = uri.split("/");
 
 		if (uriElements.length == 2 && uriElements[1].equals(sequenceNumberUri)) {
-			writeSequenceNumber(ctx, e, false);
+			writeSequence(ctx, e, false);
 		} else if (uriElements.length == 3 && uriElements[1].equals(sequenceNumberUri)
 				&& uriElements[2].equals("follow")) {
-			writeSequenceNumber(ctx, e, true);
+			writeSequence(ctx, e, true);
 		} else {
 			write404(ctx, e, uri);
 		}
@@ -122,27 +130,16 @@ public class SequenceServerHandler extends SimpleChannelHandler {
 
 
 	@Override
-	public void writeRequested(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		// The message event is a Long containing the sequence number.
-		long sequenceNumber = (Long) e.getMessage();
-
-		// Convert the sequence to a string and then a buffer.
-		ChannelBuffer buffer = ChannelBuffers.copiedBuffer(Long.toString(sequenceNumber), CharsetUtil.UTF_8);
-		
-		// Wrap the buffer in a HTTP chunk.
-		DefaultHttpChunk chunk = new DefaultHttpChunk(buffer);
-
-		// Pass the chunk downstream.
-		Channels.write(ctx, e.getFuture(), chunk);
-	}
+	public abstract void writeRequested(ChannelHandlerContext ctx, MessageEvent e) throws Exception;
 
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
 		// Get the cause of the exception.
 		Throwable t = e.getCause();
-		
-		// A ClosedChannelException occurs if the client disconnects and is not an error scenario.
+
+		// A ClosedChannelException occurs if the client disconnects and is not
+		// an error scenario.
 		if (!(t instanceof ClosedChannelException)) {
 			LOG.log(Level.SEVERE, "Error during processing.", t);
 		}

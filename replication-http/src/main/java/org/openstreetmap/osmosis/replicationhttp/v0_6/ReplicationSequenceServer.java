@@ -10,6 +10,7 @@ import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSinkChangeSource;
 import org.openstreetmap.osmosis.replication.common.ReplicationState;
+import org.openstreetmap.osmosis.replicationhttp.v0_6.impl.SequenceNumberServerChannelPipelineFactory;
 import org.openstreetmap.osmosis.replicationhttp.v0_6.impl.SequenceServer;
 
 
@@ -38,7 +39,7 @@ public class ReplicationSequenceServer implements ChangeSinkChangeSource {
 	 *            The port to listen on.
 	 */
 	public ReplicationSequenceServer(int port) {
-		server = new SequenceServer(port);
+		server = new SequenceServer(port, new SequenceNumberServerChannelPipelineFactory());
 
 		serverStarted = false;
 	}

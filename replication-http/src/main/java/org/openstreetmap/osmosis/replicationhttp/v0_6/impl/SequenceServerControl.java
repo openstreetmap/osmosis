@@ -25,7 +25,7 @@ public interface SequenceServerControl {
 	 *            If true, the channel will be held open and updated sequences
 	 *            sent as they are arrive.
 	 */
-	void sendSequenceNumber(Channel channel, boolean follow);
+	void sendSequence(Channel channel, boolean follow);
 
 
 	/**

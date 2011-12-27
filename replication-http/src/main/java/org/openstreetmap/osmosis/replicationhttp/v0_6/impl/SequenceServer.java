@@ -20,24 +20,25 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 
 
 /**
- * This class creates a HTTP server that sends updated replication sequence
- * numbers to clients. Once started it is notified of updated sequence numbers
- * as they occur and will pass these sequence numbers to listening clients.
+ * This class creates a HTTP server that sends updated replication sequences to
+ * clients. Once started it is notified of updated sequence numbers as they
+ * occur and will pass the sequence data to listening clients. The sequence data
+ * is implementation dependent.
  * 
  * @author Brett Henderson
  */
 public class SequenceServer implements SequenceServerControl {
 
 	private int port;
+	private SequenceServerChannelPipelineFactory channelPipelineFactory;
 	/**
 	 * Limits shared data access to one thread at a time.
 	 */
 	private Lock sharedLock;
 	/**
-	 * A flag used only by the external control thread to remember if the server
-	 * has been started or not.
+	 * A flag used to remember if the server has been started or not.
 	 */
-	private boolean masterRunning;
+	private boolean serverStarted;
 	private long sequenceNumber;
 	private ChannelFactory factory;
 	private ChannelGroup allChannels;
@@ -49,9 +50,16 @@ public class SequenceServer implements SequenceServerControl {
 	 * 
 	 * @param port
 	 *            The port number to listen on.
+	 * @param channelPipelineFactory
+	 *            The factory for creating channel pipelines for new client
+	 *            connections.
 	 */
-	public SequenceServer(int port) {
+	public SequenceServer(int port, SequenceServerChannelPipelineFactory channelPipelineFactory) {
 		this.port = port;
+		this.channelPipelineFactory = channelPipelineFactory;
+		
+		// Provide handlers with access to control functions.
+		channelPipelineFactory.setControl(this);
 
 		// Create the thread synchronisation primitives.
 		sharedLock = new ReentrantLock();
@@ -72,7 +80,7 @@ public class SequenceServer implements SequenceServerControl {
 		sharedLock.lock();
 
 		try {
-			if (masterRunning) {
+			if (serverStarted) {
 				throw new OsmosisRuntimeException("The server has already been started");
 			}
 
@@ -88,13 +96,13 @@ public class SequenceServer implements SequenceServerControl {
 
 			// Launch the server.
 			ServerBootstrap bootstrap = new ServerBootstrap(factory);
-			bootstrap.setPipelineFactory(new SequenceServerChannelPipelineFactory(this));
+			bootstrap.setPipelineFactory(channelPipelineFactory);
 			bootstrap.setOption("child.tcpNoDelay", true);
 			bootstrap.setOption("child.keepAlive", true);
 			allChannels.add(bootstrap.bind(new InetSocketAddress(port)));
 
 			// Server startup has succeeded.
-			masterRunning = true;
+			serverStarted = true;
 
 		} finally {
 			sharedLock.unlock();
@@ -111,7 +119,7 @@ public class SequenceServer implements SequenceServerControl {
 	public void update(long newSequenceNumber) {
 		sharedLock.lock();
 		try {
-			if (!masterRunning) {
+			if (!serverStarted) {
 				throw new OsmosisRuntimeException("The server has not been started");
 			}
 
@@ -130,7 +138,7 @@ public class SequenceServer implements SequenceServerControl {
 			List<Channel> existingWaitingChannels = waitingChannels;
 			waitingChannels = new ArrayList<Channel>();
 			for (Channel channel : existingWaitingChannels) {
-				sendSequenceNumber(channel, sequenceNumber, true);
+				sendSequence(channel, sequenceNumber, true);
 			}
 
 		} finally {
@@ -146,12 +154,12 @@ public class SequenceServer implements SequenceServerControl {
 		sharedLock.lock();
 
 		try {
-			if (masterRunning) {
+			if (serverStarted) {
 				allChannels.close().awaitUninterruptibly();
 				factory.releaseExternalResources();
 
 				// Clear our control flag.
-				masterRunning = false;
+				serverStarted = false;
 			}
 		} finally {
 			sharedLock.unlock();
@@ -160,21 +168,21 @@ public class SequenceServer implements SequenceServerControl {
 
 
 	/**
-	 * Sends the specified sequence number to the channel. If follow is
-	 * specified, the channel will be held open and follow up calls will be made
-	 * to determineNextChannelAction with this channel and sequence number when
-	 * the operation completes. If follow is not specified, the channel will be
+	 * Sends the specified sequence to the channel. If follow is specified, the
+	 * channel will be held open and follow up calls will be made to
+	 * determineNextChannelAction with this channel and sequence number when the
+	 * operation completes. If follow is not specified, the channel will be
 	 * closed when the operation completes.
 	 * 
 	 * @param channel
 	 *            The channel.
 	 * @param currentSequenceNumber
-	 *            The sequence number to be sent.
+	 *            The sequence to be sent.
 	 * @param follow
 	 *            If true, the channel will be held open and updated sequences
 	 *            sent as they are arrive.
 	 */
-	private void sendSequenceNumber(final Channel channel, final long currentSequenceNumber, boolean follow) {
+	private void sendSequence(final Channel channel, final long currentSequenceNumber, boolean follow) {
 		// Write the sequence number to the channel.
 		ChannelFuture future = channel.write(currentSequenceNumber);
 
@@ -204,14 +212,13 @@ public class SequenceServer implements SequenceServerControl {
 
 
 	/**
-	 * Checks to see if the current sequence number should be send to the
-	 * channel, or whether the channel must wait for a new sequence number to
-	 * arrive.
+	 * Checks to see if the current sequence should be send to the channel, or
+	 * whether the channel must wait for a new sequence number to arrive.
 	 * 
 	 * @param channel
 	 *            The channel.
 	 * @param lastSequenceNumber
-	 *            The last sequence number sent to the channel.
+	 *            The last sequence sent to the channel.
 	 */
 	private void determineNextChannelAction(Channel channel, long lastSequenceNumber) {
 		long currentSequenceNumber;
@@ -238,13 +245,13 @@ public class SequenceServer implements SequenceServerControl {
 
 		// If the channel is not up to date, we must send the current sequence.
 		if (!upToDate) {
-			sendSequenceNumber(channel, currentSequenceNumber, true);
+			sendSequence(channel, currentSequenceNumber, true);
 		}
 	}
 
 
 	@Override
-	public void sendSequenceNumber(Channel channel, boolean follow) {
+	public void sendSequence(Channel channel, boolean follow) {
 		long currentSequenceNumber;
 
 		// Get the current sequence number within the lock.
@@ -255,7 +262,7 @@ public class SequenceServer implements SequenceServerControl {
 			sharedLock.unlock();
 		}
 
-		sendSequenceNumber(channel, currentSequenceNumber, follow);
+		sendSequence(channel, currentSequenceNumber, follow);
 	}
 
 
