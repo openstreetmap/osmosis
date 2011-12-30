@@ -57,7 +57,7 @@ public class SequenceServer implements SequenceServerControl {
 	public SequenceServer(int port, SequenceServerChannelPipelineFactory channelPipelineFactory) {
 		this.port = port;
 		this.channelPipelineFactory = channelPipelineFactory;
-		
+
 		// Provide handlers with access to control functions.
 		channelPipelineFactory.setControl(this);
 
@@ -232,7 +232,7 @@ public class SequenceServer implements SequenceServerControl {
 
 			// Check if the channel has already been sent the current sequence
 			// number.
-			upToDate = (lastSequenceNumber == currentSequenceNumber);
+			upToDate = (lastSequenceNumber >= currentSequenceNumber);
 
 			// If the channel is up to date we add it to the list waiting for a
 			// new sequence notification.
@@ -243,9 +243,9 @@ public class SequenceServer implements SequenceServerControl {
 			sharedLock.unlock();
 		}
 
-		// If the channel is not up to date, we must send the current sequence.
+		// If the channel is not up to date, we must send the next sequence.
 		if (!upToDate) {
-			sendSequence(channel, currentSequenceNumber, true);
+			sendSequence(channel, lastSequenceNumber + 1, true);
 		}
 	}
 
