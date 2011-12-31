@@ -12,7 +12,8 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.task.common.RunnableTask;
 import org.openstreetmap.osmosis.replication.common.ServerStateReader;
 import org.openstreetmap.osmosis.replicationhttp.v0_6.impl.ReplicationDataServerChannelPipelineFactory;
-import org.openstreetmap.osmosis.replicationhttp.v0_6.impl.SequenceNumberClient;
+import org.openstreetmap.osmosis.replicationhttp.v0_6.impl.SequenceClient;
+import org.openstreetmap.osmosis.replicationhttp.v0_6.impl.SequenceNumberClientChannelPipelineFactory;
 import org.openstreetmap.osmosis.replicationhttp.v0_6.impl.SequenceNumberClientControl;
 import org.openstreetmap.osmosis.replicationhttp.v0_6.impl.SequenceServer;
 
@@ -97,7 +98,10 @@ public class ReplicationDataServer implements RunnableTask {
 			SequenceServer server = new SequenceServer(port, new ReplicationDataServerChannelPipelineFactory(
 					dataDirectory));
 			ClientControl control = new ClientControl(server);
-			SequenceNumberClient client = new SequenceNumberClient(new InetSocketAddress(notificationPort), control);
+			SequenceNumberClientChannelPipelineFactory channelPipelineFactory =
+					new SequenceNumberClientChannelPipelineFactory(control);
+			SequenceClient<SequenceNumberClientControl> client = new SequenceClient<SequenceNumberClientControl>(
+					new InetSocketAddress(notificationPort), channelPipelineFactory);
 
 			try {
 				// Start the server with the current replication number.

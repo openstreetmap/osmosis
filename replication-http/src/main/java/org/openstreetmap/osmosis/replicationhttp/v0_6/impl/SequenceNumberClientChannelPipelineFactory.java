@@ -1,10 +1,6 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.replicationhttp.v0_6.impl;
 
-import org.jboss.netty.channel.ChannelPipeline;
-import org.jboss.netty.channel.ChannelPipelineFactory;
-import org.jboss.netty.channel.Channels;
-import org.jboss.netty.handler.codec.http.HttpClientCodec;
 
 
 /**
@@ -12,10 +8,8 @@ import org.jboss.netty.handler.codec.http.HttpClientCodec;
  * 
  * @author Brett Henderson
  */
-public class SequenceNumberClientChannelPipelineFactory implements ChannelPipelineFactory {
-
-	private SequenceNumberClientControl control;
-
+public class SequenceNumberClientChannelPipelineFactory extends
+		SequenceClientChannelPipelineFactory<SequenceNumberClientControl> {
 
 	/**
 	 * Creates a new instance.
@@ -24,12 +18,12 @@ public class SequenceNumberClientChannelPipelineFactory implements ChannelPipeli
 	 *            Provides the Netty handlers with access to the controller.
 	 */
 	public SequenceNumberClientChannelPipelineFactory(SequenceNumberClientControl control) {
-		this.control = control;
+		super(control);
 	}
 
 
 	@Override
-	public ChannelPipeline getPipeline() throws Exception {
-		return Channels.pipeline(new HttpClientCodec(), new SequenceNumberClientHandler(control));
+	protected SequenceClientHandler createHandler(SequenceNumberClientControl control) {
+		return new SequenceNumberClientHandler(control);
 	}
 }

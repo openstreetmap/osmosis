@@ -14,14 +14,18 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 
 /**
  * This class creates a HTTP client that connects to a sequence server, listens
- * for updated sequence numbers as they are received, and notifies any
- * configured listeners.
+ * for updated sequences as they are received, and notifies any configured
+ * listeners.
  * 
  * @author Brett Henderson
+ * 
+ * @param <T>
+ *            The central control type.
  */
-public class SequenceNumberClient {
+public class SequenceClient<T extends SequenceClientControl> {
 
 	private InetSocketAddress serverAddress;
+	private SequenceClientChannelPipelineFactory<T> channelPipelineFactory;
 	/**
 	 * A flag used only by the external control thread to remember if the server
 	 * has been started or not.
@@ -35,10 +39,6 @@ public class SequenceNumberClient {
 	 * The channel used to receive sequence updates from the server.
 	 */
 	private Channel channel;
-	/**
-	 * The controller to be notified when events occur.
-	 */
-	private SequenceNumberClientControl control;
 
 
 	/**
@@ -47,12 +47,14 @@ public class SequenceNumberClient {
 	 * @param serverAddress
 	 *            The address of the sequence server providing notification of
 	 *            updated sequence numbers.
-	 * @param control
-	 *            The controller to be notified when events occur.
+	 * @param channelPipelineFactory
+	 *            The factory for creating channel pipelines for new client
+	 *            connections.
 	 */
-	public SequenceNumberClient(InetSocketAddress serverAddress, SequenceNumberClientControl control) {
+	public SequenceClient(InetSocketAddress serverAddress,
+			SequenceClientChannelPipelineFactory<T> channelPipelineFactory) {
 		this.serverAddress = serverAddress;
-		this.control = control;
+		this.channelPipelineFactory = channelPipelineFactory;
 	}
 
 
@@ -71,7 +73,7 @@ public class SequenceNumberClient {
 		factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 
 		ClientBootstrap bootstrap = new ClientBootstrap(factory);
-		bootstrap.setPipelineFactory(new SequenceNumberClientChannelPipelineFactory(control));
+		bootstrap.setPipelineFactory(channelPipelineFactory);
 		bootstrap.setOption("tcpNoDelay", true);
 		bootstrap.setOption("keepAlive", true);
 		ChannelFuture future = bootstrap.connect(serverAddress);
