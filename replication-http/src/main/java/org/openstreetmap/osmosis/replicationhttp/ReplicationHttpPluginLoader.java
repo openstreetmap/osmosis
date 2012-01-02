@@ -27,16 +27,16 @@ public class ReplicationHttpPluginLoader implements PluginLoader {
 		
 		factoryMap = new HashMap<String, TaskManagerFactory>();
 
-		factoryMap.put("read-replication", new ReplicationDataClientFactory());
+		factoryMap.put("receive-replication", new ReplicationDataClientFactory());
 		factoryMap.put("rr", new ReplicationDataClientFactory());
-		factoryMap.put("serve-replication-data", new ReplicationDataServerFactory());
+		factoryMap.put("send-replication-data", new ReplicationDataServerFactory());
 		factoryMap.put("srd", new ReplicationDataServerFactory());
-		factoryMap.put("serve-replication-sequence", new ReplicationSequenceServerFactory());
+		factoryMap.put("send-replication-sequence", new ReplicationSequenceServerFactory());
 		factoryMap.put("srs", new ReplicationSequenceServerFactory());
 
 		factoryMap.put("read-replication-0.6", new ReplicationDataClientFactory());
-		factoryMap.put("serve-replication-data-0.6", new ReplicationDataServerFactory());
-		factoryMap.put("serve-replication-sequence-0.6", new ReplicationSequenceServerFactory());
+		factoryMap.put("send-replication-data-0.6", new ReplicationDataServerFactory());
+		factoryMap.put("send-replication-sequence-0.6", new ReplicationSequenceServerFactory());
 		
 		return factoryMap;
 	}
