@@ -13,6 +13,7 @@ import org.openstreetmap.osmosis.replication.v0_6.ReplicationDownloaderInitializ
 import org.openstreetmap.osmosis.replication.v0_6.ReplicationFileMergerFactory;
 import org.openstreetmap.osmosis.replication.v0_6.ReplicationFileMergerInitializerFactory;
 import org.openstreetmap.osmosis.replication.v0_6.ReplicationLagReaderFactory;
+import org.openstreetmap.osmosis.replication.v0_6.ReplicationToChangeWriterFactory;
 import org.openstreetmap.osmosis.replication.v0_6.ReplicationWriterFactory;
 
 
@@ -48,6 +49,8 @@ public class ReplicationPluginLoader implements PluginLoader {
 		factoryMap.put("rrl", new ReplicationLagReaderFactory());
 		factoryMap.put("write-replication", new ReplicationWriterFactory());
 		factoryMap.put("wr", new ReplicationWriterFactory());
+		factoryMap.put("replication-to-change", new ReplicationToChangeWriterFactory());
+		factoryMap.put("rtr", new ReplicationToChangeWriterFactory());
 		
 		factoryMap.put("read-change-interval-0.6", new IntervalDownloaderFactory());
 		factoryMap.put("read-change-interval-init-0.6", new IntervalDownloaderInitializerFactory());
@@ -57,6 +60,7 @@ public class ReplicationPluginLoader implements PluginLoader {
 		factoryMap.put("merge-replication-files-init-0.6", new ReplicationFileMergerInitializerFactory());
 		factoryMap.put("read-replication-lag-0.6", new ReplicationLagReaderFactory());
 		factoryMap.put("write-replication-0.6", new ReplicationWriterFactory());
+		factoryMap.put("replication-to-change-0.6", new ReplicationToChangeWriterFactory());
 		
 		return factoryMap;
 	}
