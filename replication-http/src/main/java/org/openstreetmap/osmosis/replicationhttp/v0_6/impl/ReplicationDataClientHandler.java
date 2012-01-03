@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -33,10 +34,11 @@ import org.openstreetmap.osmosis.xml.v0_6.XmlChangeReader;
 public class ReplicationDataClientHandler extends SequenceClientHandler {
 
 	private static final Logger LOG = Logger.getLogger(ReplicationDataClientHandler.class.getName());
-	private static final String LOCAL_STATE_FILE = "state.txt";
 
 	private ChangeSink changeSink;
 	private PropertiesPersister statePersistor;
+	private boolean sinkInitInvoked;
+	private boolean replicationStateReceived;
 	private ReplicationState replicationState;
 	private long chunksRemaining;
 	private File tmpDataFile;
@@ -46,20 +48,18 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param workingDirectory
-	 *            The directory containing state tracking files.
 	 * @param control
 	 *            Provides the Netty handlers with access to the controller.
 	 * @param changeSink
 	 *            The destination for the replication data.
 	 */
-	public ReplicationDataClientHandler(File workingDirectory, SequenceClientControl control,
-			ChangeSink changeSink) {
+	public ReplicationDataClientHandler(SequenceClientControl control, ChangeSink changeSink) {
 		super(control);
 
 		this.changeSink = changeSink;
 
-		statePersistor = new PropertiesPersister(new File(workingDirectory, LOCAL_STATE_FILE));
+		sinkInitInvoked = false;
+		replicationStateReceived = false;
 		replicationState = null;
 		chunksRemaining = -1;
 	}
@@ -71,7 +71,7 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 	}
 
 
-	private ReplicationState loadState(ChannelBuffer buffer, ReplicationState emptyState) {
+	private ReplicationState loadState(ChannelBuffer buffer) {
 		Properties properties = new Properties();
 
 		try {
@@ -80,9 +80,10 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 			throw new OsmosisRuntimeException("Unable to load replication state from received properties", e);
 		}
 
-		emptyState.load(propertiesToStringMap(properties));
+		ReplicationState newState = new ReplicationState();
+		newState.load(propertiesToStringMap(properties));
 
-		return emptyState;
+		return newState;
 	}
 
 
@@ -141,15 +142,53 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 		// The replication data file is no longer required.
 		replicationFile.delete();
 	}
+	
+	
+	private void invokeSinkInit() {
+		replicationState = new ReplicationState();
+		Map<String, Object> metaData = new HashMap<String, Object>(1);
+		changeSink.initialize(metaData);
+		sinkInitInvoked = true;
+	}
+
+
+	@Override
+	protected String getRequestUri() {
+		// We need to know the last replication number that we have received on
+		// a previous run. To do this we need to retrieve the replication state
+		// from our downstream replication task by initializing.
+		invokeSinkInit();
+		
+		// The downstream task returns the currently active sequence number, not the last received one.
+		long requestSequenceNumber = replicationState.getSequenceNumber() - 1;
+		
+		return "/replicationData/" + requestSequenceNumber + "/tail";
+	}
 
 
 	@Override
 	protected void processMessageData(ChannelBuffer buffer) {
-		if (replicationState == null) {
+		if (!(sinkInitInvoked && replicationStateReceived)) {
+			// We usually have to invoke the sink init and retrieve existing
+			// replication state, but if this is during startup we may have
+			// already performed this step while preparing our initial request.
+			if (!sinkInitInvoked) {
+				invokeSinkInit();
+			}
+			
 			// The first chunk contains the replication state stored in
 			// properties format.
-			replicationState = new ReplicationState();
-			loadState(buffer, replicationState);
+			ReplicationState serverReplicationState = loadState(buffer);
+			
+			// Validate that the server has sent us the expected state.
+			if (serverReplicationState.getSequenceNumber() != replicationState.getSequenceNumber()) {
+				throw new OsmosisRuntimeException("Received sequence number "
+						+ serverReplicationState.getSequenceNumber() + " from server, expected "
+						+ replicationState.getSequenceNumber());
+			}
+			
+			// Update the local state with server values.
+			replicationState.setTimestamp(serverReplicationState.getTimestamp());
 
 		} else if (chunksRemaining < 0) {
 			// The next chunk contains the number of chunks that the replication
