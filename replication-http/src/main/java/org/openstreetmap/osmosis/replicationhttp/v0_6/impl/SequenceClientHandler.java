@@ -45,11 +45,19 @@ public abstract class SequenceClientHandler extends SimpleChannelHandler {
 	}
 
 
+	/**
+	 * Gets the URI to request from the server to initialise message processing.
+	 * 
+	 * @return The request URI.
+	 */
+	protected abstract String getRequestUri();
+
+
 	@Override
 	public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
 		// Send a request to the server asking for sequence number
 		// notifications.
-		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/sequenceNumber/follow");
+		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, getRequestUri());
 		Channels.write(ctx, e.getFuture(), request);
 
 		midStream = false;
