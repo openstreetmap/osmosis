@@ -21,7 +21,6 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jboss.netty.util.CharsetUtil;
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 
 
 /**
@@ -47,13 +46,33 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 	}
 
 
+	/**
+	 * Gets the central control object.
+	 * 
+	 * @return The controller.
+	 */
+	protected SequenceServerControl getControl() {
+		return control;
+	}
+
+
 	@Override
 	public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent e) {
 		control.registerChannel(e.getChannel());
 	}
 
 
-	private void write404(ChannelHandlerContext ctx, final MessageEvent e, String requestedUri) {
+	/**
+	 * Writes a HTTP 404 response to the client.
+	 * 
+	 * @param ctx
+	 *            The Netty context.
+	 * @param future
+	 *            The future for current processing.
+	 * @param requestedUri
+	 *            The URI requested by the client.
+	 */
+	protected void write404(final ChannelHandlerContext ctx, ChannelFuture future, String requestedUri) {
 		// Write the HTTP header to the client.
 		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.NOT_FOUND);
 		response.addHeader("Content-Type", "text/plain");
@@ -62,33 +81,50 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 		ChannelBuffer buffer = ChannelBuffers.copiedBuffer("The requested URI doesn't exist: " + requestedUri,
 				CharsetUtil.UTF_8);
 		response.setContent(buffer);
-		Channels.write(ctx, e.getFuture(), response);
+		Channels.write(ctx, future, response);
 
 		// Wait for the previous operation to finish and then close the channel.
-		e.getFuture().addListener(new ChannelFutureListener() {
+		future.addListener(new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture future) {
-				e.getChannel().close();
+				ctx.getChannel().close();
 			}
 		});
 	}
 
 
-	private void writeSequence(ChannelHandlerContext ctx, final MessageEvent e, final boolean follow) {
+	/**
+	 * Writes sequence data to the client. If follow is set, it allows
+	 * continuous updates to be streamed to the client.
+	 * 
+	 * @param ctx
+	 *            The Netty context.
+	 * @param future
+	 *            The future for current processing.
+	 * @param contentType
+	 *            The content type to set on the HTTP response.
+	 * @param lastSequenceNumber
+	 *            The last known sequence number. Sending will start from after
+	 *            this number.
+	 * @param follow
+	 *            If true, continuous updates will be sent to the client.
+	 */
+	protected void initiateSequenceWriting(final ChannelHandlerContext ctx, final ChannelFuture future,
+			String contentType, final long lastSequenceNumber, final boolean follow) {
 		// Write the HTTP header to the client.
 		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-		response.addHeader("Content-Type", "text/plain");
+		response.addHeader("Content-Type", contentType);
 		response.setChunked(true);
 		response.addHeader(HttpHeaders.Names.TRANSFER_ENCODING, HttpHeaders.Values.CHUNKED);
-		Channels.write(ctx, e.getFuture(), response);
+		Channels.write(ctx, future, response);
 
 		// Wait for the previous operation to finish and then start sending
 		// sequence numbers to this channel.
-		e.getFuture().addListener(new ChannelFutureListener() {
+		future.addListener(new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception {
 				if (future.isSuccess()) {
-					control.sendSequence(e.getChannel(), follow);
+					control.determineNextChannelAction(ctx.getChannel(), lastSequenceNumber, follow);
 				}
 			}
 		});
@@ -96,36 +132,26 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 
 
 	/**
-	 * Gets the URI that all requests must provide. Note that this can only
-	 * consist of a single path element.
+	 * Parses the request and initialises the response processing, typically by
+	 * calling the writeSequence method.
 	 * 
-	 * @return The URI.
+	 * @param ctx
+	 *            The Netty context.
+	 * @param future
+	 *            The future for current processing.
+	 * @param request
+	 *            The client request.
 	 */
-	protected abstract String getUri();
+	protected abstract void handleRequest(ChannelHandlerContext ctx, ChannelFuture future, HttpRequest request);
 
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		final String sequenceNumberUri = "sequenceNumber";
-
 		// We have received a message from the client which is a HTTP request.
 		HttpRequest request = (HttpRequest) e.getMessage();
 
-		// Split the request Uri into its path elements.
-		String uri = request.getUri();
-		if (!uri.startsWith("/")) {
-			throw new OsmosisRuntimeException("Uri doesn't start with a / character: " + uri);
-		}
-		String[] uriElements = uri.split("/");
-
-		if (uriElements.length == 2 && uriElements[1].equals(sequenceNumberUri)) {
-			writeSequence(ctx, e, false);
-		} else if (uriElements.length == 3 && uriElements[1].equals(sequenceNumberUri)
-				&& uriElements[2].equals("follow")) {
-			writeSequence(ctx, e, true);
-		} else {
-			write404(ctx, e, uri);
-		}
+		// Invoke the implementation specific handler for request parsing.
+		handleRequest(ctx, e.getFuture(), request);
 	}
 
 

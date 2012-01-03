@@ -19,6 +19,7 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.WriteCompletionEvent;
 import org.jboss.netty.handler.codec.http.DefaultHttpChunk;
+import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.util.CharsetUtil;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.replication.common.ReplicationSequenceFormatter;
@@ -55,12 +56,6 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 		this.dataDirectory = dataDirectory;
 
 		sequenceFormatter = new ReplicationSequenceFormatter(9, 3);
-	}
-
-
-	@Override
-	protected String getUri() {
-		return "replicationData";
 	}
 
 
@@ -157,6 +152,29 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to read from the replication data file", e);
+		}
+	}
+
+
+	@Override
+	protected void handleRequest(ChannelHandlerContext ctx, ChannelFuture future, HttpRequest request) {
+		final String sequenceNumberUri = "replicationData";
+		final String contentType = "application/octet-stream";
+		
+		// Split the request Uri into its path elements.
+		String uri = request.getUri();
+		if (!uri.startsWith("/")) {
+			throw new OsmosisRuntimeException("Uri doesn't start with a / character: " + uri);
+		}
+		String[] uriElements = uri.split("/");
+
+		if (uriElements.length == 2 && uriElements[1].equals(sequenceNumberUri)) {
+			initiateSequenceWriting(ctx, future, contentType, getControl().getLatestSequenceNumber() - 1, false);
+		} else if (uriElements.length == 3 && uriElements[1].equals(sequenceNumberUri)
+				&& uriElements[2].equals("follow")) {
+			initiateSequenceWriting(ctx, future, contentType, getControl().getLatestSequenceNumber() - 1, true);
+		} else {
+			write404(ctx, future, uri);
 		}
 	}
 

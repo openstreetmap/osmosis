@@ -13,19 +13,28 @@ import org.jboss.netty.channel.Channel;
 public interface SequenceServerControl {
 
 	/**
-	 * Allows a Netty handler to request the controller to initialize sending
-	 * sequence numbers to a channel. If follow is specified the controller will
-	 * continue sending updated sequence values for the life of the server, or
-	 * until the client disconnects. Otherwise only a single sequence will be
-	 * sent.
+	 * Allows a Netty handler to request the latest sequence number from the
+	 * controller.
+	 * 
+	 * @return The latest sequence number.
+	 */
+	long getLatestSequenceNumber();
+
+
+	/**
+	 * Allows a Netty handler to notify the controller that the channel is ready
+	 * for more data. If the controller has new sequence information available
+	 * it will send it, otherwise it will add the channel to the waiting list.
 	 * 
 	 * @param channel
-	 *            The channel to send sequence numbers to.
+	 *            The client channel.
+	 * @param lastSequenceNumber
+	 *            The last sequence number received by the channel.
 	 * @param follow
 	 *            If true, the channel will be held open and updated sequences
-	 *            sent as they are arrive.
+	 *            sent as they arrive.
 	 */
-	void sendSequence(Channel channel, boolean follow);
+	void determineNextChannelAction(Channel channel, long lastSequenceNumber, boolean follow);
 
 
 	/**

@@ -182,7 +182,7 @@ public class SequenceServer implements SequenceServerControl {
 	 *            If true, the channel will be held open and updated sequences
 	 *            sent as they are arrive.
 	 */
-	private void sendSequence(final Channel channel, final long currentSequenceNumber, boolean follow) {
+	private void sendSequence(final Channel channel, final long currentSequenceNumber, final boolean follow) {
 		// Write the sequence number to the channel.
 		ChannelFuture future = channel.write(currentSequenceNumber);
 
@@ -195,7 +195,7 @@ public class SequenceServer implements SequenceServerControl {
 				public void operationComplete(ChannelFuture future) throws Exception {
 					// Only send more data if the write was successful.
 					if (future.isSuccess()) {
-						determineNextChannelAction(channel, currentSequenceNumber);
+						determineNextChannelAction(channel, currentSequenceNumber, follow);
 					}
 				}
 			});
@@ -219,8 +219,11 @@ public class SequenceServer implements SequenceServerControl {
 	 *            The channel.
 	 * @param lastSequenceNumber
 	 *            The last sequence sent to the channel.
+	 * @param follow
+	 *            If true, the channel will be held open and updated sequences
+	 *            sent as they are arrive.
 	 */
-	private void determineNextChannelAction(Channel channel, long lastSequenceNumber) {
+	public void determineNextChannelAction(Channel channel, long lastSequenceNumber, boolean follow) {
 		long currentSequenceNumber;
 		boolean upToDate;
 
@@ -245,24 +248,20 @@ public class SequenceServer implements SequenceServerControl {
 
 		// If the channel is not up to date, we must send the next sequence.
 		if (!upToDate) {
-			sendSequence(channel, lastSequenceNumber + 1, true);
+			sendSequence(channel, lastSequenceNumber + 1, follow);
 		}
 	}
 
 
 	@Override
-	public void sendSequence(Channel channel, boolean follow) {
-		long currentSequenceNumber;
-
+	public long getLatestSequenceNumber() {
 		// Get the current sequence number within the lock.
 		sharedLock.lock();
 		try {
-			currentSequenceNumber = sequenceNumber;
+			return sequenceNumber;
 		} finally {
 			sharedLock.unlock();
 		}
-
-		sendSequence(channel, currentSequenceNumber, follow);
 	}
 
 
