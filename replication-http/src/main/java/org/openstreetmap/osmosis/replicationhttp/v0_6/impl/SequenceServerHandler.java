@@ -72,14 +72,45 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 	 * @param requestedUri
 	 *            The URI requested by the client.
 	 */
-	protected void writeUriNotFound(final ChannelHandlerContext ctx, ChannelFuture future, String requestedUri) {
+	private void writeResourceNotFound(final ChannelHandlerContext ctx, ChannelFuture future, String requestedUri) {
 		// Write the HTTP header to the client.
 		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.NOT_FOUND);
 		response.addHeader("Content-Type", "text/plain");
 
 		// Send the 404 message to the client.
-		ChannelBuffer buffer = ChannelBuffers.copiedBuffer("The requested URI doesn't exist: " + requestedUri,
+		ChannelBuffer buffer = ChannelBuffers.copiedBuffer("The requested resource does not exist: " + requestedUri,
 				CharsetUtil.UTF_8);
+		response.setContent(buffer);
+		Channels.write(ctx, future, response);
+
+		// Wait for the previous operation to finish and then close the channel.
+		future.addListener(new ChannelFutureListener() {
+			@Override
+			public void operationComplete(ChannelFuture future) {
+				ctx.getChannel().close();
+			}
+		});
+	}
+
+
+	/**
+	 * Writes a HTTP 410 response to the client.
+	 * 
+	 * @param ctx
+	 *            The Netty context.
+	 * @param future
+	 *            The future for current processing.
+	 * @param requestedUri
+	 *            The URI requested by the client.
+	 */
+	private void writeResourceGone(final ChannelHandlerContext ctx, ChannelFuture future, String requestedUri) {
+		// Write the HTTP header to the client.
+		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.GONE);
+		response.addHeader("Content-Type", "text/plain");
+
+		// Send the 410 message to the client.
+		ChannelBuffer buffer = ChannelBuffers.copiedBuffer("The requested resource is no longer available: "
+				+ requestedUri, CharsetUtil.UTF_8);
 		response.setContent(buffer);
 		Channels.write(ctx, future, response);
 
@@ -105,7 +136,7 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 	 * @param errorMessage
 	 *            Further information about why the request is bad.
 	 */
-	protected void writeBadRequest(final ChannelHandlerContext ctx, ChannelFuture future, String requestedUri,
+	private void writeBadRequest(final ChannelHandlerContext ctx, ChannelFuture future, String requestedUri,
 			String errorMessage) {
 		final String newLine = "\r\n";
 
@@ -190,7 +221,16 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 		HttpRequest request = (HttpRequest) e.getMessage();
 
 		// Invoke the implementation specific handler for request parsing.
-		handleRequest(ctx, e.getFuture(), request);
+		try {
+			handleRequest(ctx, e.getFuture(), request);
+			
+		} catch (ResourceNotFoundException ex) {
+			writeResourceNotFound(ctx, e.getFuture(), request.getUri());
+		} catch (ResourceGoneException ex) {
+			writeResourceGone(ctx, e.getFuture(), request.getUri());
+		} catch (BadRequestException ex) {
+			writeBadRequest(ctx, e.getFuture(), request.getUri(), ex.getMessage());
+		}
 	}
 
 
@@ -212,5 +252,40 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 		// We must stop sending to this client if any errors occur during
 		// processing.
 		e.getChannel().close();
+	}
+
+	/**
+	 * Used during request parsing to notify that the requested URI could not be
+	 * found.
+	 */
+	protected static class ResourceNotFoundException extends RuntimeException {
+		private static final long serialVersionUID = -1L;
+	}
+
+	/**
+	 * Used during request parsing to notify that the request is invalid in some
+	 * way.
+	 */
+	protected static class BadRequestException extends RuntimeException {
+		private static final long serialVersionUID = -1L;
+
+
+		/**
+		 * Creates a new instance.
+		 * 
+		 * @param message
+		 *            The error message.
+		 */
+		public BadRequestException(String message) {
+			super(message);
+		}
+	}
+
+	/**
+	 * Used during request parsing to notify that the requested URI is no longer
+	 * available.
+	 */
+	protected static class ResourceGoneException extends RuntimeException {
+		private static final long serialVersionUID = -1L;
 	}
 }

@@ -51,8 +51,7 @@ public class SequenceNumberServerHandler extends SequenceServerHandler {
 
 		// First element must be the sequence number base uri.
 		if (uriElements.isEmpty() || !sequenceNumberUri.equals(uriElements.remove())) {
-			writeUriNotFound(ctx, future, uri);
-			return;
+			throw new ResourceNotFoundException();
 		}
 
 		/*
@@ -62,8 +61,7 @@ public class SequenceNumberServerHandler extends SequenceServerHandler {
 		 */
 		long lastSequenceNumber;
 		if (uriElements.isEmpty()) {
-			writeUriNotFound(ctx, future, uri);
-			return;
+			throw new ResourceNotFoundException();
 		}
 		String sequenceStartString = uriElements.remove();
 		if ("current".equals(sequenceStartString)) {
@@ -74,9 +72,8 @@ public class SequenceNumberServerHandler extends SequenceServerHandler {
 			try {
 				lastSequenceNumber = Long.parseLong(sequenceStartString);
 			} catch (NumberFormatException e) {
-				writeBadRequest(ctx, future, uri, "Requested sequence number of " + sequenceStartString
+				throw new BadRequestException("Requested sequence number of " + sequenceStartString
 						+ " is not a number.");
-				return;
 			}
 		}
 
@@ -89,8 +86,7 @@ public class SequenceNumberServerHandler extends SequenceServerHandler {
 			if ("tail".equals(tailElement)) {
 				follow = true;
 			} else {
-				writeUriNotFound(ctx, future, uri);
-				return;
+				throw new ResourceNotFoundException();
 			}
 		} else {
 			follow = false;
@@ -98,8 +94,7 @@ public class SequenceNumberServerHandler extends SequenceServerHandler {
 		
 		// Validate that that no more URI elements are available.
 		if (!uriElements.isEmpty()) {
-			writeUriNotFound(ctx, future, uri);
-			return;
+			throw new ResourceNotFoundException();
 		}
 
 		// Begin sending replication sequence information to the client.
