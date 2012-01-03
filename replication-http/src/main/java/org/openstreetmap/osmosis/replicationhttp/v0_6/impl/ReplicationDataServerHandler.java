@@ -7,9 +7,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,7 +32,9 @@ import org.jboss.netty.handler.codec.http.DefaultHttpChunk;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.util.CharsetUtil;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.util.PropertiesPersister;
 import org.openstreetmap.osmosis.replication.common.ReplicationSequenceFormatter;
+import org.openstreetmap.osmosis.replication.common.ReplicationState;
 
 
 /**
@@ -37,6 +46,7 @@ import org.openstreetmap.osmosis.replication.common.ReplicationSequenceFormatter
 public class ReplicationDataServerHandler extends SequenceServerHandler {
 
 	private static final Logger LOG = Logger.getLogger(ReplicationDataServerHandler.class.getName());
+	private static final String REQUEST_DATE_FORMAT = "yyyy-MM-dd-HH-mm-ss";
 	private static final int CHUNK_SIZE = 8192;
 
 	private File dataDirectory;
@@ -60,6 +70,99 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 		this.dataDirectory = dataDirectory;
 
 		sequenceFormatter = new ReplicationSequenceFormatter(9, 3);
+	}
+
+
+	private DateFormat getRequestDateParser() {
+		SimpleDateFormat dateParser = new SimpleDateFormat(REQUEST_DATE_FORMAT);
+		Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+		dateParser.setCalendar(calendar);
+
+		return dateParser;
+	}
+
+
+	private File getStateFile(long sequenceNumber) {
+		return new File(dataDirectory, sequenceFormatter.getFormattedName(sequenceNumber, ".state.txt"));
+	}
+
+
+	private File getDataFile(long sequenceNumber) {
+		return new File(dataDirectory, sequenceFormatter.getFormattedName(sequenceNumber, ".osc.gz"));
+	}
+
+
+	private ReplicationState getReplicationState(long sequenceNumber) {
+		PropertiesPersister persister = new PropertiesPersister(getStateFile(sequenceNumber));
+		ReplicationState state = new ReplicationState();
+		state.load(persister.loadMap());
+
+		return state;
+	}
+
+
+	/**
+	 * Search through the replication state records and find the nearest
+	 * replication number with a timestamp earlier or equal to the requested
+	 * date.
+	 * 
+	 * @param lastDate
+	 *            The last date known by the client.
+	 * @return The associated sequence number.
+	 */
+	private long getSequenceNumberByDate(Date lastDate) {
+		long startBound = 0;
+		long endBound = getControl().getLatestSequenceNumber();
+
+		// If the requested date is greater than or equal to the latest known
+		// timestamp we should return our latest sequence number.
+		if (lastDate.compareTo(getReplicationState(endBound).getTimestamp()) >= 0) {
+			return endBound;
+		}
+
+		// Continue splitting our range in half until either we find the
+		// requested record, or we only have one possibility remaining.
+		while ((endBound - startBound) > 1) {
+			// Calculate the current midpoint.
+			long midPoint = startBound + ((endBound - startBound) / 2);
+
+			// If the midpoint doesn't exist we need to reset the start bound to
+			// the midpoint and search again.
+			if (!getStateFile(midPoint).exists()) {
+				startBound = midPoint;
+				continue;
+			}
+
+			// If the midpoint timestamp is greater we search in the lower half,
+			// otherwise the higher half.
+			int comparison = lastDate.compareTo(getReplicationState(midPoint).getTimestamp());
+			if (comparison == 0) {
+				// We have an exact match so stop processing now.
+				return midPoint;
+			} else if (comparison < 0) {
+				// We will now search in the lower half of the search range.
+				// Even though we know the midpoint is not the right value, we
+				// include it in the next range because our search assumes that
+				// the right sequence number is less than the end point.
+				endBound = midPoint - 1;
+			} else {
+				// We will now search in the upper half of the search range.
+				// Even though the mid point has a timestamp less than the
+				// requested value, it still may be the selected value if the
+				// next timestamp is greater.
+				startBound = midPoint;
+			}
+		}
+
+		// We only have one possibility remaining which is the start bound. This
+		// is the requested record if it exists and has a timestamp less than or
+		// equal to that requested.
+		if (getStateFile(startBound).exists()
+				&& lastDate.compareTo(getReplicationState(startBound).getTimestamp()) >= 0) {
+			return startBound;
+		} else {
+			throw new ResourceGoneException();
+		}
 	}
 
 
@@ -176,12 +279,11 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 		uriElements.remove(); // First element is empty due to leading '/'.
 
 		// First element must be either the replication state or replication
-		// data uri which determines whether replicatin data will be included or
-		// just the replication state.
+		// data uri which determines whether replication data will be included
+		// or just the replication state.
 		String contentType;
 		if (uriElements.isEmpty()) {
-			writeUriNotFound(ctx, future, uri);
-			return;
+			throw new ResourceNotFoundException();
 		}
 		String requestTypeString = uriElements.remove();
 		if (replicationStateUri.equals(requestTypeString)) {
@@ -191,12 +293,10 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 			contentType = dataContentType;
 			includeData = true;
 		} else {
-			writeUriNotFound(ctx, future, uri);
-			return;
+			throw new ResourceNotFoundException();
 		}
 		if (uriElements.isEmpty() || !replicationDataUri.equals(uriElements.remove())) {
-			writeUriNotFound(ctx, future, uri);
-			return;
+			throw new ResourceNotFoundException();
 		}
 
 		/*
@@ -206,8 +306,7 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 		 */
 		long lastSequenceNumber;
 		if (uriElements.isEmpty()) {
-			writeUriNotFound(ctx, future, uri);
-			return;
+			throw new ResourceNotFoundException();
 		}
 		String sequenceStartString = uriElements.remove();
 		if ("current".equals(sequenceStartString)) {
@@ -215,12 +314,20 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 			// from after the previous number.
 			lastSequenceNumber = getControl().getLatestSequenceNumber() - 1;
 		} else {
+			// Try to parse the sequence start string as a number. If that fails
+			// try to parse as a date.
 			try {
 				lastSequenceNumber = Long.parseLong(sequenceStartString);
 			} catch (NumberFormatException e) {
-				writeBadRequest(ctx, future, uri, "Requested sequence number of " + sequenceStartString
-						+ " is not a number.");
-				return;
+				try {
+					Date lastDate = getRequestDateParser().parse(sequenceStartString);
+					lastSequenceNumber = getSequenceNumberByDate(lastDate);
+
+				} catch (ParseException e1) {
+					throw new BadRequestException("Requested sequence number of " + sequenceStartString
+							+ " is not a number, or a date in format yyyy-MM-dd-HH-mm-ss.");
+				}
+
 			}
 		}
 
@@ -233,8 +340,7 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 			if ("tail".equals(tailElement)) {
 				follow = true;
 			} else {
-				writeUriNotFound(ctx, future, uri);
-				return;
+				throw new ResourceNotFoundException();
 			}
 		} else {
 			follow = false;
@@ -242,8 +348,7 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 
 		// Validate that that no more URI elements are available.
 		if (!uriElements.isEmpty()) {
-			writeUriNotFound(ctx, future, uri);
-			return;
+			throw new ResourceNotFoundException();
 		}
 
 		// Begin sending replication sequence information to the client.
@@ -264,10 +369,8 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 		long sequenceNumber = (Long) e.getMessage();
 
 		// Get the name of the replication data file.
-		String stateFileName = sequenceFormatter.getFormattedName(sequenceNumber, ".state.txt");
-		String dataFileName = sequenceFormatter.getFormattedName(sequenceNumber, ".osc.gz");
-		File stateFile = new File(dataDirectory, stateFileName);
-		File dataFile = new File(dataDirectory, dataFileName);
+		File stateFile = getStateFile(sequenceNumber);
+		File dataFile = getDataFile(sequenceNumber);
 
 		// Load the contents of the state file.
 		ChannelBuffer stateFileBuffer = loadFile(stateFile, ctx, e.getFuture());
