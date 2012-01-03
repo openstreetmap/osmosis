@@ -72,14 +72,53 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 	 * @param requestedUri
 	 *            The URI requested by the client.
 	 */
-	protected void write404(final ChannelHandlerContext ctx, ChannelFuture future, String requestedUri) {
+	protected void writeUriNotFound(final ChannelHandlerContext ctx, ChannelFuture future, String requestedUri) {
 		// Write the HTTP header to the client.
 		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.NOT_FOUND);
 		response.addHeader("Content-Type", "text/plain");
 
-		// Send the 404 message for the client.
+		// Send the 404 message to the client.
 		ChannelBuffer buffer = ChannelBuffers.copiedBuffer("The requested URI doesn't exist: " + requestedUri,
 				CharsetUtil.UTF_8);
+		response.setContent(buffer);
+		Channels.write(ctx, future, response);
+
+		// Wait for the previous operation to finish and then close the channel.
+		future.addListener(new ChannelFutureListener() {
+			@Override
+			public void operationComplete(ChannelFuture future) {
+				ctx.getChannel().close();
+			}
+		});
+	}
+
+
+	/**
+	 * Writes a HTTP 400 response to the client.
+	 * 
+	 * @param ctx
+	 *            The Netty context.
+	 * @param future
+	 *            The future for current processing.
+	 * @param requestedUri
+	 *            The URI requested by the client.
+	 * @param errorMessage
+	 *            Further information about why the request is bad.
+	 */
+	protected void writeBadRequest(final ChannelHandlerContext ctx, ChannelFuture future, String requestedUri,
+			String errorMessage) {
+		final String newLine = "\r\n";
+
+		// Write the HTTP header to the client.
+		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.NOT_FOUND);
+		response.addHeader("Content-Type", "text/plain");
+
+		// Send the 400 message to the client.
+		StringBuilder messageBuilder = new StringBuilder();
+		messageBuilder.append("Bad Request").append(newLine);
+		messageBuilder.append("Message: ").append(errorMessage).append(newLine);
+		messageBuilder.append("Requested URI: ").append(requestedUri).append(newLine);
+		ChannelBuffer buffer = ChannelBuffers.copiedBuffer(messageBuilder.toString(), CharsetUtil.UTF_8);
 		response.setContent(buffer);
 		Channels.write(ctx, future, response);
 

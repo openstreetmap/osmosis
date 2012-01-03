@@ -7,6 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,6 +43,7 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 	private ReplicationSequenceFormatter sequenceFormatter;
 	private FileChannel chunkedFileChannel;
 	private boolean chunkedFileCountSent;
+	private boolean includeData;
 
 
 	/**
@@ -158,24 +162,92 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 
 	@Override
 	protected void handleRequest(ChannelHandlerContext ctx, ChannelFuture future, HttpRequest request) {
-		final String sequenceNumberUri = "replicationData";
-		final String contentType = "application/octet-stream";
-		
+		final String replicationStateUri = "replicationState";
+		final String replicationDataUri = "replicationData";
+		final String textContentType = "text/plain";
+		final String dataContentType = "application/octet-stream";
+
 		// Split the request Uri into its path elements.
 		String uri = request.getUri();
 		if (!uri.startsWith("/")) {
 			throw new OsmosisRuntimeException("Uri doesn't start with a / character: " + uri);
 		}
-		String[] uriElements = uri.split("/");
+		Queue<String> uriElements = new LinkedList<String>(Arrays.asList(uri.split("/")));
+		uriElements.remove(); // First element is empty due to leading '/'.
 
-		if (uriElements.length == 2 && uriElements[1].equals(sequenceNumberUri)) {
-			initiateSequenceWriting(ctx, future, contentType, getControl().getLatestSequenceNumber() - 1, false);
-		} else if (uriElements.length == 3 && uriElements[1].equals(sequenceNumberUri)
-				&& uriElements[2].equals("follow")) {
-			initiateSequenceWriting(ctx, future, contentType, getControl().getLatestSequenceNumber() - 1, true);
-		} else {
-			write404(ctx, future, uri);
+		// First element must be either the replication state or replication
+		// data uri which determines whether replicatin data will be included or
+		// just the replication state.
+		String contentType;
+		if (uriElements.isEmpty()) {
+			writeUriNotFound(ctx, future, uri);
+			return;
 		}
+		String requestTypeString = uriElements.remove();
+		if (replicationStateUri.equals(requestTypeString)) {
+			contentType = textContentType;
+			includeData = false;
+		} else if (replicationDataUri.equals(requestTypeString)) {
+			contentType = dataContentType;
+			includeData = true;
+		} else {
+			writeUriNotFound(ctx, future, uri);
+			return;
+		}
+		if (uriElements.isEmpty() || !replicationDataUri.equals(uriElements.remove())) {
+			writeUriNotFound(ctx, future, uri);
+			return;
+		}
+
+		/*
+		 * The next element determines which replication number to start from.
+		 * The request is one of "current" or N where is the last sequence
+		 * number received by the client.
+		 */
+		long lastSequenceNumber;
+		if (uriElements.isEmpty()) {
+			writeUriNotFound(ctx, future, uri);
+			return;
+		}
+		String sequenceStartString = uriElements.remove();
+		if ("current".equals(sequenceStartString)) {
+			// If we want the current number, we tell the controller to start
+			// from after the previous number.
+			lastSequenceNumber = getControl().getLatestSequenceNumber() - 1;
+		} else {
+			try {
+				lastSequenceNumber = Long.parseLong(sequenceStartString);
+			} catch (NumberFormatException e) {
+				writeBadRequest(ctx, future, uri, "Requested sequence number of " + sequenceStartString
+						+ " is not a number.");
+				return;
+			}
+		}
+
+		// If the next element exists and is "tail" it means that the client
+		// wants to stay connected and receive updated sequences as they become
+		// available.
+		boolean follow;
+		if (!uriElements.isEmpty()) {
+			String tailElement = uriElements.remove();
+			if ("tail".equals(tailElement)) {
+				follow = true;
+			} else {
+				writeUriNotFound(ctx, future, uri);
+				return;
+			}
+		} else {
+			follow = false;
+		}
+
+		// Validate that that no more URI elements are available.
+		if (!uriElements.isEmpty()) {
+			writeUriNotFound(ctx, future, uri);
+			return;
+		}
+
+		// Begin sending replication sequence information to the client.
+		initiateSequenceWriting(ctx, future, contentType, lastSequenceNumber, follow);
 	}
 
 
@@ -200,9 +272,12 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 		// Load the contents of the state file.
 		ChannelBuffer stateFileBuffer = loadFile(stateFile, ctx, e.getFuture());
 
-		// Open the data file read for sending.
-		chunkedFileChannel = openFileChannel(dataFile);
-		chunkedFileCountSent = false;
+		// Only include replication data if initially requested by the client.
+		if (includeData) {
+			// Open the data file read for sending.
+			chunkedFileChannel = openFileChannel(dataFile);
+			chunkedFileCountSent = false;
+		}
 
 		/*
 		 * Send the state file to the client. We will continue when we receive

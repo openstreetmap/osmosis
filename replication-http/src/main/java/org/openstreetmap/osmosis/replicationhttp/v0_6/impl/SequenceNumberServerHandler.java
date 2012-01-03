@@ -1,6 +1,10 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.replicationhttp.v0_6.impl;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelFuture;
@@ -11,6 +15,7 @@ import org.jboss.netty.handler.codec.http.DefaultHttpChunk;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.util.CharsetUtil;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+
 
 /**
  * A sequence server handler implementation that sends the sequence number
@@ -35,22 +40,70 @@ public class SequenceNumberServerHandler extends SequenceServerHandler {
 	protected void handleRequest(ChannelHandlerContext ctx, ChannelFuture future, HttpRequest request) {
 		final String sequenceNumberUri = "sequenceNumber";
 		final String contentType = "text/plain";
-		
+
 		// Split the request Uri into its path elements.
 		String uri = request.getUri();
 		if (!uri.startsWith("/")) {
 			throw new OsmosisRuntimeException("Uri doesn't start with a / character: " + uri);
 		}
-		String[] uriElements = uri.split("/");
+		Queue<String> uriElements = new LinkedList<String>(Arrays.asList(uri.split("/")));
+		uriElements.remove(); // First element is empty due to leading '/'.
 
-		if (uriElements.length == 2 && uriElements[1].equals(sequenceNumberUri)) {
-			initiateSequenceWriting(ctx, future, contentType, getControl().getLatestSequenceNumber() - 1, false);
-		} else if (uriElements.length == 3 && uriElements[1].equals(sequenceNumberUri)
-				&& uriElements[2].equals("follow")) {
-			initiateSequenceWriting(ctx, future, contentType, getControl().getLatestSequenceNumber() - 1, true);
-		} else {
-			write404(ctx, future, uri);
+		// First element must be the sequence number base uri.
+		if (uriElements.isEmpty() || !sequenceNumberUri.equals(uriElements.remove())) {
+			writeUriNotFound(ctx, future, uri);
+			return;
 		}
+
+		/*
+		 * The next element determines which replication number to start from.
+		 * The request is one of "current" or N where is the last sequence
+		 * number received by the client.
+		 */
+		long lastSequenceNumber;
+		if (uriElements.isEmpty()) {
+			writeUriNotFound(ctx, future, uri);
+			return;
+		}
+		String sequenceStartString = uriElements.remove();
+		if ("current".equals(sequenceStartString)) {
+			// If we want the current number, we tell the controller to start
+			// from after the previous number.
+			lastSequenceNumber = getControl().getLatestSequenceNumber() - 1;
+		} else {
+			try {
+				lastSequenceNumber = Long.parseLong(sequenceStartString);
+			} catch (NumberFormatException e) {
+				writeBadRequest(ctx, future, uri, "Requested sequence number of " + sequenceStartString
+						+ " is not a number.");
+				return;
+			}
+		}
+
+		// If the next element exists and is "tail" it means that the client
+		// wants to stay connected and receive updated sequences as they become
+		// available.
+		boolean follow;
+		if (!uriElements.isEmpty()) {
+			String tailElement = uriElements.remove();
+			if ("tail".equals(tailElement)) {
+				follow = true;
+			} else {
+				writeUriNotFound(ctx, future, uri);
+				return;
+			}
+		} else {
+			follow = false;
+		}
+		
+		// Validate that that no more URI elements are available.
+		if (!uriElements.isEmpty()) {
+			writeUriNotFound(ctx, future, uri);
+			return;
+		}
+
+		// Begin sending replication sequence information to the client.
+		initiateSequenceWriting(ctx, future, contentType, lastSequenceNumber, follow);
 	}
 
 
