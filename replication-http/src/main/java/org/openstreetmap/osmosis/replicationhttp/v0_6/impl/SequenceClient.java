@@ -18,14 +18,11 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  * listeners.
  * 
  * @author Brett Henderson
- * 
- * @param <T>
- *            The central control type.
  */
-public class SequenceClient<T extends SequenceClientControl> {
+public class SequenceClient {
 
 	private InetSocketAddress serverAddress;
-	private SequenceClientChannelPipelineFactory<T> channelPipelineFactory;
+	private SequenceClientChannelPipelineFactory channelPipelineFactory;
 	/**
 	 * A flag used only by the external control thread to remember if the server
 	 * has been started or not.
@@ -52,7 +49,7 @@ public class SequenceClient<T extends SequenceClientControl> {
 	 *            connections.
 	 */
 	public SequenceClient(InetSocketAddress serverAddress,
-			SequenceClientChannelPipelineFactory<T> channelPipelineFactory) {
+			SequenceClientChannelPipelineFactory channelPipelineFactory) {
 		this.serverAddress = serverAddress;
 		this.channelPipelineFactory = channelPipelineFactory;
 	}

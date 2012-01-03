@@ -13,7 +13,7 @@ import org.jboss.netty.util.CharsetUtil;
  */
 public class SequenceNumberClientHandler extends SequenceClientHandler {
 
-	private SequenceNumberClientControl control;
+	private SequenceNumberClientListener sequenceNumberListener;
 
 
 	/**
@@ -21,11 +21,20 @@ public class SequenceNumberClientHandler extends SequenceClientHandler {
 	 * 
 	 * @param control
 	 *            Provides the Netty handlers with access to the controller.
+	 * @param sequenceNumberListener
+	 *            This will be notified when new sequence numbers are received.
 	 */
-	public SequenceNumberClientHandler(SequenceNumberClientControl control) {
+	public SequenceNumberClientHandler(SequenceClientControl control,
+			SequenceNumberClientListener sequenceNumberListener) {
 		super(control);
 
-		this.control = control;
+		this.sequenceNumberListener = sequenceNumberListener;
+	}
+
+
+	@Override
+	protected String getRequestUri() {
+		return "/sequenceNumber/current/tail";
 	}
 
 
@@ -36,6 +45,6 @@ public class SequenceNumberClientHandler extends SequenceClientHandler {
 		long sequenceNumber = Long.parseLong(sequenceNumberString);
 
 		// Send the new sequence number notification.
-		control.notifySequenceNumber(sequenceNumber);
+		sequenceNumberListener.notifySequenceNumber(sequenceNumber);
 	}
 }

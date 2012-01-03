@@ -12,14 +12,11 @@ import org.jboss.netty.handler.codec.http.HttpClientCodec;
  * 
  * 
  * @author Brett Henderson
- * 
- * @param <T>
- *            The central control type.
  */
-public abstract class SequenceClientChannelPipelineFactory<T extends SequenceClientControl> implements
+public abstract class SequenceClientChannelPipelineFactory implements
 		ChannelPipelineFactory {
 
-	private T centralControl;
+	private SequenceClientControl centralControl;
 
 
 	/**
@@ -28,7 +25,7 @@ public abstract class SequenceClientChannelPipelineFactory<T extends SequenceCli
 	 * @param control
 	 *            Provides the Netty handlers with access to the controller.
 	 */
-	public SequenceClientChannelPipelineFactory(T control) {
+	public SequenceClientChannelPipelineFactory(SequenceClientControl control) {
 		this.centralControl = control;
 	}
 
@@ -40,7 +37,7 @@ public abstract class SequenceClientChannelPipelineFactory<T extends SequenceCli
 	 *            The control object used to send event notifications.
 	 * @return The channel handler.
 	 */
-	protected abstract SequenceClientHandler createHandler(T control);
+	protected abstract SequenceClientHandler createHandler(SequenceClientControl control);
 
 
 	@Override

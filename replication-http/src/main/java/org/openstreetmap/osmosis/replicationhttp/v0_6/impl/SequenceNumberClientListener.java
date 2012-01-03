@@ -2,16 +2,16 @@
 package org.openstreetmap.osmosis.replicationhttp.v0_6.impl;
 
 /**
- * This interface provides Netty handlers executing in worker threads with
- * access to sequence number client control methods.
+ * Used by SequenceNumberClientHandler to notify a listener about received
+ * sequence numbers.
  * 
  * @author Brett Henderson
  */
-public interface SequenceNumberClientControl extends SequenceClientControl {
+public interface SequenceNumberClientListener {
 
 	/**
-	 * Allows a Netty handler to tell the controller that a new sequence number
-	 * has been received.
+	 * Allows a Netty handler to notify when a new sequence number has been
+	 * received.
 	 * 
 	 * @param sequenceNumber
 	 *            The received sequence number.
