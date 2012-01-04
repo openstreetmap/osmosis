@@ -59,18 +59,16 @@ public class SequenceNumberServerHandler extends SequenceServerHandler {
 		 * The request is one of "current" or N where is the last sequence
 		 * number received by the client.
 		 */
-		long lastSequenceNumber;
+		long nextSequenceNumber;
 		if (uriElements.isEmpty()) {
 			throw new ResourceNotFoundException();
 		}
 		String sequenceStartString = uriElements.remove();
 		if ("current".equals(sequenceStartString)) {
-			// If we want the current number, we tell the controller to start
-			// from after the previous number.
-			lastSequenceNumber = getControl().getLatestSequenceNumber() - 1;
+			nextSequenceNumber = getControl().getLatestSequenceNumber();
 		} else {
 			try {
-				lastSequenceNumber = Long.parseLong(sequenceStartString);
+				nextSequenceNumber = Long.parseLong(sequenceStartString);
 			} catch (NumberFormatException e) {
 				throw new BadRequestException("Requested sequence number of " + sequenceStartString
 						+ " is not a number.");
@@ -98,7 +96,7 @@ public class SequenceNumberServerHandler extends SequenceServerHandler {
 		}
 
 		// Begin sending replication sequence information to the client.
-		initiateSequenceWriting(ctx, future, contentType, lastSequenceNumber, follow);
+		initiateSequenceWriting(ctx, future, contentType, nextSequenceNumber, follow);
 	}
 
 

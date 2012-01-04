@@ -195,7 +195,7 @@ public class SequenceServer implements SequenceServerControl {
 				public void operationComplete(ChannelFuture future) throws Exception {
 					// Only send more data if the write was successful.
 					if (future.isSuccess()) {
-						determineNextChannelAction(channel, currentSequenceNumber, follow);
+						determineNextChannelAction(channel, currentSequenceNumber + 1, follow);
 					}
 				}
 			});
@@ -212,20 +212,21 @@ public class SequenceServer implements SequenceServerControl {
 
 
 	/**
-	 * Checks to see if the current sequence should be send to the channel, or
-	 * whether the channel must wait for a new sequence number to arrive.
+	 * Allows a Netty handler to notify the controller that the channel is ready
+	 * for more data. If the controller has new sequence information available
+	 * it will send it, otherwise it will add the channel to the waiting list.
 	 * 
 	 * @param channel
-	 *            The channel.
-	 * @param lastSequenceNumber
-	 *            The last sequence sent to the channel.
+	 *            The client channel.
+	 * @param nextSequenceNumber
+	 *            The sequence number that the client needs to be sent next.
 	 * @param follow
 	 *            If true, the channel will be held open and updated sequences
-	 *            sent as they are arrive.
+	 *            sent as they arrive.
 	 */
-	public void determineNextChannelAction(Channel channel, long lastSequenceNumber, boolean follow) {
+	public void determineNextChannelAction(Channel channel, long nextSequenceNumber, boolean follow) {
 		long currentSequenceNumber;
-		boolean upToDate;
+		boolean sequenceAvailable;
 
 		// We can only access the master sequence number and waiting channels
 		// while we have the lock
@@ -233,22 +234,29 @@ public class SequenceServer implements SequenceServerControl {
 		try {
 			currentSequenceNumber = sequenceNumber;
 
-			// Check if the channel has already been sent the current sequence
-			// number.
-			upToDate = (lastSequenceNumber >= currentSequenceNumber);
-
-			// If the channel is up to date we add it to the list waiting for a
-			// new sequence notification.
-			if (upToDate) {
+			// Check if the next sequence number is available yet.
+			sequenceAvailable = nextSequenceNumber <= currentSequenceNumber;
+			
+			// If the sequence is not available, make sure that the client
+			// hasn't requested a sequence number more than one past current.
+			if (!sequenceAvailable) {
+				if ((nextSequenceNumber - currentSequenceNumber) > 1) {
+					throw new OsmosisRuntimeException("Requested sequence number " + nextSequenceNumber
+							+ " is more than 1 past current number " + currentSequenceNumber);
+				}
+			}
+			
+			// If the sequence isn't available we add the channel to the list waiting for a new sequence notification.
+			if (!sequenceAvailable) {
 				waitingChannels.add(channel);
 			}
 		} finally {
 			sharedLock.unlock();
 		}
 
-		// If the channel is not up to date, we must send the next sequence.
-		if (!upToDate) {
-			sendSequence(channel, lastSequenceNumber + 1, follow);
+		// Send the sequence if it is available.
+		if (sequenceAvailable) {
+			sendSequence(channel, nextSequenceNumber, follow);
 		}
 	}
 

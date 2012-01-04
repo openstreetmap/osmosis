@@ -173,14 +173,14 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 	 *            The future for current processing.
 	 * @param contentType
 	 *            The content type to set on the HTTP response.
-	 * @param lastSequenceNumber
-	 *            The last known sequence number. Sending will start from after
-	 *            this number.
+	 * @param requestedSequenceNumber
+	 *            The requested sequence number. Sending will start from this
+	 *            number.
 	 * @param follow
 	 *            If true, continuous updates will be sent to the client.
 	 */
 	protected void initiateSequenceWriting(final ChannelHandlerContext ctx, final ChannelFuture future,
-			String contentType, final long lastSequenceNumber, final boolean follow) {
+			String contentType, final long requestedSequenceNumber, final boolean follow) {
 		// Write the HTTP header to the client.
 		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 		response.addHeader("Content-Type", contentType);
@@ -194,7 +194,7 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception {
 				if (future.isSuccess()) {
-					control.determineNextChannelAction(ctx.getChannel(), lastSequenceNumber, follow);
+					control.determineNextChannelAction(ctx.getChannel(), requestedSequenceNumber, follow);
 				}
 			}
 		});

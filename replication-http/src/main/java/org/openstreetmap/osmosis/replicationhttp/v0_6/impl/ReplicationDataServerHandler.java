@@ -104,20 +104,25 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 	/**
 	 * Search through the replication state records and find the nearest
 	 * replication number with a timestamp earlier or equal to the requested
-	 * date.
+	 * date, then return the next sequence number. It is not sufficient to find
+	 * the minimum known sequence record with a timestamp greater than the
+	 * requested date because there may be missing replication records in
+	 * between.
 	 * 
 	 * @param lastDate
 	 *            The last date known by the client.
 	 * @return The associated sequence number.
 	 */
-	private long getSequenceNumberByDate(Date lastDate) {
+	private long getNextSequenceNumberByDate(Date lastDate) {
 		long startBound = 0;
 		long endBound = getControl().getLatestSequenceNumber();
 
 		// If the requested date is greater than or equal to the latest known
-		// timestamp we should return our latest sequence number.
+		// timestamp we should return our latest sequence number plus one so
+		// that the client will start receiving all new records as they arrive
+		// with possibly some duplicated change records.
 		if (lastDate.compareTo(getReplicationState(endBound).getTimestamp()) >= 0) {
-			return endBound;
+			return endBound + 1;
 		}
 
 		// Continue splitting our range in half until either we find the
@@ -138,7 +143,7 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 			int comparison = lastDate.compareTo(getReplicationState(midPoint).getTimestamp());
 			if (comparison == 0) {
 				// We have an exact match so stop processing now.
-				return midPoint;
+				return midPoint + 1;
 			} else if (comparison < 0) {
 				// We will now search in the lower half of the search range.
 				// Even though we know the midpoint is not the right value, we
@@ -159,8 +164,11 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 		// equal to that requested.
 		if (getStateFile(startBound).exists()
 				&& lastDate.compareTo(getReplicationState(startBound).getTimestamp()) >= 0) {
-			return startBound;
+			return startBound + 1;
 		} else {
+			// We cannot find any replication records with an early enough date.
+			// This typically means that replication records for that time
+			// period either no longer exist or never existed.
 			throw new ResourceGoneException();
 		}
 	}
@@ -304,24 +312,22 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 		 * The request is one of "current" or N where is the last sequence
 		 * number received by the client.
 		 */
-		long lastSequenceNumber;
+		long nextSequenceNumber;
 		if (uriElements.isEmpty()) {
 			throw new ResourceNotFoundException();
 		}
 		String sequenceStartString = uriElements.remove();
 		if ("current".equals(sequenceStartString)) {
-			// If we want the current number, we tell the controller to start
-			// from after the previous number.
-			lastSequenceNumber = getControl().getLatestSequenceNumber() - 1;
+			nextSequenceNumber = getControl().getLatestSequenceNumber();
 		} else {
 			// Try to parse the sequence start string as a number. If that fails
 			// try to parse as a date.
 			try {
-				lastSequenceNumber = Long.parseLong(sequenceStartString);
+				nextSequenceNumber = Long.parseLong(sequenceStartString);
 			} catch (NumberFormatException e) {
 				try {
 					Date lastDate = getRequestDateParser().parse(sequenceStartString);
-					lastSequenceNumber = getSequenceNumberByDate(lastDate);
+					nextSequenceNumber = getNextSequenceNumberByDate(lastDate);
 
 				} catch (ParseException e1) {
 					throw new BadRequestException("Requested sequence number of " + sequenceStartString
@@ -352,7 +358,7 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 		}
 
 		// Begin sending replication sequence information to the client.
-		initiateSequenceWriting(ctx, future, contentType, lastSequenceNumber, follow);
+		initiateSequenceWriting(ctx, future, contentType, nextSequenceNumber, follow);
 	}
 
 

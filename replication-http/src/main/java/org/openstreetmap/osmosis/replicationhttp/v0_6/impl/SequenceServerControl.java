@@ -28,13 +28,13 @@ public interface SequenceServerControl {
 	 * 
 	 * @param channel
 	 *            The client channel.
-	 * @param lastSequenceNumber
-	 *            The last sequence number received by the channel.
+	 * @param nextSequenceNumber
+	 *            The sequence number that the client needs to be sent next.
 	 * @param follow
 	 *            If true, the channel will be held open and updated sequences
 	 *            sent as they arrive.
 	 */
-	void determineNextChannelAction(Channel channel, long lastSequenceNumber, boolean follow);
+	void determineNextChannelAction(Channel channel, long nextSequenceNumber, boolean follow);
 
 
 	/**
