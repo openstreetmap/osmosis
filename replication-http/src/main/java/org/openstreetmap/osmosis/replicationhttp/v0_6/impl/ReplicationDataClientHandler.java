@@ -18,9 +18,9 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.util.CharsetUtil;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableChangeSource;
-import org.openstreetmap.osmosis.core.util.PropertiesPersister;
 import org.openstreetmap.osmosis.replication.common.ReplicationState;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlChangeReader;
@@ -36,7 +36,7 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 	private static final Logger LOG = Logger.getLogger(ReplicationDataClientHandler.class.getName());
 
 	private ChangeSink changeSink;
-	private PropertiesPersister statePersistor;
+	private NoLifecycleChangeSinkWrapper noLifecycleChangeSink;
 	private boolean sinkInitInvoked;
 	private boolean replicationStateReceived;
 	private ReplicationState replicationState;
@@ -57,6 +57,8 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 		super(control);
 
 		this.changeSink = changeSink;
+
+		noLifecycleChangeSink = new NoLifecycleChangeSinkWrapper(changeSink);
 
 		sinkInitInvoked = false;
 		replicationStateReceived = false;
@@ -88,7 +90,6 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 
 
 	private void createReplicationDataChannel() {
-
 		try {
 			tmpDataFile = File.createTempFile("change", ".tmp");
 		} catch (IOException e) {
@@ -127,23 +128,33 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 	private void sendReplicationData() {
 		// Release all class level resources and prepare for passing the
 		// replication data downstream.
-		File replicationFile = prepareReplicationDataFile();
 		ReplicationState readyState = replicationState;
 		replicationState = null;
+		File replicationFile;
+		if (readyState.getSequenceNumber() > 0) {
+			replicationFile = prepareReplicationDataFile();
+		} else {
+			replicationFile = null;
+		}
+		replicationStateReceived = false;
+		sinkInitInvoked = false;
+		chunksRemaining = -1;
 
-		// Send the replication data downstream.
-		RunnableChangeSource changeReader = new XmlChangeReader(replicationFile, true, CompressionMethod.GZip);
-		changeReader.setChangeSink(changeSink);
-		changeReader.run();
-
-		// Persist the state.
-		statePersistor.store(readyState.store());
-
-		// The replication data file is no longer required.
-		replicationFile.delete();
+		// Send the replication data downstream but don't call any lifecycle
+		// methods on the change sink because we're managing those separately.
+		if (replicationFile != null) {
+			RunnableChangeSource changeReader = new XmlChangeReader(replicationFile, true, CompressionMethod.GZip);
+			changeReader.setChangeSink(noLifecycleChangeSink);
+			changeReader.run();
+			
+			// The replication data file is no longer required.
+			replicationFile.delete();
+		}
+		
+		changeSink.complete();
 	}
-	
-	
+
+
 	private void invokeSinkInit() {
 		replicationState = new ReplicationState();
 		Map<String, Object> metaData = new HashMap<String, Object>(1);
@@ -159,10 +170,10 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 		// a previous run. To do this we need to retrieve the replication state
 		// from our downstream replication task by initializing.
 		invokeSinkInit();
-		
-		// The downstream task returns the currently active sequence number, not the last received one.
-		long requestSequenceNumber = replicationState.getSequenceNumber() - 1;
-		
+
+		// The downstream task returns the next sequence number.
+		long requestSequenceNumber = replicationState.getSequenceNumber();
+
 		return "/replicationData/" + requestSequenceNumber + "/tail";
 	}
 
@@ -176,20 +187,21 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 			if (!sinkInitInvoked) {
 				invokeSinkInit();
 			}
-			
+
 			// The first chunk contains the replication state stored in
 			// properties format.
 			ReplicationState serverReplicationState = loadState(buffer);
-			
+
 			// Validate that the server has sent us the expected state.
 			if (serverReplicationState.getSequenceNumber() != replicationState.getSequenceNumber()) {
 				throw new OsmosisRuntimeException("Received sequence number "
 						+ serverReplicationState.getSequenceNumber() + " from server, expected "
 						+ replicationState.getSequenceNumber());
 			}
-			
+
 			// Update the local state with server values.
 			replicationState.setTimestamp(serverReplicationState.getTimestamp());
+			replicationStateReceived = true;
 
 		} else if (chunksRemaining < 0) {
 			// The next chunk contains the number of chunks that the replication
@@ -214,7 +226,7 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 
 		// If no more chunks are remaining we need to send the replication data
 		// downstream.
-		if (chunksRemaining <= 0) {
+		if (chunksRemaining == 0 || replicationState.getSequenceNumber() == 0) {
 			sendReplicationData();
 		}
 	}
@@ -231,5 +243,50 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 		}
 
 		super.channelClosed(ctx, e);
+	}
+
+	/**
+	 * This acts as a proxy between the xml change reader and the real change
+	 * sink. The primary purpose is to only propagate calls to process because
+	 * the lifecycle methods initialize, complete and release are managed
+	 * separately.
+	 */
+	private static class NoLifecycleChangeSinkWrapper implements ChangeSink {
+		private ChangeSink changeSink;
+
+
+		/**
+		 * Creates a new instance.
+		 * 
+		 * @param changeSink
+		 *            The wrapped change sink.
+		 */
+		public NoLifecycleChangeSinkWrapper(ChangeSink changeSink) {
+			this.changeSink = changeSink;
+		}
+
+
+		@Override
+		public void initialize(Map<String, Object> metaData) {
+			// Do nothing.
+		}
+
+
+		@Override
+		public void process(ChangeContainer change) {
+			changeSink.process(change);
+		}
+
+
+		@Override
+		public void complete() {
+			// Do nothing.
+		}
+
+
+		@Override
+		public void release() {
+			// Do nothing.
+		}
 	}
 }
