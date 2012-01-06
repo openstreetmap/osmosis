@@ -11,7 +11,6 @@ import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.util.FileBasedLock;
 import org.openstreetmap.osmosis.core.util.PropertiesPersister;
-import org.openstreetmap.osmosis.replication.common.ReplicationFileSequenceFormatter;
 import org.openstreetmap.osmosis.replication.common.ReplicationState;
 
 
@@ -33,7 +32,6 @@ public class ReplicationStateWriter implements ChangeSink {
 
 	private FileBasedLock fileLock;
 	private boolean lockObtained;
-	private ReplicationFileSequenceFormatter sequenceFormatter;
 	private PropertiesPersister statePersistor;
 	private ReplicationState state;
 
@@ -102,10 +100,6 @@ public class ReplicationStateWriter implements ChangeSink {
 		if (!lockObtained) {
 			throw new OsmosisRuntimeException("initialize has not been called");
 		}
-
-		// Write the sequenced state file.
-		File stateFile = sequenceFormatter.getFormattedName(state.getSequenceNumber(), ".state.txt");
-		new PropertiesPersister(stateFile).store(state.store());
 
 		// Write the global state file.
 		statePersistor.store(state.store());
