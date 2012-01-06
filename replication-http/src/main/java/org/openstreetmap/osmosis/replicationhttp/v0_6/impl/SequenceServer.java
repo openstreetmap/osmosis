@@ -241,6 +241,7 @@ public class SequenceServer implements SequenceServerControl {
 			// hasn't requested a sequence number more than one past current.
 			if (!sequenceAvailable) {
 				if ((nextSequenceNumber - currentSequenceNumber) > 1) {
+					channel.close();
 					throw new OsmosisRuntimeException("Requested sequence number " + nextSequenceNumber
 							+ " is more than 1 past current number " + currentSequenceNumber);
 				}

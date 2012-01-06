@@ -54,6 +54,7 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 	private FileChannel chunkedFileChannel;
 	private boolean chunkedFileCountSent;
 	private boolean includeData;
+	private ChannelFuture sequenceFuture;
 
 
 	/**
@@ -303,9 +304,6 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 		} else {
 			throw new ResourceNotFoundException();
 		}
-		if (uriElements.isEmpty() || !replicationDataUri.equals(uriElements.remove())) {
-			throw new ResourceNotFoundException();
-		}
 
 		/*
 		 * The next element determines which replication number to start from.
@@ -373,6 +371,9 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 
 		// The message event is a Long containing the sequence number.
 		long sequenceNumber = (Long) e.getMessage();
+		
+		// We must save the future to attach to the final write.
+		sequenceFuture = e.getFuture();
 
 		// Get the name of the replication data file.
 		File stateFile = getStateFile(sequenceNumber);
@@ -381,20 +382,28 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 		// Load the contents of the state file.
 		ChannelBuffer stateFileBuffer = loadFile(stateFile, ctx, e.getFuture());
 
-		// Only include replication data if initially requested by the client.
-		if (includeData) {
+		// Only include replication data if initially requested by the client
+		// and if this is not sequence 0.
+		if (includeData && sequenceNumber > 0) {
 			// Open the data file read for sending.
 			chunkedFileChannel = openFileChannel(dataFile);
 			chunkedFileCountSent = false;
 		}
 
 		/*
-		 * Send the state file to the client. We will continue when we receive
-		 * completion information via the writeComplete method. We must create a
-		 * new future because we don't want the future of the current event to
+		 * Send the state file to the client. If replication data is to be sent
+		 * we will continue when we receive completion information via the
+		 * writeComplete method. We must create a new future now if we have more
+		 * data coming because we don't want the future of the current event to
 		 * fire until we're completely finished processing.
 		 */
-		Channels.write(ctx, Channels.future(ctx.getChannel()), new DefaultHttpChunk(stateFileBuffer));
+		ChannelFuture writeFuture;
+		if (chunkedFileChannel != null) {
+			writeFuture = Channels.future(ctx.getChannel());
+		} else {
+			writeFuture = sequenceFuture;
+		}
+		Channels.write(ctx, writeFuture, new DefaultHttpChunk(stateFileBuffer));
 	}
 
 
@@ -403,6 +412,8 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 		if (chunkedFileChannel != null) {
 			// We have an open file channel so we are still sending replication
 			// data.
+			ChannelBuffer buffer;
+			ChannelFuture future;
 			if (!chunkedFileCountSent) {
 				// Calculate the number of chunks to be sent and send to the
 				// client.
@@ -416,12 +427,22 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 				ChannelBuffer numChunksBuffer = ChannelBuffers
 						.copiedBuffer(Long.toString(numChunks), CharsetUtil.UTF_8);
 				chunkedFileCountSent = true;
-				Channels.write(ctx, Channels.future(ctx.getChannel()), new DefaultHttpChunk(numChunksBuffer));
+				future = Channels.future(ctx.getChannel());
+				buffer = numChunksBuffer;
 
 			} else {
 				// Send the next chunk to the client.
-				Channels.write(ctx, Channels.future(ctx.getChannel()), new DefaultHttpChunk(getFileChunk()));
+				buffer = getFileChunk();
+				if (chunkedFileChannel != null) {
+					future = Channels.future(ctx.getChannel());
+				} else {
+					// This is the last write for this sequence so attach the original future.
+					future = sequenceFuture;
+				}
 			}
+			
+			// Write the data to the channel.
+			Channels.write(ctx, future, new DefaultHttpChunk(buffer));
 		}
 	}
 
