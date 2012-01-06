@@ -147,6 +147,7 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 	private void invokeSinkInit() {
 		replicationState = new ReplicationState();
 		Map<String, Object> metaData = new HashMap<String, Object>(1);
+		metaData.put(ReplicationState.META_DATA_KEY, replicationState);
 		changeSink.initialize(metaData);
 		sinkInitInvoked = true;
 	}
