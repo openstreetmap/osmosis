@@ -87,7 +87,7 @@ public class ReplicationTest extends AbstractDataTest {
 
 		// Create the sequence server for notifying when new sequence numbers
 		// are available and connect it to the primary source.
-		ReplicationSequenceServer sequenceServer = new ReplicationSequenceServer(8081);
+		ReplicationSequenceServer sequenceServer = new ReplicationSequenceServer(0);
 		source.setChangeSink(sequenceServer);
 
 		// Create a replication data writer and receive data from the primary
@@ -95,28 +95,36 @@ public class ReplicationTest extends AbstractDataTest {
 		File workingDir1 = dataUtils.newFolder();
 		sequenceServer.setChangeSink(new ReplicationWriter(workingDir1));
 
+		// Send sequence through the primary pipeline to ensure the
+		// sequence server is running.
+		source.sendSequence();
+		
+		// Give it a short time for the port to be allocated.
+		Thread.sleep(1000);
+
 		// Create a HTTP replication data server using the data from the
 		// replication writer, and receive sequence number updates from the
 		// sequence server.
-		ReplicationDataServer dataServer = new ReplicationDataServer(8081, workingDir1, 8080);
+		ReplicationDataServer dataServer = new ReplicationDataServer(sequenceServer.getPort(), workingDir1, 0);
+
+		// Start the HTTP data server.
+		TaskRunner serverRunner = new TaskRunner(dataServer, "data-server");
+		serverRunner.start();
+		
+		// Give it a short time for the port to be allocated.
+		Thread.sleep(1000);
 
 		// Create a HTTP replication data client receiving data from the data
 		// server.
-		ReplicationDataClient dataClient = new ReplicationDataClient(new InetSocketAddress(8080));
+		ReplicationDataClient dataClient = new ReplicationDataClient(new InetSocketAddress(dataServer.getPort()));
 
 		// Create a replication data writer to receiving data from the HTTP data
 		// source.
 		File workingDir2 = dataUtils.newFolder();
 		dataClient.setChangeSink(new ReplicationWriter(workingDir2));
 
-		// Send sequence through the primary pipeline to ensure the
-		// sequence server is running.
-		source.sendSequence();
-
 		// Start the HTTP data server and HTTP data client.
-		TaskRunner serverRunner = new TaskRunner(dataServer, "data-server");
 		TaskRunner clientRunner = new TaskRunner(dataClient, "data-client");
-		serverRunner.start();
 		clientRunner.start();
 
 		// Send the test replication intervals.

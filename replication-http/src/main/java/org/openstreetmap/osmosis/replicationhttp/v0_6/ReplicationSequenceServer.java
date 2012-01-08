@@ -51,6 +51,16 @@ public class ReplicationSequenceServer implements ChangeSinkChangeSource {
 	}
 
 
+	/**
+	 * Returns the port that is being used to listen for new connections.
+	 * 
+	 * @return The port number.
+	 */
+	public int getPort() {
+		return server.getPort();
+	}
+
+
 	@Override
 	public void initialize(Map<String, Object> metaData) {
 		// Get the replication state from the upstream task.

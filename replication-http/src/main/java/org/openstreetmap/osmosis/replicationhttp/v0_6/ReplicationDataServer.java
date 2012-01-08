@@ -47,6 +47,16 @@ public class ReplicationDataServer implements RunnableTask {
 	}
 
 
+	/**
+	 * Returns the port that is being used to listen for new connections.
+	 * 
+	 * @return The port number.
+	 */
+	public int getPort() {
+		return port;
+	}
+
+
 	private long getCurrentSequenceNumber() {
 		try {
 			return new ServerStateReader().getServerState(dataDirectory.toURI().toURL()).getSequenceNumber();
@@ -84,6 +94,10 @@ public class ReplicationDataServer implements RunnableTask {
 		try {
 			// Start the server with the current replication number.
 			server.start(getCurrentSequenceNumber());
+
+			// Update the port. It may have been allocated dynamically if the
+			// port was specified as 0.
+			port = server.getPort();
 
 			// Run the client and perform restarts if it fails. This call will
 			// block.

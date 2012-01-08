@@ -76,6 +76,16 @@ public class SequenceServer implements SequenceServerControl {
 
 
 	/**
+	 * Returns the port that the server is listening on.
+	 * 
+	 * @return The listening port.
+	 */
+	public int getPort() {
+		return port;
+	}
+
+
+	/**
 	 * Starts the server.
 	 * 
 	 * @param initialSequenceNumber
@@ -104,7 +114,13 @@ public class SequenceServer implements SequenceServerControl {
 			bootstrap.setPipelineFactory(channelPipelineFactory);
 			bootstrap.setOption("child.tcpNoDelay", true);
 			bootstrap.setOption("child.keepAlive", true);
-			allChannels.add(bootstrap.bind(new InetSocketAddress(port)));
+			Channel serverChannel = bootstrap.bind(new InetSocketAddress(port));
+			allChannels.add(serverChannel);
+
+			// Get the port that the server is listening on. This may be
+			// dynamically allocated if 0 was originally specified.
+			InetSocketAddress address = (InetSocketAddress) serverChannel.getLocalAddress();
+			port = address.getPort();
 
 			/*
 			 * Create our own background sending thread. Initiating the send of
