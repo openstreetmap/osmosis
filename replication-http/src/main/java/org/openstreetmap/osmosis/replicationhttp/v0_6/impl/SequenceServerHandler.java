@@ -1,6 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.replicationhttp.v0_6.impl;
 
+import java.net.InetSocketAddress;
 import java.nio.channels.ClosedChannelException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -226,6 +227,12 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
 		// We have received a message from the client which is a HTTP request.
 		HttpRequest request = (HttpRequest) e.getMessage();
+		
+		InetSocketAddress remoteAddress = (InetSocketAddress) ctx.getChannel().getRemoteAddress();
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Received new request from " + remoteAddress.getAddress().getHostAddress() + ":"
+					+ remoteAddress.getPort());
+		}
 
 		// Invoke the implementation specific handler for request parsing.
 		try {

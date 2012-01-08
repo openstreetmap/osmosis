@@ -356,8 +356,8 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 
 		// Begin sending replication sequence information to the client.
 		if (LOG.isLoggable(Level.FINER)) {
-			LOG.finer("New request, includeData=" + includeData + ", sequenceNumber=" + nextSequenceNumber + ", tail="
-					+ follow);
+			LOG.finer("New request details, includeData=" + includeData + ", sequenceNumber=" + nextSequenceNumber
+					+ ", tail=" + follow);
 		}
 		initiateSequenceWriting(ctx, contentType, nextSequenceNumber, follow);
 	}

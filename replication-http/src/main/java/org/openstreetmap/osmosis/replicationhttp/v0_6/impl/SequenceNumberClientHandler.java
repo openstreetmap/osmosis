@@ -1,6 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.replicationhttp.v0_6.impl;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -47,7 +48,9 @@ public class SequenceNumberClientHandler extends SequenceClientHandler {
 		// The readable data is the sequence number in string form.
 		String sequenceNumberString = buffer.toString(CharsetUtil.UTF_8);
 		long sequenceNumber = Long.parseLong(sequenceNumberString);
-		LOG.finest("Received sequence number " + sequenceNumber);
+		if (LOG.isLoggable(Level.FINEST)) {
+			LOG.finest("Received sequence number " + sequenceNumber);
+		}
 
 		// Send the new sequence number notification.
 		sequenceNumberListener.notifySequenceNumber(sequenceNumber);

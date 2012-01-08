@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jboss.netty.bootstrap.ServerBootstrap;
@@ -121,6 +122,9 @@ public class SequenceServer implements SequenceServerControl {
 			// dynamically allocated if 0 was originally specified.
 			InetSocketAddress address = (InetSocketAddress) serverChannel.getLocalAddress();
 			port = address.getPort();
+			if (LOG.isLoggable(Level.INFO)) {
+				LOG.info("Server listening on port " + port);
+			}
 
 			/*
 			 * Create our own background sending thread. Initiating the send of
@@ -154,7 +158,9 @@ public class SequenceServer implements SequenceServerControl {
 				throw new OsmosisRuntimeException("The server has not been started");
 			}
 
-			LOG.finer("Updating with new sequence " + newSequenceNumber);
+			if (LOG.isLoggable(Level.FINER)) {
+				LOG.finer("Updating with new sequence " + newSequenceNumber);
+			}
 
 			// Verify that the new sequence number is not less than the existing
 			// sequence number.
@@ -183,7 +189,9 @@ public class SequenceServer implements SequenceServerControl {
 				List<Channel> existingWaitingChannels = waitingChannels;
 				waitingChannels = new ArrayList<Channel>();
 				for (Channel channel : existingWaitingChannels) {
-					LOG.finest("Waking up channel " + channel + " with sequence " + sequenceNumber);
+					if (LOG.isLoggable(Level.FINEST)) {
+						LOG.finest("Waking up channel " + channel + " with sequence " + sequenceNumber);
+					}
 					sendSequence(channel, nextSequenceNumber, true);
 				}
 			}
@@ -288,8 +296,10 @@ public class SequenceServer implements SequenceServerControl {
 			// If the sequence isn't available we add the channel to the list
 			// waiting for a new sequence notification.
 			if (!sequenceAvailable) {
-				LOG.finest("Next sequence " + nextSequenceNumber + " is not available yet so adding channel " + channel
-						+ " to waiting list.");
+				if (LOG.isLoggable(Level.FINEST)) {
+					LOG.finest("Next sequence " + nextSequenceNumber + " is not available yet so adding channel "
+							+ channel + " to waiting list.");
+				}
 				waitingChannels.add(channel);
 			}
 		} finally {
@@ -298,7 +308,9 @@ public class SequenceServer implements SequenceServerControl {
 
 		// Send the sequence if it is available.
 		if (sequenceAvailable) {
-			LOG.finest("Next sequence " + nextSequenceNumber + " is available.");
+			if (LOG.isLoggable(Level.FINEST)) {
+				LOG.finest("Next sequence " + nextSequenceNumber + " is available.");
+			}
 			sendSequence(channel, nextSequenceNumber, follow);
 		}
 	}
