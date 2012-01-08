@@ -4,6 +4,7 @@ package org.openstreetmap.osmosis.replicationhttp.v0_6.impl;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -46,6 +47,7 @@ public class SequenceServer implements SequenceServerControl {
 	private ChannelFactory factory;
 	private ChannelGroup allChannels;
 	private List<Channel> waitingChannels;
+	private ExecutorService sendService;
 
 
 	/**
@@ -104,6 +106,16 @@ public class SequenceServer implements SequenceServerControl {
 			bootstrap.setOption("child.keepAlive", true);
 			allChannels.add(bootstrap.bind(new InetSocketAddress(port)));
 
+			/*
+			 * Create our own background sending thread. Initiating the send of
+			 * a sequence should be relatively light on CPU so one thread should
+			 * keep up with a large number of clients. However we may trigger a
+			 * large number of messages at once which might cause a
+			 * multi-threaded pool to spawn a large number of threads for very
+			 * short lived processing.
+			 */
+			sendService = Executors.newSingleThreadExecutor();
+
 			// Server startup has succeeded.
 			serverStarted = true;
 
@@ -127,7 +139,7 @@ public class SequenceServer implements SequenceServerControl {
 			}
 
 			LOG.finer("Updating with new sequence " + newSequenceNumber);
-			
+
 			// Verify that the new sequence number is not less than the existing
 			// sequence number.
 			if (newSequenceNumber < sequenceNumber) {
@@ -174,6 +186,10 @@ public class SequenceServer implements SequenceServerControl {
 
 		try {
 			if (serverStarted) {
+				// Shutdown our background worker thread.
+				sendService.shutdownNow();
+
+				// Shutdown the Netty framework.
 				allChannels.close().awaitUninterruptibly();
 				factory.releaseExternalResources();
 
@@ -230,25 +246,12 @@ public class SequenceServer implements SequenceServerControl {
 	}
 
 
-	/**
-	 * Allows a Netty handler to notify the controller that the channel is ready
-	 * for more data. If the controller has new sequence information available
-	 * it will send it, otherwise it will add the channel to the waiting list.
-	 * 
-	 * @param channel
-	 *            The client channel.
-	 * @param nextSequenceNumber
-	 *            The sequence number that the client needs to be sent next.
-	 * @param follow
-	 *            If true, the channel will be held open and updated sequences
-	 *            sent as they arrive.
-	 */
-	public void determineNextChannelAction(Channel channel, long nextSequenceNumber, boolean follow) {
+	private void determineNextChannelActionImpl(Channel channel, long nextSequenceNumber, boolean follow) {
 		long currentSequenceNumber;
 		boolean sequenceAvailable;
 
 		// We can only access the master sequence number and waiting channels
-		// while we have the lock
+		// while we have the lock.
 		sharedLock.lock();
 		try {
 			currentSequenceNumber = sequenceNumber;
@@ -282,6 +285,40 @@ public class SequenceServer implements SequenceServerControl {
 			LOG.finest("Next sequence " + nextSequenceNumber + " is available.");
 			sendSequence(channel, nextSequenceNumber, follow);
 		}
+	}
+
+
+	/**
+	 * Allows a Netty handler to notify the controller that the channel is ready
+	 * for more data. If the controller has new sequence information available
+	 * it will send it, otherwise it will add the channel to the waiting list.
+	 * This method will perform execution in a background worker thread and will
+	 * return immediately.
+	 * 
+	 * @param channel
+	 *            The client channel.
+	 * @param nextSequenceNumber
+	 *            The sequence number that the client needs to be sent next.
+	 * @param follow
+	 *            If true, the channel will be held open and updated sequences
+	 *            sent as they arrive.
+	 */
+	public void determineNextChannelAction(final Channel channel, final long nextSequenceNumber, final boolean follow) {
+		/*
+		 * We submit new requests from our own worker thread instead of using
+		 * the Netty IO thread. This is not to free up IO threads because
+		 * initiating the send of a sequence is a relatively lightweight
+		 * operation. It is to avoid the situation where a Netty IO thread
+		 * encounters a stack overflow when it completes writing a sequence,
+		 * then finds another available and sends it, then finds another
+		 * available and so on in a recursive fashion.
+		 */
+		sendService.submit(new Runnable() {
+			@Override
+			public void run() {
+				determineNextChannelActionImpl(channel, nextSequenceNumber, follow);
+			}
+		});
 	}
 
 
