@@ -174,7 +174,7 @@ public class SequenceServer implements SequenceServerControl {
 			// If the new sequence number is greater than our existing number
 			// then we can send updates to our clients.
 			if (oldSequenceNumber < sequenceNumber) {
-				long nextSequenceNumber = oldSequenceNumber + 1;
+				final long nextSequenceNumber = oldSequenceNumber + 1;
 				/*
 				 * Create a new waiting channels list and process from the
 				 * original. This is necessary because some channels may get
@@ -188,11 +188,17 @@ public class SequenceServer implements SequenceServerControl {
 				 */
 				List<Channel> existingWaitingChannels = waitingChannels;
 				waitingChannels = new ArrayList<Channel>();
-				for (Channel channel : existingWaitingChannels) {
+				for (final Channel channel : existingWaitingChannels) {
 					if (LOG.isLoggable(Level.FINEST)) {
 						LOG.finest("Waking up channel " + channel + " with sequence " + sequenceNumber);
 					}
-					sendSequence(channel, nextSequenceNumber, true);
+					// Submit the request via the worker thread.
+					sendService.submit(new Runnable() {
+						@Override
+						public void run() {
+							sendSequence(channel, nextSequenceNumber, true);
+						}
+					});
 				}
 			}
 
