@@ -272,7 +272,7 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 
 
 	@Override
-	protected void handleRequest(ChannelHandlerContext ctx, ChannelFuture future, HttpRequest request) {
+	protected void handleRequest(ChannelHandlerContext ctx, HttpRequest request) {
 		final String replicationStateUri = "replicationState";
 		final String replicationDataUri = "replicationData";
 		final String textContentType = "text/plain";
@@ -359,7 +359,7 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 			LOG.finer("New request, includeData=" + includeData + ", sequenceNumber=" + nextSequenceNumber + ", tail="
 					+ follow);
 		}
-		initiateSequenceWriting(ctx, future, contentType, nextSequenceNumber, follow);
+		initiateSequenceWriting(ctx, contentType, nextSequenceNumber, follow);
 	}
 
 

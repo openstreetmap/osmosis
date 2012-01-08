@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
@@ -28,6 +29,8 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class SequenceServer implements SequenceServerControl {
+
+	private static final Logger LOG = Logger.getLogger(SequenceServer.class.getName());
 
 	private int port;
 	private SequenceServerChannelPipelineFactory channelPipelineFactory;
@@ -123,22 +126,38 @@ public class SequenceServer implements SequenceServerControl {
 				throw new OsmosisRuntimeException("The server has not been started");
 			}
 
-			this.sequenceNumber = newSequenceNumber;
+			LOG.finer("Updating with new sequence " + newSequenceNumber);
+			
+			// Verify that the new sequence number is not less than the existing
+			// sequence number.
+			if (newSequenceNumber < sequenceNumber) {
+				throw new OsmosisRuntimeException("Received sequence number " + newSequenceNumber
+						+ " from server, expected " + sequenceNumber + " or greater");
+			}
+			long oldSequenceNumber = sequenceNumber;
+			sequenceNumber = newSequenceNumber;
 
-			/*
-			 * Create a new waiting channels list and process from the original.
-			 * This is necessary because some channels may get added back in
-			 * during processing causing a concurrent modification exception.
-			 * Due to the Netty implementation, if a write operation completes
-			 * before we get a chance to register the completion listener, the
-			 * listener will run within this thread and that will mean the
-			 * channel will need to be added to the waiting list before we
-			 * complete sending messages to all the other channels.
-			 */
-			List<Channel> existingWaitingChannels = waitingChannels;
-			waitingChannels = new ArrayList<Channel>();
-			for (Channel channel : existingWaitingChannels) {
-				sendSequence(channel, sequenceNumber, true);
+			// If the new sequence number is greater than our existing number
+			// then we can send updates to our clients.
+			if (oldSequenceNumber < sequenceNumber) {
+				long nextSequenceNumber = oldSequenceNumber + 1;
+				/*
+				 * Create a new waiting channels list and process from the
+				 * original. This is necessary because some channels may get
+				 * added back in during processing causing a concurrent
+				 * modification exception. Due to the Netty implementation, if a
+				 * write operation completes before we get a chance to register
+				 * the completion listener, the listener will run within this
+				 * thread and that will mean the channel will need to be added
+				 * to the waiting list before we complete sending messages to
+				 * all the other channels.
+				 */
+				List<Channel> existingWaitingChannels = waitingChannels;
+				waitingChannels = new ArrayList<Channel>();
+				for (Channel channel : existingWaitingChannels) {
+					LOG.finest("Waking up channel " + channel + " with sequence " + sequenceNumber);
+					sendSequence(channel, nextSequenceNumber, true);
+				}
 			}
 
 		} finally {
@@ -236,7 +255,7 @@ public class SequenceServer implements SequenceServerControl {
 
 			// Check if the next sequence number is available yet.
 			sequenceAvailable = nextSequenceNumber <= currentSequenceNumber;
-			
+
 			// If the sequence is not available, make sure that the client
 			// hasn't requested a sequence number more than one past current.
 			if (!sequenceAvailable) {
@@ -246,9 +265,12 @@ public class SequenceServer implements SequenceServerControl {
 							+ " is more than 1 past current number " + currentSequenceNumber);
 				}
 			}
-			
-			// If the sequence isn't available we add the channel to the list waiting for a new sequence notification.
+
+			// If the sequence isn't available we add the channel to the list
+			// waiting for a new sequence notification.
 			if (!sequenceAvailable) {
+				LOG.finest("Next sequence " + nextSequenceNumber + " is not available yet so adding channel " + channel
+						+ " to waiting list.");
 				waitingChannels.add(channel);
 			}
 		} finally {
@@ -257,6 +279,7 @@ public class SequenceServer implements SequenceServerControl {
 
 		// Send the sequence if it is available.
 		if (sequenceAvailable) {
+			LOG.finest("Next sequence " + nextSequenceNumber + " is available.");
 			sendSequence(channel, nextSequenceNumber, follow);
 		}
 	}

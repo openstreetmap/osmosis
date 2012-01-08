@@ -33,6 +33,7 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 	private static final Logger LOG = Logger.getLogger(SequenceServerHandler.class.getName());
 
 	private SequenceServerControl control;
+	private long currentSequenceNumber;
 
 
 	/**
@@ -67,12 +68,10 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 	 * 
 	 * @param ctx
 	 *            The Netty context.
-	 * @param future
-	 *            The future for current processing.
 	 * @param requestedUri
 	 *            The URI requested by the client.
 	 */
-	private void writeResourceNotFound(final ChannelHandlerContext ctx, ChannelFuture future, String requestedUri) {
+	private void writeResourceNotFound(final ChannelHandlerContext ctx, String requestedUri) {
 		// Write the HTTP header to the client.
 		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.NOT_FOUND);
 		response.addHeader("Content-Type", "text/plain");
@@ -81,10 +80,14 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 		ChannelBuffer buffer = ChannelBuffers.copiedBuffer("The requested resource does not exist: " + requestedUri,
 				CharsetUtil.UTF_8);
 		response.setContent(buffer);
-		Channels.write(ctx, future, response);
+
+		// Write the header. Use a new future because the future we've been
+		// passed is for upstream.
+		ChannelFuture headerFuture = Channels.future(ctx.getChannel());
+		Channels.write(ctx, headerFuture, response);
 
 		// Wait for the previous operation to finish and then close the channel.
-		future.addListener(new ChannelFutureListener() {
+		headerFuture.addListener(new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture future) {
 				ctx.getChannel().close();
@@ -98,12 +101,10 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 	 * 
 	 * @param ctx
 	 *            The Netty context.
-	 * @param future
-	 *            The future for current processing.
 	 * @param requestedUri
 	 *            The URI requested by the client.
 	 */
-	private void writeResourceGone(final ChannelHandlerContext ctx, ChannelFuture future, String requestedUri) {
+	private void writeResourceGone(final ChannelHandlerContext ctx, String requestedUri) {
 		// Write the HTTP header to the client.
 		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.GONE);
 		response.addHeader("Content-Type", "text/plain");
@@ -112,10 +113,14 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 		ChannelBuffer buffer = ChannelBuffers.copiedBuffer("The requested resource is no longer available: "
 				+ requestedUri, CharsetUtil.UTF_8);
 		response.setContent(buffer);
-		Channels.write(ctx, future, response);
+
+		// Write the header. Use a new future because the future we've been
+		// passed is for upstream.
+		ChannelFuture headerFuture = Channels.future(ctx.getChannel());
+		Channels.write(ctx, headerFuture, response);
 
 		// Wait for the previous operation to finish and then close the channel.
-		future.addListener(new ChannelFutureListener() {
+		headerFuture.addListener(new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture future) {
 				ctx.getChannel().close();
@@ -129,14 +134,12 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 	 * 
 	 * @param ctx
 	 *            The Netty context.
-	 * @param future
-	 *            The future for current processing.
 	 * @param requestedUri
 	 *            The URI requested by the client.
 	 * @param errorMessage
 	 *            Further information about why the request is bad.
 	 */
-	private void writeBadRequest(final ChannelHandlerContext ctx, ChannelFuture future, String requestedUri,
+	private void writeBadRequest(final ChannelHandlerContext ctx, String requestedUri,
 			String errorMessage) {
 		final String newLine = "\r\n";
 
@@ -151,10 +154,14 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 		messageBuilder.append("Requested URI: ").append(requestedUri).append(newLine);
 		ChannelBuffer buffer = ChannelBuffers.copiedBuffer(messageBuilder.toString(), CharsetUtil.UTF_8);
 		response.setContent(buffer);
-		Channels.write(ctx, future, response);
+
+		// Write the header. Use a new future because the future we've been
+		// passed is for upstream.
+		ChannelFuture headerFuture = Channels.future(ctx.getChannel());
+		Channels.write(ctx, headerFuture, response);
 
 		// Wait for the previous operation to finish and then close the channel.
-		future.addListener(new ChannelFutureListener() {
+		headerFuture.addListener(new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture future) {
 				ctx.getChannel().close();
@@ -169,8 +176,6 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 	 * 
 	 * @param ctx
 	 *            The Netty context.
-	 * @param future
-	 *            The future for current processing.
 	 * @param contentType
 	 *            The content type to set on the HTTP response.
 	 * @param requestedSequenceNumber
@@ -179,18 +184,22 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 	 * @param follow
 	 *            If true, continuous updates will be sent to the client.
 	 */
-	protected void initiateSequenceWriting(final ChannelHandlerContext ctx, final ChannelFuture future,
+	protected void initiateSequenceWriting(final ChannelHandlerContext ctx,
 			String contentType, final long requestedSequenceNumber, final boolean follow) {
-		// Write the HTTP header to the client.
+		// Create the HTTP header to send to the client.
 		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
 		response.addHeader("Content-Type", contentType);
 		response.setChunked(true);
 		response.addHeader(HttpHeaders.Names.TRANSFER_ENCODING, HttpHeaders.Values.CHUNKED);
-		Channels.write(ctx, future, response);
+
+		// Write the header. We must use a new future because the future we've
+		// been passed is for upstream.
+		ChannelFuture headerFuture = Channels.future(ctx.getChannel());
+		Channels.write(ctx, headerFuture, response);
 
 		// Wait for the previous operation to finish and then start sending
 		// sequence numbers to this channel.
-		future.addListener(new ChannelFutureListener() {
+		headerFuture.addListener(new ChannelFutureListener() {
 			@Override
 			public void operationComplete(ChannelFuture future) throws Exception {
 				if (future.isSuccess()) {
@@ -207,12 +216,10 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 	 * 
 	 * @param ctx
 	 *            The Netty context.
-	 * @param future
-	 *            The future for current processing.
 	 * @param request
 	 *            The client request.
 	 */
-	protected abstract void handleRequest(ChannelHandlerContext ctx, ChannelFuture future, HttpRequest request);
+	protected abstract void handleRequest(ChannelHandlerContext ctx, HttpRequest request);
 
 
 	@Override
@@ -222,20 +229,40 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 
 		// Invoke the implementation specific handler for request parsing.
 		try {
-			handleRequest(ctx, e.getFuture(), request);
+			handleRequest(ctx, request);
 			
 		} catch (ResourceNotFoundException ex) {
-			writeResourceNotFound(ctx, e.getFuture(), request.getUri());
+			writeResourceNotFound(ctx, request.getUri());
 		} catch (ResourceGoneException ex) {
-			writeResourceGone(ctx, e.getFuture(), request.getUri());
+			writeResourceGone(ctx, request.getUri());
 		} catch (BadRequestException ex) {
-			writeBadRequest(ctx, e.getFuture(), request.getUri(), ex.getMessage());
+			writeBadRequest(ctx, request.getUri(), ex.getMessage());
 		}
 	}
 
 
+	/**
+	 * Convert the sequence number to sequence data and write to the channel.
+	 * 
+	 * @param ctx
+	 *            The channel handler context.
+	 * @param future
+	 *            The future for current processing.
+	 * @param sequenceNumber
+	 *            The sequence number to be written.
+	 */
+	protected abstract void writeSequence(ChannelHandlerContext ctx, ChannelFuture future, long sequenceNumber);
+
+
 	@Override
-	public abstract void writeRequested(ChannelHandlerContext ctx, MessageEvent e) throws Exception;
+	public void writeRequested(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
+		// The message event is a Long containing the sequence number.
+		currentSequenceNumber = (Long) e.getMessage();
+
+		// Call the concrete implementation to convert the sequence to writable
+		// data.
+		writeSequence(ctx, e.getFuture(), currentSequenceNumber);
+	}
 
 
 	@Override
@@ -246,7 +273,7 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 		// A ClosedChannelException occurs if the client disconnects and is not
 		// an error scenario.
 		if (!(t instanceof ClosedChannelException)) {
-			LOG.log(Level.SEVERE, "Error during processing.", t);
+			LOG.log(Level.SEVERE, "Error during processing for channel " + ctx.getChannel() + ".", t);
 		}
 
 		// We must stop sending to this client if any errors occur during

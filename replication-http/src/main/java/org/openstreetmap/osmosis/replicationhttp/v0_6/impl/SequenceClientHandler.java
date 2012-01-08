@@ -107,7 +107,7 @@ public abstract class SequenceClientHandler extends SimpleChannelHandler {
 		// A ClosedChannelException occurs if the client disconnects and is not
 		// an error scenario.
 		if (!(t instanceof ClosedChannelException)) {
-			LOG.log(Level.SEVERE, "Error during processing.", t);
+			LOG.log(Level.SEVERE, "Error during processing for channel " + ctx.getChannel() + ".", t);
 		}
 
 		// We must stop sending to this client if any errors occur during

@@ -8,8 +8,10 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskRunner;
+import org.openstreetmap.osmosis.replication.common.ReplicationSequenceFormatter;
 import org.openstreetmap.osmosis.replication.v0_6.ReplicationWriter;
 import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 
@@ -20,29 +22,28 @@ import org.openstreetmap.osmosis.testutil.AbstractDataTest;
  * @author Brett Henderson
  */
 public class ReplicationTest extends AbstractDataTest {
-	
-	
+
 	/**
 	 * Configures logging to write all output to the console.
 	 */
 	private static void configureLoggingConsole() {
 		Logger rootLogger;
 		Handler consoleHandler;
-		
+
 		rootLogger = Logger.getLogger("");
-		
+
 		// Remove any existing handlers.
 		for (Handler handler : rootLogger.getHandlers()) {
 			rootLogger.removeHandler(handler);
 		}
-		
+
 		// Add a new console handler.
 		consoleHandler = new ConsoleHandler();
 		consoleHandler.setLevel(Level.ALL);
 		rootLogger.addHandler(consoleHandler);
 	}
-	
-	
+
+
 	/**
 	 * Configures the logging level.
 	 * 
@@ -51,15 +52,16 @@ public class ReplicationTest extends AbstractDataTest {
 	 */
 	private static void configureLoggingLevel(Level level) {
 		Logger rootLogger;
-		
+
 		rootLogger = Logger.getLogger("");
-		
+
 		// Set the required logging level.
 		rootLogger.setLevel(level);
-		
+
 		// Set the JPF logger to one level lower.
 		Logger.getLogger("org.java.plugin").setLevel(Level.WARNING);
 	}
+
 
 	/**
 	 * Single end to end test.
@@ -69,10 +71,17 @@ public class ReplicationTest extends AbstractDataTest {
 	 */
 	@Test
 	public void test() throws Exception {
-		configureLoggingConsole();
-		configureLoggingLevel(Level.FINEST);
-		Logger.getLogger("org.openstreetmap.osmosis.replication.v0_6.ReplicationStateWriter").setLevel(Level.INFO);
-		
+		final int sequenceCount = 100;
+
+		// Due to the multi-threaded nature of this test, it may be necessary to
+		// enable logging to diagnose problems.
+		final boolean enableLogging = false;
+		if (enableLogging) {
+			configureLoggingConsole();
+			configureLoggingLevel(Level.FINEST);
+			Logger.getLogger("org.openstreetmap.osmosis.replication.v0_6.ReplicationStateWriter").setLevel(Level.INFO);
+		}
+
 		// Create the primary replication data source.
 		MockReplicationSource source = new MockReplicationSource();
 
@@ -111,16 +120,23 @@ public class ReplicationTest extends AbstractDataTest {
 		clientRunner.start();
 
 		// Send the test replication intervals.
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < sequenceCount; i++) {
 			source.sendSequence();
 		}
 
-		Thread.sleep(60000);
+		Thread.sleep(5000);
+
 		// Shut down the pipelines.
 		clientRunner.interrupt();
 		serverRunner.interrupt();
 		clientRunner.join();
 		serverRunner.join();
 		source.release();
+
+		// Verify that all of the replication sequences made it to the
+		// destination.
+		File finalStateFile = new File(workingDir2, new ReplicationSequenceFormatter(9, 3).getFormattedName(
+				sequenceCount, ".state.txt"));
+		Assert.assertTrue("The state file for sequence " + sequenceCount + " doesn't exist.", finalStateFile.exists());
 	}
 }

@@ -36,7 +36,7 @@ public class SequenceNumberServerHandler extends SequenceServerHandler {
 
 
 	@Override
-	protected void handleRequest(ChannelHandlerContext ctx, ChannelFuture future, HttpRequest request) {
+	protected void handleRequest(ChannelHandlerContext ctx, HttpRequest request) {
 		final String sequenceNumberUri = "sequenceNumber";
 		final String contentType = "text/plain";
 
@@ -95,7 +95,7 @@ public class SequenceNumberServerHandler extends SequenceServerHandler {
 		}
 
 		// Begin sending replication sequence information to the client.
-		initiateSequenceWriting(ctx, future, contentType, nextSequenceNumber, follow);
+		initiateSequenceWriting(ctx, contentType, nextSequenceNumber, follow);
 	}
 
 
