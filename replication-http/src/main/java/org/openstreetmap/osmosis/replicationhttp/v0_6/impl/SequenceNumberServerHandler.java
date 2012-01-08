@@ -10,7 +10,6 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.Channels;
-import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.handler.codec.http.DefaultHttpChunk;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.util.CharsetUtil;
@@ -101,10 +100,7 @@ public class SequenceNumberServerHandler extends SequenceServerHandler {
 
 
 	@Override
-	public void writeRequested(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		// The message event is a Long containing the sequence number.
-		long sequenceNumber = (Long) e.getMessage();
-
+	protected void writeSequence(ChannelHandlerContext ctx, ChannelFuture future, long sequenceNumber) {
 		// Convert the sequence to a string and then a buffer.
 		ChannelBuffer buffer = ChannelBuffers.copiedBuffer(Long.toString(sequenceNumber), CharsetUtil.UTF_8);
 
@@ -112,6 +108,6 @@ public class SequenceNumberServerHandler extends SequenceServerHandler {
 		DefaultHttpChunk chunk = new DefaultHttpChunk(buffer);
 
 		// Pass the chunk downstream.
-		Channels.write(ctx, e.getFuture(), chunk);
+		Channels.write(ctx, future, chunk);
 	}
 }

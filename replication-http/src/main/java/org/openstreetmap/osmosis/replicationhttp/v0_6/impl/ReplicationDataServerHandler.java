@@ -26,7 +26,6 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.Channels;
-import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.WriteCompletionEvent;
 import org.jboss.netty.handler.codec.http.DefaultHttpChunk;
 import org.jboss.netty.handler.codec.http.HttpRequest;
@@ -214,7 +213,7 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 	}
 
 
-	private ChannelBuffer loadFile(File file, ChannelHandlerContext ctx, ChannelFuture future) {
+	private ChannelBuffer loadFile(File file) {
 		FileChannel fileChannel = openFileChannel(file);
 
 		try {
@@ -356,31 +355,37 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 		}
 
 		// Begin sending replication sequence information to the client.
+		if (LOG.isLoggable(Level.FINER)) {
+			LOG.finer("New request, includeData=" + includeData + ", sequenceNumber=" + nextSequenceNumber + ", tail="
+					+ follow);
+		}
 		initiateSequenceWriting(ctx, future, contentType, nextSequenceNumber, follow);
 	}
 
 
 	@Override
-	public void writeRequested(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
+	protected void writeSequence(ChannelHandlerContext ctx, ChannelFuture future, long sequenceNumber) {
 		// We do not support sending new replication data until the previous
 		// send has completed.
 		if (chunkedFileChannel != null) {
 			throw new OsmosisRuntimeException(
 					"We cannot send new replication data until the previous write has completed");
 		}
-
-		// The message event is a Long containing the sequence number.
-		long sequenceNumber = (Long) e.getMessage();
+		
+		if (LOG.isLoggable(Level.FINEST)) {
+			LOG.finest("Sequence being written, includeData=" + includeData + ", sequenceNumber="
+					+ sequenceNumber);
+		}
 		
 		// We must save the future to attach to the final write.
-		sequenceFuture = e.getFuture();
+		sequenceFuture = future;
 
 		// Get the name of the replication data file.
 		File stateFile = getStateFile(sequenceNumber);
 		File dataFile = getDataFile(sequenceNumber);
 
 		// Load the contents of the state file.
-		ChannelBuffer stateFileBuffer = loadFile(stateFile, ctx, e.getFuture());
+		ChannelBuffer stateFileBuffer = loadFile(stateFile);
 
 		// Only include replication data if initially requested by the client
 		// and if this is not sequence 0.
@@ -443,6 +448,8 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 			
 			// Write the data to the channel.
 			Channels.write(ctx, future, new DefaultHttpChunk(buffer));
+		} else {
+			super.writeComplete(ctx, e);
 		}
 	}
 
@@ -458,5 +465,6 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 			}
 			chunkedFileChannel = null;
 		}
+		super.channelClosed(ctx, e);
 	}
 }

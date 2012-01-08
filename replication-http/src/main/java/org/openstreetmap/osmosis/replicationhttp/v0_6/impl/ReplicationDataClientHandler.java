@@ -191,6 +191,7 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 			// The first chunk contains the replication state stored in
 			// properties format.
 			ReplicationState serverReplicationState = loadState(buffer);
+			LOG.finest("Received replication state " + serverReplicationState.getSequenceNumber());
 
 			// Validate that the server has sent us the expected state.
 			if (serverReplicationState.getSequenceNumber() != replicationState.getSequenceNumber()) {
