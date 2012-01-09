@@ -18,7 +18,7 @@ public class ReplicationDataClientFactory extends TaskManagerFactory {
 	private static final String ARG_HOST = "host";
 	private static final String ARG_PORT = "port";
 	private static final String DEFAULT_HOST = "localhost";
-	private static final int DEFAULT_PORT = 8080;
+	private static final int DEFAULT_PORT = 0;
 
 
 	/**
@@ -30,9 +30,8 @@ public class ReplicationDataClientFactory extends TaskManagerFactory {
 		int port;
 
 		// Get the task arguments.
-		host = getStringArgument(taskConfig, ARG_HOST,
-				getDefaultStringArgument(taskConfig, DEFAULT_HOST));
-		port = getIntegerArgument(taskConfig, ARG_PORT, getDefaultIntegerArgument(taskConfig, DEFAULT_PORT));
+		host = getStringArgument(taskConfig, ARG_HOST, DEFAULT_HOST);
+		port = getIntegerArgument(taskConfig, ARG_PORT, DEFAULT_PORT);
 		
 		return new RunnableChangeSourceManager(
 			taskConfig.getId(),

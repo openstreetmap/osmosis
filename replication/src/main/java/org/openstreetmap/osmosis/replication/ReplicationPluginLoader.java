@@ -50,7 +50,7 @@ public class ReplicationPluginLoader implements PluginLoader {
 		factoryMap.put("write-replication", new ReplicationWriterFactory());
 		factoryMap.put("wr", new ReplicationWriterFactory());
 		factoryMap.put("replication-to-change", new ReplicationToChangeWriterFactory());
-		factoryMap.put("rtr", new ReplicationToChangeWriterFactory());
+		factoryMap.put("rtc", new ReplicationToChangeWriterFactory());
 		
 		factoryMap.put("read-change-interval-0.6", new IntervalDownloaderFactory());
 		factoryMap.put("read-change-interval-init-0.6", new IntervalDownloaderInitializerFactory());
