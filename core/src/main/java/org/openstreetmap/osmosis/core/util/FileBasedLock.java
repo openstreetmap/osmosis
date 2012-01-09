@@ -93,6 +93,7 @@ public class FileBasedLock implements Releasable {
 		
 		try {
 			fileLock.release();
+			fileLock = null;
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to release lock on file " + lockFile + ".");
 		}

@@ -2,7 +2,6 @@
 package org.openstreetmap.osmosis.replication.v0_6;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
@@ -10,10 +9,9 @@ import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeForStreamableApplierComparator;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeSorter;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
-import org.openstreetmap.osmosis.replication.common.FileReplicationStatePersistor;
+import org.openstreetmap.osmosis.core.util.PropertiesPersister;
 import org.openstreetmap.osmosis.replication.common.ReplicationFileSequenceFormatter;
 import org.openstreetmap.osmosis.replication.common.ReplicationState;
-import org.openstreetmap.osmosis.replication.common.ReplicationStatePersister;
 import org.openstreetmap.osmosis.replication.v0_6.impl.ReplicationDownloaderConfiguration;
 import org.openstreetmap.osmosis.replication.v0_6.impl.ReplicationFileMergerConfiguration;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
@@ -35,7 +33,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	private boolean sinkActive;
 	private ChangeSink changeSink;
 	private ReplicationState currentDataState;
-	private ReplicationStatePersister dataStatePersister;
+	private PropertiesPersister dataStatePersister;
 	private ReplicationFileSequenceFormatter replicationFileSequenceFormatter;
 	
 	
@@ -52,7 +50,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		
 		dataDirectory = new File(getWorkingDirectory(), DATA_DIRECTORY);
 		
-		dataStatePersister = new FileReplicationStatePersistor(new File(dataDirectory, DATA_STATE_FILE));
+		dataStatePersister = new PropertiesPersister(new File(dataDirectory, DATA_STATE_FILE));
 		
 		replicationFileSequenceFormatter = new ReplicationFileSequenceFormatter(dataDirectory);
 		
@@ -83,7 +81,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		long intervalLength;
 		
 		// Read the current persisted state.
-		currentDataState = dataStatePersister.loadState();
+		currentDataState = new ReplicationState(dataStatePersister.loadMap());
 		
 		// Get the default maximum timestamp according to base calculations.
 		maximumTimestamp = super.calculateMaximumTimestamp(configuration, serverTimestamp, localTimestamp);
@@ -127,15 +125,15 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	
 	
 	private void persistSequencedCurrentState() {
-		FileReplicationStatePersistor statePersistor;
+		PropertiesPersister statePersistor;
 		File stateFile;
 		
 		stateFile = replicationFileSequenceFormatter.getFormattedName(currentDataState.getSequenceNumber(),
 				".state.txt");
 		
-		statePersistor = new FileReplicationStatePersistor(stateFile);
+		statePersistor = new PropertiesPersister(stateFile);
 		
-		statePersistor.saveState(currentDataState);
+		statePersistor.store(currentDataState.store());
 	}
 	
 	
@@ -206,13 +204,13 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		}
 		
 		// Create an initial replication state object.
-		currentDataState = new ReplicationState(0, 0, new ArrayList<Long>(), new ArrayList<Long>(), alignedDate, 0);
+		currentDataState = new ReplicationState(alignedDate, 0);
 		
 		// Write out the initial "0" state file.
 		persistSequencedCurrentState();
 		
 		// Save the main state file.
-		dataStatePersister.saveState(currentDataState);
+		dataStatePersister.store(currentDataState.store());
 	}
 	
 	
@@ -259,7 +257,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 				changeSink.release();
 				
 				persistSequencedCurrentState();
-				dataStatePersister.saveState(currentDataState);
+				dataStatePersister.store(currentDataState.store());
 				
 				// Update the state to match the next interval.
 				currentDataState.setSequenceNumber(currentDataState.getSequenceNumber() + 1);
@@ -292,7 +290,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		if (sinkActive) {
 			changeSink.complete();
 			persistSequencedCurrentState();
-			dataStatePersister.saveState(currentDataState);
+			dataStatePersister.store(currentDataState.store());
 			
 			changeSink.release();
 			changeSink = null;

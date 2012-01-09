@@ -2,61 +2,49 @@
 package org.openstreetmap.osmosis.replication.common;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.openstreetmap.osmosis.core.store.StoreClassRegister;
-import org.openstreetmap.osmosis.core.store.StoreReader;
-import org.openstreetmap.osmosis.core.store.StoreWriter;
-import org.openstreetmap.osmosis.core.store.Storeable;
 import org.openstreetmap.osmosis.core.time.DateFormatter;
 import org.openstreetmap.osmosis.core.time.DateParser;
 
 
 /**
- * Contains the state to be remembered between replication invocations. This state ensures that no
- * data is missed during replication, and none is repeated.
+ * Contains the state to be remembered between replication invocations. This
+ * state ensures that no data is missed during replication, and ensures that
+ * none is repeated except after certain failure situations.
  */
-public class ReplicationState implements Storeable {
+public class ReplicationState {
+	/**
+	 * The key used when passing an instance through the pipeline as metadata.
+	 */
+	public static final String META_DATA_KEY = "replication.state";
+	
+	
 	private Date timestamp;
 	private long sequenceNumber;
 
 
 	/**
+	 * Creates a new instance with all values set to defaults.
+	 */
+	public ReplicationState() {
+		this.timestamp = new Date(0);
+		this.sequenceNumber = 0;
+	}
+
+
+	/**
 	 * Creates a new instance.
 	 * 
-	 * @param txnMax
-	 *            The maximum transaction id in the database.
-	 * @param txnMaxQueried
-	 *            The maximum transaction id currently replicated from the database.
-	 * @param txnActive
-	 *            The currently active transaction ids.
-	 * @param txnReady
-	 *            The previously active transaction ids that can now be queried.
 	 * @param timestamp
 	 *            The maximum timestamp of data currently read from the database.
 	 * @param sequenceNumber
 	 *            The replication sequence number.
 	 */
-	public ReplicationState(long txnMax, long txnMaxQueried, List<Long> txnActive, List<Long> txnReady,
-			Date timestamp, long sequenceNumber) {
+	public ReplicationState(Date timestamp, long sequenceNumber) {
 		this.timestamp = timestamp;
 		this.sequenceNumber = sequenceNumber;
-	}
-	
-	
-	/**
-	 * Creates a new instance.
-	 * 
-	 * @param reader
-	 *            The store to read state from.
-	 * @param scr
-	 *            Maintains the mapping between classes and their identifiers
-	 *            within the store.
-	 */
-	public ReplicationState(StoreReader reader, StoreClassRegister scr) {
-		timestamp = new Date(reader.readLong());
-		sequenceNumber = reader.readLong();
 	}
 	
 	
@@ -66,19 +54,20 @@ public class ReplicationState implements Storeable {
 	 * @param properties
 	 *            The properties to load state from.
 	 */
-	public ReplicationState(Properties properties) {
-		timestamp = new DateParser().parse(properties.getProperty("timestamp"));
-		sequenceNumber = Long.parseLong(properties.getProperty("sequenceNumber"));
+	public ReplicationState(Map<String, String> properties) {
+		load(properties);
 	}
-
-
+	
+	
 	/**
-	 * {@inheritDoc}
+	 * Loads all state from the provided properties object.
+	 * 
+	 * @param properties
+	 *            The properties to be read.
 	 */
-	@Override
-	public void store(StoreWriter writer, StoreClassRegister storeClassRegister) {
-		writer.writeLong(timestamp.getTime());
-		writer.writeLong(sequenceNumber);
+	public void load(Map<String, String> properties) {
+		timestamp = new DateParser().parse(properties.get("timestamp"));
+		sequenceNumber = Long.parseLong(properties.get("sequenceNumber"));
 	}
 
 
@@ -88,9 +77,21 @@ public class ReplicationState implements Storeable {
 	 * @param properties
 	 *            The properties to be updated.
 	 */
-	public void store(Properties properties) {
-		properties.setProperty("timestamp", new DateFormatter().format(timestamp));
-		properties.setProperty("sequenceNumber", Long.toString(sequenceNumber));
+	public void store(Map<String, String> properties) {
+		properties.put("timestamp", new DateFormatter().format(timestamp));
+		properties.put("sequenceNumber", Long.toString(sequenceNumber));
+	}
+
+
+	/**
+	 * Writes all state into a new properties object.
+	 * 
+	 * @return The properties.
+	 */
+	public Map<String, String> store() {
+		Map<String, String> properties = new HashMap<String, String>();
+		store(properties);
+		return properties;
 	}
 
 

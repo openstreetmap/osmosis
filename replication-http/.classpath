@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Replication"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Xml"/>
+	<classpathentry kind="lib" path="lib/test/antlr-2.7.7.jar"/>
+	<classpathentry kind="lib" path="lib/test/checkstyle-5.4.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-beanutils-core-1.8.3.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-codec-1.5.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-compress-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/test/google-collections-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/hamcrest-core-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/test/jpf-1.5.jar"/>
+	<classpathentry kind="lib" path="lib/test/junit-4.10.jar"/>
+	<classpathentry kind="lib" path="lib/test/netty-3.2.7.Final.jar"/>
+	<classpathentry kind="lib" path="lib/test/stax2-api-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/test/woodstox-core-lgpl-4.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/xercesImpl-2.9.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-TestUtil"/>
+	<classpathentry kind="output" path="eclipse"/>
+</classpath>

@@ -33,6 +33,7 @@
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-pgsimple" rev="${project.version}" conf="runtime->default" changing="true"/>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-pgsnapshot" rev="${project.version}" conf="runtime->default" changing="true"/>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-replication" rev="${project.version}" conf="runtime->default" changing="true"/>
+    	<dependency org="org.openstreetmap.osmosis" name="osmosis-replication-http" rev="${project.version}" conf="runtime->default" changing="true"/>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-set" rev="${project.version}" conf="runtime->default" changing="true"/>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-tagfilter" rev="${project.version}" conf="runtime->default" changing="true"/>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-xml" rev="${project.version}" conf="runtime->default" changing="true"/>

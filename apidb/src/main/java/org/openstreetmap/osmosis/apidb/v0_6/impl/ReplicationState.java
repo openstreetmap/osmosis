@@ -3,29 +3,33 @@ package org.openstreetmap.osmosis.apidb.v0_6.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 import java.util.StringTokenizer;
-
-import org.openstreetmap.osmosis.core.store.StoreClassRegister;
-import org.openstreetmap.osmosis.core.store.StoreReader;
-import org.openstreetmap.osmosis.core.store.StoreWriter;
-import org.openstreetmap.osmosis.core.store.Storeable;
-import org.openstreetmap.osmosis.core.time.DateFormatter;
-import org.openstreetmap.osmosis.core.time.DateParser;
 
 
 /**
  * Contains the state to be remembered between replication invocations. This state ensures that no
  * data is missed during replication, and none is repeated.
  */
-public class ReplicationState implements Storeable {
+public class ReplicationState extends org.openstreetmap.osmosis.replication.common.ReplicationState {
 	private long txnMax;
 	private long txnMaxQueried;
 	private List<Long> txnActive;
 	private List<Long> txnReady;
-	private Date timestamp;
-	private long sequenceNumber;
+
+
+	/**
+	 * Creates a new instance with all values set to defaults.
+	 */
+	public ReplicationState() {
+		super();
+		this.txnMax = 0;
+		this.txnMaxQueried = 0;
+		this.txnActive = new ArrayList<Long>();
+		this.txnReady = new ArrayList<Long>();
+	}
 
 
 	/**
@@ -46,45 +50,11 @@ public class ReplicationState implements Storeable {
 	 */
 	public ReplicationState(long txnMax, long txnMaxQueried, List<Long> txnActive, List<Long> txnReady,
 			Date timestamp, long sequenceNumber) {
+		super(timestamp, sequenceNumber);
 		this.txnMax = txnMax;
 		this.txnMaxQueried = txnMaxQueried;
 		this.txnActive = new ArrayList<Long>(txnActive);
 		this.txnReady = new ArrayList<Long>(txnReady);
-		this.timestamp = timestamp;
-		this.sequenceNumber = sequenceNumber;
-	}
-	
-	
-	/**
-	 * Creates a new instance.
-	 * 
-	 * @param reader
-	 *            The store to read state from.
-	 * @param scr
-	 *            Maintains the mapping between classes and their identifiers
-	 *            within the store.
-	 */
-	public ReplicationState(StoreReader reader, StoreClassRegister scr) {
-		int txnActiveCount;
-		int txnReadyCount;
-		
-		txnMax = reader.readLong();
-		txnMaxQueried = reader.readLong();
-		
-		txnActiveCount = reader.readInteger();
-		txnActive = new ArrayList<Long>();
-		for (int i = 0; i < txnActiveCount; i++) {
-			txnActive.add(reader.readLong());
-		}
-		
-		txnReadyCount = reader.readInteger();
-		txnReady = new ArrayList<Long>();
-		for (int i = 0; i < txnReadyCount; i++) {
-			txnReady.add(reader.readLong());
-		}
-		
-		timestamp = new Date(reader.readLong());
-		sequenceNumber = reader.readLong();
 	}
 	
 	
@@ -94,55 +64,44 @@ public class ReplicationState implements Storeable {
 	 * @param properties
 	 *            The properties to load state from.
 	 */
-	public ReplicationState(Properties properties) {
-		txnMax = Long.parseLong(properties.getProperty("txnMax"));
-		txnMaxQueried = Long.parseLong(properties.getProperty("txnMaxQueried"));
-		txnActive = fromString(properties.getProperty("txnActiveList"));
-		txnReady = fromString(properties.getProperty("txnReadyList"));
-		timestamp = new DateParser().parse(properties.getProperty("timestamp"));
-		sequenceNumber = Long.parseLong(properties.getProperty("sequenceNumber"));
+	public ReplicationState(Map<String, String> properties) {
+		load(properties);
 	}
-
-
+	
+	
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void store(StoreWriter writer, StoreClassRegister storeClassRegister) {
-		writer.writeLong(txnMax);
-		writer.writeLong(txnMaxQueried);
-		
-		writer.writeInteger(txnActive.size());
-		for (Long value : txnActive) {
-			writer.writeLong(value);
-		}
-		
-		writer.writeInteger(txnReady.size());
-		for (Long value : txnReady) {
-			writer.writeLong(value);
-		}
-		
-		writer.writeLong(timestamp.getTime());
-		writer.writeLong(sequenceNumber);
-	}
-
-
-	/**
-	 * Writes all state into the provided properties object.
+	 * Loads all state from the provided properties object.
 	 * 
 	 * @param properties
-	 *            The properties to be updated.
+	 *            The properties to be read.
 	 */
-	public void store(Properties properties) {
-		properties.setProperty("txnMax", Long.toString(txnMax));
-		properties.setProperty("txnMaxQueried", Long.toString(txnMaxQueried));
-		properties.setProperty("txnActiveList", toString(txnActive));
-		properties.setProperty("txnReadyList", toString(txnReady));
-		properties.setProperty("timestamp", new DateFormatter().format(timestamp));
-		properties.setProperty("sequenceNumber", Long.toString(sequenceNumber));
+	public void load(Map<String, String> properties) {
+		super.load(properties);
+		txnMax = Long.parseLong(properties.get("txnMax"));
+		txnMaxQueried = Long.parseLong(properties.get("txnMaxQueried"));
+		txnActive = fromString(properties.get("txnActiveList"));
+		txnReady = fromString(properties.get("txnReadyList"));
+	}
+
+
+	@Override
+	public void store(Map<String, String> properties) {
+		super.store(properties);
+		properties.put("txnMax", Long.toString(txnMax));
+		properties.put("txnMaxQueried", Long.toString(txnMaxQueried));
+		properties.put("txnActiveList", toString(txnActive));
+		properties.put("txnReadyList", toString(txnReady));
 	}
 	
 	
+	@Override
+	public Map<String, String> store() {
+		Map<String, String> properties = new HashMap<String, String>();
+		store(properties);
+		return properties;
+	}
+
+
 	private String toString(List<Long> values) {
 		StringBuilder buffer;
 		
@@ -237,48 +196,6 @@ public class ReplicationState implements Storeable {
 
 
 	/**
-	 * Gets the maximum timestamp of data currently read from the database.
-	 * 
-	 * @return The timestamp.
-	 */
-	public Date getTimestamp() {
-		return timestamp;
-	}
-
-
-	/**
-	 * Sets the maximum timestamp of data currently read from the database.
-	 * 
-	 * @param timestamp
-	 *            The timestamp.
-	 */
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
-	}
-	
-	
-	/**
-	 * Gets the replication sequence number.
-	 * 
-	 * @return The sequence number.
-	 */
-	public long getSequenceNumber() {
-		return sequenceNumber;
-	}
-
-
-	/**
-	 * Sets the replication sequence number.
-	 * 
-	 * @param sequenceNumber
-	 *            The sequence number.
-	 */
-	public void setSequenceNumber(long sequenceNumber) {
-		this.sequenceNumber = sequenceNumber;
-	}
-
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -288,12 +205,11 @@ public class ReplicationState implements Storeable {
 		if (obj instanceof ReplicationState) {
 			ReplicationState compareState = (ReplicationState) obj;
 			
-			if (txnMax == compareState.txnMax
+			if (super.equals(obj)
+					&& txnMax == compareState.txnMax
 					&& txnMaxQueried == compareState.txnMaxQueried
 					&& txnActive.equals(compareState.txnActive)
-					&& txnReady.equals(compareState.txnReady)
-					&& timestamp.equals(compareState.timestamp)
-					&& sequenceNumber == compareState.sequenceNumber) {
+					&& txnReady.equals(compareState.txnReady)) {
 				result = true;
 			} else {
 				result = false;
@@ -306,21 +222,16 @@ public class ReplicationState implements Storeable {
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public int hashCode() {
-		return (int) sequenceNumber + (int) txnMax + (int) txnMaxQueried + (int) timestamp.getTime();
+		return super.hashCode() + (int) txnMax + (int) txnMaxQueried;
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String toString() {
 		return "ReplicationState(txnMax=" + txnMax + ", txnMaxQueried=" + txnMaxQueried + ", txnActive=" + txnActive
-				+ ", txnReady=" + txnReady + ", timestamp=" + timestamp + ", sequenceNumber=" + sequenceNumber + ")";
+				+ ", txnReady=" + txnReady + ", timestamp=" + getTimestamp() + ", sequenceNumber="
+				+ getSequenceNumber() + ")";
 	}
 }
