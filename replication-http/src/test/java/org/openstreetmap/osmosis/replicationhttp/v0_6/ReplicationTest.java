@@ -72,6 +72,7 @@ public class ReplicationTest extends AbstractDataTest {
 	@Test
 	public void test() throws Exception {
 		final int sequenceCount = 100;
+		long timerStart;
 
 		// Due to the multi-threaded nature of this test, it may be necessary to
 		// enable logging to diagnose problems.
@@ -98,9 +99,6 @@ public class ReplicationTest extends AbstractDataTest {
 		// Send sequence through the primary pipeline to ensure the
 		// sequence server is running.
 		source.sendSequence();
-		
-		// Give it a short time for the port to be allocated.
-		Thread.sleep(1000);
 
 		// Create a HTTP replication data server using the data from the
 		// replication writer, and receive sequence number updates from the
@@ -110,9 +108,17 @@ public class ReplicationTest extends AbstractDataTest {
 		// Start the HTTP data server.
 		TaskRunner serverRunner = new TaskRunner(dataServer, "data-server");
 		serverRunner.start();
-		
-		// Give it a short time for the port to be allocated.
-		Thread.sleep(1000);
+
+		/*
+		 * The server starts in another thread so we need to wait until it has
+		 * started. We will wait until the dynamically allocated port is
+		 * exported via the getPort method which occurs after server startup.
+		 */
+		timerStart = System.currentTimeMillis();
+		while (dataServer.getPort() == 0 && (System.currentTimeMillis() - timerStart < 10000)) {
+			Thread.sleep(10);
+		}
+		Assert.assertFalse("Server port was not dynamically allocated.", sequenceServer.getPort() == 0);
 
 		// Create a HTTP replication data client receiving data from the data
 		// server.
@@ -132,7 +138,17 @@ public class ReplicationTest extends AbstractDataTest {
 			source.sendSequence();
 		}
 
-		Thread.sleep(5000);
+		// Wait for all the data to reach the destination.
+		File finalStateFile = new File(workingDir2, new ReplicationSequenceFormatter(9, 3).getFormattedName(
+				sequenceCount, ".state.txt"));
+		timerStart = System.currentTimeMillis();
+		while (!finalStateFile.exists() && (System.currentTimeMillis() - timerStart < 10000)) {
+			Thread.sleep(100);
+		}
+
+		// Verify that all of the replication sequences made it to the
+		// destination.
+		Assert.assertTrue("The state file for sequence " + sequenceCount + " doesn't exist.", finalStateFile.exists());
 
 		// Shut down the pipelines.
 		clientRunner.interrupt();
@@ -140,11 +156,5 @@ public class ReplicationTest extends AbstractDataTest {
 		clientRunner.join();
 		serverRunner.join();
 		source.release();
-
-		// Verify that all of the replication sequences made it to the
-		// destination.
-		File finalStateFile = new File(workingDir2, new ReplicationSequenceFormatter(9, 3).getFormattedName(
-				sequenceCount, ".state.txt"));
-		Assert.assertTrue("The state file for sequence " + sequenceCount + " doesn't exist.", finalStateFile.exists());
 	}
 }
