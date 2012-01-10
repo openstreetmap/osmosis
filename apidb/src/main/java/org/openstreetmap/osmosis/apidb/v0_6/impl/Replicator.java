@@ -254,14 +254,14 @@ public class Replicator {
 		// Perform replication up to the number of iterations, or infinitely if
 		// set to 0.
 		iterationTime = System.currentTimeMillis();
-		for (int iterationCount = 0; true; iterationCount++) {
+		for (int iterationCount = 1; true; iterationCount++) {
 			long requiredIterationTime;
 
 			// Perform the replication interval.
 			replicateImpl();
 			
 			// Stop if we've reached the target number of iterations.
-			if (iterations > 0 || iterationCount >= iterations) {
+			if (iterations > 0 && iterationCount >= iterations) {
 				break;
 			}
 
