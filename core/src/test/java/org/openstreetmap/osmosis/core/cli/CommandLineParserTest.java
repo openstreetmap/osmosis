@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import org.junit.Assert;
 import org.junit.Test;
 
+import org.openstreetmap.osmosis.core.LogLevels;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 
 
@@ -25,19 +26,23 @@ public class CommandLineParserTest {
 		
 		commandLineParser = new CommandLineParser();
 		commandLineParser.parse(new String [] {});
-		Assert.assertEquals("Incorrect default log level.", Level.INFO, commandLineParser.getLogLevel());
+		Assert.assertEquals("Incorrect default log level.", Level.INFO,
+				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
 		commandLineParser.parse(new String [] {"-q"});
-		Assert.assertEquals("Incorrect quiet log level.", Level.WARNING, commandLineParser.getLogLevel());
+		Assert.assertEquals("Incorrect quiet log level.", Level.WARNING,
+				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
 		commandLineParser.parse(new String [] {"-q", "1"});
-		Assert.assertEquals("Incorrect very quiet log level.", Level.SEVERE, commandLineParser.getLogLevel());
+		Assert.assertEquals("Incorrect very quiet log level.", Level.SEVERE,
+				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
 		commandLineParser.parse(new String [] {"-q", "2"});
-		Assert.assertEquals("Incorrect very very quiet log level.", Level.OFF, commandLineParser.getLogLevel());
+		Assert.assertEquals("Incorrect very very quiet log level.", Level.OFF,
+				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 	}
 	
 	
@@ -50,25 +55,30 @@ public class CommandLineParserTest {
 		
 		commandLineParser = new CommandLineParser();
 		commandLineParser.parse(new String [] {});
-		Assert.assertEquals("Incorrect default log level.", Level.INFO, commandLineParser.getLogLevel());
+		Assert.assertEquals("Incorrect default log level.", Level.INFO,
+				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
 		commandLineParser.parse(new String [] {"-v"});
-		Assert.assertEquals("Incorrect verbose log level.", Level.FINE, commandLineParser.getLogLevel());
+		Assert.assertEquals("Incorrect verbose log level.", Level.FINE,
+				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
 		commandLineParser.parse(new String [] {"-v", "1"});
-		Assert.assertEquals("Incorrect very verbose log level.", Level.FINER, commandLineParser.getLogLevel());
+		Assert.assertEquals("Incorrect very verbose log level.", Level.FINER,
+				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
 		commandLineParser.parse(new String [] {"-v", "2"});
-		Assert.assertEquals("Incorrect very very verbose log level.", Level.FINEST, commandLineParser.getLogLevel());
+		Assert.assertEquals("Incorrect very very verbose log level.", Level.FINEST,
+				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
 		commandLineParser.parse(new String [] {"-v", "3"});
 		Assert.assertEquals(
 				"Incorrect very very very verbose log level.",
-				Level.FINEST, commandLineParser.getLogLevel());
+				Level.FINEST,
+				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 	}
 	
 	
@@ -81,19 +91,23 @@ public class CommandLineParserTest {
 		
 		commandLineParser = new CommandLineParser();
 		commandLineParser.parse(new String [] {});
-		Assert.assertEquals("Incorrect default log level.", Level.INFO, commandLineParser.getLogLevel());
+		Assert.assertEquals("Incorrect default log level.", Level.INFO,
+				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
 		commandLineParser.parse(new String [] {"-v", "-q"});
-		Assert.assertEquals("Incorrect default log level.", Level.INFO, commandLineParser.getLogLevel());
+		Assert.assertEquals("Incorrect default log level.", Level.INFO,
+				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
 		commandLineParser.parse(new String [] {"-v", "1", "-q", "1"});
-		Assert.assertEquals("Incorrect default log level.", Level.INFO, commandLineParser.getLogLevel());
+		Assert.assertEquals("Incorrect default log level.", Level.INFO,
+				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
 		commandLineParser.parse(new String [] {"-v", "1", "-q", "2"});
-		Assert.assertEquals("Incorrect quiet log level.", Level.WARNING, commandLineParser.getLogLevel());
+		Assert.assertEquals("Incorrect quiet log level.", Level.WARNING,
+				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 	}
 	
 	

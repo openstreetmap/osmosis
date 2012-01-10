@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.pipeline.common.PipelineConstants;
@@ -28,20 +27,6 @@ public class CommandLineParser {
 	private static final String OPTION_VERBOSE_LONG = "verbose";
 	private static final String OPTION_PLUGIN_SHORT = "p";
 	private static final String OPTION_PLUGIN_LONG = "plugin";
-	
-	
-	/**
-	 * Defines the log levels supported from the command line.
-	 */
-	private static final Level [] LOG_LEVELS = {
-		Level.OFF,
-		Level.SEVERE,
-		Level.WARNING,
-		Level.INFO,
-		Level.FINE,
-		Level.FINER,
-		Level.FINEST
-	};
 	
 	
 	/**
@@ -349,23 +334,13 @@ public class CommandLineParser {
 	
 	
 	/**
-	 * The level of logging required.
+	 * Gets the level of logging required. This is a number that can be used to
+	 * access a log level from the LogLevels class.
 	 * 
-	 * @return The log level to be used.
+	 * @return The index of the log level to be used.
 	 */
-	public Level getLogLevel() {
-		int logLevelIndex;
-		
-		logLevelIndex = DEFAULT_LOG_LEVEL_INDEX + verboseValue - quietValue;
-		
-		if (logLevelIndex < 0) {
-			logLevelIndex = 0;
-		}
-		if (logLevelIndex >= LOG_LEVELS.length) {
-			logLevelIndex = LOG_LEVELS.length - 1;
-		}
-		
-		return LOG_LEVELS[logLevelIndex];
+	public int getLogLevelIndex() {
+		return DEFAULT_LOG_LEVEL_INDEX + verboseValue - quietValue;
 	}
 	
 	

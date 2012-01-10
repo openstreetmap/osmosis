@@ -74,7 +74,7 @@ public final class Osmosis {
 		commandLineParser.parse(args);
 		
 		// Configure the new logging level.
-		configureLoggingLevel(commandLineParser.getLogLevel());
+		configureLoggingLevel(commandLineParser.getLogLevelIndex());
 		
 		LOG.info("Osmosis Version " + OsmosisConstants.VERSION);
 		taskRegistrar = new TaskRegistrar();
@@ -124,17 +124,20 @@ public final class Osmosis {
 	 * Configures the logging level.
 	 * 
 	 * @param level
-	 *            The new logging level to apply.
+	 *            The index of the logging level to apply.
 	 */
-	private static void configureLoggingLevel(Level level) {
+	private static void configureLoggingLevel(int logLevelIndex) {
 		Logger rootLogger;
 		
 		rootLogger = Logger.getLogger("");
 		
 		// Set the required logging level.
-		rootLogger.setLevel(level);
+		rootLogger.setLevel(LogLevels.getLogLevel(logLevelIndex));
 		
-		// Set the JPF logger to one level lower.
+		// Set spring logging to one level lower.
+		Logger.getLogger("org.springframework").setLevel(LogLevels.getLogLevel(logLevelIndex - 1));
+		
+		// Minimise the JPF logging.
 		Logger.getLogger("org.java.plugin").setLevel(Level.WARNING);
 	}
 }
