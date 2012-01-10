@@ -258,10 +258,13 @@ public class Replicator {
 			long requiredIterationTime;
 
 			// Perform the replication interval.
+			LOG.fine("Processing replication sequence.");
 			replicateImpl();
+			LOG.fine("Replication sequence complete.");
 			
 			// Stop if we've reached the target number of iterations.
 			if (iterations > 0 && iterationCount >= iterations) {
+				LOG.fine("Exiting replication loop.");
 				break;
 			}
 
