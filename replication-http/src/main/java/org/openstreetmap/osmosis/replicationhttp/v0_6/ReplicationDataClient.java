@@ -25,6 +25,7 @@ public class ReplicationDataClient implements RunnableChangeSource {
 
 	private NoReleaseChangeSinkWrapper changeSinkWrapper;
 	private InetSocketAddress serverAddress;
+	private String pathPrefix;
 
 
 	/**
@@ -32,9 +33,14 @@ public class ReplicationDataClient implements RunnableChangeSource {
 	 * 
 	 * @param serverAddress
 	 *            The server to connect to.
+	 * @param pathPrefix
+	 *            The base path to add to the URL. This is necessary if a data
+	 *            server is sitting behind a proxy server that adds a prefix to
+	 *            the request path.
 	 */
-	public ReplicationDataClient(InetSocketAddress serverAddress) {
+	public ReplicationDataClient(InetSocketAddress serverAddress, String pathPrefix) {
 		this.serverAddress = serverAddress;
+		this.pathPrefix = pathPrefix;
 
 		changeSinkWrapper = new NoReleaseChangeSinkWrapper();
 	}
@@ -57,7 +63,7 @@ public class ReplicationDataClient implements RunnableChangeSource {
 			// Create the client for receiving replication data.
 			ReplicationDataClientChannelPipelineFactory pipelineFactory =
 					new ReplicationDataClientChannelPipelineFactory(
-							clientRestartManager.getControl(), changeSinkWrapper);
+							clientRestartManager.getControl(), changeSinkWrapper, pathPrefix);
 			SequenceClient client = new SequenceClient(serverAddress, pipelineFactory);
 
 			// Run the client and perform restarts if it fails. This call will

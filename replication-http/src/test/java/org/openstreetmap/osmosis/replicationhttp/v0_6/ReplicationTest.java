@@ -122,7 +122,7 @@ public class ReplicationTest extends AbstractDataTest {
 
 		// Create a HTTP replication data client receiving data from the data
 		// server.
-		ReplicationDataClient dataClient = new ReplicationDataClient(new InetSocketAddress(dataServer.getPort()));
+		ReplicationDataClient dataClient = new ReplicationDataClient(new InetSocketAddress(dataServer.getPort()), "");
 
 		// Create a replication data writer to receiving data from the HTTP data
 		// source.

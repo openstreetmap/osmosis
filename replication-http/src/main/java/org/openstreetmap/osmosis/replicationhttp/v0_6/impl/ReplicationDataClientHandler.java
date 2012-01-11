@@ -36,6 +36,7 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 	private static final Logger LOG = Logger.getLogger(ReplicationDataClientHandler.class.getName());
 
 	private ChangeSink changeSink;
+	private String pathPrefix;
 	private NoLifecycleChangeSinkWrapper noLifecycleChangeSink;
 	private boolean sinkInitInvoked;
 	private boolean replicationStateReceived;
@@ -52,11 +53,16 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 	 *            Provides the Netty handlers with access to the controller.
 	 * @param changeSink
 	 *            The destination for the replication data.
+	 * @param pathPrefix
+	 *            The base path to add to the URL. This is necessary if a data
+	 *            server is sitting behind a proxy server that adds a prefix to
+	 *            the request path.
 	 */
-	public ReplicationDataClientHandler(SequenceClientControl control, ChangeSink changeSink) {
+	public ReplicationDataClientHandler(SequenceClientControl control, ChangeSink changeSink, String pathPrefix) {
 		super(control);
 
 		this.changeSink = changeSink;
+		this.pathPrefix = pathPrefix;
 
 		noLifecycleChangeSink = new NoLifecycleChangeSinkWrapper(changeSink);
 
@@ -174,7 +180,7 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 		// The downstream task returns the next sequence number.
 		long requestSequenceNumber = replicationState.getSequenceNumber();
 
-		return "/replicationData/" + requestSequenceNumber + "/tail";
+		return pathPrefix + "/replicationData/" + requestSequenceNumber + "/tail";
 	}
 
 

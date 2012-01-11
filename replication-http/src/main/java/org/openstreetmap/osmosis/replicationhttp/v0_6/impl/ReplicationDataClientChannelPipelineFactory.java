@@ -12,6 +12,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 public class ReplicationDataClientChannelPipelineFactory extends SequenceClientChannelPipelineFactory {
 
 	private ChangeSink changeSink;
+	private String pathPrefix;
 
 
 	/**
@@ -21,17 +22,22 @@ public class ReplicationDataClientChannelPipelineFactory extends SequenceClientC
 	 *            Provides the Netty handlers with access to the controller.
 	 * @param changeSink
 	 *            The destination for the replication data.
+	 * @param pathPrefix
+	 *            The base path to add to the URL. This is necessary if a data
+	 *            server is sitting behind a proxy server that adds a prefix to
+	 *            the request path.
 	 */
 	public ReplicationDataClientChannelPipelineFactory(SequenceClientControl control,
-			ChangeSink changeSink) {
+			ChangeSink changeSink, String pathPrefix) {
 		super(control);
 
 		this.changeSink = changeSink;
+		this.pathPrefix = pathPrefix;
 	}
 
 
 	@Override
 	protected SequenceClientHandler createHandler(SequenceClientControl control) {
-		return new ReplicationDataClientHandler(control, changeSink);
+		return new ReplicationDataClientHandler(control, changeSink, pathPrefix);
 	}
 }
