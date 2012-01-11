@@ -4,6 +4,7 @@ package org.openstreetmap.osmosis.replicationhttp.v0_6.impl;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 
@@ -15,6 +16,10 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class SequenceClientRestartManager {
+
+	private static final Logger LOG = Logger.getLogger(SequenceClientRestartManager.class.getName());
+	private static final int RESTART_DELAY = 60000;
+
 	private Lock controlLock;
 	private Condition controlCondition;
 	private ClientControl control;
@@ -75,36 +80,49 @@ public class SequenceClientRestartManager {
 	 *            The sequence client to manage.
 	 */
 	public void manageClient(SequenceClient sequenceClient) {
-		controlLock.lock();
-
 		try {
-			
-			try {
-				// Run the client within a loop to allow client restarts if
-				// problems occur.
-				while (true) {
-					clientRunning = true;
+			// Run the client within a loop to allow client restarts if
+			// problems occur.
+			while (true) {
+				// Initialise the running flag. We must do this before we
+				// start the client because the client thread will set it to
+				// false when it finishes which may occur very soon after
+				// starting.
+				clientRunning = true;
+				try {
 					sequenceClient.start();
+				} catch (OsmosisRuntimeException e) {
+					// The client startup failed, so log the exception and try
+					// again in the next loop.
+					LOG.warning("Unable to start the sequence client, will retry in " + RESTART_DELAY
+							+ " milliseconds.");
+				}
 
-					// Wait for the client to stop.
+				// Wait for the client to stop.
+				try {
+					controlLock.lock();
 					while (clientRunning) {
 						waitForUpdate();
 					}
-
-					// Wait for 1 minute between connection failures.
-					try {
-						Thread.sleep(60000);
-					} catch (InterruptedException e) {
-						throw new OsmosisRuntimeException(
-								"Thread sleep failed between sequence number client invocations", e);
-					}
+				} finally {
+					controlLock.unlock();
 				}
 
-			} finally {
+				// Stop the client explicitly which will close any remaining
+				// resources.
 				sequenceClient.stop();
+
+				// Wait for 1 minute between connection failures.
+				try {
+					Thread.sleep(RESTART_DELAY);
+				} catch (InterruptedException e) {
+					throw new OsmosisRuntimeException("Thread sleep failed between sequence number client invocations",
+							e);
+				}
 			}
+
 		} finally {
-			controlLock.unlock();
+			sequenceClient.stop();
 		}
 	}
 
