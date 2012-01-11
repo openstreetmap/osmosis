@@ -49,6 +49,7 @@ public class SequenceServer implements SequenceServerControl {
 	private ChannelGroup allChannels;
 	private List<Channel> waitingChannels;
 	private ExecutorService sendService;
+	private int totalRequests;
 
 
 	/**
@@ -101,6 +102,7 @@ public class SequenceServer implements SequenceServerControl {
 			}
 
 			sequenceNumber = initialSequenceNumber;
+			totalRequests = 0;
 
 			// Create a channel group to hold all channels for use during
 			// shutdown.
@@ -370,6 +372,22 @@ public class SequenceServer implements SequenceServerControl {
 
 	@Override
 	public void registerChannel(Channel channel) {
+		// Update the total requests counter within the lock.
+		sharedLock.lock();
+		try {
+			totalRequests++;
+		} finally {
+			sharedLock.unlock();
+		}
+		
 		allChannels.add(channel);
+	}
+
+
+	@Override
+	public ServerStatistics getStatistics() {
+		// The all channels collection contains the server channel which must be
+		// removed from the count to get the number of client connections.
+		return new ServerStatistics(totalRequests, allChannels.size() - 1);
 	}
 }

@@ -172,6 +172,44 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 
 
 	/**
+	 * Writes server statistics to the client.
+	 * 
+	 * @param ctx
+	 *            The Netty context.
+	 */
+	private void writeStatistics(final ChannelHandlerContext ctx) {
+		final String newLine = "\r\n";
+		
+		ServerStatistics statistics = control.getStatistics();
+
+		// Write the HTTP header to the client.
+		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.OK);
+		response.addHeader("Content-Type", "text/plain");
+
+		// Send the statistics message to the client.
+		StringBuilder messageBuilder = new StringBuilder();
+		messageBuilder.append("Server Statistics").append(newLine);
+		messageBuilder.append("Total Requests: ").append(statistics.getTotalRequests()).append(newLine);
+		messageBuilder.append("Active Connections: ").append(statistics.getActiveConnections()).append(newLine);
+		ChannelBuffer buffer = ChannelBuffers.copiedBuffer(messageBuilder.toString(), CharsetUtil.UTF_8);
+		response.setContent(buffer);
+
+		// Write the header. Use a new future because the future we've been
+		// passed is for upstream.
+		ChannelFuture headerFuture = Channels.future(ctx.getChannel());
+		Channels.write(ctx, headerFuture, response);
+
+		// Wait for the previous operation to finish and then close the channel.
+		headerFuture.addListener(new ChannelFutureListener() {
+			@Override
+			public void operationComplete(ChannelFuture future) {
+				ctx.getChannel().close();
+			}
+		});
+	}
+
+
+	/**
 	 * Writes sequence data to the client. If follow is set, it allows
 	 * continuous updates to be streamed to the client.
 	 * 
@@ -234,9 +272,15 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 					+ remoteAddress.getPort());
 		}
 
-		// Invoke the implementation specific handler for request parsing.
+		// Process the HTTP request.
 		try {
-			handleRequest(ctx, request);
+			// Check if this is a request to a generic URL. If it isn't
+			// something we support then delegate to the specific handler.
+			if (request.getUri().equals("/statistics")) {
+				writeStatistics(ctx);
+			} else {
+				handleRequest(ctx, request);
+			}
 			
 		} catch (ResourceNotFoundException ex) {
 			writeResourceNotFound(ctx, request.getUri());

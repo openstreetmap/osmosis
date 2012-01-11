@@ -46,4 +46,12 @@ public interface SequenceServerControl {
 	 *            The channel to be registered.
 	 */
 	void registerChannel(Channel channel);
+	
+	
+	/**
+	 * Gets the runtime statistics of the server.
+	 * 
+	 * @return The server statistics.
+	 */
+	ServerStatistics getStatistics();
 }
