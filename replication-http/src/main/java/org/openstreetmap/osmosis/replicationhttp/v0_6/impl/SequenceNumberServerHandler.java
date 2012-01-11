@@ -46,7 +46,12 @@ public class SequenceNumberServerHandler extends SequenceServerHandler {
 			throw new OsmosisRuntimeException("Uri doesn't start with a / character: " + uri);
 		}
 		Queue<String> uriElements = new LinkedList<String>(Arrays.asList(uri.split("/")));
-		uriElements.remove(); // First element is empty due to leading '/'.
+		
+		// First element is empty due to leading '/', unless there is only a '/'
+		// in which case there will be no elements.
+		if (uriElements.size() > 0) {
+			uriElements.remove();
+		}
 
 		// First element must be the sequence number base uri.
 		if (uriElements.isEmpty() || !sequenceNumberUri.equals(uriElements.remove())) {
