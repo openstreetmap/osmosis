@@ -26,7 +26,8 @@ public class ApidbFileReplicator implements RunnableChangeSource {
 	private DatabaseLoginCredentials loginCredentials;
 	private DatabasePreferences preferences;
 	private int iterations;
-	private int interval;
+	private int minInterval;
+	private int maxInterval;
 	private ChangeSink changeSink;
 	
 	
@@ -40,15 +41,19 @@ public class ApidbFileReplicator implements RunnableChangeSource {
 	 * @param iterations
 	 *            The number of replication intervals to execute. 0 means
 	 *            infinite.
-	 * @param interval
+	 * @param minInterval
 	 *            The minimum number of milliseconds between intervals.
+	 * @param maxInterval
+	 *            The maximum number of milliseconds between intervals if no new
+	 *            data is available. This isn't a hard limit because proces
 	 */
     public ApidbFileReplicator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
-            int iterations, int interval) {
+            int iterations, int minInterval, int maxInterval) {
     	this.loginCredentials = loginCredentials;
     	this.preferences = preferences;
     	this.iterations = iterations;
-    	this.interval = interval;
+    	this.minInterval = minInterval;
+    	this.maxInterval = maxInterval;
     }
 
 
@@ -80,7 +85,8 @@ public class ApidbFileReplicator implements RunnableChangeSource {
 		txnSnapshotLoader = new TransactionDao(dbCtx.getJdbcTemplate());
 		systemTimeLoader = new TimeDao(dbCtx.getJdbcTemplate());
 		
-		replicator = new Replicator(source, changeSink, txnSnapshotLoader, systemTimeLoader, iterations, interval);
+		replicator = new Replicator(source, changeSink, txnSnapshotLoader, systemTimeLoader, iterations, minInterval,
+				maxInterval);
 		
 		replicator.replicate();
     }

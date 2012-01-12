@@ -46,7 +46,7 @@ public class ReplicatorTest {
 		timeLoader = new MockSystemTimeLoader();
 		
 		// Instantiate the new replicator.
-		replicator = new Replicator(source, destination, snapshotLoader, timeLoader, 1, 0);
+		replicator = new Replicator(source, destination, snapshotLoader, timeLoader, 1, 0, 0);
 		
 		// Provide initialisation data.
 		timeLoader.getTimes().add(buildDate("2009-10-11 12:13:14"));
@@ -98,11 +98,14 @@ public class ReplicatorTest {
 		timeLoader = new MockSystemTimeLoader();
 		
 		// Instantiate the new replicator.
-		replicator = new Replicator(source, destination, snapshotLoader, timeLoader, 1, 0);
+		replicator = new Replicator(source, destination, snapshotLoader, timeLoader, 1, 0, 0);
 		
 		// We want the snapshot loader to return the same snapshot to simulate no database changes.
 		snapshotLoader.getSnapshots().add(new TransactionSnapshot("100:200:110,112"));
-		// But we want the clock time to have progressed.
+		// But we want the clock time to have progressed. We need to supply the
+		// time twice because the replicator will check the time again if no
+		// data is available to compare it against the maximum replication interval.
+		timeLoader.getTimes().add(buildDate("2009-10-11 12:13:15"));
 		timeLoader.getTimes().add(buildDate("2009-10-11 12:13:15"));
 		
 		// Launch the replication process.
@@ -151,7 +154,7 @@ public class ReplicatorTest {
 		timeLoader = new MockSystemTimeLoader();
 		
 		// Instantiate the new replicator.
-		replicator = new Replicator(source, destination, snapshotLoader, timeLoader, 1, 0);
+		replicator = new Replicator(source, destination, snapshotLoader, timeLoader, 1, 0, 0);
 		
 		// Set the snapshot loader to return a snapshot with higher xMax.
 		snapshotLoader.getSnapshots().add(new TransactionSnapshot("100:220"));
@@ -212,7 +215,7 @@ public class ReplicatorTest {
 		timeLoader = new MockSystemTimeLoader();
 		
 		// Instantiate the new replicator.
-		replicator = new Replicator(source, destination, snapshotLoader, timeLoader, 1, 0);
+		replicator = new Replicator(source, destination, snapshotLoader, timeLoader, 1, 0, 0);
 		
 		// Set the snapshot loader to return a snapshot with higher xMax.
 		snapshotLoader.getSnapshots().add(new TransactionSnapshot("100:220:185"));
@@ -273,7 +276,7 @@ public class ReplicatorTest {
 		timeLoader = new MockSystemTimeLoader();
 		
 		// Instantiate the new replicator.
-		replicator = new Replicator(source, destination, snapshotLoader, timeLoader, 1, 0);
+		replicator = new Replicator(source, destination, snapshotLoader, timeLoader, 1, 0, 0);
 		
 		// Set the snapshot loader to return a snapshot with higher xMax.
 		snapshotLoader.getSnapshots().add(new TransactionSnapshot("20000:30000:26000"));

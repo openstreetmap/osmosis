@@ -14,9 +14,11 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.RunnableChangeSourceManager;
  */
 public class ApidbFileReplicatorFactory extends DatabaseTaskManagerFactory {
 	private static final String ARG_ITERATIONS = "iterations";
-	private static final String ARG_INTERVAL = "interval";
+	private static final String ARG_MIN_INTERVAL = "minInterval";
+	private static final String ARG_MAX_INTERVAL = "maxInterval";
 	private static final int DEFAULT_ITERATIONS = 1;
-	private static final int DEFAULT_INTERVAL = 5000;
+	private static final int DEFAULT_MIN_INTERVAL = 0;
+	private static final int DEFAULT_MAX_INTERVAL = 0;
 	
 	
 	/**
@@ -27,17 +29,19 @@ public class ApidbFileReplicatorFactory extends DatabaseTaskManagerFactory {
 		DatabaseLoginCredentials loginCredentials;
 		DatabasePreferences preferences;
 		int iterations;
-		int interval;
+		int minInterval;
+		int maxInterval;
 		
 		// Get the task arguments.
 		loginCredentials = getDatabaseLoginCredentials(taskConfig);
 		preferences = getDatabasePreferences(taskConfig);
 		iterations = getIntegerArgument(taskConfig, ARG_ITERATIONS, DEFAULT_ITERATIONS);
-		interval = getIntegerArgument(taskConfig, ARG_INTERVAL, DEFAULT_INTERVAL);
+		minInterval = getIntegerArgument(taskConfig, ARG_MIN_INTERVAL, DEFAULT_MIN_INTERVAL);
+		maxInterval = getIntegerArgument(taskConfig, ARG_MAX_INTERVAL, DEFAULT_MAX_INTERVAL);
 		
 		return new RunnableChangeSourceManager(
 			taskConfig.getId(),
-			new ApidbFileReplicator(loginCredentials, preferences, iterations, interval),
+			new ApidbFileReplicator(loginCredentials, preferences, iterations, minInterval, maxInterval),
 			taskConfig.getPipeArgs()
 		);
 	}

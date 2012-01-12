@@ -107,7 +107,6 @@ public class ApidbFileReplicatorTest extends AbstractDataTest {
         		"authFile=" + authFile.getPath(),
                 "allowIncorrectSchemaVersion=true",
         		"iterations=2",
-        		"interval=0",
         		"--write-replication",
         		"workingDirectory=" + workingDirectory.getPath()
                 });

@@ -40,7 +40,8 @@ public class Replicator {
 	private TransactionSnapshotLoader snapshotLoader;
 	private SystemTimeLoader systemTimeLoader;
 	private int iterations;
-	private int interval;
+	private int minInterval;
+	private int maxInterval;
 
 
 	/**
@@ -57,18 +58,23 @@ public class Replicator {
 	 * @param iterations
 	 *            The number of replication intervals to execute. 0 means
 	 *            infinite.
-	 * @param interval
+	 * @param minInterval
 	 *            The minimum number of milliseconds between intervals.
+	 * @param maxInterval
+	 *            The maximum number of milliseconds between intervals if no new
+	 *            data is available. This isn't a hard limit because processing
+	 *            latency may increase the duration.
 	 */
 	public Replicator(ReplicationSource source, ChangeSink changeSink,
 			TransactionSnapshotLoader snapshotLoader, SystemTimeLoader systemTimeLoader, int iterations,
-			int interval) {
+			int minInterval, int maxInterval) {
 		this.source = source;
 		this.changeSink = changeSink;
 		this.snapshotLoader = snapshotLoader;
 		this.systemTimeLoader = systemTimeLoader;
 		this.iterations = iterations;
-		this.interval = interval;
+		this.minInterval = minInterval;
+		this.maxInterval = maxInterval;
 	}
 
 
@@ -249,13 +255,9 @@ public class Replicator {
 	 * replication intervals has been reached.
 	 */
 	private void replicateLoop() {
-		long iterationTime;
-
 		// Perform replication up to the number of iterations, or infinitely if
 		// set to 0.
-		iterationTime = System.currentTimeMillis();
 		for (int iterationCount = 1; true; iterationCount++) {
-			long requiredIterationTime;
 
 			// Perform the replication interval.
 			LOG.fine("Processing replication sequence.");
@@ -266,36 +268,6 @@ public class Replicator {
 			if (iterations > 0 && iterationCount >= iterations) {
 				LOG.fine("Exiting replication loop.");
 				break;
-			}
-
-			// Calculate the time at which we're allowed to start our next
-			// iteration.
-			requiredIterationTime = iterationTime + interval;
-			// Wait until we reach our required iteration time.
-			while (true) {
-				long newIterationTime = System.currentTimeMillis();
-				long shortfall;
-
-				// Determine how far we are away from the required time.
-				shortfall = requiredIterationTime - newIterationTime;
-
-				/*
-				 * If we've reached the required time we should process. If the
-				 * current time has not yet reached the iteration time of the
-				 * previous run we have a clock skew situation and should just
-				 * process anyway to reset our current time.
-				 */
-				if (shortfall < 0 || newIterationTime < iterationTime) {
-					iterationTime = newIterationTime;
-					break;
-				}
-				
-				// We haven't reached our required time, so we should sleep and try again.
-				try {
-					Thread.sleep(shortfall);
-				} catch (InterruptedException e) {
-					throw new OsmosisRuntimeException("Unable to sleep until next replication iteration.", e);
-				}
 			}
 		}
 	}
@@ -319,22 +291,68 @@ public class Replicator {
 		metaData = new HashMap<String, Object>(1);
 		metaData.put(ReplicationState.META_DATA_KEY, state);
 		changeSink.initialize(metaData);
+		
+		// Wait until the minimum delay interval has been reached.
+		while (true) {
+			/*
+			 * Determine the time of processing. Note that we must do this after
+			 * obtaining the database transaction snapshot. A key rule in
+			 * replication is that the timestamp we specify in our replication state
+			 * is always equal to or later than all data timestamps. This allows
+			 * consumers to know that when they pick a timestamp to start
+			 * replicating from that *all* data created after that timestamp will be
+			 * included in subsequent replications.
+			 */
+			systemTimestamp = systemTimeLoader.getSystemTime();
+			if (LOG.isLoggable(Level.FINER)) {
+				LOG.finer("Loaded system time " + systemTimestamp + " from the database.");
+			}
+			
+			// Continue onto next step if we've reached the minimum interval or
+			// if our remaining interval exceeds the maximum (clock skew).
+			long remainingInterval = state.getTimestamp().getTime() + minInterval - systemTimestamp.getTime();
+			if (remainingInterval <= 0 || remainingInterval > minInterval) {
+				break;
+			} else {
+				try {
+					Thread.sleep(remainingInterval);
+				} catch (InterruptedException e) {
+					throw new OsmosisRuntimeException("Unable to sleep until next replication iteration.", e);
+				}
+			}
+		}
 
-		// Update our view of the current database transaction state.
-		obtainNewSnapshot(state);
-
-		/*
-		 * Determine the time of processing. Note that we must do this after
-		 * obtaining the database transaction snapshot. A key rule in
-		 * replication is that the timestamp we specify in our replication state
-		 * is always equal to or later than all data timestamps. This allows
-		 * consumers to know that when they pick a timestamp to start
-		 * replicating from that *all* data created after that timestamp will be
-		 * included in subsequent replications.
-		 */
-		systemTimestamp = systemTimeLoader.getSystemTime();
-		if (LOG.isLoggable(Level.FINER)) {
-			LOG.finer("Loaded system time " + systemTimestamp + " from the database.");
+		// Wait until either data becomes available or the maximum interval is reached.
+		while (true) {
+			// Update our view of the current database transaction state.
+			obtainNewSnapshot(state);
+			
+			// Continue onto next step if data is available.
+			if (state.getTxnMaxQueried() != state.getTxnMax()) {
+				break;
+			}
+			
+			systemTimestamp = systemTimeLoader.getSystemTime();
+			if (LOG.isLoggable(Level.FINER)) {
+				LOG.finer("Loaded system time " + systemTimestamp + " from the database.");
+			}
+			
+			// Continue onto next step if we've reached the maximum interval or
+			// if our remaining interval exceeds the maximum (clock skew).
+			long remainingInterval = state.getTimestamp().getTime() + maxInterval - systemTimestamp.getTime();
+			if (remainingInterval <= 0 || remainingInterval > maxInterval) {
+				break;
+			} else {
+				long sleepInterval = remainingInterval;
+				if (sleepInterval > minInterval) {
+					sleepInterval = minInterval;
+				}
+				try {
+					Thread.sleep(sleepInterval);
+				} catch (InterruptedException e) {
+					throw new OsmosisRuntimeException("Unable to sleep until data becomes available.", e);
+				}
+			}
 		}
 		
 		// If this is the first interval we are setting an initial state but not
