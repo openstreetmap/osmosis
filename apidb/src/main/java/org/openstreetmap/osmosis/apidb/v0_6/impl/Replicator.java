@@ -260,9 +260,7 @@ public class Replicator {
 		for (int iterationCount = 1; true; iterationCount++) {
 
 			// Perform the replication interval.
-			LOG.fine("Processing replication sequence.");
 			replicateImpl();
-			LOG.fine("Replication sequence complete.");
 			
 			// Stop if we've reached the target number of iterations.
 			if (iterations > 0 && iterationCount >= iterations) {
@@ -294,6 +292,10 @@ public class Replicator {
 		
 		// Wait until the minimum delay interval has been reached.
 		while (true) {
+			// Make sure we have no existing transaction that may have cached
+			// information such as system timestamp.
+			snapshotLoader.rollbackExistingTransaction();
+			
 			/*
 			 * Determine the time of processing. Note that we must do this after
 			 * obtaining the database transaction snapshot. A key rule in
@@ -324,6 +326,10 @@ public class Replicator {
 
 		// Wait until either data becomes available or the maximum interval is reached.
 		while (true) {
+			// Make sure we have no existing transaction that may have cached
+			// information such as system timestamp.
+			snapshotLoader.rollbackExistingTransaction();
+			
 			// Update our view of the current database transaction state.
 			obtainNewSnapshot(state);
 			
@@ -354,6 +360,8 @@ public class Replicator {
 				}
 			}
 		}
+
+		LOG.fine("Processing replication sequence.");
 		
 		// If this is the first interval we are setting an initial state but not
 		// performing any replication.
@@ -387,5 +395,7 @@ public class Replicator {
 
 		// Commit changes.
 		changeSink.complete();
+		
+		LOG.fine("Replication sequence complete.");
 	}
 }

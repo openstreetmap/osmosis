@@ -30,4 +30,10 @@ public class MockTransactionSnapshotLoader implements TransactionSnapshotLoader 
 	public TransactionSnapshot getTransactionSnapshot() {
 		return snapshots.remove(0);
 	}
+
+
+	@Override
+	public void rollbackExistingTransaction() {
+		// Nothing to do.
+	}
 }

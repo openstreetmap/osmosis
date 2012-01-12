@@ -50,4 +50,12 @@ public class TransactionDao implements TransactionSnapshotLoader {
 		
 		return snapshot;
 	}
+
+
+	@Override
+	public void rollbackExistingTransaction() {
+		// This is a bit of a hack but we have to clear the current transaction
+		// before we can get a current timestamp.
+		jdbcTemplate.update("rollback");
+	}
 }
