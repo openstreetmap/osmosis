@@ -12,12 +12,4 @@ public interface TransactionSnapshotLoader {
 	 * @return The transaction snapshot.
 	 */
 	TransactionSnapshot getTransactionSnapshot();
-	
-	
-	/**
-	 * Clears any existing transaction which is necessary to obtain accurate
-	 * database transaction information, specifically the current system
-	 * timestamp.
-	 */
-	void rollbackExistingTransaction();
 }

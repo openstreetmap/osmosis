@@ -189,9 +189,8 @@ public class Replicator {
 		predicates.getActiveList().addAll(state.getTxnActive());
 
 		// The state object will only contain ready ids for transaction ranges
-		// that have passed
-		// already so we must add all of them to the predicate so they get
-		// included in this query.
+		// that have passed already so we must add all of them to the predicate
+		// so they get included in this query.
 		predicates.getReadyList().addAll(state.getTxnReady());
 
 		// The ready list can be cleared on the state object now.
@@ -292,10 +291,6 @@ public class Replicator {
 		
 		// Wait until the minimum delay interval has been reached.
 		while (true) {
-			// Make sure we have no existing transaction that may have cached
-			// information such as system timestamp.
-			snapshotLoader.rollbackExistingTransaction();
-			
 			/*
 			 * Determine the time of processing. Note that we must do this after
 			 * obtaining the database transaction snapshot. A key rule in
@@ -326,15 +321,11 @@ public class Replicator {
 
 		// Wait until either data becomes available or the maximum interval is reached.
 		while (true) {
-			// Make sure we have no existing transaction that may have cached
-			// information such as system timestamp.
-			snapshotLoader.rollbackExistingTransaction();
-			
 			// Update our view of the current database transaction state.
 			obtainNewSnapshot(state);
 			
 			// Continue onto next step if data is available.
-			if (state.getTxnMaxQueried() != state.getTxnMax()) {
+			if (state.getTxnMaxQueried() != state.getTxnMax() || state.getTxnReady().size() > 0) {
 				break;
 			}
 			
@@ -362,6 +353,17 @@ public class Replicator {
 		}
 
 		LOG.fine("Processing replication sequence.");
+		
+		/*
+		 * We must get the latest timestamp before proceeding. Using an earlier
+		 * timestamp runs the risk of marking a replication sequence with a
+		 * timestamp that is too early which may lead to replication clients
+		 * starting with a later sequence than they should.
+		 */
+		systemTimestamp = systemTimeLoader.getSystemTime();
+		if (LOG.isLoggable(Level.FINER)) {
+			LOG.finer("Loaded system time " + systemTimestamp + " from the database.");
+		}
 		
 		// If this is the first interval we are setting an initial state but not
 		// performing any replication.
