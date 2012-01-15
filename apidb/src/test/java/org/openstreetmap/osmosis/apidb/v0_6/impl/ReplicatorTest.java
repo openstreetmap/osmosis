@@ -50,6 +50,7 @@ public class ReplicatorTest {
 		
 		// Provide initialisation data.
 		timeLoader.getTimes().add(buildDate("2009-10-11 12:13:14"));
+		timeLoader.getTimes().add(buildDate("2009-10-11 12:13:14"));
 		snapshotLoader.getSnapshots().add(new TransactionSnapshot("100:200:110,112"));
 		
 		// Launch the replication process.
@@ -102,9 +103,8 @@ public class ReplicatorTest {
 		
 		// We want the snapshot loader to return the same snapshot to simulate no database changes.
 		snapshotLoader.getSnapshots().add(new TransactionSnapshot("100:200:110,112"));
-		// But we want the clock time to have progressed. We need to supply the
-		// time twice because the replicator will check the time again if no
-		// data is available to compare it against the maximum replication interval.
+		// But we want the clock time to have progressed.
+		timeLoader.getTimes().add(buildDate("2009-10-11 12:13:15"));
 		timeLoader.getTimes().add(buildDate("2009-10-11 12:13:15"));
 		timeLoader.getTimes().add(buildDate("2009-10-11 12:13:15"));
 		
@@ -159,6 +159,7 @@ public class ReplicatorTest {
 		// Set the snapshot loader to return a snapshot with higher xMax.
 		snapshotLoader.getSnapshots().add(new TransactionSnapshot("100:220"));
 		// We also want the clock time to have progressed.
+		timeLoader.getTimes().add(buildDate("2009-10-11 12:13:15"));
 		timeLoader.getTimes().add(buildDate("2009-10-11 12:13:15"));
 		
 		// Launch the replication process.
@@ -221,6 +222,7 @@ public class ReplicatorTest {
 		snapshotLoader.getSnapshots().add(new TransactionSnapshot("100:220:185"));
 		// We also want the clock time to have progressed.
 		timeLoader.getTimes().add(buildDate("2009-10-11 12:13:15"));
+		timeLoader.getTimes().add(buildDate("2009-10-11 12:13:15"));
 		
 		// Launch the replication process.
 		replicator.replicate();
@@ -281,6 +283,7 @@ public class ReplicatorTest {
 		// Set the snapshot loader to return a snapshot with higher xMax.
 		snapshotLoader.getSnapshots().add(new TransactionSnapshot("20000:30000:26000"));
 		// We also want the clock time to have progressed.
+		timeLoader.getTimes().add(buildDate("2009-10-11 12:13:15"));
 		timeLoader.getTimes().add(buildDate("2009-10-11 12:13:15"));
 		
 		// Launch the replication process.
