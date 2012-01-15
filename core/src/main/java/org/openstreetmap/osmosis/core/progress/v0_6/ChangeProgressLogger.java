@@ -51,6 +51,7 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 	 */
 	public void initialize(Map<String, Object> metaData) {
 		progressTracker.initialize();
+		changeSink.initialize(metaData);
 	}
 	
 	
