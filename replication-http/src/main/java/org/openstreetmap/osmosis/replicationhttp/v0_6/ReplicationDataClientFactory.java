@@ -38,10 +38,10 @@ public class ReplicationDataClientFactory extends TaskManagerFactory {
 		basePath = new StringBuilder(getStringArgument(taskConfig, ARG_PATH_PREFIX, DEFAULT_PATH_PREFIX));
 		
 		// Ensure that the base path if it exists has a leading slash but no trailing slash.
-		while (basePath.charAt(0) == '/') {
+		while (basePath.length() > 0 && basePath.charAt(0) == '/') {
 			basePath.delete(0, 1);
 		}
-		while (basePath.charAt(basePath.length() - 1) == '/') {
+		while (basePath.length() > 0 && basePath.charAt(basePath.length() - 1) == '/') {
 			basePath.delete(basePath.length() - 1, basePath.length());
 		}
 		if (basePath.length() > 0) {
