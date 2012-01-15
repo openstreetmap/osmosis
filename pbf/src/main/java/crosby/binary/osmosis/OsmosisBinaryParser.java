@@ -33,7 +33,6 @@ public class OsmosisBinaryParser extends BinaryParser {
     @Override
     public void complete() {
         sink.complete();
-        sink.release();
     }
 
     /** Get the osmosis object representing a the user in a given Info protobuf.
