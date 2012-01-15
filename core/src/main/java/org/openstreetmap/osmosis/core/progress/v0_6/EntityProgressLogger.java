@@ -49,6 +49,7 @@ public class EntityProgressLogger implements SinkSource {
 	 */
 	public void initialize(Map<String, Object> metaData) {
 		progressTracker.initialize();
+		sink.initialize(metaData);
 	}
 	
 	
