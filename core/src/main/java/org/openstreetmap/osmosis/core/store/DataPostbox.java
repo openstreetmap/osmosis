@@ -123,8 +123,8 @@ public class DataPostbox<T> implements Initializable {
 		outputComplete = false;
 		inputReleased = false;
 		outputReleased = false;
-		inputExit = false;
-		outputExit = false;
+		inputExit = true;
+		outputExit = true;
 		inputOkay = true;
 		outputOkay = true;
 
@@ -328,7 +328,11 @@ public class DataPostbox<T> implements Initializable {
 
 
 	/**
-	 * {@inheritDoc}
+	 * This method conforms to the
+	 * {@link org.openstreetmap.osmosis.core.lifecycle.Releasable} contract,
+	 * however there are limitations around calling it multiple times. Each call
+	 * to this method must be matched by a call to the outputRelease method in a
+	 * separate thread or deadlock will occur.
 	 */
 	@Override
 	public void release() {

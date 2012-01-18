@@ -14,10 +14,12 @@ package org.openstreetmap.osmosis.core.lifecycle;
 public interface Releasable {
 	/**
 	 * Performs resource cleanup tasks such as closing files, or database
-	 * connections. This must be called after all processing is complete and may
-	 * be called multiple times. Implementations must call release on any nested
-	 * Releasable objects. It should be called within a finally block to ensure
-	 * it is called in exception scenarios.
+	 * connections. This must be called after all processing is complete.
+	 * Implementations should support calling release multiple times, however
+	 * this is not mandatory and cannot be relied on by clients. Implementations
+	 * must call release on any nested Releasable objects. It does not throw
+	 * exceptions and should be called within a finally block to ensure it is
+	 * called in exception scenarios.
 	 */
 	void release();
 }
