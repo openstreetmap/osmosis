@@ -9,13 +9,11 @@ import org.openstreetmap.osmosis.apidb.v0_6.impl.SchemaVersionValidator;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.SystemTimeLoader;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.TimeDao;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.TransactionDao;
-import org.openstreetmap.osmosis.apidb.v0_6.impl.TransactionSnapshotLoader;
+import org.openstreetmap.osmosis.apidb.v0_6.impl.TransactionManager;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableChangeSource;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
 
 /**
@@ -75,14 +73,14 @@ public class ApidbFileReplicator implements RunnableChangeSource {
     protected void runImpl(DatabaseContext2 dbCtx) {
 		Replicator replicator;
 		ReplicationSource source;
-		TransactionSnapshotLoader txnSnapshotLoader;
+		TransactionManager txnSnapshotLoader;
 		SystemTimeLoader systemTimeLoader;
 		
 		new SchemaVersionValidator(loginCredentials, preferences)
 				.validateVersion(ApidbVersionConstants.SCHEMA_MIGRATIONS);
 		
 		source = new AllEntityDao(dbCtx.getJdbcTemplate());
-		txnSnapshotLoader = new TransactionDao(dbCtx.getJdbcTemplate());
+		txnSnapshotLoader = new TransactionDao(dbCtx);
 		systemTimeLoader = new TimeDao(dbCtx.getJdbcTemplate());
 		
 		replicator = new Replicator(source, changeSink, txnSnapshotLoader, systemTimeLoader, iterations, minInterval,
@@ -100,13 +98,7 @@ public class ApidbFileReplicator implements RunnableChangeSource {
         final DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials);
     	
         try {
-        	dbCtx.executeWithinTransaction(new TransactionCallbackWithoutResult() {
-        		private DatabaseContext2 dbCtxInner = dbCtx;
-
-				@Override
-				protected void doInTransactionWithoutResult(TransactionStatus arg0) {
-					runImpl(dbCtxInner);
-				} });
+        	runImpl(dbCtx);
 
         } finally {
             dbCtx.release();

@@ -37,7 +37,7 @@ public class Replicator {
 
 	private ChangeSink changeSink;
 	private ReplicationSource source;
-	private TransactionSnapshotLoader snapshotLoader;
+	private TransactionManager txnManager;
 	private SystemTimeLoader systemTimeLoader;
 	private int iterations;
 	private int minInterval;
@@ -66,11 +66,11 @@ public class Replicator {
 	 *            latency may increase the duration.
 	 */
 	public Replicator(ReplicationSource source, ChangeSink changeSink,
-			TransactionSnapshotLoader snapshotLoader, SystemTimeLoader systemTimeLoader, int iterations,
+			TransactionManager snapshotLoader, SystemTimeLoader systemTimeLoader, int iterations,
 			int minInterval, int maxInterval) {
 		this.source = source;
 		this.changeSink = changeSink;
-		this.snapshotLoader = snapshotLoader;
+		this.txnManager = snapshotLoader;
 		this.systemTimeLoader = systemTimeLoader;
 		this.iterations = iterations;
 		this.minInterval = minInterval;
@@ -89,7 +89,7 @@ public class Replicator {
 		TransactionSnapshot transactionSnapshot;
 
 		// Obtain the latest transaction snapshot from the database.
-		transactionSnapshot = snapshotLoader.getTransactionSnapshot();
+		transactionSnapshot = txnManager.getTransactionSnapshot();
 
 		// Update the xmax value.
 		state.setTxnMax(transactionSnapshot.getXMax());
@@ -259,7 +259,12 @@ public class Replicator {
 		for (int iterationCount = 1; true; iterationCount++) {
 
 			// Perform the replication interval.
-			replicateImpl();
+			txnManager.executeWithinTransaction(new Runnable() {
+				@Override
+				public void run() {
+					replicateImpl();
+				}
+			});
 			
 			// Stop if we've reached the target number of iterations.
 			if (iterations > 0 && iterationCount >= iterations) {
