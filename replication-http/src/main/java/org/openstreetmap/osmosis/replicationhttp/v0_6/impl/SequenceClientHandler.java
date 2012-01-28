@@ -31,6 +31,7 @@ public abstract class SequenceClientHandler extends SimpleChannelHandler {
 	private static final Logger LOG = Logger.getLogger(SequenceClientHandler.class.getName());
 
 	private SequenceClientControl control;
+	private String serverHost;
 	private boolean midStream;
 
 
@@ -39,9 +40,12 @@ public abstract class SequenceClientHandler extends SimpleChannelHandler {
 	 * 
 	 * @param control
 	 *            Provides the Netty handlers with access to the controller.
+	 * @param serverHost
+	 *            The name of the host system running the sequence server.
 	 */
-	public SequenceClientHandler(SequenceClientControl control) {
+	public SequenceClientHandler(SequenceClientControl control, String serverHost) {
 		this.control = control;
+		this.serverHost = serverHost;
 	}
 
 
@@ -58,6 +62,7 @@ public abstract class SequenceClientHandler extends SimpleChannelHandler {
 		// Send a request to the server asking for sequence number
 		// notifications.
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, getRequestUri());
+		request.addHeader("Host", serverHost);
 		Channels.write(ctx, e.getFuture(), request);
 
 		midStream = false;

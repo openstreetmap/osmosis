@@ -28,10 +28,12 @@ public class SequenceNumberClientHandler extends SequenceClientHandler {
 	 *            Provides the Netty handlers with access to the controller.
 	 * @param sequenceNumberListener
 	 *            This will be notified when new sequence numbers are received.
+	 * @param serverHost
+	 *            The name of the host system running the sequence server.
 	 */
 	public SequenceNumberClientHandler(SequenceClientControl control,
-			SequenceNumberClientListener sequenceNumberListener) {
-		super(control);
+			SequenceNumberClientListener sequenceNumberListener, String serverHost) {
+		super(control, serverHost);
 
 		this.sequenceNumberListener = sequenceNumberListener;
 	}

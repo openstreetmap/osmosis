@@ -63,7 +63,8 @@ public class ReplicationDataClient implements RunnableChangeSource {
 			// Create the client for receiving replication data.
 			ReplicationDataClientChannelPipelineFactory pipelineFactory =
 					new ReplicationDataClientChannelPipelineFactory(
-							clientRestartManager.getControl(), changeSinkWrapper, pathPrefix);
+							clientRestartManager.getControl(), changeSinkWrapper, serverAddress.getHostName(),
+							pathPrefix);
 			SequenceClient client = new SequenceClient(serverAddress, pipelineFactory);
 
 			// Run the client and perform restarts if it fails. This call will

@@ -53,13 +53,16 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 	 *            Provides the Netty handlers with access to the controller.
 	 * @param changeSink
 	 *            The destination for the replication data.
+	 * @param serverHost
+	 *            The name of the host system running the sequence server.
 	 * @param pathPrefix
 	 *            The base path to add to the URL. This is necessary if a data
 	 *            server is sitting behind a proxy server that adds a prefix to
 	 *            the request path.
 	 */
-	public ReplicationDataClientHandler(SequenceClientControl control, ChangeSink changeSink, String pathPrefix) {
-		super(control);
+	public ReplicationDataClientHandler(SequenceClientControl control, ChangeSink changeSink, String serverHost,
+			String pathPrefix) {
+		super(control, serverHost);
 
 		this.changeSink = changeSink;
 		this.pathPrefix = pathPrefix;

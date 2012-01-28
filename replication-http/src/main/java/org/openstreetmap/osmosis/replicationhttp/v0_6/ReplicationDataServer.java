@@ -88,7 +88,8 @@ public class ReplicationDataServer implements RunnableTask {
 
 		// Create the client for receiving updated sequence numbers..
 		SequenceNumberClientChannelPipelineFactory channelPipelineFactory =
-				new SequenceNumberClientChannelPipelineFactory(clientRestartManager.getControl(), numberListener);
+				new SequenceNumberClientChannelPipelineFactory(
+						clientRestartManager.getControl(), numberListener, "localhost");
 		SequenceClient client = new SequenceClient(new InetSocketAddress(notificationPort), channelPipelineFactory);
 
 		try {
