@@ -9,6 +9,7 @@ package org.openstreetmap.osmosis.replicationhttp.v0_6.impl;
 public class SequenceNumberClientChannelPipelineFactory extends SequenceClientChannelPipelineFactory {
 
 	private SequenceNumberClientListener sequenceNumberListener;
+	private String serverHost;
 
 
 	/**
@@ -18,9 +19,11 @@ public class SequenceNumberClientChannelPipelineFactory extends SequenceClientCh
 	 *            Provides the Netty handlers with access to the controller.
 	 * @param sequenceNumberListener
 	 *            This will be notified when new sequence numbers are received.
+	 * @param serverHost
+	 *            The name of the host system running the sequence server.
 	 */
 	public SequenceNumberClientChannelPipelineFactory(SequenceClientControl control,
-			SequenceNumberClientListener sequenceNumberListener) {
+			SequenceNumberClientListener sequenceNumberListener, String serverHost) {
 		super(control);
 
 		this.sequenceNumberListener = sequenceNumberListener;
@@ -29,6 +32,6 @@ public class SequenceNumberClientChannelPipelineFactory extends SequenceClientCh
 
 	@Override
 	protected SequenceClientHandler createHandler(SequenceClientControl control) {
-		return new SequenceNumberClientHandler(control, sequenceNumberListener);
+		return new SequenceNumberClientHandler(control, sequenceNumberListener, serverHost);
 	}
 }

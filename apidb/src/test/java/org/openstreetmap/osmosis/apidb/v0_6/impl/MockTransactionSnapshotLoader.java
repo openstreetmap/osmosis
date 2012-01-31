@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * A mocked transaction snapshot loader allowing canned snapshots to be returned.
  */
-public class MockTransactionSnapshotLoader implements TransactionSnapshotLoader {
+public class MockTransactionSnapshotLoader implements TransactionManager {
 
 	private List<TransactionSnapshot> snapshots = new ArrayList<TransactionSnapshot>();
 
@@ -23,11 +23,14 @@ public class MockTransactionSnapshotLoader implements TransactionSnapshotLoader 
 	}
 
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public TransactionSnapshot getTransactionSnapshot() {
 		return snapshots.remove(0);
+	}
+
+
+	@Override
+	public void executeWithinTransaction(Runnable target) {
+		target.run();
 	}
 }
