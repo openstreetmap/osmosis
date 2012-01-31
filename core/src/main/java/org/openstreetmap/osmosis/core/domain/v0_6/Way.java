@@ -163,7 +163,7 @@ public class Way extends Entity implements Comparable<Way> {
 	private Way(Way originalWay) {
 		super(originalWay);
 		
-		this.wayNodes = new ArrayList<WayNode>(wayNodes);
+		this.wayNodes = new ArrayList<WayNode>(originalWay.wayNodes);
 	}
 	
 	

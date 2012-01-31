@@ -162,7 +162,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	private Relation(Relation originalRelation) {
 		super(originalRelation);
 		
-		this.members = new ArrayList<RelationMember>(members);
+		this.members = new ArrayList<RelationMember>(originalRelation.members);
 	}
 	
 	
