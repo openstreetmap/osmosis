@@ -26,6 +26,7 @@ public class SequenceNumberClientChannelPipelineFactory extends SequenceClientCh
 			SequenceNumberClientListener sequenceNumberListener, String serverHost) {
 		super(control);
 
+		this.serverHost = serverHost;
 		this.sequenceNumberListener = sequenceNumberListener;
 	}
 
