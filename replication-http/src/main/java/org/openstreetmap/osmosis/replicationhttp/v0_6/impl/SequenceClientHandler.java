@@ -17,7 +17,9 @@ import org.jboss.netty.handler.codec.http.HttpChunk;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponse;
+import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 
 
 /**
@@ -84,6 +86,10 @@ public abstract class SequenceClientHandler extends SimpleChannelHandler {
 
 		if (!midStream) {
 			HttpResponse response = (HttpResponse) e.getMessage();
+			HttpResponseStatus status = response.getStatus();
+			if (!HttpResponseStatus.OK.equals(status)) {
+				throw new OsmosisRuntimeException("Received a " + status + " response from the server.");
+			}
 			buffer = response.getContent();
 			midStream = true;
 		} else {
