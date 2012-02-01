@@ -41,7 +41,7 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 	private boolean sinkInitInvoked;
 	private boolean replicationStateReceived;
 	private ReplicationState replicationState;
-	private long chunksRemaining;
+	private long dataRemaining;
 	private File tmpDataFile;
 	private FileChannel tmpDataChannel;
 
@@ -72,7 +72,7 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 		sinkInitInvoked = false;
 		replicationStateReceived = false;
 		replicationState = null;
-		chunksRemaining = -1;
+		dataRemaining = -1;
 	}
 
 
@@ -147,7 +147,7 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 		}
 		replicationStateReceived = false;
 		sinkInitInvoked = false;
-		chunksRemaining = -1;
+		dataRemaining = -1;
 
 		// Send the replication data downstream but don't call any lifecycle
 		// methods on the change sink because we're managing those separately.
@@ -215,15 +215,13 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 			replicationState.setTimestamp(serverReplicationState.getTimestamp());
 			replicationStateReceived = true;
 
-		} else if (chunksRemaining < 0) {
-			// The next chunk contains the number of chunks that the replication
-			// data will be sent in.
+		} else if (dataRemaining < 0) {
+			// The next chunk contains the size of the replication data.
+			String dataRemainingString = buffer.toString(CharsetUtil.UTF_8);
+			dataRemaining = Long.parseLong(dataRemainingString);
 
-			String chunksRemainingString = buffer.toString(CharsetUtil.UTF_8);
-			chunksRemaining = Long.parseLong(chunksRemainingString);
-
-			if (chunksRemaining < 0) {
-				throw new OsmosisRuntimeException("The replication data chunk count is negative: " + chunksRemaining);
+			if (dataRemaining < 0) {
+				throw new OsmosisRuntimeException("The replication data size is negative: " + dataRemaining);
 			}
 
 			// Create a temp file and open an NIO channel on the file.
@@ -232,13 +230,14 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 		} else {
 
 			// Write the buffer to the currently open file channel.
+			int readableBytes = buffer.readableBytes();
 			writeReplicationData(buffer);
-			chunksRemaining--;
+			dataRemaining -= readableBytes;
 		}
 
-		// If no more chunks are remaining we need to send the replication data
+		// If no more data is coming we need to send the replication data
 		// downstream.
-		if (chunksRemaining == 0 || replicationState.getSequenceNumber() == 0) {
+		if (dataRemaining == 0 || replicationState.getSequenceNumber() == 0) {
 			sendReplicationData();
 		}
 	}

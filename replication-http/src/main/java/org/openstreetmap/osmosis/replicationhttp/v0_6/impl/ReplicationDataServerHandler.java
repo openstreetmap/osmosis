@@ -46,12 +46,12 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 
 	private static final Logger LOG = Logger.getLogger(ReplicationDataServerHandler.class.getName());
 	private static final String REQUEST_DATE_FORMAT = "yyyy-MM-dd-HH-mm-ss";
-	private static final int CHUNK_SIZE = 8192;
+	private static final int CHUNK_SIZE = 4096;
 
 	private File dataDirectory;
 	private ReplicationSequenceFormatter sequenceFormatter;
 	private FileChannel chunkedFileChannel;
-	private boolean chunkedFileCountSent;
+	private boolean fileSizeSent;
 	private boolean includeData;
 	private ChannelFuture sequenceFuture;
 
@@ -392,7 +392,7 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 		if (includeData && sequenceNumber > 0) {
 			// Open the data file read for sending.
 			chunkedFileChannel = openFileChannel(dataFile);
-			chunkedFileCountSent = false;
+			fileSizeSent = false;
 		}
 
 		/*
@@ -419,19 +419,11 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 			// data.
 			ChannelBuffer buffer;
 			ChannelFuture future;
-			if (!chunkedFileCountSent) {
-				// Calculate the number of chunks to be sent and send to the
-				// client.
-				long fileSize = chunkedFileChannel.size();
-				long numChunks = fileSize / CHUNK_SIZE;
-				if ((fileSize % CHUNK_SIZE) > 0) {
-					numChunks++;
-				}
-
-				// Send the number of chunks as a string.
+			if (!fileSizeSent) {
+				// Send the size of data as a string to the client.
 				ChannelBuffer numChunksBuffer = ChannelBuffers
-						.copiedBuffer(Long.toString(numChunks), CharsetUtil.UTF_8);
-				chunkedFileCountSent = true;
+						.copiedBuffer(Long.toString(chunkedFileChannel.size()), CharsetUtil.UTF_8);
+				fileSizeSent = true;
 				future = Channels.future(ctx.getChannel());
 				buffer = numChunksBuffer;
 
