@@ -269,6 +269,11 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 			throw new OsmosisRuntimeException("Unable to read from the replication data file", e);
 		}
 	}
+	
+	
+	private ChannelBuffer buildChunkHeader(long chunkSize) {
+		return ChannelBuffers.copiedBuffer(Long.toString(chunkSize) + "\r\n", CharsetUtil.UTF_8);
+	}
 
 
 	@Override
@@ -386,6 +391,10 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 
 		// Load the contents of the state file.
 		ChannelBuffer stateFileBuffer = loadFile(stateFile);
+		
+		// Add a chunk length header.
+		stateFileBuffer = ChannelBuffers.wrappedBuffer(buildChunkHeader(stateFileBuffer.readableBytes()),
+				stateFileBuffer);
 
 		// Only include replication data if initially requested by the client
 		// and if this is not sequence 0.
@@ -420,13 +429,11 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 			ChannelBuffer buffer;
 			ChannelFuture future;
 			if (!fileSizeSent) {
-				// Send the size of data as a string to the client.
-				ChannelBuffer numChunksBuffer = ChannelBuffers
-						.copiedBuffer(Long.toString(chunkedFileChannel.size()), CharsetUtil.UTF_8);
+				// Send a chunk header containing the size of the file.
+				ChannelBuffer fileSizeBuffer = buildChunkHeader(chunkedFileChannel.size());
 				fileSizeSent = true;
 				future = Channels.future(ctx.getChannel());
-				buffer = numChunksBuffer;
-
+				buffer = fileSizeBuffer;
 			} else {
 				// Send the next chunk to the client.
 				buffer = getFileChunk();
