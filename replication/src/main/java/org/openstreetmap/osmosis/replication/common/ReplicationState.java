@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.time.DateFormatter;
 import org.openstreetmap.osmosis.core.time.DateParser;
 
@@ -59,6 +60,14 @@ public class ReplicationState {
 	}
 	
 	
+	private String loadProperty(Map<String, String> properties, String key) {
+		if (!properties.containsKey(key)) {
+			throw new OsmosisRuntimeException("The replication state doesn't contain a " + key + " property.");
+		}
+		return properties.get(key);
+	}
+	
+	
 	/**
 	 * Loads all state from the provided properties object.
 	 * 
@@ -66,8 +75,8 @@ public class ReplicationState {
 	 *            The properties to be read.
 	 */
 	public void load(Map<String, String> properties) {
-		timestamp = new DateParser().parse(properties.get("timestamp"));
-		sequenceNumber = Long.parseLong(properties.get("sequenceNumber"));
+		timestamp = new DateParser().parse(loadProperty(properties, "timestamp"));
+		sequenceNumber = Long.parseLong(loadProperty(properties, "sequenceNumber"));
 	}
 
 
