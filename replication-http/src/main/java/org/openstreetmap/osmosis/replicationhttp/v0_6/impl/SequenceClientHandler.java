@@ -35,6 +35,7 @@ public abstract class SequenceClientHandler extends SimpleChannelHandler {
 	private SequenceClientControl control;
 	private String serverHost;
 	private boolean midStream;
+	private boolean active;
 
 
 	/**
@@ -48,6 +49,8 @@ public abstract class SequenceClientHandler extends SimpleChannelHandler {
 	public SequenceClientHandler(SequenceClientControl control, String serverHost) {
 		this.control = control;
 		this.serverHost = serverHost;
+		
+		active = true;
 	}
 
 
@@ -82,24 +85,26 @@ public abstract class SequenceClientHandler extends SimpleChannelHandler {
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-		ChannelBuffer buffer;
-
-		if (!midStream) {
-			HttpResponse response = (HttpResponse) e.getMessage();
-			HttpResponseStatus status = response.getStatus();
-			if (!HttpResponseStatus.OK.equals(status)) {
-				throw new OsmosisRuntimeException("Received a " + status + " response from the server.");
+		if (active) {
+			ChannelBuffer buffer;
+	
+			if (!midStream) {
+				HttpResponse response = (HttpResponse) e.getMessage();
+				HttpResponseStatus status = response.getStatus();
+				if (!HttpResponseStatus.OK.equals(status)) {
+					throw new OsmosisRuntimeException("Received a " + status + " response from the server.");
+				}
+				buffer = response.getContent();
+				midStream = true;
+			} else {
+				HttpChunk chunk = (HttpChunk) e.getMessage();
+				buffer = chunk.getContent();
 			}
-			buffer = response.getContent();
-			midStream = true;
-		} else {
-			HttpChunk chunk = (HttpChunk) e.getMessage();
-			buffer = chunk.getContent();
-		}
-
-		// Perform implementation specific processing of the buffer contents.
-		if (buffer.readableBytes() > 0) {
-			processMessageData(buffer);
+	
+			// Perform implementation specific processing of the buffer contents.
+			if (buffer.readableBytes() > 0) {
+				processMessageData(buffer);
+			}
 		}
 	}
 
@@ -112,6 +117,10 @@ public abstract class SequenceClientHandler extends SimpleChannelHandler {
 
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
+		// When we close the channel we may still continue to receive some
+		// data. Flag that this should be ignored.
+		active = false;
+		
 		// Get the cause of the exception.
 		Throwable t = e.getCause();
 
