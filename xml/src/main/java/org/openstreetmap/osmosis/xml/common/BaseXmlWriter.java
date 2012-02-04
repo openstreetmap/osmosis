@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -105,6 +106,14 @@ public abstract class BaseXmlWriter {
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to write data.", e);
 		}
+	}
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void initialize(Map<String, Object> metaData) {
+		// Do nothing.
 	}
 	
 	
