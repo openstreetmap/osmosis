@@ -1,6 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.tagfilter.v0_6;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.core.task.v0_6.SinkSource;
+import org.openstreetmap.osmosis.tagfilter.common.KeyValueFileReader;
 
 
 /**
@@ -38,6 +40,24 @@ public class WayKeyValueFilter implements SinkSource, EntityProcessor {
 
 		allowedKeyValues = new HashSet<String>();
 		String[] keyValues = keyValueList.split(",");
+		for (int i = 0; i < keyValues.length; i++) {
+			allowedKeyValues.add(keyValues[i]);
+		}
+
+	}
+
+
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param keyValueListFile
+	 *            File containing one key-value combination per line
+	 */
+	public WayKeyValueFilter(File keyValueListFile) {
+
+		allowedKeyValues = new HashSet<String>();
+		KeyValueFileReader reader = new KeyValueFileReader(keyValueListFile);
+		String[] keyValues = reader.loadKeyValues();
 		for (int i = 0; i < keyValues.length; i++) {
 			allowedKeyValues.add(keyValues[i]);
 		}
