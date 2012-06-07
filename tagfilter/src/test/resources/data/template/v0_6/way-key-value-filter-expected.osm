@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version="0.6" generator="Osmosis %VERSION%">
+  <bounds minlon="-180.00000" minlat="-90.00000" maxlon="180.00000" maxlat="90.00000" origin="Osmosis %VERSION%"/>
+  <node id="13" version="2" timestamp="2011-05-08T22:06:06Z" uid="134914" user="user1" lat="51.3731042" lon="9.5130058"/>
+  <node id="19" version="2" timestamp="2010-07-07T07:51:18Z" uid="10" user="user1" lat="51.9458753" lon="-0.20698"/>
+  <node id="22" version="4" timestamp="2010-07-31T21:53:23Z" uid="20" user="user1" lat="51.938183" lon="-0.268633"/>
+  <node id="33" version="2" timestamp="2010-12-27T18:09:50Z" uid="30" user="user1" lat="52.5336725" lon="0.8310367"/>
+  <way id="2" version="11" timestamp="2008-01-02T03:04:05Z" uid="20" user="user1">
+    <nd ref="19"/>
+    <nd ref="22"/>
+    <nd ref="33"/>
+    <tag k="box_type" v="lamp_box"/>
+    <tag k="created_by" v="Me1"/>
+    <tag k="other_tag_1c" v="other tag after"/>
+  </way>
+  <way id="3" version="11" timestamp="2008-01-02T03:04:05Z" uid="20" user="user1">
+    <nd ref="13"/>
+    <nd ref="22"/>
+    <nd ref="33"/>
+    <tag k="box_type" v="wall"/>
+  </way>
+  <relation id="1" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user1">
+    <member type="node" ref="3" role="noderole"/>
+    <member type="way" ref="1" role="wayrole1"/>
+    <member type="way" ref="2" role="wayrole2"/>
+    <tag k="other_tag_1d" v="other tag before"/>
+    <tag k="type" v="myrelation"/>
+  </relation>
+</osm>
