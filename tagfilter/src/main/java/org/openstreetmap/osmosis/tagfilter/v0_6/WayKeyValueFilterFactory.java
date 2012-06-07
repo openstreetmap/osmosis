@@ -18,7 +18,7 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkSourceManager;
  */
 public class WayKeyValueFilterFactory extends TaskManagerFactory {
 	private static final String ARG_KEY_VALUE_LIST = "keyValueList";
-	private static final String ARG_KEY_VALUE_LIST_File = "keyValueListFile";
+	private static final String ARG_KEY_VALUE_LIST_FILE = "keyValueListFile";
 	
 	
 	/**
@@ -29,13 +29,16 @@ public class WayKeyValueFilterFactory extends TaskManagerFactory {
 		WayKeyValueFilter wayKeyValueFilter;
 		
 		if (doesArgumentExist(taskConfig, ARG_KEY_VALUE_LIST)) {
-			String keyValueList = getStringArgument(taskConfig, ARG_KEY_VALUE_LIST,
+			String keyValueList = getStringArgument(taskConfig, ARG_KEY_VALUE_LIST);
+			wayKeyValueFilter = new WayKeyValueFilter(keyValueList);
+		} else if (doesArgumentExist(taskConfig, ARG_KEY_VALUE_LIST_FILE)) {
+			String keyValueListFile = getStringArgument(taskConfig, ARG_KEY_VALUE_LIST_FILE);
+			wayKeyValueFilter = new WayKeyValueFilter(new File(keyValueListFile));
+		} else {
+			String keyValueList = getDefaultStringArgument(taskConfig,
 					"highway.motorway,highway.motorway_link,highway.trunk,highway.trunk_link");
 			wayKeyValueFilter = new WayKeyValueFilter(keyValueList);
-		} else {
-			String keyValueListFile = getStringArgument(taskConfig, ARG_KEY_VALUE_LIST_File);
-			wayKeyValueFilter = new WayKeyValueFilter(new File(keyValueListFile));
-		}		
+		}
 		
 		return new SinkSourceManager(
 			taskConfig.getId(),

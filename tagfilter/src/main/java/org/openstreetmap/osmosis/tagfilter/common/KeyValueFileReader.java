@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-
 
 /**
  * Reads the content of a file containing "key.value" tags.
@@ -39,25 +37,17 @@ public class KeyValueFileReader {
 	 */
 	private BufferedReader reader;
 
-	/**
-	 * The filename for error-messages.
-	 */
-	private String fileName;
-
 
 	/**
 	 * Creates a new instance.
 	 * 
 	 * @param keyValueFile
 	 *            The file to read key.value tags from.
+	 * @throws FileNotFoundException
+	 *             in case the specified file does not exist
 	 */
-	public KeyValueFileReader(final File keyValueFile) {
-		try {
-			this.reader = new BufferedReader(new FileReader(keyValueFile));
-			this.fileName = keyValueFile.getName();
-		} catch (FileNotFoundException ex) {
-			throw new OsmosisRuntimeException("Unable to read from key.value file " + fileName + ".", ex);
-		}
+	public KeyValueFileReader(final File keyValueFile) throws FileNotFoundException {
+		this.reader = new BufferedReader(new FileReader(keyValueFile));
 	}
 
 
@@ -65,16 +55,16 @@ public class KeyValueFileReader {
 	 * Reads the file and returns an array of key.value tags
 	 * 
 	 * @return an array of key.value tags
+	 * @throws IOException
+	 *             in case the file could not be read
 	 */
-	public String[] loadKeyValues() {
+	public String[] loadKeyValues() throws IOException {
 		List<String> result = new LinkedList<String>();
 		try {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				result.add(line);
 			}
-		} catch (IOException ex) {
-			throw new OsmosisRuntimeException("Unable to read from key.value file " + fileName + ".", ex);
 		} finally {
 			cleanup();
 		}
@@ -90,7 +80,7 @@ public class KeyValueFileReader {
 			try {
 				reader.close();
 			} catch (Exception e) {
-				LOG.log(Level.SEVERE, "Unable to close key.value file reader.", e);
+				LOG.log(Level.SEVERE, "Unable to close file reader.", e);
 			} finally {
 				reader = null;
 			}

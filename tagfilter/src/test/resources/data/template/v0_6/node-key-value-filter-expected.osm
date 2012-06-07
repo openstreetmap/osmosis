@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version="0.6" generator="Osmosis %VERSION%">
+  <bounds minlon="-180.00000" minlat="-90.00000" maxlon="180.00000" maxlat="90.00000" origin="Osmosis %VERSION%"/>
+  <node id="19" version="2" timestamp="2010-07-07T07:51:18Z" uid="10" user="user1" lat="51.9458753" lon="-0.20698">
+    <tag k="amenity" v="post_box"/>
+    <tag k="box_type" v="lamp_box"/>
+    <tag k="last_collection_mf" v="1630"/>
+    <tag k="last_collection_sat" v="0945"/>
+    <tag k="ref" v="SG4 90"/>
+  </node>
+  <node id="33" version="2" timestamp="2010-12-27T18:09:50Z" uid="30" user="user1" lat="52.5336725" lon="0.8310367">
+    <tag k="amenity" v="post_box"/>
+    <tag k="box_type" v="wall"/>
+    <tag k="collection_times" v="Mo-Fr 17:30; Sa 11:30"/>
+    <tag k="note" v="in brick pillar being bus shelter"/>
+    <tag k="ref" v="IP24 3228"/>
+    <tag k="royal_cypher" v="EIIR"/>
+  </node>
+</osm>

@@ -17,7 +17,7 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkSourceManager;
  */
 public class NodeKeyValueFilterFactory extends TaskManagerFactory {
     private static final String ARG_KEY_VALUE_LIST = "keyValueList";
-    private static final String ARG_KEY_VALUE_LIST_File = "keyValueListFile";
+    private static final String ARG_KEY_VALUE_LIST_FILE = "keyValueListFile";
     
 	/**
 	 * {@inheritDoc}
@@ -30,7 +30,7 @@ public class NodeKeyValueFilterFactory extends TaskManagerFactory {
 			String keyValueList = getStringArgument(taskConfig, ARG_KEY_VALUE_LIST);
 			nodeKeyValueFilter = new NodeKeyValueFilter(keyValueList);
 		} else {
-			String keyValueListFile = getStringArgument(taskConfig, ARG_KEY_VALUE_LIST_File);
+			String keyValueListFile = getStringArgument(taskConfig, ARG_KEY_VALUE_LIST_FILE);
 			nodeKeyValueFilter = new NodeKeyValueFilter(new File(keyValueListFile));
 		}
 		

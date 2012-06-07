@@ -2,9 +2,12 @@
 package org.openstreetmap.osmosis.tagfilter.v0_6;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
 
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityProcessor;
@@ -52,10 +55,18 @@ public class NodeKeyValueFilter implements SinkSource, EntityProcessor {
 	 *            File containing one key-value combination per line
 	 */
 	public NodeKeyValueFilter(File keyValueListFile) {
+		
+		String[] keyValues;
+		try {
+			KeyValueFileReader reader = new KeyValueFileReader(keyValueListFile);
+			keyValues = reader.loadKeyValues();
+		} catch (FileNotFoundException ex) {
+			throw new OsmosisRuntimeException("Unable to find key.value file " + keyValueListFile.getAbsolutePath() + ".", ex);
+		} catch (IOException ex) {
+			throw new OsmosisRuntimeException("Unable to read from key.value file " + keyValueListFile.getAbsolutePath() + ".", ex);
+		}
 
 		allowedKeyValues = new HashSet<String>();
-		KeyValueFileReader reader = new KeyValueFileReader(keyValueListFile);
-		String[] keyValues = reader.loadKeyValues();
 		for (int i = 0; i < keyValues.length; i++) {
 			allowedKeyValues.add(keyValues[i]);
 		}

@@ -1,0 +1,2 @@
+box_type.lamp_box
+box_type.wall
