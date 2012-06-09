@@ -20,17 +20,10 @@ public class KeyValueFileReaderTest extends AbstractDataTest {
 	 * Tests that in case the file does not exist, the KeyValueFileReader
 	 * constructor throws an exception
 	 */
-	@Test
-	public final void testFileNotFound() {
+	@Test(expected=FileNotFoundException.class)
+	public final void testFileNotFound() throws Exception {
 		File file = new File("non_existing_file.txt");
-		try {
-			new KeyValueFileReader(file);
-			Assert.fail();
-		} catch (FileNotFoundException ex) {
-			Assert.assertTrue(true);
-		} catch (Exception ex) {
-			Assert.fail();
-		}
+		KeyValueFileReader kvfr = new KeyValueFileReader(file);
 	}
 
 
@@ -38,14 +31,10 @@ public class KeyValueFileReaderTest extends AbstractDataTest {
 	 * Tests the reading of key-value pairs from the file.
 	 */
 	@Test
-	public final void testLoadKeyValues() {
+	public final void testLoadKeyValues() throws Exception {
 		File file = dataUtils.createDataFile("v0_6/allowed-key-values.txt");
-		try {
-			String[] expected = { "box_type.lamp_box", "box_type.wall" };
-			String[] actual = new KeyValueFileReader(file).loadKeyValues();
-			Assert.assertArrayEquals(expected, actual);
-		} catch (Exception ex) {
-			Assert.fail();
-		}
+		String[] expected = { "box_type.lamp_box", "box_type.wall" };
+		String[] actual = new KeyValueFileReader(file).loadKeyValues();
+		Assert.assertArrayEquals(expected, actual);
 	}
 }
