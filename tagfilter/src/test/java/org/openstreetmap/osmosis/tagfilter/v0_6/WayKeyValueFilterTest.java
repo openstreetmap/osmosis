@@ -1,12 +1,9 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.tagfilter.v0_6;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.openstreetmap.osmosis.core.Osmosis;
 import org.openstreetmap.osmosis.testutil.AbstractDataTest;

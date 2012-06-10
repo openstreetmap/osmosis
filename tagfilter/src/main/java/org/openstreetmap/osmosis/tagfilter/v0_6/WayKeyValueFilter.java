@@ -63,9 +63,11 @@ public class WayKeyValueFilter implements SinkSource, EntityProcessor {
 			KeyValueFileReader reader = new KeyValueFileReader(keyValueListFile);
 			keyValues = reader.loadKeyValues();
 		} catch (FileNotFoundException ex) {
-			throw new OsmosisRuntimeException("Unable to find key.value file " + keyValueListFile.getAbsolutePath() + ".", ex);
+			throw new OsmosisRuntimeException("Unable to find key.value file " + keyValueListFile.getAbsolutePath()
+					+ ".", ex);
 		} catch (IOException ex) {
-			throw new OsmosisRuntimeException("Unable to read from key.value file " + keyValueListFile.getAbsolutePath() + ".", ex);
+			throw new OsmosisRuntimeException("Unable to read from key.value file "
+					+ keyValueListFile.getAbsolutePath() + ".", ex);
 		}
 
 		allowedKeyValues = new HashSet<String>();

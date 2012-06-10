@@ -52,7 +52,7 @@ public class KeyValueFileReader {
 
 
 	/**
-	 * Reads the file and returns an array of key.value tags
+	 * Reads the file and returns an array of key.value tags.
 	 * 
 	 * @return an array of key.value tags
 	 * @throws IOException
