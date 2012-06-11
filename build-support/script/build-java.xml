@@ -106,7 +106,7 @@
 		<property name="db.apidb.authfile" location="src/test/resources/data/template/v0_6/apidb-authfile.txt"/>
 		<property name="db.pgsql.authfile" location="src/test/resources/data/template/v0_6/pgsql-authfile.txt"/>
 		
-		<junit fork="no" maxmemory="512m" printsummary="on" haltonerror="off" haltonfailure="off" filtertrace="on" failureproperty="test.failure" includeantruntime="false">
+		<junit fork="yes" forkmode="perBatch" maxmemory="512m" printsummary="on" haltonerror="off" haltonfailure="off" filtertrace="on" failureproperty="test.failure">
 			<formatter type="plain" usefile="true"/>
 			<formatter type="xml" usefile="true"/>
 			<classpath>
