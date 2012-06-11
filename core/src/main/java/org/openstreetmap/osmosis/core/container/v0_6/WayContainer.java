@@ -13,8 +13,6 @@ import org.openstreetmap.osmosis.core.store.StoreWriter;
  * @author Brett Henderson
  */
 public class WayContainer extends EntityContainer {
-	private static final long serialVersionUID = 1L;
-	
 	
 	private Way way;
 	

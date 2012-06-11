@@ -101,7 +101,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private PreparedStatement bulkRelationTagStatement;
 	private PreparedStatement singleRelationMemberStatement;
 	private PreparedStatement bulkRelationMemberStatement;
-	private int uncommittedEntityCount;
 	private NodeMapper nodeBuilder;
 	private WayMapper wayBuilder;
 	private RelationMapper relationBuilder;
@@ -168,8 +167,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		wayNodeBuilder = new WayNodeMapper();
 		relationMemberBuilder = new RelationMemberMapper();
 		wayGeometryBuilder = new WayGeometryBuilder(storeType);
-		
-		uncommittedEntityCount = 0;
 		
 		statementContainer = new ReleasableStatementContainer();
 		
@@ -271,8 +268,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				processedNodes.add(node);
 				
 				prmIndex = nodeBuilder.populateEntityParameters(bulkNodeStatement, prmIndex, node);
-				
-				uncommittedEntityCount++;
 			}
 			
 			try {
@@ -293,8 +288,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				node = nodeBuffer.remove(0);
 				
 				nodeBuilder.populateEntityParameters(singleNodeStatement, 1, node);
-				
-				uncommittedEntityCount++;
 				
 				try {
 					singleNodeStatement.executeUpdate();
@@ -397,8 +390,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 					geometries.add(wayGeometryBuilder.createWayLinestring(way));
 				}
 				prmIndex = wayBuilder.populateEntityParameters(bulkWayStatement, prmIndex, way, geometries);
-				
-				uncommittedEntityCount++;
 			}
 			
 			try {
@@ -428,8 +419,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 					geometries.add(wayGeometryBuilder.createWayLinestring(way));
 				}
 				wayBuilder.populateEntityParameters(singleWayStatement, 1, way, geometries);
-				
-				uncommittedEntityCount++;
 				
 				try {
 					singleWayStatement.executeUpdate();
@@ -584,8 +573,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				processedRelations.add(relation);
 				
 				prmIndex = relationBuilder.populateEntityParameters(bulkRelationStatement, prmIndex, relation);
-				
-				uncommittedEntityCount++;
 			}
 			
 			try {
@@ -607,8 +594,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 				relation = relationBuffer.remove(0);
 				
 				relationBuilder.populateEntityParameters(singleRelationStatement, 1, relation);
-				
-				uncommittedEntityCount++;
 				
 				try {
 					singleRelationStatement.executeUpdate();
