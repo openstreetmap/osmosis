@@ -28,5 +28,6 @@
     	<dependency org="junit" name="junit" rev="${dependency.version.junit}" conf="compile->default"/>
     	
     	<dependency org="com.puppycrawl.tools" name="checkstyle" rev="${dependency.version.checkstyle}" conf="test->default"/>
+    	<dependency org="org.jacoco" name="org.jacoco.ant" rev="${dependency.version.jacoco}" conf="test->default"/>
     </dependencies>
 </ivy-module>

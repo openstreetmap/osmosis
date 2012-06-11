@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="Osmosis.Build.Java" default="init-ivy" basedir="."
 	xmlns:ivy="antlib:org.apache.ivy.ant"
-	xmlns:cs="antlib:com.puppycrawl.tools.checkstyle">
-	
+	xmlns:cs="antlib:com.puppycrawl.tools.checkstyle"
+	xmlns:jacoco="antlib:org.jacoco.ant">
+
 	<description>
 		Performs a build for a standard java project.
 	</description>
-	
+
 	<!-- Include common build components. -->
 	<property name="build-support.dir" location="../"/>
 	<import file="${build-support.dir}/script/build-ivy.xml"/>
-	
+
 	<!-- Define classpaths for each of the lib directories. -->
 	<path id="classpath.compile">
 		<fileset dir="lib/compile" includes="**/*.jar"/>
@@ -21,7 +22,7 @@
 	<path id="classpath.test">
 		<fileset dir="lib/test" includes="**/*.jar"/>
 	</path>
-	
+
 	<target name="build_src" depends="resolve" description="Compile source code into class files.">
 		<!-- Create the build directory structure. -->
 		<mkdir dir="build"/>
@@ -35,11 +36,11 @@
 		<!-- Put a version number file in the build/src directory. -->
 		<touch file="build/src/version-${project.version}"/>
 	</target>
-	
+
 	<target name="build_test" depends="build_src" description="Compile test source code into class files.">
 		<!-- Create the build directory structure. -->
 		<mkdir dir="build/test"/>
-		
+
 		<!-- Compile the java test code with the main project classes as a dependency. -->
 		<mkdir dir="src/test/java"/>
 		<javac srcdir="src/test/java" destdir="build/test" debug="on" debuglevel="lines,vars,source" includeantruntime="false">
@@ -53,42 +54,42 @@
 			<fileset dir="src/test/resources" erroronmissingdir="false"/>
 		</copy>
 	</target>
-	
+
 	<target name="_build" depends="build_src" description="Generates the binaries for the distribution.">
 		<!-- Create the binary directory -->
 		<mkdir dir="build/binary"/>
-		
+
 		<!-- Create a manifest for the jar file. -->
 		<manifest file="build/binary/jar.txt">
 			<attribute name="Main-Class" value="org.openstreetmap.osmosis.core.Osmosis"/>
 			<attribute name="Built-By" value="${user.name}"/>
 			<attribute name="Implementation-Title" value="Osmosis Library"/>
-			<attribute name="Implementation-Version" value="${project.version} (${TODAY})"/> 
+			<attribute name="Implementation-Version" value="${project.version} (${TODAY})"/>
 			<attribute name="Implementation-Vendor" value="Brett Henderson"/>
 		</manifest>
-		
+
 		<!-- Create the jar archive. -->
 		<jar
 			destfile="build/binary/${project.name}.jar"
 			basedir="build/src"
 			manifest="build/binary/jar.txt"/>
-		
+
 		<!-- Copy the jar to the distrib directory where it will be found by ivy. -->
 		<mkdir dir="distrib"/>
 		<copy
 			file="build/binary/${project.name}.jar"
 			tofile="distrib/jars/${project.name}-${project.version}.jar"/>
 	</target>
-	
+
 	<!-- Produces javadoc output from the source code. -->
 	<target name="javadoc" depends="init" description="Products javadoc documentation from the source code.">
 		<javadoc packagenames="*" sourcepath="src" destdir="doc/api" classpathref="classpath.compile"/>
 	</target>
-	
+
 	<!-- Performs checkstyle analysis of all source files in the project. -->
 	<target name="checkstyle">
 		<taskdef uri="antlib:com.puppycrawl.tools.checkstyle" resource="checkstyletask.properties" classpathref="classpath.test" />
-		
+
 		<mkdir dir="report"/>
 		<cs:checkstyle config="${build-support.dir}/checkstyle.xml">
 			<fileset dir="src" includes="**/*.java"/>
@@ -97,37 +98,66 @@
 			<formatter type="xml" toFile="report/checkstyle.xml"/>
 		</cs:checkstyle>
 	</target>
-	
+
 	<!-- Runs all of the unit tests in the application. -->
 	<target name="test" depends="build_test" description="Run automated test cases.">
 		<mkdir dir="report/test"/>
-		
+
 		<!-- Determine the location of the database authorisation file.  This can be overridden outside the build if necessary. -->
 		<property name="db.apidb.authfile" location="src/test/resources/data/template/v0_6/apidb-authfile.txt"/>
 		<property name="db.pgsql.authfile" location="src/test/resources/data/template/v0_6/pgsql-authfile.txt"/>
-		
-		<junit fork="yes" forkmode="perBatch" maxmemory="512m" printsummary="on" haltonerror="off" haltonfailure="off" filtertrace="on" failureproperty="test.failure">
-			<formatter type="plain" usefile="true"/>
-			<formatter type="xml" usefile="true"/>
-			<classpath>
-				<path refid="classpath.test"/>
-				<path location="build/src"/>
-				<path location="build/test"/>
-			</classpath>
-			<sysproperty key="db.apidb.authfile" value="${db.apidb.authfile}"/>
-			<sysproperty key="db.pgsql.authfile" value="${db.pgsql.authfile}"/>
-			<batchtest todir="report/test">
-				<fileset dir="build/test">
-					<include name="**/*Test*.class"/>
-					<exclude name="**/*TestSuite*.class"/>
-					<exclude name="**/*$*.class"/>
-				</fileset>
-			</batchtest>
-		</junit>
+
+		<!-- Register the jacoco code coverage library. -->
+		<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml" classpathref="classpath.test" />
+
+		<!-- Run the junit tests and capture code coverage statistics. -->
+		<jacoco:coverage append="false" destfile="build/jacoco.exec">
+			<junit fork="yes" forkmode="once" maxmemory="512m" printsummary="on" haltonerror="off" haltonfailure="off" filtertrace="on" failureproperty="test.failure">
+				<formatter type="plain" usefile="true"/>
+				<formatter type="xml" usefile="true"/>
+				<classpath>
+					<path refid="classpath.test"/>
+					<path location="build/src"/>
+					<path location="build/test"/>
+				</classpath>
+				<sysproperty key="db.apidb.authfile" value="${db.apidb.authfile}"/>
+				<sysproperty key="db.pgsql.authfile" value="${db.pgsql.authfile}"/>
+				<batchtest todir="report/test">
+					<fileset dir="build/test">
+						<include name="**/*Test*.class"/>
+						<exclude name="**/*TestSuite*.class"/>
+						<exclude name="**/*$*.class"/>
+					</fileset>
+				</batchtest>
+			</junit>
+		</jacoco:coverage>
+
+		<!-- This ensures that a jacoco output file exists even if no unit tests were executed. -->
+		<touch file="build/jacoco.exec" />
+
+		<!-- Generate the code coverage report. -->
+		<jacoco:report>
+
+			<executiondata>
+				<file file="build/jacoco.exec"/>
+			</executiondata>
+
+			<structure name="${ant.project.name}">
+				<classfiles>
+					<fileset dir="build/src"/>
+				</classfiles>
+				<sourcefiles encoding="UTF-8">
+					<fileset dir="src/main/java"/>
+				</sourcefiles>
+			</structure>
+
+			<html destdir="report/jacoco"/>
+
+		</jacoco:report>
 
 		<fail message="One or more junit tests failed." if="test.failure" />
 	</target>
-	
+
 	<target name="_clean">
 		<!-- Delete ivy resolved libraries. -->
 		<delete dir="lib"/>
@@ -138,7 +168,7 @@
 		<!-- Delete the doc/api directory tree. -->
 		<delete dir="doc/api"/>
 	</target>
-	
+
 	<!-- Public Targets -->
 	<target name="all" depends="build, checkstyle, test, publish" description="Executes all major build targets."/>
 	<target name="clean" depends="_clean" description="Clean up the project tree."/>

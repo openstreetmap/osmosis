@@ -32,5 +32,6 @@
         <dependency org="org.openstreetmap.osmosis" name="osmosis-testutil" rev="${project.version}" conf="test->default" changing="true"/>
         <dependency org="junit" name="junit" rev="${dependency.version.junit}" conf="test->default"/>
     	<dependency org="com.puppycrawl.tools" name="checkstyle" rev="${dependency.version.checkstyle}" conf="test->default"/>
+    	<dependency org="org.jacoco" name="org.jacoco.ant" rev="${dependency.version.jacoco}" conf="test->default"/>
     </dependencies>
 </ivy-module>
