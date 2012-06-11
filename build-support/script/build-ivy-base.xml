@@ -12,7 +12,8 @@
 	
 	<target name="ivy-availability" description="Checks if the ivy library is available">
 		<property name="ivy.version" value="${dependency.version.ivy}" />
-		<property name="ivy.jar.dir" value="${build-support.dir}/ivy" />
+		<property name="ivy.dir" value="${build-support.dir}/ivy" />
+		<property name="ivy.jar.dir" value="${ivy.dir}/runtime" />
 		<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy-${ivy.version}.jar" />
 		
 		<!-- Determine if the ivy jar is already available. -->
@@ -48,7 +49,9 @@
 		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant"
 			classpathref="ivy.lib.path" />
 		
-		<!-- Override the shared repo location to point at the svn-based ivy repo. -->
+		<!-- Override the ivy root directory to be located in the build-support directory. -->
+		<property name="ivy.default.ivy.user.dir" value="${ivy.dir}/data"/>
+		<!-- Override the shared repo location to point at the source controlled ivy repo. -->
 		<property name="ivy.shared.default.root" location="${build-support.dir}/repo"/>
 		<ivy:configure />
 		
