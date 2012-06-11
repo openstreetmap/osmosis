@@ -18,7 +18,7 @@
 		<ivy:report todir="report/ivy"/>
 	</target>
 	
-	<target name="publish" depends="resolve, build">
+	<target name="publish" depends="resolve">
 		<ivy:deliver pubrevision="${project.version}"/>
 		<ivy:publish resolver="local" pubrevision="${project.version}" overwrite="true"/>
 	</target>

@@ -5,7 +5,7 @@
 	<property name="build-support.dir" location="../build-support"/>
 	<import file="${build-support.dir}/script/build-ivy.xml"/>
 	
-	<target name="build" depends="resolve" description="Builds the distribution package.">
+	<target name="build_binary" depends="resolve" description="Builds the distribution package.">
 		<!-- Create the distribution archives. -->
 		<mkdir dir="distrib/zips"/>
 		<zip destfile="distrib/zips/osmosis-${project.version}.zip">
@@ -39,16 +39,20 @@
 		</tar>
 	</target>
 	
-	<target name="dist" depends="build"/>
+	<target name="_build" depends="build_binary, publish" description="Builds the package and publishes to ivy."/>
 	
-	<!-- Executes all major build targets. -->
-	<target name="all" depends="publish"/>
-	
-	<target name="clean" description="Clean up the project tree.">
+	<target name="_clean" description="Clean up the project tree.">
 		<!-- Delete generated directory trees. -->
 		<delete dir="build"/>
 		<delete dir="distrib"/>
 		<delete dir="lib"/>
 		<delete dir="report"/>
 	</target>
+
+	<!-- Public Targets -->
+	<target name="clean" depends="_clean" description="Clean up the project tree."/>
+	<target name="build" depends="_build" description="Build the main project target."/>
+	<target name="checkstyle" depends="" description="Verify that code follows style guidelines."/>
+	<target name="test" depends="" description="Run automated unit tests."/>
+	<target name="all" depends="build, checkstyle, test" description="Executes all major build targets."/>
 </project>

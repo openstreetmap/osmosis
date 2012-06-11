@@ -55,7 +55,7 @@
 		</copy>
 	</target>
 
-	<target name="_build" depends="build_src" description="Generates the binaries for the distribution.">
+	<target name="build_binary" depends="build_src" description="Generates the binaries for the distribution.">
 		<!-- Create the binary directory -->
 		<mkdir dir="build/binary"/>
 
@@ -81,13 +81,15 @@
 			tofile="distrib/jars/${project.name}-${project.version}.jar"/>
 	</target>
 
+	<target name="_build" depends="build_binary, publish" description="Builds the package and publishes to ivy."/>
+
 	<!-- Produces javadoc output from the source code. -->
 	<target name="javadoc" depends="init" description="Products javadoc documentation from the source code.">
 		<javadoc packagenames="*" sourcepath="src" destdir="doc/api" classpathref="classpath.compile"/>
 	</target>
 
 	<!-- Performs checkstyle analysis of all source files in the project. -->
-	<target name="checkstyle">
+	<target name="_checkstyle">
 		<taskdef uri="antlib:com.puppycrawl.tools.checkstyle" resource="checkstyletask.properties" classpathref="classpath.test" />
 
 		<mkdir dir="report"/>
@@ -100,7 +102,7 @@
 	</target>
 
 	<!-- Runs all of the unit tests in the application. -->
-	<target name="test" depends="build_test" description="Run automated test cases.">
+	<target name="_test" depends="build_test" description="Run automated test cases.">
 		<mkdir dir="report/test"/>
 
 		<!-- Determine the location of the database authorisation file.  This can be overridden outside the build if necessary. -->
@@ -170,7 +172,9 @@
 	</target>
 
 	<!-- Public Targets -->
-	<target name="all" depends="build, checkstyle, test, publish" description="Executes all major build targets."/>
 	<target name="clean" depends="_clean" description="Clean up the project tree."/>
-	<target name="build" depends="_build" description="Builds the main project target."/>
+	<target name="build" depends="_build" description="Build the main project target."/>
+	<target name="checkstyle" depends="_checkstyle" description="Verify that code follows style guidelines."/>
+	<target name="test" depends="_test" description="Run automated unit tests."/>
+	<target name="all" depends="build, checkstyle, test" description="Executes all major build targets."/>
 </project>

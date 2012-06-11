@@ -18,8 +18,12 @@
 		<subant target="clean" buildpathref="build-path" />
 	</target>
 	
-	<target name="publish" depends="find-projects">
-		<subant target="publish" buildpathref="build-path" />
+	<target name="build" depends="find-projects">
+		<subant target="build" buildpathref="build-path" />
+	</target>
+	
+	<target name="checkstyle" depends="find-projects">
+		<subant target="checkstyle" buildpathref="build-path" />
 	</target>
 	
 	<target name="test" depends="find-projects">
@@ -27,6 +31,8 @@
 	</target>
 	
 	<target name="all" depends="find-projects">
-		<subant target="all" buildpathref="build-path" />
+		<subant target="build" buildpathref="build-path" />
+		<subant target="checkstyle" buildpathref="build-path" />
+		<subant target="test" buildpathref="build-path" />
 	</target>
 </project>
