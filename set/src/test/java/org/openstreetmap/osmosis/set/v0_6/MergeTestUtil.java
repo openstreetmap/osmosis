@@ -27,6 +27,22 @@ public final class MergeTestUtil {
 	 */
 	public static SinkEntityInspector merge(EntityMerger merger, 
 			RunnableSource source1, RunnableSource source2) throws Exception {
+		return merge(merger, source1, source2, null);
+	}
+	
+	/**
+	 * Helper method to execute a simple merge of two sources.
+	 * 
+	 * @param merger the merge to use for the execution of the merge.
+	 * @param source1 the first source to merge.
+	 * @param source2 the second source to merge.
+	 * @param exceptionHandler the exception handler to attach to threads.
+	 * @return the sink entity inspector containing the merged result.
+	 * @throws Exception if something goes wrong.
+	 */
+	public static SinkEntityInspector merge(EntityMerger merger, 
+			RunnableSource source1, RunnableSource source2,
+			Thread.UncaughtExceptionHandler exceptionHandler) throws Exception {
 		Thread t1 = new Thread(source1);
 		Thread t2 = new Thread(source2);
 		
@@ -36,6 +52,13 @@ public final class MergeTestUtil {
 		merger.setSink(inspector);
 		
 		Thread mThread = new Thread(merger);
+		
+		if (exceptionHandler != null) {
+			t1.setUncaughtExceptionHandler(exceptionHandler);
+			t2.setUncaughtExceptionHandler(exceptionHandler);
+			mThread.setUncaughtExceptionHandler(exceptionHandler);
+		}
+
 		mThread.start();
 		t1.start();
 		t2.start();
