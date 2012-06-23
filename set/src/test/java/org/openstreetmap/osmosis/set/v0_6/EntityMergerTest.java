@@ -2,10 +2,20 @@
 package org.openstreetmap.osmosis.set.v0_6;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import junit.framework.Assert;
 
 import org.junit.Test;
 import org.openstreetmap.osmosis.core.Osmosis;
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
+import org.openstreetmap.osmosis.core.misc.v0_6.EmptyReader;
 import org.openstreetmap.osmosis.testutil.AbstractDataTest;
+import org.openstreetmap.osmosis.xml.common.CompressionMethod;
+import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
 
 /**
  * Test the --merge task.
@@ -319,5 +329,79 @@ public class EntityMergerTest extends AbstractDataTest {
 		// Validate that the output file matches the expected result.
 		dataUtils.compareFiles(expectedOutputFile, actualOutputFile);
 
+	}
+	
+	/**
+	 * Tests bad sort order in an input stream (node, way, relations not in
+	 * order).
+	 * 
+	 * @throws Exception
+	 *             if something fails
+	 */
+	@Test
+	public void badSortOrderType() throws Exception {
+		File sourceFile = dataUtils.createDataFile("v0_6/merge-in-badorder-type.osm");
+
+		mergeAndLookForException(sourceFile, "Pipeline entities are not sorted");
+	}
+	
+	/**
+	 * Tests bad sort order in an input stream (ids not sorted).
+	 * 
+	 * @throws Exception
+	 *             if something fails
+	 */
+	@Test
+	public void badSortOrderId() throws Exception {
+		File sourceFile = dataUtils.createDataFile("v0_6/merge-in-badorder-id.osm");
+
+		mergeAndLookForException(sourceFile, "Pipeline entities are not sorted");
+	}
+
+	/**
+	 * Runs a merge and records the exceptions that happened during the merge.
+	 * 
+	 * The test is considered passed iff at least one exception was thrown and 
+	 * the exception message begins with a given string.
+	 * 
+	 * This method does not use command line parsing because it is impossible 
+	 * to check whether the right exception has been thrown. Also, as all 
+	 * exceptions are OsmosisRuntimeExceptions, we need to check the message
+	 * so the JUnit expected exception facility is no good here. 
+	 * 
+	 * To add insult to injury, running a merge task involves three worker threads; 
+	 * the exception we expect is thrown on one of those worker threads which brings 
+	 * the pipeline down. But we want to check for that one source exception
+	 * is thrown for the correct reason, otherwise the test becomes very unspecific.
+	 * 
+	 */
+	private void mergeAndLookForException(File sourceFile, String exceptionMessagePrefix) throws Exception {
+		final List<Throwable> exceptions = Collections.synchronizedList(new ArrayList<Throwable>());
+		
+		XmlReader reader = new XmlReader(sourceFile, false, CompressionMethod.None);
+
+		EntityMerger merger = new EntityMerger(
+				ConflictResolutionMethod.LatestSource, 1, BoundRemovedAction.Ignore);
+
+		MergeTestUtil.merge(merger, reader, new EmptyReader(), new Thread.UncaughtExceptionHandler() {
+			@Override
+			public void uncaughtException(Thread t, Throwable e) {
+				exceptions.add(e);
+			}
+		});
+		
+		// At least one of those exceptions should be a "Pipeline not sorted" one
+		boolean sortExceptionFound = false;
+		for (Throwable t : exceptions) {
+			if (!(t instanceof OsmosisRuntimeException)) {
+				Assert.fail("Unexpected exception thrown: " + t);
+			}
+			
+			sortExceptionFound |= t.getMessage().startsWith(exceptionMessagePrefix);
+		}
+		
+		if (!sortExceptionFound) {
+			Assert.fail("Expected exception not thrown");
+		}
 	}
 }
