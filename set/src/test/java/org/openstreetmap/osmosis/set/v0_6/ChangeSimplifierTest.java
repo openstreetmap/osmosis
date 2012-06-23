@@ -21,7 +21,7 @@ public class ChangeSimplifierTest extends AbstractDataTest {
 	 *             if any file operations fail.
 	 */
 	@Test
-	public void test() throws IOException {
+	public void commonCase() throws IOException {
 		File sourceFile;
 		File expectedOutputFile;
 		File actualOutputFile;
@@ -31,7 +31,6 @@ public class ChangeSimplifierTest extends AbstractDataTest {
 		expectedOutputFile = dataUtils.createDataFile("v0_6/simplify-change-out.osc");
 		actualOutputFile = dataUtils.newFile();
 		
-		// Append the two source files into the destination file.
 		Osmosis.run(
 			new String [] {
 				"-q",
