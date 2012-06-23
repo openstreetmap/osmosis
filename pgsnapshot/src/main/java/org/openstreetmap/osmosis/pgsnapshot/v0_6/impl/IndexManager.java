@@ -54,7 +54,7 @@ public class IndexManager {
 	};
 	private static final String POST_LOAD_SQL_POPULATE_WAY_BBOX =
 		"UPDATE ways SET bbox = ("
-		+ "SELECT Envelope(Collect(geom)) FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id"
+		+ "SELECT ST_Envelope(ST_Collect(geom)) FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id"
 		+ " WHERE way_nodes.way_id = ways.id"
 		+ ")";
 	private static final String POST_LOAD_SQL_POPULATE_WAY_LINESTRING =
