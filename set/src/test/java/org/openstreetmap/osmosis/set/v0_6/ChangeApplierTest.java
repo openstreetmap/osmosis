@@ -24,7 +24,9 @@ public class ChangeApplierTest extends AbstractDataTest {
 	 */
 	@Test
 	public void createNode() throws Exception {
-		applyChange("v0_6/apply-change-base.osm", "v0_6/change-create.osc", "v0_6/apply-change-create.osm");
+		applyChange("v0_6/apply_change/apply-change-base.osm",
+				"v0_6/apply_change/change-create.osc",
+				"v0_6/apply_change/apply-change-create.osm");
 	}
 	
 	/**
@@ -35,7 +37,9 @@ public class ChangeApplierTest extends AbstractDataTest {
 	 */
 	@Test
 	public void modifyNode() throws Exception {
-		applyChange("v0_6/apply-change-base.osm", "v0_6/change-modify.osc", "v0_6/apply-change-modify.osm");
+		applyChange("v0_6/apply_change/apply-change-base.osm",
+				"v0_6/apply_change/change-modify.osc",
+				"v0_6/apply_change/apply-change-modify.osm");
 	}
 	
 	/**
@@ -46,7 +50,9 @@ public class ChangeApplierTest extends AbstractDataTest {
 	 */
 	@Test
 	public void deleteNode() throws Exception {
-		applyChange("v0_6/apply-change-base.osm", "v0_6/change-delete.osc", "v0_6/apply-change-delete.osm");
+		applyChange("v0_6/apply_change/apply-change-base.osm",
+				"v0_6/apply_change/change-delete.osc",
+				"v0_6/apply_change/apply-change-delete.osm");
 	}
 	
 	/**
@@ -57,7 +63,9 @@ public class ChangeApplierTest extends AbstractDataTest {
 	 */
 	@Test(expected = OsmosisRuntimeException.class)
 	public void createModifyDelete() throws Exception {
-		applyChange("v0_6/apply-change-base.osm", "v0_6/change-create-modify-delete.osc", "v0_6/apply-change-base.osm");
+		applyChange("v0_6/apply_change/apply-change-base.osm",
+				"v0_6/apply_change/change-create-modify-delete.osc",
+				"v0_6/apply_change/apply-change-base.osm");
 	}
 
 	/**
@@ -70,7 +78,9 @@ public class ChangeApplierTest extends AbstractDataTest {
 	 */
 	@Test
 	public void deleteNonExistent() throws Exception {
-		applyChange("v0_6/apply-change-base.osm", "v0_6/change-delete-nonexistent.osc", "v0_6/apply-change-base.osm");
+		applyChange("v0_6/apply_change/apply-change-base.osm",
+				"v0_6/apply_change/change-delete-nonexistent.osc",
+				"v0_6/apply_change/apply-change-base.osm");
 	}
 	
 	/**
@@ -83,9 +93,9 @@ public class ChangeApplierTest extends AbstractDataTest {
 	 */
 	@Test
 	public void modifyNonExistent() throws Exception {
-		applyChange("v0_6/apply-change-base.osm", 
-				"v0_6/change-modify-nonexistent.osc", 
-				"v0_6/apply-change-modify-nonexistent.osm");
+		applyChange("v0_6/apply_change/apply-change-base.osm", 
+				"v0_6/apply_change/change-modify-nonexistent.osc", 
+				"v0_6/apply_change/apply-change-modify-nonexistent.osm");
 	}
 	
 	/**
@@ -98,9 +108,9 @@ public class ChangeApplierTest extends AbstractDataTest {
 	 */
 	@Test
 	public void createExistent() throws Exception {
-		applyChange("v0_6/apply-change-base.osm", 
-				"v0_6/change-create-existent.osc", 
-				"v0_6/apply-change-base.osm");
+		applyChange("v0_6/apply_change/apply-change-base.osm", 
+				"v0_6/apply_change/change-create-existent.osc", 
+				"v0_6/apply_change/apply-change-base.osm");
 	}
 
 	/**
@@ -112,7 +122,9 @@ public class ChangeApplierTest extends AbstractDataTest {
 	 */
 	@Test
 	public void modifyHigherVersion() throws Exception {
-		applyChange("v0_6/apply-change-base-high.osm", "v0_6/change-modify.osc", "v0_6/apply-change-modify-higher.osm");
+		applyChange("v0_6/apply_change/apply-change-base-high.osm", 
+				"v0_6/apply_change/change-modify.osc", 
+				"v0_6/apply_change/apply-change-modify-higher.osm");
 	}
 
 	private void applyChange(String sourceFileName, String changeFileName, 
