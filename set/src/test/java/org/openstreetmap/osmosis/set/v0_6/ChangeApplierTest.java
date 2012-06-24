@@ -126,6 +126,35 @@ public class ChangeApplierTest extends AbstractDataTest {
 				"v0_6/apply_change/change-modify.osc", 
 				"v0_6/apply_change/apply-change-modify-higher.osm");
 	}
+	
+	/**
+	 * Test the case when the change is longer than the source stream 
+	 * and consists of creates.
+	 * 
+	 * @throws Exception
+	 *             if something goes wrong
+	 */
+	@Test
+	public void longChangeCreate() throws Exception {
+		applyChange("v0_6/apply_change/apply-change-base-node-only.osm", 
+				"v0_6/apply_change/change-big-create.osc", 
+				"v0_6/apply_change/apply-change-big.osm");
+	}
+	
+	/**
+	 * Test the case when the change is longer than the source 
+	 * stream and consists of deletes.
+	 * 
+	 * @throws Exception
+	 *             if something goes wrong
+	 */
+	@Test
+	public void longChangeDelete() throws Exception {
+		applyChange("v0_6/apply_change/apply-change-base-node-only.osm", 
+				"v0_6/apply_change/change-big-delete.osc", 
+				"v0_6/apply_change/apply-change-base-node-only.osm");
+	}
+
 
 	private void applyChange(String sourceFileName, String changeFileName, 
 			String expectedOutputFileName) throws IOException {
