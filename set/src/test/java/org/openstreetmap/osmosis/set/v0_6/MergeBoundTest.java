@@ -18,6 +18,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
+import org.openstreetmap.osmosis.core.misc.v0_6.EmptyReader;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.testutil.v0_6.SinkEntityInspector;
@@ -143,8 +144,8 @@ public class MergeBoundTest {
 	 */
 	@Test
 	public void testBothEmpty() throws Exception {
-		RunnableSource source0 = new EmptySource();
-		RunnableSource source1 = new EmptySource();
+		RunnableSource source0 = new EmptyReader();
+		RunnableSource source1 = new EmptyReader();
 
 		EntityMerger merger = new EntityMerger(ConflictResolutionMethod.LatestSource, 1,
 				BoundRemovedAction.Ignore);
@@ -161,7 +162,7 @@ public class MergeBoundTest {
 	 */
 	@Test
 	public void testOneSourceEmpty() throws Exception {
-		RunnableSource source0 = new EmptySource();
+		RunnableSource source0 = new EmptyReader();
 
 		Bound bound1 = new Bound(5, 6, 8, 7, "source2");
 		RunnableSource source1 = new BoundSource(bound1, true);
@@ -183,29 +184,6 @@ public class MergeBoundTest {
 			list.add(elem);
 		}
 		return list;
-	}
-
-	/**
-	 * A trivial empty source.
-	 */
-	private static class EmptySource implements RunnableSource {
-
-		private Sink sink;
-		
-		@Override
-		public void setSink(Sink sink) {
-			this.sink = sink;
-		}
-
-		@Override
-		public void run() {
-			try {
-				sink.initialize(Collections.<String, Object>emptyMap());
-				sink.complete();
-			} finally {
-				sink.release();
-			}
-		}
 	}
 
 	/**
