@@ -221,7 +221,7 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 				base = null;
 			}
 			
-			// Any remaining "change" entities must be creates.
+			// Process any remaining "change" entities.
 			while (change != null || changePostbox.hasNext()) {
 				if (change == null) {
 					change = changePostbox.getNext();
