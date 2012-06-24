@@ -16,6 +16,46 @@ import org.openstreetmap.osmosis.testutil.AbstractDataTest;
  */
 public class ChangeApplierTest extends AbstractDataTest {
 
+	
+	/**
+	 * Test the application of an empty change to a non-empty stream.
+	 * 
+	 * @throws Exception
+	 *             if something goes wrong
+	 */
+	@Test
+	public void emptyChange() throws Exception {
+		applyChange("v0_6/apply_change/apply-change-base.osm",
+				"v0_6/empty-change.osc",
+				"v0_6/apply_change/apply-change-base.osm");
+	}
+	
+	/**
+	 * Test the application of a non-empty change to an empty stream.
+	 * 
+	 * @throws Exception
+	 *             if something goes wrong
+	 */
+	@Test
+	public void emptyBase() throws Exception {
+		applyChange("v0_6/empty-entity.osm",
+				"v0_6/apply_change/change-delete.osc",
+				"v0_6/empty-entity.osm");
+	}
+	
+	/**
+	 * Test the application of an empty change to an empty stream.
+	 * 
+	 * @throws Exception
+	 *             if something goes wrong
+	 */
+	@Test
+	public void emptyBoth() throws Exception {
+		applyChange("v0_6/empty-entity.osm",
+				"v0_6/empty-change.osc",
+				"v0_6/empty-entity.osm");
+	}
+
 	/**
 	 * Test the creation of a node.
 	 * 
