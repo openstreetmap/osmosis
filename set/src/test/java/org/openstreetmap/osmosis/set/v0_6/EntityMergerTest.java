@@ -36,8 +36,8 @@ public class EntityMergerTest extends AbstractDataTest {
 		File actualOutputFile;
 		
 		// Generate files.
-		sourceFile = dataUtils.createDataFile("v0_6/merge-in-1.osm");
-		expectedOutputFile = dataUtils.createDataFile("v0_6/merge-in-1.osm");
+		sourceFile = dataUtils.createDataFile("v0_6/merge/merge-in-1.osm");
+		expectedOutputFile = dataUtils.createDataFile("v0_6/merge/merge-in-1.osm");
 		actualOutputFile = dataUtils.newFile();
 		
 		// Run the merge.
@@ -67,8 +67,8 @@ public class EntityMergerTest extends AbstractDataTest {
 		File actualOutputFile;
 		
 		// Generate files.
-		sourceFile = dataUtils.createDataFile("v0_6/merge-in-1.osm");
-		expectedOutputFile = dataUtils.createDataFile("v0_6/merge-in-1.osm");
+		sourceFile = dataUtils.createDataFile("v0_6/merge/merge-in-1.osm");
+		expectedOutputFile = dataUtils.createDataFile("v0_6/merge/merge-in-1.osm");
 		actualOutputFile = dataUtils.newFile();
 		
 		// Run the merge.
@@ -99,9 +99,9 @@ public class EntityMergerTest extends AbstractDataTest {
 		File actualOutputFile;
 		
 		// Generate files.
-		sourceFile1 = dataUtils.createDataFile("v0_6/merge-in-1.osm");
-		sourceFile2 = dataUtils.createDataFile("v0_6/merge-in-1.osm");
-		expectedOutputFile = dataUtils.createDataFile("v0_6/merge-in-1.osm");
+		sourceFile1 = dataUtils.createDataFile("v0_6/merge/merge-in-1.osm");
+		sourceFile2 = dataUtils.createDataFile("v0_6/merge/merge-in-1.osm");
+		expectedOutputFile = dataUtils.createDataFile("v0_6/merge/merge-in-1.osm");
 		actualOutputFile = dataUtils.newFile();
 		
 		// Run the merge.
@@ -132,9 +132,9 @@ public class EntityMergerTest extends AbstractDataTest {
 		File actualOutputFile;
 		
 		// Generate files.
-		sourceFile1 = dataUtils.createDataFile("v0_6/merge-in-1.osm");
-		sourceFile2 = dataUtils.createDataFile("v0_6/merge-in-2-timestamp.osm");
-		expectedOutputFile = dataUtils.createDataFile("v0_6/merge-out-timestamp.osm");
+		sourceFile1 = dataUtils.createDataFile("v0_6/merge/merge-in-1.osm");
+		sourceFile2 = dataUtils.createDataFile("v0_6/merge/merge-in-2-timestamp.osm");
+		expectedOutputFile = dataUtils.createDataFile("v0_6/merge/merge-out-timestamp.osm");
 		actualOutputFile = dataUtils.newFile();
 		
 		// Run the merge.
@@ -184,9 +184,9 @@ public class EntityMergerTest extends AbstractDataTest {
 		File actualOutputFile;
 		
 		// Generate files.
-		sourceFile1 = dataUtils.createDataFile("v0_6/merge-in-1.osm");
-		sourceFile2 = dataUtils.createDataFile("v0_6/merge-in-2-version.osm");
-		expectedOutputFile = dataUtils.createDataFile("v0_6/merge-out-version.osm");
+		sourceFile1 = dataUtils.createDataFile("v0_6/merge/merge-in-1.osm");
+		sourceFile2 = dataUtils.createDataFile("v0_6/merge/merge-in-2-version.osm");
+		expectedOutputFile = dataUtils.createDataFile("v0_6/merge/merge-out-version.osm");
 		actualOutputFile = dataUtils.newFile();
 		
 		// Run the merge.
@@ -236,9 +236,9 @@ public class EntityMergerTest extends AbstractDataTest {
 		File actualOutputFile;
 		
 		// Generate files.
-		sourceFile1 = dataUtils.createDataFile("v0_6/merge-in-1.osm");
-		sourceFile2 = dataUtils.createDataFile("v0_6/merge-in-2-secondSource.osm");
-		expectedOutputFile = dataUtils.createDataFile("v0_6/merge-out-secondSource.osm");
+		sourceFile1 = dataUtils.createDataFile("v0_6/merge/merge-in-1.osm");
+		sourceFile2 = dataUtils.createDataFile("v0_6/merge/merge-in-2-secondSource.osm");
+		expectedOutputFile = dataUtils.createDataFile("v0_6/merge/merge-out-secondSource.osm");
 		actualOutputFile = dataUtils.newFile();
 		
 		// Run the merge.
@@ -261,7 +261,7 @@ public class EntityMergerTest extends AbstractDataTest {
 		// As the mergen-in-2 input does not contain any entities that are not 
 		// in the second source, the output should be identical to the first source.
 		
-		expectedOutputFile = dataUtils.createDataFile("v0_6/merge-in-1.osm");
+		expectedOutputFile = dataUtils.createDataFile("v0_6/merge/merge-in-1.osm");
 
 		// Run the merge.
 		Osmosis.run(
@@ -293,9 +293,9 @@ public class EntityMergerTest extends AbstractDataTest {
 		File actualOutputFile;
 		
 		// Generate files.
-		sourceFile1 = dataUtils.createDataFile("v0_6/merge-in-1.osm");
-		sourceFile2 = dataUtils.createDataFile("v0_6/merge-in-2-disjunct.osm");
-		expectedOutputFile = dataUtils.createDataFile("v0_6/merge-out-disjunct.osm");
+		sourceFile1 = dataUtils.createDataFile("v0_6/merge/merge-in-1.osm");
+		sourceFile2 = dataUtils.createDataFile("v0_6/merge/merge-in-2-disjunct.osm");
+		expectedOutputFile = dataUtils.createDataFile("v0_6/merge/merge-out-disjunct.osm");
 		actualOutputFile = dataUtils.newFile();
 		
 		// Run the merge.
@@ -340,7 +340,7 @@ public class EntityMergerTest extends AbstractDataTest {
 	 */
 	@Test
 	public void badSortOrderType() throws Exception {
-		File sourceFile = dataUtils.createDataFile("v0_6/merge-in-badorder-type.osm");
+		File sourceFile = dataUtils.createDataFile("v0_6/merge/merge-in-badorder-type.osm");
 
 		mergeAndLookForException(sourceFile, "Pipeline entities are not sorted");
 	}
@@ -353,7 +353,7 @@ public class EntityMergerTest extends AbstractDataTest {
 	 */
 	@Test
 	public void badSortOrderId() throws Exception {
-		File sourceFile = dataUtils.createDataFile("v0_6/merge-in-badorder-id.osm");
+		File sourceFile = dataUtils.createDataFile("v0_6/merge/merge-in-badorder-id.osm");
 
 		mergeAndLookForException(sourceFile, "Pipeline entities are not sorted");
 	}
