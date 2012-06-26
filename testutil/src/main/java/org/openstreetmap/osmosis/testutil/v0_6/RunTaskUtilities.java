@@ -42,14 +42,23 @@ public final class RunTaskUtilities {
 			RunnableSource source1, RunnableSource source2,
 			Thread.UncaughtExceptionHandler exceptionHandler) throws Exception {
 		
-		Thread sourceThread1 = new Thread(source1);
-		Thread sourceThread2 = new Thread(source2);
-		
 		SinkEntityInspector inspector = new SinkEntityInspector();
 		source1.setSink(multiSink.getSink(0));
 		source2.setSink(multiSink.getSink(1));
 		multiSink.setSink(inspector);
 		
+		runCore(multiSink, source1, source2, exceptionHandler);
+		
+		return inspector;
+	}
+
+	private static void runCore(Runnable multiSink,
+			Runnable source1, Runnable source2,
+			Thread.UncaughtExceptionHandler exceptionHandler)
+			throws InterruptedException {
+
+		Thread sourceThread1 = new Thread(source1);
+		Thread sourceThread2 = new Thread(source2);
 		Thread sinkThread = new Thread(multiSink);
 		
 		if (exceptionHandler != null) {
@@ -65,7 +74,5 @@ public final class RunTaskUtilities {
 		sinkThread.join();
 		sourceThread1.join();
 		sourceThread2.join();
-		
-		return inspector;
 	}
 }
