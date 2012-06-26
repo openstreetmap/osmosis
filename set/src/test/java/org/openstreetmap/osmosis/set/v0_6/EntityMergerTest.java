@@ -14,6 +14,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
 import org.openstreetmap.osmosis.core.misc.v0_6.EmptyReader;
 import org.openstreetmap.osmosis.testutil.AbstractDataTest;
+import org.openstreetmap.osmosis.testutil.v0_6.RunTaskUtilities;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
 
@@ -383,7 +384,7 @@ public class EntityMergerTest extends AbstractDataTest {
 		EntityMerger merger = new EntityMerger(
 				ConflictResolutionMethod.LatestSource, 1, BoundRemovedAction.Ignore);
 
-		MergeTestUtil.merge(merger, reader, new EmptyReader(), new Thread.UncaughtExceptionHandler() {
+		RunTaskUtilities.run(merger, reader, new EmptyReader(), new Thread.UncaughtExceptionHandler() {
 			@Override
 			public void uncaughtException(Thread t, Throwable e) {
 				exceptions.add(e);

@@ -21,6 +21,7 @@ import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
 import org.openstreetmap.osmosis.core.misc.v0_6.EmptyReader;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
+import org.openstreetmap.osmosis.testutil.v0_6.RunTaskUtilities;
 import org.openstreetmap.osmosis.testutil.v0_6.SinkEntityInspector;
 
 
@@ -50,7 +51,7 @@ public class MergeBoundTest {
 		EntityMerger merger = new EntityMerger(ConflictResolutionMethod.LatestSource, 1,
 				BoundRemovedAction.Ignore);
 		
-		SinkEntityInspector merged = MergeTestUtil.merge(merger, source0, source1);
+		SinkEntityInspector merged = RunTaskUtilities.run(merger, source0, source1);
 		List<EntityContainer> mergedList = createList(merged.getProcessedEntities());
 
 		Assert.assertEquals(2, mergedList.size());
@@ -73,7 +74,7 @@ public class MergeBoundTest {
 		EntityMerger merger = new EntityMerger(ConflictResolutionMethod.LatestSource, 1,
 				BoundRemovedAction.Ignore);
 		
-		SinkEntityInspector merged = MergeTestUtil.merge(merger, source0, source1);
+		SinkEntityInspector merged = RunTaskUtilities.run(merger, source0, source1);
 
 		List<EntityContainer> mergedList = createList(merged.getProcessedEntities());
 		Assert.assertEquals(2, mergedList.size());
@@ -96,7 +97,7 @@ public class MergeBoundTest {
 		EntityMerger merger = new EntityMerger(ConflictResolutionMethod.LatestSource, 1,
 				BoundRemovedAction.Ignore);
 		
-		SinkEntityInspector merged = MergeTestUtil.merge(merger, source0, source1);
+		SinkEntityInspector merged = RunTaskUtilities.run(merger, source0, source1);
 		List<EntityContainer> mergedList = createList(merged.getProcessedEntities());
 		
 		Assert.assertEquals(2, mergedList.size());
@@ -122,7 +123,7 @@ public class MergeBoundTest {
 		EntityMerger merger = new EntityMerger(ConflictResolutionMethod.LatestSource, 1,
 				BoundRemovedAction.Ignore);
 		
-		SinkEntityInspector merged = MergeTestUtil.merge(merger, source0, source1);
+		SinkEntityInspector merged = RunTaskUtilities.run(merger, source0, source1);
 		List<EntityContainer> mergedList = createList(merged.getProcessedEntities());
 		Assert.assertEquals(3, mergedList.size());
 		Assert.assertEquals(EntityType.Bound, mergedList.get(0).getEntity().getType());
@@ -150,7 +151,7 @@ public class MergeBoundTest {
 		EntityMerger merger = new EntityMerger(ConflictResolutionMethod.LatestSource, 1,
 				BoundRemovedAction.Ignore);
 		
-		SinkEntityInspector merged = MergeTestUtil.merge(merger, source0, source1);
+		SinkEntityInspector merged = RunTaskUtilities.run(merger, source0, source1);
 		Assert.assertTrue("Expected empty result set but got some data", merged.getLastEntityContainer() == null);
 	}
 	
@@ -170,7 +171,7 @@ public class MergeBoundTest {
 		EntityMerger merger = new EntityMerger(ConflictResolutionMethod.LatestSource, 1,
 				BoundRemovedAction.Ignore);
 		
-		SinkEntityInspector merged = MergeTestUtil.merge(merger, source0, source1);
+		SinkEntityInspector merged = RunTaskUtilities.run(merger, source0, source1);
 		List<EntityContainer> mergedList = createList(merged.getProcessedEntities());
 		
 		Assert.assertEquals(2, mergedList.size());
