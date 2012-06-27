@@ -53,7 +53,7 @@ public class ChangeDeriverTest extends AbstractDataTest {
 	
 	/**
 	 * Deriving change with an empty left input should yield
-	 * a change with creates only.
+	 * a change with deletes only.
 	 * 
 	 * @throws Exception if something goes wrong.
 	 */
