@@ -94,6 +94,9 @@
 
 		<mkdir dir="report"/>
 		<cs:checkstyle config="${build-support.dir}/checkstyle.xml">
+			<classpath>
+				<path refid="classpath.test"/>
+			</classpath>
 			<fileset dir="src" includes="**/*.java"/>
 			<fileset dir="test" includes="**/*.java" erroronmissingdir="false"/>
 			<formatter type="plain"/>
