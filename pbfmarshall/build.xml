@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="Osmosis.PbfMarshall" default="all" basedir=".">
+
+	<!-- Include common java build. -->
+	<property name="build-support.dir" location="../build-support"/>
+	<import file="${build-support.dir}/script/build-java.xml"/>
+
+	<!--
+		Disable checkstyle and unit testing because this project only contains generated code
+		from Google Protocol Buffers.  No hand-written code exists.
+	-->
+	<target name="checkstyle"/>
+	<target name="test"/>
+</project>

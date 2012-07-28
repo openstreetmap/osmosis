@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/test/protobuf-java-2.4.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-TestUtil"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Xml"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-PbfMarshall"/>
+	<classpathentry kind="output" path="eclipse"/>
+</classpath>
