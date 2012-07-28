@@ -33,21 +33,21 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
+import org.openstreetmap.osmosis.pbf2.marshall.Fileformat;
+import org.openstreetmap.osmosis.pbf2.marshall.Osmformat;
+import org.openstreetmap.osmosis.pbf2.marshall.Fileformat.Blob;
+import org.openstreetmap.osmosis.pbf2.marshall.Fileformat.BlobHeader;
+import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.HeaderBBox;
+import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.Info;
+import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.Node;
+import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.PrimitiveGroup;
+import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.Relation;
+import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.Way;
+import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.Relation.MemberType;
 import org.openstreetmap.osmosis.pbf2.v0_6.impl.PbfFieldDecoder;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import crosby.binary.Fileformat;
-import crosby.binary.Fileformat.Blob;
-import crosby.binary.Fileformat.BlobHeader;
-import crosby.binary.Osmformat;
-import crosby.binary.Osmformat.HeaderBBox;
-import crosby.binary.Osmformat.Info;
-import crosby.binary.Osmformat.Node;
-import crosby.binary.Osmformat.PrimitiveGroup;
-import crosby.binary.Osmformat.Relation;
-import crosby.binary.Osmformat.Relation.MemberType;
-import crosby.binary.Osmformat.Way;
 
 
 /**
