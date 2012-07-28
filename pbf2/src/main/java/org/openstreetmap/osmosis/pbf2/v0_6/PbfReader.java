@@ -37,6 +37,8 @@ import org.openstreetmap.osmosis.pbf2.marshall.Fileformat;
 import org.openstreetmap.osmosis.pbf2.marshall.Osmformat;
 import org.openstreetmap.osmosis.pbf2.marshall.Fileformat.Blob;
 import org.openstreetmap.osmosis.pbf2.marshall.Fileformat.BlobHeader;
+import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.DenseInfo;
+import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.DenseNodes;
 import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.HeaderBBox;
 import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.Info;
 import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.Node;
@@ -199,7 +201,7 @@ public class PbfReader implements RunnableSource {
 		entityData = new CommonEntityData(
 				entityId,
 				info.getVersion(),
-				new Date(info.getTimestamp()),
+				fieldDecoder.decodeTimestamp(info.getTimestamp()),
 				user,
 				info.getChangeset());
 
@@ -240,10 +242,105 @@ public class PbfReader implements RunnableSource {
 
 			osmNode = new org.openstreetmap.osmosis.core.domain.v0_6.Node(
 					entityData,
-					node.getLat() * COORDINATE_SCALING_FACTOR,
-					node.getLon() * COORDINATE_SCALING_FACTOR);
+					fieldDecoder.decodeLatitude(node.getLat()),
+					fieldDecoder.decodeLatitude(node.getLon()));
 
 			sink.process(new NodeContainer(osmNode));
+		}
+	}
+
+
+	private void processNodes(DenseNodes nodes, PbfFieldDecoder fieldDecoder) {
+		List<Long> idList = nodes.getIdList();
+		List<Long> latList = nodes.getLatList();
+		List<Long> lonList = nodes.getLonList();
+
+		// Ensure parallel lists are of equal size.
+		if ((idList.size() != latList.size()) || (idList.size() != lonList.size())) {
+			throw new OsmosisRuntimeException("Number of ids (" + idList.size() + "), latitudes ("
+					+ latList.size() + "), and longitudes (" + lonList.size() + ") don't match");
+		}
+
+		Iterator<Integer> keysValuesIterator = nodes.getKeysValsList().iterator();
+
+		DenseInfo denseInfo;
+		if (nodes.hasDenseinfo()) {
+			denseInfo = nodes.getDenseinfo();
+		} else {
+			denseInfo = null;
+		}
+
+		long nodeId = 0;
+		long latitude = 0;
+		long longitude = 0;
+		int userId = 0;
+		int userSid = 0;
+		long timestamp = 0;
+		long changesetId = 0;
+		for (int i = 0; i < idList.size(); i++) {
+			CommonEntityData entityData;
+			org.openstreetmap.osmosis.core.domain.v0_6.Node node;
+
+			// Delta decode node fields.
+			nodeId += idList.get(i);
+			latitude += latList.get(i);
+			longitude += lonList.get(i);
+
+			if (denseInfo != null) {
+				// Delta decode dense info fields.
+				userId += denseInfo.getUid(i);
+				userSid += denseInfo.getUserSid(i);
+				timestamp += denseInfo.getTimestamp(i);
+				changesetId += denseInfo.getChangeset(i);
+
+				// Build the user, but only if one exists.
+				OsmUser user;
+				if (userId >= 0) {
+					user = new OsmUser(userId, fieldDecoder.decodeString(userSid));
+				} else {
+					user = OsmUser.NONE;
+				}
+
+				entityData = new CommonEntityData(
+						nodeId,
+						denseInfo.getVersion(i),
+						fieldDecoder.decodeTimestamp(timestamp),
+						user,
+						changesetId);
+			} else {
+				entityData = new CommonEntityData(
+						nodeId,
+						EMPTY_VERSION,
+						EMPTY_TIMESTAMP,
+						OsmUser.NONE,
+						EMPTY_CHANGESET);
+			}
+
+			// Build the tags. The key and value string indexes are sequential
+			// in the same PBF array. Each set of tags is delimited by an index
+			// with a value of 0.
+			Collection<Tag> tags = entityData.getTags();
+			while (keysValuesIterator.hasNext()) {
+				int keyIndex = keysValuesIterator.next();
+				if (keyIndex == 0) {
+					break;
+				}
+				if (!keysValuesIterator.hasNext()) {
+					throw new OsmosisRuntimeException(
+							"The PBF DenseInfo keys/values list contains a key with no corresponding value.");
+				}
+				int valueIndex = keysValuesIterator.next();
+
+				Tag tag = new Tag(fieldDecoder.decodeString(keyIndex), fieldDecoder.decodeString(valueIndex));
+				tags.add(tag);
+			}
+
+			node = new org.openstreetmap.osmosis.core.domain.v0_6.Node(
+					entityData,
+					fieldDecoder.decodeLatitude(latitude),
+					fieldDecoder.decodeLongitude(longitude));
+
+			sink.process(new NodeContainer(node));
 		}
 	}
 	
@@ -289,7 +386,7 @@ public class PbfReader implements RunnableSource {
 		List<RelationMember> members = relation.getMembers();
 
 		// Ensure parallel lists are of equal size.
-		if ((memberIds.size() != memberRoles.size()) && (memberIds.size() != memberTypes.size())) {
+		if ((memberIds.size() != memberRoles.size()) || (memberIds.size() != memberTypes.size())) {
 			throw new OsmosisRuntimeException("Number of member ids (" + memberIds.size() + "), member roles ("
 					+ memberRoles.size() + "), and member types (" + memberTypes.size() + ") don't match");
 		}
@@ -362,6 +459,7 @@ public class PbfReader implements RunnableSource {
 		PbfFieldDecoder fieldDecoder = new PbfFieldDecoder(block);
 
 		for (PrimitiveGroup primitiveGroup : block.getPrimitivegroupList()) {
+			processNodes(primitiveGroup.getDense(), fieldDecoder);
 			processNodes(primitiveGroup.getNodesList(), fieldDecoder);
 			processWays(primitiveGroup.getWaysList(), fieldDecoder);
 			processRelations(primitiveGroup.getRelationsList(), fieldDecoder);
