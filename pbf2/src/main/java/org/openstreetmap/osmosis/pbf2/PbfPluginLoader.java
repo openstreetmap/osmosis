@@ -23,10 +23,10 @@ public class PbfPluginLoader implements PluginLoader {
 		PbfReaderFactory reader = new PbfReaderFactory();
 
 		factoryMap = new HashMap<String, TaskManagerFactory>();
-		factoryMap.put("read-pbf2", reader);
-		factoryMap.put("rp2", reader);
+		factoryMap.put("read-pbf-fast", reader);
+		factoryMap.put("rbf", reader);
 
-		factoryMap.put("read-pbf2-0.6", reader);
+		factoryMap.put("read-pbf-fast-0.6", reader);
 
 		return factoryMap;
 	}

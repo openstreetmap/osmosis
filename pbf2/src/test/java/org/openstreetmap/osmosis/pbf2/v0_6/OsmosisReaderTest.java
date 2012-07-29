@@ -40,7 +40,7 @@ public class OsmosisReaderTest extends AbstractDataTest {
         // Read the PBF using the PBF2 reader and write to XML.
         Osmosis.run(new String[] {
         		"-q",
-        		"--read-pbf2-0.6",
+        		"--read-pbf-fast-0.6",
         		pbfFile.getPath(),
         		"--write-xml-0.6",
         		outputXmlFile.getPath()
