@@ -459,6 +459,7 @@ public class PbfReader implements RunnableSource {
 		PbfFieldDecoder fieldDecoder = new PbfFieldDecoder(block);
 
 		for (PrimitiveGroup primitiveGroup : block.getPrimitivegroupList()) {
+			log.finer("Processing OSM primitive group.");
 			processNodes(primitiveGroup.getDense(), fieldDecoder);
 			processNodes(primitiveGroup.getNodesList(), fieldDecoder);
 			processWays(primitiveGroup.getWaysList(), fieldDecoder);
@@ -468,6 +469,7 @@ public class PbfReader implements RunnableSource {
 
 
 	private void processBlobs(DataInputStream dis) throws IOException {
+		int dataBlockCount = 0;
 		while (true) {
 			// Read the length of the next header block. This is the only time
 			// we should expect to encounter an EOF exception. In all other
@@ -481,10 +483,15 @@ public class PbfReader implements RunnableSource {
 
 			// Read the header message then process the associated blob message
 			// according to its type. Skip any unknown blob bytes.
+			log.finer("Reading blob header.");
 			BlobHeader blobHeader = readHeader(headerLength, dis);
 			if ("OSMHeader".equals(blobHeader.getType())) {
+				log.finer("Processing OSM header.");
 				processOsmHeader(readBlobData(blobHeader, dis));
 			} else if ("OSMData".equals(blobHeader.getType())) {
+				if (log.isLoggable(Level.FINER)) {
+					log.finer("Processing OSM data block " + dataBlockCount++ + ".");
+				}
 				processOsmPrimitives(readBlobData(blobHeader, dis));
 			} else {
 				if (dis.skip(blobHeader.getDatasize()) != blobHeader.getDatasize()) {
