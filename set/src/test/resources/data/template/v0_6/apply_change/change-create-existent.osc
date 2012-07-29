@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osmChange version="0.6" generator="Osmosis %VERSION%">
+  <create>
+    <node id="1" version="1" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" lat="-1" lon="-2">
+      <tag k="created_by" v="Me1"/>
+    </node>
+  </create>
+</osmChange>

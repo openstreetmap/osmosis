@@ -18,7 +18,7 @@ import org.openstreetmap.osmosis.pgsimple.common.DatabaseContext;
 public class NodeDao extends EntityDao<Node> {
 	private static final String SQL_UPDATE_WAY_BBOX =
 		"UPDATE ways w SET bbox = ("
-		+ " SELECT Envelope(Collect(n.geom))"
+		+ " SELECT ST_Envelope(ST_Collect(n.geom))"
 		+ " FROM nodes n INNER JOIN way_nodes wn ON wn.node_id = n.id"
 		+ " WHERE wn.way_id = w.id"
 		+ " )"

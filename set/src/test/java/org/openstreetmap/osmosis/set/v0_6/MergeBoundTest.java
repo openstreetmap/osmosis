@@ -18,8 +18,10 @@ import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
+import org.openstreetmap.osmosis.core.misc.v0_6.EmptyReader;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
+import org.openstreetmap.osmosis.testutil.v0_6.RunTaskUtilities;
 import org.openstreetmap.osmosis.testutil.v0_6.SinkEntityInspector;
 
 
@@ -49,7 +51,7 @@ public class MergeBoundTest {
 		EntityMerger merger = new EntityMerger(ConflictResolutionMethod.LatestSource, 1,
 				BoundRemovedAction.Ignore);
 		
-		SinkEntityInspector merged = merge(merger, source0, source1);
+		SinkEntityInspector merged = RunTaskUtilities.run(merger, source0, source1);
 		List<EntityContainer> mergedList = createList(merged.getProcessedEntities());
 
 		Assert.assertEquals(2, mergedList.size());
@@ -72,7 +74,7 @@ public class MergeBoundTest {
 		EntityMerger merger = new EntityMerger(ConflictResolutionMethod.LatestSource, 1,
 				BoundRemovedAction.Ignore);
 		
-		SinkEntityInspector merged = merge(merger, source0, source1);
+		SinkEntityInspector merged = RunTaskUtilities.run(merger, source0, source1);
 
 		List<EntityContainer> mergedList = createList(merged.getProcessedEntities());
 		Assert.assertEquals(2, mergedList.size());
@@ -95,7 +97,7 @@ public class MergeBoundTest {
 		EntityMerger merger = new EntityMerger(ConflictResolutionMethod.LatestSource, 1,
 				BoundRemovedAction.Ignore);
 		
-		SinkEntityInspector merged = merge(merger, source0, source1);
+		SinkEntityInspector merged = RunTaskUtilities.run(merger, source0, source1);
 		List<EntityContainer> mergedList = createList(merged.getProcessedEntities());
 		
 		Assert.assertEquals(2, mergedList.size());
@@ -121,7 +123,7 @@ public class MergeBoundTest {
 		EntityMerger merger = new EntityMerger(ConflictResolutionMethod.LatestSource, 1,
 				BoundRemovedAction.Ignore);
 		
-		SinkEntityInspector merged = merge(merger, source0, source1);
+		SinkEntityInspector merged = RunTaskUtilities.run(merger, source0, source1);
 		List<EntityContainer> mergedList = createList(merged.getProcessedEntities());
 		Assert.assertEquals(3, mergedList.size());
 		Assert.assertEquals(EntityType.Bound, mergedList.get(0).getEntity().getType());
@@ -143,13 +145,13 @@ public class MergeBoundTest {
 	 */
 	@Test
 	public void testBothEmpty() throws Exception {
-		RunnableSource source0 = new EmptySource();
-		RunnableSource source1 = new EmptySource();
+		RunnableSource source0 = new EmptyReader();
+		RunnableSource source1 = new EmptyReader();
 
 		EntityMerger merger = new EntityMerger(ConflictResolutionMethod.LatestSource, 1,
 				BoundRemovedAction.Ignore);
 		
-		SinkEntityInspector merged = merge(merger, source0, source1);
+		SinkEntityInspector merged = RunTaskUtilities.run(merger, source0, source1);
 		Assert.assertTrue("Expected empty result set but got some data", merged.getLastEntityContainer() == null);
 	}
 	
@@ -161,7 +163,7 @@ public class MergeBoundTest {
 	 */
 	@Test
 	public void testOneSourceEmpty() throws Exception {
-		RunnableSource source0 = new EmptySource();
+		RunnableSource source0 = new EmptyReader();
 
 		Bound bound1 = new Bound(5, 6, 8, 7, "source2");
 		RunnableSource source1 = new BoundSource(bound1, true);
@@ -169,7 +171,7 @@ public class MergeBoundTest {
 		EntityMerger merger = new EntityMerger(ConflictResolutionMethod.LatestSource, 1,
 				BoundRemovedAction.Ignore);
 		
-		SinkEntityInspector merged = merge(merger, source0, source1);
+		SinkEntityInspector merged = RunTaskUtilities.run(merger, source0, source1);
 		List<EntityContainer> mergedList = createList(merged.getProcessedEntities());
 		
 		Assert.assertEquals(2, mergedList.size());
@@ -183,55 +185,6 @@ public class MergeBoundTest {
 			list.add(elem);
 		}
 		return list;
-	}
-	
-
-	/**
-	 * Helper method to execute a simple merge of two sources.
-	 * 
-	 * @throws Exception if something goes wrong.
-	 */
-	private SinkEntityInspector merge(EntityMerger merger, 
-			RunnableSource source1, RunnableSource source2) throws Exception {
-		Thread t1 = new Thread(source1);
-		Thread t2 = new Thread(source2);
-		
-		SinkEntityInspector inspector = new SinkEntityInspector();
-		source1.setSink(merger.getSink(0));
-		source2.setSink(merger.getSink(1));
-		merger.setSink(inspector);
-		
-		Thread mThread = new Thread(merger);
-		mThread.start();
-		t1.start();
-		t2.start();
-		mThread.join();
-		t1.join();
-		t2.join();
-		return inspector;
-	}
-
-	/**
-	 * A trivial empty source.
-	 */
-	private static class EmptySource implements RunnableSource {
-
-		private Sink sink;
-		
-		@Override
-		public void setSink(Sink sink) {
-			this.sink = sink;
-		}
-
-		@Override
-		public void run() {
-			try {
-				sink.initialize(Collections.<String, Object>emptyMap());
-				sink.complete();
-			} finally {
-				sink.release();
-			}
-		}
 	}
 
 	/**
