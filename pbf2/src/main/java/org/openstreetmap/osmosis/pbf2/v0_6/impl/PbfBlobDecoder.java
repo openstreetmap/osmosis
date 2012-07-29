@@ -59,8 +59,7 @@ public class PbfBlobDecoder implements Runnable {
 
 	private String blobType;
 	private byte[] rawBlob;
-	private boolean complete;
-	private boolean error;
+	private PbfBlobDecoderListener listener;
 	private List<EntityContainer> decodedEntities;
 
 
@@ -71,35 +70,13 @@ public class PbfBlobDecoder implements Runnable {
 	 *            The type of blob.
 	 * @param rawBlob
 	 *            The raw data of the blob.
+	 * @param listener
+	 *            The listener for receiving decoding results.
 	 */
-	public PbfBlobDecoder(String blobType, byte[] rawBlob) {
+	public PbfBlobDecoder(String blobType, byte[] rawBlob, PbfBlobDecoderListener listener) {
 		this.blobType = blobType;
 		this.rawBlob = rawBlob;
-	}
-
-
-	/**
-	 * Allows external controller to determine if processing is complete.
-	 * 
-	 * @return True if complete, false otherwise.
-	 */
-	public boolean isComplete() {
-		if (error) {
-			throw new OsmosisRuntimeException("A blob decoding error has occurred, aborting.");
-		}
-
-		return complete;
-	}
-
-
-	/**
-	 * Gets the list of decoded entities contained within the data block. This
-	 * is only available after processing is complete.
-	 * 
-	 * @return The list of decoded entities.
-	 */
-	public List<EntityContainer> getDecodedEntities() {
-		return decodedEntities;
+		this.listener = listener;
 	}
 
 
@@ -443,7 +420,6 @@ public class PbfBlobDecoder implements Runnable {
 
 	private void runAndTrapExceptions() {
 		try {
-
 			decodedEntities = new ArrayList<EntityContainer>();
 
 			if ("OSMHeader".equals(blobType)) {
@@ -466,16 +442,13 @@ public class PbfBlobDecoder implements Runnable {
 
 	@Override
 	public void run() {
-		complete = false;
-		error = false;
-
 		try {
 			runAndTrapExceptions();
 
-			complete = true;
+			listener.complete(decodedEntities);
 
 		} catch (RuntimeException e) {
-			error = true;
+			listener.error();
 		}
 	}
 }
