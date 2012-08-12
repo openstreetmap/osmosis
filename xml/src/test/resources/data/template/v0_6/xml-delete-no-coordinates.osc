@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osmChange version="0.6" generator="Osmosis %VERSION%">
+  <delete>
+    <node id="1" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10"/>
+  </delete>
+</osmChange>
