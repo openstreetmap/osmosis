@@ -48,13 +48,13 @@ public class ChangeSourceElementProcessor extends BaseElementProcessor {
 		
 		createElementProcessor =
 			new OsmElementProcessor(
-					this, new ChangeSinkAdapter(changeSink, ChangeAction.Create), enableDateParsing, false);
+					this, new ChangeSinkAdapter(changeSink, ChangeAction.Create), enableDateParsing, false, true);
 		modifyElementProcessor =
 			new OsmElementProcessor(
-					this, new ChangeSinkAdapter(changeSink, ChangeAction.Modify), enableDateParsing, false);
+					this, new ChangeSinkAdapter(changeSink, ChangeAction.Modify), enableDateParsing, false, true);
 		deleteElementProcessor =
 			new OsmElementProcessor(
-					this, new ChangeSinkAdapter(changeSink, ChangeAction.Delete), enableDateParsing, false);
+					this, new ChangeSinkAdapter(changeSink, ChangeAction.Delete), enableDateParsing, false, false);
 	}
 	
 	

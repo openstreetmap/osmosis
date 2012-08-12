@@ -38,6 +38,23 @@ public class OsmElementProcessor extends SourceElementProcessor {
 
 	private String generator;
 	
+
+	/**
+	 * Creates a new instance (coordinates are required).
+	 * 
+	 * @param parentProcessor
+	 *            The parent of this element processor.
+	 * @param sink
+	 *            The sink for receiving processed data.
+	 * @param enableDateParsing
+	 *            If true, dates will be parsed from xml data, else the current
+	 *            date will be used thus saving parsing time.
+	 * @param validateVersion If true, a version attribute will be checked and validated.
+	 */
+	public OsmElementProcessor(
+			BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing, boolean validateVersion) {
+		this(parentProcessor, sink, enableDateParsing, validateVersion, true);
+	}
 	/**
 	 * Creates a new instance.
 	 * 
@@ -48,15 +65,18 @@ public class OsmElementProcessor extends SourceElementProcessor {
 	 * @param enableDateParsing
 	 *            If true, dates will be parsed from xml data, else the current
 	 *            date will be used thus saving parsing time.
-	 *            @param validateVersion If true, a version attribute will be checked and validated.
+	 * @param validateVersion If true, a version attribute will be checked and validated.
+	 * @param coordinatesRequired
+	 *            If true, nodes without lat and lon attributes set will cause an exception.
 	 */
 	public OsmElementProcessor(
-			BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing, boolean validateVersion) {
+			BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing, boolean validateVersion,
+			boolean coordinatesRequired) {
 		super(parentProcessor, sink, enableDateParsing);
 		
 		this.validateVersion = validateVersion;
 
-		nodeElementProcessor = new NodeElementProcessor(this, getSink(), enableDateParsing);
+		nodeElementProcessor = new NodeElementProcessor(this, getSink(), enableDateParsing, coordinatesRequired);
 		wayElementProcessor = new WayElementProcessor(this, getSink(), enableDateParsing);
 		relationElementProcessor = new RelationElementProcessor(this, getSink(), enableDateParsing);
 	}

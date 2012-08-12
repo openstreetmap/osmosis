@@ -33,8 +33,10 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	
 	private TagElementProcessor tagElementProcessor;
 	private Node node;
+	private boolean coordinatesRequired;
 	
 	
+
 	/**
 	 * Creates a new instance.
 	 * 
@@ -47,8 +49,27 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	 *            date will be used thus saving parsing time.
 	 */
 	public NodeElementProcessor(BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing) {
+		this(parentProcessor, sink, enableDateParsing, true);
+	}
+	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param parentProcessor
+	 *            The parent of this element processor.
+	 * @param sink
+	 *            The sink for receiving processed data.
+	 * @param enableDateParsing
+	 *            If true, dates will be parsed from xml data, else the current
+	 *            date will be used thus saving parsing time.
+	 * @param coordinatesRequired
+	 * 		      If true, nodes without lat and lon attributes set will cause an exception.
+	 */
+	public NodeElementProcessor(BaseElementProcessor parentProcessor, Sink sink, boolean enableDateParsing, 
+			boolean coordinatesRequired) {
 		super(parentProcessor, sink, enableDateParsing);
-		
+
+		this.coordinatesRequired = coordinatesRequired;
 		tagElementProcessor = new TagElementProcessor(this, this);
 	}
 	
@@ -80,14 +101,14 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 		rawUserId = attributes.getValue(ATTRIBUTE_NAME_USERID);
 		rawUserName = attributes.getValue(ATTRIBUTE_NAME_USER);
 		changesetId = buildChangesetId(attributes.getValue(ATTRIBUTE_NAME_CHANGESET_ID));
-		latitude = Double.parseDouble(attributes.getValue(ATTRIBUTE_NAME_LATITUDE));
-		longitude = Double.parseDouble(attributes.getValue(ATTRIBUTE_NAME_LONGITUDE));
+		
+		latitude = getLatLonDouble(attributes, ATTRIBUTE_NAME_LATITUDE, id);
+		longitude = getLatLonDouble(attributes, ATTRIBUTE_NAME_LONGITUDE, id);
 		
 		user = buildUser(rawUserId, rawUserName);
 		
 		node = new Node(new CommonEntityData(id, version, timestampContainer, user, changesetId), latitude, longitude);
 	}
-	
 	
 	/**
 	 * Retrieves the appropriate child element processor for the newly
@@ -128,5 +149,26 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	 */
 	public void processTag(Tag tag) {
 		node.getTags().add(tag);
+	}
+	
+	private double getLatLonDouble(Attributes attributes, String attributeName, long id) {
+		String value = attributes.getValue(attributeName);
+		if (value == null) {
+			if (coordinatesRequired) {
+				throw new OsmosisRuntimeException(String.format(
+						"Node %s does not have its %s attribute set; this attribute is required in current context.",
+						id, attributeName));
+			} else {
+				return Double.NaN;
+			}
+		}
+		
+		try {
+			return Double.parseDouble(value);
+		} catch (NumberFormatException ex) {
+			throw new OsmosisRuntimeException(String.format(
+					"Node %s: cannot parse the %s attribute as a numeric value",
+					id, attributeName));
+		}
 	}
 }
