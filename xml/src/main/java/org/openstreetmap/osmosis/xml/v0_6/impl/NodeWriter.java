@@ -58,9 +58,14 @@ public class NodeWriter extends EntityWriter {
 		beginOpenElement();
 		addCommonAttributes(node);
 		
-		addAttribute("lat", numberFormat.format(node.getLatitude()));
-		addAttribute("lon", numberFormat.format(node.getLongitude()));
+		if (!Double.isNaN(node.getLatitude())) {
+			addAttribute("lat", numberFormat.format(node.getLatitude()));
+		}
 		
+		if (!Double.isNaN(node.getLongitude())) {
+			addAttribute("lon", numberFormat.format(node.getLongitude()));
+		}
+
 		addMetatags(node);
 		
 		tags = node.getTags();
