@@ -2466,7 +2466,8 @@ CREATE TABLE nodes (
     visible boolean NOT NULL,
     "timestamp" timestamp without time zone NOT NULL,
     tile bigint NOT NULL,
-    version bigint NOT NULL
+    version bigint NOT NULL,
+    redaction_id integer
 );
 
 
@@ -2582,7 +2583,8 @@ CREATE TABLE relations (
     changeset_id bigint NOT NULL,
     "timestamp" timestamp without time zone NOT NULL,
     version bigint NOT NULL,
-    visible boolean DEFAULT true NOT NULL
+    visible boolean DEFAULT true NOT NULL,
+    redaction_id integer
 );
 
 
@@ -2822,7 +2824,8 @@ CREATE TABLE ways (
     changeset_id bigint NOT NULL,
     "timestamp" timestamp without time zone NOT NULL,
     version bigint NOT NULL,
-    visible boolean DEFAULT true NOT NULL
+    visible boolean DEFAULT true NOT NULL,
+    redaction_id integer
 );
 
 

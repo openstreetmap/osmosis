@@ -447,6 +447,8 @@ public abstract class EntityDao<T extends Entity> {
 			sql.append(")");
 		}
 		
+		sql.append(" AND redaction_id IS NULL");
+		
 		LOG.log(Level.FINER, "Entity identification query: " + sql);
 		
 		namedParamJdbcTemplate.update(sql.toString(), parameterSource);
