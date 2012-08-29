@@ -1,3 +1,25 @@
+0.41
+All entities can now pass metadata through the pipeline.  XML tasks can add these as additional attributes on output.
+Added --convert-change-to-full-history task.
+Added "initialize" support to all tasks to allow pre-processing setup to occur.
+Added a number of unit tests to increase test coverage, and reduced use of duplicated support classes.
+Added support for the XML bounds element, but still support old bound element.
+Added configurable log message prefix to the output of --log-progress-* tasks.
+Added completion step timings for --log-progress-* tasks.
+Added continuous replication looping support to apidb replication functionality.
+Added --write-replication task.
+Enhanced  --replicate-apidb to send output through the pipeline to tasks like --write-replication instead of being an all-in-one task.
+Added --send-replication-sequence task which notifies listeners when new replication data has been written.
+Added --send-replication-data task which provides streaming replication data to listeners.
+Added --receive-replication task which consumes data sent by --serve-replication-data.
+Added --replication-to-change task which converts a replication pipeline stream to a normal change stream.
+Added keyValueListFile option to --node-key-value and --way-key-value tasks.
+Added JaCoCo code coverage tool to the build process.
+Updated ant scripts to use build, checkstyle, test and all targets across all projects.
+Update pgsnapshot and pgsimple tasks to no longer use PostGIS deprecated function names.
+Added --read-pbf-fast PBF reader which utilises multi-threading to improve performance.
+Enhanced XML tasks to handle missing lat/lon attributes on deleted entities.
+
 0.40.1
 Fix the classworlds version in the Windows launcher.
 
