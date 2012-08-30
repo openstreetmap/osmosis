@@ -189,7 +189,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			Date localTimestamp) {
 		Date maximumTimestamp;
 		
-		maximumTimestamp = serverTimestamp;
+		maximumTimestamp = new Date(Long.MAX_VALUE);
 		
 		// Limit the duration according to the maximum defined in the configuration.
 		if (configuration.getMaxInterval() > 0) {
