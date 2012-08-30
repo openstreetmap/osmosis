@@ -34,6 +34,6 @@ public class TimeDao implements SystemTimeLoader {
 	public Date getSystemTime() {
 		// The timeofday function is the only one that returns wall clock time.
 		// Others return the time of the start of the transaction.
-		return jdbcTemplate.queryForObject("SELECT CAST(timeofday() as timestamp) AS SystemTime", Date.class);
+		return jdbcTemplate.queryForObject("SELECT clock_timestamp()", Date.class);
 	}
 }
