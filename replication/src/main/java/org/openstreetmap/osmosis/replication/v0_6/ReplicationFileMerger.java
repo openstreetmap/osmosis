@@ -4,6 +4,7 @@ package org.openstreetmap.osmosis.replication.v0_6;
 import java.io.File;
 import java.util.Date;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeForStreamableApplierComparator;
@@ -25,6 +26,8 @@ import org.openstreetmap.osmosis.xml.v0_6.XmlChangeWriter;
  * combined into larger files for more efficient consumption where latency is less of an issue.
  */
 public class ReplicationFileMerger extends BaseReplicationDownloader {
+	private static final Logger LOG = Logger.getLogger(ReplicationFileMerger.class.getName());
+
 	private static final String DATA_DIRECTORY = "data";
 	private static final String CONFIG_FILE = "configuration.txt";
 	private static final String DATA_STATE_FILE = "state.txt";
@@ -233,6 +236,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 			currentDataState.setSequenceNumber(currentDataState.getSequenceNumber() + 1);
 			
 			// Initialise an output file for the new sequence number.
+			LOG.finer("Opening change sink for interval with sequence number " + currentDataState.getSequenceNumber());
 			changeSink = buildResultWriter(currentDataState.getSequenceNumber());
 		}
 		
@@ -244,15 +248,17 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 				intervalEnd = new Date(currentDataState.getTimestamp().getTime() + intervalLength);
 				intervalEnd = alignDateToIntervalBoundary(intervalEnd, intervalLength);
 				currentDataState.setTimestamp(intervalEnd);
+				LOG.finer("End of current interval is " + intervalEnd);
 			}
 			
 			// If the replication state has moved us past the current interval end point we need to
 			// open a new interval. This may occur many times if the current replication state moves
 			// us past several intervals.
-			while ((replicationState.getTimestamp().getTime() - currentDataState.getTimestamp().getTime())
-					>= intervalLength) {
-				
+			while (replicationState.getTimestamp().compareTo(currentDataState.getTimestamp()) > 0) {
+
 				// If we have an open changeset writer, close it and save the current state.
+				LOG.finer("Closing change sink for interval with sequence number "
+						+ currentDataState.getSequenceNumber());
 				changeSink.complete();
 				changeSink.release();
 				
@@ -265,12 +271,15 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 						new Date(currentDataState.getTimestamp().getTime() + configuration.getIntervalLength()));
 				
 				// Begin a new interval.
+				LOG.finer("Opening change sink for interval with sequence number "
+						+ currentDataState.getSequenceNumber());
 				changeSink = buildResultWriter(currentDataState.getSequenceNumber());
 			}
 			
 		} else {
 			// There is no maximum interval set, so simply update the current state based on the
 			// current replication state.
+			LOG.finer("End of current interval is " + replicationState.getTimestamp());
 			currentDataState.setTimestamp(replicationState.getTimestamp());
 		}
 		
@@ -288,6 +297,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	@Override
 	protected void processComplete() {
 		if (sinkActive) {
+			LOG.finer("Closing change sink for interval with sequence number " + currentDataState.getSequenceNumber());
 			changeSink.complete();
 			persistSequencedCurrentState();
 			dataStatePersister.store(currentDataState.store());
