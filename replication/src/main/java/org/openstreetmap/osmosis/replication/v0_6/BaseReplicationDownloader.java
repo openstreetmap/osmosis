@@ -199,6 +199,8 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			}
 		}
 		
+		LOG.finer("Maximum timestamp is " + maximumTimestamp);
+		
 		return maximumTimestamp;
 	}
 	
