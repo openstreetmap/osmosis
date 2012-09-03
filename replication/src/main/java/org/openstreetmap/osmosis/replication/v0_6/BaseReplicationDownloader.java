@@ -225,7 +225,16 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			long sequenceNumber;
 			ReplicationState fileReplicationState;
 			
-			// Ensure that our current state is within the allowable timestamp range.
+			// Ensure that our current state is within the allowable timestamp
+			// range. We can't continue if our local state has already reached
+			// (or exceeded) the maximum timestamp. This will typically occur if
+			// a job is run again before new data becomes available, or if an
+			// implementation of this class (eg. ReplicationFileMerger) is
+			// waiting for a full time period of data to become available before
+			// processing. This is an optimisation in that the timestamp
+			// associated with the next replication sequence will be checked
+			// before we process its data, but that requires downloading an
+			// additional state file.
 			if (localState.getTimestamp().compareTo(maximumDownloadTimestamp) >= 0) {
 				break;
 			}
@@ -236,6 +245,15 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			
 			// Get the state associated with the next file.
 			fileReplicationState = serverStateReader.getServerState(baseUrl, sequenceNumber);
+			
+			// Ensure that the next state is within the allowable timestamp
+			// range. We must stop if the next data takes us beyond the maximum
+			// timestamp. This will either occur if a maximum download time
+			// duration limit has been imposed, or if a time-aligned boundary
+			// has been reached.
+			if (fileReplicationState.getTimestamp().compareTo(maximumDownloadTimestamp) > 0) {
+				break;
+			}
 			
 			// Download the next replication file to a temporary file.
 			replicationFile =
