@@ -6,10 +6,9 @@ import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
-import org.openstreetmap.osmosis.core.util.PropertiesPersister;
-import org.openstreetmap.osmosis.replication.common.ReplicationFileSequenceFormatter;
+import org.openstreetmap.osmosis.replication.common.FileReplicationStore;
 import org.openstreetmap.osmosis.replication.common.ReplicationState;
-import org.openstreetmap.osmosis.xml.common.CompressionMethod;
+import org.openstreetmap.osmosis.replication.common.ReplicationStore;
 import org.openstreetmap.osmosis.xml.v0_6.XmlChangeWriter;
 
 
@@ -23,11 +22,8 @@ import org.openstreetmap.osmosis.xml.v0_6.XmlChangeWriter;
  */
 public class ReplicationWriter implements ChangeSink {
 
-	/**
-	 * This handles and persists the replication metadata.
-	 */
+	private ReplicationStore replicationStore;
 	private ReplicationStateWriter stateWriter;
-	private ReplicationFileSequenceFormatter sequenceFormatter;
 	private ReplicationState state;
 	private XmlChangeWriter changeWriter;
 
@@ -39,11 +35,8 @@ public class ReplicationWriter implements ChangeSink {
 	 *            The directory containing configuration and tracking files.
 	 */
 	public ReplicationWriter(File workingDirectory) {
+		replicationStore = new FileReplicationStore(workingDirectory, false);
 		stateWriter = new ReplicationStateWriter(workingDirectory);
-
-		// Build the sequence formatter which converts sequence numbers into a
-		// filename and creates the intermediate directories as required.
-		sequenceFormatter = new ReplicationFileSequenceFormatter(workingDirectory);
 	}
 
 
@@ -57,8 +50,7 @@ public class ReplicationWriter implements ChangeSink {
 
 		// Initialize a new change writer for the current sequence number.
 		if (state.getSequenceNumber() > 0) {
-			File changeFile = sequenceFormatter.getFormattedName(state.getSequenceNumber(), ".osc.gz");
-			changeWriter = new XmlChangeWriter(changeFile, CompressionMethod.GZip);
+			changeWriter = replicationStore.saveData(state.getSequenceNumber());
 		}
 	}
 
@@ -79,9 +71,7 @@ public class ReplicationWriter implements ChangeSink {
 		}
 
 		// Write the sequenced state file.
-		File stateFile = sequenceFormatter.getFormattedName(state.getSequenceNumber(), ".state.txt");
-		new PropertiesPersister(stateFile).store(state.store());
-		
+		replicationStore.saveState(state);
 
 		// We must only complete the state writer after we've finished writing
 		// the replication data and sequence numbered state.

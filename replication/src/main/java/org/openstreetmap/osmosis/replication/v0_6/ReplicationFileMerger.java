@@ -11,11 +11,11 @@ import org.openstreetmap.osmosis.core.sort.v0_6.ChangeForStreamableApplierCompar
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeSorter;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.util.PropertiesPersister;
-import org.openstreetmap.osmosis.replication.common.ReplicationFileSequenceFormatter;
+import org.openstreetmap.osmosis.replication.common.FileReplicationStore;
 import org.openstreetmap.osmosis.replication.common.ReplicationState;
+import org.openstreetmap.osmosis.replication.common.ReplicationStore;
 import org.openstreetmap.osmosis.replication.v0_6.impl.ReplicationDownloaderConfiguration;
 import org.openstreetmap.osmosis.replication.v0_6.impl.ReplicationFileMergerConfiguration;
-import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlChangeReader;
 import org.openstreetmap.osmosis.xml.v0_6.XmlChangeWriter;
 
@@ -31,13 +31,12 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 
 	private static final String DATA_DIRECTORY = "data";
 	private static final String CONFIG_FILE = "configuration.txt";
-	private static final String DATA_STATE_FILE = "state.txt";
 
 	private boolean sinkActive;
 	private ChangeSink changeSink;
 	private ReplicationState currentDataState;
 	private PropertiesPersister dataStatePersister;
-	private ReplicationFileSequenceFormatter replicationFileSequenceFormatter;
+	private ReplicationStore replicationStore;
 
 
 	/**
@@ -49,13 +48,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	public ReplicationFileMerger(File workingDirectory) {
 		super(workingDirectory);
 
-		File dataDirectory;
-
-		dataDirectory = new File(getWorkingDirectory(), DATA_DIRECTORY);
-
-		dataStatePersister = new PropertiesPersister(new File(dataDirectory, DATA_STATE_FILE));
-
-		replicationFileSequenceFormatter = new ReplicationFileSequenceFormatter(dataDirectory);
+		replicationStore = new FileReplicationStore(new File(getWorkingDirectory(), DATA_DIRECTORY), true);
 
 		sinkActive = false;
 	}
@@ -127,31 +120,15 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 
 
 	private ChangeSink buildResultWriter(long sequenceNumber) {
-		File resultFile;
 		XmlChangeWriter xmlChangeWriter;
 		ChangeSorter changeSorter;
 
-		resultFile = replicationFileSequenceFormatter.getFormattedName(currentDataState.getSequenceNumber(), ".osc.gz");
-
-		xmlChangeWriter = new XmlChangeWriter(resultFile, CompressionMethod.GZip);
+		xmlChangeWriter = replicationStore.saveData(sequenceNumber);
 
 		changeSorter = new ChangeSorter(new ChangeForStreamableApplierComparator());
 		changeSorter.setChangeSink(xmlChangeWriter);
 
 		return changeSorter;
-	}
-
-
-	private void persistSequencedCurrentState() {
-		PropertiesPersister statePersistor;
-		File stateFile;
-
-		stateFile = replicationFileSequenceFormatter.getFormattedName(currentDataState.getSequenceNumber(),
-				".state.txt");
-
-		statePersistor = new PropertiesPersister(stateFile);
-
-		statePersistor.store(currentDataState.store());
 	}
 
 
@@ -237,10 +214,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		currentDataState = new ReplicationState(alignedDate, 0);
 
 		// Write out the initial "0" state file.
-		persistSequencedCurrentState();
-
-		// Save the main state file.
-		dataStatePersister.store(currentDataState.store());
+		replicationStore.saveState(currentDataState);
 	}
 
 
@@ -294,8 +268,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 				changeSink.complete();
 				changeSink.release();
 
-				persistSequencedCurrentState();
-				dataStatePersister.store(currentDataState.store());
+				replicationStore.saveState(currentDataState);
 
 				// Update the state to match the next interval.
 				currentDataState.setSequenceNumber(currentDataState.getSequenceNumber() + 1);
@@ -332,8 +305,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		if (sinkActive) {
 			LOG.finer("Closing change sink for interval with sequence number " + currentDataState.getSequenceNumber());
 			changeSink.complete();
-			persistSequencedCurrentState();
-			dataStatePersister.store(currentDataState.store());
+			replicationStore.saveState(currentDataState);
 
 			changeSink.release();
 			changeSink = null;
