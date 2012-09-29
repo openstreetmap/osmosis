@@ -4,6 +4,7 @@ package org.openstreetmap.osmosis.replication.v0_6;
 import java.io.File;
 import java.util.Map;
 
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeForStreamableApplierComparator;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeSorter;
@@ -64,7 +65,15 @@ public class ReplicationDownloader extends BaseReplicationDownloader implements 
 	 */
 	@Override
 	protected void processInitializeState(ReplicationState initialState) {
-		// Nothing to do.
+		// We don't allow automatic state file initialization for replication
+		// downloading. This is the most common task used by end users to
+		// retrieve replication information. It is very rare that a user would
+		// want to begin from the latest server state file. In most cases
+		// they'll want to begin processing from a known point in time.
+		throw new OsmosisRuntimeException("The local state.txt file doesn't exist."
+				+ " See http://wiki.openstreetmap.org/wiki/Osmosis/Detailed_Usage"
+				+ "#--read-replication-interval-init_.28--rrii.29"
+				+ " for more details on how to create the state.txt file.");
 	}
 	
 	
