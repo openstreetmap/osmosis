@@ -89,8 +89,9 @@ public class CommandLineParser {
 			} else if (isArgumentForOption(OPTION_PLUGIN_SHORT, OPTION_PLUGIN_LONG, globalOption.name)) {
 				plugins.add(parseOptionString(globalOption));
 			} else {
-				throw new OsmosisRuntimeException(
-						"Argument " + (globalOption.offset + 1) + " specifies an unrecognised option.");
+				throw new OsmosisRuntimeException("Argument " + (globalOption.offset + 1)
+						+ " specifies an unrecognised option \"" + GLOBAL_ARGUMENT_PREFIX + globalOption.name
+						+ "\".");
 			}
 		}
 	}
