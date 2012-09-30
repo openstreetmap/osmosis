@@ -3,10 +3,18 @@ package org.openstreetmap.osmosis.tagtransform;
 
 public interface Match {
 
-	public String getMatchID();
-	public String getKey(int group);
-	public String getValue(int group);
-	public int getKeyGroupCount();
-	public int getValueGroupCount();
-	
+	String getMatchID();
+
+
+	String getKey(int group);
+
+
+	String getValue(int group);
+
+
+	int getKeyGroupCount();
+
+
+	int getValueGroupCount();
+
 }

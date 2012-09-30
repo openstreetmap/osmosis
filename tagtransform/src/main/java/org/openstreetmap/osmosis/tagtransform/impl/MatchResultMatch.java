@@ -12,31 +12,37 @@ public class MatchResultMatch implements Match {
 	private MatchResult valueRes;
 	private String matchID;
 
+
 	public MatchResultMatch(String matchID, MatchResult keyRes, MatchResult valueRes) {
 		this.matchID = matchID;
 		this.keyRes = keyRes;
 		this.valueRes = valueRes;
 	}
 
+
 	@Override
 	public String getKey(int group) {
 		return keyRes.group(group);
 	}
+
 
 	@Override
 	public int getKeyGroupCount() {
 		return keyRes.groupCount() + 1;
 	}
 
+
 	@Override
 	public String getMatchID() {
 		return matchID;
 	}
 
+
 	@Override
 	public String getValue(int group) {
 		return valueRes.group(group);
 	}
+
 
 	@Override
 	public int getValueGroupCount() {

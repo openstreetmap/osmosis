@@ -11,8 +11,7 @@ import org.openstreetmap.osmosis.tagtransform.Output;
 public class CopyAll implements Output {
 
 	@Override
-	public void apply(Map<String, String> originalTags,
-			Map<String, String> tags, Collection<Match> matches) {
+	public void apply(Map<String, String> originalTags, Map<String, String> tags, Collection<Match> matches) {
 		// copy all tags
 		tags.putAll(originalTags);
 	}

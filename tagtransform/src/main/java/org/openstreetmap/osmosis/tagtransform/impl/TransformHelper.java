@@ -41,11 +41,13 @@ import org.openstreetmap.osmosis.xml.common.XmlTimestampFormat;
 
 /**
  * Class is intended to provide utility place for tag transform functionality. <br/>
- * See {@link org.openstreetmap.osmosis.tagtransform.v0_6.TransformTask TransformTask} for example implementation.
+ * See {@link org.openstreetmap.osmosis.tagtransform.v0_6.TransformTask
+ * TransformTask} for example implementation.
  * 
  * @author apopov
- *
- * @param <T> is a sink type.
+ * 
+ * @param <T>
+ *            is a sink type.
  */
 public abstract class TransformHelper<T extends Task & Completable> implements Completable {
 	protected Logger logger = Logger.getLogger(this.getClass().getName());
@@ -56,48 +58,53 @@ public abstract class TransformHelper<T extends Task & Completable> implements C
 	protected List<Translation> translations;
 	protected static TimestampFormat timestampFormat = new XmlTimestampFormat();
 
-	
+
 	public TransformHelper(String configFile, String statsFile) {
-		logger.log(Level.FINE, "Transform configured with "+configFile+" and "+statsFile);
+		logger.log(Level.FINE, "Transform configured with " + configFile + " and " + statsFile);
 		translations = new TransformLoader().load(configFile);
 		this.statsFile = statsFile;
 		this.configFile = configFile;
 	}
 
+
 	public void setSink(T sink) {
 		this.sink = sink;
 	}
-	
+
+
 	@Override
 	public void complete() {
-		if ( statsFile != null && !statsFile.isEmpty() ) {
+		if (statsFile != null && !statsFile.isEmpty()) {
 			StringBuilder builder = new StringBuilder();
 			builder.append(configFile);
 			builder.append("\n\n");
-			for ( Translation t : translations )
+			for (Translation t : translations)
 				t.outputStats(builder, "");
-			
+
 			Writer writer = null;
 			try {
 				writer = new FileWriter(new File(statsFile));
 				writer.write(builder.toString());
 			} catch (IOException e) {
-				throw new StatsSaveException("Failed to save stats: "+e.getLocalizedMessage(), e);
+				throw new StatsSaveException("Failed to save stats: " + e.getLocalizedMessage(), e);
 			} finally {
-				if ( writer != null )
+				if (writer != null)
 					try {
 						writer.close();
-					} catch (IOException e) {}
+					} catch (IOException e) {
+					}
 			}
 		}
 		sink.complete();
 	}
 
+
 	@Override
 	public void release() {
 		sink.release();
 	}
-	
+
+
 	/**
 	 * Transforms entity container according to configFile.
 	 * 
@@ -107,49 +114,48 @@ public abstract class TransformHelper<T extends Task & Completable> implements C
 	protected EntityContainer processEntityContainer(EntityContainer entityContainer) {
 		Entity entity = entityContainer.getEntity();
 		EntityType entityType = entity.getType();
-		
+
 		Collection<Tag> tagList = entity.getTags();
 		Map<String, String> originalTags = new HashMap<String, String>();
-		for ( Tag tag : tagList ) {
+		for (Tag tag : tagList) {
 			originalTags.put(tag.getKey(), tag.getValue());
 		}
-		
+
 		Map<String, String> tags = new HashMap<String, String>(originalTags);
-		for ( Translation translation : translations ) {
-			Collection<Match> matches = translation.match(tags, TTEntityType.fromEntityType0_6(entityType), entity.getUser().getName(), entity.getUser().getId());
-			if ( matches == null || matches.isEmpty() )
+		for (Translation translation : translations) {
+			Collection<Match> matches = translation.match(tags, TTEntityType.fromEntityType0_6(entityType), entity
+					.getUser().getName(), entity.getUser().getId());
+			if (matches == null || matches.isEmpty())
 				continue;
-			if ( translation.isDropOnMatch() ) {
+			if (translation.isDropOnMatch()) {
 				return null;
 			}
-			
+
 			Map<String, String> newTags = new HashMap<String, String>();
-			for ( Output output : translation.getOutputs() ) {
+			for (Output output : translation.getOutputs()) {
 				output.apply(tags, newTags, matches);
 			}
 			tags = newTags;
 		}
-		
+
 		Collection<Tag> newTags = new ArrayList<Tag>();
-		for ( Entry<String, String> tag : tags.entrySet() )
+		for (Entry<String, String> tag : tags.entrySet())
 			newTags.add(new Tag(tag.getKey(), tag.getValue()));
-		
+
 		EntityContainer output = null;
 		TimestampContainer timestamp = new UnparsedTimestampContainer(timestampFormat,
 				entity.getFormattedTimestamp(timestampFormat));
-		switch ( entity.getType() ) {
+		switch (entity.getType()) {
 		case Node:
 			Node oldNode = (Node) entityContainer.getEntity();
-			output = new NodeContainer(
-					new Node(oldNode.getId(), oldNode.getVersion(), timestamp,
-							oldNode.getUser(), oldNode.getChangesetId(), oldNode.getLatitude(),
-							oldNode.getLongitude()));
+			output = new NodeContainer(new Node(oldNode.getId(), oldNode.getVersion(), timestamp, oldNode.getUser(),
+					oldNode.getChangesetId(), oldNode.getLatitude(), oldNode.getLongitude()));
 			output.getEntity().getTags().addAll(newTags);
 			break;
-			
+
 		case Way:
 			Way oldWay = (Way) entityContainer.getEntity();
-			Way way = new Way(oldWay.getId(), oldWay.getVersion(), timestamp, oldWay.getUser(),oldWay.getChangesetId());
+			Way way = new Way(oldWay.getId(), oldWay.getVersion(), timestamp, oldWay.getUser(), oldWay.getChangesetId());
 			way.getTags().addAll(newTags);
 			way.getWayNodes().addAll(oldWay.getWayNodes());
 			output = new WayContainer(way);
@@ -157,8 +163,8 @@ public abstract class TransformHelper<T extends Task & Completable> implements C
 
 		case Relation:
 			Relation oldRelation = (Relation) entityContainer.getEntity();
-			Relation relation = new Relation(oldRelation.getId(), oldRelation.getVersion(),
-					timestamp, oldRelation.getUser(), oldRelation.getChangesetId());
+			Relation relation = new Relation(oldRelation.getId(), oldRelation.getVersion(), timestamp,
+					oldRelation.getUser(), oldRelation.getChangesetId());
 			relation.getTags().addAll(newTags);
 			relation.getMembers().addAll(oldRelation.getMembers());
 			output = new RelationContainer(relation);
@@ -168,11 +174,8 @@ public abstract class TransformHelper<T extends Task & Completable> implements C
 			break;
 
 		}
-		
+
 		return output;
 	}
-
-	
-
 
 }

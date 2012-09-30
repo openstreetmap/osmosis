@@ -21,8 +21,8 @@ public class TranslationImpl implements Translation {
 	private List<Output> output;
 	private Matcher finder;
 
-	public TranslationImpl(String name, String description, Matcher matcher,
-			Matcher finder, List<Output> output) {
+
+	public TranslationImpl(String name, String description, Matcher matcher, Matcher finder, List<Output> output) {
 		this.name = name;
 		this.description = description;
 		this.matcher = matcher;
@@ -30,23 +30,26 @@ public class TranslationImpl implements Translation {
 		this.output = output;
 	}
 
+
 	@Override
 	public Collection<Output> getOutputs() {
 		return output;
 	}
+
 
 	@Override
 	public boolean isDropOnMatch() {
 		return output.isEmpty();
 	}
 
+
 	@Override
 	public Collection<Match> match(Map<String, String> tags, TTEntityType type, String uname, int uid) {
 		Collection<Match> matches = matcher.match(tags, type, uname, uid);
-		if ( matches != null && !matches.isEmpty() ) {
+		if (matches != null && !matches.isEmpty()) {
 			Collection<Match> finds = finder == null ? null : finder.match(tags, type, uname, uid);
-			if ( finds != null && !finds.isEmpty() ) {
-				if ( matches instanceof ArrayList )
+			if (finds != null && !finds.isEmpty()) {
+				if (matches instanceof ArrayList)
 					matches.addAll(finds);
 				else {
 					List<Match> allMatches = new ArrayList<Match>();
@@ -55,12 +58,13 @@ public class TranslationImpl implements Translation {
 					return allMatches;
 				}
 			}
-			
+
 			return matches;
 		}
-		
+
 		return null;
 	}
+
 
 	@Override
 	public void outputStats(StringBuilder output, String indent) {
@@ -68,12 +72,12 @@ public class TranslationImpl implements Translation {
 		output.append(name);
 		output.append(":");
 		output.append('\n');
-		if ( description != null && !description.isEmpty() ) {
+		if (description != null && !description.isEmpty()) {
 			output.append(description);
 			output.append('\n');
 		}
-		matcher.outputStats(output, indent+"    ");
-		if ( finder != null )
+		matcher.outputStats(output, indent + "    ");
+		if (finder != null)
 			finder.outputStats(output, "  + ");
 		output.append('\n');
 	}

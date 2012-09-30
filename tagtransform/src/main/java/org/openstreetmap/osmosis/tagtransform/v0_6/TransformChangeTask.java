@@ -15,17 +15,19 @@ public class TransformChangeTask extends TransformHelper<ChangeSink> implements 
 		super(configFile, statsFile);
 	}
 
+
 	@Override
 	public void process(ChangeContainer changeContainer) {
-		if ( !ChangeAction.Delete.equals(changeContainer.getAction()) ) { 
+		if (!ChangeAction.Delete.equals(changeContainer.getAction())) {
 			EntityContainer output = super.processEntityContainer(changeContainer.getEntityContainer());
-			
-			if ( output != null )
-				sink.process( new ChangeContainer(output, changeContainer.getAction()) );
+
+			if (output != null)
+				sink.process(new ChangeContainer(output, changeContainer.getAction()));
 		} else {
 			sink.process(changeContainer);
 		}
 	}
+
 
 	@Override
 	public void setChangeSink(ChangeSink changeSink) {

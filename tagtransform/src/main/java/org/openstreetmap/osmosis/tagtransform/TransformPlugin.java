@@ -6,18 +6,18 @@ import java.util.Map;
 
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
 import org.openstreetmap.osmosis.core.plugin.PluginLoader;
+import org.openstreetmap.osmosis.tagtransform.v0_6.TransformChangeTaskFactory;
+import org.openstreetmap.osmosis.tagtransform.v0_6.TransformTaskFactory;
 
 
 public class TransformPlugin implements PluginLoader {
 
 	@Override
 	public Map<String, TaskManagerFactory> loadTaskFactories() {
-		org.openstreetmap.osmosis.tagtransform.v0_6.TransformTaskFactory v0_6 =
-			new org.openstreetmap.osmosis.tagtransform.v0_6.TransformTaskFactory();
-		
-		org.openstreetmap.osmosis.tagtransform.v0_6.TransformChangeTaskFactory change_v0_6 =
-			new org.openstreetmap.osmosis.tagtransform.v0_6.TransformChangeTaskFactory();
-		
+		TransformTaskFactory v0_6 = new org.openstreetmap.osmosis.tagtransform.v0_6.TransformTaskFactory();
+
+		TransformChangeTaskFactory change_v0_6 = new org.openstreetmap.osmosis.tagtransform.v0_6.TransformChangeTaskFactory();
+
 		Map<String, TaskManagerFactory> tasks = new HashMap<String, TaskManagerFactory>();
 		tasks.put("tag-transform-0.6", v0_6);
 		tasks.put("tag-transform", v0_6);

@@ -4,9 +4,9 @@ package org.openstreetmap.osmosis.tagtransform;
 import java.util.Collection;
 import java.util.Map;
 
+
 public interface Output {
 
-	public void apply(Map<String, String> originalTags,
-			Map<String, String> tags, Collection<Match> matches);
-	
+	void apply(Map<String, String> originalTags, Map<String, String> tags, Collection<Match> matches);
+
 }
