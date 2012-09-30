@@ -29,19 +29,24 @@ public class AndMatcher implements Matcher {
 
 
 	@Override
-	public Collection<Match> match(Map<String, String> tags, TTEntityType type, String uname, int uid) {
-		if (this.type != null && this.type != type)
+	public Collection<Match> match(Map<String, String> tags, TTEntityType entityType, String entityUname,
+			int entityUid) {
+		if (this.type != null && this.type != entityType) {
 			return null;
-		if (this.uname != null && !this.uname.equals(uname))
+		}
+		if (this.uname != null && !this.uname.equals(entityUname)) {
 			return null;
-		if (this.uid != 0 && this.uid != uid)
+		}
+		if (this.uid != 0 && this.uid != entityUid) {
 			return null;
+		}
 
 		List<Match> allMatches = new ArrayList<Match>();
 		for (Matcher matcher : matchers) {
-			Collection<Match> matches = matcher.match(tags, type, uname, uid);
-			if (matches == null || matches.isEmpty())
+			Collection<Match> matches = matcher.match(tags, entityType, entityUname, entityUid);
+			if (matches == null || matches.isEmpty()) {
 				return null;
+			}
 			allMatches.addAll(matches);
 		}
 		matchHits++;
@@ -55,7 +60,8 @@ public class AndMatcher implements Matcher {
 		output.append("And: ");
 		output.append(matchHits);
 		output.append('\n');
-		for (Matcher matcher : matchers)
+		for (Matcher matcher : matchers) {
 			matcher.outputStats(output, indent + "    ");
+		}
 	}
 }

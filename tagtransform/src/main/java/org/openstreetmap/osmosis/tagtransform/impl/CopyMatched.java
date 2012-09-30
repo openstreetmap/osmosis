@@ -14,8 +14,9 @@ public class CopyMatched implements Output {
 	public void apply(Map<String, String> originalTags, Map<String, String> tags, Collection<Match> matches) {
 		// put any matches directly
 		for (Match match : matches) {
-			if (match.getKeyGroupCount() > 0)
+			if (match.getKeyGroupCount() > 0) {
 				tags.put(match.getKey(0), match.getValue(0));
+			}
 		}
 	}
 

@@ -19,13 +19,16 @@ public class TagOutput implements Output {
 	public TagOutput(String key, String value, String fromMatch) {
 		keyFormat = new MessageFormat(santitise(key));
 		valueFormat = new MessageFormat(santitise(value));
-		this.fromMatch = (fromMatch == null || fromMatch.length() == 0) ? null : fromMatch;
+		if ((fromMatch != null && fromMatch.length() > 0)) {
+			this.fromMatch = fromMatch;
+		}
 	}
 
 
 	private String santitise(String str) {
-		if (str == null || str.length() == 0)
+		if (str == null || str.length() == 0) {
 			return "{0}";
+		}
 		return str;
 	}
 
@@ -40,14 +43,16 @@ public class TagOutput implements Output {
 				if (matchID != null && matchID.equals(fromMatch)) {
 					// process key args
 					String[] args = new String[match.getKeyGroupCount()];
-					for (int i = 0; i < args.length; i++)
+					for (int i = 0; i < args.length; i++) {
 						args[i] = match.getKey(i);
+					}
 					String key = keyFormat.format(args);
 
 					// process value args
 					args = new String[match.getValueGroupCount()];
-					for (int i = 0; i < args.length; i++)
+					for (int i = 0; i < args.length; i++) {
 						args[i] = match.getValue(i);
+					}
 					String value = valueFormat.format(args);
 
 					// put the tag

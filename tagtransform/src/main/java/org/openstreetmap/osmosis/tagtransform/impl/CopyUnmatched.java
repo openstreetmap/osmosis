@@ -16,8 +16,9 @@ public class CopyUnmatched implements Output {
 		// copy the original, then remove the matches
 		Map<String, String> toCopy = new HashMap<String, String>(originalTags);
 		for (Match match : matches) {
-			if (match.getKeyGroupCount() > 0)
+			if (match.getKeyGroupCount() > 0) {
 				toCopy.remove(match.getKey(0));
+			}
 		}
 		// apply the copy
 		tags.putAll(toCopy);

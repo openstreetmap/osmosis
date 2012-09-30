@@ -11,7 +11,8 @@ public class TransformChangeTaskFactory extends TaskManagerFactory {
 
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
-		String configFile = getStringArgument(taskConfig, "file", getDefaultStringArgument(taskConfig, "transform.xml"));
+		String configFile =
+				getStringArgument(taskConfig, "file", getDefaultStringArgument(taskConfig, "transform.xml"));
 		String statsFile = getStringArgument(taskConfig, "stats", null);
 		return new ChangeSinkChangeSourceManager(taskConfig.getId(), new TransformChangeTask(configFile, statsFile),
 				taskConfig.getPipeArgs());

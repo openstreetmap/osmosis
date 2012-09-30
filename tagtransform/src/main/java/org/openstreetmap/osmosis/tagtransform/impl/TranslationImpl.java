@@ -47,11 +47,16 @@ public class TranslationImpl implements Translation {
 	public Collection<Match> match(Map<String, String> tags, TTEntityType type, String uname, int uid) {
 		Collection<Match> matches = matcher.match(tags, type, uname, uid);
 		if (matches != null && !matches.isEmpty()) {
-			Collection<Match> finds = finder == null ? null : finder.match(tags, type, uname, uid);
+			Collection<Match> finds;
+			if (finder == null) {
+				finds = null;
+			} else {
+				finds = finder.match(tags, type, uname, uid);
+			}
 			if (finds != null && !finds.isEmpty()) {
-				if (matches instanceof ArrayList)
+				if (matches instanceof ArrayList) {
 					matches.addAll(finds);
-				else {
+				} else {
 					List<Match> allMatches = new ArrayList<Match>();
 					allMatches.addAll(matches);
 					allMatches.addAll(finds);
@@ -67,19 +72,20 @@ public class TranslationImpl implements Translation {
 
 
 	@Override
-	public void outputStats(StringBuilder output, String indent) {
-		output.append(indent);
-		output.append(name);
-		output.append(":");
-		output.append('\n');
+	public void outputStats(StringBuilder statsOutput, String indent) {
+		statsOutput.append(indent);
+		statsOutput.append(name);
+		statsOutput.append(":");
+		statsOutput.append('\n');
 		if (description != null && !description.isEmpty()) {
-			output.append(description);
-			output.append('\n');
+			statsOutput.append(description);
+			statsOutput.append('\n');
 		}
-		matcher.outputStats(output, indent + "    ");
-		if (finder != null)
-			finder.outputStats(output, "  + ");
-		output.append('\n');
+		matcher.outputStats(statsOutput, indent + "    ");
+		if (finder != null) {
+			finder.outputStats(statsOutput, "  + ");
+		}
+		statsOutput.append('\n');
 	}
 
 }

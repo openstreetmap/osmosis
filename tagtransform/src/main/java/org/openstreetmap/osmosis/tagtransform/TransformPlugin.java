@@ -14,18 +14,18 @@ public class TransformPlugin implements PluginLoader {
 
 	@Override
 	public Map<String, TaskManagerFactory> loadTaskFactories() {
-		TransformTaskFactory v0_6 = new org.openstreetmap.osmosis.tagtransform.v0_6.TransformTaskFactory();
+		TransformTaskFactory transformFactory = new org.openstreetmap.osmosis.tagtransform.v0_6.TransformTaskFactory();
 
-		TransformChangeTaskFactory change_v0_6 = new org.openstreetmap.osmosis.tagtransform.v0_6.TransformChangeTaskFactory();
+		TransformChangeTaskFactory changeTransformFactory =
+				new org.openstreetmap.osmosis.tagtransform.v0_6.TransformChangeTaskFactory();
 
 		Map<String, TaskManagerFactory> tasks = new HashMap<String, TaskManagerFactory>();
-		tasks.put("tag-transform-0.6", v0_6);
-		tasks.put("tag-transform", v0_6);
-		tasks.put("tt", v0_6);
-		tasks.put("tag-transform-change-0.6", change_v0_6);
-		tasks.put("tag-transform-change", change_v0_6);
-		tasks.put("ttc", change_v0_6);
+		tasks.put("tag-transform-0.6", transformFactory);
+		tasks.put("tag-transform", transformFactory);
+		tasks.put("tt", transformFactory);
+		tasks.put("tag-transform-change-0.6", changeTransformFactory);
+		tasks.put("tag-transform-change", changeTransformFactory);
+		tasks.put("ttc", changeTransformFactory);
 		return tasks;
 	}
-
 }

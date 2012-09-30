@@ -73,8 +73,9 @@ public abstract class TransformHelper<T extends Task & Initializable> implements
 			StringBuilder builder = new StringBuilder();
 			builder.append(configFile);
 			builder.append("\n\n");
-			for (Translation t : translations)
+			for (Translation t : translations) {
 				t.outputStats(builder, "");
+			}
 
 			Writer writer = null;
 			try {
@@ -83,11 +84,13 @@ public abstract class TransformHelper<T extends Task & Initializable> implements
 			} catch (IOException e) {
 				throw new StatsSaveException("Failed to save stats: " + e.getLocalizedMessage(), e);
 			} finally {
-				if (writer != null)
+				if (writer != null) {
 					try {
 						writer.close();
 					} catch (IOException e) {
+						logger.log(Level.WARNING, "Unable to close stats file " + statsFile + ".", e);
 					}
+				}
 			}
 		}
 		sink.complete();
@@ -104,6 +107,7 @@ public abstract class TransformHelper<T extends Task & Initializable> implements
 	 * Transforms entity container according to configFile.
 	 * 
 	 * @param entityContainer
+	 *            The entity to be processed.
 	 * @return transformed (if needed) entityContainer
 	 */
 	protected EntityContainer processEntityContainer(EntityContainer entityContainer) {
@@ -122,10 +126,11 @@ public abstract class TransformHelper<T extends Task & Initializable> implements
 
 		// Apply tag transformations.
 		for (Translation translation : translations) {
-			Collection<Match> matches = translation.match(tagMap, TTEntityType.fromEntityType0_6(entityType), entity
+			Collection<Match> matches = translation.match(tagMap, TTEntityType.fromEntityType06(entityType), entity
 					.getUser().getName(), entity.getUser().getId());
-			if (matches == null || matches.isEmpty())
+			if (matches == null || matches.isEmpty()) {
 				continue;
+			}
 			if (translation.isDropOnMatch()) {
 				return null;
 			}

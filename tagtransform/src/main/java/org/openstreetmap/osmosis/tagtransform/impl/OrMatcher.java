@@ -29,22 +29,28 @@ public class OrMatcher implements Matcher {
 
 
 	@Override
-	public Collection<Match> match(Map<String, String> tags, TTEntityType type, String uname, int uid) {
-		if (this.type != null && this.type != type)
+	public Collection<Match> match(Map<String, String> tags, TTEntityType entityType, String entityUname,
+			int entityUid) {
+		if (this.type != null && this.type != entityType) {
 			return null;
-		if (this.uname != null && !this.uname.equals(uname))
+		}
+		if (this.uname != null && !this.uname.equals(entityUname)) {
 			return null;
-		if (this.uid != 0 && this.uid != uid)
+		}
+		if (this.uid != 0 && this.uid != entityUid) {
 			return null;
+		}
 
 		List<Match> allMatches = new ArrayList<Match>();
 		for (Matcher matcher : matchers) {
-			Collection<Match> matches = matcher.match(tags, type, uname, uid);
-			if (matches != null)
+			Collection<Match> matches = matcher.match(tags, entityType, entityUname, entityUid);
+			if (matches != null) {
 				allMatches.addAll(matches);
+			}
 		}
-		if (!allMatches.isEmpty())
+		if (!allMatches.isEmpty()) {
 			matchHits++;
+		}
 		return allMatches;
 	}
 
@@ -55,8 +61,9 @@ public class OrMatcher implements Matcher {
 		output.append("Or: ");
 		output.append(matchHits);
 		output.append('\n');
-		for (Matcher matcher : matchers)
+		for (Matcher matcher : matchers) {
 			matcher.outputStats(output, indent + "    ");
+		}
 	}
 
 }

@@ -17,8 +17,9 @@ public class TransformTask extends TransformHelper<Sink> implements SinkSource {
 	@Override
 	public void process(EntityContainer entityContainer) {
 		EntityContainer output = processEntityContainer(entityContainer);
-		if (output != null)
+		if (output != null) {
 			sink.process(output);
+		}
 	}
 
 }

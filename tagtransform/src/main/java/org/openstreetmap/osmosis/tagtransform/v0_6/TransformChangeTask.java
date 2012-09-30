@@ -21,8 +21,9 @@ public class TransformChangeTask extends TransformHelper<ChangeSink> implements 
 		if (!ChangeAction.Delete.equals(changeContainer.getAction())) {
 			EntityContainer output = super.processEntityContainer(changeContainer.getEntityContainer());
 
-			if (output != null)
+			if (output != null) {
 				sink.process(new ChangeContainer(output, changeContainer.getAction()));
+			}
 		} else {
 			sink.process(changeContainer);
 		}

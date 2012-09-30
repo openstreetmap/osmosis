@@ -8,23 +8,8 @@ public enum TTEntityType {
 
 	NODE, WAY, RELATION, BOUND;
 
-	public EntityType getEntityType0_6() {
-		switch (this) {
-		case NODE:
-			return EntityType.Node;
-		case WAY:
-			return EntityType.Way;
-		case RELATION:
-			return EntityType.Relation;
-		case BOUND:
-			return EntityType.Bound;
-		default:
-			return null;
-		}
-	}
 
-
-	public static TTEntityType fromEntityType0_6(EntityType entityType) {
+	public static TTEntityType fromEntityType06(EntityType entityType) {
 		switch (entityType) {
 		case Node:
 			return NODE;

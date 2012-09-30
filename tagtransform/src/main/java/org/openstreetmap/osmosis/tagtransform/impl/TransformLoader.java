@@ -19,10 +19,10 @@ import org.w3c.dom.NodeList;
 
 
 public class TransformLoader {
-	private static final Logger logger = Logger.getLogger(TransformLoader.class.getName());
+	private static final Logger LOG = Logger.getLogger(TransformLoader.class.getName());
 
 
-	public List<Translation> load(String configFile) throws TransformLoadException {
+	public List<Translation> load(String configFile) {
 		List<Translation> translations = new ArrayList<Translation>();
 		File file = new File(configFile);
 		try {
@@ -33,8 +33,9 @@ public class TransformLoader {
 			NodeList translationElements = doc.getDocumentElement().getElementsByTagName("translation");
 			for (int i = 0; i < translationElements.getLength(); i++) {
 				Translation t = parseTranslation((Element) translationElements.item(i));
-				if (t != null)
+				if (t != null) {
 					translations.add(t);
+				}
 			}
 		} catch (Exception e) {
 			throw new TransformLoadException("Failed to load transform", e);
@@ -52,47 +53,51 @@ public class TransformLoader {
 
 		NodeList children = element.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
-			if (!(children.item(i) instanceof Element))
+			if (!(children.item(i) instanceof Element)) {
 				continue;
+			}
 			Element child = (Element) children.item(i);
 			String nodeName = child.getNodeName();
-			if (nodeName.equals("name"))
+			if (nodeName.equals("name")) {
 				name = child.getTextContent();
-			else if (nodeName.equals("description"))
+			} else if (nodeName.equals("description")) {
 				description = child.getTextContent();
-			else if (nodeName.equals("match"))
+			} else if (nodeName.equals("match")) {
 				matcher = parseMatcher(child);
-			else if (nodeName.equals("find"))
+			} else if (nodeName.equals("find")) {
 				finder = parseMatcher(child);
-			else if (nodeName.equals("output")) {
+			} else if (nodeName.equals("output")) {
 				NodeList outputs = child.getChildNodes();
 				for (int j = 0; j < outputs.getLength(); j++) {
-					if (!(outputs.item(j) instanceof Element))
+					if (!(outputs.item(j) instanceof Element)) {
 						continue;
+					}
 					Output o = parseOutput((Element) outputs.item(j));
-					if (o != null)
+					if (o != null) {
 						output.add(o);
+					}
 				}
 			}
 		}
 
 		if (matcher != null) {
-			logger.info("New translation: " + name);
+			LOG.info("New translation: " + name);
 			return new TranslationImpl(name, description, matcher, finder, output);
-		} else
+		} else {
 			return null;
+		}
 	}
 
 
 	private Output parseOutput(Element child) {
 		String name = child.getNodeName();
-		if (name.equals("copy-all"))
+		if (name.equals("copy-all")) {
 			return new CopyAll();
-		else if (name.equals("copy-unmatched"))
+		} else if (name.equals("copy-unmatched")) {
 			return new CopyUnmatched();
-		else if (name.equals("copy-matched"))
+		} else if (name.equals("copy-matched")) {
 			return new CopyMatched();
-		else if (name.equals("tag")) {
+		} else if (name.equals("tag")) {
 			String k = child.getAttribute("k");
 			String v = child.getAttribute("v");
 			String m = child.getAttribute("from_match");
@@ -111,12 +116,14 @@ public class TransformLoader {
 			int uid = 0;
 
 			for (int i = 0; i < children.getLength(); i++) {
-				if (!(children.item(i) instanceof Element))
+				if (!(children.item(i) instanceof Element)) {
 					continue;
+				}
 				Element child = (Element) children.item(i);
 				Matcher m = parseMatcher(child);
-				if (m != null)
+				if (m != null) {
 					matchers.add(m);
+				}
 			}
 
 			TTEntityType type = getType(matcher.getAttribute("type"));
@@ -126,11 +133,17 @@ public class TransformLoader {
 			if (matcher.getAttribute("uid") != "") {
 				uid = Integer.parseInt(matcher.getAttribute("uid"));
 			}
-			String mode = name.equals("find") ? "or" : matcher.getAttribute("mode");
-			if (mode == null || mode.equals("") || mode.equals("and"))
+			String mode;
+			if (name.equals("find")) {
+				mode = "or";
+			} else {
+				mode = matcher.getAttribute("mode");
+			}
+			if (mode == null || mode.equals("") || mode.equals("and")) {
 				return new AndMatcher(matchers, type, uname, uid);
-			else if (mode.equals("or"))
+			} else if (mode.equals("or")) {
 				return new OrMatcher(matchers, type, uname, uid);
+			}
 
 		} else if (name.equals("tag")) {
 			String k = matcher.getAttribute("k");
@@ -147,14 +160,18 @@ public class TransformLoader {
 
 
 	private TTEntityType getType(String type) {
-		if (type == null || type.isEmpty() || type.equals("all"))
+		if (type == null || type.isEmpty() || type.equals("all")) {
 			return null;
-		if (type.equals("node"))
+		}
+		if (type.equals("node")) {
 			return TTEntityType.NODE;
-		if (type.equals("way"))
+		}
+		if (type.equals("way")) {
 			return TTEntityType.WAY;
-		if (type.equals("relation"))
+		}
+		if (type.equals("relation")) {
 			return TTEntityType.RELATION;
+		}
 		if (type.equals("bound")) {
 			return TTEntityType.BOUND;
 		}
