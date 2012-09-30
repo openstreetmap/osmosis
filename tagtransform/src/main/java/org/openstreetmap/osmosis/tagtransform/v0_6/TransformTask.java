@@ -1,4 +1,4 @@
-// License: GPL. Copyright 2008 by Dave Stubbs and other contributors.
+// This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.tagtransform.v0_6;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;

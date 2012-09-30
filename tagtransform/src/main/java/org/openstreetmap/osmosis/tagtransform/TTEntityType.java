@@ -1,3 +1,4 @@
+// This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.tagtransform;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
