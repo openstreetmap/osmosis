@@ -37,6 +37,7 @@
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-replication-http" rev="${project.version}" conf="runtime->default" changing="true"/>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-set" rev="${project.version}" conf="runtime->default" changing="true"/>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-tagfilter" rev="${project.version}" conf="runtime->default" changing="true"/>
+    	<dependency org="org.openstreetmap.osmosis" name="osmosis-tagtransform" rev="${project.version}" conf="runtime->default" changing="true"/>
     	<dependency org="org.openstreetmap.osmosis" name="osmosis-xml" rev="${project.version}" conf="runtime->default" changing="true"/>
     	
     	<dependency org="org.codehaus.plexus" name="plexus-classworlds" rev="${dependency.version.classworlds}" conf="runtime->default"/>
