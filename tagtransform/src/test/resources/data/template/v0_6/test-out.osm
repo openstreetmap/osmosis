@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version="0.6" generator="Osmosis %VERSION%">
+  <node id="1" version="1" timestamp="2007-01-29T08:48:14Z" lat="1.1" lon="51"/>
+  <node id="2" version="1" timestamp="2007-01-29T08:48:14Z" lat="1.1" lon="51">
+    <tag k="bicycle" v="yes"/>
+    <tag k="crossing" v="toucan"/>
+    <tag k="foot" v="yes"/>
+    <tag k="highway" v="crossing"/>
+    <tag k="horse" v="no"/>
+    <tag k="oneway" v="yes"/>
+  </node>
+  <node id="3" version="1" timestamp="2007-01-29T08:48:14Z" lat="1.1" lon="51">
+    <tag k="bicycle" v="no"/>
+    <tag k="crossing" v="traffic_signals"/>
+    <tag k="foot" v="yes"/>
+    <tag k="highway" v="crossing"/>
+    <tag k="horse" v="no"/>
+  </node>
+  <node id="2" version="1" timestamp="2007-01-29T08:48:14Z" lat="1.1" lon="51">
+    <tag k="crossing" v="toucan"/>
+    <tag k="highway" v="crossing"/>
+  </node>
+  <way id="4" version="1" timestamp="2007-01-29T08:48:14Z"/>
+  <way id="5" version="1" timestamp="2007-01-29T08:48:14Z">
+    <tag k="highway" v="motorway"/>
+  </way>
+  <way id="6" version="1" timestamp="2007-01-29T08:48:14Z">
+    <tag k="ncn" v="yes"/>
+    <tag k="ncn_ref" v="4"/>
+  </way>
+  <way id="10" version="1" timestamp="2007-01-29T08:48:14Z">
+    <tag k="lcn" v="yes"/>
+    <tag k="ncn" v="yes"/>
+    <tag k="rcn" v="yes"/>
+    <tag k="route" v=";;"/>
+  </way>
+  <way id="11" version="1" timestamp="2007-01-29T08:48:14Z">
+    <tag k="lcn" v="yes"/>
+    <tag k="ncn" v="proposed"/>
+    <tag k="rcn" v="yes"/>
+    <tag k="route" v=";ncn;"/>
+  </way>
+  <way id="12" version="1" timestamp="2007-01-29T08:48:14Z">
+    <tag k="highway" v="residential"/>
+    <tag k="ncn" v="yes"/>
+    <tag k="route" v=""/>
+  </way>
+  <way id="13" version="1" timestamp="2007-01-29T08:48:14Z">
+    <tag k="duration" v="16"/>
+    <tag k="occupancy" v="156"/>
+    <tag k="piste_lift" v="something"/>
+  </way>
+  <way id="22" version="1" timestamp="2007-01-29T08:48:14Z">
+    <tag k="bicycle" v="yes"/>
+    <tag k="crossing" v="traffic_signals"/>
+    <tag k="foot" v="yes"/>
+    <tag k="highway" v="crossing"/>
+    <tag k="horse" v="no"/>
+    <tag k="oneway" v="yes"/>
+  </way>
+</osm>
