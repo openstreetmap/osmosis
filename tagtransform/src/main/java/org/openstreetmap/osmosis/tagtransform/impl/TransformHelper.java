@@ -29,8 +29,8 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
-import org.openstreetmap.osmosis.core.lifecycle.Completable;
 import org.openstreetmap.osmosis.core.task.common.Task;
+import org.openstreetmap.osmosis.core.task.v0_6.Initializable;
 import org.openstreetmap.osmosis.tagtransform.Match;
 import org.openstreetmap.osmosis.tagtransform.Output;
 import org.openstreetmap.osmosis.tagtransform.StatsSaveException;
@@ -49,7 +49,7 @@ import org.openstreetmap.osmosis.xml.common.XmlTimestampFormat;
  * @param <T>
  *            is a sink type.
  */
-public abstract class TransformHelper<T extends Task & Completable> implements Completable {
+public abstract class TransformHelper<T extends Task & Initializable> implements Initializable {
 	protected Logger logger = Logger.getLogger(this.getClass().getName());
 
 	protected T sink;
@@ -64,6 +64,12 @@ public abstract class TransformHelper<T extends Task & Completable> implements C
 		translations = new TransformLoader().load(configFile);
 		this.statsFile = statsFile;
 		this.configFile = configFile;
+	}
+
+
+	@Override
+	public void initialize(Map<String, Object> metaData) {
+		sink.initialize(metaData);
 	}
 
 
