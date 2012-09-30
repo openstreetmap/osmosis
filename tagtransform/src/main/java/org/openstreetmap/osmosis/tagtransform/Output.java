@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2008 by Dave Stubbs and other contributors.
-package uk.co.randomjunk.osmosis.transform;
+package org.openstreetmap.osmosis.tagtransform;
 
 import java.util.Collection;
 import java.util.Map;

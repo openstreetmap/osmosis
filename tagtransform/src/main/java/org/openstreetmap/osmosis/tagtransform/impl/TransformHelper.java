@@ -1,4 +1,4 @@
-package uk.co.randomjunk.osmosis.transform.impl;
+package org.openstreetmap.osmosis.tagtransform.impl;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -30,17 +30,17 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.lifecycle.Completable;
 import org.openstreetmap.osmosis.core.task.common.Task;
+import org.openstreetmap.osmosis.tagtransform.Match;
+import org.openstreetmap.osmosis.tagtransform.Output;
+import org.openstreetmap.osmosis.tagtransform.StatsSaveException;
+import org.openstreetmap.osmosis.tagtransform.TTEntityType;
+import org.openstreetmap.osmosis.tagtransform.Translation;
 import org.openstreetmap.osmosis.xml.common.XmlTimestampFormat;
 
-import uk.co.randomjunk.osmosis.transform.Match;
-import uk.co.randomjunk.osmosis.transform.Output;
-import uk.co.randomjunk.osmosis.transform.StatsSaveException;
-import uk.co.randomjunk.osmosis.transform.TTEntityType;
-import uk.co.randomjunk.osmosis.transform.Translation;
 
 /**
  * Class is intended to provide utility place for tag transform functionality. <br/>
- * See {@link uk.co.randomjunk.osmosis.transform.v0_6.TransformTask TransformTask} for example implementation.
+ * See {@link org.openstreetmap.osmosis.tagtransform.v0_6.TransformTask TransformTask} for example implementation.
  * 
  * @author apopov
  *

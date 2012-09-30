@@ -1,4 +1,4 @@
-package uk.co.randomjunk.osmosis.transform;
+package org.openstreetmap.osmosis.tagtransform;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 

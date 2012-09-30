@@ -1,11 +1,11 @@
 // License: GPL. Copyright 2008 by Dave Stubbs and other contributors.
-package uk.co.randomjunk.osmosis.transform.v0_6;
+package org.openstreetmap.osmosis.tagtransform.v0_6;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.core.task.v0_6.SinkSource;
+import org.openstreetmap.osmosis.tagtransform.impl.TransformHelper;
 
-import uk.co.randomjunk.osmosis.transform.impl.TransformHelper;
 
 public class TransformTask extends TransformHelper<Sink> implements SinkSource {
 

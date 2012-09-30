@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2008 by Dave Stubbs and other contributors.
-package uk.co.randomjunk.osmosis.transform.impl;
+package org.openstreetmap.osmosis.tagtransform.impl;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,14 +9,14 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.openstreetmap.osmosis.tagtransform.Matcher;
+import org.openstreetmap.osmosis.tagtransform.Output;
+import org.openstreetmap.osmosis.tagtransform.TTEntityType;
+import org.openstreetmap.osmosis.tagtransform.Translation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import uk.co.randomjunk.osmosis.transform.Matcher;
-import uk.co.randomjunk.osmosis.transform.Output;
-import uk.co.randomjunk.osmosis.transform.TTEntityType;
-import uk.co.randomjunk.osmosis.transform.Translation;
 
 public class TransformLoader {
 	private static final Logger logger = Logger.getLogger(TransformLoader.class.getName());

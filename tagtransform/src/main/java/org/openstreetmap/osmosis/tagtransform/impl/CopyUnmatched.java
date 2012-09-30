@@ -1,12 +1,13 @@
 // License: GPL. Copyright 2008 by Dave Stubbs and other contributors.
-package uk.co.randomjunk.osmosis.transform.impl;
+package org.openstreetmap.osmosis.tagtransform.impl;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import uk.co.randomjunk.osmosis.transform.Match;
-import uk.co.randomjunk.osmosis.transform.Output;
+import org.openstreetmap.osmosis.tagtransform.Match;
+import org.openstreetmap.osmosis.tagtransform.Output;
+
 
 public class CopyUnmatched implements Output {
 

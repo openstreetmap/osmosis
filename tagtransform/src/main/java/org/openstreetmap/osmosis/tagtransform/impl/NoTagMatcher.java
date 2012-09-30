@@ -1,58 +1,47 @@
 // License: GPL. Copyright 2008 by Dave Stubbs and other contributors.
-package uk.co.randomjunk.osmosis.transform.impl;
+package org.openstreetmap.osmosis.tagtransform.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
-import uk.co.randomjunk.osmosis.transform.Match;
-import uk.co.randomjunk.osmosis.transform.Matcher;
-import uk.co.randomjunk.osmosis.transform.TTEntityType;
+import org.openstreetmap.osmosis.tagtransform.Match;
+import org.openstreetmap.osmosis.tagtransform.Matcher;
+import org.openstreetmap.osmosis.tagtransform.TTEntityType;
 
-public class TagMatcher implements Matcher {
 
-	private String matchID;
+public class NoTagMatcher implements Matcher {
+
 	private Pattern keyPattern;
 	private Pattern valuePattern;
-	private long matchHits = 0;
-	
-	public TagMatcher(String matchID, String keyPattern, String valuePattern) {
-		this.matchID = matchID;
+	private long matchHits;
+
+	public NoTagMatcher(String keyPattern, String valuePattern) {
 		this.keyPattern = Pattern.compile(keyPattern);
 		this.valuePattern = Pattern.compile(valuePattern);
 	}
-	
+
 	@Override
 	public Collection<Match> match(Map<String, String> tags, TTEntityType type, String uname, int uid) {
-		List<Match> matches = new ArrayList<Match>();
-		
 		// loop through the tags to find matches
 		for ( Entry<String, String> tag : tags.entrySet() ) {
 			java.util.regex.Matcher keyMatch = keyPattern.matcher(tag.getKey());
 			java.util.regex.Matcher valueMatch = valuePattern.matcher(tag.getValue());
 			if ( keyMatch.matches() && valueMatch.matches() ) {
-				MatchResult keyRes = keyMatch.toMatchResult();
-				MatchResult valueRes = valueMatch.toMatchResult();
-				matches.add(new MatchResultMatch(matchID, keyRes, valueRes));
+				return null;
 			}
 		}
 		
-		matchHits += matches.size();
-		return matches;
+		matchHits += 1;
+		return Collections.singleton(NULL_MATCH);
 	}
-
+	
 	@Override
 	public void outputStats(StringBuilder output, String indent) {
 		output.append(indent);
-		output.append("Tag[");
-		if ( matchID != null ) {
-			output.append(matchID);
-			output.append(",");
-		}
+		output.append("NoTag[");
 		output.append(keyPattern.pattern());
 		output.append(",");
 		output.append(valuePattern.pattern());
@@ -61,4 +50,30 @@ public class TagMatcher implements Matcher {
 		output.append('\n');
 	}
 
+	private static final Match NULL_MATCH = new Match() {
+		@Override
+		public int getValueGroupCount() {
+			return 0;
+		}
+	
+		@Override
+		public String getValue(int group) {
+			return null;
+		}
+	
+		@Override
+		public String getMatchID() {
+			return null;
+		}
+	
+		@Override
+		public int getKeyGroupCount() {
+			return 0;
+		}
+	
+		@Override
+		public String getKey(int group) {
+			return null;
+		}
+	};
 }

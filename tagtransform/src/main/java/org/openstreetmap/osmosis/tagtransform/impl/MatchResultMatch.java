@@ -1,9 +1,10 @@
 // License: GPL. Copyright 2008 by Dave Stubbs and other contributors.
-package uk.co.randomjunk.osmosis.transform.impl;
+package org.openstreetmap.osmosis.tagtransform.impl;
 
 import java.util.regex.MatchResult;
 
-import uk.co.randomjunk.osmosis.transform.Match;
+import org.openstreetmap.osmosis.tagtransform.Match;
+
 
 public class MatchResultMatch implements Match {
 

@@ -1,14 +1,15 @@
 // License: GPL. Copyright 2008 by Dave Stubbs and other contributors.
-package uk.co.randomjunk.osmosis.transform.impl;
+package org.openstreetmap.osmosis.tagtransform.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import uk.co.randomjunk.osmosis.transform.Match;
-import uk.co.randomjunk.osmosis.transform.Matcher;
-import uk.co.randomjunk.osmosis.transform.TTEntityType;
+import org.openstreetmap.osmosis.tagtransform.Match;
+import org.openstreetmap.osmosis.tagtransform.Matcher;
+import org.openstreetmap.osmosis.tagtransform.TTEntityType;
+
 
 public class OrMatcher implements Matcher {
 

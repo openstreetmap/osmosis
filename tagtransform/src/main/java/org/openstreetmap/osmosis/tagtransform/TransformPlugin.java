@@ -1,5 +1,5 @@
 // License: GPL. Copyright 2008 by Dave Stubbs and other contributors.
-package uk.co.randomjunk.osmosis.transform;
+package org.openstreetmap.osmosis.tagtransform;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,11 +12,11 @@ public class TransformPlugin implements PluginLoader {
 
 	@Override
 	public Map<String, TaskManagerFactory> loadTaskFactories() {
-		uk.co.randomjunk.osmosis.transform.v0_6.TransformTaskFactory v0_6 =
-			new uk.co.randomjunk.osmosis.transform.v0_6.TransformTaskFactory();
+		org.openstreetmap.osmosis.tagtransform.v0_6.TransformTaskFactory v0_6 =
+			new org.openstreetmap.osmosis.tagtransform.v0_6.TransformTaskFactory();
 		
-		uk.co.randomjunk.osmosis.transform.v0_6.TransformChangeTaskFactory change_v0_6 =
-			new uk.co.randomjunk.osmosis.transform.v0_6.TransformChangeTaskFactory();
+		org.openstreetmap.osmosis.tagtransform.v0_6.TransformChangeTaskFactory change_v0_6 =
+			new org.openstreetmap.osmosis.tagtransform.v0_6.TransformChangeTaskFactory();
 		
 		Map<String, TaskManagerFactory> tasks = new HashMap<String, TaskManagerFactory>();
 		tasks.put("tag-transform-0.6", v0_6);
