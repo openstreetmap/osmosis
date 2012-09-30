@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+
+<translations>
+
+  <translation>
+    <name>Strip unused</name>
+    <match mode="or">
+      <tag k="tiger:.*" v=".*"/>
+      <tag k="created_by" v=".*"/>
+      <tag k="source" v=".*"/>
+      <tag k="attribution" v=".*"/>
+    </match>
+    <output>
+      <copy-unmatched/>
+    </output>
+  </translation>
+
+  <translation>
+    <name>Simplify True</name>
+    <description>Simplifies the different variations of true/false, yes/no.</description>
+    <match mode="or">
+      <tag k="oneway|bridge|tunnel|ncn|lcn|rcn|bicycle|foot|motorcar|horse" match_id="yes" v="1|true"/>
+      <tag k="oneway|bridge|tunnel|ncn|lcn|rcn|bicycle|foot|motorcar|horse" match_id="no" v="0|false"/>
+      <tag k="oneway" match_id="reverse" v="reverse|backwards"/>
+    </match>
+    <output>
+      <copy-all/>
+      <tag from_match="yes" v="yes"/>
+      <tag from_match="no" v="no"/>
+      <tag from_match="reverse" v="-1"/>
+    </output>
+  </translation>
+
+  <translation>
+    <name>Simplify Access</name>
+    <description>Simplifies the access restrictions to yes/no.</description>
+    <match mode="or">
+      <tag k=".*" match_id="yes" v="designated|public|permissive"/>
+      <tag k=".*" match_id="no" v="private|privat"/>
+    </match>
+    <output>
+      <copy-all/>
+      <tag from_match="yes" v="yes"/>
+      <tag from_match="no" v="no"/>
+    </output>
+  </translation>
+
+  <translation>
+    <name>Bike->Toucan</name>
+    <description>Convert bike crossings</description>
+    <match mode="or" type="node">
+      <match>
+        <match mode="or">
+          <tag k="highway" v="traffic_signals"/>
+          <tag k="highway" v="crossing"/>
+          <tag k="crossing" v="traffic_signals"/>
+        </match>
+        <tag k="bicycle" v="yes"/>
+      </match>
+      <tag k="crossing_ref" v="toucan"/>
+    </match>
+    <output>
+      <copy-all/>
+      <tag k="crossing" v="toucan"/>
+    </output>
+  </translation>
+
+  <translation>
+    <name>Paths->track</name>
+    <match type="way">
+      <tag k="highway" v="path"/>
+      <tag k="motorcar" v="yes"/>
+    </match>
+    <output>
+      <copy-all/>
+      <tag highway="track"/>
+    </output>
+  </translation>
+  
+  <translation>
+    <name>Paths/footways->cycleway</name>
+    <description>Convert paths to cycleways -- these have precedence in this result</description>
+    <match type="way">
+      <match mode="or">
+        <tag k="highway" v="path"/>
+        <tag k="highway" v="footway"/>
+      </match>
+      <tag k="bicycle" v="yes"/>
+    </match>
+    <output>
+      <copy-all/>
+      <tag highway="cycleway"/>
+    </output>
+  </translation>
+  
+  <translation>
+    <name>Paths->footway</name>
+    <match type="way">
+      <tag k="highway" v="path"/>
+      <tag k="foot" v="yes"/>
+    </match>
+    <output>
+      <copy-all/>
+      <tag highway="footway"/>
+    </output>
+  </translation>
+  
+  <translation>
+    <name>NCN</name>
+    <description>Find all the way ncn variations and tag consistently</description>
+    <match>
+      <match mode="or">
+        <tag k="route" v="(.*;|^)ncn(;.*|$)" match_id="route"/>
+        <tag k="ncn_ref" v=".*"/>
+      </match>
+      <notag k="ncn" v=".*"/>
+    </match>
+    <output>
+      <copy-all/>
+      <tag k="ncn" v="yes"/>
+      <tag k="route" from_match="route" v="{1}{2}"/>
+    </output>
+  </translation>
+
+  <translation>
+    <name>RCN</name>
+    <description>Find all the way rcn variations and tag consistently</description>
+    <match>
+      <match mode="or">
+        <tag k="route" v="(.*;|^)rcn(;.*|$)" match_id="route"/>
+        <tag k="rcn_ref" v=".*"/>
+      </match>
+      <notag k="rcn" v=".*"/>
+    </match>
+    <output>
+      <copy-all/>
+      <tag k="rcn" v="yes"/>
+      <tag k="route" from_match="route" v="{1}{2}"/>
+    </output>
+  </translation>
+
+  <translation>
+    <name>LCN</name>
+    <description>Find all the way lcn variations and tag consistently</description>
+    <match>
+      <match mode="or">
+        <tag k="route" v="(.*;|^)lcn(;.*|$)" match_id="route"/>
+        <tag k="lcn_ref" v=".*"/>
+      </match>
+      <notag k="lcn" v=".*"/>
+    </match>
+    <output>
+      <copy-all/>
+      <tag k="lcn" v="yes"/>
+      <tag k="route" from_match="route" v="{1}{2}"/>
+    </output>
+  </translation>
+
+  <translation>
+    <name>Arbitrary Piste Remapping</name>
+    <description>Just test some of the advanced features by remapping the piste:* style tags</description>
+    <match type="way" mode="or">
+      <tag k="piste:lift" v=".*" match_id="type"/>
+    </match>
+    <find>
+      <tag k="piste:lift:(.*)" v=".*" match_id="piste_attr"/>
+    </find>
+    <output>
+      <copy-unmatched/>
+      <tag k="piste_lift" from_match="type"/>
+      <tag from_match="piste_attr" k="{1}" v="{0}"/>
+    </output>
+  </translation>
+ <!-- And to do the reverse mapping would be:
+  <translation>
+    <name>Arbitrary Piste Remapping</name>
+    <description>Just test some of the advanced features by remapping to the piste:* style tags</description>
+    <match type="way">
+      <tag k="piste_lift" v=".*" match_id="type"/>
+      <findtag k="(occupancy|capacity|duration)" v=".*" match_id="piste_attr"/>
+    </match>
+    <output>
+      <copy-unmatched/>
+      <tag k="piste:lift" from_match="type"/>
+      <tag from_match="piste_attr" k="piste:lift:\1" v="\0"/>
+    </output>
+  </translation>
+ -->
+
+</translations>

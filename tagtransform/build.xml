@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     12 Aug 2008                                                   
+
+     Tag Transform Plugin
+
+     ====================================================================== -->
+<project name="tagtransform" default="package">
+    <description>
+            Builds the Osmosis Tag Transform plugin.
+    </description>
+
+	<path id="libs">
+		<fileset dir="libs">
+			 <include name="**/*.jar" />
+			 <include name="**/*.zip" />
+		</fileset>
+	</path>
+
+    <!-- ================================= 
+          target: build   
+         ================================= -->
+    <target name="build">
+		<!-- Create the build directories -->
+		<mkdir dir="build"/>
+		<mkdir dir="build/classes"/>
+    	
+		<!-- Compile stuff -->
+		<javac srcdir="src" destdir="build/classes" debuglevel="lines,vars,source" classpathref="libs"/>
+    	
+		<!-- Copy all resource files (even if there aren't any... I'll get caught out later otherwise) -->
+		<copy todir="build/classes">
+			<fileset dir="src">
+				<exclude name="**/*.java"/>
+			</fileset>
+		</copy>
+    </target>
+
+	<target name="package" depends="build">
+		<mkdir dir="build/dist"/>
+		<jar
+			destfile="build/dist/tagtransform.jar"
+			basedir="build/classes" />
+	</target>
+</project>
