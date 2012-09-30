@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="Osmosis.TagTransform" default="all" basedir=".">
-	
+
 	<!-- Include common java build. -->
 	<property name="build-support.dir" location="../build-support"/>
 	<import file="${build-support.dir}/script/build-java.xml"/>
+
+	<!--
+		Disable checkstyle.
+		The tag transform plugin used to exist outside the main source tree and as a result
+		doesn't comply with Osmosis coding standards.
+	-->
+	<target name="checkstyle">
+		<echo message="Checkstyle is disabled for tagtransform."/>
+	</target>
 </project>
