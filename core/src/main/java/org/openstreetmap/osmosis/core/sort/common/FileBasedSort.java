@@ -207,17 +207,16 @@ public class FileBasedSort<T extends Storeable> implements Releasable {
 				long maxChunkIndex;
 				long subChunkCount;
 				
-				// The current chunk count must be divided by
-				// MAX_FILE_SORT_COUNT and we must recurse for each
-				// of those sub chunk counts.
+				/*
+				 * The current chunk count must be divided by
+				 * MAX_MERGE_SOURCE_COUNT and we must recurse for each of those
+				 * sub chunk counts. Where the result isn't exact, we round up
+				 * to the nearest multiple of MAX_MERGE_SOURCE_COUNT to ensure
+				 * we don't end up with more than MAX_MERGE_SOURCE_COUNT
+				 * sources.
+				 */
 				subChunkCount = chunkCount / MAX_MERGE_SOURCE_COUNT;
-				
-				// If the sub chunk count is now less than MAX_FILE_SORT_COUNT,
-				// increase it to that value to minimise the number of files
-				// created.
-				if (subChunkCount < MAX_MERGE_SOURCE_COUNT) {
-					subChunkCount = MAX_MERGE_SOURCE_COUNT;
-				}
+				subChunkCount += chunkCount % MAX_MERGE_SOURCE_COUNT;
 				
 				// We can never pass beyond the chunk boundaries specified for
 				// this function.
@@ -234,10 +233,15 @@ public class FileBasedSort<T extends Storeable> implements Releasable {
 						subChunkCount = maxChunkIndex - subFirstChunk;
 					}
 					
-					// Either call the persistent or standard version of the
-					// recursive iterate based on whether this nesting level
-					// requires persistence.
-					if (((nestLevel + 1) % MAX_MEMORY_SORT_DEPTH) == 0) {
+					/*
+					 * Either call the persistent or standard version of the
+					 * recursive iterate based on whether this nesting level
+					 * requires persistence. If we only have one chunk left at
+					 * this point we make an exception and skip persistence
+					 * because it will only result in a single file being opened
+					 * anyway.
+					 */
+					if (((nestLevel + 1) % MAX_MEMORY_SORT_DEPTH) == 0 && subChunkCount > 1) {
 						sources.add(
 							iteratePersisted(nestLevel + 1, subFirstChunk, subChunkCount)
 						);
