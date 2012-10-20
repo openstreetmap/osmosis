@@ -53,7 +53,7 @@ public class MergingIterator<DataType> implements ReleasableIterator<DataType> {
 					sourceData.add(source.next());
 					sourceIndex++;
 				} else {
-					sources.remove(sourceIndex);
+					sources.remove(sourceIndex).release();
 				}
 			}
 		}
@@ -128,5 +128,4 @@ public class MergingIterator<DataType> implements ReleasableIterator<DataType> {
 			source.release();
 		}
 	}
-
 }
