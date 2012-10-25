@@ -18,7 +18,7 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkSourceManager;
  */
 public class UsedNodeFilterFactory extends TaskManagerFactory {
 	private static final String ARG_ID_TRACKER_TYPE = "idTrackerType";
-	private static final IdTrackerType DEFAULT_ID_TRACKER_TYPE = IdTrackerType.IdList;
+	private static final IdTrackerType DEFAULT_ID_TRACKER_TYPE = IdTrackerType.Dynamic;
 	
 	
 	/**
