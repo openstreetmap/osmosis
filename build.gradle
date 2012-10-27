@@ -1,0 +1,65 @@
+task wrapper(type: Wrapper) {
+	gradleVersion = '1.2'
+}
+
+
+/* Build collections containing each type of project.  These collections will
+ * be used to apply common configurations to projects of the same type.
+ */
+def packageProjects = allprojects.findAll { project -> project.path.equals(':package') }
+def buildProjects = allprojects.findAll { project -> project.path.equals(':build-support') }
+// Java projects are all those that aren't in the previous collections.
+def javaProjects = subprojects.findAll { project -> !packageProjects.contains(project) && !buildProjects.contains(project) }
+
+// Apply common project configuration
+subprojects {
+	apply plugin: 'eclipse-wtp'
+
+	// Load the project version dynamically from Git
+	version = 'git describe --always --dirty'.execute().in.text.trim()
+
+	// Enable access to artefact dependency repositories.
+	repositories {
+		// Standard Maven repository.
+		mavenCentral()
+
+		// Custom local ivy repository for non-public artefacts.
+		ivy {
+			// URL can refer to a local directory
+			url new File(rootDir, 'build-support/repo')
+
+			// Configure Ivy layout to match local repo directory structure.
+			layout 'pattern', {
+				artifact '[organisation]/[module]/[revision]/[type]s/[artifact].[ext]'
+				artifact "[module]/[revision]/[artifact].[ext]"
+				ivy "[organisation]/[module]/[revision]/ivys/ivy.xml"
+			}
+		}
+	}
+}
+
+// Apply common configurations to all projects supporting Java.
+configure(javaProjects) {
+	apply plugin: 'checkstyle'
+	apply plugin: 'java'
+	apply plugin: 'jdepend'
+
+	// Add osmosis prefix to all generated jar files.
+	archivesBaseName = 'osmosis-' + project.name
+
+	sourceCompatibility = 1.6
+
+	test {
+  		//jvmArgs "-Ddb.apidb.authfile=$db.apidb.authfile" "-Ddb.pgsql.authfile=$db.pgsql.authfile"
+  		//testLogging.showStandardStreams = true
+	}
+
+	dependencies {
+		testCompile group: 'junit', name: 'junit', version: dependencyVersionJunit
+	}
+
+	checkstyle {
+		configFile = new File(rootDir, 'build-support/checkstyle.xml')
+		configProperties.samedir = configFile.parentFile
+	}
+}
