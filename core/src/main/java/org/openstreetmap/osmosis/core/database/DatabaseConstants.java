@@ -80,7 +80,7 @@ public final class DatabaseConstants {
     /**
      * The default user for a database connection.
      */
-    public static final String TASK_DEFAULT_USER = "osm";
+    public static final String TASK_DEFAULT_USER = null;
 
     /**
      * The default password for a database connection.
@@ -90,7 +90,7 @@ public final class DatabaseConstants {
     /**
      * The default password for a database connection.
      */
-    public static final String TASK_DEFAULT_PASSWORD = "";
+    public static final String TASK_DEFAULT_PASSWORD = null;
 
     /**
      * The default value for whether schema version validation should be performed.
