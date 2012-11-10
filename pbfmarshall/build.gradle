@@ -1,0 +1,6 @@
+dependencies {
+    compile group: 'com.google.protobuf', name: 'protobuf-java', version: dependencyVersionProtobuf
+}
+
+// Disable checkstyle because this is auto-generated code.
+checkstyleMain.enabled = false

@@ -1,0 +1,7 @@
+dependencies {
+    compile project(':apidb')
+    compile project(':core')
+    compile project(':replication')
+    compile project(':xml')
+    testCompile project(':testutil')
+}

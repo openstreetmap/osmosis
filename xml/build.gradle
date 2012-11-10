@@ -1,0 +1,5 @@
+dependencies {
+    compile project(':core')
+    compile group: 'commons-codec', name: 'commons-codec', version: dependencyVersionCommonsCodec
+    testCompile project(':testutil')
+}

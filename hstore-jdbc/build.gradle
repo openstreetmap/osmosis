@@ -1,0 +1,6 @@
+dependencies {
+    compile group: 'postgresql', name: 'postgresql', version: dependencyVersionPostgreSql
+}
+
+// Disable checkstyle because this is external code.
+checkstyleMain.enabled = false

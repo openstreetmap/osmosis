@@ -1,0 +1,7 @@
+dependencies {
+    compile project(':core')
+    compile group: 'com.google.protobuf', name: 'protobuf-java', version: dependencyVersionProtobuf
+    compile group: 'crosby', name: 'osmpbf', version: dependencyVersionOsmPbf
+    testCompile project(':testutil')
+    testCompile project(':xml')
+}

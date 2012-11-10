@@ -1,0 +1,12 @@
+dependencies {
+    compile project(':core')
+    compile project(':xml')
+    testCompile project(':testutil')
+}
+
+/*
+ * Disable checkstyle.
+ * The tag transform plugin used to exist outside the main source tree and as a result
+ * doesn't comply with Osmosis coding standards.
+ */
+checkstyleMain.enabled = false
