@@ -124,7 +124,10 @@
         <!-- Disabled due to large number of tests using hard-coded numbers.
         <module name="MagicNumber"/>-->
         <module name="MissingSwitchDefault"/>
-        <module name="RedundantThrows"/>
+        <!-- Disabled due to gradle not appearing to include project
+        dependencies on classpath, thus check fails if an exception is outside
+        the project.
+        <module name="RedundantThrows"/>-->
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
 
