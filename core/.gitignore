@@ -1,7 +1,8 @@
+.classpath
+.project
+.settings
+/bin
 /build
-/distrib
-/eclipse
-/lib
-/report
 /src/main/java/org/openstreetmap/osmosis/core/OsmosisConstants.java
 /src/main/resources/org/openstreetmap/osmosis/core/plugin/plugin.xml
+
