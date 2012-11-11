@@ -50,8 +50,17 @@ configure(javaProjects) {
 	sourceCompatibility = 1.6
 
 	test {
-  		//jvmArgs "-Ddb.apidb.authfile=$db.apidb.authfile" "-Ddb.pgsql.authfile=$db.pgsql.authfile"
-  		//testLogging.showStandardStreams = true
+		/*
+		 * Pass on each of our custom properties to the unit tests if they have
+		 * been provided.
+		 */
+		['db.apidb.authfile', 'db.pgsql.authfile'].each {
+			propName ->
+				if (System.getProperties().containsKey(propName)) {
+					jvmArgs '-D' + propName + '=' + System.getProperty(propName)
+				}
+		}
+		//testLogging.showStandardStreams = true
 	}
 
 	dependencies {
