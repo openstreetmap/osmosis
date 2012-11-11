@@ -1,0 +1,73 @@
+configurations {
+    runtime
+    archives
+}
+
+dependencies {
+    runtime project(':apidb')
+    runtime project(':areafilter')
+    runtime project(':core')
+    runtime project(':dataset')
+    runtime project(':extract')
+    runtime project(':pbf')
+    runtime project(':pbf2')
+    runtime project(':pgsimple')
+    runtime project(':pgsnapshot')
+    runtime project(':replication')
+    runtime project(':replication-http')
+    runtime project(':set')
+    runtime project(':tagfilter')
+    runtime project(':tagtransform')
+    runtime project(':xml')
+    runtime group: 'org.codehaus.plexus', name: 'plexus-classworlds', version: dependencyVersionClassworlds
+}
+
+task syncLibs(type: Sync) {
+    into "lib/default"
+    from configurations.runtime
+}
+
+def artefactPrefix = 'osmosis-' + version
+
+task distZip(type: Zip) {
+    description = 'Builds a zip file containing a self-contained distribution of the application.'
+    archiveName = artefactPrefix + '.zip'
+    destinationDir = new File(projectDir, 'build/distribution')
+    from('.') {
+    	exclude 'build*'
+    	exclude 'ivy.xml'
+    	exclude '.*'
+    }
+}
+distZip.dependsOn syncLibs
+
+task distTgz(type: Tar) {
+    description = 'Builds a tgz file containing a self-contained distribution of the application.'
+    archiveName = artefactPrefix + '.tgz'
+    destinationDir = new File(projectDir, 'build/distribution')
+    compression = Compression.GZIP
+    from('.') {
+    	exclude 'build*'
+    	exclude 'ivy.xml'
+    	exclude '.*'
+    }
+}
+distTgz.dependsOn syncLibs
+
+task assemble {
+    description = 'Generates a working application directory structure.'
+}
+assemble.dependsOn distZip, distTgz
+
+task build {
+	description = 'Assembles and tests this project.'
+}
+build.dependsOn assemble
+
+task clean(type: Delete) {
+    delete 'build'
+}
+
+artifacts {
+    archives distZip, distTgz
+}
