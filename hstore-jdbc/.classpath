@@ -4,13 +4,18 @@
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="lib/test/antlr-2.7.7.jar"/>
-	<classpathentry kind="lib" path="lib/test/checkstyle-5.4.jar"/>
+	<classpathentry kind="lib" path="lib/test/asm-all-4.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/checkstyle-5.6.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-beanutils-core-1.8.3.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-cli-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/test/google-collections-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/test/hamcrest-core-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/test/junit-4.10.jar"/>
-	<classpathentry kind="lib" path="lib/test/postgresql-9.0-801.jdbc4.jar"/>
+	<classpathentry kind="lib" path="lib/test/org.jacoco.agent-0.6.0.201210061924.jar"/>
+	<classpathentry kind="lib" path="lib/test/org.jacoco.ant-0.6.0.201210061924.jar"/>
+	<classpathentry kind="lib" path="lib/test/org.jacoco.core-0.6.0.201210061924.jar"/>
+	<classpathentry kind="lib" path="lib/test/org.jacoco.report-0.6.0.201210061924.jar"/>
+	<classpathentry kind="lib" path="lib/test/postgresql-9.1-901-1.jdbc4.jar"/>
 	<classpathentry kind="output" path="eclipse"/>
 </classpath>

@@ -11,11 +11,12 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Osmosis-Xml"/>
 	<classpathentry kind="lib" path="lib/test/antlr-2.7.7.jar"/>
 	<classpathentry kind="lib" path="lib/test/aopalliance-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/test/checkstyle-5.4.jar"/>
+	<classpathentry kind="lib" path="lib/test/asm-all-4.0.jar"/>
+	<classpathentry kind="lib" path="lib/test/checkstyle-5.6.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-beanutils-core-1.8.3.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-cli-1.2.jar"/>
-	<classpathentry kind="lib" path="lib/test/commons-codec-1.5.jar"/>
-	<classpathentry kind="lib" path="lib/test/commons-compress-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-codec-1.7.jar"/>
+	<classpathentry kind="lib" path="lib/test/commons-compress-1.4.1.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-dbcp-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/test/commons-pool-1.5.4.jar"/>
@@ -23,18 +24,23 @@
 	<classpathentry kind="lib" path="lib/test/hamcrest-core-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/test/jpf-1.5.jar"/>
 	<classpathentry kind="lib" path="lib/test/junit-4.10.jar"/>
-	<classpathentry kind="lib" path="lib/test/mysql-connector-java-5.1.18.jar"/>
-	<classpathentry kind="lib" path="lib/test/postgresql-9.0-801.jdbc4.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-aop-3.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-asm-3.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-beans-3.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-context-3.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-core-3.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-expression-3.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-jdbc-3.0.6.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/test/spring-tx-3.0.6.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/test/mysql-connector-java-5.1.21.jar"/>
+	<classpathentry kind="lib" path="lib/test/org.jacoco.agent-0.6.0.201210061924.jar"/>
+	<classpathentry kind="lib" path="lib/test/org.jacoco.ant-0.6.0.201210061924.jar"/>
+	<classpathentry kind="lib" path="lib/test/org.jacoco.core-0.6.0.201210061924.jar"/>
+	<classpathentry kind="lib" path="lib/test/org.jacoco.report-0.6.0.201210061924.jar"/>
+	<classpathentry kind="lib" path="lib/test/postgresql-9.1-901-1.jdbc4.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-aop-3.1.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-asm-3.1.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-beans-3.1.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-context-3.1.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-core-3.1.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-expression-3.1.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-jdbc-3.1.2.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/test/spring-tx-3.1.2.RELEASE.jar"/>
 	<classpathentry kind="lib" path="lib/test/stax2-api-3.1.1.jar"/>
-	<classpathentry kind="lib" path="lib/test/woodstox-core-lgpl-4.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/test/woodstox-core-lgpl-4.1.4.jar"/>
 	<classpathentry kind="lib" path="lib/test/xercesImpl-2.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/test/xz-1.0.jar"/>
 	<classpathentry kind="output" path="eclipse"/>
 </classpath>
