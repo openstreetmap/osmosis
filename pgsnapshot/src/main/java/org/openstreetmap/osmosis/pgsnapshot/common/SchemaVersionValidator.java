@@ -3,7 +3,7 @@ package org.openstreetmap.osmosis.pgsnapshot.common;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 
 /**
@@ -16,7 +16,7 @@ public class SchemaVersionValidator {
 	private static final String SELECT_SQL = "SELECT version FROM schema_info";
 	
 	private DatabasePreferences preferences;
-	private SimpleJdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 	private boolean validated;
 	
 	
@@ -28,7 +28,7 @@ public class SchemaVersionValidator {
 	 * @param preferences
 	 *            The database preferences.
 	 */
-	public SchemaVersionValidator(SimpleJdbcTemplate jdbcTemplate, DatabasePreferences preferences) {
+	public SchemaVersionValidator(JdbcTemplate jdbcTemplate, DatabasePreferences preferences) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.preferences = preferences;
 	}

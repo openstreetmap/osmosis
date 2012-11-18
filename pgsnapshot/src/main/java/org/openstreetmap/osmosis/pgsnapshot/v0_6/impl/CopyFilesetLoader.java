@@ -75,7 +75,7 @@ public class CopyFilesetLoader implements Runnable {
 			dbCtx.beginTransaction();
 			
 			capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
-			new SchemaVersionValidator(dbCtx.getSimpleJdbcTemplate(), preferences)
+			new SchemaVersionValidator(dbCtx.getJdbcTemplate(), preferences)
 				.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
 			
 			wayColumns = WAY_COLUMNS;
@@ -113,10 +113,10 @@ public class CopyFilesetLoader implements Runnable {
     		dbCtx.commitTransaction();
     		
     		LOG.fine("Clustering database.");
-    		dbCtx.getSimpleJdbcTemplate().update("CLUSTER");
+    		dbCtx.getJdbcTemplate().update("CLUSTER");
     		
     		LOG.fine("Vacuuming database.");
-    		dbCtx.getSimpleJdbcTemplate().update("VACUUM ANALYZE");
+    		dbCtx.getJdbcTemplate().update("VACUUM ANALYZE");
     		
     		LOG.fine("Complete.");
     		

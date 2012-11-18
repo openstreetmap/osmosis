@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.apidb.common.DatabaseContext2;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 
@@ -18,7 +18,7 @@ public class TransactionDao implements TransactionManager {
 	private static final Logger LOG = Logger.getLogger(TransactionDao.class.getName());
 	
 	private DatabaseContext2 dbCtx;
-	private SimpleJdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 	
 	
 	/**
@@ -30,7 +30,7 @@ public class TransactionDao implements TransactionManager {
 	public TransactionDao(DatabaseContext2 dbCtx) {
 		this.dbCtx = dbCtx;
 		
-		jdbcTemplate = dbCtx.getSimpleJdbcTemplate();
+		jdbcTemplate = dbCtx.getJdbcTemplate();
 	}
 	
 	

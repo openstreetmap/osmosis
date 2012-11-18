@@ -43,7 +43,7 @@ public class PostgresqlIdentityValueLoader2 implements IdentityValueLoader {
 	 */
 	@Override
 	public long getLastSequenceId(String sequenceName) {
-		return dbCtx.getSimpleJdbcTemplate().queryForLong(SQL_SELECT_LAST_SEQUENCE_ID, sequenceName);
+		return dbCtx.getJdbcTemplate().queryForLong(SQL_SELECT_LAST_SEQUENCE_ID, sequenceName);
 	}
 	
 	

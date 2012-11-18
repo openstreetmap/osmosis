@@ -7,7 +7,7 @@ import java.util.List;
 import org.openstreetmap.osmosis.core.database.FeaturePopulator;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 
 /**
@@ -37,7 +37,7 @@ public class NodeDao extends EntityDao<Node> {
 		+ " )";
 	
 	
-	private SimpleJdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 	private DatabaseCapabilityChecker capabilityChecker;
 	
 	
@@ -50,9 +50,9 @@ public class NodeDao extends EntityDao<Node> {
 	 *            The dao to use for adding action records to the database.
 	 */
 	public NodeDao(DatabaseContext dbCtx, ActionDao actionDao) {
-		super(dbCtx.getSimpleJdbcTemplate(), new NodeMapper(), actionDao);
+		super(dbCtx.getJdbcTemplate(), new NodeMapper(), actionDao);
 		
-		jdbcTemplate = dbCtx.getSimpleJdbcTemplate();
+		jdbcTemplate = dbCtx.getJdbcTemplate();
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 	}
 	

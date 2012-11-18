@@ -8,7 +8,8 @@ import java.util.Map;
 
 import org.openstreetmap.osmosis.core.database.DbFeature;
 import org.openstreetmap.osmosis.core.store.Storeable;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 
 /**
@@ -22,7 +23,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
  */
 public class EntityFeatureDao<Tef extends Storeable, Tdb extends DbFeature<Tef>> {
 	private EntityFeatureMapper<Tdb> entityFeatureMapper;
-	private SimpleJdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
 	
 	/**
@@ -33,8 +35,9 @@ public class EntityFeatureDao<Tef extends Storeable, Tdb extends DbFeature<Tef>>
 	 * @param entityFeatureMapper
 	 *            Provides entity type specific JDBC support.
 	 */
-	protected EntityFeatureDao(SimpleJdbcTemplate jdbcTemplate, EntityFeatureMapper<Tdb> entityFeatureMapper) {
+	protected EntityFeatureDao(JdbcTemplate jdbcTemplate, EntityFeatureMapper<Tdb> entityFeatureMapper) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 		
 		this.entityFeatureMapper = entityFeatureMapper;
 	}
@@ -88,7 +91,7 @@ public class EntityFeatureDao<Tef extends Storeable, Tdb extends DbFeature<Tef>>
 			args.clear();
 			entityFeatureMapper.populateParameters(args, feature);
 			
-			jdbcTemplate.update(entityFeatureMapper.getSqlInsert(1), args);
+			namedParameterJdbcTemplate.update(entityFeatureMapper.getSqlInsert(1), args);
 		}
 	}
 	

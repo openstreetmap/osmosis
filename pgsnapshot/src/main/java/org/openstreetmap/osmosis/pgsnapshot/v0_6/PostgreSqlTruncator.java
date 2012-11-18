@@ -46,7 +46,7 @@ public class PostgreSqlTruncator implements RunnableTask {
 	public PostgreSqlTruncator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		
-		schemaVersionValidator = new SchemaVersionValidator(dbCtx.getSimpleJdbcTemplate(), preferences);
+		schemaVersionValidator = new SchemaVersionValidator(dbCtx.getJdbcTemplate(), preferences);
 	}
 	
 	
@@ -63,7 +63,7 @@ public class PostgreSqlTruncator implements RunnableTask {
 			for (int i = 0; i < SQL_TABLE_NAMES.length; i++) {
 				if (dbCtx.doesTableExist(SQL_TABLE_NAMES[i])) {
 					LOG.finer("Truncating table " + SQL_TABLE_NAMES[i] + ".");
-					dbCtx.getSimpleJdbcTemplate().update("TRUNCATE " + SQL_TABLE_NAMES[i]);
+					dbCtx.getJdbcTemplate().update("TRUNCATE " + SQL_TABLE_NAMES[i]);
 				} else {
 					LOG.finer("Skipping table " + SQL_TABLE_NAMES[i] + " which doesn't exist in the current schema.");
 				}
@@ -73,7 +73,7 @@ public class PostgreSqlTruncator implements RunnableTask {
 			dbCtx.commitTransaction();
 			
 			LOG.fine("Vacuuming database.");
-			dbCtx.getSimpleJdbcTemplate().update("VACUUM ANALYZE");
+			dbCtx.getJdbcTemplate().update("VACUUM ANALYZE");
 			LOG.fine("Complete.");
 			
 		} finally {

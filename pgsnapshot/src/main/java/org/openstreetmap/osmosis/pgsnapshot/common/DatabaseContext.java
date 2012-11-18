@@ -19,7 +19,6 @@ import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.postgresql.copy.CopyManager;
 import org.postgresql.core.BaseConnection;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -45,7 +44,6 @@ public class DatabaseContext {
     private TransactionTemplate txnTemplate;
     private TransactionStatus transaction;
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcTemplate simpleJdbcTemplate;
     
 
     /**
@@ -59,7 +57,6 @@ public class DatabaseContext {
     	txnManager = new DataSourceTransactionManager(dataSource);
     	txnTemplate = new TransactionTemplate(txnManager);
     	jdbcTemplate = new JdbcTemplate(dataSource);
-    	simpleJdbcTemplate = new SimpleJdbcTemplate(jdbcTemplate);
     	
     	setStatementFetchSizeForStreaming();
     }
@@ -91,16 +88,6 @@ public class DatabaseContext {
     	} finally {
     		transaction = null;
     	}
-    }
-    
-    
-    /**
-     * Gets the jdbc template which provides simple access to database functions.
-     * 
-     * @return The jdbc template.
-     */
-    public SimpleJdbcTemplate getSimpleJdbcTemplate() {
-    	return simpleJdbcTemplate;
     }
     
     

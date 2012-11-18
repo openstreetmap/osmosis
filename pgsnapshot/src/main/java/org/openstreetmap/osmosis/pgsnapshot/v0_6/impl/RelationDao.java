@@ -18,7 +18,7 @@ import org.openstreetmap.osmosis.core.store.StoreReleasingIterator;
 import org.openstreetmap.osmosis.core.store.UpcastIterator;
 import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 import org.openstreetmap.osmosis.pgsnapshot.common.RowMapperRowCallbackListener;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 
 /**
@@ -28,7 +28,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
  */
 public class RelationDao extends EntityDao<Relation> {
 	
-	private SimpleJdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 	private EntityFeatureDao<RelationMember, DbOrderedFeature<RelationMember>> relationMemberDao;
 	private RelationMemberMapper relationMemberMapper;
 	
@@ -42,12 +42,12 @@ public class RelationDao extends EntityDao<Relation> {
 	 *            The dao to use for adding action records to the database.
 	 */
 	public RelationDao(DatabaseContext dbCtx, ActionDao actionDao) {
-		super(dbCtx.getSimpleJdbcTemplate(), new RelationMapper(), actionDao);
+		super(dbCtx.getJdbcTemplate(), new RelationMapper(), actionDao);
 		
-		jdbcTemplate = dbCtx.getSimpleJdbcTemplate();
+		jdbcTemplate = dbCtx.getJdbcTemplate();
 		relationMemberMapper = new RelationMemberMapper();
 		relationMemberDao = new EntityFeatureDao<RelationMember, DbOrderedFeature<RelationMember>>(
-				dbCtx.getSimpleJdbcTemplate(), relationMemberMapper);
+				dbCtx.getJdbcTemplate(), relationMemberMapper);
 	}
 	
 	
@@ -151,7 +151,7 @@ public class RelationDao extends EntityDao<Relation> {
 					relationMemberMapper.getRowMapper(), storeListener);
 			
 			// Perform the query passing the row mapper chain to process rows in a streamy fashion.
-			jdbcTemplate.getJdbcOperations().query(sql, rowCallbackListener);
+			jdbcTemplate.query(sql, rowCallbackListener);
 			
 			// Open a iterator on the store that will release the store upon completion.
 			resultIterator =

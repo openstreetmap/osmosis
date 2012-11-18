@@ -18,7 +18,8 @@ import org.openstreetmap.osmosis.core.store.StoreReleasingIterator;
 import org.openstreetmap.osmosis.pgsnapshot.common.NoSuchRecordException;
 import org.openstreetmap.osmosis.pgsnapshot.common.RowMapperRowCallbackListener;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 
 /**
@@ -30,7 +31,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
  */
 public abstract class EntityDao<T extends Entity> {
 	
-	private SimpleJdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	private ActionDao actionDao;
 	private EntityMapper<T> entityMapper;
 	
@@ -45,8 +47,9 @@ public abstract class EntityDao<T extends Entity> {
 	 * @param actionDao
 	 *            The dao to use for adding action records to the database.
 	 */
-	protected EntityDao(SimpleJdbcTemplate jdbcTemplate, EntityMapper<T> entityMapper, ActionDao actionDao) {
+	protected EntityDao(JdbcTemplate jdbcTemplate, EntityMapper<T> entityMapper, ActionDao actionDao) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 		this.entityMapper = entityMapper;
 		this.actionDao = actionDao;
 	}
@@ -108,7 +111,7 @@ public abstract class EntityDao<T extends Entity> {
 		args = new HashMap<String, Object>();
 		entityMapper.populateEntityParameters(args, entity);
 		
-		jdbcTemplate.update(entityMapper.getSqlInsert(1), args);
+		namedParameterJdbcTemplate.update(entityMapper.getSqlInsert(1), args);
 		
 		actionDao.addAction(entityMapper.getEntityType(), ChangesetAction.CREATE, entity.getId());
 	}
@@ -126,7 +129,7 @@ public abstract class EntityDao<T extends Entity> {
 		args = new HashMap<String, Object>();
 		entityMapper.populateEntityParameters(args, entity);
 		
-		jdbcTemplate.update(entityMapper.getSqlUpdate(true), args);
+		namedParameterJdbcTemplate.update(entityMapper.getSqlUpdate(true), args);
 		
 		actionDao.addAction(entityMapper.getEntityType(), ChangesetAction.MODIFY, entity.getId());
 	}
@@ -144,7 +147,7 @@ public abstract class EntityDao<T extends Entity> {
 		args = new HashMap<String, Object>();
 		args.put("id", entityId);
 		
-		jdbcTemplate.update(entityMapper.getSqlDelete(true), args);
+		namedParameterJdbcTemplate.update(entityMapper.getSqlDelete(true), args);
 		
 		actionDao.addAction(entityMapper.getEntityType(), ChangesetAction.DELETE, entityId);
 	}
@@ -172,7 +175,7 @@ public abstract class EntityDao<T extends Entity> {
 			rowCallbackListener = new RowMapperRowCallbackListener<T>(entityMapper.getRowMapper(), storeListener);
 			
 			// Perform the query passing the row mapper chain to process rows in a streamy fashion.
-			jdbcTemplate.getJdbcOperations().query(sql, rowCallbackListener);
+			jdbcTemplate.query(sql, rowCallbackListener);
 			
 			// Open a iterator on the store that will release the store upon completion.
 			resultIterator = new StoreReleasingIterator<T>(sortingStore.iterate(), sortingStore);

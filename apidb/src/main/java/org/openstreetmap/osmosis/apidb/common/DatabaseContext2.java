@@ -13,7 +13,6 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabaseType;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -35,7 +34,6 @@ public class DatabaseContext2 {
     private PlatformTransactionManager txnManager;
     private TransactionTemplate txnTemplate;
     private JdbcTemplate jdbcTemplate;
-    private SimpleJdbcTemplate simpleJdbcTemplate;
     private DatabaseType dbType;
     private IdentityValueLoader identityValueLoader;
     
@@ -50,7 +48,6 @@ public class DatabaseContext2 {
     	txnManager = new DataSourceTransactionManager(dataSource);
     	txnTemplate = new TransactionTemplate(txnManager);
     	jdbcTemplate = new JdbcTemplate(dataSource);
-    	simpleJdbcTemplate = new SimpleJdbcTemplate(jdbcTemplate);
     	this.dbType = loginCredentials.getDbType();
     	
     	setStatementFetchSizeForStreaming();
@@ -65,16 +62,6 @@ public class DatabaseContext2 {
         default:
             throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
         }
-    }
-    
-    
-    /**
-     * Gets the jdbc template which provides simple access to database functions.
-     * 
-     * @return The jdbc template.
-     */
-    public SimpleJdbcTemplate getSimpleJdbcTemplate() {
-    	return simpleJdbcTemplate;
     }
     
     

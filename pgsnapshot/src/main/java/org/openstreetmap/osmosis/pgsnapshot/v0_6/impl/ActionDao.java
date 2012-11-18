@@ -2,7 +2,7 @@
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
 import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 
 /**
@@ -14,7 +14,7 @@ public class ActionDao {
 	private static final String SQL_INSERT = "INSERT INTO actions(data_type, action, id) VALUES(?, ?, ?)";
 	private static final String SQL_TRUNCATE = "TRUNCATE actions";
 	
-	private SimpleJdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 	private DatabaseCapabilityChecker capabilityChecker;
 	
 	
@@ -25,7 +25,7 @@ public class ActionDao {
 	 *            The database context to use for accessing the database.
 	 */
 	public ActionDao(DatabaseContext dbCtx) {
-		jdbcTemplate = dbCtx.getSimpleJdbcTemplate();
+		jdbcTemplate = dbCtx.getJdbcTemplate();
 		
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 	}

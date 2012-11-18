@@ -34,7 +34,7 @@ import org.openstreetmap.osmosis.pgsnapshot.v0_6.PostgreSqlVersionConstants;
 import org.postgis.PGgeometry;
 import org.postgis.Point;
 import org.postgis.Polygon;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 
 /**
@@ -55,7 +55,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	private DatabaseCapabilityChecker capabilityChecker;
 	private boolean initialized;
 	private DatabaseContext dbCtx;
-	private SimpleJdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 	private UserDao userDao;
 	private NodeDao nodeDao;
 	private WayDao wayDao;
@@ -92,7 +92,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			ActionDao actionDao;
 			
 			dbCtx = new DatabaseContext(loginCredentials);
-			jdbcTemplate = dbCtx.getSimpleJdbcTemplate();
+			jdbcTemplate = dbCtx.getJdbcTemplate();
 			
 			dbCtx.beginTransaction();
 			

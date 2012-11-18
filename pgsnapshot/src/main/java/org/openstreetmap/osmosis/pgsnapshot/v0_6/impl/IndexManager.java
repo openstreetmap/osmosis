@@ -4,7 +4,7 @@ package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 
 /**
@@ -66,7 +66,7 @@ public class IndexManager {
 		+ ")";
 	
 	
-	private SimpleJdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 	private DatabaseCapabilityChecker capabilityChecker;
 	private boolean populateBbox;
 	private boolean populateLinestring;
@@ -88,7 +88,7 @@ public class IndexManager {
 		this.populateBbox = populateBbox;
 		this.populateLinestring = populateLinestring;
 		
-		jdbcTemplate = dbCtx.getSimpleJdbcTemplate();
+		jdbcTemplate = dbCtx.getJdbcTemplate();
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 	}
 	

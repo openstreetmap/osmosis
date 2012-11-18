@@ -5,7 +5,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 import org.openstreetmap.osmosis.pgsnapshot.common.NoSuchRecordException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 
 /**
@@ -18,7 +18,7 @@ public class UserDao {
 	private static final String INSERT_USER = "INSERT INTO users(id, name) VALUES(?, ?)";
 	private static final String UPDATE_USER = "UPDATE users SET name = ? WHERE id = ?";
 	
-	private SimpleJdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 	private ActionDao actionDao;
 	private UserRowMapper rowMapper;
 	
@@ -34,7 +34,7 @@ public class UserDao {
 	public UserDao(DatabaseContext dbCtx, ActionDao actionDao) {
 		this.actionDao = actionDao;
 		
-		jdbcTemplate = dbCtx.getSimpleJdbcTemplate();
+		jdbcTemplate = dbCtx.getJdbcTemplate();
 		
 		rowMapper = new UserRowMapper();
 	}
