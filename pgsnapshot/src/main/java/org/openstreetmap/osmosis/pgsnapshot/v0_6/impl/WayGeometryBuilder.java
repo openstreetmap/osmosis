@@ -3,6 +3,7 @@ package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
@@ -28,6 +29,8 @@ import org.postgis.Polygon;
  * @author Brett Henderson
  */
 public class WayGeometryBuilder implements Releasable {
+	
+	private static final Logger LOG = Logger.getLogger(WayGeometryBuilder.class.getName());
 	/**
 	 * Stores the locations of nodes so that they can be used to build the way
 	 * geometries.
@@ -194,8 +197,9 @@ public class WayGeometryBuilder implements Releasable {
 	 * @return The linestring representing the way.
 	 */
 	public LineString createWayLinestring(Way way) {
+		LOG.info("building way geometry");
 		List<Point> linePoints;
-		int numValidNodes = 0;
+		//int numValidNodes = 0;
 		
 		linePoints = new ArrayList<Point>();
 		for (WayNode wayNode : way.getWayNodes()) {
@@ -204,18 +208,13 @@ public class WayGeometryBuilder implements Releasable {
 			nodeLocation = locationStore.getNodeLocation(wayNode.getNodeId());
 	
 			if (nodeLocation.isValid()) {
-				numValidNodes++;
+				//numValidNodes++;
 				linePoints.add(new Point(nodeLocation.getLongitude(), nodeLocation.getLatitude()));
 			} else {
 				return null;
 			}
 		}
-	
-		if (numValidNodes >= 2) {	
-			return createLinestring(linePoints);
-		} else {
-			return null;
-		}
+		return createLinestring(linePoints);
 	}
 	
 	

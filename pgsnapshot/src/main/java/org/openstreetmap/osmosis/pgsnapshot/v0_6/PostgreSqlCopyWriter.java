@@ -34,6 +34,7 @@ public class PostgreSqlCopyWriter implements Sink {
 	private NodeLocationStoreType storeType;
 	private boolean populateBbox;
 	private boolean populateLinestring;
+	private boolean keepInvalidWays;
 	private boolean initialized;
 	
 	
@@ -46,13 +47,18 @@ public class PostgreSqlCopyWriter implements Sink {
 	 *            Contains preferences configuring database behaviour.
 	 * @param storeType
 	 *            The node location storage type used by the geometry builders.
+	 * @param keepInvalidWays
+	 *            If true, zero and single node ways are kept. Otherwise they are
+	 *            silently dropped to avoid putting invalid geometries into the 
+	 *            database which can cause problems with postgis functions.
 	 */
 	public PostgreSqlCopyWriter(
 			DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
-			NodeLocationStoreType storeType) {
+			NodeLocationStoreType storeType, boolean keepInvalidWays) {
 		this.loginCredentials = loginCredentials;
 		this.preferences = preferences;
 		this.storeType = storeType;
+		this.keepInvalidWays = keepInvalidWays;
 		
 		copyFileset = new TempCopyFileset();
 	}
@@ -76,7 +82,7 @@ public class PostgreSqlCopyWriter implements Sink {
 			}
 
 			copyFilesetBuilder =
-				new CopyFilesetBuilder(copyFileset, populateBbox, populateLinestring, storeType);
+				new CopyFilesetBuilder(copyFileset, populateBbox, populateLinestring, storeType, keepInvalidWays);
 			
 			copyFilesetLoader = new CopyFilesetLoader(loginCredentials, preferences, copyFileset);
 			
