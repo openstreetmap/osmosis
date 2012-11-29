@@ -179,7 +179,6 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(WayContainer wayContainer) {
-		System.out.println("processing way"); 
 		Way way;
 		int sequenceId;
 		List<Long> nodeIds;
@@ -191,7 +190,7 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 			nodeIds.add(wayNode.getNodeId());
 		}
 		
-		// Unless explicitly specified, drop zero and single node ways
+		// Keep invalid ways out of the database if desired by the user
 		if (way.getWayNodes().size() > 1 || keepInvalidWays) {
 			wayWriter.writeField(way.getId());
 			wayWriter.writeField(way.getVersion());
