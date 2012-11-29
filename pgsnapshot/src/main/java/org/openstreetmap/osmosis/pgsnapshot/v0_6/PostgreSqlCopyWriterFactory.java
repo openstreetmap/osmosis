@@ -19,7 +19,7 @@ public class PostgreSqlCopyWriterFactory extends DatabaseTaskManagerFactory {
 	private static final String ARG_NODE_LOCATION_STORE_TYPE = "nodeLocationStoreType";
 	private static final String DEFAULT_NODE_LOCATION_STORE_TYPE = "CompactTempFile";
 	private static final String ARG_KEEP_INVALID_WAYS = "keepInvalidWays";
-	private static final boolean DEFAULT_KEEP_INVALID_WAYS = false;
+	private static final boolean DEFAULT_KEEP_INVALID_WAYS = true;
 	
 	/**
 	 * {@inheritDoc}
