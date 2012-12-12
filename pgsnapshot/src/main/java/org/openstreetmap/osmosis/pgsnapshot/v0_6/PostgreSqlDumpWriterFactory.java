@@ -57,7 +57,8 @@ public class PostgreSqlDumpWriterFactory extends TaskManagerFactory {
 		
 		return new SinkManager(
 			taskConfig.getId(),
-			new PostgreSqlDumpWriter(filePrefix, enableBboxBuilder, enableLinestringBuilder, storeType, keepInvalidWays),
+			new PostgreSqlDumpWriter(
+					filePrefix, enableBboxBuilder, enableLinestringBuilder, storeType, keepInvalidWays),
 			taskConfig.getPipeArgs()
 		);
 	}

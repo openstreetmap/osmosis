@@ -27,6 +27,10 @@ public class ActionChangeWriter implements EntityProcessor {
 	 *            The underlying change writer.
 	 * @param action
 	 *            The action to apply to all writes.
+	 * @param keepInvalidWays
+	 *            If true, zero and single node ways are kept. Otherwise they are
+	 *            silently dropped to avoid putting invalid geometries into the 
+	 *            database which can cause problems with postgis functions.
 	 */
 	public ActionChangeWriter(ChangeWriter changeWriter, ChangeAction action, boolean keepInvalidWays) {
 		this.changeWriter = changeWriter;
