@@ -126,6 +126,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 				"--read-xml-change-0.6",
 				changesetFile.getPath(),
 				"--write-pgsql-change-0.6",
+				"keepInvalidWays=false", 
 				"authFile=" + authFile.getPath()
 			}
 		);

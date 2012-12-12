@@ -37,6 +37,10 @@
     <nd ref="5"/>
     <tag k="created_by" v="Me1"/>
   </way>
+  <way id="4" version="13" timestamp="2012-12-11T15:10:12Z" changeset="10">
+    <nd ref="1"/>
+    <tag k="note" v="single node way"/>
+  </way>
   <relation id="1" version="10" timestamp="2008-01-02T03:04:05Z" uid="10" user="user10" changeset="11">
     <member type="node" ref="6" role="noderole"/>
     <member type="way" ref="1" role="wayrole1"/>
