@@ -17,6 +17,7 @@ import org.openstreetmap.osmosis.core.task.common.ChangeAction;
 public class ActionChangeWriter implements EntityProcessor {
 	private ChangeWriter changeWriter;
 	private ChangeAction action;
+	private boolean keepInvalidWays;
 	
 	
 	/**
@@ -27,9 +28,10 @@ public class ActionChangeWriter implements EntityProcessor {
 	 * @param action
 	 *            The action to apply to all writes.
 	 */
-	public ActionChangeWriter(ChangeWriter changeWriter, ChangeAction action) {
+	public ActionChangeWriter(ChangeWriter changeWriter, ChangeAction action, boolean keepInvalidWays) {
 		this.changeWriter = changeWriter;
 		this.action = action;
+		this.keepInvalidWays = keepInvalidWays;
 	}
 	
 	
@@ -53,7 +55,7 @@ public class ActionChangeWriter implements EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(WayContainer wayContainer) {
-		changeWriter.write(wayContainer.getEntity(), action);
+		changeWriter.write(wayContainer.getEntity(), action, keepInvalidWays);
 	}
 	
 	

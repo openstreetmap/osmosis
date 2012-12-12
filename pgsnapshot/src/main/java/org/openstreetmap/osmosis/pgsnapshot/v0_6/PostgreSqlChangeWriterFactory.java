@@ -16,6 +16,9 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.ChangeSinkManager;
  */
 public class PostgreSqlChangeWriterFactory extends DatabaseTaskManagerFactory {
 	
+	private static final String ARG_KEEP_INVALID_WAYS = "keepInvalidWays";
+	private static final boolean DEFAULT_KEEP_INVALID_WAYS = true;
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -28,11 +31,14 @@ public class PostgreSqlChangeWriterFactory extends DatabaseTaskManagerFactory {
 		loginCredentials = getDatabaseLoginCredentials(taskConfig);
 		preferences = getDatabasePreferences(taskConfig);
 		
+		boolean keepInvalidWays = getBooleanArgument(taskConfig, ARG_KEEP_INVALID_WAYS, DEFAULT_KEEP_INVALID_WAYS);
+		
 		return new ChangeSinkManager(
 			taskConfig.getId(),
 			new PostgreSqlChangeWriter(
 				loginCredentials,
-				preferences
+				preferences,
+				keepInvalidWays
 			),
 			taskConfig.getPipeArgs()
 		);

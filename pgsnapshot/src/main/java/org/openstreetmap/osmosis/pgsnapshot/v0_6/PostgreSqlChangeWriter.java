@@ -40,13 +40,13 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	 * @param preferences
 	 *            Contains preferences configuring database behaviour.
 	 */
-	public PostgreSqlChangeWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
+	public PostgreSqlChangeWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences, boolean keepInvalidWays) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		changeWriter = new ChangeWriter(dbCtx);
 		actionWriterMap = new HashMap<ChangeAction, ActionChangeWriter>();
-		actionWriterMap.put(ChangeAction.Create, new ActionChangeWriter(changeWriter, ChangeAction.Create));
-		actionWriterMap.put(ChangeAction.Modify, new ActionChangeWriter(changeWriter, ChangeAction.Modify));
-		actionWriterMap.put(ChangeAction.Delete, new ActionChangeWriter(changeWriter, ChangeAction.Delete));
+		actionWriterMap.put(ChangeAction.Create, new ActionChangeWriter(changeWriter, ChangeAction.Create, keepInvalidWays));
+		actionWriterMap.put(ChangeAction.Modify, new ActionChangeWriter(changeWriter, ChangeAction.Modify, keepInvalidWays));
+		actionWriterMap.put(ChangeAction.Delete, new ActionChangeWriter(changeWriter, ChangeAction.Delete, keepInvalidWays));
 		
 		schemaVersionValidator = new SchemaVersionValidator(dbCtx.getSimpleJdbcTemplate(), preferences);
 		
