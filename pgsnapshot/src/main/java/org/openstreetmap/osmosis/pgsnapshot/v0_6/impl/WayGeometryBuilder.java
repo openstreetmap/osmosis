@@ -196,7 +196,6 @@ public class WayGeometryBuilder implements Releasable {
 	 */
 	public LineString createWayLinestring(Way way) {
 		List<Point> linePoints;
-		//int numValidNodes = 0;
 		
 		linePoints = new ArrayList<Point>();
 		for (WayNode wayNode : way.getWayNodes()) {
@@ -205,7 +204,6 @@ public class WayGeometryBuilder implements Releasable {
 			nodeLocation = locationStore.getNodeLocation(wayNode.getNodeId());
 	
 			if (nodeLocation.isValid()) {
-				//numValidNodes++;
 				linePoints.add(new Point(nodeLocation.getLongitude(), nodeLocation.getLatitude()));
 			} else {
 				return null;
