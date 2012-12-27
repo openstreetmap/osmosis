@@ -17,6 +17,7 @@ import org.openstreetmap.osmosis.core.task.common.ChangeAction;
 public class ActionChangeWriter implements EntityProcessor {
 	private ChangeWriter changeWriter;
 	private ChangeAction action;
+	private boolean keepInvalidWays;
 	
 	
 	/**
@@ -26,10 +27,15 @@ public class ActionChangeWriter implements EntityProcessor {
 	 *            The underlying change writer.
 	 * @param action
 	 *            The action to apply to all writes.
+	 * @param keepInvalidWays
+	 *            If true, zero and single node ways are kept. Otherwise they are
+	 *            silently dropped to avoid putting invalid geometries into the 
+	 *            database which can cause problems with postgis functions.
 	 */
-	public ActionChangeWriter(ChangeWriter changeWriter, ChangeAction action) {
+	public ActionChangeWriter(ChangeWriter changeWriter, ChangeAction action, boolean keepInvalidWays) {
 		this.changeWriter = changeWriter;
 		this.action = action;
+		this.keepInvalidWays = keepInvalidWays;
 	}
 	
 	
@@ -53,7 +59,7 @@ public class ActionChangeWriter implements EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	public void process(WayContainer wayContainer) {
-		changeWriter.write(wayContainer.getEntity(), action);
+		changeWriter.write(wayContainer.getEntity(), action, keepInvalidWays);
 	}
 	
 	

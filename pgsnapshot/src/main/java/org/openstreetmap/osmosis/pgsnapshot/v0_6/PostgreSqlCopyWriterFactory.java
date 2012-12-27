@@ -18,6 +18,8 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkManager;
 public class PostgreSqlCopyWriterFactory extends DatabaseTaskManagerFactory {
 	private static final String ARG_NODE_LOCATION_STORE_TYPE = "nodeLocationStoreType";
 	private static final String DEFAULT_NODE_LOCATION_STORE_TYPE = "CompactTempFile";
+	private static final String ARG_KEEP_INVALID_WAYS = "keepInvalidWays";
+	private static final boolean DEFAULT_KEEP_INVALID_WAYS = true;
 	
 	/**
 	 * {@inheritDoc}
@@ -27,6 +29,7 @@ public class PostgreSqlCopyWriterFactory extends DatabaseTaskManagerFactory {
 		DatabaseLoginCredentials loginCredentials;
 		DatabasePreferences preferences;
 		NodeLocationStoreType storeType;
+		boolean keepInvalidWays;
 		
 		// Get the task arguments.
 		loginCredentials = getDatabaseLoginCredentials(taskConfig);
@@ -34,10 +37,11 @@ public class PostgreSqlCopyWriterFactory extends DatabaseTaskManagerFactory {
 		storeType = Enum.valueOf(
 				NodeLocationStoreType.class,
 				getStringArgument(taskConfig, ARG_NODE_LOCATION_STORE_TYPE, DEFAULT_NODE_LOCATION_STORE_TYPE));
+		keepInvalidWays = getBooleanArgument(taskConfig, ARG_KEEP_INVALID_WAYS, DEFAULT_KEEP_INVALID_WAYS);
 		
 		return new SinkManager(
 			taskConfig.getId(),
-			new PostgreSqlCopyWriter(loginCredentials, preferences,	storeType),
+			new PostgreSqlCopyWriter(loginCredentials, preferences,	storeType, keepInvalidWays),
 			taskConfig.getPipeArgs()
 		);
 	}

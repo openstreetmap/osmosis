@@ -39,16 +39,21 @@ public class PostgreSqlDumpWriter implements Sink {
 	 *            relying on the database.
 	 * @param storeType
 	 *            The node location storage type used by the geometry builders.
+	 * @param keepInvalidWays
+	 *            If true, zero and single node ways are kept. Otherwise they are
+	 *            silently dropped to avoid putting invalid geometries into the 
+	 *            database which can cause problems with postgis functions.
 	 */
 	public PostgreSqlDumpWriter(
 			File filePrefix, boolean enableBboxBuilder,
-			boolean enableLinestringBuilder, NodeLocationStoreType storeType) {
+			boolean enableLinestringBuilder, NodeLocationStoreType storeType, 
+			boolean keepInvalidWays) {
 		DirectoryCopyFileset copyFileset;
 		
 		copyFileset = new DirectoryCopyFileset(filePrefix);
 		
 		copyFilesetBuilder =
-			new CopyFilesetBuilder(copyFileset, enableBboxBuilder, enableLinestringBuilder, storeType);
+			new CopyFilesetBuilder(copyFileset, enableBboxBuilder, enableLinestringBuilder, storeType, keepInvalidWays);
 	}
     
     

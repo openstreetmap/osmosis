@@ -39,14 +39,22 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	 *            Contains all information required to connect to the database.
 	 * @param preferences
 	 *            Contains preferences configuring database behaviour.
+	 * @param keepInvalidWays
+	 *            If true, zero and single node ways are kept. Otherwise they are
+	 *            silently dropped to avoid putting invalid geometries into the 
+	 *            database which can cause problems with postgis functions.
 	 */
-	public PostgreSqlChangeWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
+	public PostgreSqlChangeWriter(DatabaseLoginCredentials loginCredentials, 
+			DatabasePreferences preferences, boolean keepInvalidWays) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		changeWriter = new ChangeWriter(dbCtx);
 		actionWriterMap = new HashMap<ChangeAction, ActionChangeWriter>();
-		actionWriterMap.put(ChangeAction.Create, new ActionChangeWriter(changeWriter, ChangeAction.Create));
-		actionWriterMap.put(ChangeAction.Modify, new ActionChangeWriter(changeWriter, ChangeAction.Modify));
-		actionWriterMap.put(ChangeAction.Delete, new ActionChangeWriter(changeWriter, ChangeAction.Delete));
+		actionWriterMap.put(ChangeAction.Create, 
+				new ActionChangeWriter(changeWriter, ChangeAction.Create, keepInvalidWays));
+		actionWriterMap.put(ChangeAction.Modify, 
+				new ActionChangeWriter(changeWriter, ChangeAction.Modify, keepInvalidWays));
+		actionWriterMap.put(ChangeAction.Delete, 
+				new ActionChangeWriter(changeWriter, ChangeAction.Delete, keepInvalidWays));
 		
 		schemaVersionValidator = new SchemaVersionValidator(dbCtx.getJdbcTemplate(), preferences);
 		

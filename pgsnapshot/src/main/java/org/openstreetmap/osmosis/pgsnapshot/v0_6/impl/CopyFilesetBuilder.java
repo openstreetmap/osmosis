@@ -39,6 +39,7 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 	
 	private boolean enableBboxBuilder;
 	private boolean enableLinestringBuilder;
+	private boolean keepInvalidWays;
 	private WayGeometryBuilder wayGeometryBuilder;
 	private CompletableContainer writerContainer;
 	private MemberTypeValueMapper memberTypeValueMapper;
@@ -69,12 +70,18 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 	 *            relying on the database.
 	 * @param storeType
 	 *            The node location storage type used by the geometry builders.
+	 * @param keepInvalidWays
+	 *            If true, zero and single node ways are kept. Otherwise they are
+	 *            silently dropped to avoid putting invalid geometries into the 
+	 *            database which can cause problems with postgis functions.
 	 */
 	public CopyFilesetBuilder(
 			CopyFileset copyFileset, boolean enableBboxBuilder,
-			boolean enableLinestringBuilder, NodeLocationStoreType storeType) {
+			boolean enableLinestringBuilder, NodeLocationStoreType storeType,
+			boolean keepInvalidWays) {
 		this.enableBboxBuilder = enableBboxBuilder;
 		this.enableLinestringBuilder = enableLinestringBuilder;
+		this.keepInvalidWays = keepInvalidWays;
 		
 		writerContainer = new CompletableContainer();
 		
@@ -183,8 +190,8 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 			nodeIds.add(wayNode.getNodeId());
 		}
 		
-		// Ignore ways with a single node because they can't be loaded into postgis.
-		if (way.getWayNodes().size() > 1) {
+		// Keep invalid ways out of the database if desired by the user
+		if (way.getWayNodes().size() > 1 || keepInvalidWays) {
 			wayWriter.writeField(way.getId());
 			wayWriter.writeField(way.getVersion());
 			wayWriter.writeField(way.getUser().getId());

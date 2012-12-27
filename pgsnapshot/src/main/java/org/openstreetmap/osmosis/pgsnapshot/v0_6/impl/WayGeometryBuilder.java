@@ -28,6 +28,7 @@ import org.postgis.Polygon;
  * @author Brett Henderson
  */
 public class WayGeometryBuilder implements Releasable {
+	
 	/**
 	 * Stores the locations of nodes so that they can be used to build the way
 	 * geometries.
@@ -195,7 +196,6 @@ public class WayGeometryBuilder implements Releasable {
 	 */
 	public LineString createWayLinestring(Way way) {
 		List<Point> linePoints;
-		int numValidNodes = 0;
 		
 		linePoints = new ArrayList<Point>();
 		for (WayNode wayNode : way.getWayNodes()) {
@@ -204,18 +204,12 @@ public class WayGeometryBuilder implements Releasable {
 			nodeLocation = locationStore.getNodeLocation(wayNode.getNodeId());
 	
 			if (nodeLocation.isValid()) {
-				numValidNodes++;
 				linePoints.add(new Point(nodeLocation.getLongitude(), nodeLocation.getLatitude()));
 			} else {
 				return null;
 			}
 		}
-	
-		if (numValidNodes >= 2) {	
-			return createLinestring(linePoints);
-		} else {
-			return null;
-		}
+		return createLinestring(linePoints);
 	}
 	
 	

@@ -142,20 +142,30 @@ public class ChangeWriter {
 	 *            The way to be written.
 	 * @param action
 	 *            The change to be applied.
+	 * @param keepInvalidWays
+	 *            If true, zero and single node ways are kept. Otherwise they are
+	 *            silently dropped to avoid putting invalid geometries into the 
+	 *            database which can cause problems with postgis functions.
 	 */
-	public void write(Way way, ChangeAction action) {
+	public void write(Way way, ChangeAction action, boolean keepInvalidWays) {
 		processEntityPrerequisites(way);
-
+		
 		// If this is a create or modify, we must create or modify the records
 		// in the database. Note that we don't use the input source to
 		// distinguish between create and modify, we make this determination
 		// based on our current data set.
-		if (ChangeAction.Create.equals(action)
-				|| ChangeAction.Modify.equals(action)) {
+		if (ChangeAction.Create.equals(action) || ChangeAction.Modify.equals(action)) {
 			if (wayDao.exists(way.getId())) {
-				wayDao.modifyEntity(way);
+				if (way.getWayNodes().size() >= 2 || keepInvalidWays) {
+					wayDao.modifyEntity(way);
+				} else {
+					wayDao.removeEntity(way.getId());
+				}
+				
 			} else {
-				wayDao.addEntity(way);
+				if (way.getWayNodes().size() >= 2 || keepInvalidWays) {
+					wayDao.addEntity(way);
+				}
 			}
 
 		} else {
