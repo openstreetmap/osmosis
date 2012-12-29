@@ -37,7 +37,7 @@
     <nd ref="5"/>
     <tag k="created_by" v="Me1"/>
   </way>
-  <way id="4" version="13" timestamp="2012-12-11T15:10:12Z" changeset="10">
+  <way id="4" version="13" timestamp="2012-12-11T15:10:12Z" changeset="101">
     <nd ref="1"/>
     <tag k="note" v="single node way"/>
   </way>
