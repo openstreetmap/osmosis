@@ -1,3 +1,23 @@
+0.42
+Fix PostgreSQL timestamp bugs in apidb replication logic.
+Fix replication file merging boundary corrections.  Occurs when catching up after outages.
+Replication logic correctly honours the max timestamp parameter.
+Prevent replication file downloader from reading beyond maximum available replication interval.
+Prevent replication file downloader from stalling if interval is too long.
+Improve error reporting when an unknown global option is specified.
+Disable automatic state.txt creation for --read-replication-interval.
+Add --tag-transform plugin and task.
+Reduce number of file handles consumed by file-based sorting.
+Make the default id tracker Dynamic for --used-node and --used-way.
+Use Gradle for the automated build scripts instead of Ant/Ivy.
+Fix PostgreSQL ident authentication.
+Remove obsolete debian build scripts.
+Eliminate use of deprecated Spring SimpleJdbcTemplate.
+Improve handling of invalid geometries in --pgsql-xxx tasks.
+Default keepInvalidWays option on --pgsql-xxx tasks to true.
+Enable keepInvalidWays functionality for --pgsql-xxx replication.
+Fix pgsnapshot COPY load script to use ST_ prefix for all PostGIS functions.
+
 0.41
 All entities can now pass metadata through the pipeline.  XML tasks can add these as additional attributes on output.
 Added --convert-change-to-full-history task.
