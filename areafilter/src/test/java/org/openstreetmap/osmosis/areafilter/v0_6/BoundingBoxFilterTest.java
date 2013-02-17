@@ -56,7 +56,7 @@ public class BoundingBoxFilterTest {
 		entityInspector = new SinkEntityInspector();
 		// simpleAreaFilter doesn't cross antimeridian; no complete ways or relations
 		simpleAreaFilter = new BoundingBoxFilter(
-		        IdTrackerType.IdList,
+		        IdTrackerType.Dynamic,
 		        -20,
 		        20,
 		        20,

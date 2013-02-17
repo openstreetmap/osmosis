@@ -1,7 +1,6 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.tagfilter.v0_6;
 
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.filter.common.IdTrackerType;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskConfiguration;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
@@ -17,7 +16,6 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkSourceManager;
  * @author Bartosz Fabianowski
  */
 public class UsedWayFilterFactory extends TaskManagerFactory {
-	private static final String ARG_ID_TRACKER_TYPE = "idTrackerType";
 	private static final IdTrackerType DEFAULT_ID_TRACKER_TYPE = IdTrackerType.Dynamic;
 	
 	
@@ -31,22 +29,7 @@ public class UsedWayFilterFactory extends TaskManagerFactory {
 	 */
 	protected IdTrackerType getIdTrackerType(
 			TaskConfiguration taskConfig) {
-		if (doesArgumentExist(taskConfig, ARG_ID_TRACKER_TYPE)) {
-			String idTrackerType;
-			
-			idTrackerType = getStringArgument(taskConfig, ARG_ID_TRACKER_TYPE);
-			
-			try {
-				return IdTrackerType.valueOf(idTrackerType);
-			} catch (IllegalArgumentException e) {
-				throw new OsmosisRuntimeException(
-					"Argument " + ARG_ID_TRACKER_TYPE + " for task " + taskConfig.getId()
-					+ " must contain a valid id tracker type.", e);
-			}
-			
-		} else {
-			return DEFAULT_ID_TRACKER_TYPE;
-		}
+		return DEFAULT_ID_TRACKER_TYPE;
 	}
 
 	/**

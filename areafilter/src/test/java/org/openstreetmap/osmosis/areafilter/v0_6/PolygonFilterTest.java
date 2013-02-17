@@ -57,7 +57,7 @@ public class PolygonFilterTest {
 		polygonFile = new File(getClass().getResource("testPolygon.txt").getFile());
 		entityInspector = new SinkEntityInspector();
 		// polyAreaFilter has a notch out of the Northeast corner.
-		polyAreaFilter = new PolygonFilter(IdTrackerType.IdList, polygonFile, false, false, false, false);
+		polyAreaFilter = new PolygonFilter(IdTrackerType.Dynamic, polygonFile, false, false, false, false);
 		polyAreaFilter.setSink(entityInspector);
 		intersectingBound = new Bound(30, 0, 30, 0, "intersecting");
 		crossingIntersectingBound = new Bound(-10, 10, 30, -30, "crossing intersecting");
