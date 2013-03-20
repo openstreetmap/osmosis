@@ -917,11 +917,11 @@ public class ApidbWriter implements Sink, EntityProcessor {
     
     private void populateCurrentNodes() {
         // Copy data into the current node tables.
-        for (int i = 0; i < maxNodeId; i += LOAD_CURRENT_NODE_ROW_COUNT) {
+        for (long i = 0; i < maxNodeId; i += LOAD_CURRENT_NODE_ROW_COUNT) {
             // Node
             try {
-                loadCurrentNodesStatement.setInt(1, i);
-                loadCurrentNodesStatement.setInt(2, i + LOAD_CURRENT_NODE_ROW_COUNT);
+                loadCurrentNodesStatement.setLong(1, i);
+                loadCurrentNodesStatement.setLong(2, i + LOAD_CURRENT_NODE_ROW_COUNT);
 
                 loadCurrentNodesStatement.execute();
 
@@ -931,8 +931,8 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
             // Node tags
             try {
-                loadCurrentNodeTagsStatement.setInt(1, i);
-                loadCurrentNodeTagsStatement.setInt(2, i + LOAD_CURRENT_NODE_ROW_COUNT);
+                loadCurrentNodeTagsStatement.setLong(1, i);
+                loadCurrentNodeTagsStatement.setLong(2, i + LOAD_CURRENT_NODE_ROW_COUNT);
 
                 loadCurrentNodeTagsStatement.execute();
 
@@ -946,11 +946,11 @@ public class ApidbWriter implements Sink, EntityProcessor {
     
     
     private void populateCurrentWays() {
-        for (int i = 0; i < maxWayId; i += LOAD_CURRENT_WAY_ROW_COUNT) {
+        for (long i = 0; i < maxWayId; i += LOAD_CURRENT_WAY_ROW_COUNT) {
             // Way
             try {
-                loadCurrentWaysStatement.setInt(1, i);
-                loadCurrentWaysStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
+                loadCurrentWaysStatement.setLong(1, i);
+                loadCurrentWaysStatement.setLong(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
 
                 loadCurrentWaysStatement.execute();
 
@@ -960,8 +960,8 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
             // Way tags
             try {
-                loadCurrentWayTagsStatement.setInt(1, i);
-                loadCurrentWayTagsStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
+                loadCurrentWayTagsStatement.setLong(1, i);
+                loadCurrentWayTagsStatement.setLong(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
 
                 loadCurrentWayTagsStatement.execute();
 
@@ -971,8 +971,8 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
             // Way nodes
             try {
-                loadCurrentWayNodesStatement.setInt(1, i);
-                loadCurrentWayNodesStatement.setInt(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
+                loadCurrentWayNodesStatement.setLong(1, i);
+                loadCurrentWayNodesStatement.setLong(2, i + LOAD_CURRENT_WAY_ROW_COUNT);
 
                 loadCurrentWayNodesStatement.execute();
 
@@ -986,11 +986,11 @@ public class ApidbWriter implements Sink, EntityProcessor {
     
     
     private void populateCurrentRelations() {
-        for (int i = 0; i < maxRelationId; i += LOAD_CURRENT_RELATION_ROW_COUNT) {
+        for (long i = 0; i < maxRelationId; i += LOAD_CURRENT_RELATION_ROW_COUNT) {
             // Way
             try {
-                loadCurrentRelationsStatement.setInt(1, i);
-                loadCurrentRelationsStatement.setInt(2, i + LOAD_CURRENT_RELATION_ROW_COUNT);
+                loadCurrentRelationsStatement.setLong(1, i);
+                loadCurrentRelationsStatement.setLong(2, i + LOAD_CURRENT_RELATION_ROW_COUNT);
 
                 loadCurrentRelationsStatement.execute();
 
@@ -1000,8 +1000,8 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
             // Relation tags
             try {
-                loadCurrentRelationTagsStatement.setInt(1, i);
-                loadCurrentRelationTagsStatement.setInt(2, i + LOAD_CURRENT_RELATION_ROW_COUNT);
+                loadCurrentRelationTagsStatement.setLong(1, i);
+                loadCurrentRelationTagsStatement.setLong(2, i + LOAD_CURRENT_RELATION_ROW_COUNT);
 
                 loadCurrentRelationTagsStatement.execute();
 
@@ -1011,8 +1011,8 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
             // Relation members
             try {
-                loadCurrentRelationMembersStatement.setInt(1, i);
-                loadCurrentRelationMembersStatement.setInt(2, i + LOAD_CURRENT_RELATION_ROW_COUNT);
+                loadCurrentRelationMembersStatement.setLong(1, i);
+                loadCurrentRelationMembersStatement.setLong(2, i + LOAD_CURRENT_RELATION_ROW_COUNT);
 
                 loadCurrentRelationMembersStatement.execute();
 
