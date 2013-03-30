@@ -15,6 +15,9 @@ def javaProjects = subprojects.findAll { project -> !packageProjects.contains(pr
 subprojects {
 	apply plugin: 'eclipse-wtp'
 
+	// All projects use a common group id.
+	group = 'org.openstreetmap.osmosis'
+
 	// Load the project version dynamically from Git
 	version = 'git describe --always --dirty'.execute().in.text.trim()
 
@@ -43,6 +46,8 @@ configure(javaProjects) {
 	apply plugin: 'checkstyle'
 	apply plugin: 'java'
 	apply plugin: 'jdepend'
+	apply plugin: 'maven'
+	apply plugin: 'signing'
 
 	// Add osmosis prefix to all generated jar files.
 	archivesBaseName = 'osmosis-' + project.name
@@ -70,5 +75,62 @@ configure(javaProjects) {
 	checkstyle {
 		configFile = new File(rootDir, 'build-support/checkstyle.xml')
 		configProperties.samedir = configFile.parentFile
+	}
+
+	// Build javadoc and source jars and include in published artifacts.
+	task javadocJar(type: Jar, dependsOn: javadoc) {
+		classifier = 'javadoc'
+		from 'build/docs/javadoc'
+	}
+	task sourcesJar(type: Jar) {
+		from sourceSets.main.allSource
+		classifier = 'sources'
+	}
+	artifacts {
+	    archives jar
+	
+	    archives javadocJar
+	    archives sourcesJar
+	}
+
+	// Sign all published artifacts if signing is enabled.
+	signing {
+		sign configurations.archives
+		required = Boolean.valueOf(osmosisSigningEnabled)
+	}
+
+	// Configure the maven plugin to upload artefacts to the Sonatype repository.
+	uploadArchives {
+		repositories {
+			mavenDeployer {
+				beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+				// Sonatype URLs
+				// Snapshots - https://oss.sonatype.org/content/repositories/snapshots/
+				// Staging - https://oss.sonatype.org/service/local/staging/deploy/maven2/
+				repository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+					authentication(userName: sonatypeUsername, password: sonatypePassword)
+				}
+
+				pom.project {
+					name project.name
+					packaging 'jar'
+					description 'Osmosis is a Java application and library for processing OSM data.'
+					url 'http://wiki.openstreetmap.org/wiki/Osmosis'
+
+					scm {
+						url 'scm:git@github.com:openstreetmap/osmosis.git'
+						connection 'scm:git@github.com:openstreetmap/osmosis.git'
+						developerConnection 'scm:git@github.com:openstreetmap/osmosis.git'
+					}
+
+					licenses {
+						license {
+							name 'Public Domain'
+						}
+					}
+				}
+			}
+		}
 	}
 }
