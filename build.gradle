@@ -19,7 +19,7 @@ subprojects {
 	group = 'org.openstreetmap.osmosis'
 
 	// Load the project version dynamically from Git
-	version = 'git describe --always --dirty'.execute().in.text.trim()
+	version = 'git describe --always --dirty'.execute().in.text.trim() + '-' + osmosisBuildType
 
 	// Enable access to artefact dependency repositories.
 	repositories {
