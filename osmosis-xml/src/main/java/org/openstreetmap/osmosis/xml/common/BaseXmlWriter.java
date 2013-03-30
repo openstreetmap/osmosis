@@ -112,10 +112,13 @@ public abstract class BaseXmlWriter {
 	}
     
     
-    /**
-     * {@inheritDoc}
-     */
-    public void initialize(Map<String, Object> metaData) {
+	/**
+	 * Initialize the object.
+	 * 
+	 * @param metaData
+	 *            Meta data applicable to this pipeline invocation.
+	 */
+	public void initialize(Map<String, Object> metaData) {
 		// Do nothing.
 	}
 	
