@@ -4,12 +4,12 @@ configurations {
 }
 
 dependencies {
-    compile project(':core')
+    compile project(':osmosis-core')
     compile group: 'org.postgis', name: 'postgis-jdbc', version: dependencyVersionPostGis
     compile group: 'postgresql', name: 'postgresql', version: dependencyVersionPostgreSql
-    testCompile project(':dataset')
-    testCompile project(':testutil')
-    testCompile project(':xml')
+    testCompile project(':osmosis-dataset')
+    testCompile project(':osmosis-testutil')
+    testCompile project(':osmosis-xml')
 }
 
 // Disable tests until continuous integration has a database configured.

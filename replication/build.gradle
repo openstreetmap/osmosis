@@ -1,5 +1,0 @@
-dependencies {
-    compile project(':core')
-    compile project(':set')
-    compile project(':xml')
-}

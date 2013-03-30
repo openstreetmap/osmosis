@@ -4,21 +4,21 @@ configurations {
 }
 
 dependencies {
-    runtime project(':apidb')
-    runtime project(':areafilter')
-    runtime project(':core')
-    runtime project(':dataset')
-    runtime project(':extract')
-    runtime project(':pbf')
-    runtime project(':pbf2')
-    runtime project(':pgsimple')
-    runtime project(':pgsnapshot')
-    runtime project(':replication')
-    runtime project(':replication-http')
-    runtime project(':set')
-    runtime project(':tagfilter')
-    runtime project(':tagtransform')
-    runtime project(':xml')
+    runtime project(':osmosis-apidb')
+    runtime project(':osmosis-areafilter')
+    runtime project(':osmosis-core')
+    runtime project(':osmosis-dataset')
+    runtime project(':osmosis-extract')
+    runtime project(':osmosis-pbf')
+    runtime project(':osmosis-pbf2')
+    runtime project(':osmosis-pgsimple')
+    runtime project(':osmosis-pgsnapshot')
+    runtime project(':osmosis-replication')
+    runtime project(':osmosis-replication-http')
+    runtime project(':osmosis-set')
+    runtime project(':osmosis-tagfilter')
+    runtime project(':osmosis-tagtransform')
+    runtime project(':osmosis-xml')
     runtime group: 'org.codehaus.plexus', name: 'plexus-classworlds', version: dependencyVersionClassworlds
 }
 

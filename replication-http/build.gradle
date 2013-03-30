@@ -1,7 +1,0 @@
-dependencies {
-    compile project(':core')
-    compile project(':replication')
-    compile project(':xml')
-    compile group: 'org.jboss.netty', name: 'netty', version: dependencyVersionNetty
-    testCompile project(':testutil')
-}

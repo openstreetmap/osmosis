@@ -1,0 +1,7 @@
+dependencies {
+    compile project(':osmosis-core')
+    compile project(':osmosis-replication')
+    compile project(':osmosis-xml')
+    compile group: 'org.jboss.netty', name: 'netty', version: dependencyVersionNetty
+    testCompile project(':osmosis-testutil')
+}

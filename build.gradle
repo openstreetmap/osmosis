@@ -49,9 +49,6 @@ configure(javaProjects) {
 	apply plugin: 'maven'
 	apply plugin: 'signing'
 
-	// Add osmosis prefix to all generated jar files.
-	archivesBaseName = 'osmosis-' + project.name
-
 	sourceCompatibility = 1.6
 
 	test {

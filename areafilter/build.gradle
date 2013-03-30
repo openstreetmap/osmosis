@@ -1,5 +1,0 @@
-dependencies {
-    compile project(':core')
-    testCompile project(':xml')
-    testCompile project(':testutil')
-}

@@ -1,5 +1,5 @@
 dependencies {
-    compile project(':core')
+    compile project(':osmosis-core')
     compile group: 'commons-codec', name: 'commons-codec', version: dependencyVersionCommonsCodec
-    testCompile project(':testutil')
+    testCompile project(':osmosis-testutil')
 }

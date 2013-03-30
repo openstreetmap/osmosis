@@ -1,8 +1,0 @@
-dependencies {
-    compile project(':core')
-    compile project(':pbfmarshall')
-    compile group: 'com.google.protobuf', name: 'protobuf-java', version: dependencyVersionProtobuf
-    testCompile project(':pbf')
-    testCompile project(':testutil')
-    testCompile project(':xml')
-}

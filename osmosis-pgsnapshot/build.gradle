@@ -4,13 +4,13 @@ configurations {
 }
 
 dependencies {
-    compile project(':core')
-    compile project(':hstore-jdbc')
+    compile project(':osmosis-core')
+    compile project(':osmosis-hstore-jdbc')
     compile group: 'commons-dbcp', name: 'commons-dbcp', version: dependencyVersionCommonsDbcp
     compile group: 'org.postgis', name: 'postgis-jdbc', version: dependencyVersionPostGis
     compile group: 'org.springframework', name: 'spring-jdbc', version: dependencyVersionSpring
     compile group: 'postgresql', name: 'postgresql', version: dependencyVersionPostgreSql
-    testCompile project(':dataset')
-    testCompile project(':testutil')
-    testCompile project(':xml')
+    testCompile project(':osmosis-dataset')
+    testCompile project(':osmosis-testutil')
+    testCompile project(':osmosis-xml')
 }
