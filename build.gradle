@@ -102,10 +102,12 @@ configure(javaProjects) {
 			mavenDeployer {
 				beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-				// Sonatype URLs
-				// Snapshots - https://oss.sonatype.org/content/repositories/snapshots/
-				// Staging - https://oss.sonatype.org/service/local/staging/deploy/maven2/
-				repository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+				// We upload to the Sonatype SNAPSHOT repository unless it is a release build in
+				// which case we upload to the staging repository.
+				def sonatypeRepoUrl = "RELEASE".equals(osmosisBuildType) ?
+					'https://oss.sonatype.org/service/local/staging/deploy/maven2/' :
+					'https://oss.sonatype.org/content/repositories/snapshots/'
+				repository(url: sonatypeRepoUrl) {
 					authentication(userName: sonatypeUsername, password: sonatypePassword)
 				}
 
