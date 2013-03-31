@@ -1,0 +1,37 @@
+----------------------------------------
+Release notes for 1.3.0  -- 2012-12-04
+----------------------------------------
+
+Add osmosis replication fields into the header.
+   -- Changes from Frederick Ramm <frederik@remote.org>
+
+
+----------------------------------------
+Release notes for 1.2.1  -- 2011-10-29
+----------------------------------------
+
+--------------------------------------
+Release notes for 1.2.0  -- NOT RELEASED
+--------------------------------------
+
+* Bad tag, so not releasable.
+
+
+* Switched to the lite (non-introspective) version of protocol buffers 
+  for a smaller library.
+* Includes support for "visible" flag on OSM objects. This allows PBF to
+  handle OSM history files.
+* Namespace and include conventions changes for the C++ library. Everything
+  is in the OSMPBF namespace. You now do:
+ #include <osmpbf/osmpbf.h>
+* Added stuff needed to build Debian/Ubuntu libosmpbf-dev package containing
+  the C++ library.
+* Added osmpbf-outline tool that shows internals of a PBF file for debugging.
+* Added magic file that can recognize OSM PBF files.
+
+   --  Changes from Jochen Topf <jochen@topf.org>
+                    Peter <github@mazdermind.de>
+
+* Added a pom.xml
+
+   --  Changes from Zsombor Welker <flaktack@welker.hu>

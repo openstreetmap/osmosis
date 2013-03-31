@@ -1,0 +1,13 @@
+dependencies {
+    compile group: 'com.google.protobuf', name: 'protobuf-java', version: dependencyVersionProtobuf
+}
+
+// Disable checkstyle because this is external code.
+checkstyleMain.enabled = false
+
+sourceSets {
+	main {
+		// Create a separate source directory to contain protobuf generated classes.
+		java.srcDirs 'gen-src/main/java'
+	}
+}
