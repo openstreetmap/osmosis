@@ -9,7 +9,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
-import crosby.binary.file.BlockInputStream;
+import org.openstreetmap.osmosis.osmbinary.file.BlockInputStream;
 
 /** Glue code that implements a task that connects an InputStream a containing binary-format data to a Sink. 
  * @author crosby

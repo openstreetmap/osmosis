@@ -23,9 +23,9 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
-import crosby.binary.BinaryParser;
-import crosby.binary.Osmformat;
-import crosby.binary.Osmformat.DenseInfo;
+import org.openstreetmap.osmosis.osmbinary.BinaryParser;
+import org.openstreetmap.osmosis.osmbinary.Osmformat;
+import org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo;
 
 /** Class that reads and parses binary files and sends the contained entities to the sink. */
 public class OsmosisBinaryParser extends BinaryParser {

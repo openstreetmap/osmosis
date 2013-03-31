@@ -29,13 +29,13 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
-import crosby.binary.BinarySerializer;
-import crosby.binary.Osmformat;
-import crosby.binary.Osmformat.DenseInfo;
-import crosby.binary.StringTable;
-import crosby.binary.Osmformat.Relation.MemberType;
-import crosby.binary.file.BlockOutputStream;
-import crosby.binary.file.FileBlock;
+import org.openstreetmap.osmosis.osmbinary.BinarySerializer;
+import org.openstreetmap.osmosis.osmbinary.Osmformat;
+import org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo;
+import org.openstreetmap.osmosis.osmbinary.StringTable;
+import org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType;
+import org.openstreetmap.osmosis.osmbinary.file.BlockOutputStream;
+import org.openstreetmap.osmosis.osmbinary.file.FileBlock;
 
 /**
  * Receives data from the Osmosis pipeline and stores it in the PBF format.

@@ -11,7 +11,7 @@ import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
 import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkManager;
 
-import crosby.binary.file.BlockOutputStream;
+import org.openstreetmap.osmosis.osmbinary.file.BlockOutputStream;
 
 /**
  * The task manager factory for a binary (PBF) writer.
