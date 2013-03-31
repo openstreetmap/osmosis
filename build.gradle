@@ -25,19 +25,6 @@ subprojects {
 	repositories {
 		// Standard Maven repository.
 		mavenCentral()
-
-		// Custom local ivy repository for non-public artefacts.
-		ivy {
-			// URL can refer to a local directory
-			url new File(rootDir, 'build-support/repo')
-
-			// Configure Ivy layout to match local repo directory structure.
-			layout 'pattern', {
-				artifact '[organisation]/[module]/[revision]/[type]s/[artifact].[ext]'
-				artifact "[module]/[revision]/[artifact].[ext]"
-				ivy "[organisation]/[module]/[revision]/ivys/ivy.xml"
-			}
-		}
 	}
 }
 
