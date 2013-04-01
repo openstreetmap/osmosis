@@ -82,9 +82,9 @@ public class CorePluginLoader implements PluginLoader {
 		factoryMap.put("tee-change", new ChangeTeeFactory());
 		factoryMap.put("tc", new ChangeTeeFactory());
 		factoryMap.put("read-empty", new EmptyReaderFactory());
-		factoryMap.put("re", new EmptyReaderFactory());
+		factoryMap.put("rem", new EmptyReaderFactory());
 		factoryMap.put("read-empty-change", new EmptyChangeReaderFactory());
-		factoryMap.put("rec", new EmptyChangeReaderFactory());
+		factoryMap.put("remc", new EmptyChangeReaderFactory());
 
 		factoryMap.put("compute-bounding-box", new BoundComputerFactory());
 		factoryMap.put("cbb", new BoundComputerFactory());
