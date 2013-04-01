@@ -1,5 +1,6 @@
 Osmosis consists of all files in this archive with the exception of the
-third party libraries in the lib and repo subdirectories.
+third party libraries in the lib sub-directory, and the osmosis-osm-binary
+library which is a re-packaged version of a third-party library.
 
 Osmosis is placed into the public domain and where this is not legally
 possible everybody is granted a perpetual, irrevocable license to use
