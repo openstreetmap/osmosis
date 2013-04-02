@@ -1,3 +1,16 @@
+0.43
+Update command line help to point to the correct wiki location.
+Remove idTrackerType arguments to filtering tasks, only the Dynamic option is now available.
+Fix the --write-apidb task to use 64-bit ids.
+Upgrade to version 1.4 of the Gradle build tool.
+Enhance the build scripts to support publishing to Sonatype OSS Repository and Maven Central.
+Rename all projects to use an "osmosis-" prefix.
+Included a copy of the PBF OSM Binary project in the source tree, and eliminated the pre-compiled osmbin.jar.
+Remove pbfmarshall project due to the same functionality being provided by the osm-binary project.
+Removed the internal Ivy repository due to all dependencies now being available on Maven Central.
+Rename --read-empty short name --re to --rem to avoid clash with --report-entity.
+Rename --read-empty-change short name --rec to --remc for consistency with --read-empty.
+
 0.42
 Fix PostgreSQL timestamp bugs in apidb replication logic.
 Fix replication file merging boundary corrections.  Occurs when catching up after outages.
