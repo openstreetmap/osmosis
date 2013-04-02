@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.lifecycle.Releasable;
-import org.openstreetmap.osmosis.pbf2.marshall.Fileformat;
-import org.openstreetmap.osmosis.pbf2.marshall.Fileformat.BlobHeader;
+import org.openstreetmap.osmosis.osmbinary.Fileformat;
+import org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader;
 
 
 /**

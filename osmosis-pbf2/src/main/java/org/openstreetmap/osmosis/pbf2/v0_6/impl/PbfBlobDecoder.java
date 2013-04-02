@@ -26,17 +26,17 @@ import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
-import org.openstreetmap.osmosis.pbf2.marshall.Osmformat;
-import org.openstreetmap.osmosis.pbf2.marshall.Fileformat.Blob;
-import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.DenseInfo;
-import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.DenseNodes;
-import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.HeaderBBox;
-import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.Info;
-import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.Node;
-import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.PrimitiveGroup;
-import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.Relation;
-import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.Way;
-import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.Relation.MemberType;
+import org.openstreetmap.osmosis.osmbinary.Osmformat;
+import org.openstreetmap.osmosis.osmbinary.Fileformat.Blob;
+import org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo;
+import org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes;
+import org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox;
+import org.openstreetmap.osmosis.osmbinary.Osmformat.Info;
+import org.openstreetmap.osmosis.osmbinary.Osmformat.Node;
+import org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup;
+import org.openstreetmap.osmosis.osmbinary.Osmformat.Relation;
+import org.openstreetmap.osmosis.osmbinary.Osmformat.Way;
+import org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 

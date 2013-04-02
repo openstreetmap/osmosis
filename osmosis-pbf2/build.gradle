@@ -1,6 +1,6 @@
 dependencies {
     compile project(':osmosis-core')
-    compile project(':osmosis-pbfmarshall')
+    compile project(':osmosis-osm-binary')
     compile group: 'com.google.protobuf', name: 'protobuf-java', version: dependencyVersionProtobuf
     testCompile project(':osmosis-pbf')
     testCompile project(':osmosis-testutil')

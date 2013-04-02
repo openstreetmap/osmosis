@@ -3,8 +3,8 @@ package org.openstreetmap.osmosis.pbf2.v0_6.impl;
 
 import java.util.Date;
 
-import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.PrimitiveBlock;
-import org.openstreetmap.osmosis.pbf2.marshall.Osmformat.StringTable;
+import org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock;
+import org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable;
 
 
 
