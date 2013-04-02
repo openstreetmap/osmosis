@@ -105,14 +105,22 @@ configure(javaProjects) {
 					url 'http://wiki.openstreetmap.org/wiki/Osmosis'
 
 					scm {
-						url 'scm:git@github.com:openstreetmap/osmosis.git'
-						connection 'scm:git@github.com:openstreetmap/osmosis.git'
-						developerConnection 'scm:git@github.com:openstreetmap/osmosis.git'
+						url 'https://github.com/openstreetmap/osmosis'
+						connection 'scm:git:git://github.com/openstreetmap/osmosis.git'
+						developerConnection 'scm:git:ssh://git@github.com/openstreetmap/osmosis.git'
 					}
 
 					licenses {
 						license {
 							name 'Public Domain'
+						}
+					}
+
+					developers {
+						developer {
+							id 'brett'
+							name 'Brett Henderson'
+							email 'brett@bretth.com'
 						}
 					}
 				}
