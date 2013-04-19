@@ -1,4 +1,4 @@
--- Database creation script for the simple PostgreSQL schema.
+-- Database creation script for the snapshot PostgreSQL schema.
 
 -- Drop all tables if they exist.
 DROP TABLE IF EXISTS actions;
