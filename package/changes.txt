@@ -1,3 +1,7 @@
+0.43.1
+Fix the version number displayed on startup to be up to date.
+Remove RELEASE suffix from version number of release builds.
+
 0.43
 Update command line help to point to the correct wiki location.
 Remove idTrackerType arguments to filtering tasks, only the Dynamic option is now available.
