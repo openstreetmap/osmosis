@@ -18,8 +18,9 @@ subprojects {
 	// All projects use a common group id.
 	group = 'org.openstreetmap.osmosis'
 
-	// Load the project version dynamically from Git
-	version = 'git describe --always --dirty'.execute().in.text.trim() + '-' + osmosisBuildType
+	// Load the project version dynamically from Git.  For release builds, don't add a suffix.
+	def versionSuffix = "RELEASE".equals(osmosisBuildType) ? '' : '-' + osmosisBuildType
+	version = 'git describe --always --dirty'.execute().in.text.trim() + versionSuffix
 
 	// Enable access to artefact dependency repositories.
 	repositories {
