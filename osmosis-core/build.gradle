@@ -30,6 +30,7 @@ task generateJavaSources {
      * it is up to date.
      */
     inputs.file inputFile
+    inputs.property('version', version)
     outputs.file outputFile
 
     doLast {
