@@ -10,9 +10,13 @@ DROP INDEX idx_relation_members_member_id_and_type;
 DROP INDEX idx_ways_bbox;
 DROP INDEX idx_ways_linestring;
 
--- Comment these out if the COPY files include bbox or linestring column values.
-SELECT DropGeometryColumn('ways', 'bbox');
-SELECT DropGeometryColumn('ways', 'linestring');
+-- Uncomment these out if bbox or linestring columns are needed and the COPY
+-- files do not include them. If you want these columns you should use the
+-- enableBboxBuilder or enableLinestringBuilder options to --write-pgsql-dump
+-- as they are faster than the following SQL.
+
+/*SELECT DropGeometryColumn('ways', 'bbox');
+SELECT DropGeometryColumn('ways', 'linestring');*/
 
 -- Import the table data from the data files using the fast COPY method.
 \copy users FROM 'users.txt'
@@ -32,33 +36,35 @@ CREATE INDEX idx_nodes_geom ON nodes USING gist (geom);
 CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id);
 CREATE INDEX idx_relation_members_member_id_and_type ON relation_members USING btree (member_id, member_type);
 
--- Comment these out if the COPY files include bbox or linestring column values.
-SELECT AddGeometryColumn('ways', 'bbox', 4326, 'GEOMETRY', 2);
-SELECT AddGeometryColumn('ways', 'linestring', 4326, 'GEOMETRY', 2);
+-- Uncomment these if bbox or linestring columns are needed and the COPY files do not include them.
 
--- Comment these out if the COPY files include bbox or linestring column values.
 -- Update the bbox column of the way table.
+/*SELECT AddGeometryColumn('ways', 'bbox', 4326, 'GEOMETRY', 2);
 UPDATE ways SET bbox = (
 	SELECT ST_Envelope(ST_Collect(geom))
 	FROM nodes JOIN way_nodes ON way_nodes.node_id = nodes.id
 	WHERE way_nodes.way_id = ways.id
-);
+);*/
+
 -- Update the linestring column of the way table.
+/*SELECT AddGeometryColumn('ways', 'linestring', 4326, 'GEOMETRY', 2);
 UPDATE ways w SET linestring = (
 	SELECT ST_MakeLine(c.geom) AS way_line FROM (
 		SELECT n.geom AS geom
 		FROM nodes n INNER JOIN way_nodes wn ON n.id = wn.node_id
 		WHERE (wn.way_id = w.id) ORDER BY wn.sequence_id
 	) c
-);
+);*/
 
--- Index the way bounding box column.
+-- Index the way bounding box column. If you don't have one of these columns, comment out the index
 CREATE INDEX idx_ways_bbox ON ways USING gist (bbox);
 CREATE INDEX idx_ways_linestring ON ways USING gist (linestring);
 
--- Update all clustered tables because it doesn't happen implicitly.
-CLUSTER nodes USING idx_nodes_geom;
-CLUSTER ways USING idx_ways_linestring;
+-- Optional: CLUSTER imported tables. CLUSTER takes a significant amount of time to run and a 
+-- significant amount of free disk space but speeds up some queries.
+
+--CLUSTER nodes USING idx_nodes_geom;
+--CLUSTER ways USING idx_ways_linestring;
 
 -- Perform database maintenance due to large database changes.
-VACUUM ANALYZE;
+ANALYZE;
