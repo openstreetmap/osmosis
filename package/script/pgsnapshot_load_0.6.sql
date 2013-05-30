@@ -36,6 +36,10 @@ CREATE INDEX idx_nodes_geom ON nodes USING gist (geom);
 CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id);
 CREATE INDEX idx_relation_members_member_id_and_type ON relation_members USING btree (member_id, member_type);
 
+ALTER TABLE ONLY nodes CLUSTER ON idx_nodes_geom;
+ALTER TABLE ONLY way_nodes CLUSTER ON pk_way_nodes;
+ALTER TABLE ONLY relation_members CLUSTER ON pk_relation_members;
+
 -- Uncomment these if bbox or linestring columns are needed and the COPY files do not include them.
 
 -- Update the bbox column of the way table.
@@ -60,11 +64,16 @@ UPDATE ways w SET linestring = (
 CREATE INDEX idx_ways_bbox ON ways USING gist (bbox);
 CREATE INDEX idx_ways_linestring ON ways USING gist (linestring);
 
+ALTER TABLE ONLY ways CLUSTER ON idx_ways_bbox;
+ALTER TABLE ONLY ways CLUSTER ON idx_ways_linestring;
+
 -- Optional: CLUSTER imported tables. CLUSTER takes a significant amount of time to run and a 
 -- significant amount of free disk space but speeds up some queries.
 
---CLUSTER nodes USING idx_nodes_geom;
---CLUSTER ways USING idx_ways_linestring;
+--CLUSTER nodes;
+--CLUSTER ways;
+
+-- It is not necessary to CLUSTER way_nodes or relation_members after the initial load but you might want to do so later on
 
 -- Perform database maintenance due to large database changes.
 ANALYZE;

@@ -108,9 +108,15 @@ CREATE INDEX idx_way_nodes_node_id ON way_nodes USING btree (node_id);
 CREATE INDEX idx_relation_members_member_id_and_type ON relation_members USING btree (member_id, member_type);
 
 
--- Cluster tables by geographical location.
-CLUSTER nodes USING idx_nodes_geom;
+-- Set to cluster nodes by geographical location.
+ALTER TABLE ONLY nodes CLUSTER ON idx_nodes_geom;
 
+-- Set to cluster the tables showing relationship by parent ID and sequence
+ALTER TABLE ONLY way_nodes CLUSTER ON pk_way_nodes;
+ALTER TABLE ONLY relation_members CLUSTER ON pk_relation_members;
+
+-- There are no sensible CLUSTER orders for users or relations.
+-- Depending on geometry columns different clustings of ways may be desired.
 
 -- Create the function that provides "unnest" functionality while remaining compatible with 8.3.
 CREATE OR REPLACE FUNCTION unnest_bbox_way_nodes() RETURNS void AS $$
