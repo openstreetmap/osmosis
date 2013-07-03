@@ -142,3 +142,29 @@ DECLARE
 BEGIN
 END;
 $$ LANGUAGE plpgsql;
+
+-- Manually set statistics for the way_nodes and relation_members table
+-- Postgres gets horrible counts of distinct values by sampling random pages
+-- and can be off by an 1-2 orders of magnitude
+
+-- Size of the ways table / size of the way_nodes table
+ALTER TABLE way_nodes ALTER COLUMN way_id SET (n_distinct = -0.08);
+
+-- Size of the nodes table / size of the way_nodes table * 0.998
+-- 0.998 is a factor for nodes not in ways
+ALTER TABLE way_nodes ALTER COLUMN node_id SET (n_distinct = -0.83);
+
+-- API allows a maximum of 2000 nodes/way. Unlikely to impact query plans.
+ALTER TABLE way_nodes ALTER COLUMN sequence_id SET (n_distinct = 2000);
+
+-- Size of the relations table / size of the relation_members table
+ALTER TABLE relation_members ALTER COLUMN relation_id SET (n_distinct = -0.09);
+
+-- Based on June 2013 data
+ALTER TABLE relation_members ALTER COLUMN member_id SET (n_distinct = -0.62);
+
+-- Based on June 2013 data. Unlikely to impact query plans.
+ALTER TABLE relation_members ALTER COLUMN member_role SET (n_distinct = 6500);
+
+-- Based on June 2013 data. Unlikely to impact query plans.
+ALTER TABLE relation_members ALTER COLUMN sequence_id SET (n_distinct = 10000);
