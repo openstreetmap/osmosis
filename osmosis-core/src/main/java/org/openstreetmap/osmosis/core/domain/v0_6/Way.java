@@ -13,7 +13,6 @@ import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
 import org.openstreetmap.osmosis.core.store.StoreClassRegister;
 import org.openstreetmap.osmosis.core.store.StoreReader;
 import org.openstreetmap.osmosis.core.store.StoreWriter;
-import org.openstreetmap.osmosis.core.util.IntAsChar;
 
 
 /**
@@ -181,7 +180,7 @@ public class Way extends Entity implements Comparable<Way> {
 		
 		int featureCount;
 		
-		featureCount = sr.readCharacter();
+		featureCount = sr.readInteger();
 		
 		wayNodes = new ArrayList<WayNode>();
 		for (int i = 0; i < featureCount; i++) {
@@ -197,7 +196,7 @@ public class Way extends Entity implements Comparable<Way> {
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		super.store(sw, scr);
 		
-		sw.writeCharacter(IntAsChar.intToChar(wayNodes.size()));
+		sw.writeInteger(wayNodes.size());
 		for (WayNode wayNode : wayNodes) {
 			wayNode.store(sw, scr);
 		}
