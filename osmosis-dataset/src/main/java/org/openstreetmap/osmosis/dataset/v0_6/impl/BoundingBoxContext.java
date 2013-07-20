@@ -4,7 +4,7 @@ package org.openstreetmap.osmosis.dataset.v0_6.impl;
 import java.awt.geom.Rectangle2D;
 import java.util.Comparator;
 
-import org.openstreetmap.osmosis.core.filter.common.BitSetIdTracker;
+import org.openstreetmap.osmosis.core.filter.common.DynamicIdTracker;
 import org.openstreetmap.osmosis.core.filter.common.IdTracker;
 import org.openstreetmap.osmosis.core.store.UnsignedIntegerComparator;
 import org.openstreetmap.osmosis.core.util.TileCalculator;
@@ -117,9 +117,9 @@ public class BoundingBoxContext {
 		minimumTile = tmpMinimumTile;
 		
 		// Create the id trackers.
-		nodeIdTracker = new BitSetIdTracker();
-		wayIdTracker = new BitSetIdTracker();
-		relationIdTracker = new BitSetIdTracker();
-		externalNodeIdTracker = new BitSetIdTracker();
+		nodeIdTracker = new DynamicIdTracker();
+		wayIdTracker = new DynamicIdTracker();
+		relationIdTracker = new DynamicIdTracker();
+		externalNodeIdTracker = new DynamicIdTracker();
 	}
 }

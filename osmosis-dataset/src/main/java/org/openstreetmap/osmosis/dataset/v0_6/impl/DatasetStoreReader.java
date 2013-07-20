@@ -22,7 +22,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
-import org.openstreetmap.osmosis.core.filter.common.BitSetIdTracker;
+import org.openstreetmap.osmosis.core.filter.common.DynamicIdTracker;
 import org.openstreetmap.osmosis.core.filter.common.IdTracker;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.store.EmptyIterator;
@@ -287,7 +287,7 @@ public class DatasetStoreReader implements DatasetContext {
 		ReleasableIterator<Long> nodeIdsForTileset;
 		IdTracker idTracker;
 		
-		idTracker = new BitSetIdTracker();
+		idTracker = new DynamicIdTracker();
 		
 		// Search through all nodes in the tile range and add them to a
 		// temporary id tracker. This temporary id tracker allows all node ids

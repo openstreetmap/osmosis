@@ -23,7 +23,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
-import org.openstreetmap.osmosis.core.filter.common.BitSetIdTracker;
+import org.openstreetmap.osmosis.core.filter.common.DynamicIdTracker;
 import org.openstreetmap.osmosis.core.filter.common.IdTracker;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
@@ -55,8 +55,8 @@ public class IntegrityReporter implements Sink, EntityProcessor {
 		this.file = file;
 		
 		initialized = false;
-		nodeBitSet = new BitSetIdTracker();
-		wayBitSet = new BitSetIdTracker();
+		nodeBitSet = new DynamicIdTracker();
+		wayBitSet = new DynamicIdTracker();
 	}
 	
 	
