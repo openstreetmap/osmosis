@@ -10,7 +10,6 @@ import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeForStreamableApplierComparator;
 import org.openstreetmap.osmosis.core.sort.v0_6.ChangeSorter;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
-import org.openstreetmap.osmosis.core.util.PropertiesPersister;
 import org.openstreetmap.osmosis.replication.common.FileReplicationStore;
 import org.openstreetmap.osmosis.replication.common.ReplicationState;
 import org.openstreetmap.osmosis.replication.common.ReplicationStore;
@@ -35,7 +34,6 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	private boolean sinkActive;
 	private ChangeSink changeSink;
 	private ReplicationState currentDataState;
-	private PropertiesPersister dataStatePersister;
 	private ReplicationStore replicationStore;
 
 
@@ -47,7 +45,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	 */
 	public ReplicationFileMerger(File workingDirectory) {
 		super(workingDirectory);
-
+		
 		replicationStore = new FileReplicationStore(new File(getWorkingDirectory(), DATA_DIRECTORY), true);
 
 		sinkActive = false;
@@ -77,7 +75,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		long intervalLength;
 
 		// Read the current persisted state.
-		currentDataState = new ReplicationState(dataStatePersister.loadMap());
+		currentDataState = replicationStore.getCurrentState();
 
 		// Get the default maximum timestamp according to base calculations.
 		maximumTimestamp = super.calculateMaximumTimestamp(configuration, serverTimestamp, localTimestamp);
