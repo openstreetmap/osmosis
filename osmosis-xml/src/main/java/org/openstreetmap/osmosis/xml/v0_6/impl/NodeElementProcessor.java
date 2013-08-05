@@ -80,7 +80,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	public void begin(Attributes attributes) {
 		long id;
 		String sversion;
-		int version;
+		long version;
 		TimestampContainer timestampContainer;
 		String rawUserId;
 		String rawUserName;
@@ -95,7 +95,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 			throw new OsmosisRuntimeException("Node " + id
 					+ " does not have a version attribute as OSM 0.6 are required to have.  Is this a 0.5 file?");
 		} else {
-			version = Integer.parseInt(sversion);
+			version = Long.parseLong(sversion);
 		}
 		timestampContainer = createTimestampContainer(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
 		rawUserId = attributes.getValue(ATTRIBUTE_NAME_USERID);
