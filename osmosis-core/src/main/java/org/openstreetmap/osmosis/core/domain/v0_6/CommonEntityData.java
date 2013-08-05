@@ -28,7 +28,7 @@ import org.openstreetmap.osmosis.core.util.LongAsInt;
 public class CommonEntityData implements Storeable {
 	
 	private long id;
-	private int version;
+	private long version;
 	private int changesetId;
 	private TimestampContainer timestampContainer;
 	private OsmUser user;
@@ -51,7 +51,7 @@ public class CommonEntityData implements Storeable {
 	 * @param changesetId
 	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	public CommonEntityData(long id, int version, Date timestamp, OsmUser user, long changesetId) {
+	public CommonEntityData(long id, long version, Date timestamp, OsmUser user, long changesetId) {
 		// Chain to the more specific constructor
 		this(id, version, new SimpleTimestampContainer(timestamp), user, changesetId);
 	}
@@ -73,7 +73,7 @@ public class CommonEntityData implements Storeable {
 	 *            The id of the changeset that this version of the entity was created by.
 	 */
 	public CommonEntityData(
-			long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId) {
+			long id, long version, TimestampContainer timestampContainer, OsmUser user, long changesetId) {
 		init(id, timestampContainer, user, version, changesetId);
 		tags = new TagCollectionImpl();
 		metaTags = new LazyHashMap<String, Object>();
@@ -97,7 +97,7 @@ public class CommonEntityData implements Storeable {
 	 *            The tags to apply to the object.
 	 */
 	public CommonEntityData(
-			long id, int version, Date timestamp, OsmUser user, long changesetId, Collection<Tag> tags) {
+			long id, long version, Date timestamp, OsmUser user, long changesetId, Collection<Tag> tags) {
 		// Chain to the more specific constructor
 		this(id, version, new SimpleTimestampContainer(timestamp), user, changesetId, tags);
 	}
@@ -120,7 +120,7 @@ public class CommonEntityData implements Storeable {
 	 * @param tags
 	 *            The tags to apply to the object.
 	 */
-	public CommonEntityData(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
+	public CommonEntityData(long id, long version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
 			Collection<Tag> tags) {
 		init(id, timestampContainer, user, version, changesetId);
 		this.tags = new TagCollectionImpl(tags);
@@ -142,7 +142,7 @@ public class CommonEntityData implements Storeable {
 	 * @param changesetId
 	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	private void init(long newId, TimestampContainer newTimestampContainer, OsmUser newUser, int newVersion,
+	private void init(long newId, TimestampContainer newTimestampContainer, OsmUser newUser, long newVersion,
 			long newChangesetId) {
 		this.id = newId;
 		this.timestampContainer = newTimestampContainer;
@@ -303,7 +303,7 @@ public class CommonEntityData implements Storeable {
 	 * 
 	 * @return The version.
 	 */
-	public int getVersion() {
+	public long getVersion() {
 		return version;
 	}
 
@@ -314,7 +314,7 @@ public class CommonEntityData implements Storeable {
 	 * @param version
 	 *            The version.
 	 */
-	public void setVersion(int version) {
+	public void setVersion(long version) {
 		assertWriteable();
 		
 		this.version = version;
