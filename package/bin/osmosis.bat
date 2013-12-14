@@ -36,6 +36,6 @@ cd /D %SAVEDIR%
 
 set MAINCLASS=org.codehaus.classworlds.Launcher
 set PLEXUS_CP=%MYAPP_HOME%\lib\default\plexus-classworlds-2.4.jar
-SET EXEC=%JAVACMD% %JAVACMD_OPTIONS% -cp "%PLEXUS_CP%" -Dapp.home="%MYAPP_HOME%" -Dclassworlds.conf="%MYAPP_HOME%\config\plexus.conf" %MAINCLASS%  %OSMOSIS_OPTIONS% %*
+SET EXEC="%JAVACMD%" %JAVACMD_OPTIONS% -cp "%PLEXUS_CP%" -Dapp.home="%MYAPP_HOME%" -Dclassworlds.conf="%MYAPP_HOME%\config\plexus.conf" %MAINCLASS%  %OSMOSIS_OPTIONS% %*
 
 %EXEC%
