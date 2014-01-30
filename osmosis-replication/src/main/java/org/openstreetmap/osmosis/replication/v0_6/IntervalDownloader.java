@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.core.merge.common.ConflictResolutionMethod;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskRunner;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
@@ -111,6 +112,7 @@ public class IntervalDownloader implements RunnableChangeSource {
 			URLConnection connection = timestampUrl.openConnection();
 			connection.setReadTimeout(15 * 60 * 1000); // timeout 15 minutes
 			connection.setConnectTimeout(15 * 60 * 1000); // timeout 15 minutes
+			connection.setRequestProperty("User-Agent", "Osmosis/" + OsmosisConstants.VERSION);
 			timestampStream = connection.getInputStream();
 			
 			reader = new BufferedReader(new InputStreamReader(timestampStream));

@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.OsmosisConstants;
 
 
 /**
@@ -92,6 +93,7 @@ public class ServerStateReader {
 			URLConnection connection = stateUrl.openConnection();
 			connection.setReadTimeout(15 * 60 * 1000); // timeout 15 minutes
 			connection.setConnectTimeout(15 * 60 * 1000); // timeout 15 minutes
+			connection.setRequestProperty("User-Agent", "Osmosis/" + OsmosisConstants.VERSION);
 			stateStream = connection.getInputStream();
 			
 			reader = new BufferedReader(new InputStreamReader(stateStream));
