@@ -112,10 +112,10 @@ public class ReplicationStateWriter implements ChangeSink {
 
 
 	@Override
-	public void release() {
+	public void close() {
 		state = null;
 
-		fileLock.release();
+		fileLock.close();
 		lockObtained = false;
 	}
 }

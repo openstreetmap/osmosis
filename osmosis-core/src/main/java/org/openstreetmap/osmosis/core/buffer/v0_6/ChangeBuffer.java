@@ -60,8 +60,8 @@ public class ChangeBuffer implements ChangeSinkRunnableChangeSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		buffer.release();
+	public void close() {
+		buffer.close();
 	}
 	
 	
@@ -88,7 +88,7 @@ public class ChangeBuffer implements ChangeSinkRunnableChangeSource {
 			buffer.outputComplete();
 			
 		} finally {
-			changeSink.release();
+			changeSink.close();
 			buffer.outputRelease();
 		}
 	}

@@ -227,7 +227,7 @@ public class RandomAccessObjectStore<T extends Storeable> implements Completable
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		if (offsetTrackingStream != null) {
 			try {
 				offsetTrackingStream.close();

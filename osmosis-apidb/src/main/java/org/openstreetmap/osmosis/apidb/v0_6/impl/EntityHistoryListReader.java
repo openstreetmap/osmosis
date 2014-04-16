@@ -89,7 +89,7 @@ public class EntityHistoryListReader implements ReleasableIterator<List<ChangeCo
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		sourceIterator.release();
+	public void close() {
+		sourceIterator.close();
 	}
 }

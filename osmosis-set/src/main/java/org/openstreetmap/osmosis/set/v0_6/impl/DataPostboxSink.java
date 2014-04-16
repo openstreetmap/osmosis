@@ -59,7 +59,7 @@ public class DataPostboxSink implements Sink {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		postbox.release();
+	public void close() {
+		postbox.close();
 	}
 }

@@ -87,7 +87,7 @@ public class TagSorter implements SinkSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		sink.release();
+	public void close() {
+		sink.close();
 	}
 }

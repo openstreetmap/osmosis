@@ -130,7 +130,7 @@ public class RandomAccessObjectStoreReader<T> implements Closeable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		if (randomFile != null) {
 			try {
 				randomFile.close();

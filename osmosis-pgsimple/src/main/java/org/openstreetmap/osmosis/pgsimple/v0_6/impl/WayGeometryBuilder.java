@@ -223,7 +223,7 @@ public class WayGeometryBuilder implements Closeable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		locationStore.release();
+	public void close() {
+		locationStore.close();
 	}
 }

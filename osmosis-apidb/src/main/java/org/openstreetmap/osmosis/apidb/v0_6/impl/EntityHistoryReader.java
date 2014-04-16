@@ -124,7 +124,7 @@ public class EntityHistoryReader<T extends Entity> implements ReleasableIterator
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		releasableContainer.release();
+	public void close() {
+		releasableContainer.close();
 	}
 }

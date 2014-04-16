@@ -117,7 +117,7 @@ public class TagFilterTest {
 
 		List<EntityContainer> expectedResult = Arrays.asList(amenityNodeContainer, residentialWayContainer);
 		assertTrue(entityInspector.getProcessedEntities().equals(expectedResult));
-		tagFilter.release();
+		tagFilter.close();
 	}
 
 
@@ -140,7 +140,7 @@ public class TagFilterTest {
 
 		List<EntityContainer> expectedResult = Arrays.asList(amenityNodeContainer, residentialWayContainer);
 		assertTrue(entityInspector.getProcessedEntities().equals(expectedResult));
-		tagFilter.release();
+		tagFilter.close();
 	}
 
 
@@ -162,7 +162,7 @@ public class TagFilterTest {
 
 		List<EntityContainer> expectedResult = Arrays.asList(amenityNodeContainer, residentialWayContainer);
 		assertTrue(entityInspector.getProcessedEntities().equals(expectedResult));
-		tagFilter.release();
+		tagFilter.close();
 	}
 
 }

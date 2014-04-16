@@ -340,7 +340,7 @@ public class DataPostbox<T> implements Initializable {
 	 * separate thread or deadlock will occur.
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		lock.lock();
 
 		try {

@@ -179,7 +179,7 @@ public class TempCopyFileset implements CopyFileset, Closeable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		for (File tmpFile : tmpFiles) {
 			if (!tmpFile.delete()) {
 				// We cannot throw an exception within a release statement.

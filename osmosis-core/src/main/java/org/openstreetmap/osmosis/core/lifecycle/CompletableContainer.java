@@ -56,9 +56,9 @@ public class CompletableContainer implements Completable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		for (Closeable object : objects) {
-			object.release();
+			object.close();
 		}
 	}
 }

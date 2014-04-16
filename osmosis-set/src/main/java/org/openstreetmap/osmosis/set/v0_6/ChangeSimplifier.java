@@ -64,8 +64,8 @@ public class ChangeSimplifier implements ChangeSinkChangeSource {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		orderingValidator.release();
+	public void close() {
+		orderingValidator.close();
 	}
 
 

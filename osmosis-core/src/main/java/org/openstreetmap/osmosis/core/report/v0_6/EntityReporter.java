@@ -222,7 +222,7 @@ public class EntityReporter implements Sink {
 	/**
 	 * Cleans up any open file handles.
 	 */
-	public void release() {
+	public void close() {
 		if (fileWriter != null) {
 			try {
 				fileWriter.close();

@@ -63,7 +63,7 @@ public class AllEntityDao implements ReplicationSource {
 			return resultIterator;
 			
 		} finally {
-			releasableContainer.release();
+			releasableContainer.close();
 		}
 	}
 	
@@ -97,7 +97,7 @@ public class AllEntityDao implements ReplicationSource {
 			return resultIterator;
 			
 		} finally {
-			releasableContainer.release();
+			releasableContainer.close();
 		}
 	}
 	
@@ -127,7 +127,7 @@ public class AllEntityDao implements ReplicationSource {
 			return resultIterator;
 			
 		} finally {
-			releasableContainer.release();
+			releasableContainer.close();
 		}
 	}
 	
@@ -157,7 +157,7 @@ public class AllEntityDao implements ReplicationSource {
 			return resultIterator;
 			
 		} finally {
-			releasableContainer.release();
+			releasableContainer.close();
 		}
 	}
 }

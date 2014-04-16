@@ -1074,8 +1074,8 @@ public class ApidbWriter implements Sink, EntityProcessor {
     /**
      * Releases all database resources.
      */
-    public void release() {
-        userManager.release();
+    public void close() {
+        userManager.close();
 
         dbCtx.release();
     }

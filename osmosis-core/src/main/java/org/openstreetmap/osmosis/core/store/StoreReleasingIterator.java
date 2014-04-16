@@ -73,15 +73,15 @@ public class StoreReleasingIterator<DataType> implements ReleasableIterator<Data
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		if (iterator != null) {
-			iterator.release();
+			iterator.close();
 			
 			iterator = null;
 		}
 		
 		if (store != null) {
-			store.release();
+			store.close();
 			
 			store = null;
 		}

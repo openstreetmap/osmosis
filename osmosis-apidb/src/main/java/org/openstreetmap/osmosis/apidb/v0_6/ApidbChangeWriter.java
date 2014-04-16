@@ -84,7 +84,7 @@ public class ApidbChangeWriter implements ChangeSink {
     /**
      * {@inheritDoc}
      */
-    public void release() {
+    public void close() {
         changeWriter.release();
     }
 }

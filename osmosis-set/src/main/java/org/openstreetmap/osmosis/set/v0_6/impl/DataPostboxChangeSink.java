@@ -59,7 +59,7 @@ public class DataPostboxChangeSink implements ChangeSink {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		postbox.release();
+	public void close() {
+		postbox.close();
 	}
 }

@@ -53,7 +53,7 @@ public class BoundContainerIterator implements ReleasableIterator<BoundContainer
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		source.release();
+	public void close() {
+		source.close();
 	}
 }

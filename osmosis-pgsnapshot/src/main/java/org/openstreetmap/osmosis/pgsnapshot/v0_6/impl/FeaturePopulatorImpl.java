@@ -60,7 +60,7 @@ public class FeaturePopulatorImpl<Te extends Entity, Tf extends Storeable, Tdbf 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		source.release();
+	public void close() {
+		source.close();
 	}
 }

@@ -235,7 +235,7 @@ public class ChangeApplier implements MultiSinkMultiChangeSinkRunnableSource {
 			changePostbox.outputComplete();
 			
 		} finally {
-			sink.release();
+			sink.close();
 			
 			basePostbox.outputRelease();
 			changePostbox.outputRelease();

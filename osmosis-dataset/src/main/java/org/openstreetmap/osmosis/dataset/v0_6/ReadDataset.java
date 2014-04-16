@@ -55,8 +55,8 @@ public class ReadDataset implements RunnableDatasetSource {
 			datasetSink.process(store);
 			
 		} finally {
-			datasetSink.release();
-			store.release();
+			datasetSink.close();
+			store.close();
 		}
 	}
 }

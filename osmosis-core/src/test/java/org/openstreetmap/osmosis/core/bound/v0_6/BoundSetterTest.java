@@ -36,7 +36,7 @@ public class BoundSetterTest {
 		setter.process(new NodeContainer(new Node(
 				new CommonEntityData(1, 1, new Date(), OsmUser.NONE, 1), 1, 1)));
 		setter.complete();
-		setter.release();
+		setter.close();
 		
 		EntityContainer ec = inspector.getProcessedEntities().iterator().next();
 		Assert.assertEquals(EntityType.Node, ec.getEntity().getType());
@@ -53,7 +53,7 @@ public class BoundSetterTest {
 		setter.process(new NodeContainer(new Node(
 				new CommonEntityData(1, 1, new Date(), OsmUser.NONE, 1), 1, 1)));
 		setter.complete();
-		setter.release();
+		setter.close();
 		
 		EntityContainer ec = inspector.getProcessedEntities().iterator().next();
 		Assert.assertEquals(EntityType.Node, ec.getEntity().getType());
@@ -72,7 +72,7 @@ public class BoundSetterTest {
 		setter.process(new NodeContainer(new Node(
 				new CommonEntityData(1, 1, new Date(), OsmUser.NONE, 1), 1, 1)));
 		setter.complete();
-		setter.release();
+		setter.close();
 		
 		Iterator<EntityContainer> iterator = inspector.getProcessedEntities().iterator();
 		EntityContainer ec = iterator.next();
@@ -97,7 +97,7 @@ public class BoundSetterTest {
 		setter.process(new NodeContainer(new Node(
 				new CommonEntityData(1, 1, new Date(), OsmUser.NONE, 1), 1, 1)));
 		setter.complete();
-		setter.release();
+		setter.close();
 		
 		EntityContainer ec = inspector.getProcessedEntities().iterator().next();
 		Assert.assertEquals(EntityType.Bound, ec.getEntity().getType());

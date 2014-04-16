@@ -73,7 +73,7 @@ public class DatasetDriver implements DatasetSink {
 			dsCtx.complete();
 			
 		} finally {
-			dsCtx.release();
+			dsCtx.close();
 		}
 	}
 
@@ -82,7 +82,7 @@ public class DatasetDriver implements DatasetSink {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		// Do nothing.
 	}
 

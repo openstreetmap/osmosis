@@ -56,7 +56,7 @@ public class NodeLocationStoreTest {
 			Assert.assertFalse("The node location should be invalid.", location.isValid());
 		}
 		
-		store.release();
+		store.close();
 	}
 	
 	

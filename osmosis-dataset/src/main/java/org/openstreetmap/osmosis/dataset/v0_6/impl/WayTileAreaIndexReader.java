@@ -77,9 +77,9 @@ public class WayTileAreaIndexReader implements Closeable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		for (IndexStoreReader<Integer, IntegerLongIndexElement> indexReader : indexReaders) {
-			indexReader.release();
+			indexReader.close();
 		}
 	}
 	

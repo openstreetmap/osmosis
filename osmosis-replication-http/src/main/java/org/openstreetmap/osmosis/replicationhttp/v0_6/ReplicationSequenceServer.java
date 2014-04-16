@@ -111,8 +111,8 @@ public class ReplicationSequenceServer implements ChangeSinkChangeSource {
 
 
 	@Override
-	public void release() {
-		changeSink.release();
+	public void close() {
+		changeSink.close();
 
 		if (serverStarted) {
 			try {

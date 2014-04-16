@@ -61,7 +61,7 @@ public class ReleasableStatementContainer implements Closeable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		for (Statement statement : objects) {
 			try {
 				statement.close();

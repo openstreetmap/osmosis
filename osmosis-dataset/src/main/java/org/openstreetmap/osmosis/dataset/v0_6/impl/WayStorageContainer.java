@@ -92,7 +92,7 @@ public class WayStorageContainer implements Closeable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		releasableContainer.release();
+	public void close() {
+		releasableContainer.close();
 	}
 }

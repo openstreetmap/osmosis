@@ -34,7 +34,7 @@ public class EmptyChangeReader implements RunnableChangeSource {
 			changeSink.initialize(Collections.<String, Object>emptyMap());
 			changeSink.complete();
 		} finally {
-			changeSink.release();
+			changeSink.close();
 		}
 	}
 }

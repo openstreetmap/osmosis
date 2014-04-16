@@ -166,7 +166,7 @@ public class FileBasedSort<T extends Storeable> implements Closeable {
 			// This will release the persistent iterator and its underlying
 			// source iterator if the persistence operations failed.
 			if (persistentIterator != null) {
-				persistentIterator.release();
+				persistentIterator.close();
 			}
 		}
 	}
@@ -264,7 +264,7 @@ public class FileBasedSort<T extends Storeable> implements Closeable {
 			
 		} finally {
 			for (ReleasableIterator<T> source : sources) {
-				source.release();
+				source.close();
 			}
 		}
 	}
@@ -285,7 +285,7 @@ public class FileBasedSort<T extends Storeable> implements Closeable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		chunkedEntityStore.release();
+	public void close() {
+		chunkedEntityStore.close();
 	}
 }

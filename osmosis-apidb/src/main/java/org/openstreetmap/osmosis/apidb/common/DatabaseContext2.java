@@ -273,7 +273,7 @@ public class DatabaseContext2 {
      * should always be called in a finally block whenever this class is used.
      */
     public void release() {
-    	identityValueLoader.release();
+    	identityValueLoader.close();
     	
     	try {
 			dataSource.close();

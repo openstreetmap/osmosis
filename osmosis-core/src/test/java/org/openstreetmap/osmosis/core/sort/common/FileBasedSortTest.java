@@ -67,11 +67,11 @@ public class FileBasedSortTest {
 					lastValue = currentValue;
 				}
 			} finally {
-				resultIterator.release();
+				resultIterator.close();
 			}
 
 		} finally {
-			fileBasedSort.release();
+			fileBasedSort.close();
 		}
 	}
 }

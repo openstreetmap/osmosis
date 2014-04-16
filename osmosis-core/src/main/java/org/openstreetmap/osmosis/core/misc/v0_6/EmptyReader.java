@@ -34,7 +34,7 @@ public class EmptyReader implements RunnableSource {
 			sink.initialize(Collections.<String, Object>emptyMap());
 			sink.complete();
 		} finally {
-			sink.release();
+			sink.close();
 		}
 	}
 }

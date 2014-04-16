@@ -53,7 +53,7 @@ public class RelationContainerIterator implements ReleasableIterator<RelationCon
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		source.release();
+	public void close() {
+		source.close();
 	}
 }

@@ -171,8 +171,8 @@ public class EntityReader<T extends Entity> implements ReleasableIterator<T> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		entityReader.release();
-		entityTagReader.release();
+	public void close() {
+		entityReader.close();
+		entityTagReader.close();
 	}
 }

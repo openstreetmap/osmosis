@@ -103,7 +103,7 @@ public class FileBasedLock implements Closeable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		if (outputStream != null) {
 			try {
 				outputStream.close();

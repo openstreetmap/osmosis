@@ -123,7 +123,7 @@ public class XmlChangeReader implements RunnableChangeSource {
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to read XML file " + file + ".", e);
 		} finally {
-			changeSink.release();
+			changeSink.close();
 			
 			if (inputStream != null) {
 				try {

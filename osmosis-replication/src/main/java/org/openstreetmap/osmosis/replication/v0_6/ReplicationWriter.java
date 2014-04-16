@@ -66,7 +66,7 @@ public class ReplicationWriter implements ChangeSink {
 		if (state.getSequenceNumber() > 0) {
 			// Complete the writing of the change file.
 			changeWriter.complete();
-			changeWriter.release();
+			changeWriter.close();
 			changeWriter = null;
 		}
 
@@ -80,11 +80,11 @@ public class ReplicationWriter implements ChangeSink {
 
 
 	@Override
-	public void release() {
+	public void close() {
 		if (changeWriter != null) {
-			changeWriter.release();
+			changeWriter.close();
 			changeWriter = null;
 		}
-		stateWriter.release();
+		stateWriter.close();
 	}
 }

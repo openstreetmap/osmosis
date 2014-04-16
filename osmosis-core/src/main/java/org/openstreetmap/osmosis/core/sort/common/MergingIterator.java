@@ -53,7 +53,7 @@ public class MergingIterator<DataType> implements ReleasableIterator<DataType> {
 					sourceData.add(source.next());
 					sourceIndex++;
 				} else {
-					sources.remove(sourceIndex).release();
+					sources.remove(sourceIndex).close();
 				}
 			}
 		}
@@ -104,7 +104,7 @@ public class MergingIterator<DataType> implements ReleasableIterator<DataType> {
 		if (source.hasNext()) {
 			sourceData.set(indexMinimum, source.next());
 		} else {
-			sources.remove(indexMinimum).release();
+			sources.remove(indexMinimum).close();
 			sourceData.remove(indexMinimum);
 		}
 		
@@ -123,9 +123,9 @@ public class MergingIterator<DataType> implements ReleasableIterator<DataType> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		for (ReleasableIterator<DataType> source : sources) {
-			source.release();
+			source.close();
 		}
 	}
 }

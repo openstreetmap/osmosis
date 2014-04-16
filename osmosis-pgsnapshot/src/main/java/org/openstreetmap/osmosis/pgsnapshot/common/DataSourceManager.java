@@ -162,7 +162,7 @@ public final class DataSourceManager implements Closeable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		if (localDataSource != null) {
 			try {
 				localDataSource.close();

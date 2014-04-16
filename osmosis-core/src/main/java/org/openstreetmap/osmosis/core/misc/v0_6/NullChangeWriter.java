@@ -43,7 +43,7 @@ public class NullChangeWriter implements ChangeSink {
 	/**
 	 * Cleans up any open file handles.
 	 */
-	public void release() {
+	public void close() {
 		// Nothing to do.
 	}
 }

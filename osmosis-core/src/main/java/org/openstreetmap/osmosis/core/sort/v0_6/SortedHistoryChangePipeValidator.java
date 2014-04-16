@@ -77,8 +77,8 @@ public class SortedHistoryChangePipeValidator implements ChangeSinkChangeSource 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		changeSink.release();
+	public void close() {
+		changeSink.close();
 	}
 	
 	

@@ -61,8 +61,8 @@ public class IndexedObjectStoreReader<T> implements Closeable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		objectStoreReader.release();
-		indexStoreReader.release();
+	public void close() {
+		objectStoreReader.close();
+		indexStoreReader.close();
 	}
 }

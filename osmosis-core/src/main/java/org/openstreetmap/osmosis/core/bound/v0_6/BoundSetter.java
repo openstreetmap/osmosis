@@ -78,8 +78,8 @@ public class BoundSetter implements SinkSource {
 
 
 	@Override
-	public void release() {
-		sink.release();
+	public void close() {
+		sink.close();
 	}
 
 

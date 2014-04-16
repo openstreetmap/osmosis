@@ -53,7 +53,7 @@ public class WayContainerIterator implements ReleasableIterator<WayContainer> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		source.release();
+	public void close() {
+		source.close();
 	}
 }

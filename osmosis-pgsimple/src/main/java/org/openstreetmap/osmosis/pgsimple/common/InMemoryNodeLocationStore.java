@@ -197,7 +197,7 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		logMemoryConsumption(Level.FINE);
 	}
 }

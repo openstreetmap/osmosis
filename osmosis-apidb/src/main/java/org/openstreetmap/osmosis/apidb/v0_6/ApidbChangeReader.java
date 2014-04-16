@@ -94,13 +94,13 @@ public class ApidbChangeReader implements RunnableChangeSource {
 	        	}
 	        	
 	        } finally {
-	        	reader.release();
+	        	reader.close();
 	        }
 	
 	        changeSink.complete();
 	        
     	} finally {
-    		changeSink.release();
+    		changeSink.close();
     	}
     }
     

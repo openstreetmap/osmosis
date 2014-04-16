@@ -404,7 +404,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			return selectionCount > 0;
 			
 		} finally {
-			i.release();
+			i.close();
 		}
 	}
 
@@ -460,7 +460,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			return selectionCount > 0;
 			
 		} finally {
-			i.release();
+			i.close();
 		}
 	}
 	
@@ -495,7 +495,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			}
 			
 		} finally {
-			i.release();
+			i.close();
 		}
 	}
 	
@@ -521,7 +521,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			}
 			
 		} finally {
-			i.release();
+			i.close();
 		}
 	}
 	
@@ -554,7 +554,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			}
     		
     	} finally {
-    		i.release();
+    		i.close();
     	}
     }
     
@@ -571,7 +571,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			}
     		
     	} finally {
-    		i.release();
+    		i.close();
     	}
     }
     
@@ -588,7 +588,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			}
     		
     	} finally {
-    		i.release();
+    		i.close();
     	}
     }
 	
@@ -636,17 +636,17 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		if (allNodes != null) {
-			allNodes.release();
+			allNodes.close();
 		}
 		if (allWays != null) {
-			allWays.release();			
+			allWays.close();			
 		}
 		if (allRelations != null) {
-			allRelations.release();
+			allRelations.close();
 		}
-		sink.release();
+		sink.close();
 	}
 	
 	

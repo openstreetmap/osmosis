@@ -330,7 +330,7 @@ public class CopyFileWriter implements Completable {
 	/**
 	 * Cleans up any open file handles.
 	 */
-	public void release() {
+	public void close() {
 		try {
 			try {
 				if (writer != null) {

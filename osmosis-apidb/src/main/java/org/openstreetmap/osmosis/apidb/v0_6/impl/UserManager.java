@@ -199,7 +199,7 @@ public class UserManager implements Closeable {
      * {@inheritDoc}
      */
     @Override
-    public void release() {
-        statementContainer.release();
+    public void close() {
+        statementContainer.close();
     }
 }

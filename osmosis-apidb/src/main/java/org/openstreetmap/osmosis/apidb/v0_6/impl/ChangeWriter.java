@@ -1065,9 +1065,9 @@ public class ChangeWriter {
      * Releases all database resources.
      */
     public void release() {
-        statementContainer.release();
-        userManager.release();
-        changesetManager.release();
+        statementContainer.close();
+        userManager.close();
+        changesetManager.close();
 
         dbCtx.release();
     }

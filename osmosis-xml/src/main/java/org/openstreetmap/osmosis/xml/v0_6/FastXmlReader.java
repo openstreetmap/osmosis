@@ -101,7 +101,7 @@ public class FastXmlReader implements RunnableSource {
 			} catch (Exception e) {
 				throw new OsmosisRuntimeException("Unable to read XML file " + file + ".", e);
 			} finally {
-				sink.release();
+				sink.close();
 				
 				if (inputStream != null) {
 					try {

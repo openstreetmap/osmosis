@@ -78,8 +78,8 @@ public class PeekableIterator<T> implements ReleasableIterator<T> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		sourceIterator.release();
+	public void close() {
+		sourceIterator.close();
 	}
 	
 	

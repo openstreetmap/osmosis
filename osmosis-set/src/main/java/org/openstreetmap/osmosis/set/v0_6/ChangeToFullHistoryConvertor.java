@@ -68,7 +68,7 @@ public class ChangeToFullHistoryConvertor implements ChangeSinkSource {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		sink.release();
+	public void close() {
+		sink.close();
 	}
 }

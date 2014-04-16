@@ -98,9 +98,9 @@ public class RelationReader  extends EntityReader<Relation> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		super.release();
+	public void close() {
+		super.close();
 		
-		relationMemberReader.release();
+		relationMemberReader.close();
 	}
 }

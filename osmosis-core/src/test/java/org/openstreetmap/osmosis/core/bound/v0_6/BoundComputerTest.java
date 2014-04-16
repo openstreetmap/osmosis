@@ -34,7 +34,7 @@ public class BoundComputerTest {
 		BoundComputer bc = new BoundComputer("NewBound");
 		bc.setSink(inspector);
 		bc.complete();
-		bc.release();
+		bc.close();
 
 		Assert.assertNull(inspector.getLastEntityContainer());
 	}
@@ -50,7 +50,7 @@ public class BoundComputerTest {
 		bc.setSink(inspector);
 		bc.process(new BoundContainer(new Bound("Test")));
 		bc.complete();
-		bc.release();
+		bc.close();
 
 		Assert.assertNull(inspector.getLastEntityContainer());
 	}
@@ -67,7 +67,7 @@ public class BoundComputerTest {
 		bc.process(new NodeContainer(new Node(new CommonEntityData(1, 1, new Date(), OsmUser.NONE, 1), 1, 1)));
 		bc.process(new NodeContainer(new Node(new CommonEntityData(2, 2, new Date(), OsmUser.NONE, 1), 2, 2)));
 		bc.complete();
-		bc.release();
+		bc.close();
 
 		EntityContainer ec = inspector.getProcessedEntities().iterator().next();
 		Assert.assertEquals(new Bound(2, 1, 2, 1, "NewBound"), ec.getEntity());
@@ -85,7 +85,7 @@ public class BoundComputerTest {
 		bc.process(new NodeContainer(new Node(new CommonEntityData(1, 1, new Date(), OsmUser.NONE, 1), 1, 1)));
 		bc.process(new NodeContainer(new Node(new CommonEntityData(2, 2, new Date(), OsmUser.NONE, 1), 2, 2)));
 		bc.complete();
-		bc.release();
+		bc.close();
 
 		Iterator<EntityContainer> iterator = inspector.getProcessedEntities().iterator();
 		EntityContainer ec = iterator.next();

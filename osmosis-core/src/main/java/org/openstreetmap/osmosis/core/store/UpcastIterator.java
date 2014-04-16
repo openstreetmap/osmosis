@@ -62,7 +62,7 @@ public class UpcastIterator<X, Y extends X> implements ReleasableIterator<X> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		source.release();
+	public void close() {
+		source.close();
 	}
 }

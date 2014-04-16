@@ -92,7 +92,7 @@ public class BoundComputer implements SinkSource, EntityProcessor {
 			}
 		} finally {
 			if (iter != null) {
-				iter.release();
+				iter.close();
 			}
 		}
 
@@ -101,9 +101,9 @@ public class BoundComputer implements SinkSource, EntityProcessor {
 
 
 	@Override
-	public void release() {
-		sink.release();
-		objects.release();
+	public void close() {
+		sink.close();
+		objects.close();
 	}
 
 

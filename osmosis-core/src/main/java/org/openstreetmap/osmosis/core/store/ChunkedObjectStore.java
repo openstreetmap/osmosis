@@ -166,12 +166,12 @@ public class ChunkedObjectStore<T extends Storeable> implements Completable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		objectStore.release();
+	public void close() {
+		objectStore.close();
 		if (indexStoreReader != null) {
-			indexStoreReader.release();
+			indexStoreReader.close();
 			indexStoreReader = null;
 		}
-		indexStore.release();
+		indexStore.close();
 	}
 }

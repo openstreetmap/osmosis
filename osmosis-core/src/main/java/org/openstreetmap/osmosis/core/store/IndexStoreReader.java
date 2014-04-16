@@ -230,8 +230,8 @@ public class IndexStoreReader<K, T extends IndexElement<K>> implements Closeable
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		indexStoreReader.release();
+	public void close() {
+		indexStoreReader.close();
 	}
 	
 	

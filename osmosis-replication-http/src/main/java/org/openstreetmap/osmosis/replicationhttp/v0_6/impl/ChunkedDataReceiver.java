@@ -195,7 +195,7 @@ public class ChunkedDataReceiver implements Closeable {
 
 
 	@Override
-	public void release() {
+	public void close() {
 		if (tmpDataChannel != null) {
 			try {
 				tmpDataChannel.close();

@@ -61,7 +61,7 @@ public class OsmosisExtractApiDb {
 			success = true;
 
 		} finally {
-			fileLock.release();
+			fileLock.close();
 		}
 
 		// Indicate success or otherwise.

@@ -80,13 +80,13 @@ public class ApidbCurrentReader implements RunnableSource {
 	        	}
 	        	
 	        } finally {
-	        	reader.release();
+	        	reader.close();
 	        }
 	
 	        sink.complete();
 	        
     	} finally {
-    		sink.release();
+    		sink.close();
     	}
     }
     

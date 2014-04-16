@@ -194,11 +194,11 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 							fileSort.add(indexIterator.next());
 						}
 					} finally {
-						indexStoreReader.release();
+						indexStoreReader.close();
 					}
 					
 					// Release the existing index store and create a new one.
-					indexStore.release();
+					indexStore.close();
 					if (indexFile != null) {
 						indexStore = new RandomAccessObjectStore<T>(serializationFactory, indexFile);
 					} else {
@@ -212,11 +212,11 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 							indexStore.add(sortIterator.next());
 						}
 					} finally {
-						sortIterator.release();
+						sortIterator.close();
 					}
 					
 				} finally {
-					fileSort.release();
+					fileSort.close();
 				}
 			}
 			
@@ -228,7 +228,7 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		indexStore.release();
+	public void close() {
+		indexStore.close();
 	}
 }

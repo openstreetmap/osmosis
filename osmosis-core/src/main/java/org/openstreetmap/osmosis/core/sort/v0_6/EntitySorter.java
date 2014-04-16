@@ -74,7 +74,7 @@ public class EntitySorter implements SinkSource {
 			sink.complete();
 		} finally {
 			if (iterator != null) {
-				iterator.release();
+				iterator.close();
 			}
 		}
 	}
@@ -83,8 +83,8 @@ public class EntitySorter implements SinkSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		fileBasedSort.release();
-		sink.release();
+	public void close() {
+		fileBasedSort.close();
+		sink.close();
 	}
 }

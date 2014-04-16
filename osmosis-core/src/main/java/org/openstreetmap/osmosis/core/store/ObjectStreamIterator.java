@@ -41,7 +41,7 @@ public class ObjectStreamIterator<T> extends ObjectDataInputIterator<T> implemen
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		if (inStream != null) {
 			try {
 				inStream.close();

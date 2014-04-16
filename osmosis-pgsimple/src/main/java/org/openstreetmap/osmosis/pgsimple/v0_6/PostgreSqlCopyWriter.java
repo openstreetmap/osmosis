@@ -124,9 +124,9 @@ public class PostgreSqlCopyWriter implements Sink {
 	/**
 	 * Releases all database resources.
 	 */
-	public void release() {
-		copyFilesetBuilder.release();
-		copyFileset.release();
+	public void close() {
+		copyFilesetBuilder.close();
+		copyFileset.close();
 		
 		initialized = false;
 	}

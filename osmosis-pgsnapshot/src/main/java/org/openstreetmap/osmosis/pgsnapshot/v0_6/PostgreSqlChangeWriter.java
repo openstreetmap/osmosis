@@ -117,7 +117,7 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		changeWriter.release();
 		
 		dbCtx.release();

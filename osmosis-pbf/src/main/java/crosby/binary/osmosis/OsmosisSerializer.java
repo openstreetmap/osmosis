@@ -500,9 +500,9 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
     }
 
     @Override
-    public void release() {
+    public void close() {
         try {
-            close();
+            super.close();
         } catch (IOException e) {
         	LOG.log(Level.WARNING, "Unable to release PBF file resources during release.", e);
         }

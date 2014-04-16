@@ -406,8 +406,8 @@ public class IntervalDownloader implements RunnableChangeSource {
 			fileLock.unlock();
 			
 		} finally {
-			changeSink.release();
-			fileLock.release();
+			changeSink.close();
+			fileLock.close();
 		}
 	}
 }

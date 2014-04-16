@@ -90,7 +90,7 @@ public class ChangeTagSorter implements ChangeSinkChangeSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		changeSink.release();
+	public void close() {
+		changeSink.close();
 	}
 }

@@ -214,7 +214,7 @@ public class PermanentFileDatasetStoreFileManager implements DatasetStoreFileMan
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		// Do nothing.
 	}
 }

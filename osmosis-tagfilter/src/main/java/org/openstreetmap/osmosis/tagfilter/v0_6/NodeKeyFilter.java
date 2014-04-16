@@ -117,8 +117,8 @@ public class NodeKeyFilter implements SinkSource, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		sink.release();
+	public void close() {
+		sink.close();
 	}
 
 

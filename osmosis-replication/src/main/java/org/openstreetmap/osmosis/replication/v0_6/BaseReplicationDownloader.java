@@ -383,7 +383,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			fileLock.unlock();
 			
 		} finally {
-			fileLock.release();
+			fileLock.close();
 		}
 	}
 }

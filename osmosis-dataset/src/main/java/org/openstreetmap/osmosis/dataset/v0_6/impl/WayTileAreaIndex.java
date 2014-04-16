@@ -99,7 +99,7 @@ public class WayTileAreaIndex implements Completable {
 			return new WayTileAreaIndexReader(MASKS, indexReaders);
 			
 		} finally {
-			releasableContainer.release();
+			releasableContainer.close();
 		}
 	}
 	
@@ -119,9 +119,9 @@ public class WayTileAreaIndex implements Completable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		for (Closeable index : indexes) {
-			index.release();
+			index.close();
 		}
 	}
 }

@@ -53,7 +53,7 @@ public class NodeContainerIterator implements ReleasableIterator<NodeContainer> 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		source.release();
+	public void close() {
+		source.close();
 	}
 }

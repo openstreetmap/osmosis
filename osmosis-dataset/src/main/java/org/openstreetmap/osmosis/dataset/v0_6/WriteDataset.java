@@ -65,13 +65,13 @@ public class WriteDataset implements Sink {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		// We must release the store last because downstream tasks must be able
 		// to release store readers first.
-		store.release();
+		store.close();
 		
 		// We must release the file manager after the store to ensure all open
 		// files are closed.
-		fileManager.release();
+		fileManager.close();
 	}
 }

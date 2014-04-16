@@ -207,7 +207,7 @@ public class ChangeWriter {
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to invoke the osmosis update stored function.", e);
 		} finally {
-			statementContainer.release();
+			statementContainer.close();
 		}
 		
 		// Clear all action records.

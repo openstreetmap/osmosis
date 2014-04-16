@@ -56,9 +56,9 @@ public class ReleasableContainer implements Closeable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		for (Closeable object : objects) {
-			object.release();
+			object.close();
 		}
 		objects.clear();
 	}

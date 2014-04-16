@@ -231,7 +231,7 @@ public class Replicator {
 			state.setTimestamp(currentTimestamp);
 
 		} finally {
-			sourceIterator.release();
+			sourceIterator.close();
 		}
 	}
 
@@ -244,7 +244,7 @@ public class Replicator {
 			replicateLoop();
 
 		} finally {
-			changeSink.release();
+			changeSink.close();
 		}
 	}
 

@@ -134,7 +134,7 @@ public class DatabaseContext {
     		}
     	}
     	
-    	dataSourceManager.release();
+    	dataSourceManager.close();
     }
     
 

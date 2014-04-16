@@ -119,7 +119,7 @@ public class PbfStreamSplitter implements Iterator<PbfRawBlob>, Closeable {
 
 
 	@Override
-	public void release() {
+	public void close() {
 		if (dis != null) {
 			try {
 				dis.close();

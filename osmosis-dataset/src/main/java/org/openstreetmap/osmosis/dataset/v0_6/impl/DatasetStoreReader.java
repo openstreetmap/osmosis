@@ -300,7 +300,7 @@ public class DatasetStoreReader implements DatasetContext {
 			}
 			
 		} finally {
-			nodeIdsForTileset.release();
+			nodeIdsForTileset.close();
 		}
 		
 		// Check to see whether each applicable node lies within the bounding
@@ -377,7 +377,7 @@ public class DatasetStoreReader implements DatasetContext {
 				}
 			}
 		} finally {
-			tileWayIndexValues.release();
+			tileWayIndexValues.close();
 		}
 	}
 	
@@ -400,7 +400,7 @@ public class DatasetStoreReader implements DatasetContext {
 				}
 				
 			} finally {
-				wayIdIterator.release();
+				wayIdIterator.close();
 			}
 		}
 		
@@ -447,7 +447,7 @@ public class DatasetStoreReader implements DatasetContext {
 				}
 				
 			} finally {
-				relationIdIterator.release();
+				relationIdIterator.close();
 			}
 		}
 		for (Long wayId : bboxCtx.wayIdTracker) {
@@ -458,7 +458,7 @@ public class DatasetStoreReader implements DatasetContext {
 				}
 				
 			} finally {
-				relationIdIterator.release();
+				relationIdIterator.close();
 			}
 		}
 		for (boolean moreParents = true; moreParents;) {
@@ -481,7 +481,7 @@ public class DatasetStoreReader implements DatasetContext {
 					}
 					
 				} finally {
-					relationIdIterator.release();
+					relationIdIterator.close();
 				}
 			}
 		}
@@ -602,7 +602,7 @@ public class DatasetStoreReader implements DatasetContext {
 		 * {@inheritDoc}
 		 */
 		@Override
-		public void release() {
+		public void close() {
 			// Do nothing.
 		}
 	}
@@ -621,9 +621,9 @@ public class DatasetStoreReader implements DatasetContext {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		nodeStorageContainer.release();
-		wayStorageContainer.release();
-		relationStorageContainer.release();
+	public void close() {
+		nodeStorageContainer.close();
+		wayStorageContainer.close();
+		relationStorageContainer.close();
 	}
 }

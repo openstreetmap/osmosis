@@ -448,7 +448,7 @@ public class DatabaseContext {
      * should always be called in a finally block whenever this class is used.
      */
     public void release() {
-    	identityValueLoader.release();
+    	identityValueLoader.close();
     	
         if (statement != null) {
             try {

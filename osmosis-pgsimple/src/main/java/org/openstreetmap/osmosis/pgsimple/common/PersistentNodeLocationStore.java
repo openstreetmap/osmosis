@@ -217,7 +217,7 @@ public class PersistentNodeLocationStore implements NodeLocationStore {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		if (fileOutStream != null) {
 			try {
 				fileOutStream.close();

@@ -321,7 +321,7 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		if (fileOutStream != null) {
 			try {
 				fileOutStream.close();

@@ -56,7 +56,7 @@ public class DumpDataset implements DatasetSinkSource {
 			sink.complete();
 			
 		} finally {
-			bboxData.release();
+			bboxData.close();
 		}
 	}
 	
@@ -65,11 +65,11 @@ public class DumpDataset implements DatasetSinkSource {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		sink.release();
+	public void close() {
+		sink.close();
 		
 		if (datasetReader != null) {
-			datasetReader.release();
+			datasetReader.close();
 		}
 	}
 }

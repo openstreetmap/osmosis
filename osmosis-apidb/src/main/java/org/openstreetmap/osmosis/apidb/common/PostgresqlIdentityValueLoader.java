@@ -137,7 +137,7 @@ public class PostgresqlIdentityValueLoader implements IdentityValueLoader {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		statementContainer.release();
+	public void close() {
+		statementContainer.close();
 	}
 }

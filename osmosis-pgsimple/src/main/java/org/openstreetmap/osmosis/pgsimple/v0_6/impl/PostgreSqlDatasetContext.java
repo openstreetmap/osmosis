@@ -455,8 +455,8 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		releasableContainer.release();
+	public void close() {
+		releasableContainer.close();
 		releasableContainer.clear();
 		
 		if (dbCtx != null) {

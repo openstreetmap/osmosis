@@ -187,7 +187,7 @@ public abstract class EntityDao<T extends Entity> {
 			
 		} finally {
 			if (sortingStore != null) {
-				sortingStore.release();
+				sortingStore.close();
 			}
 		}
 	}
@@ -242,7 +242,7 @@ public abstract class EntityDao<T extends Entity> {
 			return entityIterator;
 			
 		} finally {
-			releasableContainer.release();
+			releasableContainer.close();
 		}
 	}
 	

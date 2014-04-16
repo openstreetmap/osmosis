@@ -98,7 +98,7 @@ public class MysqlIdentityValueLoader implements IdentityValueLoader {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		statementContainer.release();
+	public void close() {
+		statementContainer.close();
 	}
 }
