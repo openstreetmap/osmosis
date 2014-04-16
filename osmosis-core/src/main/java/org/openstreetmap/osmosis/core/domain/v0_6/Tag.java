@@ -62,13 +62,13 @@ public class Tag implements Comparable<Tag>, Storeable {
 	
 	
 	/**
-	 * Compares this tag to the specified tag. The tag comparison is based on
-	 * a comparison of key and value in that order.
+	 * Compares this tag to the specified tag. The tag comparison is based on a
+	 * comparison of key and value in that order.
 	 * 
 	 * @param tag
 	 *            The tag to compare to.
-	 * @return 0 if equal, < 0 if considered "smaller", and > 0 if considered
-	 *         "bigger".
+	 * @return 0 if equal, &lt; 0 if considered "smaller", and &gt; 0 if
+	 *         considered "bigger".
 	 */
 	public int compareTo(Tag tag) {
 		int keyResult;

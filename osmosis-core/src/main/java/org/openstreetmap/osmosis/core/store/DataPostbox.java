@@ -20,7 +20,6 @@ import org.openstreetmap.osmosis.core.task.v0_6.Initializable;
  * Both threads will block until the other is ready. It supports a single
  * writing thread, and a single reading thread. Multiple reading or writing
  * threads are NOT supported.
- * </p>
  * <p>
  * The input thread must call methods in the following sequence:
  * <ul>
@@ -41,7 +40,6 @@ import org.openstreetmap.osmosis.core.task.v0_6.Initializable;
  * <li>outputRelease - Called once at the end of processing regardless of
  * success or failure</li>
  * </ul>
- * </p>
  * <p>
  * The input thread will block in the following situations:
  * <ul>
@@ -65,13 +63,11 @@ import org.openstreetmap.osmosis.core.task.v0_6.Initializable;
  * <li>The outputRelease method has been called, but release has not yet been
  * called.</li>
  * </ul>
- * </p>
  * <p>
  * This class may be re-used multiple times. For this to work, both input and
  * output methods must be called an equal number of times or deadlock will
  * occur. Re-use may occur after input or output threads fail, however in all
  * cases calls to release and outputRelease must be matched.
- * </p>
  * 
  * @param <T>
  *            The type of data held in the postbox.

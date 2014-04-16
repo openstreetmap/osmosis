@@ -247,8 +247,8 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 * 
 	 * @param comparisonMemberList
 	 *            The member list to compare to.
-	 * @return 0 if equal, < 0 if considered "smaller", and > 0 if considered
-	 *         "bigger".
+	 * @return 0 if equal, &lt; 0 if considered "smaller", and &gt; 0 if
+	 *         considered "bigger".
 	 */
 	protected int compareMemberList(Collection<RelationMember> comparisonMemberList) {
 		Iterator<RelationMember> i;
@@ -277,12 +277,13 @@ public class Relation extends Entity implements Comparable<Relation> {
 
 	/**
 	 * Compares this relation to the specified relation. The relation comparison
-	 * is based on a comparison of id, version, timestamp, and tags in that order.
+	 * is based on a comparison of id, version, timestamp, and tags in that
+	 * order.
 	 * 
 	 * @param comparisonRelation
 	 *            The relation to compare to.
-	 * @return 0 if equal, < 0 if considered "smaller", and > 0 if considered
-	 *         "bigger".
+	 * @return 0 if equal, &lt; 0 if considered "smaller", and &gt; 0 if
+	 *         considered "bigger".
 	 */
 	public int compareTo(Relation comparisonRelation) {
 		int memberListResult;

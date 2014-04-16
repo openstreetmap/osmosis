@@ -8,9 +8,10 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  * Populates an entity with its features.
  * 
  * @param <T>
+ *            The type of entity to be populated.
  */
 public interface FeaturePopulator<T> extends Releasable {
-	
+
 	/**
 	 * Populates the specified entity.
 	 * 

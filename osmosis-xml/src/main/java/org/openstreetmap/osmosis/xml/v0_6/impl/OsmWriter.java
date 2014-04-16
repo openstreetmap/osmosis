@@ -38,9 +38,9 @@ public class OsmWriter extends ElementWriter {
 	 *            element is embedded within a higher level element (eg.
 	 *            changesets)
 	 * @param legacyBound
-	 *            If true, write the legacy <bound> element instead of the
-	 *            correct <bounds> one.
-	 *        
+	 *            If true, write the legacy &lt;bound&gt; element instead of the
+	 *            correct &lt;bounds&gt; one.
+	 * 
 	 */
 	public OsmWriter(String elementName, int indentLevel, boolean renderAttributes, boolean legacyBound) {
 		super(elementName, indentLevel);

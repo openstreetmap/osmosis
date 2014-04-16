@@ -24,8 +24,8 @@ public class BoundWriter extends ElementWriter {
 	 * @param indentLevel
 	 *            The indent level of the element.
 	 * @param legacyBound
-	 *            If true, write the legacy <bound> element instead of the
-	 *            correct <bounds> one.
+	 *            If true, write the legacy &lt;bound&gt; element instead of the
+	 *            correct &lt;bounds&gt; one.
 	 */
 	public BoundWriter(String elementName, int indentLevel, boolean legacyBound) {
 		super(elementName, indentLevel);

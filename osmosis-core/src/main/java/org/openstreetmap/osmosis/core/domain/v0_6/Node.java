@@ -242,12 +242,14 @@ public class Node extends Entity implements Comparable<Node> {
 
 
 	/**
-	 * Compares this node to the specified node. The node comparison is based on a comparison of id,
-	 * version, latitude, longitude, timestamp and tags in that order.
+	 * Compares this node to the specified node. The node comparison is based on
+	 * a comparison of id, version, latitude, longitude, timestamp and tags in
+	 * that order.
 	 * 
 	 * @param comparisonNode
 	 *            The node to compare to.
-	 * @return 0 if equal, < 0 if considered "smaller", and > 0 if considered "bigger".
+	 * @return 0 if equal, &lt; 0 if considered "smaller", and &gt; 0 if
+	 *         considered "bigger".
 	 */
 	public int compareTo(Node comparisonNode) {
 		if (this.getId() < comparisonNode.getId()) {

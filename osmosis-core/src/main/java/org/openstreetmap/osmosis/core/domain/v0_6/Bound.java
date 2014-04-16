@@ -399,13 +399,14 @@ public class Bound extends Entity implements Comparable<Bound> {
 
 
 	/**
-	 * Compares this bound to the specified bound. The bound comparison is based on a comparison
-	 * of area, latitude, and longitude in that order.
+	 * Compares this bound to the specified bound. The bound comparison is based
+	 * on a comparison of area, latitude, and longitude in that order.
 	 * 
 	 * @param comparisonBound
 	 *            The bound to compare to.
-	 * @return 0 if equal, < 0 if this sorts before comparison (this is "smaller"), and > 0 if this
-	 *         sorts before comparison (this is "bigger")
+	 * @return 0 if equal, &lt; 0 if this sorts before comparison (this is
+	 *         "smaller"), and &gt; 0 if this sorts before comparison (this is
+	 *         "bigger")
 	 */
 	public int compareTo(Bound comparisonBound) {
 		double areaT = 0.0, areaC = 0.0;
