@@ -4,7 +4,7 @@ package org.openstreetmap.osmosis.pgsimple.common;
 import java.sql.PreparedStatement;
 
 import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 
 
 /**
@@ -12,7 +12,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  * 
  * @author Brett Henderson
  */
-public class BaseDao implements Releasable {
+public class BaseDao implements Closeable {
 	
 	private DatabaseContext dbCtx;
 	private ReleasableStatementContainer statementContainer;

@@ -2,7 +2,7 @@
 package org.openstreetmap.osmosis.dataset.v0_6.impl;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableContainer;
 import org.openstreetmap.osmosis.core.store.IndexStoreReader;
 import org.openstreetmap.osmosis.core.store.LongLongIndexElement;
@@ -14,7 +14,7 @@ import org.openstreetmap.osmosis.core.store.RandomAccessObjectStoreReader;
  * 
  * @author Brett Henderson
  */
-public class WayStorageContainer implements Releasable {
+public class WayStorageContainer implements Closeable {
 	private ReleasableContainer releasableContainer;
 	private RandomAccessObjectStoreReader<Way> wayObjectReader;
 	private IndexStoreReader<Long, LongLongIndexElement> wayObjectOffsetIndexReader;

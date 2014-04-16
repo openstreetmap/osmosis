@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 import org.openstreetmap.osmosis.core.store.ChunkedObjectStore;
 import org.openstreetmap.osmosis.core.store.ObjectSerializationFactory;
@@ -22,7 +22,7 @@ import org.openstreetmap.osmosis.core.store.Storeable;
  *            The object type to be sorted.
  * @author Brett Henderson
  */
-public class FileBasedSort<T extends Storeable> implements Releasable {
+public class FileBasedSort<T extends Storeable> implements Closeable {
 	/**
 	 * The maximum number of entities to perform memory-based sorting on,
 	 * amounts larger than this will be split into chunks of this size, the

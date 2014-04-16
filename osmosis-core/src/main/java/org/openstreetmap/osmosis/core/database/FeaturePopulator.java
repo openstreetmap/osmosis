@@ -1,7 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.database;
 
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 
 
 /**
@@ -10,7 +10,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  * @param <T>
  *            The type of entity to be populated.
  */
-public interface FeaturePopulator<T> extends Releasable {
+public interface FeaturePopulator<T> extends Closeable {
 
 	/**
 	 * Populates the specified entity.

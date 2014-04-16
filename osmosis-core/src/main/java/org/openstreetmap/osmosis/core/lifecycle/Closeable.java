@@ -11,7 +11,7 @@ package org.openstreetmap.osmosis.core.lifecycle;
  * 
  * @author Brett Henderson
  */
-public interface Releasable {
+public interface Closeable {
 	/**
 	 * Performs resource cleanup tasks such as closing files, or database
 	 * connections. This must be called after all processing is complete.

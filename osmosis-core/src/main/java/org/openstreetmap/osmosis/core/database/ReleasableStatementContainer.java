@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 
 
 /**
@@ -18,7 +18,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  * 
  * @author Brett Henderson
  */
-public class ReleasableStatementContainer implements Releasable {
+public class ReleasableStatementContainer implements Closeable {
 	private static final Logger LOG = Logger.getLogger(ReleasableStatementContainer.class.getName());
 	
 	private List<Statement> objects;

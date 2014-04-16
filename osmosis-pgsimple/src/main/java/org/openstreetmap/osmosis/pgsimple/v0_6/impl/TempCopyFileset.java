@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 
 
 /**
@@ -16,7 +16,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  * @author Brett Henderson
  * 
  */
-public class TempCopyFileset implements CopyFileset, Releasable {
+public class TempCopyFileset implements CopyFileset, Closeable {
 	
 	private static final Logger LOG = Logger.getLogger(TempCopyFileset.class.getName());
 	

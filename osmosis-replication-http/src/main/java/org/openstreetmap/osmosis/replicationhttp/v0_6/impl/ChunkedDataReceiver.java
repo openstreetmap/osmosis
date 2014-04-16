@@ -15,7 +15,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.util.CharsetUtil;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 
 
 /**
@@ -25,7 +25,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  * 
  * @author Brett Henderson
  */
-public class ChunkedDataReceiver implements Releasable {
+public class ChunkedDataReceiver implements Closeable {
 
 	private static final Logger LOG = Logger.getLogger(ChunkedDataReceiver.class.getName());
 

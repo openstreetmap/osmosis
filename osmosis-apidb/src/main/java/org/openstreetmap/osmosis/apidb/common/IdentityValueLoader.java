@@ -1,7 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.apidb.common;
 
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 
 
 /**
@@ -11,7 +11,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  * 
  * @author Brett Henderson
  */
-public interface IdentityValueLoader extends Releasable {
+public interface IdentityValueLoader extends Closeable {
 
 	/**
 	 * Returns the id of the most recently inserted row on the current

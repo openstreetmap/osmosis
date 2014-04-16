@@ -8,7 +8,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 import org.openstreetmap.osmosis.pgsnapshot.common.CompactPersistentNodeLocationStore;
 import org.openstreetmap.osmosis.pgsnapshot.common.InMemoryNodeLocationStore;
 import org.openstreetmap.osmosis.pgsnapshot.common.NodeLocation;
@@ -27,7 +27,7 @@ import org.postgis.Polygon;
  * 
  * @author Brett Henderson
  */
-public class WayGeometryBuilder implements Releasable {
+public class WayGeometryBuilder implements Closeable {
 	
 	/**
 	 * Stores the locations of nodes so that they can be used to build the way

@@ -13,14 +13,14 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 
 /**
  * Creates or loads the details of the Osmosis user in the database.
  * 
  * @author Brett Henderson
  */
-public class UserManager implements Releasable {
+public class UserManager implements Closeable {
 
     private static final Logger LOG = Logger.getLogger(UserManager.class.getName());
 

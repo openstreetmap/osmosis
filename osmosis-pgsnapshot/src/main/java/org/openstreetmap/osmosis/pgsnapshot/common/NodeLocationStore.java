@@ -1,7 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.common;
 
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 
 
 /**
@@ -10,7 +10,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  * 
  * @author Brett Henderson
  */
-public interface NodeLocationStore extends Releasable {
+public interface NodeLocationStore extends Closeable {
 	/**
 	 * Adds the specified node location details.
 	 * 

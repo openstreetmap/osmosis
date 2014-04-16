@@ -12,6 +12,6 @@ import java.util.Iterator;
  *            The data type to be iterated.
  * @author Brett Henderson
  */
-public interface ReleasableIterator<T> extends Iterator<T>, Releasable {
+public interface ReleasableIterator<T> extends Iterator<T>, Closeable {
 	// This combines multiple interfaces but doesn't add methods.
 }

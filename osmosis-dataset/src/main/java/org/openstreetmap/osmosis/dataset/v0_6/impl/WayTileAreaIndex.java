@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.lifecycle.Completable;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableContainer;
 import org.openstreetmap.osmosis.core.store.IndexStore;
 import org.openstreetmap.osmosis.core.store.IndexStoreReader;
@@ -120,7 +120,7 @@ public class WayTileAreaIndex implements Completable {
 	 */
 	@Override
 	public void release() {
-		for (Releasable index : indexes) {
+		for (Closeable index : indexes) {
 			index.release();
 		}
 	}

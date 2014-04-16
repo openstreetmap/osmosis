@@ -3,7 +3,7 @@ package org.openstreetmap.osmosis.dataset.v0_6.impl;
 
 import java.io.File;
 
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 
 
 /**
@@ -11,7 +11,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  * 
  * @author Brett Henderson
  */
-public interface DatasetStoreFileManager extends Releasable {
+public interface DatasetStoreFileManager extends Closeable {
 	/**
 	 * Returns the file to be used for storing node objects.
 	 * 

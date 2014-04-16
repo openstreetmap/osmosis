@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 
 
 /**
@@ -21,7 +21,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  *            The object type being stored.
  * @author Brett Henderson
  */
-public class RandomAccessObjectStoreReader<T> implements Releasable {
+public class RandomAccessObjectStoreReader<T> implements Closeable {
 	private static final Logger LOG = Logger.getLogger(RandomAccessObjectStoreReader.class.getName());
 	
 	private BufferedRandomAccessFileInputStream randomFile;

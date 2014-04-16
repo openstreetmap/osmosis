@@ -57,7 +57,7 @@ public class CompletableContainer implements Completable {
 	 */
 	@Override
 	public void release() {
-		for (Releasable object : objects) {
+		for (Closeable object : objects) {
 			object.release();
 		}
 	}

@@ -15,7 +15,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableContainer;
 import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
@@ -25,7 +25,7 @@ import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  * 
  * @author Brett Henderson
  */
-public class ChangesetManager implements Releasable {
+public class ChangesetManager implements Closeable {
 
 	private static final Logger LOG = Logger.getLogger(ChangesetManager.class.getName());
 	

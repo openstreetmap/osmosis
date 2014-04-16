@@ -1,7 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.core.store;
 
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 
 
 /**
@@ -15,7 +15,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  *            The object type being stored.
  * @author Brett Henderson
  */
-public class IndexedObjectStoreReader<T> implements Releasable {
+public class IndexedObjectStoreReader<T> implements Closeable {
 	private RandomAccessObjectStoreReader<T> objectStoreReader;
 	private IndexStoreReader<Long, LongLongIndexElement> indexStoreReader;
 	
