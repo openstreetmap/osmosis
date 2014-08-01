@@ -9,9 +9,8 @@ package org.openstreetmap.osmosis.core.util;
  * of use.
  * <p>
  * The result can be cast directly to an int, but converting back to an unsigned
- * long value must be performed like: <code>
- * long tile = intTile & 0xFFFFFFFFl;
- * </code>
+ * long value must be performed like:
+ * {@code long tile = intTile & 0xFFFFFFFFl;}
  * 
  * @author Brett Henderson
  */

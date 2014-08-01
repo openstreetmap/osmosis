@@ -23,6 +23,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.Initializable;
  * </p>
  * <p>
  * The input thread must call methods in the following sequence:
+ * </p>
  * <ul>
  * <li>initialize - Called during successful startup, can be skipped in failure
  * condition</li>
@@ -31,7 +32,9 @@ import org.openstreetmap.osmosis.core.task.v0_6.Initializable;
  * <li>release - Called once at the end of processing regardless of success or
  * failure</li>
  * </ul>
+ * <p>
  * The output thread must call methods in the following sequence:
+ * </p>
  * <ul>
  * <li>outputInitialize - Called during successful startup, can be skipped in
  * failure condition</li>
@@ -41,9 +44,9 @@ import org.openstreetmap.osmosis.core.task.v0_6.Initializable;
  * <li>outputRelease - Called once at the end of processing regardless of
  * success or failure</li>
  * </ul>
- * </p>
  * <p>
  * The input thread will block in the following situations:
+ * </p>
  * <ul>
  * <li>initialize has been called, but outputInitialize has not yet been called</li>
  * <li>put has been called, and the buffer is full</li>
@@ -53,7 +56,9 @@ import org.openstreetmap.osmosis.core.task.v0_6.Initializable;
  * called. This wait must occur to support the scenario where both threads
  * subsequently wish to initialize again.</li>
  * </ul>
+ * <p>
  * The output thread will block in the following situations:
+ * </p>
  * <ul>
  * <li>The outputInitialize method has been called, and initialize has not yet
  * been called</li>
@@ -65,7 +70,6 @@ import org.openstreetmap.osmosis.core.task.v0_6.Initializable;
  * <li>The outputRelease method has been called, but release has not yet been
  * called.</li>
  * </ul>
- * </p>
  * <p>
  * This class may be re-used multiple times. For this to work, both input and
  * output methods must be called an equal number of times or deadlock will

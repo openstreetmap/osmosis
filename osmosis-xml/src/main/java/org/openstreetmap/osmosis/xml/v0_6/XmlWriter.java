@@ -56,8 +56,8 @@ public class XmlWriter extends BaseXmlWriter implements Sink {
 	 * @param compressionMethod
 	 *            Specifies the compression method to employ.
 	 * @param legacyBound
-	 *            If true, write the legacy <bound> element instead of the
-	 *            correct <bounds> one.
+	 *            If true, write the legacy {@literal <bound>} element
+	 *            instead of the correct {@literal <bounds>} one.
 	 */
 	public XmlWriter(File file, CompressionMethod compressionMethod, boolean legacyBound) {
 		super(file, compressionMethod);

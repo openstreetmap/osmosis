@@ -67,7 +67,7 @@ public class Tag implements Comparable<Tag>, Storeable {
 	 * 
 	 * @param tag
 	 *            The tag to compare to.
-	 * @return 0 if equal, < 0 if considered "smaller", and > 0 if considered
+	 * @return 0 if equal, &lt; 0 if considered "smaller", and &gt; 0 if considered
 	 *         "bigger".
 	 */
 	public int compareTo(Tag tag) {

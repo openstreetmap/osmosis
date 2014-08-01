@@ -29,7 +29,7 @@ import org.openstreetmap.osmosis.xml.common.XmlTimestampFormat;
 
 
 /**
- * Class is intended to provide utility place for tag transform functionality. <br/>
+ * Class is intended to provide utility place for tag transform functionality. <br>
  * See {@link org.openstreetmap.osmosis.tagtransform.v0_6.TransformTask
  * TransformTask} for example implementation.
  * 
