@@ -404,7 +404,7 @@ public class Bound extends Entity implements Comparable<Bound> {
 	 * 
 	 * @param comparisonBound
 	 *            The bound to compare to.
-	 * @return 0 if equal, < 0 if this sorts before comparison (this is "smaller"), and > 0 if this
+	 * @return 0 if equal, &lt; 0 if this sorts before comparison (this is "smaller"), and &gt; 0 if this
 	 *         sorts before comparison (this is "bigger")
 	 */
 	public int compareTo(Bound comparisonBound) {

@@ -246,7 +246,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 * 
 	 * @param comparisonWayNodes
 	 *            The node list to compare to.
-	 * @return 0 if equal, < 0 if considered "smaller", and > 0 if considered
+	 * @return 0 if equal, &lt; 0 if considered "smaller", and &gt; 0 if considered
 	 *         "bigger".
 	 */
 	protected int compareWayNodes(List<WayNode> comparisonWayNodes) {
@@ -280,7 +280,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 * 
 	 * @param comparisonWay
 	 *            The way to compare to.
-	 * @return 0 if equal, < 0 if considered "smaller", and > 0 if considered
+	 * @return 0 if equal, &lt; 0 if considered "smaller", and &gt; 0 if considered
 	 *         "bigger".
 	 */
 	public int compareTo(Way comparisonWay) {

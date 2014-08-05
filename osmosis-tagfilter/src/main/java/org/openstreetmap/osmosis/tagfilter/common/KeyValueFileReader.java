@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * Reads the content of a file containing "key.value" tags.
  * 
  * <p>
- * The content of the file contains one key.value pair per line. Example:<br/>
+ * The content of the file contains one key.value pair per line. Example:<br>
  * 
  * <code>
  * railway.tram
