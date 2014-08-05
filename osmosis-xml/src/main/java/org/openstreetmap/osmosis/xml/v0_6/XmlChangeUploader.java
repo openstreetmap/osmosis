@@ -122,6 +122,7 @@ public class XmlChangeUploader implements ChangeSink {
             System.err.println("DEBUG: URL= " + url.toString());
             HttpURLConnection httpCon = (HttpURLConnection)
                                       url.openConnection();
+            httpCon.setRequestProperty("User-Agent", "Osmosis/" + OsmosisConstants.VERSION);
 
             // we do not use Authenticator.setDefault()
             // here to stay thread-safe.
