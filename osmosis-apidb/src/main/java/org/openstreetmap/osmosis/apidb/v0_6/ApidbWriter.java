@@ -1160,7 +1160,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
             maxWayId = wayId + 1;
         }
         if (wayId < minWayId) {
-          minWayId = wayId + 1;
+          minWayId = wayId;
         }
         wayBuffer.add(way);
 
@@ -1215,7 +1215,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
             maxRelationId = relationId + 1;
         }
         if (relationId < minRelationId) {
-          minRelationId = relationId + 1;
+          minRelationId = relationId;
         }
         relationBuffer.add(relation);
 
