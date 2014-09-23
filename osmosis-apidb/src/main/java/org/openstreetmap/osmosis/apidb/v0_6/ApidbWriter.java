@@ -216,8 +216,11 @@ public class ApidbWriter implements Sink, EntityProcessor {
     private final List<DbFeatureHistory<DbFeature<Tag>>> relationTagBuffer;
     private final List<DbFeatureHistory<DbOrderedFeature<RelationMember>>> relationMemberBuffer;
     private long maxNodeId;
+    private long minNodeId;
     private long maxWayId;
+    private long minWayId;
     private long maxRelationId;
+    private long minRelationId;
     private final TileCalculator tileCalculator;
     private final MemberTypeRenderer memberTypeRenderer;
     private boolean initialized;
@@ -276,9 +279,12 @@ public class ApidbWriter implements Sink, EntityProcessor {
         relationTagBuffer = new ArrayList<DbFeatureHistory<DbFeature<Tag>>>();
         relationMemberBuffer = new ArrayList<DbFeatureHistory<DbOrderedFeature<RelationMember>>>();
 
-        maxNodeId = 0;
-        maxWayId = 0;
-        maxRelationId = 0;
+        maxNodeId = Long.MIN_VALUE;
+        minNodeId = Long.MAX_VALUE;
+        maxWayId = Long.MIN_VALUE;
+        minWayId = Long.MAX_VALUE;
+        maxRelationId = Long.MIN_VALUE;
+        minRelationId = Long.MAX_VALUE;
 
         tileCalculator = new TileCalculator();
         memberTypeRenderer = new MemberTypeRenderer();
@@ -917,7 +923,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
     
     private void populateCurrentNodes() {
         // Copy data into the current node tables.
-        for (long i = 0; i < maxNodeId; i += LOAD_CURRENT_NODE_ROW_COUNT) {
+        for (long i = minNodeId; i < maxNodeId; i += LOAD_CURRENT_NODE_ROW_COUNT) {
             // Node
             try {
                 loadCurrentNodesStatement.setLong(1, i);
@@ -946,7 +952,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
     
     
     private void populateCurrentWays() {
-        for (long i = 0; i < maxWayId; i += LOAD_CURRENT_WAY_ROW_COUNT) {
+        for (long i = minWayId; i < maxWayId; i += LOAD_CURRENT_WAY_ROW_COUNT) {
             // Way
             try {
                 loadCurrentWaysStatement.setLong(1, i);
@@ -986,7 +992,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
     
     
     private void populateCurrentRelations() {
-        for (long i = 0; i < maxRelationId; i += LOAD_CURRENT_RELATION_ROW_COUNT) {
+        for (long i = minRelationId; i < maxRelationId; i += LOAD_CURRENT_RELATION_ROW_COUNT) {
             // Way
             try {
                 loadCurrentRelationsStatement.setLong(1, i);
@@ -1115,6 +1121,9 @@ public class ApidbWriter implements Sink, EntityProcessor {
         if (nodeId >= maxNodeId) {
             maxNodeId = nodeId + 1;
         }
+        if (nodeId < minNodeId) {
+          minNodeId = nodeId;
+        }
 
         nodeBuffer.add(node);
 
@@ -1150,7 +1159,9 @@ public class ApidbWriter implements Sink, EntityProcessor {
         if (wayId >= maxWayId) {
             maxWayId = wayId + 1;
         }
-
+        if (wayId < minWayId) {
+          minWayId = wayId + 1;
+        }
         wayBuffer.add(way);
 
         flushWays(false);
@@ -1203,7 +1214,9 @@ public class ApidbWriter implements Sink, EntityProcessor {
         if (relationId >= maxRelationId) {
             maxRelationId = relationId + 1;
         }
-
+        if (relationId < minRelationId) {
+          minRelationId = relationId + 1;
+        }
         relationBuffer.add(relation);
 
         flushRelations(false);
