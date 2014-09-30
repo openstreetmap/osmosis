@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
@@ -12,7 +13,6 @@ import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
-import org.openstreetmap.osmosis.hstore.PGHStore;
 import org.springframework.jdbc.core.RowMapper;
 
 
@@ -64,9 +64,10 @@ public abstract class EntityRowMapper<T extends Entity> implements RowMapper<T> 
 	 *             if a database error is encountered.
 	 * @return The common entity data.
 	 */
+	@SuppressWarnings("unchecked")
 	protected CommonEntityData mapCommonEntityData(ResultSet rs) throws SQLException {
 		CommonEntityData entityData;
-		PGHStore dbTags;
+		Map<String, String> dbTags;
 		Collection<Tag> tags;
 		
 		entityData = new CommonEntityData(
@@ -77,7 +78,7 @@ public abstract class EntityRowMapper<T extends Entity> implements RowMapper<T> 
 			rs.getLong("changeset_id")
 		);
 		
-		dbTags = (PGHStore) rs.getObject("tags");
+		dbTags = (Map<String, String>) rs.getObject("tags");
 		if (dbTags != null) {
 			tags = entityData.getTags();
 			for (Entry<String, String> tagEntry : dbTags.entrySet()) {

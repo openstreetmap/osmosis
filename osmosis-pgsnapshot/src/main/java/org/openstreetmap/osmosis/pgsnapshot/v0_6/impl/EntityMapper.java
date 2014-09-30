@@ -3,12 +3,12 @@ package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
-import org.openstreetmap.osmosis.hstore.PGHStore;
 import org.springframework.jdbc.core.RowMapper;
 
 
@@ -226,7 +226,7 @@ public abstract class EntityMapper<T extends Entity> {
 	 *            The entity containing the data to be inserted.
 	 */
 	protected void populateCommonEntityParameters(Map<String, Object> args, Entity entity) {
-		PGHStore tags;
+		Map<String, String> tags;
 		
 		// We can't write an entity with a null timestamp.
 		if (entity.getTimestamp() == null) {
@@ -234,7 +234,7 @@ public abstract class EntityMapper<T extends Entity> {
 					"Entity(" + entity.getType() + ") " + entity.getId() + " does not have a timestamp set.");
 		}
 		
-		tags = new PGHStore();
+		tags = new HashMap<String, String>(entity.getTags().size());
 		for (Tag tag : entity.getTags()) {
 			tags.put(tag.getKey(), tag.getValue());
 		}
