@@ -32,7 +32,7 @@ public class MysqlIdentityValueLoader2 implements IdentityValueLoader {
 	 * @return The newly inserted id.
 	 */
 	public long getLastInsertId() {
-		return dbCtx.getJdbcTemplate().queryForLong(SQL_SELECT_LAST_INSERT_ID);
+		return dbCtx.getJdbcTemplate().queryForObject(SQL_SELECT_LAST_INSERT_ID, Long.class);
 	}
 
 
