@@ -27,6 +27,11 @@ public final class DatabaseConstants {
     public static final String TASK_ARG_HOST = "host";
 
     /**
+     * The task argument for specifying the port for a database connection.
+     */
+    public static final String TASK_ARG_PORT = "port";
+
+    /**
      * The task argument for specifying the database instance for a database connection.
      */
     public static final String TASK_ARG_DATABASE = "database";
@@ -71,6 +76,11 @@ public final class DatabaseConstants {
      * The default host for a database connection.
      */
     public static final String TASK_DEFAULT_HOST = "localhost";
+
+    /**
+     * The default port for a database connection.
+     */
+    public static final String TASK_DEFAULT_PORT = "5432";
 
     /**
      * The default database for a database connection.
