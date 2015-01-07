@@ -22,16 +22,17 @@ if [ ! "$(ls -A $DATADIR)" ]; then
 		CREATE DATABASE pgosmsnap06_test OWNER osm;
 	EOSQL
 
-	# Start the database temporarily while we configure it.
-	#su postgres sh -lc "postgres" &
-	#PID=$!
-	#echo "PID: ${PID}"
-	#sleep 1
+	# Start the database server temporarily while we configure the databases.
 	su postgres sh -lc "pg_ctl -w start"
 
-	# Configure the database as the OSM user.
+	# Configure the pgosmsnap06_test database as the OSM user.
 	su postgres sh -lc "psql -U osm pgosmsnap06_test" <<-EOSQL
 		CREATE EXTENSION hstore;
+		CREATE EXTENSION postgis;
+		\i /install/script/pgsnapshot_schema_0.6.sql
+		\i /install/script/pgsnapshot_schema_0.6_action.sql
+		\i /install/script/pgsnapshot_schema_0.6_bbox.sql
+		\i /install/script/pgsnapshot_schema_0.6_linestring.sql
 	EOSQL
 
 	# Stop the database.

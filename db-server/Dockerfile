@@ -9,5 +9,6 @@ RUN yum install -y postgis
 EXPOSE 5432
 
 COPY docker-start.sh /start.sh
+COPY script /install/script
 
 CMD ["/start.sh"]
