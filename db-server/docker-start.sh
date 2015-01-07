@@ -22,6 +22,11 @@ if [ ! "$(ls -A $DATADIR)" ]; then
 		CREATE DATABASE pgosmsnap06_test OWNER osm;
 	EOSQL
 
+	# Create the apidb database owned by osm.
+	su postgres sh -lc "postgres --single -jE" <<-EOSQL
+		CREATE DATABASE api06_test OWNER osm;
+	EOSQL
+
 	# Start the database server temporarily while we configure the databases.
 	su postgres sh -lc "pg_ctl -w start"
 
@@ -33,6 +38,12 @@ if [ ! "$(ls -A $DATADIR)" ]; then
 		\i /install/script/pgsnapshot_schema_0.6_action.sql
 		\i /install/script/pgsnapshot_schema_0.6_bbox.sql
 		\i /install/script/pgsnapshot_schema_0.6_linestring.sql
+	EOSQL
+
+	# Configure the api06_test database as the OSM user.
+	su postgres sh -lc "psql -U osm api06_test" <<-EOSQL
+		\i /install/script/contrib/apidb_0.6.sql
+		\i /install/script/contrib/apidb_0.6_osmosis_xid_indexing.sql
 	EOSQL
 
 	# Stop the database.
