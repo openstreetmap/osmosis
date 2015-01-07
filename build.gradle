@@ -8,8 +8,9 @@ task wrapper(type: Wrapper) {
  */
 def packageProjects = allprojects.findAll { project -> project.path.equals(':package') }
 def buildProjects = allprojects.findAll { project -> project.path.equals(':build-support') }
+def dockerProjects = allprojects.findAll { project -> project.path.equals(':db-server') }
 // Java projects are all those that aren't in the previous collections.
-def javaProjects = subprojects.findAll { project -> !packageProjects.contains(project) && !buildProjects.contains(project) }
+def javaProjects = subprojects.findAll { project -> !packageProjects.contains(project) && !buildProjects.contains(project) && !dockerProjects.contains(project) }
 
 // Apply common project configuration
 subprojects {
