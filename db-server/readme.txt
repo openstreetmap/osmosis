@@ -1,4 +1,6 @@
 This directory contains the scripts to create a docker-based database server to be used for unit testing.
+In order to use this server, docker must be installed on the local workstation.  Beyond that, no additional
+configuration should be required.
 
 To build the docker image, run the following script.
     ./build.sh
