@@ -15,6 +15,7 @@ if [ ! "$(ls -A $DATADIR)" ]; then
 	EOSQL
 
 	# Allow the osm user to connect remotely with a password.
+	echo "listen_addresses = '*'" >> "${DATADIR}/postgresql.conf"
 	echo "host all osm 0.0.0.0/0 md5" >> "${DATADIR}/pg_hba.conf"
 
 	# Create the pgsnapshot database owned by osm.
