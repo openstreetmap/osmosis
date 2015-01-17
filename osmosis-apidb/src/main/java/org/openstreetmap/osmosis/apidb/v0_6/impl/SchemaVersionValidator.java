@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.apidb.common.DatabaseContext;
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 
@@ -26,22 +26,20 @@ public class SchemaVersionValidator {
 
     private static final String SELECT_SQL = "SELECT version FROM schema_migrations";
 
+    private final DatabaseLoginCredentials credentials;
     private final DatabasePreferences preferences;
-
-    private final DatabaseContext dbCtx;
 
     private boolean validated;
 
     /**
      * Creates a new instance.
      * 
-     * @param loginCredentials Contains all information required to connect to the database.
+     * @param credentials Contains all information required to connect to the database.
      * @param preferences The database preferences.
      */
-    public SchemaVersionValidator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
+    public SchemaVersionValidator(DatabaseLoginCredentials credentials, DatabasePreferences preferences) {
+    	this.credentials = credentials;
         this.preferences = preferences;
-
-        dbCtx = new DatabaseContext(loginCredentials);
     }
 
     /**
@@ -65,8 +63,7 @@ public class SchemaVersionValidator {
      */
     private void validateDBVersion(String[] expectedMigrations) {
         if (preferences.getValidateSchemaVersion()) {
-            try {
-                ResultSet resultSet;
+            try (DatabaseContext dbCtx = new DatabaseContext(credentials)) {
                 Set<String> actualMigrationSet;
                 Set<String> expectedMigrationSet;
                 List<String> matchingMigrations;
@@ -79,11 +76,13 @@ public class SchemaVersionValidator {
 
                 // Load the database migrations into a Set.
                 actualMigrationSet = new HashSet<String>();
-                resultSet = dbCtx.executeQuery(SELECT_SQL);
-                while (resultSet.next()) {
-                    actualMigrationSet.add(resultSet.getString("version"));
+                try (ResultSet resultSet = dbCtx.executeQuery(SELECT_SQL)) {
+	                while (resultSet.next()) {
+	                    actualMigrationSet.add(resultSet.getString("version"));
+	                }
+                } catch (SQLException e) {
+                	throw new OsmosisRuntimeException("Unable to retrieve existing database migrations", e);
                 }
-                resultSet.close();
 
                 // Remove items from both sets that are identical.
                 matchingMigrations = new ArrayList<String>();
@@ -119,19 +118,7 @@ public class SchemaVersionValidator {
                         throw new OsmosisRuntimeException(errorMessage.toString());
                     }
                 }
-
-            } catch (SQLException e) {
-                throw new OsmosisRuntimeException("Unable to read the schema version from the schema info table.", e);
-            } finally {
-                cleanup();
             }
         }
-    }
-
-    /**
-     * Releases all resources allocated during execution.
-     */
-    private void cleanup() {
-        dbCtx.release();
     }
 }

@@ -6,11 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.apidb.common.DatabaseContext;
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
@@ -19,6 +17,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
+import org.openstreetmap.osmosis.core.lifecycle.Completable;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
 import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 import org.openstreetmap.osmosis.core.util.TileCalculator;
@@ -29,9 +28,7 @@ import org.openstreetmap.osmosis.core.util.TileCalculator;
  * 
  * @author Brett Henderson
  */
-public class ChangeWriter {
-
-    private static final Logger LOG = Logger.getLogger(ChangeWriter.class.getName());
+public class ChangeWriter implements Completable {
 
     private static final String INSERT_SQL_NODE =
     	"INSERT INTO nodes (node_id, version, timestamp, visible, changeset_id, latitude, longitude, tile)"
@@ -229,38 +226,12 @@ public class ChangeWriter {
      * @throws SQLException if an error occurs accessing the database.
      */
     private boolean checkIfEntityExists(PreparedStatement statement, long id) throws SQLException {
-        boolean exists;
-        ResultSet resultSet;
-
-        resultSet = null;
-        try {
-            statement.setLong(1, id);
-
-            resultSet = statement.executeQuery();
-
-            resultSet.next();
-
-            if (resultSet.getInt("rowCount") == 0) {
-                exists = false;
-            } else {
-                exists = true;
-            }
-
-            resultSet.close();
-            resultSet = null;
-
-            return exists;
-
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    // We are already in an error condition so log and continue.
-                    LOG.log(Level.WARNING, "Unable to close entity existence check result set.", e);
-                }
-            }
-        }
+    	statement.setLong(1, id);
+    	try (ResultSet resultSet = statement.executeQuery()) {
+    		resultSet.next();
+    		
+    		return (resultSet.getInt("rowCount") != 0);
+    	}
     }
 
     /**
@@ -273,41 +244,15 @@ public class ChangeWriter {
      * @throws SQLException if an error occurs accessing the database.
      */
     private boolean checkIfEntityHistoryExists(PreparedStatement statement, long id, int version) throws SQLException {
-        boolean exists;
-        ResultSet resultSet;
-        int prmIndex;
-
-        resultSet = null;
-        try {
-            prmIndex = 1;
-            statement.setLong(prmIndex++, id);
-            statement.setInt(prmIndex++, version);
-
-            resultSet = statement.executeQuery();
-
-            resultSet.next();
-
-            if (resultSet.getInt("rowCount") == 0) {
-                exists = false;
-            } else {
-                exists = true;
-            }
-
-            resultSet.close();
-            resultSet = null;
-
-            return exists;
-
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    // We are already in an error condition so log and continue.
-                    LOG.log(Level.WARNING, "Unable to close entity history existence result set.", e);
-                }
-            }
-        }
+    	int prmIndex = 1;
+        statement.setLong(prmIndex++, id);
+        statement.setInt(prmIndex++, version);
+        
+        try (ResultSet resultSet = statement.executeQuery()) {
+    		resultSet.next();
+    		
+    		return (resultSet.getInt("rowCount") != 0);
+    	}
     }
 
     /**
@@ -1064,11 +1009,11 @@ public class ChangeWriter {
     /**
      * Releases all database resources.
      */
-    public void release() {
+    public void close() {
         statementContainer.close();
         userManager.close();
         changesetManager.close();
 
-        dbCtx.release();
+        dbCtx.close();
     }
 }

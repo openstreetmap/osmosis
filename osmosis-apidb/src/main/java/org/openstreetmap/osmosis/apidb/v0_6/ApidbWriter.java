@@ -1077,7 +1077,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
     public void close() {
         userManager.close();
 
-        dbCtx.release();
+        dbCtx.close();;
     }
 
     /**

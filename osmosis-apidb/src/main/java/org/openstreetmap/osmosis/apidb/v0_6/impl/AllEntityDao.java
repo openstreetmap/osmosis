@@ -44,10 +44,7 @@ public class AllEntityDao implements ReplicationSource {
 	 * @return An iterator pointing at the identified records.
 	 */
 	public ReleasableIterator<ChangeContainer> getHistory(ReplicationQueryPredicates predicates) {
-		ReleasableContainer releasableContainer;
-		
-		releasableContainer = new ReleasableContainer();
-		try {
+		try (ReleasableContainer releasableContainer = new ReleasableContainer()) {
 			List<ReleasableIterator<ChangeContainer>> sources;
 			MultipleSourceIterator<ChangeContainer> resultIterator;
 			
@@ -61,9 +58,6 @@ public class AllEntityDao implements ReplicationSource {
 			releasableContainer.clear();
 			
 			return resultIterator;
-			
-		} finally {
-			releasableContainer.close();
 		}
 	}
 	
@@ -78,10 +72,7 @@ public class AllEntityDao implements ReplicationSource {
 	 * @return An iterator pointing at the identified records.
 	 */
 	public ReleasableIterator<ChangeContainer> getHistory(Date intervalBegin, Date intervalEnd) {
-		ReleasableContainer releasableContainer;
-		
-		releasableContainer = new ReleasableContainer();
-		try {
+		try (ReleasableContainer releasableContainer = new ReleasableContainer()) {
 			List<ReleasableIterator<ChangeContainer>> sources;
 			MultipleSourceIterator<ChangeContainer> resultIterator;
 			
@@ -95,9 +86,6 @@ public class AllEntityDao implements ReplicationSource {
 			releasableContainer.clear();
 			
 			return resultIterator;
-			
-		} finally {
-			releasableContainer.close();
 		}
 	}
 	
@@ -108,10 +96,7 @@ public class AllEntityDao implements ReplicationSource {
 	 * @return An iterator pointing at the identified records.
 	 */
 	public ReleasableIterator<ChangeContainer> getHistory() {
-		ReleasableContainer releasableContainer;
-		
-		releasableContainer = new ReleasableContainer();
-		try {
+		try (ReleasableContainer releasableContainer = new ReleasableContainer()) {
 			List<ReleasableIterator<ChangeContainer>> sources;
 			MultipleSourceIterator<ChangeContainer> resultIterator;
 			
@@ -125,9 +110,6 @@ public class AllEntityDao implements ReplicationSource {
 			releasableContainer.clear();
 			
 			return resultIterator;
-			
-		} finally {
-			releasableContainer.close();
 		}
 	}
 	
@@ -138,10 +120,7 @@ public class AllEntityDao implements ReplicationSource {
 	 * @return An iterator pointing at the current records.
 	 */
 	public ReleasableIterator<EntityContainer> getCurrent() {
-		ReleasableContainer releasableContainer;
-		
-		releasableContainer = new ReleasableContainer();
-		try {
+		try (ReleasableContainer releasableContainer = new ReleasableContainer()) {
 			List<ReleasableIterator<EntityContainer>> sources;
 			MultipleSourceIterator<EntityContainer> resultIterator;
 			
@@ -155,9 +134,6 @@ public class AllEntityDao implements ReplicationSource {
 			releasableContainer.clear();
 			
 			return resultIterator;
-			
-		} finally {
-			releasableContainer.close();
 		}
 	}
 }

@@ -26,7 +26,7 @@ import org.springframework.transaction.support.TransactionTemplate;
  * 
  * @author Brett Henderson
  */
-public class DatabaseContext2 {
+public class DatabaseContext2 implements AutoCloseable {
 
     private static final Logger LOG = Logger.getLogger(DatabaseContext.class.getName());
 
@@ -271,8 +271,19 @@ public class DatabaseContext2 {
     /**
      * Releases all database resources. This method is guaranteed not to throw transactions and
      * should always be called in a finally block whenever this class is used.
+     * 
+     * @deprecated Use {@link #close()} instead.
      */
     public void release() {
+    	close();
+    }
+    
+    
+    /**
+     * Releases all database resources. This method is guaranteed not to throw transactions and
+     * should always be called in a finally or try-with-resources block whenever this class is used.
+     */
+    public void close() {
     	identityValueLoader.close();
     	
     	try {
@@ -290,42 +301,23 @@ public class DatabaseContext2 {
      * @param columnName The column to check for.
      * @return True if the column exists, false otherwise.
      */
-    public boolean doesColumnExist(String tableName, String columnName) {
-        ResultSet resultSet = null;
-        boolean result;
+	public boolean doesColumnExist(String tableName, String columnName) {
+		Connection connection;
 
-        try {
-        	Connection connection;
-        	
-            LOG.finest("Checking if column {" + columnName + "} in table {" + tableName + "} exists.");
+		LOG.finest("Checking if column {" + columnName + "} in table {" + tableName + "} exists.");
 
-            // This connection may not be freed if an exception occurs. It's a small chance and the
-			// additional code to avoid it is cumbersome.
-            connection = DataSourceUtils.getConnection(dataSource);
-            
-            resultSet = connection.getMetaData().getColumns(null, null, tableName, columnName);
-            result = resultSet.next();
-            resultSet.close();
-            resultSet = null;
-            
-            DataSourceUtils.releaseConnection(connection, dataSource);
-
-            return result;
-
-        } catch (SQLException e) {
-            throw new OsmosisRuntimeException("Unable to check for the existence of column " + tableName + "."
-                    + columnName + ".", e);
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    // We are already in an error condition so log and continue.
-                    LOG.log(Level.WARNING, "Unable to close column existence result set.", e);
-                }
-            }
-        }
-    }
+		connection = DataSourceUtils.getConnection(dataSource);
+		try {
+			try (ResultSet resultSet = connection.getMetaData().getColumns(null, null, tableName, columnName)) {
+				return resultSet.next();
+			} catch (SQLException e) {
+				throw new OsmosisRuntimeException("Unable to check for the existence of column " + tableName + "."
+						+ columnName + ".", e);
+			}
+		} finally {
+			DataSourceUtils.releaseConnection(connection, dataSource);
+		}
+	}
 
     /**
      * Indicates if the specified table exists in the database.
@@ -334,39 +326,18 @@ public class DatabaseContext2 {
      * @return True if the table exists, false otherwise.
      */
     public boolean doesTableExist(String tableName) {
-        ResultSet resultSet = null;
-        boolean result;
+    	Connection connection;
 
-        try {
-        	Connection connection;
-        	
-            LOG.finest("Checking if table {" + tableName + "} exists.");
+    	LOG.finest("Checking if table {" + tableName + "} exists.");
 
-            // This connection may not be freed if an exception occurs. It's a small chance and the
-			// additional code to avoid it is cumbersome.
-            connection = DataSourceUtils.getConnection(dataSource);
-
-            resultSet = connection.getMetaData().getTables(null, null, tableName, new String[] {"TABLE"});
-            result = resultSet.next();
-            resultSet.close();
-            resultSet = null;
-            
-            DataSourceUtils.releaseConnection(connection, dataSource);
-
-            return result;
-
-        } catch (SQLException e) {
-            throw new OsmosisRuntimeException("Unable to check for the existence of table " + tableName + ".", e);
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    // We are already in an error condition so log and continue.
-                    LOG.log(Level.WARNING, "Unable to close table existence result set.", e);
-                }
-            }
-        }
+    	connection = DataSourceUtils.getConnection(dataSource);
+		try (ResultSet resultSet = connection.getMetaData().getTables(null, null, tableName, new String[] { "TABLE" })) {
+			return resultSet.next();
+		} catch (SQLException e) {
+			throw new OsmosisRuntimeException("Unable to check for the existence of table " + tableName + ".", e);
+		} finally {
+			DataSourceUtils.releaseConnection(connection, dataSource);
+		}
     }
 
     /**
@@ -377,7 +348,7 @@ public class DatabaseContext2 {
      */
     @Override
     protected void finalize() throws Throwable {
-        release();
+        close();
 
         super.finalize();
     }

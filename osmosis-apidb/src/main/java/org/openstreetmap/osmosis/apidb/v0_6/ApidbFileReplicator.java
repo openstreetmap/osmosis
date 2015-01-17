@@ -95,13 +95,8 @@ public class ApidbFileReplicator implements RunnableChangeSource {
 	 */
 	@Override
 	public void run() {
-        final DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials);
-    	
-        try {
+        try (DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials)) {
         	runImpl(dbCtx);
-
-        } finally {
-            dbCtx.release();
         }
 	}
 }

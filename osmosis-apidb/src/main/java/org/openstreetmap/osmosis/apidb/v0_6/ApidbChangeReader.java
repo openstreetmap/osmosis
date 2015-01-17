@@ -75,26 +75,26 @@ public class ApidbChangeReader implements RunnableChangeSource {
     protected void runImpl(DatabaseContext2 dbCtx) {
     	try {
     		AllEntityDao entityDao;
-    		ReleasableIterator<ChangeContainer> reader;
-    		
+
     		changeSink.initialize(Collections.<String, Object>emptyMap());
-    		
+
 	        new SchemaVersionValidator(loginCredentials, preferences)
 	                .validateVersion(ApidbVersionConstants.SCHEMA_MIGRATIONS);
-	        
+
 	        entityDao = new AllEntityDao(dbCtx.getJdbcTemplate());
-	        
-	        reader = entityDao.getHistory(intervalBegin, intervalEnd);
-	        if (!fullHistory) {
-	        	reader = new DeltaToDiffReader(reader);
-	        }
-	        try {
-	        	while (reader.hasNext()) {
-	        		changeSink.process(reader.next());
-	        	}
+
+	        try (ReleasableIterator<ChangeContainer> reader = entityDao.getHistory(intervalBegin, intervalEnd)) {
+	        	ReleasableIterator<ChangeContainer> i;
 	        	
-	        } finally {
-	        	reader.close();
+	        	if (fullHistory) {
+	        		i = reader;
+	        	} else {
+	        		i = new DeltaToDiffReader(reader);
+	        	}
+
+	        	while (i.hasNext()) {
+	        		changeSink.process(i.next());
+	        	}
 	        }
 	
 	        changeSink.complete();
@@ -109,19 +109,13 @@ public class ApidbChangeReader implements RunnableChangeSource {
      * Reads all data from the database and send it to the sink.
      */
     public void run() {
-        final DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials);
-    	
-        try {
+        try (DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials)) {
         	dbCtx.executeWithinTransaction(new TransactionCallbackWithoutResult() {
-        		private DatabaseContext2 dbCtxInner = dbCtx;
-
 				@Override
 				protected void doInTransactionWithoutResult(TransactionStatus arg0) {
-					runImpl(dbCtxInner);
+					runImpl(dbCtx);
 				} });
 
-        } finally {
-            dbCtx.release();
         }
     }
 }

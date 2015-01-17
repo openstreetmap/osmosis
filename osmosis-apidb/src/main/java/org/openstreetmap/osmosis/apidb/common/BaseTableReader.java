@@ -139,7 +139,7 @@ public abstract class BaseTableReader<T> implements ReleasableIterator<T> {
 		nextValue = null;
 		resultSet = null;
 		
-		dbCtx.release();
+		dbCtx.close();
 	}
 	
 	
