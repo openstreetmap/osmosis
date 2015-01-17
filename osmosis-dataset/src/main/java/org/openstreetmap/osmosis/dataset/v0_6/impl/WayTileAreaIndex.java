@@ -84,9 +84,7 @@ public class WayTileAreaIndex implements Completable {
 	 * @return An index reader.
 	 */
 	public WayTileAreaIndexReader createReader() {
-		ReleasableContainer releasableContainer = new ReleasableContainer();
-		
-		try {
+		try (ReleasableContainer releasableContainer = new ReleasableContainer()) {
 			List<IndexStoreReader<Integer, IntegerLongIndexElement>> indexReaders;
 			
 			indexReaders = new ArrayList<IndexStoreReader<Integer, IntegerLongIndexElement>>(MASKS.length);
@@ -97,9 +95,6 @@ public class WayTileAreaIndex implements Completable {
 			releasableContainer.clear();
 			
 			return new WayTileAreaIndexReader(MASKS, indexReaders);
-			
-		} finally {
-			releasableContainer.close();
 		}
 	}
 	

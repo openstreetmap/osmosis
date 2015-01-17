@@ -36,8 +36,6 @@ public class DumpDataset implements DatasetSinkSource {
 	 */
 	@Override
 	public void process(Dataset dataset) {
-		ReleasableIterator<EntityContainer> bboxData;
-		
 		if (datasetReader != null) {
 			throw new OsmosisRuntimeException("process may only be invoked once.");
 		}
@@ -45,8 +43,7 @@ public class DumpDataset implements DatasetSinkSource {
 		datasetReader = dataset.createReader();
 		
 		// Pass all data within the dataset to the sink.
-		bboxData = datasetReader.iterate();
-		try {
+		try (ReleasableIterator<EntityContainer> bboxData = datasetReader.iterate()) {
 			sink.initialize(Collections.<String, Object>emptyMap());
 			
 			while (bboxData.hasNext()) {
@@ -55,8 +52,6 @@ public class DumpDataset implements DatasetSinkSource {
 			
 			sink.complete();
 			
-		} finally {
-			bboxData.close();
 		}
 	}
 	

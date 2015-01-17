@@ -400,9 +400,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	 */
 	@Override
 	public DatasetContext createReader() {
-		ReleasableContainer releasableContainer = new ReleasableContainer();
-		
-		try {
+		try (ReleasableContainer releasableContainer = new ReleasableContainer()) {
 			DatasetContext reader;
 			
 			reader = new DatasetStoreReader(
@@ -428,9 +426,6 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 			releasableContainer.clear();
 			
 			return reader;
-			
-		} finally {
-			releasableContainer.close();
 		}
 	}
 	

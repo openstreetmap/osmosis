@@ -284,7 +284,6 @@ public class DatasetStoreReader implements DatasetContext {
 	 *            The bounding box data.
 	 */
 	private void populateNodeIds(BoundingBoxContext bboxCtx) {
-		ReleasableIterator<Long> nodeIdsForTileset;
 		IdTracker idTracker;
 		
 		idTracker = new DynamicIdTracker();
@@ -293,16 +292,12 @@ public class DatasetStoreReader implements DatasetContext {
 		// temporary id tracker. This temporary id tracker allows all node ids
 		// to be sorted ascendingly prior to retrieving the nodes themselves
 		// which improves index performance.
-		nodeIdsForTileset = getNodeIdsForTileRange(bboxCtx.minimumTile, bboxCtx.maximumTile);
-		try {
+		try (ReleasableIterator<Long> nodeIdsForTileset = getNodeIdsForTileRange(bboxCtx.minimumTile, bboxCtx.maximumTile)) {
 			while (nodeIdsForTileset.hasNext()) {
 				idTracker.set(nodeIdsForTileset.next());
 			}
-			
-		} finally {
-			nodeIdsForTileset.close();
 		}
-		
+
 		// Check to see whether each applicable node lies within the bounding
 		// box and add them to the result id list if they are.
 		for (long nodeId : idTracker) {
@@ -325,12 +320,9 @@ public class DatasetStoreReader implements DatasetContext {
 	 *            The bounding box data.
 	 */
 	private void populateWayIdsUsingTileWayIndex(BoundingBoxContext bboxCtx, boolean completeWays) {
-		ReleasableIterator<Long> tileWayIndexValues;
-		
 		// Search through all ways in the tile range and store the ids of those
 		// within the bounding box.
-		tileWayIndexValues = getWayIdsForTileRange(bboxCtx.minimumTile, bboxCtx.maximumTile);
-		try {
+		try (ReleasableIterator<Long> tileWayIndexValues = getWayIdsForTileRange(bboxCtx.minimumTile, bboxCtx.maximumTile)) {
 			while (tileWayIndexValues.hasNext()) {
 				long wayId;
 				Way way;
@@ -376,8 +368,6 @@ public class DatasetStoreReader implements DatasetContext {
 					}
 				}
 			}
-		} finally {
-			tileWayIndexValues.close();
 		}
 	}
 	
@@ -393,14 +383,10 @@ public class DatasetStoreReader implements DatasetContext {
 	private void populateWayIdsUsingNodeWayIndex(BoundingBoxContext bboxCtx, boolean completeWays) {
 		// Select all ways that contain the currently selected nodes.
 		for (Long nodeId : bboxCtx.nodeIdTracker) {
-			ReleasableIterator<Long> wayIdIterator = getWayIdsOwningNode(nodeId);
-			try {
+			try (ReleasableIterator<Long> wayIdIterator = getWayIdsOwningNode(nodeId)) {
 				while (wayIdIterator.hasNext()) {
 					bboxCtx.wayIdTracker.set(wayIdIterator.next());
 				}
-				
-			} finally {
-				wayIdIterator.close();
 			}
 		}
 		
@@ -440,25 +426,19 @@ public class DatasetStoreReader implements DatasetContext {
 	private void populateRelationIds(BoundingBoxContext bboxCtx) {
 		// Select all relations that contain the currently selected nodes, ways and relations.
 		for (Long nodeId : bboxCtx.nodeIdTracker) {
-			ReleasableIterator<Long> relationIdIterator = getRelationIdsOwningNode(nodeId);
-			try {
+			try (ReleasableIterator<Long> relationIdIterator = getRelationIdsOwningNode(nodeId)) {
 				while (relationIdIterator.hasNext()) {
 					bboxCtx.relationIdTracker.set(relationIdIterator.next());
 				}
 				
-			} finally {
-				relationIdIterator.close();
 			}
 		}
 		for (Long wayId : bboxCtx.wayIdTracker) {
-			ReleasableIterator<Long> relationIdIterator = getRelationIdsOwningWay(wayId);
-			try {
+			try (ReleasableIterator<Long> relationIdIterator = getRelationIdsOwningWay(wayId)) {
 				while (relationIdIterator.hasNext()) {
 					bboxCtx.relationIdTracker.set(relationIdIterator.next());
 				}
 				
-			} finally {
-				relationIdIterator.close();
 			}
 		}
 		for (boolean moreParents = true; moreParents;) {
@@ -467,8 +447,7 @@ public class DatasetStoreReader implements DatasetContext {
 			moreParents = false;
 			
 			for (Long relationId : bboxCtx.relationIdTracker) {
-				ReleasableIterator<Long> relationIdIterator = getRelationIdsOwningRelation(relationId);
-				try {
+				try (ReleasableIterator<Long> relationIdIterator = getRelationIdsOwningRelation(relationId)) {
 					while (relationIdIterator.hasNext()) {
 						long parentRelationId;
 						
@@ -480,8 +459,6 @@ public class DatasetStoreReader implements DatasetContext {
 						}
 					}
 					
-				} finally {
-					relationIdIterator.close();
 				}
 			}
 		}
