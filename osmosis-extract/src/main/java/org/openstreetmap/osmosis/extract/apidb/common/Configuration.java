@@ -51,26 +51,13 @@ public class Configuration {
 
 
 	private Properties loadProperties(File configFile) {
-		FileInputStream fileInputStream = null;
-
 		properties = new Properties();
 
-		try {
-			fileInputStream = new FileInputStream(configFile);
-
+		try (FileInputStream fileInputStream = new FileInputStream(configFile)) {
 			properties.load(fileInputStream);
 
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to load properties from config file " + configFile);
-		} finally {
-			if (fileInputStream != null) {
-				try {
-					fileInputStream.close();
-				} catch (IOException e) {
-					// We are already in an error condition so log and continue.
-					LOG.log(Level.WARNING, "Unable to close file input stream.", e);
-				}
-			}
 		}
 
 		return properties;
