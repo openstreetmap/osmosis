@@ -374,9 +374,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	
 	
 	private boolean selectParentRelationsPass() {
-		ReleasableIterator<RelationContainer> i = allRelations.iterate();
-		
-		try {
+		try (ReleasableIterator<RelationContainer> i = allRelations.iterate()) {
 			int selectionCount;
 			
 			selectionCount = 0;
@@ -403,8 +401,6 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			
 			return selectionCount > 0;
 			
-		} finally {
-			i.close();
 		}
 	}
 
@@ -430,9 +426,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	 * @return True if additional selections were made an another pass is needed.
 	 */
 	private boolean selectChildRelationsPass() {
-		ReleasableIterator<RelationContainer> i = allRelations.iterate();
-		
-		try {
+		try (ReleasableIterator<RelationContainer> i = allRelations.iterate()) {
 			int selectionCount;
 			
 			selectionCount = 0;
@@ -458,9 +452,6 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 			}
 			
 			return selectionCount > 0;
-			
-		} finally {
-			i.close();
 		}
 	}
 	
@@ -469,9 +460,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	 * Select all relation members of type node or way for existing selected relations.
 	 */
 	private void selectChildNonRelationsPass() {
-		ReleasableIterator<RelationContainer> i = allRelations.iterate();
-		
-		try {
+		try (ReleasableIterator<RelationContainer> i = allRelations.iterate()) {
 			while (i.hasNext()) {
 				Relation relation = i.next().getEntity();
 				long relationId = relation.getId();
@@ -493,9 +482,6 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 					}
 				}
 			}
-			
-		} finally {
-			i.close();
 		}
 	}
 	
@@ -504,9 +490,7 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 	 * Select all nodes within already selected ways.
 	 */
 	private void selectWayNodes() {
-		ReleasableIterator<WayContainer> i = allWays.iterate();
-		
-		try {
+		try (ReleasableIterator<WayContainer> i = allWays.iterate()) {
 			while (i.hasNext()) {
 				Way way = i.next().getEntity();
 				long wayId = way.getId();
@@ -519,9 +503,6 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
 					}
 				}
 			}
-			
-		} finally {
-			i.close();
 		}
 	}
 	
@@ -543,52 +524,37 @@ public abstract class AreaFilter implements SinkSource, EntityProcessor {
     
     
     private void pumpNodesToSink() {
-    	ReleasableIterator<NodeContainer> i = allNodes.iterate();
-    	
-    	try {
+    	try (ReleasableIterator<NodeContainer> i = allNodes.iterate()) {
     		while (i.hasNext()) {
 				NodeContainer nodeContainer = i.next();
 				if (availableNodes.get(nodeContainer.getEntity().getId())) {
 					emitNode(nodeContainer);
 				}
 			}
-    		
-    	} finally {
-    		i.close();
     	}
     }
     
     
     private void pumpWaysToSink() {
-    	ReleasableIterator<WayContainer> i = allWays.iterate();
-    	
-    	try {
+    	try (ReleasableIterator<WayContainer> i = allWays.iterate()) {
     		while (i.hasNext()) {
 				WayContainer wayContainer = i.next();
 				if (availableWays.get(wayContainer.getEntity().getId())) {
 					emitWay(wayContainer);
 				}
 			}
-    		
-    	} finally {
-    		i.close();
     	}
     }
     
     
     private void pumpRelationsToSink() {
-    	ReleasableIterator<RelationContainer> i = allRelations.iterate();
-    	
-    	try {
+    	try (ReleasableIterator<RelationContainer> i = allRelations.iterate()) {
     		while (i.hasNext()) {
 				RelationContainer relationContainer = i.next();
 				if (availableRelations.get(relationContainer.getEntity().getId())) {
 					emitRelation(relationContainer);
 				}
 			}
-    		
-    	} finally {
-    		i.close();
     	}
     }
 	
