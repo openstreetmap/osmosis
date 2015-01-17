@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 
@@ -18,9 +17,6 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  * @author Brett Henderson
  */
 public class ResourceFileManager {
-	
-	private static final Logger LOG = Logger.getLogger(ResourceFileManager.class.getName());
-	
 	
 	/**
 	 * Copies a packaged resource to a file on the file system.
@@ -34,54 +30,29 @@ public class ResourceFileManager {
 	 *            The output file.
 	 */
 	public void copyResourceToFile(Class<?> callingClass, String sourceResource, File destinationFile) {
-		InputStream is = null;
-		OutputStream os = null;
+		byte[] buffer = new byte[4096];
 		
-		try {
-			byte[] buffer;
-			int bytesRead;
-			
-			buffer = new byte[4096];
-			
-			is = callingClass.getResourceAsStream(sourceResource);
-			os = new FileOutputStream(destinationFile);
-			
+		try (InputStream is = callingClass.getResourceAsStream(sourceResource)) {
 			if (is == null) {
 			    throw new FileNotFoundException("Could not find " + sourceResource);
 			}
-			
-			while (true) {
-				bytesRead = is.read(buffer);
-				
-				// Stop reading if no more data is available.
-				if (bytesRead < 0) {
-					break;
+
+			try (OutputStream os = new FileOutputStream(destinationFile)) {
+				while (true) {
+					int bytesRead = is.read(buffer);
+					
+					// Stop reading if no more data is available.
+					if (bytesRead < 0) {
+						break;
+					}
+					
+					os.write(buffer, 0, bytesRead);
 				}
-				
-				os.write(buffer, 0, bytesRead);
 			}
-			
-			is.close();
-			os.close();
 			
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException(
 					"Unable to copy resource " + sourceResource + " to file " + destinationFile);
-		} finally {
-			if (is != null) {
-				try {
-					is.close();
-				} catch (Exception e) {
-					LOG.warning("Unable to close input stream for resource " + sourceResource);
-				}
-			}
-			if (os != null) {
-				try {
-					os.close();
-				} catch (Exception e) {
-					LOG.warning("Unable to close output stream for file " + destinationFile);
-				}
-			}
 		}
 	}
 }

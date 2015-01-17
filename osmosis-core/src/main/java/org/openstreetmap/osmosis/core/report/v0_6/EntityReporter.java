@@ -11,8 +11,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
@@ -37,10 +35,7 @@ public class EntityReporter implements Sink {
 	private static final int COLUMN_WIDTH_WAY_COUNT = 7;
 	private static final int COLUMN_WIDTH_RELATION_COUNT = 7;
 	
-	private Logger log = Logger.getLogger(EntityReporter.class.getName());
-	
 	private File file;
-	private FileWriter fileWriter;
 	private Map<String, UserStatistics> userMap;
 	private UserStatistics anonymousUser;
 	private UserStatistics totalUser;
@@ -201,18 +196,10 @@ public class EntityReporter implements Sink {
 	 * Flushes all changes to file.
 	 */
 	public void complete() {
-		try {
-			BufferedWriter writer;
-			
-			fileWriter = new FileWriter(file);
-			writer = new BufferedWriter(fileWriter);
-			
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
 			// Produce a report on the user statistics.
 			writeUserReport(writer);
-			
-			writer.close();
-			fileWriter = null;
-			
+
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to write report to file " + file + ".");
 		}
@@ -220,18 +207,9 @@ public class EntityReporter implements Sink {
 	
 	
 	/**
-	 * Cleans up any open file handles.
+	 * {@inheritDoc}
 	 */
 	public void close() {
-		if (fileWriter != null) {
-			try {
-				fileWriter.close();
-			} catch (IOException e) {
-				log.log(Level.SEVERE, "Unable to close file writer for file " + file + ".", e);
-			} finally {
-				fileWriter = null;
-			}
-		}
 	}
 	
 	

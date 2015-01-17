@@ -95,17 +95,15 @@ public class TaskRegistrar {
 		try {
 			for (URL pluginConfigurationUrl : Collections.list(Thread.currentThread()
 					.getContextClassLoader().getResources(pluginResourceName))) {
-				InputStream pluginInputStream;
 				BufferedReader pluginReader;
 				
 				LOG.finer("Loading plugin configuration file from url " + pluginConfigurationUrl + ".");
 				
-				pluginInputStream = pluginConfigurationUrl.openStream();
-				if (pluginInputStream == null) {
-					throw new OsmosisRuntimeException("Cannot open URL " + pluginConfigurationUrl + ".");
-				}
-				
-				try {
+				try (InputStream pluginInputStream = pluginConfigurationUrl.openStream()) {
+					if (pluginInputStream == null) {
+						throw new OsmosisRuntimeException("Cannot open URL " + pluginConfigurationUrl + ".");
+					}
+					
 					pluginReader = new BufferedReader(new InputStreamReader(pluginInputStream));
 					
 					for (;;) {
@@ -122,12 +120,6 @@ public class TaskRegistrar {
 							
 							loadPlugin(plugin);
 						}
-					}
-				} finally {
-					try {
-						pluginInputStream.close();
-					} catch (IOException e) {
-						LOG.warning("Unable to close plugin resource " + pluginResourceName + ".");
 					}
 				}
 			}
