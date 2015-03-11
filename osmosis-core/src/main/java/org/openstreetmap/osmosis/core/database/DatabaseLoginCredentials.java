@@ -16,6 +16,7 @@ public class DatabaseLoginCredentials {
     private boolean forceUtf8;
     private boolean profileSql;
     private DatabaseType dbType;
+    private String postgresSchema;
     
     
 	/**
@@ -58,6 +59,7 @@ public class DatabaseLoginCredentials {
         this.forceUtf8 = forceUtf8;
         this.profileSql = profileSql;
         this.dbType = dbType;
+        this.postgresSchema = "";
     }
     
     
@@ -207,5 +209,23 @@ public class DatabaseLoginCredentials {
 	 */
     public void setDbType(String property) {
         this.dbType = DatabaseType.fromString(property);
+    }
+
+    /**
+     * Returns the postgresql schema.
+     * 
+     * @return The postgresql schema.
+     */
+    public String getPostgresSchema() {
+        return postgresSchema;
+    }
+
+    /**
+     * Updates the postgresql schema.
+     * 
+     * @param postgresSchema The new postgresql schema.
+     */
+    public void setPostgresSchema(String postgresSchema) {
+        this.postgresSchema = postgresSchema;
     }
 }

@@ -59,6 +59,13 @@ public class DatabaseContext {
     	jdbcTemplate = new JdbcTemplate(dataSource);
     	
     	setStatementFetchSizeForStreaming();
+
+        if (loginCredentials.getPostgresSchema() != "") {
+            // JJ: should prepend to old search_path
+            jdbcTemplate.execute("SELECT set_config('search_path', '"
+                                 + loginCredentials.getPostgresSchema()
+                                 + ",' || current_setting('search_path'), false)");
+        }
     }
 
 
