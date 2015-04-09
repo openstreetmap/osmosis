@@ -8,367 +8,142 @@ public final class Fileformat {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
   }
-  public interface BlobOrBuilder
-      extends com.google.protobuf.MessageLiteOrBuilder {
-    
-    // optional bytes raw = 1;
+  public interface BlobOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:OSMPBF.Blob)
+      com.google.protobuf.MessageLiteOrBuilder {
+
+    /**
+     * <code>optional bytes raw = 1;</code>
+     *
+     * <pre>
+     * No compression
+     * </pre>
+     */
     boolean hasRaw();
+    /**
+     * <code>optional bytes raw = 1;</code>
+     *
+     * <pre>
+     * No compression
+     * </pre>
+     */
     com.google.protobuf.ByteString getRaw();
-    
-    // optional int32 raw_size = 2;
+
+    /**
+     * <code>optional int32 raw_size = 2;</code>
+     *
+     * <pre>
+     * When compressed, the uncompressed size
+     * </pre>
+     */
     boolean hasRawSize();
+    /**
+     * <code>optional int32 raw_size = 2;</code>
+     *
+     * <pre>
+     * When compressed, the uncompressed size
+     * </pre>
+     */
     int getRawSize();
-    
-    // optional bytes zlib_data = 3;
+
+    /**
+     * <code>optional bytes zlib_data = 3;</code>
+     *
+     * <pre>
+     * Possible compressed versions of the data.
+     * </pre>
+     */
     boolean hasZlibData();
+    /**
+     * <code>optional bytes zlib_data = 3;</code>
+     *
+     * <pre>
+     * Possible compressed versions of the data.
+     * </pre>
+     */
     com.google.protobuf.ByteString getZlibData();
-    
-    // optional bytes lzma_data = 4;
+
+    /**
+     * <code>optional bytes lzma_data = 4;</code>
+     *
+     * <pre>
+     * PROPOSED feature for LZMA compressed data. SUPPORT IS NOT REQUIRED.
+     * </pre>
+     */
     boolean hasLzmaData();
+    /**
+     * <code>optional bytes lzma_data = 4;</code>
+     *
+     * <pre>
+     * PROPOSED feature for LZMA compressed data. SUPPORT IS NOT REQUIRED.
+     * </pre>
+     */
     com.google.protobuf.ByteString getLzmaData();
-    
-    // optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];
+
+    /**
+     * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+     *
+     * <pre>
+     * Formerly used for bzip2 compressed data. Depreciated in 2010.
+     * </pre>
+     */
     @java.lang.Deprecated boolean hasOBSOLETEBzip2Data();
+    /**
+     * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+     *
+     * <pre>
+     * Formerly used for bzip2 compressed data. Depreciated in 2010.
+     * </pre>
+     */
     @java.lang.Deprecated com.google.protobuf.ByteString getOBSOLETEBzip2Data();
   }
+  /**
+   * Protobuf type {@code OSMPBF.Blob}
+   */
   public static final class Blob extends
-      com.google.protobuf.GeneratedMessageLite
-      implements BlobOrBuilder {
+      com.google.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:OSMPBF.Blob)
+      BlobOrBuilder {
     // Use Blob.newBuilder() to construct.
-    private Blob(Builder builder) {
+    private Blob(com.google.protobuf.GeneratedMessageLite.Builder builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private Blob(boolean noInit) {}
-    
+    private Blob(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
+
     private static final Blob defaultInstance;
     public static Blob getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public Blob getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
-    private int bitField0_;
-    // optional bytes raw = 1;
-    public static final int RAW_FIELD_NUMBER = 1;
-    private com.google.protobuf.ByteString raw_;
-    public boolean hasRaw() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    public com.google.protobuf.ByteString getRaw() {
-      return raw_;
-    }
-    
-    // optional int32 raw_size = 2;
-    public static final int RAW_SIZE_FIELD_NUMBER = 2;
-    private int rawSize_;
-    public boolean hasRawSize() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    public int getRawSize() {
-      return rawSize_;
-    }
-    
-    // optional bytes zlib_data = 3;
-    public static final int ZLIB_DATA_FIELD_NUMBER = 3;
-    private com.google.protobuf.ByteString zlibData_;
-    public boolean hasZlibData() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    public com.google.protobuf.ByteString getZlibData() {
-      return zlibData_;
-    }
-    
-    // optional bytes lzma_data = 4;
-    public static final int LZMA_DATA_FIELD_NUMBER = 4;
-    private com.google.protobuf.ByteString lzmaData_;
-    public boolean hasLzmaData() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
-    }
-    public com.google.protobuf.ByteString getLzmaData() {
-      return lzmaData_;
-    }
-    
-    // optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];
-    public static final int OBSOLETE_BZIP2_DATA_FIELD_NUMBER = 5;
-    private com.google.protobuf.ByteString oBSOLETEBzip2Data_;
-    @java.lang.Deprecated public boolean hasOBSOLETEBzip2Data() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
-    }
-    @java.lang.Deprecated public com.google.protobuf.ByteString getOBSOLETEBzip2Data() {
-      return oBSOLETEBzip2Data_;
-    }
-    
-    private void initFields() {
-      raw_ = com.google.protobuf.ByteString.EMPTY;
-      rawSize_ = 0;
-      zlibData_ = com.google.protobuf.ByteString.EMPTY;
-      lzmaData_ = com.google.protobuf.ByteString.EMPTY;
-      oBSOLETEBzip2Data_ = com.google.protobuf.ByteString.EMPTY;
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-      
-      memoizedIsInitialized = 1;
-      return true;
-    }
-    
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, raw_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeInt32(2, rawSize_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(3, zlibData_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeBytes(4, lzmaData_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeBytes(5, oBSOLETEBzip2Data_);
-      }
-    }
-    
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-    
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, raw_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, rawSize_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, zlibData_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, lzmaData_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(5, oBSOLETEBzip2Data_);
-      }
-      memoizedSerializedSize = size;
-      return size;
-    }
-    
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-    
-    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseFrom(
+
+    private final com.google.protobuf.ByteString unknownFields;
+    private Blob(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Fileformat.Blob prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-    
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          org.openstreetmap.osmosis.osmbinary.Fileformat.Blob, Builder>
-        implements org.openstreetmap.osmosis.osmbinary.Fileformat.BlobOrBuilder {
-      // Construct using org.openstreetmap.osmosis.osmbinary.Fileformat.Blob.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-      
-      private void maybeForceBuilderInitialization() {
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-      
-      public Builder clear() {
-        super.clear();
-        raw_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        rawSize_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        zlibData_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        lzmaData_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000008);
-        oBSOLETEBzip2Data_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000010);
-        return this;
-      }
-      
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-      
-      public org.openstreetmap.osmosis.osmbinary.Fileformat.Blob getDefaultInstanceForType() {
-        return org.openstreetmap.osmosis.osmbinary.Fileformat.Blob.getDefaultInstance();
-      }
-      
-      public org.openstreetmap.osmosis.osmbinary.Fileformat.Blob build() {
-        org.openstreetmap.osmosis.osmbinary.Fileformat.Blob result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-      
-      private org.openstreetmap.osmosis.osmbinary.Fileformat.Blob buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        org.openstreetmap.osmosis.osmbinary.Fileformat.Blob result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
-      public org.openstreetmap.osmosis.osmbinary.Fileformat.Blob buildPartial() {
-        org.openstreetmap.osmosis.osmbinary.Fileformat.Blob result = new org.openstreetmap.osmosis.osmbinary.Fileformat.Blob(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.raw_ = raw_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.rawSize_ = rawSize_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.zlibData_ = zlibData_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
-        }
-        result.lzmaData_ = lzmaData_;
-        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-          to_bitField0_ |= 0x00000010;
-        }
-        result.oBSOLETEBzip2Data_ = oBSOLETEBzip2Data_;
-        result.bitField0_ = to_bitField0_;
-        return result;
-      }
-      
-      public Builder mergeFrom(org.openstreetmap.osmosis.osmbinary.Fileformat.Blob other) {
-        if (other == org.openstreetmap.osmosis.osmbinary.Fileformat.Blob.getDefaultInstance()) return this;
-        if (other.hasRaw()) {
-          setRaw(other.getRaw());
-        }
-        if (other.hasRawSize()) {
-          setRawSize(other.getRawSize());
-        }
-        if (other.hasZlibData()) {
-          setZlibData(other.getZlibData());
-        }
-        if (other.hasLzmaData()) {
-          setLzmaData(other.getLzmaData());
-        }
-        if (other.hasOBSOLETEBzip2Data()) {
-          setOBSOLETEBzip2Data(other.getOBSOLETEBzip2Data());
-        }
-        return this;
-      }
-      
-      public final boolean isInitialized() {
-        return true;
-      }
-      
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        while (true) {
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
+      try {
+        boolean done = false;
+        while (!done) {
           int tag = input.readTag();
           switch (tag) {
             case 0:
-              
-              return this;
+              done = true;
+              break;
             default: {
-              if (!parseUnknownField(input, extensionRegistry, tag)) {
-                
-                return this;
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
+                                     extensionRegistry, tag)) {
+                done = true;
               }
               break;
             }
@@ -399,18 +174,441 @@ public final class Fileformat {
             }
           }
         }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
+        makeExtensionsImmutable();
       }
-      
+    }
+    public static com.google.protobuf.Parser<Blob> PARSER =
+        new com.google.protobuf.AbstractParser<Blob>() {
+      public Blob parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Blob(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Blob> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    public static final int RAW_FIELD_NUMBER = 1;
+    private com.google.protobuf.ByteString raw_;
+    /**
+     * <code>optional bytes raw = 1;</code>
+     *
+     * <pre>
+     * No compression
+     * </pre>
+     */
+    public boolean hasRaw() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional bytes raw = 1;</code>
+     *
+     * <pre>
+     * No compression
+     * </pre>
+     */
+    public com.google.protobuf.ByteString getRaw() {
+      return raw_;
+    }
+
+    public static final int RAW_SIZE_FIELD_NUMBER = 2;
+    private int rawSize_;
+    /**
+     * <code>optional int32 raw_size = 2;</code>
+     *
+     * <pre>
+     * When compressed, the uncompressed size
+     * </pre>
+     */
+    public boolean hasRawSize() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional int32 raw_size = 2;</code>
+     *
+     * <pre>
+     * When compressed, the uncompressed size
+     * </pre>
+     */
+    public int getRawSize() {
+      return rawSize_;
+    }
+
+    public static final int ZLIB_DATA_FIELD_NUMBER = 3;
+    private com.google.protobuf.ByteString zlibData_;
+    /**
+     * <code>optional bytes zlib_data = 3;</code>
+     *
+     * <pre>
+     * Possible compressed versions of the data.
+     * </pre>
+     */
+    public boolean hasZlibData() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional bytes zlib_data = 3;</code>
+     *
+     * <pre>
+     * Possible compressed versions of the data.
+     * </pre>
+     */
+    public com.google.protobuf.ByteString getZlibData() {
+      return zlibData_;
+    }
+
+    public static final int LZMA_DATA_FIELD_NUMBER = 4;
+    private com.google.protobuf.ByteString lzmaData_;
+    /**
+     * <code>optional bytes lzma_data = 4;</code>
+     *
+     * <pre>
+     * PROPOSED feature for LZMA compressed data. SUPPORT IS NOT REQUIRED.
+     * </pre>
+     */
+    public boolean hasLzmaData() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional bytes lzma_data = 4;</code>
+     *
+     * <pre>
+     * PROPOSED feature for LZMA compressed data. SUPPORT IS NOT REQUIRED.
+     * </pre>
+     */
+    public com.google.protobuf.ByteString getLzmaData() {
+      return lzmaData_;
+    }
+
+    public static final int OBSOLETE_BZIP2_DATA_FIELD_NUMBER = 5;
+    private com.google.protobuf.ByteString oBSOLETEBzip2Data_;
+    /**
+     * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+     *
+     * <pre>
+     * Formerly used for bzip2 compressed data. Depreciated in 2010.
+     * </pre>
+     */
+    @java.lang.Deprecated public boolean hasOBSOLETEBzip2Data() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+     *
+     * <pre>
+     * Formerly used for bzip2 compressed data. Depreciated in 2010.
+     * </pre>
+     */
+    @java.lang.Deprecated public com.google.protobuf.ByteString getOBSOLETEBzip2Data() {
+      return oBSOLETEBzip2Data_;
+    }
+
+    private void initFields() {
+      raw_ = com.google.protobuf.ByteString.EMPTY;
+      rawSize_ = 0;
+      zlibData_ = com.google.protobuf.ByteString.EMPTY;
+      lzmaData_ = com.google.protobuf.ByteString.EMPTY;
+      oBSOLETEBzip2Data_ = com.google.protobuf.ByteString.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, raw_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeInt32(2, rawSize_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBytes(3, zlibData_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBytes(4, lzmaData_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeBytes(5, oBSOLETEBzip2Data_);
+      }
+      output.writeRawBytes(unknownFields);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, raw_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, rawSize_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, zlibData_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, lzmaData_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(5, oBSOLETEBzip2Data_);
+      }
+      size += unknownFields.size();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Fileformat.Blob prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    /**
+     * Protobuf type {@code OSMPBF.Blob}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          org.openstreetmap.osmosis.osmbinary.Fileformat.Blob, Builder>
+        implements
+        // @@protoc_insertion_point(builder_implements:OSMPBF.Blob)
+        org.openstreetmap.osmosis.osmbinary.Fileformat.BlobOrBuilder {
+      // Construct using org.openstreetmap.osmosis.osmbinary.Fileformat.Blob.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private void maybeForceBuilderInitialization() {
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        raw_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        rawSize_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        zlibData_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        lzmaData_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        oBSOLETEBzip2Data_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public org.openstreetmap.osmosis.osmbinary.Fileformat.Blob getDefaultInstanceForType() {
+        return org.openstreetmap.osmosis.osmbinary.Fileformat.Blob.getDefaultInstance();
+      }
+
+      public org.openstreetmap.osmosis.osmbinary.Fileformat.Blob build() {
+        org.openstreetmap.osmosis.osmbinary.Fileformat.Blob result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public org.openstreetmap.osmosis.osmbinary.Fileformat.Blob buildPartial() {
+        org.openstreetmap.osmosis.osmbinary.Fileformat.Blob result = new org.openstreetmap.osmosis.osmbinary.Fileformat.Blob(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.raw_ = raw_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.rawSize_ = rawSize_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.zlibData_ = zlibData_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.lzmaData_ = lzmaData_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.oBSOLETEBzip2Data_ = oBSOLETEBzip2Data_;
+        result.bitField0_ = to_bitField0_;
+        return result;
+      }
+
+      public Builder mergeFrom(org.openstreetmap.osmosis.osmbinary.Fileformat.Blob other) {
+        if (other == org.openstreetmap.osmosis.osmbinary.Fileformat.Blob.getDefaultInstance()) return this;
+        if (other.hasRaw()) {
+          setRaw(other.getRaw());
+        }
+        if (other.hasRawSize()) {
+          setRawSize(other.getRawSize());
+        }
+        if (other.hasZlibData()) {
+          setZlibData(other.getZlibData());
+        }
+        if (other.hasLzmaData()) {
+          setLzmaData(other.getLzmaData());
+        }
+        if (other.hasOBSOLETEBzip2Data()) {
+          setOBSOLETEBzip2Data(other.getOBSOLETEBzip2Data());
+        }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.openstreetmap.osmosis.osmbinary.Fileformat.Blob parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.openstreetmap.osmosis.osmbinary.Fileformat.Blob) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
       private int bitField0_;
-      
-      // optional bytes raw = 1;
+
       private com.google.protobuf.ByteString raw_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes raw = 1;</code>
+       *
+       * <pre>
+       * No compression
+       * </pre>
+       */
       public boolean hasRaw() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
+      /**
+       * <code>optional bytes raw = 1;</code>
+       *
+       * <pre>
+       * No compression
+       * </pre>
+       */
       public com.google.protobuf.ByteString getRaw() {
         return raw_;
       }
+      /**
+       * <code>optional bytes raw = 1;</code>
+       *
+       * <pre>
+       * No compression
+       * </pre>
+       */
       public Builder setRaw(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
@@ -420,42 +618,96 @@ public final class Fileformat {
         
         return this;
       }
+      /**
+       * <code>optional bytes raw = 1;</code>
+       *
+       * <pre>
+       * No compression
+       * </pre>
+       */
       public Builder clearRaw() {
         bitField0_ = (bitField0_ & ~0x00000001);
         raw_ = getDefaultInstance().getRaw();
         
         return this;
       }
-      
-      // optional int32 raw_size = 2;
+
       private int rawSize_ ;
+      /**
+       * <code>optional int32 raw_size = 2;</code>
+       *
+       * <pre>
+       * When compressed, the uncompressed size
+       * </pre>
+       */
       public boolean hasRawSize() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
+      /**
+       * <code>optional int32 raw_size = 2;</code>
+       *
+       * <pre>
+       * When compressed, the uncompressed size
+       * </pre>
+       */
       public int getRawSize() {
         return rawSize_;
       }
+      /**
+       * <code>optional int32 raw_size = 2;</code>
+       *
+       * <pre>
+       * When compressed, the uncompressed size
+       * </pre>
+       */
       public Builder setRawSize(int value) {
         bitField0_ |= 0x00000002;
         rawSize_ = value;
         
         return this;
       }
+      /**
+       * <code>optional int32 raw_size = 2;</code>
+       *
+       * <pre>
+       * When compressed, the uncompressed size
+       * </pre>
+       */
       public Builder clearRawSize() {
         bitField0_ = (bitField0_ & ~0x00000002);
         rawSize_ = 0;
         
         return this;
       }
-      
-      // optional bytes zlib_data = 3;
+
       private com.google.protobuf.ByteString zlibData_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes zlib_data = 3;</code>
+       *
+       * <pre>
+       * Possible compressed versions of the data.
+       * </pre>
+       */
       public boolean hasZlibData() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
+      /**
+       * <code>optional bytes zlib_data = 3;</code>
+       *
+       * <pre>
+       * Possible compressed versions of the data.
+       * </pre>
+       */
       public com.google.protobuf.ByteString getZlibData() {
         return zlibData_;
       }
+      /**
+       * <code>optional bytes zlib_data = 3;</code>
+       *
+       * <pre>
+       * Possible compressed versions of the data.
+       * </pre>
+       */
       public Builder setZlibData(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
@@ -465,21 +717,48 @@ public final class Fileformat {
         
         return this;
       }
+      /**
+       * <code>optional bytes zlib_data = 3;</code>
+       *
+       * <pre>
+       * Possible compressed versions of the data.
+       * </pre>
+       */
       public Builder clearZlibData() {
         bitField0_ = (bitField0_ & ~0x00000004);
         zlibData_ = getDefaultInstance().getZlibData();
         
         return this;
       }
-      
-      // optional bytes lzma_data = 4;
+
       private com.google.protobuf.ByteString lzmaData_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes lzma_data = 4;</code>
+       *
+       * <pre>
+       * PROPOSED feature for LZMA compressed data. SUPPORT IS NOT REQUIRED.
+       * </pre>
+       */
       public boolean hasLzmaData() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
+      /**
+       * <code>optional bytes lzma_data = 4;</code>
+       *
+       * <pre>
+       * PROPOSED feature for LZMA compressed data. SUPPORT IS NOT REQUIRED.
+       * </pre>
+       */
       public com.google.protobuf.ByteString getLzmaData() {
         return lzmaData_;
       }
+      /**
+       * <code>optional bytes lzma_data = 4;</code>
+       *
+       * <pre>
+       * PROPOSED feature for LZMA compressed data. SUPPORT IS NOT REQUIRED.
+       * </pre>
+       */
       public Builder setLzmaData(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
@@ -489,21 +768,48 @@ public final class Fileformat {
         
         return this;
       }
+      /**
+       * <code>optional bytes lzma_data = 4;</code>
+       *
+       * <pre>
+       * PROPOSED feature for LZMA compressed data. SUPPORT IS NOT REQUIRED.
+       * </pre>
+       */
       public Builder clearLzmaData() {
         bitField0_ = (bitField0_ & ~0x00000008);
         lzmaData_ = getDefaultInstance().getLzmaData();
         
         return this;
       }
-      
-      // optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];
+
       private com.google.protobuf.ByteString oBSOLETEBzip2Data_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+       *
+       * <pre>
+       * Formerly used for bzip2 compressed data. Depreciated in 2010.
+       * </pre>
+       */
       @java.lang.Deprecated public boolean hasOBSOLETEBzip2Data() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
+      /**
+       * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+       *
+       * <pre>
+       * Formerly used for bzip2 compressed data. Depreciated in 2010.
+       * </pre>
+       */
       @java.lang.Deprecated public com.google.protobuf.ByteString getOBSOLETEBzip2Data() {
         return oBSOLETEBzip2Data_;
       }
+      /**
+       * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+       *
+       * <pre>
+       * Formerly used for bzip2 compressed data. Depreciated in 2010.
+       * </pre>
+       */
       @java.lang.Deprecated public Builder setOBSOLETEBzip2Data(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
@@ -513,110 +819,239 @@ public final class Fileformat {
         
         return this;
       }
+      /**
+       * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
+       *
+       * <pre>
+       * Formerly used for bzip2 compressed data. Depreciated in 2010.
+       * </pre>
+       */
       @java.lang.Deprecated public Builder clearOBSOLETEBzip2Data() {
         bitField0_ = (bitField0_ & ~0x00000010);
         oBSOLETEBzip2Data_ = getDefaultInstance().getOBSOLETEBzip2Data();
         
         return this;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:OSMPBF.Blob)
     }
-    
+
     static {
       defaultInstance = new Blob(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:OSMPBF.Blob)
   }
-  
-  public interface BlobHeaderOrBuilder
-      extends com.google.protobuf.MessageLiteOrBuilder {
-    
-    // required string type = 1;
+
+  public interface BlobHeaderOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:OSMPBF.BlobHeader)
+      com.google.protobuf.MessageLiteOrBuilder {
+
+    /**
+     * <code>required string type = 1;</code>
+     */
     boolean hasType();
-    String getType();
-    
-    // optional bytes indexdata = 2;
+    /**
+     * <code>required string type = 1;</code>
+     */
+    java.lang.String getType();
+    /**
+     * <code>required string type = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getTypeBytes();
+
+    /**
+     * <code>optional bytes indexdata = 2;</code>
+     */
     boolean hasIndexdata();
+    /**
+     * <code>optional bytes indexdata = 2;</code>
+     */
     com.google.protobuf.ByteString getIndexdata();
-    
-    // required int32 datasize = 3;
+
+    /**
+     * <code>required int32 datasize = 3;</code>
+     */
     boolean hasDatasize();
+    /**
+     * <code>required int32 datasize = 3;</code>
+     */
     int getDatasize();
   }
+  /**
+   * Protobuf type {@code OSMPBF.BlobHeader}
+   */
   public static final class BlobHeader extends
-      com.google.protobuf.GeneratedMessageLite
-      implements BlobHeaderOrBuilder {
+      com.google.protobuf.GeneratedMessageLite implements
+      // @@protoc_insertion_point(message_implements:OSMPBF.BlobHeader)
+      BlobHeaderOrBuilder {
     // Use BlobHeader.newBuilder() to construct.
-    private BlobHeader(Builder builder) {
+    private BlobHeader(com.google.protobuf.GeneratedMessageLite.Builder builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private BlobHeader(boolean noInit) {}
-    
+    private BlobHeader(boolean noInit) { this.unknownFields = com.google.protobuf.ByteString.EMPTY;}
+
     private static final BlobHeader defaultInstance;
     public static BlobHeader getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public BlobHeader getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.ByteString unknownFields;
+    private BlobHeader(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.ByteString.Output unknownFieldsOutput =
+          com.google.protobuf.ByteString.newOutput();
+      com.google.protobuf.CodedOutputStream unknownFieldsCodedOutput =
+          com.google.protobuf.CodedOutputStream.newInstance(
+              unknownFieldsOutput);
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFieldsCodedOutput,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              type_ = bs;
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              indexdata_ = input.readBytes();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              datasize_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        try {
+          unknownFieldsCodedOutput.flush();
+        } catch (java.io.IOException e) {
+        // Should not happen
+        } finally {
+          unknownFields = unknownFieldsOutput.toByteString();
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static com.google.protobuf.Parser<BlobHeader> PARSER =
+        new com.google.protobuf.AbstractParser<BlobHeader>() {
+      public BlobHeader parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new BlobHeader(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<BlobHeader> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
-    // required string type = 1;
     public static final int TYPE_FIELD_NUMBER = 1;
     private java.lang.Object type_;
+    /**
+     * <code>required string type = 1;</code>
+     */
     public boolean hasType() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getType() {
+    /**
+     * <code>required string type = 1;</code>
+     */
+    public java.lang.String getType() {
       java.lang.Object ref = type_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           type_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getTypeBytes() {
+    /**
+     * <code>required string type = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTypeBytes() {
       java.lang.Object ref = type_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         type_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
-    // optional bytes indexdata = 2;
+
     public static final int INDEXDATA_FIELD_NUMBER = 2;
     private com.google.protobuf.ByteString indexdata_;
+    /**
+     * <code>optional bytes indexdata = 2;</code>
+     */
     public boolean hasIndexdata() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
+    /**
+     * <code>optional bytes indexdata = 2;</code>
+     */
     public com.google.protobuf.ByteString getIndexdata() {
       return indexdata_;
     }
-    
-    // required int32 datasize = 3;
+
     public static final int DATASIZE_FIELD_NUMBER = 3;
     private int datasize_;
+    /**
+     * <code>required int32 datasize = 3;</code>
+     */
     public boolean hasDatasize() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
+    /**
+     * <code>required int32 datasize = 3;</code>
+     */
     public int getDatasize() {
       return datasize_;
     }
-    
+
     private void initFields() {
       type_ = "";
       indexdata_ = com.google.protobuf.ByteString.EMPTY;
@@ -625,8 +1060,9 @@ public final class Fileformat {
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-      
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
       if (!hasType()) {
         memoizedIsInitialized = 0;
         return false;
@@ -638,7 +1074,7 @@ public final class Fileformat {
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -651,13 +1087,14 @@ public final class Fileformat {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeInt32(3, datasize_);
       }
+      output.writeRawBytes(unknownFields);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -671,106 +1108,98 @@ public final class Fileformat {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(3, datasize_);
       }
+      size += unknownFields.size();
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
+    /**
+     * Protobuf type {@code OSMPBF.BlobHeader}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
           org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader, Builder>
-        implements org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeaderOrBuilder {
+        implements
+        // @@protoc_insertion_point(builder_implements:OSMPBF.BlobHeader)
+        org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeaderOrBuilder {
       // Construct using org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
+
       private void maybeForceBuilderInitialization() {
       }
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         type_ = "";
@@ -781,15 +1210,15 @@ public final class Fileformat {
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader getDefaultInstanceForType() {
         return org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader.getDefaultInstance();
       }
-      
+
       public org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader build() {
         org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader result = buildPartial();
         if (!result.isInitialized()) {
@@ -797,17 +1226,7 @@ public final class Fileformat {
         }
         return result;
       }
-      
-      private org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader buildPartial() {
         org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader result = new org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader(this);
         int from_bitField0_ = bitField0_;
@@ -827,11 +1246,13 @@ public final class Fileformat {
         result.bitField0_ = to_bitField0_;
         return result;
       }
-      
+
       public Builder mergeFrom(org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader other) {
         if (other == org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader.getDefaultInstance()) return this;
         if (other.hasType()) {
-          setType(other.getType());
+          bitField0_ |= 0x00000001;
+          type_ = other.type_;
+          
         }
         if (other.hasIndexdata()) {
           setIndexdata(other.getIndexdata());
@@ -839,9 +1260,11 @@ public final class Fileformat {
         if (other.hasDatasize()) {
           setDatasize(other.getDatasize());
         }
+        setUnknownFields(
+            getUnknownFields().concat(other.unknownFields));
         return this;
       }
-      
+
       public final boolean isInitialized() {
         if (!hasType()) {
           
@@ -853,61 +1276,71 @@ public final class Fileformat {
         }
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              
-              return this;
-            default: {
-              if (!parseUnknownField(input, extensionRegistry, tag)) {
-                
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              type_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              indexdata_ = input.readBytes();
-              break;
-            }
-            case 24: {
-              bitField0_ |= 0x00000004;
-              datasize_ = input.readInt32();
-              break;
-            }
+        org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
-      // required string type = 1;
+
       private java.lang.Object type_ = "";
+      /**
+       * <code>required string type = 1;</code>
+       */
       public boolean hasType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getType() {
+      /**
+       * <code>required string type = 1;</code>
+       */
+      public java.lang.String getType() {
         java.lang.Object ref = type_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
-          type_ = s;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            type_ = s;
+          }
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setType(String value) {
+      /**
+       * <code>required string type = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTypeBytes() {
+        java.lang.Object ref = type_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          type_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string type = 1;</code>
+       */
+      public Builder setType(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -916,26 +1349,45 @@ public final class Fileformat {
         
         return this;
       }
+      /**
+       * <code>required string type = 1;</code>
+       */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
         type_ = getDefaultInstance().getType();
         
         return this;
       }
-      void setType(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>required string type = 1;</code>
+       */
+      public Builder setTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         type_ = value;
         
+        return this;
       }
-      
-      // optional bytes indexdata = 2;
+
       private com.google.protobuf.ByteString indexdata_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes indexdata = 2;</code>
+       */
       public boolean hasIndexdata() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
+      /**
+       * <code>optional bytes indexdata = 2;</code>
+       */
       public com.google.protobuf.ByteString getIndexdata() {
         return indexdata_;
       }
+      /**
+       * <code>optional bytes indexdata = 2;</code>
+       */
       public Builder setIndexdata(com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
@@ -945,48 +1397,62 @@ public final class Fileformat {
         
         return this;
       }
+      /**
+       * <code>optional bytes indexdata = 2;</code>
+       */
       public Builder clearIndexdata() {
         bitField0_ = (bitField0_ & ~0x00000002);
         indexdata_ = getDefaultInstance().getIndexdata();
         
         return this;
       }
-      
-      // required int32 datasize = 3;
+
       private int datasize_ ;
+      /**
+       * <code>required int32 datasize = 3;</code>
+       */
       public boolean hasDatasize() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
+      /**
+       * <code>required int32 datasize = 3;</code>
+       */
       public int getDatasize() {
         return datasize_;
       }
+      /**
+       * <code>required int32 datasize = 3;</code>
+       */
       public Builder setDatasize(int value) {
         bitField0_ |= 0x00000004;
         datasize_ = value;
         
         return this;
       }
+      /**
+       * <code>required int32 datasize = 3;</code>
+       */
       public Builder clearDatasize() {
         bitField0_ = (bitField0_ & ~0x00000004);
         datasize_ = 0;
         
         return this;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:OSMPBF.BlobHeader)
     }
-    
+
     static {
       defaultInstance = new BlobHeader(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:OSMPBF.BlobHeader)
   }
-  
-  
+
+
   static {
   }
-  
+
   // @@protoc_insertion_point(outer_class_scope)
 }
