@@ -61,8 +61,7 @@ public class WayDao extends EntityDao<Way> {
 	
 	
 	private void loadFeatures(long entityId, Way entity) {
-        if ( entity.getWayNodes().size() == 0 )
-        {
+        if (entity.getWayNodes().size() == 0) {
 		  entity.getWayNodes().addAll(wayNodeDao.getAllRaw(entityId));
         }
 	}
