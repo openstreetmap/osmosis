@@ -58,28 +58,6 @@ public class WayDao extends EntityDao<Way> {
 		wayNodeMapper = new WayNodeMapper();
 		wayNodeDao = new EntityFeatureDao<WayNode, DbOrderedFeature<WayNode>>(jdbcTemplate, wayNodeMapper);
 	}
-	
-	
-	private void loadFeatures(long entityId, Way entity) {
-        if (entity.getWayNodes().size() == 0) {
-		  entity.getWayNodes().addAll(wayNodeDao.getAllRaw(entityId));
-        }
-	}
-	
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Way getEntity(long entityId) {
-		Way entity;
-		
-		entity = super.getEntity(entityId);
-		
-		loadFeatures(entityId, entity);
-		
-		return entity;
-	}
 
 
 	/**
