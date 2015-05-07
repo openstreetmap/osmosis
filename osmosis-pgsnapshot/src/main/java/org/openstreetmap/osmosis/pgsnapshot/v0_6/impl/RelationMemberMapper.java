@@ -59,7 +59,7 @@ public class RelationMemberMapper extends EntityFeatureMapper<DbOrderedFeature<R
 				.append("s e ON f.").append(getParentEntityName()).append("_id = e.id");
 		}
 		if (filterByEntityId) {
-			resultSql.append(" WHERE entity_id = ?");
+			resultSql.append(" WHERE relation_id = ?");
 		}
 		if (orderBy) {
 			resultSql.append(getSqlDefaultOrderBy());
