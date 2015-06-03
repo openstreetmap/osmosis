@@ -44,9 +44,7 @@ public class DatasetDriver implements DatasetSink {
 	 */
 	@Override
 	public void process(Dataset dataset) {
-		DatasetContext dsCtx = dataset.createReader();
-		
-		try {
+		try (DatasetContext dsCtx = dataset.createReader()) {
 			EntityManager<Node> nodeManager = dsCtx.getNodeManager();
 			OsmUser user;
 			Node node;
@@ -71,9 +69,6 @@ public class DatasetDriver implements DatasetSink {
 			nodeManager.addEntity(node);
 			
 			dsCtx.complete();
-			
-		} finally {
-			dsCtx.close();
 		}
 	}
 

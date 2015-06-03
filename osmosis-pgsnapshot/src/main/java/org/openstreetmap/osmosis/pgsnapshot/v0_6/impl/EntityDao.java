@@ -213,11 +213,7 @@ public abstract class EntityDao<T extends Entity> {
 	 * @return The entity iterator.
 	 */
 	public ReleasableIterator<T> iterate(String tablePrefix) {
-		ReleasableContainer releasableContainer;
-		
-		releasableContainer = new ReleasableContainer();
-		
-		try {
+		try (ReleasableContainer releasableContainer = new ReleasableContainer()) {
 			ReleasableIterator<T> entityIterator;
 			List<FeaturePopulator<T>> featurePopulators;
 			
@@ -240,9 +236,6 @@ public abstract class EntityDao<T extends Entity> {
 			releasableContainer.clear();
 			
 			return entityIterator;
-			
-		} finally {
-			releasableContainer.close();
 		}
 	}
 	

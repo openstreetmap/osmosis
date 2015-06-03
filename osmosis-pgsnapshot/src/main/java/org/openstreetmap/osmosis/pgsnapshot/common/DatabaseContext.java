@@ -5,11 +5,9 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.sql.DataSource;
@@ -34,7 +32,7 @@ import org.springframework.transaction.support.TransactionTemplate;
  * 
  * @author Brett Henderson
  */
-public class DatabaseContext {
+public class DatabaseContext implements AutoCloseable {
 
     private static final Logger LOG = Logger.getLogger(DatabaseContext.class.getName());
 
@@ -125,7 +123,7 @@ public class DatabaseContext {
      * Releases all database resources. This method is guaranteed not to throw transactions and
      * should always be called in a finally block whenever this class is used.
      */
-    public void release() {
+    public void close() {
     	if (transaction != null) {
     		try {
     			txnManager.rollback(transaction);
@@ -146,39 +144,17 @@ public class DatabaseContext {
      * @return True if the column exists, false otherwise.
      */
     public boolean doesColumnExist(String tableName, String columnName) {
-        ResultSet resultSet = null;
-        boolean result;
+    	LOG.finest("Checking if column {" + columnName + "} in table {" + tableName + "} exists.");
+        Connection connection = DataSourceUtils.getConnection(dataSource);
+        try (ResultSet resultSet = connection.getMetaData().getColumns(null, null, tableName, columnName)) {
 
-        try {
-        	Connection connection;
-        	
-            LOG.finest("Checking if column {" + columnName + "} in table {" + tableName + "} exists.");
-
-            // This connection may not be freed if an exception occurs. It's a small chance and the
-			// additional code to avoid it is cumbersome.
-            connection = DataSourceUtils.getConnection(dataSource);
-            
-            resultSet = connection.getMetaData().getColumns(null, null, tableName, columnName);
-            result = resultSet.next();
-            resultSet.close();
-            resultSet = null;
-            
-            DataSourceUtils.releaseConnection(connection, dataSource);
-
-            return result;
+        	return resultSet.next();
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to check for the existence of column " + tableName + "."
                     + columnName + ".", e);
         } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    // We are already in an error condition so log and continue.
-                    LOG.log(Level.WARNING, "Unable to close column existence result set.", e);
-                }
-            }
+        	DataSourceUtils.releaseConnection(connection, dataSource);
         }
     }
 
@@ -189,38 +165,16 @@ public class DatabaseContext {
      * @return True if the table exists, false otherwise.
      */
     public boolean doesTableExist(String tableName) {
-        ResultSet resultSet = null;
-        boolean result;
+    	LOG.finest("Checking if table {" + tableName + "} exists.");
+    	Connection connection = DataSourceUtils.getConnection(dataSource);
+        try (ResultSet resultSet = connection.getMetaData().getTables(null, null, tableName, new String[] {"TABLE"})) {
 
-        try {
-        	Connection connection;
-        	
-            LOG.finest("Checking if table {" + tableName + "} exists.");
-
-            // This connection may not be freed if an exception occurs. It's a small chance and the
-			// additional code to avoid it is cumbersome.
-            connection = DataSourceUtils.getConnection(dataSource);
-
-            resultSet = connection.getMetaData().getTables(null, null, tableName, new String[] {"TABLE"});
-            result = resultSet.next();
-            resultSet.close();
-            resultSet = null;
-            
-            DataSourceUtils.releaseConnection(connection, dataSource);
-
-            return result;
+            return resultSet.next();
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to check for the existence of table " + tableName + ".", e);
         } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    // We are already in an error condition so log and continue.
-                    LOG.log(Level.WARNING, "Unable to close table existence result set.", e);
-                }
-            }
+        	DataSourceUtils.releaseConnection(connection, dataSource);
         }
     }
 
@@ -237,56 +191,35 @@ public class DatabaseContext {
 	 */
     public void loadCopyFile(File copyFile, String tableName, String ... columns) {
     	CopyManager copyManager;
-    	InputStream inStream = null;
-    	
-    	try {
-    		StringBuilder copyStatement;
-    		InputStream bufferedInStream;
-    		Connection conn;
-    		
-    		copyStatement = new StringBuilder();
-    		copyStatement.append("COPY ");
-    		copyStatement.append(tableName);
-    		if (columns.length > 0) {
-    			copyStatement.append('(');
-    			for (int i = 0; i < columns.length; i++) {
-    				if (i > 0) {
-    					copyStatement.append(',');
-    				}
-    				copyStatement.append(columns[i]);
-    			}
-    			copyStatement.append(')');
-    		}
-    		copyStatement.append(" FROM STDIN");
-    		
-    		inStream = new FileInputStream(copyFile);
-    		bufferedInStream = new BufferedInputStream(inStream, 65536);
-    		
-    		conn = DataSourceUtils.getConnection(dataSource);
+
+		StringBuilder copyStatement = new StringBuilder();
+		copyStatement.append("COPY ");
+		copyStatement.append(tableName);
+		if (columns.length > 0) {
+			copyStatement.append('(');
+			for (int i = 0; i < columns.length; i++) {
+				if (i > 0) {
+					copyStatement.append(',');
+				}
+				copyStatement.append(columns[i]);
+			}
+			copyStatement.append(')');
+		}
+		copyStatement.append(" FROM STDIN");
+		
+		try (BufferedInputStream inStream = new BufferedInputStream(new FileInputStream(copyFile), 65536)) {
+    		Connection conn = DataSourceUtils.getConnection(dataSource);
     		try {
 	    		copyManager = new CopyManager(conn.unwrap(BaseConnection.class));
 	    		
-	    		copyManager.copyIn(copyStatement.toString(), bufferedInStream);
-    		} finally {
+	    		copyManager.copyIn(copyStatement.toString(), inStream);
+    		} catch (SQLException e) {
+        		throw new OsmosisRuntimeException("Unable to process COPY file " + copyFile + ".", e);
+        	} finally {
     			DataSourceUtils.releaseConnection(conn, dataSource);
     		}
-			
-    		inStream.close();
-			inStream = null;
-			
-    	} catch (IOException e) {
+		} catch (IOException e) {
     		throw new OsmosisRuntimeException("Unable to process COPY file " + copyFile + ".", e);
-    	} catch (SQLException e) {
-    		throw new OsmosisRuntimeException("Unable to process COPY file " + copyFile + ".", e);
-    	} finally {
-    		if (inStream != null) {
-				try {
-					inStream.close();
-				} catch (IOException e) {
-					LOG.log(Level.SEVERE, "Unable to close COPY file.", e);
-				}
-				inStream = null;
-			}
     	}
     }
     
@@ -299,7 +232,7 @@ public class DatabaseContext {
      */
     @Override
     protected void finalize() throws Throwable {
-        release();
+        close();
 
         super.finalize();
     }

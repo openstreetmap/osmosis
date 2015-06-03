@@ -66,19 +66,13 @@ public class PostgreSqlCopyWriter implements Sink {
 	
 	private void initialize() {
 		if (!initialized) {
-			DatabaseContext dbCtx;
-			DatabaseCapabilityChecker capabilityChecker;
-			
 			LOG.fine("Initializing the database and temporary processing files.");
 			
-			dbCtx = new DatabaseContext(loginCredentials);
-			try {
-				capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
+			try (DatabaseContext dbCtx = new DatabaseContext(loginCredentials)) {
+				DatabaseCapabilityChecker capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
 
 				populateBbox = capabilityChecker.isWayBboxSupported();
 				populateLinestring = capabilityChecker.isWayLinestringSupported();
-			} finally {
-				dbCtx.release();
 			}
 
 			copyFilesetBuilder =

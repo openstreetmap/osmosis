@@ -433,7 +433,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	@Override
 	public void close() {
 		if (dbCtx != null) {
-			dbCtx.release();
+			dbCtx.close();
 			
 			dbCtx = null;
 		}

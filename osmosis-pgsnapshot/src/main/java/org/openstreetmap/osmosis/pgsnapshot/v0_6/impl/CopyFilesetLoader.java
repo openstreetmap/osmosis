@@ -65,9 +65,7 @@ public class CopyFilesetLoader implements Runnable {
      * Reads all data from the database and send it to the sink.
      */
     public void run() {
-    	DatabaseContext dbCtx = new DatabaseContext(loginCredentials);
-    	
-    	try {
+    	try (DatabaseContext dbCtx = new DatabaseContext(loginCredentials)) {
     		DatabaseCapabilityChecker capabilityChecker;
 			IndexManager indexManager;
 			String[] wayColumns;
@@ -119,9 +117,6 @@ public class CopyFilesetLoader implements Runnable {
     		dbCtx.getJdbcTemplate().update("VACUUM ANALYZE");
     		
     		LOG.fine("Complete.");
-    		
-    	} finally {
-    		dbCtx.release();
     	}
     }
 }

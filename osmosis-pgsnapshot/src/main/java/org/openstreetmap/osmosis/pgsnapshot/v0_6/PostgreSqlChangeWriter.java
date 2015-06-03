@@ -120,6 +120,6 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	public void close() {
 		changeWriter.release();
 		
-		dbCtx.release();
+		dbCtx.close();
 	}
 }
