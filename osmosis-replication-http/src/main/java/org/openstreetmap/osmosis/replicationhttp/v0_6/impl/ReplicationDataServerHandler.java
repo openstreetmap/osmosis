@@ -213,9 +213,7 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 
 
 	private ChannelBuffer loadFile(File file) {
-		FileChannel fileChannel = openFileChannel(file);
-
-		try {
+		try (FileChannel fileChannel = openFileChannel(file)) {
 			if (fileChannel.size() > Integer.MAX_VALUE) {
 				throw new OsmosisRuntimeException("Maximum file size supported is " + Integer.MAX_VALUE + " bytes");
 			}
@@ -233,12 +231,6 @@ public class ReplicationDataServerHandler extends SequenceServerHandler {
 
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to read from file " + file, e);
-		} finally {
-			try {
-				fileChannel.close();
-			} catch (IOException e) {
-				LOG.log(Level.WARNING, "Unable to close channel for file " + file, e);
-			}
 		}
 	}
 
