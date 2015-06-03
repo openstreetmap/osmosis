@@ -119,10 +119,13 @@ public class ReplicationLagReader implements RunnableTask {
 				);
 				
 			} else {
+				Object[] args = {
+					new Long(lag)
+				};
 				
 				// just some seconds
 				System.out.println(
-					new MessageFormat("{0} second(s)").format(lag)
+					new MessageFormat("{0} second(s)").format(args)
 				);
 				
 			}

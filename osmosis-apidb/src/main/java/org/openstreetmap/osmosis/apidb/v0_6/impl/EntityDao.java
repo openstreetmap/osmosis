@@ -460,8 +460,8 @@ public abstract class EntityDao<T extends Entity> {
 		
 		if (LOG.isLoggable(Level.FINER)) {
 			LOG.log(Level.FINER,
-					jdbcTemplate.queryForInt("SELECT Count(" + entityName + "_id) FROM " + selectedEntityTableName)
-					+ " " + entityName + " records located.");
+					jdbcTemplate.queryForObject("SELECT Count(" + entityName + "_id) FROM " + selectedEntityTableName,
+							Integer.class) + " " + entityName + " records located.");
 		}
 		
 		// Extract the data and obtain an iterator for the results.

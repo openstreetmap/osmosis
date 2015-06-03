@@ -73,7 +73,7 @@ public abstract class EntityDao<T extends Entity> {
 	 * @return True if the entity exists in the database.
 	 */
 	public boolean exists(long entityId) {
-		return jdbcTemplate.queryForInt(entityMapper.getSqlSelectCount(true), entityId) > 0;
+		return jdbcTemplate.queryForObject(entityMapper.getSqlSelectCount(true), Integer.class, entityId) > 0;
 	}
 	
 	

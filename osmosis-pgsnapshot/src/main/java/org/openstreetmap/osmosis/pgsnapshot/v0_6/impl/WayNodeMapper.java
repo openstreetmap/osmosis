@@ -48,7 +48,7 @@ public class WayNodeMapper extends EntityFeatureMapper<DbOrderedFeature<WayNode>
 				.append("s e ON f.").append(getParentEntityName()).append("_id = e.id");
 		}
 		if (filterByEntityId) {
-			resultSql.append(" WHERE entity_id = ?");
+			resultSql.append(" WHERE way_id = ?");
 		}
 		if (orderBy) {
 			resultSql.append(getSqlDefaultOrderBy());

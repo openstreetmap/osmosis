@@ -19,6 +19,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
@@ -235,6 +236,7 @@ public class XmlDownloader implements RunnableSource {
         url = new URL(pUrlStr);
         myActiveConnection = (HttpURLConnection) url.openConnection();
 
+        myActiveConnection.setRequestProperty("User-Agent", "Osmosis/" + OsmosisConstants.VERSION);
         myActiveConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
 
         responseCode = myActiveConnection.getResponseCode();

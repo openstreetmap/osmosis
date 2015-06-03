@@ -22,6 +22,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.Initializable;
  * threads are NOT supported.
  * <p>
  * The input thread must call methods in the following sequence:
+ * </p>
  * <ul>
  * <li>initialize - Called during successful startup, can be skipped in failure
  * condition</li>
@@ -30,7 +31,9 @@ import org.openstreetmap.osmosis.core.task.v0_6.Initializable;
  * <li>release - Called once at the end of processing regardless of success or
  * failure</li>
  * </ul>
+ * <p>
  * The output thread must call methods in the following sequence:
+ * </p>
  * <ul>
  * <li>outputInitialize - Called during successful startup, can be skipped in
  * failure condition</li>
@@ -42,6 +45,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.Initializable;
  * </ul>
  * <p>
  * The input thread will block in the following situations:
+ * </p>
  * <ul>
  * <li>initialize has been called, but outputInitialize has not yet been called</li>
  * <li>put has been called, and the buffer is full</li>
@@ -51,7 +55,9 @@ import org.openstreetmap.osmosis.core.task.v0_6.Initializable;
  * called. This wait must occur to support the scenario where both threads
  * subsequently wish to initialize again.</li>
  * </ul>
+ * <p>
  * The output thread will block in the following situations:
+ * </p>
  * <ul>
  * <li>The outputInitialize method has been called, and initialize has not yet
  * been called</li>

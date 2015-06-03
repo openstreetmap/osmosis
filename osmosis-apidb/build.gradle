@@ -4,7 +4,7 @@ dependencies {
     compile project(':osmosis-xml')
     compile group: 'commons-dbcp', name: 'commons-dbcp', version: dependencyVersionCommonsDbcp
     compile group: 'org.springframework', name: 'spring-jdbc', version: dependencyVersionSpring
-    runtime group: 'postgresql', name: 'postgresql', version: dependencyVersionPostgreSql
+    runtime group: 'org.postgresql', name: 'postgresql', version: dependencyVersionPostgreSql
     runtime group: 'mysql', name: 'mysql-connector-java', version: dependencyVersionMySql
     testCompile project(':osmosis-testutil')
 }

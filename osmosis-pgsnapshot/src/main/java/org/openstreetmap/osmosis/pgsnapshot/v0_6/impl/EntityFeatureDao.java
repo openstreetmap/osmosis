@@ -51,7 +51,8 @@ public class EntityFeatureDao<Tef extends Storeable, Tdb extends DbFeature<Tef>>
 	 * @return All instances of this feature type for the entity.
 	 */
 	public Collection<Tdb> getAll(long entityId) {
-		return jdbcTemplate.query(entityFeatureMapper.getSqlSelect("", true, true), entityFeatureMapper.getRowMapper());
+		return jdbcTemplate.query(entityFeatureMapper.getSqlSelect("", true, true), new Object[] {entityId},
+				entityFeatureMapper.getRowMapper());
 	}
 	
 	

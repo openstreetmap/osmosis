@@ -1,19 +1,22 @@
 task wrapper(type: Wrapper) {
-	gradleVersion = '1.4'
+	gradleVersion = '2.4'
 }
 
+apply plugin: 'idea'
 
 /* Build collections containing each type of project.  These collections will
  * be used to apply common configurations to projects of the same type.
  */
 def packageProjects = allprojects.findAll { project -> project.path.equals(':package') }
 def buildProjects = allprojects.findAll { project -> project.path.equals(':build-support') }
+def dockerProjects = allprojects.findAll { project -> project.path.equals(':db-server') }
 // Java projects are all those that aren't in the previous collections.
-def javaProjects = subprojects.findAll { project -> !packageProjects.contains(project) && !buildProjects.contains(project) }
+def javaProjects = subprojects.findAll { project -> !packageProjects.contains(project) && !buildProjects.contains(project) && !dockerProjects.contains(project) }
 
 // Apply common project configuration
 subprojects {
 	apply plugin: 'eclipse-wtp'
+	apply plugin: 'idea'
 
 	// All projects use a common group id.
 	group = 'org.openstreetmap.osmosis'

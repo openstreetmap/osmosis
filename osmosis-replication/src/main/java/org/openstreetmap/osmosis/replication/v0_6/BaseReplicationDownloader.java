@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.core.task.common.RunnableTask;
 import org.openstreetmap.osmosis.core.util.FileBasedLock;
 import org.openstreetmap.osmosis.core.util.PropertiesPersister;
@@ -96,6 +97,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			URLConnection connection = changesetUrl.openConnection();
 			connection.setReadTimeout(15 * 60 * 1000); // timeout 15 minutes
 			connection.setConnectTimeout(15 * 60 * 1000); // timeout 15 minutes
+			connection.setRequestProperty("User-Agent", "Osmosis/" + OsmosisConstants.VERSION);
 			
 			try (BufferedInputStream source = new BufferedInputStream(connection.getInputStream(), 65536)) {
 				// Create a temporary file to write the data to.

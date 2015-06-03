@@ -1,4 +1,25 @@
 ----------------------------------------
+Release notes for 1.3.3  -- 2014-03-15
+----------------------------------------
+
+Fixed ant build file.
+
+----------------------------------------
+Release notes for 1.3.2  -- 2014-03-12
+----------------------------------------
+
+Small bugfixes and build enhancements.
+Improved Debian build in coordination with Debian maintainers.
+
+
+----------------------------------------
+Release notes for 1.3.1  -- 2013-12-11
+----------------------------------------
+
+Several building fixes and enhancements.
+
+
+----------------------------------------
 Release notes for 1.3.0  -- 2012-12-04
 ----------------------------------------
 

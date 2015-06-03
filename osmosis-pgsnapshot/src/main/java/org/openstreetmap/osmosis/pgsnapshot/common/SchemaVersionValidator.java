@@ -61,7 +61,7 @@ public class SchemaVersionValidator {
 		if (preferences.getValidateSchemaVersion()) {
 			int dbVersion;
 			
-			dbVersion = jdbcTemplate.queryForInt(SELECT_SQL);
+			dbVersion = jdbcTemplate.queryForObject(SELECT_SQL, Integer.class);
 			
 			if (dbVersion != expectedVersion) {
 				throw new OsmosisRuntimeException(

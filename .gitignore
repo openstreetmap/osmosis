@@ -1,2 +1,6 @@
 .gradle
-
+*.javaEe
+*.javae
+*.iml
+*.ipr
+*.iws
