@@ -2,6 +2,7 @@ task wrapper(type: Wrapper) {
 	gradleVersion = '2.4'
 }
 
+apply plugin: 'idea'
 
 /* Build collections containing each type of project.  These collections will
  * be used to apply common configurations to projects of the same type.
@@ -15,6 +16,7 @@ def javaProjects = subprojects.findAll { project -> !packageProjects.contains(pr
 // Apply common project configuration
 subprojects {
 	apply plugin: 'eclipse-wtp'
+	apply plugin: 'idea'
 
 	// All projects use a common group id.
 	group = 'org.openstreetmap.osmosis'
