@@ -6,15 +6,12 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
@@ -85,8 +82,6 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 	 */
 	private File downloadReplicationFile(String fileName, URL baseUrl) {
 		URL changesetUrl;
-		InputStream inputStream = null;
-		OutputStream outputStream = null;
 		
 		try {
 			changesetUrl = new URL(baseUrl, fileName);
@@ -95,59 +90,31 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 		}
 		
 		try {
-			BufferedInputStream source;
-			BufferedOutputStream sink;
 			File outputFile;
-			byte[] buffer;
 			
 			// Open an input stream for the changeset file on the server.
 			URLConnection connection = changesetUrl.openConnection();
 			connection.setReadTimeout(15 * 60 * 1000); // timeout 15 minutes
 			connection.setConnectTimeout(15 * 60 * 1000); // timeout 15 minutes
-			inputStream = connection.getInputStream();
-			source = new BufferedInputStream(inputStream, 65536);
 			
-			// Create a temporary file to write the data to.
-			outputFile = File.createTempFile("change", null);
-			
-			// Open a output stream for the destination file.
-			outputStream = new FileOutputStream(outputFile);
-			sink = new BufferedOutputStream(outputStream, 65536);
-			
-			// Download the file.
-			buffer = new byte[65536];
-			for (int bytesRead = source.read(buffer); bytesRead > 0; bytesRead = source.read(buffer)) {
-				sink.write(buffer, 0, bytesRead);
+			try (BufferedInputStream source = new BufferedInputStream(connection.getInputStream(), 65536)) {
+				// Create a temporary file to write the data to.
+				outputFile = File.createTempFile("change", null);
+
+				// Open a output stream for the destination file.
+				try (BufferedOutputStream sink = new BufferedOutputStream(new FileOutputStream(outputFile), 65536)) {
+					// Download the file.
+					byte[] buffer = new byte[65536];
+					for (int bytesRead = source.read(buffer); bytesRead > 0; bytesRead = source.read(buffer)) {
+						sink.write(buffer, 0, bytesRead);
+					}
+				}
 			}
-			sink.flush();
-			
-			// Clean up all file handles.
-			inputStream.close();
-			inputStream = null;
-			outputStream.close();
-			outputStream = null;
 			
 			return outputFile;
 			
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to read the changeset file " + fileName + " from the server.", e);
-		} finally {
-			try {
-				if (inputStream != null) {
-					inputStream.close();
-				}
-			} catch (IOException e) {
-				// We are already in an error condition so log and continue.
-				LOG.log(Level.WARNING, "Unable to changeset download stream.", e);
-			}
-			try {
-				if (outputStream != null) {
-					outputStream.close();
-				}
-			} catch (IOException e) {
-				// We are already in an error condition so log and continue.
-				LOG.log(Level.WARNING, "Unable to changeset output stream.", e);
-			}
 		}
 	}
 	

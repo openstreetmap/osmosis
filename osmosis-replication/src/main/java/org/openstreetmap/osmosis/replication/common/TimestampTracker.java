@@ -8,8 +8,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.time.DateFormatter;
@@ -23,9 +21,6 @@ import org.openstreetmap.osmosis.core.time.DateParser;
  * @author Brett Henderson
  */
 public class TimestampTracker {
-	
-	private static final Logger LOG = Logger.getLogger(TimestampTracker.class.getName());
-	
 	
 	private File timestampFile;
 	private File newTimestampFile;
@@ -82,32 +77,12 @@ public class TimestampTracker {
 	 * @return The time.
 	 */
 	public Date getTime() {
-		FileReader fileReader = null;
 		
-		try {
-			BufferedReader reader;
-			Date result;
-			
-			fileReader = new FileReader(timestampFile);
-			reader = new BufferedReader(fileReader);
-			
-			result = dateParser.parse(reader.readLine());
-			
-			fileReader.close();
-			fileReader = null;
-			
-			return result;
+		try (BufferedReader reader = new BufferedReader(new FileReader(timestampFile))) {
+			return dateParser.parse(reader.readLine());
 			
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to read the time from file " + timestampFile + ".", e);
-		} finally {
-			if (fileReader != null) {
-				try {
-				fileReader.close();
-				} catch (Exception e) {
-					LOG.log(Level.WARNING, "Unable to close time file " + timestampFile + ".", e);
-				}
-			}
 		}
 	}
 	
@@ -119,31 +94,14 @@ public class TimestampTracker {
 	 *            The time to set.
 	 */
 	public void setTime(Date time) {
-		FileWriter fileWriter = null;
-		
-		try {
-			BufferedWriter writer;
-			
-			fileWriter = new FileWriter(newTimestampFile);
-			writer = new BufferedWriter(fileWriter);
-			
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(newTimestampFile))) {
 			writer.write(dateFormatter.format(time));
-			
-			writer.close();
-			
-			renameNewFileToCurrent();
 			
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException(
 					"Unable to write the time to temporary file " + newTimestampFile + ".", e);
-		} finally {
-			if (fileWriter != null) {
-				try {
-					fileWriter.close();
-				} catch (Exception e) {
-					LOG.log(Level.WARNING, "Unable to close temporary time file " + newTimestampFile + ".", e);
-				}
-			}
 		}
+
+		renameNewFileToCurrent();
 	}
 }
