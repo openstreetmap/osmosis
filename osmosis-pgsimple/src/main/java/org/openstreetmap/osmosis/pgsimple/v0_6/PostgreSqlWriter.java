@@ -833,6 +833,6 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 		statementContainer.close();
 		wayGeometryBuilder.close();
 		
-		dbCtx.release();
+		dbCtx.close();
 	}
 }

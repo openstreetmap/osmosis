@@ -460,7 +460,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 		releasableContainer.clear();
 		
 		if (dbCtx != null) {
-			dbCtx.release();
+			dbCtx.close();
 			
 			dbCtx = null;
 		}
