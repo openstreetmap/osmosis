@@ -292,7 +292,8 @@ public class DatasetStoreReader implements DatasetContext {
 		// temporary id tracker. This temporary id tracker allows all node ids
 		// to be sorted ascendingly prior to retrieving the nodes themselves
 		// which improves index performance.
-		try (ReleasableIterator<Long> nodeIdsForTileset = getNodeIdsForTileRange(bboxCtx.minimumTile, bboxCtx.maximumTile)) {
+		try (ReleasableIterator<Long> nodeIdsForTileset =
+					 getNodeIdsForTileRange(bboxCtx.minimumTile, bboxCtx.maximumTile)) {
 			while (nodeIdsForTileset.hasNext()) {
 				idTracker.set(nodeIdsForTileset.next());
 			}
@@ -322,7 +323,8 @@ public class DatasetStoreReader implements DatasetContext {
 	private void populateWayIdsUsingTileWayIndex(BoundingBoxContext bboxCtx, boolean completeWays) {
 		// Search through all ways in the tile range and store the ids of those
 		// within the bounding box.
-		try (ReleasableIterator<Long> tileWayIndexValues = getWayIdsForTileRange(bboxCtx.minimumTile, bboxCtx.maximumTile)) {
+		try (ReleasableIterator<Long> tileWayIndexValues =
+					 getWayIdsForTileRange(bboxCtx.minimumTile, bboxCtx.maximumTile)) {
 			while (tileWayIndexValues.hasNext()) {
 				long wayId;
 				Way way;

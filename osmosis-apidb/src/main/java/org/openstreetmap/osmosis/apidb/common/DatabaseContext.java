@@ -514,7 +514,7 @@ public class DatabaseContext implements AutoCloseable {
 
         try (ResultSet resultSet = getConnection().getMetaData().getColumns(null, null, tableName, columnName)) {
         	return resultSet.next();
-        } catch(SQLException e) {
+        } catch (SQLException e) {
         	throw new OsmosisRuntimeException("Unable to check for the existence of column " + tableName + "."
                   + columnName + ".", e);
         }
@@ -527,7 +527,8 @@ public class DatabaseContext implements AutoCloseable {
      * @return True if the table exists, false otherwise.
      */
     public boolean doesTableExist(String tableName) {
-        try (ResultSet resultSet = getConnection().getMetaData().getTables(null, null, tableName, new String[] {"TABLE"})) {
+        try (ResultSet resultSet =
+                     getConnection().getMetaData().getTables(null, null, tableName, new String[] {"TABLE"})) {
             LOG.finest("Checking if table {" + tableName + "} exists.");
 
             return resultSet.next();

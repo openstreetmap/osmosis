@@ -331,7 +331,8 @@ public class DatabaseContext2 implements AutoCloseable {
     	LOG.finest("Checking if table {" + tableName + "} exists.");
 
     	connection = DataSourceUtils.getConnection(dataSource);
-		try (ResultSet resultSet = connection.getMetaData().getTables(null, null, tableName, new String[] { "TABLE" })) {
+		try (ResultSet resultSet =
+					 connection.getMetaData().getTables(null, null, tableName, new String[] {"TABLE"})) {
 			return resultSet.next();
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to check for the existence of table " + tableName + ".", e);

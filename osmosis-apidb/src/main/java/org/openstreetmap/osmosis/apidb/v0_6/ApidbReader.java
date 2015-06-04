@@ -76,7 +76,8 @@ public class ApidbReader implements RunnableSource {
 	        entityDao = new AllEntityDao(dbCtx.getJdbcTemplate());
 
 	        sink.process(new BoundContainer(new Bound("Osmosis " + OsmosisConstants.VERSION)));
-	        try (ReleasableIterator<EntityContainer> reader = new EntitySnapshotReader(entityDao.getHistory(), snapshotInstant)) {
+	        try (ReleasableIterator<EntityContainer> reader =
+                         new EntitySnapshotReader(entityDao.getHistory(), snapshotInstant)) {
 	        	while (reader.hasNext()) {
 	        		sink.process(reader.next());
 	        	}

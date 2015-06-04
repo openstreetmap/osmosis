@@ -291,7 +291,8 @@ public class DatabaseContext implements AutoCloseable {
 	 */
 	public boolean doesTableExist(String tableName) {
 		LOG.finest("Checking if table {" + tableName + "} exists.");
-		try (ResultSet resultSet = getConnection().getMetaData().getTables(null, null, tableName, new String[]{"TABLE"})) {
+		try (ResultSet resultSet =
+					 getConnection().getMetaData().getTables(null, null, tableName, new String[]{"TABLE"})) {
 			
 			return resultSet.next();
 			

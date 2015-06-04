@@ -4,8 +4,6 @@ package org.openstreetmap.osmosis.extract.apidb.v0_6;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
@@ -20,10 +18,6 @@ import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
  * @author Brett Henderson
  */
 public class DatabaseTimeLoader {
-	
-	private static final Logger LOG = Logger.getLogger(DatabaseTimeLoader.class.getName());
-	
-	
 	private DatabaseLoginCredentials loginCredentials;
 	
 	
