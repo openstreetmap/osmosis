@@ -1,3 +1,24 @@
+0.44
+Improve default settings and performance of pgsnapshot load scripts.
+Fix remaining 64-bit id tracking problems.
+Increase maximum way node count from 16-bit to 32-bit int.
+Full null pointer exception in --merge-replication-files.
+Fix javadoc errors on JDK 1.8.
+Support spaces in installation path on Windows.
+Set User-Agent header on all HTTP requests.
+Support importing negative ids to apidb.
+Fix one-off error in current way/relation loading.
+Fix query for retrieving way nodes and relation members in pgsnapshot module.
+Prevent reading duplicate way nodes in pgsnapshot module.
+Fix deprecation warnings caused by upgrading to newer dependencies.
+Upgrade to protobuf 2.6.0.
+Fix replicate_osm_file.sh to return the correct exit status, not always -1.
+Add scripts to build a docker image for testing database tasks.
+Update build to download Gradle via https.
+Fix broken console logging in replication lag reader causing a crash.
+Update default replication URLs to match current planet server layout.
+Add IntelliJ IDE support.
+
 0.43.1
 Fix the version number displayed on startup to be up to date.
 Remove RELEASE suffix from version number of release builds.
