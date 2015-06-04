@@ -92,7 +92,6 @@ public class IntervalDownloader implements RunnableChangeSource {
 	public void setChangeSink(ChangeSink changeSink) {
 		this.changeSink = changeSink;
 	}
-	
 
 	public static Map<String,String> getEnvProxy(String envvar)
 	{
@@ -130,7 +129,7 @@ public class IntervalDownloader implements RunnableChangeSource {
 		} catch (MalformedURLException e) {
 			throw new OsmosisRuntimeException("The server timestamp URL could not be created.", e);
 		}
-	
+
 	        final Map<String,String> proxy = getEnvProxy("http_proxy");
 	        if (proxy.containsKey("HOST")) {
 	            System.setProperty("proxySet", "true");
@@ -264,7 +263,7 @@ public class IntervalDownloader implements RunnableChangeSource {
 	 * to the output task.
 	 */
 	private void download() {
-		inputstreamreadervalDownloaderConfiguration configuration;
+		IntervalDownloaderConfiguration configuration;
 		TimestampTracker timestampTracker;
 		ChangesetFileNameFormatter fileNameFormatter;
 		Date currentTime;
