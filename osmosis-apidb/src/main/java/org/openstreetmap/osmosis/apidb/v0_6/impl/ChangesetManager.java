@@ -69,6 +69,7 @@ public class ChangesetManager implements Closeable {
     
     private int readChangesetCount(ResultSet countSet) {
     	try (ResultSet resultSet = countSet) {
+            resultSet.next();
     		return resultSet.getInt("changesetCount");
     	} catch (SQLException e) {
     		throw new OsmosisRuntimeException("Unable to read the changeset count.", e);
