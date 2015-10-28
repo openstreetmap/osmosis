@@ -18,6 +18,11 @@ if [ ! "$(ls -A $DATADIR)" ]; then
 	echo "listen_addresses = '*'" >> "${DATADIR}/postgresql.conf"
 	echo "host all osm 0.0.0.0/0 md5" >> "${DATADIR}/pg_hba.conf"
 
+	# Create the pgsimple database owned by osm.
+	su postgres sh -lc "postgres --single -jE" <<-EOSQL
+		CREATE DATABASE pgosmsimp06_test OWNER osm;
+	EOSQL
+
 	# Create the pgsnapshot database owned by osm.
 	su postgres sh -lc "postgres --single -jE" <<-EOSQL
 		CREATE DATABASE pgosmsnap06_test OWNER osm;
@@ -30,6 +35,15 @@ if [ ! "$(ls -A $DATADIR)" ]; then
 
 	# Start the database server temporarily while we configure the databases.
 	su postgres sh -lc "pg_ctl -w start"
+
+	# Configure the pgosmsimp06_test database as the OSM user.
+	su postgres sh -lc "psql -U osm pgosmsimp06_test" <<-EOSQL
+		CREATE EXTENSION postgis;
+		\i /install/script/pgsimple_schema_0.6.sql
+		\i /install/script/pgsimple_schema_0.6_action.sql
+		\i /install/script/pgsimple_schema_0.6_bbox.sql
+		\i /install/script/pgsimple_schema_0.6_linestring.sql
+	EOSQL
 
 	# Configure the pgosmsnap06_test database as the OSM user.
 	su postgres sh -lc "psql -U osm pgosmsnap06_test" <<-EOSQL
