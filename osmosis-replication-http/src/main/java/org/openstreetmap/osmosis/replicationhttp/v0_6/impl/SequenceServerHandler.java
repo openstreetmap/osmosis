@@ -75,7 +75,7 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 	private void writeResourceNotFound(final ChannelHandlerContext ctx, String requestedUri) {
 		// Write the HTTP header to the client.
 		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.NOT_FOUND);
-		response.addHeader("Content-Type", "text/plain");
+		response.headers().add("Content-Type", "text/plain");
 
 		// Send the 404 message to the client.
 		ChannelBuffer buffer = ChannelBuffers.copiedBuffer("The requested resource does not exist: " + requestedUri,
@@ -108,7 +108,7 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 	private void writeResourceGone(final ChannelHandlerContext ctx, String requestedUri) {
 		// Write the HTTP header to the client.
 		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.GONE);
-		response.addHeader("Content-Type", "text/plain");
+		response.headers().add("Content-Type", "text/plain");
 
 		// Send the 410 message to the client.
 		ChannelBuffer buffer = ChannelBuffers.copiedBuffer("The requested resource is no longer available: "
@@ -146,7 +146,7 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 
 		// Write the HTTP header to the client.
 		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.NOT_FOUND);
-		response.addHeader("Content-Type", "text/plain");
+		response.headers().add("Content-Type", "text/plain");
 
 		// Send the 400 message to the client.
 		StringBuilder messageBuilder = new StringBuilder();
@@ -184,7 +184,7 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 
 		// Write the HTTP header to the client.
 		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.OK);
-		response.addHeader("Content-Type", "text/plain");
+		response.headers().add("Content-Type", "text/plain");
 
 		// Send the statistics message to the client.
 		StringBuilder messageBuilder = new StringBuilder();
@@ -227,9 +227,9 @@ public abstract class SequenceServerHandler extends SimpleChannelHandler {
 			String contentType, final long requestedSequenceNumber, final boolean follow) {
 		// Create the HTTP header to send to the client.
 		DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
-		response.addHeader("Content-Type", contentType);
+		response.headers().add("Content-Type", contentType);
 		response.setChunked(true);
-		response.addHeader(HttpHeaders.Names.TRANSFER_ENCODING, HttpHeaders.Values.CHUNKED);
+		response.headers().add(HttpHeaders.Names.TRANSFER_ENCODING, HttpHeaders.Values.CHUNKED);
 
 		// Write the header. We must use a new future because the future we've
 		// been passed is for upstream.

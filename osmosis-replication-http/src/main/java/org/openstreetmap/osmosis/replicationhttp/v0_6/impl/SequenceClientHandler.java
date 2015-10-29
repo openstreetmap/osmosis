@@ -67,7 +67,7 @@ public abstract class SequenceClientHandler extends SimpleChannelHandler {
 		// Send a request to the server asking for sequence number
 		// notifications.
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, getRequestUri());
-		request.addHeader("Host", serverHost);
+		request.headers().add("Host", serverHost);
 		Channels.write(ctx, e.getFuture(), request);
 
 		midStream = false;
