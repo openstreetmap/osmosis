@@ -7,7 +7,7 @@ dependencies {
     compile project(':osmosis-core')
     compile project(':osmosis-hstore-jdbc')
     compile group: 'commons-dbcp', name: 'commons-dbcp', version: dependencyVersionCommonsDbcp
-    compile group: 'org.postgis', name: 'postgis-jdbc', version: dependencyVersionPostGis
+    compile group: 'net.postgis', name: 'postgis-jdbc', version: dependencyVersionPostGis
     compile group: 'org.springframework', name: 'spring-jdbc', version: dependencyVersionSpring
     compile group: 'org.postgresql', name: 'postgresql', version: dependencyVersionPostgreSql
     testCompile project(':osmosis-dataset')
