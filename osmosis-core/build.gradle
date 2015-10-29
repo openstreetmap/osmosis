@@ -7,7 +7,7 @@ configurations {
 
 dependencies {
     compile group: 'net.sf.jpf', name: 'jpf', version: dependencyVersionJpf
-    compile group: 'org.codehaus.woodstox', name: 'woodstox-core-lgpl', version: dependencyVersionWoodstoxCore
+    compile group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: dependencyVersionWoodstoxCore
     compile group: 'org.codehaus.woodstox', name: 'stax2-api', version: dependencyVersionWoodstoxStax2
     compile group: 'org.apache.commons', name: 'commons-compress', version: dependencyVersionCommonsCompress
     compile group: 'xerces', name: 'xercesImpl', version: dependencyVersionXerces
