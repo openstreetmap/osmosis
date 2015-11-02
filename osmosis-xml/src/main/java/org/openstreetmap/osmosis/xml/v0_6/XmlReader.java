@@ -1,6 +1,17 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.xml.v0_6;
 
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
+import org.openstreetmap.osmosis.core.task.v0_6.Sink;
+import org.openstreetmap.osmosis.xml.common.CompressionActivator;
+import org.openstreetmap.osmosis.xml.common.CompressionMethod;
+import org.openstreetmap.osmosis.xml.common.SaxParserFactory;
+import org.openstreetmap.osmosis.xml.v0_6.impl.OsmHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
+import javax.xml.parsers.SAXParser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,20 +19,6 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
-import org.openstreetmap.osmosis.core.task.v0_6.Sink;
-import org.openstreetmap.osmosis.xml.common.CompressionActivator;
-import org.openstreetmap.osmosis.xml.common.CompressionMethod;
-import org.openstreetmap.osmosis.xml.v0_6.impl.OsmHandler;
 
 
 /**
@@ -67,23 +64,6 @@ public class XmlReader implements RunnableSource {
 	
 	
 	/**
-	 * Creates a new SAX parser.
-	 * 
-	 * @return The newly created SAX parser.
-	 */
-	private SAXParser createParser() {
-		try {
-			return SAXParserFactory.newInstance().newSAXParser();
-			
-		} catch (ParserConfigurationException e) {
-			throw new OsmosisRuntimeException("Unable to create SAX Parser.", e);
-		} catch (SAXException e) {
-			throw new OsmosisRuntimeException("Unable to create SAX Parser.", e);
-		}
-	}
-	
-	
-	/**
 	 * Reads all data from the file and send it to the sink.
 	 */
 	public void run() {
@@ -100,13 +80,12 @@ public class XmlReader implements RunnableSource {
 			} else {
 				inputStream = new FileInputStream(file);
 			}
-			
-			
+
 			inputStream =
 				new CompressionActivator(compressionMethod).
 					createCompressionInputStream(inputStream);
-			
-			parser = createParser();
+
+			parser = SaxParserFactory.createParser();
 			
 			parser.parse(inputStream, new OsmHandler(sink, enableDateParsing));
 			

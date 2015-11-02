@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="CGImap 0.4.0 (18495 thorn-01.openstreetmap.org)" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+ <node id="3382756758" visible="true" version="1" changeset="29244040" timestamp="2015-03-04T12:59:17Z" user="Khalfi" uid="2108921" lat="34.0024546" lon="-6.8459973">
+  <tag k="addr:city" v="rabat"/>
+  <tag k="addr:postcode" v="10000"/>
+  <tag k="addr:street" v="Avenue Omar Ibn Khattab"/>
+  <tag k="name" v="H𝄞M Events"/>
+  <tag k="name:en" v="H𝄞M Events"/>
+  <tag k="phone" v="+212 (0) 6 61 33 07 02"/>
+ </node>
+</osm>
