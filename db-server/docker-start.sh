@@ -27,6 +27,9 @@ if [ ! "$(ls -A $DATADIR)" ]; then
 	su postgres sh -lc "postgres --single -jE" <<-EOSQL
 		CREATE DATABASE pgosmsnap06_test OWNER osm;
 	EOSQL
+	su postgres sh -lc "postgres --single -jE" <<-EOSQL
+		CREATE DATABASE pgosmsnap06_test_with_schema OWNER osm;
+	EOSQL
 
 	# Create the apidb database owned by osm.
 	su postgres sh -lc "postgres --single -jE" <<-EOSQL
@@ -47,6 +50,18 @@ if [ ! "$(ls -A $DATADIR)" ]; then
 
 	# Configure the pgosmsnap06_test database as the OSM user.
 	su postgres sh -lc "psql -U osm pgosmsnap06_test" <<-EOSQL
+		CREATE EXTENSION hstore;
+		CREATE EXTENSION postgis;
+		\i /install/script/pgsnapshot_schema_0.6.sql
+		\i /install/script/pgsnapshot_schema_0.6_action.sql
+		\i /install/script/pgsnapshot_schema_0.6_bbox.sql
+		\i /install/script/pgsnapshot_schema_0.6_linestring.sql
+	EOSQL
+
+	# Configure the pgosmsnap06_test_with_schema database as the OSM user.
+	su postgres sh -lc "psql -U osm pgosmsnap06_test_with_schema" <<-EOSQL
+		CREATE SCHEMA test_schema;
+		SET search_path TO test_schema,public;
 		CREATE EXTENSION hstore;
 		CREATE EXTENSION postgis;
 		\i /install/script/pgsnapshot_schema_0.6.sql

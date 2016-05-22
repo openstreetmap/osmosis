@@ -16,8 +16,8 @@ import org.openstreetmap.osmosis.testutil.AbstractDataTest;
  */
 public class PostgreSqlTest extends AbstractDataTest {
 	
-	private File getAuthFile() {
-		return dataUtils.createDataFile("db.pgsql.authfile", "v0_6/pgsql-authfile.txt");
+	private File getAuthFile(String name) {
+		return dataUtils.createDataFile("db.pgsql.authfile", name);
 	}
 	
 	
@@ -35,7 +35,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		File outputFile;
 		
 		// Generate input files.
-		authFile = getAuthFile();
+		authFile = getAuthFile("v0_6/pgsql-authfile.txt");
 		inputFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
 		outputFile = dataUtils.newFile();
 		
@@ -93,7 +93,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		File actualResultFile;
 		
 		// Generate input files.
-		authFile = getAuthFile();
+		authFile = getAuthFile("v0_6/pgsql-authfile.txt");
 		snapshotFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
 		changesetFile = dataUtils.createDataFile("v0_6/db-changeset.osc");
 		expectedResultFile = dataUtils.createDataFile("v0_6/db-changeset-expected.osm");
@@ -164,7 +164,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		File actualResultFile;
 		
 		// Generate input files.
-		authFile = getAuthFile();
+		authFile = getAuthFile("v0_6/pgsql-authfile.txt");
 		snapshotFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
 		expectedResultFile = dataUtils.createDataFile("v0_6/db-dataset-expected.osm");
 		actualResultFile = dataUtils.newFile();
@@ -234,7 +234,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		File outputFile;
 		
 		// Generate input files.
-		authFile = getAuthFile();
+		authFile = getAuthFile("v0_6/pgsql-authfile.txt");
 		inputFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
 		outputFile = dataUtils.newFile();
 		
@@ -275,4 +275,63 @@ public class PostgreSqlTest extends AbstractDataTest {
 		// Validate that the output file matches the input file.
 		dataUtils.compareFiles(inputFile, outputFile);
 	}
+
+	/**
+	 * A test loading an osm file into a pgsql database with a schema, then dumping it
+	 * again and verifying that it is identical.
+	 * 
+	 * @throws IOException
+	 *             if any file operations fail.
+	 */
+	@Test
+	public void testLoadAndDumpWithSchema() throws IOException {
+		File authFile;
+		File inputFile;
+		File outputFile;
+
+		// Generate input files.
+		authFile = getAuthFile("v0_6/pgsql_with_schema-authfile.txt");
+		inputFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
+		outputFile = dataUtils.newFile();
+
+		// Remove all existing data from the database.
+		Osmosis.run(
+			new String [] {
+				"-q",
+				"--truncate-pgsql-0.6",
+				"postgresSchema=test_schema",
+				"authFile=" + authFile.getPath()
+			}
+		);
+
+		// Load the database with a dataset.
+		Osmosis.run(
+			new String [] {
+				"-q",
+				"--read-xml-0.6",
+				inputFile.getPath(),
+				"--write-pgsql-0.6",
+				"postgresSchema=test_schema",
+				"authFile=" + authFile.getPath()
+			}
+		);
+
+		// Dump the database to an osm file.
+		Osmosis.run(
+			new String [] {
+				"-q",
+				"--read-pgsql-0.6",
+				"authFile=" + authFile.getPath(),
+				"postgresSchema=test_schema",
+				"--dataset-dump-0.6",
+				"--tag-sort-0.6",
+				"--write-xml-0.6",
+				outputFile.getPath()
+			}
+		);
+
+		// Validate that the output file matches the input file.
+		dataUtils.compareFiles(inputFile, outputFile);
+	}
+
 }
