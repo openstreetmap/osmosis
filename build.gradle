@@ -40,7 +40,7 @@ configure(javaProjects) {
 	apply plugin: 'maven'
 	apply plugin: 'signing'
 
-	sourceCompatibility = 1.6
+	sourceCompatibility = 1.7
 
 	test {
 		/*
