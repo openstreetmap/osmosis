@@ -68,6 +68,11 @@ public final class DatabaseConstants {
     public static final String TASK_ARG_PROFILE_SQL = "profileSql";
 
     /**
+     * The task argument for specifying a postgresql schema to uses.
+     */
+    public static final String TASK_ARG_POSTGRES_SCHEMA = "postgresSchema";
+
+    /**
      * The default host for a database connection.
      */
     public static final String TASK_DEFAULT_HOST = "localhost";
@@ -111,4 +116,9 @@ public final class DatabaseConstants {
      * The default value for enabling profile on a database connection.
      */
     public static final boolean TASK_DEFAULT_PROFILE_SQL = false;
+
+    /**
+     * The default value for specifying a postgresql schema.
+     */
+    public static final String TASK_DEFAULT_POSTGRES_SCHEMA = "";
 }

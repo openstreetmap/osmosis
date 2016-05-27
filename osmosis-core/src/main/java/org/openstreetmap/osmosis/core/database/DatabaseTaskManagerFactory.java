@@ -55,6 +55,8 @@ public abstract class DatabaseTaskManagerFactory extends TaskManagerFactory {
                 loginCredentials.getProfileSql()));
         loginCredentials.setDbType(getStringArgument(taskConfig, DatabaseConstants.TASK_ARG_DB_TYPE, loginCredentials
 				.getDbType().toString()));
+        loginCredentials.setPostgresSchema(getStringArgument(taskConfig, DatabaseConstants.TASK_ARG_POSTGRES_SCHEMA,
+                loginCredentials.getPostgresSchema().toString()));
 
         return loginCredentials;
     }
