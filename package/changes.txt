@@ -1,3 +1,12 @@
+0.45
+Add postgresSchema option to pgsnapshot tasks.
+Verify XML parser on startup to verify support for multi-char unicode characters.
+Upgrade to latest version of Netty.
+Various dependency version updates.
+Fix incorrect plexus classworlds version in Windows launch script.
+Upgrade to PostGIS 2.x library.
+Add tests for pgsimple database.
+
 0.44
 Improve default settings and performance of pgsnapshot load scripts.
 Fix remaining 64-bit id tracking problems.
