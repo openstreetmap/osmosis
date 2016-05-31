@@ -154,6 +154,10 @@ public class ChangeWriter {
     private static final String DELETE_SQL_RELATION_MEMBER_CURRENT =
     	"DELETE FROM current_relation_members WHERE relation_id = ?";
 
+    private static final String DOES_NOT_HAVE_A_TIMESTAMP_SET = " does not have a timestamp set.";
+    private static final String EXISTS = " exists.";
+    private static final String AND_KEY = " and key=(";
+
     private final DatabaseContext dbCtx;
     private final UserManager userManager;
     private final ChangesetManager changesetManager;
@@ -323,7 +327,7 @@ public class ChangeWriter {
 
         // We can't write an entity with a null timestamp.
         if (node.getTimestamp() == null) {
-            throw new OsmosisRuntimeException("Node " + node.getId() + " does not have a timestamp set.");
+            throw new OsmosisRuntimeException("Node " + node.getId() + DOES_NOT_HAVE_A_TIMESTAMP_SET);
         }
 
         // Add or update the user in the database.
@@ -369,7 +373,7 @@ public class ChangeWriter {
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException(
-            		"Unable to check if current node with id=" + node.getId() + " exists.", e);
+            		"Unable to check if current node with id=" + node.getId() + EXISTS, e);
         }
         if (exists) {
             // Update the node in the history table.
@@ -428,7 +432,7 @@ public class ChangeWriter {
 
             } catch (SQLException e) {
                 throw new OsmosisRuntimeException("Unable to insert history node tag with id=" + node.getId()
-                        + " and key=(" + tag.getKey() + ").", e);
+                        + AND_KEY + tag.getKey() + ").", e);
             }
         }
 
@@ -450,7 +454,7 @@ public class ChangeWriter {
 
             } catch (SQLException e) {
                 throw new OsmosisRuntimeException("Unable to check if current node with id=" + node.getId()
-                        + " exists.", e);
+                        + EXISTS, e);
             }
             if (exists) {
                 // Update the node in the current table.
@@ -508,7 +512,7 @@ public class ChangeWriter {
 
                 } catch (SQLException e) {
                     throw new OsmosisRuntimeException("Unable to insert current node tag with id=" + node.getId()
-                            + " and key=(" + tag.getKey() + ").", e);
+                            + AND_KEY + tag.getKey() + ").", e);
                 }
             }
         }
@@ -528,7 +532,7 @@ public class ChangeWriter {
 
         // We can't write an entity with a null timestamp.
         if (way.getTimestamp() == null) {
-            throw new OsmosisRuntimeException("Way " + way.getId() + " does not have a timestamp set.");
+            throw new OsmosisRuntimeException("Way " + way.getId() + DOES_NOT_HAVE_A_TIMESTAMP_SET);
         }
 
         // Add or update the user in the database.
@@ -592,7 +596,7 @@ public class ChangeWriter {
             exists = checkIfEntityHistoryExists(selectWayCountStatement, way.getId(), way.getVersion());
 
         } catch (SQLException e) {
-            throw new OsmosisRuntimeException("Unable to check if current way with id=" + way.getId() + " exists.", e);
+            throw new OsmosisRuntimeException("Unable to check if current way with id=" + way.getId() + EXISTS, e);
         }
         if (exists) {
             // Update the way in the history table.
@@ -639,7 +643,7 @@ public class ChangeWriter {
 
             } catch (SQLException e) {
                 throw new OsmosisRuntimeException("Unable to insert history way tag with id=" + way.getId()
-                        + " and key=(" + tag.getKey() + ").", e);
+                        + AND_KEY + tag.getKey() + ").", e);
             }
         }
 
@@ -689,7 +693,7 @@ public class ChangeWriter {
                 exists = checkIfEntityExists(selectWayCurrentCountStatement, way.getId());
 
             } catch (SQLException e) {
-                throw new OsmosisRuntimeException("Unable to check if current way with id=" + way.getId() + " exists.",
+                throw new OsmosisRuntimeException("Unable to check if current way with id=" + way.getId() + EXISTS,
                         e);
             }
             if (exists) {
@@ -736,7 +740,7 @@ public class ChangeWriter {
 
                 } catch (SQLException e) {
                     throw new OsmosisRuntimeException("Unable to insert current way tag with id=" + way.getId()
-                            + " and key=(" + tag.getKey() + ").", e);
+                            + AND_KEY + tag.getKey() + ").", e);
                 }
             }
 
@@ -776,7 +780,7 @@ public class ChangeWriter {
 
         // We can't write an entity with a null timestamp.
         if (relation.getTimestamp() == null) {
-            throw new OsmosisRuntimeException("Relation " + relation.getId() + " does not have a timestamp set.");
+            throw new OsmosisRuntimeException("Relation " + relation.getId() + DOES_NOT_HAVE_A_TIMESTAMP_SET);
         }
 
         // Add or update the user in the database.
@@ -868,7 +872,7 @@ public class ChangeWriter {
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to check if current relation with id=" + relation.getId()
-                    + " exists.", e);
+                    + EXISTS, e);
         }
         if (exists) {
             // Update the relation in the history table.
@@ -917,7 +921,7 @@ public class ChangeWriter {
 
             } catch (SQLException e) {
                 throw new OsmosisRuntimeException("Unable to insert history relation tag with id=" + relation.getId()
-                        + " and key=(" + tag.getKey() + ").", e);
+                        + AND_KEY + tag.getKey() + ").", e);
             }
         }
 
@@ -974,7 +978,7 @@ public class ChangeWriter {
 
             } catch (SQLException e) {
                 throw new OsmosisRuntimeException("Unable to check if current relation with id=" + relation.getId()
-                        + " exists.", e);
+                        + EXISTS, e);
             }
             if (exists) {
                 // Update the relation in the current table.
@@ -1024,7 +1028,7 @@ public class ChangeWriter {
 
                 } catch (SQLException e) {
                     throw new OsmosisRuntimeException("Unable to insert current relation tag with id="
-                            + relation.getId() + " and key=(" + tag.getKey() + ").", e);
+                            + relation.getId() + AND_KEY + tag.getKey() + ").", e);
                 }
             }
 
