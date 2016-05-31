@@ -153,38 +153,6 @@ public class ApidbWriter implements Sink, EntityProcessor {
     private static final int INSERT_BULK_ROW_COUNT_RELATION_TAG = 100;
     private static final int INSERT_BULK_ROW_COUNT_RELATION_MEMBER = 100;
 
-    /**
-	 * Builds a multi-row SQL insert statement.
-	 * 
-	 * @param columnSql
-	 *            The basic query without value bind variables.
-	 * @param parametersSql
-	 *            The SQL parameters portion of the query.
-	 * @param rowCount
-	 *            The number of rows to insert in a single query.
-	 * @return The generated SQL statement.
-	 */
-    private static String buildSqlInsertStatement(String columnSql, String parametersSql, int rowCount) {
-        StringBuilder buffer;
-
-        buffer = new StringBuilder();
-
-        buffer.append(columnSql).append(" VALUES ");
-
-        for (int i = 0; i < rowCount; i++) {
-            if (i > 0) {
-                buffer.append(", ");
-            }
-            
-            buffer.append("(");
-            buffer.append(parametersSql);
-            buffer.append(")");
-        }
-
-        return buffer.toString();
-    }
-
-    
     private String insertSqlSingleNode;
     private String insertSqlBulkNode;
     private String insertSqlSingleNodeTag;
@@ -291,7 +259,37 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
         initialized = false;
     }
-    
+
+    /**
+     * Builds a multi-row SQL insert statement.
+     *
+     * @param columnSql
+     *            The basic query without value bind variables.
+     * @param parametersSql
+     *            The SQL parameters portion of the query.
+     * @param rowCount
+     *            The number of rows to insert in a single query.
+     * @return The generated SQL statement.
+     */
+    private static String buildSqlInsertStatement(String columnSql, String parametersSql, int rowCount) {
+        StringBuilder buffer;
+
+        buffer = new StringBuilder();
+
+        buffer.append(columnSql).append(" VALUES ");
+
+        for (int i = 0; i < rowCount; i++) {
+            if (i > 0) {
+                buffer.append(", ");
+            }
+
+            buffer.append("(");
+            buffer.append(parametersSql);
+            buffer.append(")");
+        }
+
+        return buffer.toString();
+    }
     
     private void buildSqlStatements() {
     	insertSqlSingleNode = buildSqlInsertStatement(INSERT_SQL_NODE_COLUMNS, INSERT_SQL_NODE_PARAMS, 1);

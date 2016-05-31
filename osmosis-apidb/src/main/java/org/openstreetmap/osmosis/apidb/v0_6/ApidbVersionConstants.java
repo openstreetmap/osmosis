@@ -10,12 +10,6 @@ package org.openstreetmap.osmosis.apidb.v0_6;
 public final class ApidbVersionConstants {
 	
 	/**
-	 * This class cannot be instantiated.
-	 */
-	private ApidbVersionConstants() {
-	}
-	
-	/**
 	 * Defines the schema migrations expected to be in the database.
 	 */
 	public static final String[] SCHEMA_MIGRATIONS = {
@@ -24,8 +18,8 @@ public final class ApidbVersionConstants {
 		"21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
 		"31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
 		"41", "42", "43", "44", "45", "46", "47", "48", "49", "50",
-		"51", "52", "53", "54", "55", "56", "57", "20100513171259", 
-		"20100516124737", "20100910084426", "20101114011429", 
+		"51", "52", "53", "54", "55", "56", "57", "20100513171259",
+		"20100516124737", "20100910084426", "20101114011429",
 		"20110322001319", "20110508145337", "20110521142405",
 		"20110925112722", "20111116184519", "20111212183945",
 		"20120123184321", "20120208122334", "20120208194454",
@@ -34,4 +28,10 @@ public final class ApidbVersionConstants {
 		"20121005195010", "20121012044047", "20121119165817",
 		"20121202155309", "20121203124841", "20130328184137"
 	};
+
+	/**
+	 * This class cannot be instantiated.
+	 */
+	private ApidbVersionConstants() {
+	}
 }

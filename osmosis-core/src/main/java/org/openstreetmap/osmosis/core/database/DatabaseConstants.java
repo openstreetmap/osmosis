@@ -8,13 +8,6 @@ package org.openstreetmap.osmosis.core.database;
  * @author Brett Henderson
  */
 public final class DatabaseConstants {
-	
-	/**
-	 * This class cannot be instantiated.
-	 */
-	private DatabaseConstants() {
-	}
-	
 
     /**
      * The task argument for specifying an database authorisation properties file.
@@ -35,7 +28,7 @@ public final class DatabaseConstants {
      * The task argument for specifying the user for a database connection.
      */
     public static final String TASK_ARG_USER = "user";
-    
+
     /**
      * The task argument for specifying the database type to be used.
      */
@@ -121,4 +114,10 @@ public final class DatabaseConstants {
      * The default value for specifying a postgresql schema.
      */
     public static final String TASK_DEFAULT_POSTGRES_SCHEMA = "";
+
+    /**
+     * This class cannot be instantiated.
+     */
+    private DatabaseConstants() {
+    }
 }
