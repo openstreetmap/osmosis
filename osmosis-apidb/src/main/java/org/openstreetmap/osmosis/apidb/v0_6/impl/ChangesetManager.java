@@ -113,8 +113,8 @@ public class ChangesetManager implements Releasable {
             boolean changesetExists;
             
             // Check if the changeset exists.
-            prmIndex = 1;
-            selectCountStatement.setLong(prmIndex++, changesetId);
+            prmIndex = 0;
+            selectCountStatement.setLong(++prmIndex, changesetId);
             
             changesetExists = readChangesetCount(selectCountStatement.executeQuery()) > 0;
             
@@ -136,15 +136,14 @@ public class ChangesetManager implements Releasable {
             int prmIndex;
 
             // Insert the new changeset record.
-            prmIndex = 1;
-            insertStatement.setLong(prmIndex++, changesetId);
-            insertStatement.setLong(prmIndex++, userId);
+            prmIndex = 0;
+            insertStatement.setLong(++prmIndex, changesetId);
+            insertStatement.setLong(++prmIndex, userId);
             insertStatement.executeUpdate();
 
             // Insert the changeset tags.
-            prmIndex = 1;
-            insertTagStatement.setLong(prmIndex++, changesetId);
-            insertTagStatement.setLong(prmIndex++, changesetId);
+            prmIndex = 0;
+            insertTagStatement.setLong(++prmIndex, changesetId);
             insertTagStatement.executeUpdate();
             
             // Add the changeset to the cache, and trim the cache if required.
