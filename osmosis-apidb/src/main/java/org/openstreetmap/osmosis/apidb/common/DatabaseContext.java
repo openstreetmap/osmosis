@@ -26,6 +26,8 @@ public class DatabaseContext {
 
     private static final Logger LOG = Logger.getLogger(DatabaseContext.class.getName());
 
+    private static final String UNKNOWN_DATABASE_TYPE = "Unknown database type ";
+
     private final DatabaseLoginCredentials loginCredentials;
 
     private Connection connection;
@@ -60,7 +62,7 @@ public class DatabaseContext {
                 identityValueLoader = new MysqlIdentityValueLoader(this);
                 break;
             default:
-                throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+                throw new OsmosisRuntimeException(UNKNOWN_DATABASE_TYPE + loginCredentials.getDbType() + ".");
             }
 
         } catch (ClassNotFoundException e) {
@@ -85,7 +87,7 @@ public class DatabaseContext {
                 connection = getMysqlConnection();
                 break;
             default:
-                throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+                throw new OsmosisRuntimeException(UNKNOWN_DATABASE_TYPE + loginCredentials.getDbType() + ".");
             }
         }
         
@@ -187,7 +189,7 @@ public class DatabaseContext {
 			}
 			break;
 		default:
-			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+			throw new OsmosisRuntimeException(UNKNOWN_DATABASE_TYPE + loginCredentials.getDbType() + ".");
 		}
 	}
 	
@@ -209,7 +211,7 @@ public class DatabaseContext {
 			}
 			break;
 		default:
-			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+			throw new OsmosisRuntimeException(UNKNOWN_DATABASE_TYPE + loginCredentials.getDbType() + ".");
 		}
 	}
 	
@@ -231,7 +233,7 @@ public class DatabaseContext {
 			}
 			break;
 		default:
-			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+			throw new OsmosisRuntimeException(UNKNOWN_DATABASE_TYPE + loginCredentials.getDbType() + ".");
 		}
 	}
 	
@@ -263,7 +265,7 @@ public class DatabaseContext {
         	executeStatement(statementBuilder.toString());
 			break;
 		default:
-			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+			throw new OsmosisRuntimeException(UNKNOWN_DATABASE_TYPE + loginCredentials.getDbType() + ".");
 		}
 	}
 	
@@ -283,7 +285,7 @@ public class DatabaseContext {
         	executeStatement("UNLOCK TABLES");
 			break;
 		default:
-			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+			throw new OsmosisRuntimeException(UNKNOWN_DATABASE_TYPE + loginCredentials.getDbType() + ".");
 		}
 	}
 
@@ -363,7 +365,7 @@ public class DatabaseContext {
 	        	streamingStatement.setFetchSize(Integer.MIN_VALUE);
 				break;
 			default:
-				throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+				throw new OsmosisRuntimeException(UNKNOWN_DATABASE_TYPE + loginCredentials.getDbType() + ".");
 			}
     	} catch (SQLException e) {
     		throw new OsmosisRuntimeException("Unable to update statement fetch size.", e);
