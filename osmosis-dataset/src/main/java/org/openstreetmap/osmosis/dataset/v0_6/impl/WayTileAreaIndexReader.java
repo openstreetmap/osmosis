@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 import org.openstreetmap.osmosis.core.store.IndexStoreReader;
 import org.openstreetmap.osmosis.core.store.IntegerLongIndexElement;
 
@@ -19,7 +19,7 @@ import org.openstreetmap.osmosis.core.store.IntegerLongIndexElement;
  * 
  * @author Brett Henderson
  */
-public class WayTileAreaIndexReader implements Releasable {
+public class WayTileAreaIndexReader implements Closeable {
 	private int[] masks = {0xFFFFFFFF, 0xFFFFFFF0, 0xFFFFFF00, 0xFFFF0000, 0xFF000000, 0x00000000};
 	private List<IndexStoreReader<Integer, IntegerLongIndexElement>> indexReaders;
 	
@@ -77,9 +77,9 @@ public class WayTileAreaIndexReader implements Releasable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		for (IndexStoreReader<Integer, IntegerLongIndexElement> indexReader : indexReaders) {
-			indexReader.release();
+			indexReader.close();
 		}
 	}
 	

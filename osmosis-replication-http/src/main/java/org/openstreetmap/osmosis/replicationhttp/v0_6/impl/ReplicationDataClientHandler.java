@@ -179,7 +179,7 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 	@Override
 	public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
 		// Release any half populated chunk files.
-		chunkReceiver.release();
+		chunkReceiver.close();
 
 		super.channelClosed(ctx, e);
 	}
@@ -224,7 +224,7 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 
 
 		@Override
-		public void release() {
+		public void close() {
 			// Do nothing.
 		}
 	}

@@ -84,12 +84,12 @@ public class PbfReader implements RunnableSource {
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to read PBF file " + file + ".", e);
 		} finally {
-			sink.release();
+			sink.close();
 
 			executorService.shutdownNow();
 
 			if (streamSplitter != null) {
-				streamSplitter.release();
+				streamSplitter.close();
 			}
 		}
 	}

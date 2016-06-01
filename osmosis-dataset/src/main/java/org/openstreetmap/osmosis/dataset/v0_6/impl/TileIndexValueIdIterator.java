@@ -59,7 +59,7 @@ public class TileIndexValueIdIterator implements ReleasableIterator<Long> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		// Do nothing.
 	}
 }

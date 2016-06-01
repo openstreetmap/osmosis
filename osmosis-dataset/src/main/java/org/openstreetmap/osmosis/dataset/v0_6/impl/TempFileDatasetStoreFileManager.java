@@ -229,7 +229,7 @@ public class TempFileDatasetStoreFileManager implements DatasetStoreFileManager 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		for (File file : allFiles) {
 			if (!file.delete()) {
 				log.warning("Unable to delete file " + file);

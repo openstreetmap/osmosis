@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openstreetmap.osmosis.core.lifecycle.Completable;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableContainer;
 import org.openstreetmap.osmosis.core.store.IndexStore;
 import org.openstreetmap.osmosis.core.store.IndexStoreReader;
@@ -84,9 +84,7 @@ public class WayTileAreaIndex implements Completable {
 	 * @return An index reader.
 	 */
 	public WayTileAreaIndexReader createReader() {
-		ReleasableContainer releasableContainer = new ReleasableContainer();
-		
-		try {
+		try (ReleasableContainer releasableContainer = new ReleasableContainer()) {
 			List<IndexStoreReader<Integer, IntegerLongIndexElement>> indexReaders;
 			
 			indexReaders = new ArrayList<IndexStoreReader<Integer, IntegerLongIndexElement>>(MASKS.length);
@@ -97,9 +95,6 @@ public class WayTileAreaIndex implements Completable {
 			releasableContainer.clear();
 			
 			return new WayTileAreaIndexReader(MASKS, indexReaders);
-			
-		} finally {
-			releasableContainer.release();
 		}
 	}
 	
@@ -119,9 +114,9 @@ public class WayTileAreaIndex implements Completable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		for (Releasable index : indexes) {
-			index.release();
+	public void close() {
+		for (Closeable index : indexes) {
+			index.close();
 		}
 	}
 }

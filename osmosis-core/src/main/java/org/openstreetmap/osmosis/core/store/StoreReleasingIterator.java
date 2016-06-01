@@ -2,7 +2,7 @@
 package org.openstreetmap.osmosis.core.store;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
 
 
@@ -16,7 +16,7 @@ import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
  * @author Brett Henderson
  */
 public class StoreReleasingIterator<DataType> implements ReleasableIterator<DataType> {
-	private Releasable store;
+	private Closeable store;
 	private ReleasableIterator<DataType> iterator;
 	
 	
@@ -28,7 +28,7 @@ public class StoreReleasingIterator<DataType> implements ReleasableIterator<Data
 	 * @param store
 	 *            The store to be released after use.
 	 */
-	public StoreReleasingIterator(ReleasableIterator<DataType> iterator, Releasable store) {
+	public StoreReleasingIterator(ReleasableIterator<DataType> iterator, Closeable store) {
 		this.iterator = iterator;
 		this.store = store;
 	}
@@ -73,15 +73,15 @@ public class StoreReleasingIterator<DataType> implements ReleasableIterator<Data
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		if (iterator != null) {
-			iterator.release();
+			iterator.close();
 			
 			iterator = null;
 		}
 		
 		if (store != null) {
-			store.release();
+			store.close();
 			
 			store = null;
 		}

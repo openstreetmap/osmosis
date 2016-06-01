@@ -100,9 +100,9 @@ public class WayReader extends EntityReader<Way> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		super.release();
+	public void close() {
+		super.close();
 		
-		wayNodeReader.release();
+		wayNodeReader.close();
 	}
 }

@@ -82,17 +82,9 @@ public class BoundComputer implements SinkSource, EntityProcessor {
 			sink.process(new BoundContainer(new Bound(right, left, top, bottom, this.origin)));
 		}
 
-		ReleasableIterator<EntityContainer> iter = null;
-
-		try {
-			iter = objects.iterate();
-
-			while (iter.hasNext()) {
-				sink.process(iter.next());
-			}
-		} finally {
-			if (iter != null) {
-				iter.release();
+		try (ReleasableIterator<EntityContainer> i = objects.iterate()) {
+			while (i.hasNext()) {
+				sink.process(i.next());
 			}
 		}
 
@@ -101,9 +93,9 @@ public class BoundComputer implements SinkSource, EntityProcessor {
 
 
 	@Override
-	public void release() {
-		sink.release();
-		objects.release();
+	public void close() {
+		sink.close();
+		objects.close();
 	}
 
 

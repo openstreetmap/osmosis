@@ -3,7 +3,6 @@ package org.openstreetmap.osmosis.replication.common;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -12,8 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.OsmosisConstants;
@@ -23,7 +20,6 @@ import org.openstreetmap.osmosis.core.OsmosisConstants;
  * Retrieves replication state files from the server hosting replication data.
  */
 public class ServerStateReader {
-	private static final Logger LOG = Logger.getLogger(ServerStateReader.class.getName());
 	private static final String SERVER_STATE_FILE = "state.txt";
 	private static final String SEQUENCE_STATE_FILE_SUFFIX = ".state.txt";
 	
@@ -76,7 +72,6 @@ public class ServerStateReader {
 	 */
 	private ReplicationState getServerState(URL baseUrl, String stateFile) {
 		URL stateUrl;
-		InputStream stateStream = null;
 		
 		try {
 			stateUrl = new URL(baseUrl, stateFile);
@@ -85,7 +80,6 @@ public class ServerStateReader {
 		}
 		
 		try {
-			BufferedReader reader;
 			Properties stateProperties;
 			Map<String, String> stateMap;
 			ReplicationState state;
@@ -94,11 +88,12 @@ public class ServerStateReader {
 			connection.setReadTimeout(15 * 60 * 1000); // timeout 15 minutes
 			connection.setConnectTimeout(15 * 60 * 1000); // timeout 15 minutes
 			connection.setRequestProperty("User-Agent", "Osmosis/" + OsmosisConstants.VERSION);
-			stateStream = connection.getInputStream();
-			
-			reader = new BufferedReader(new InputStreamReader(stateStream));
-			stateProperties = new Properties();
-			stateProperties.load(reader);
+			try (BufferedReader reader  = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+				stateProperties = new Properties();
+				stateProperties.load(reader);
+			} catch (IOException e) {
+				throw new OsmosisRuntimeException("Unable to read the state from the server.", e);
+			}
 			
 			stateMap = new HashMap<String, String>();
 			for (Entry<Object, Object> property : stateProperties.entrySet()) {
@@ -107,22 +102,10 @@ public class ServerStateReader {
 			
 			state = new ReplicationState(stateMap);
 			
-			stateStream.close();
-			stateStream = null;
-			
 			return state;
 			
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to read the state from the server.", e);
-		} finally {
-			try {
-				if (stateStream != null) {
-					stateStream.close();
-				}
-			} catch (IOException e) {
-				// We are already in an error condition so log and continue.
-				LOG.log(Level.WARNING, "Unable to close state stream.", e);
-			}
 		}
 	}
 }

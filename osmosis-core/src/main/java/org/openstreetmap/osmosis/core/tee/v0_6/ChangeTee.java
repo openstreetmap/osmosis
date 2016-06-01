@@ -96,9 +96,9 @@ public class ChangeTee implements ChangeSinkMultiChangeSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		for (ProxyChangeSinkChangeSource sink : sinkList) {
-			sink.release();
+			sink.close();
 		}
 	}
 	
@@ -155,8 +155,8 @@ public class ChangeTee implements ChangeSinkMultiChangeSource {
 		/**
 		 * {@inheritDoc}
 		 */
-		public void release() {
-			changeSink.release();
+		public void close() {
+			changeSink.close();
 		}
 	}
 }

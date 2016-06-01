@@ -63,7 +63,6 @@ public class ApidbCurrentReader implements RunnableSource {
     protected void runImpl(DatabaseContext2 dbCtx) {
     	try {
     		AllEntityDao entityDao;
-    		ReleasableIterator<EntityContainer> reader;
     		
     		sink.initialize(Collections.<String, Object>emptyMap());
     		
@@ -73,20 +72,16 @@ public class ApidbCurrentReader implements RunnableSource {
 	        entityDao = new AllEntityDao(dbCtx.getJdbcTemplate());
 	        
 	        sink.process(new BoundContainer(new Bound("Osmosis " + OsmosisConstants.VERSION)));
-	        reader = entityDao.getCurrent();
-	        try {
+	        try (ReleasableIterator<EntityContainer> reader = entityDao.getCurrent()) {
 	        	while (reader.hasNext()) {
 	        		sink.process(reader.next());
 	        	}
-	        	
-	        } finally {
-	        	reader.release();
 	        }
 	
 	        sink.complete();
 	        
     	} finally {
-    		sink.release();
+    		sink.close();
     	}
     }
     
@@ -95,19 +90,13 @@ public class ApidbCurrentReader implements RunnableSource {
      * Reads all data from the database and send it to the sink.
      */
     public void run() {
-        final DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials);
-    	
-        try {
+        try (DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials)) {
         	dbCtx.executeWithinTransaction(new TransactionCallbackWithoutResult() {
-        		private DatabaseContext2 dbCtxInner = dbCtx;
 
 				@Override
 				protected void doInTransactionWithoutResult(TransactionStatus arg0) {
-					runImpl(dbCtxInner);
+					runImpl(dbCtx);
 				} });
-
-        } finally {
-            dbCtx.release();
         }
     }
 }

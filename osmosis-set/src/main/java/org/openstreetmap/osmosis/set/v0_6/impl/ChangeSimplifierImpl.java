@@ -110,8 +110,8 @@ public class ChangeSimplifierImpl implements ChangeSinkChangeSource {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		changeSink.release();
+	public void close() {
+		changeSink.close();
 	}
 
 

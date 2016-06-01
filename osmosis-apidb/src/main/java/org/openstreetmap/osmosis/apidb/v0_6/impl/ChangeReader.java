@@ -96,7 +96,7 @@ public class ChangeReader<T extends Entity> implements ReleasableIterator<Change
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		source.release();
+	public void close() {
+		source.close();
 	}
 }

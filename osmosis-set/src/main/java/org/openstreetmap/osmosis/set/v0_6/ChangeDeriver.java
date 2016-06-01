@@ -175,7 +175,7 @@ public class ChangeDeriver implements MultiSinkRunnableChangeSource {
 			toPostbox.outputComplete();
 			
 		} finally {
-			changeSink.release();
+			changeSink.close();
 			
 			fromPostbox.outputRelease();
 			toPostbox.outputRelease();

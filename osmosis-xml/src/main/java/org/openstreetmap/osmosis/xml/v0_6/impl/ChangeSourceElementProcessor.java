@@ -156,8 +156,8 @@ public class ChangeSourceElementProcessor extends BaseElementProcessor {
 		/**
 		 * {@inheritDoc}
 		 */
-		public void release() {
-			changeSink.release();
+		public void close() {
+			changeSink.close();
 		}
 	}
 }

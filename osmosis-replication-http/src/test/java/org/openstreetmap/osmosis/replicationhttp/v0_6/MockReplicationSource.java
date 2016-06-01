@@ -75,6 +75,6 @@ public class MockReplicationSource implements ChangeSource {
 	 * Releases all downstream resources.
 	 */
 	public void release() {
-		changeSink.release();
+		changeSink.close();
 	}
 }

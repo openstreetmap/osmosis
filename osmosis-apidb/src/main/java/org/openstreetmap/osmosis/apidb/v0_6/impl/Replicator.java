@@ -210,18 +210,18 @@ public class Replicator {
 
 
 	private void copyChanges(ReleasableIterator<ChangeContainer> sourceIterator, ReplicationState state) {
-		try {
+		try (ReleasableIterator<ChangeContainer> i = sourceIterator) {
 			Date currentTimestamp;
 
 			// As we process, we must update the timestamp to match the latest
 			// record we have received.
 			currentTimestamp = state.getTimestamp();
 
-			while (sourceIterator.hasNext()) {
+			while (i.hasNext()) {
 				ChangeContainer change;
 				Date nextTimestamp;
 
-				change = sourceIterator.next();
+				change = i.next();
 				nextTimestamp = change.getEntityContainer().getEntity().getTimestamp();
 
 				if (currentTimestamp.compareTo(nextTimestamp) < 0) {
@@ -233,8 +233,6 @@ public class Replicator {
 
 			state.setTimestamp(currentTimestamp);
 
-		} finally {
-			sourceIterator.release();
 		}
 	}
 
@@ -247,7 +245,7 @@ public class Replicator {
 			replicateLoop();
 
 		} finally {
-			changeSink.release();
+			changeSink.close();
 		}
 	}
 

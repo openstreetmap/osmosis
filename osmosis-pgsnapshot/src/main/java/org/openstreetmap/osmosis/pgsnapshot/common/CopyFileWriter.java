@@ -6,7 +6,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,12 +13,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.lifecycle.Completable;
 import org.postgis.Geometry;
 import org.postgis.binary.BinaryWriter;
 import org.postgresql.util.PGobject;
-
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.lifecycle.Completable;
 
 
 /**
@@ -324,27 +322,12 @@ public class CopyFileWriter implements Completable {
 	 */
 	private void initialize() {
 		if (!initialized) {
-			OutputStream outStream = null;
-			
 			try {
-				outStream = new FileOutputStream(file);
-				
 				writer = new BufferedWriter(
-						new OutputStreamWriter(new BufferedOutputStream(outStream, 65536), "UTF-8"));
-				
-				outStream = null;
+						new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(file), 65536), "UTF-8"));
 				
 			} catch (IOException e) {
 				throw new OsmosisRuntimeException("Unable to open file for writing.", e);
-			} finally {
-				if (outStream != null) {
-					try {
-						outStream.close();
-					} catch (Exception e) {
-						log.log(Level.SEVERE, "Unable to close output stream.", e);
-					}
-					outStream = null;
-				}
 			}
 			
 			initialized = true;
@@ -379,7 +362,7 @@ public class CopyFileWriter implements Completable {
 	/**
 	 * Cleans up any open file handles.
 	 */
-	public void release() {
+	public void close() {
 		try {
 			try {
 				if (writer != null) {

@@ -35,7 +35,7 @@ public class SinkChangeInspector implements ChangeSink {
 	}
 
 	@Override
-	public void release() {
+	public void close() {
 		// Nothing to do here
 	}
 

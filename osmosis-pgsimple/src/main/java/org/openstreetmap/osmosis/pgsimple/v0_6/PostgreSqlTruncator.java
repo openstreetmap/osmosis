@@ -76,7 +76,7 @@ public class PostgreSqlTruncator implements RunnableTask {
 			LOG.fine("Complete.");
 			
 		} finally {
-			dbCtx.release();
+			dbCtx.close();
 		}
 	}
 }

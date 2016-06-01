@@ -84,7 +84,7 @@ public class PostgreSqlDumpWriter implements Sink {
 	/**
 	 * Releases all database resources.
 	 */
-	public void release() {
-		copyFilesetBuilder.release();
+	public void close() {
+		copyFilesetBuilder.close();
 	}
 }

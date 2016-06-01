@@ -96,9 +96,9 @@ public class EntityTee implements SinkMultiSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		for (ProxySinkSource sink : sinkList) {
-			sink.release();
+			sink.close();
 		}
 	}
 	
@@ -155,8 +155,8 @@ public class EntityTee implements SinkMultiSource {
 		/**
 		 * {@inheritDoc}
 		 */
-		public void release() {
-			sink.release();
+		public void close() {
+			sink.close();
 		}		
 	}
 }

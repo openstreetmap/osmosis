@@ -4,8 +4,6 @@ package org.openstreetmap.osmosis.apidb.common;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
@@ -17,7 +15,6 @@ import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
  * @author Brett Henderson
  */
 public class MysqlIdentityValueLoader implements IdentityValueLoader {
-	private static final Logger LOG = Logger.getLogger(MysqlIdentityValueLoader.class.getName());
 	private static final String SQL_SELECT_LAST_INSERT_ID =
 		"SELECT LAST_INSERT_ID() AS lastInsertId FROM DUAL";
 	
@@ -46,41 +43,16 @@ public class MysqlIdentityValueLoader implements IdentityValueLoader {
 	 * @return The newly inserted id.
 	 */
 	public long getLastInsertId() {
-		ResultSet lastInsertQuery;
-		
 		if (selectInsertIdStatement == null) {
-			selectInsertIdStatement =
-				statementContainer.add(dbCtx.prepareStatementForStreaming(SQL_SELECT_LAST_INSERT_ID));
+			selectInsertIdStatement = statementContainer.add(dbCtx
+					.prepareStatementForStreaming(SQL_SELECT_LAST_INSERT_ID));
 		}
-		
-		lastInsertQuery = null;
-		try {
-			long lastInsertId;
-			
-			lastInsertQuery = selectInsertIdStatement.executeQuery();
-			
+
+		try (ResultSet lastInsertQuery = selectInsertIdStatement.executeQuery()) {
 			lastInsertQuery.next();
-			lastInsertId = lastInsertQuery.getLong("lastInsertId");
-			
-			lastInsertQuery.close();
-			lastInsertQuery = null;
-			
-			return lastInsertId;
-			
+			return lastInsertQuery.getLong("lastInsertId");
 		} catch (SQLException e) {
-			throw new OsmosisRuntimeException(
-				"Unable to retrieve the id of the newly inserted record.",
-				e
-			);
-		} finally {
-			if (lastInsertQuery != null) {
-				try {
-					lastInsertQuery.close();
-				} catch (SQLException e) {
-					// We are already in an error condition so log and continue.
-					LOG.log(Level.WARNING, "Unable to close last insert query.", e);
-				}
-			}
+			throw new OsmosisRuntimeException("Unable to retrieve the id of the newly inserted record.", e);
 		}
 	}
 
@@ -98,7 +70,7 @@ public class MysqlIdentityValueLoader implements IdentityValueLoader {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		statementContainer.release();
+	public void close() {
+		statementContainer.close();
 	}
 }

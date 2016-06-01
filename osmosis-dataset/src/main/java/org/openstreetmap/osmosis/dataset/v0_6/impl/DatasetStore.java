@@ -103,7 +103,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 			}
 			
 			@Override
-			public void release() {
+			public void close() {
 				throw new UnsupportedOperationException();
 			} });
 		
@@ -400,9 +400,7 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	 */
 	@Override
 	public DatasetContext createReader() {
-		ReleasableContainer releasableContainer = new ReleasableContainer();
-		
-		try {
+		try (ReleasableContainer releasableContainer = new ReleasableContainer()) {
 			DatasetContext reader;
 			
 			reader = new DatasetStoreReader(
@@ -428,9 +426,6 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 			releasableContainer.clear();
 			
 			return reader;
-			
-		} finally {
-			releasableContainer.release();
 		}
 	}
 	
@@ -438,14 +433,14 @@ public class DatasetStore implements Sink, EntityProcessor, Dataset {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		if (nodeObjectReader != null) {
-			nodeObjectReader.release();
+			nodeObjectReader.close();
 		}
 		if (nodeObjectOffsetIndexReader != null) {
-			nodeObjectOffsetIndexReader.release();
+			nodeObjectOffsetIndexReader.close();
 		}
 		
-		storeContainer.release();
+		storeContainer.close();
 	}
 }

@@ -22,35 +22,32 @@ public class ChangesetManagerTest extends AbstractDataTest {
      */
     @Test
     public void testChangeset() {
-    	DatabaseContext dbCtx;
-    	UserManager userManager;
-    	ChangesetManager changesetManager;
     	OsmUser user;
     	long changesetId;
-    	
+
     	user = new OsmUser(1, "user");
     	changesetId = 2;
-    	
-    	dbCtx = dbUtils.createDatabaseContext();
-    	
-    	// Reset the database to a clean state.
-    	dbUtils.truncateDatabase();
-    	
-    	userManager = new UserManager(dbCtx);
-    	changesetManager = new ChangesetManager(dbCtx);
-    	
-    	userManager.addOrUpdateUser(user);
-    	
-    	// Create the changeset in the database.
-    	changesetManager.addChangesetIfRequired(changesetId, user);
-    	
-    	// Make the same call which should just return if the changeset is already known.
-    	changesetManager.addChangesetIfRequired(changesetId, user);
-    	
-    	// Create a new instance of the manager to verify that it copes with a non-cached changeset.
-    	changesetManager = new ChangesetManager(dbCtx);
-    	changesetManager.addChangesetIfRequired(changesetId, user);
-    	
-    	dbCtx.release();
+
+    	try (DatabaseContext dbCtx = dbUtils.createDatabaseContext()) {
+	    	// Reset the database to a clean state.
+	    	dbUtils.truncateDatabase();
+	    	
+	    	try (UserManager userManager = new UserManager(dbCtx)) {
+	    		userManager.addOrUpdateUser(user);
+	    	}
+
+	    	try (ChangesetManager changesetManager = new ChangesetManager(dbCtx)) {		    	
+		    	// Create the changeset in the database.
+		    	changesetManager.addChangesetIfRequired(changesetId, user);
+		    	
+		    	// Make the same call which should just return if the changeset is already known.
+		    	changesetManager.addChangesetIfRequired(changesetId, user);
+	    	}
+
+	    	// Create a new instance of the manager to verify that it copes with a non-cached changeset.
+	    	try (ChangesetManager changesetManager = new ChangesetManager(dbCtx)) {
+		    	changesetManager.addChangesetIfRequired(changesetId, user);
+	    	}
+    	}
     }
 }

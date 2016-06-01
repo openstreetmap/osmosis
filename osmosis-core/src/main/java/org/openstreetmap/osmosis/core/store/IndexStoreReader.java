@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 
 
 /**
@@ -22,7 +22,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  *            The object type being stored.
  * @author Brett Henderson
  */
-public class IndexStoreReader<K, T extends IndexElement<K>> implements Releasable {
+public class IndexStoreReader<K, T extends IndexElement<K>> implements Closeable {
 	private RandomAccessObjectStoreReader<T> indexStoreReader;
 	private Comparator<K> ordering;
 	private boolean elementDetailsInitialized;
@@ -230,8 +230,8 @@ public class IndexStoreReader<K, T extends IndexElement<K>> implements Releasabl
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		indexStoreReader.release();
+	public void close() {
+		indexStoreReader.close();
 	}
 	
 	

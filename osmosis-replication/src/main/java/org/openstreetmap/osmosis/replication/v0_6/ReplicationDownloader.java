@@ -100,7 +100,7 @@ public class ReplicationDownloader extends BaseReplicationDownloader implements 
 				// Suppress the call.
 			}
 			@Override
-			public void release() {
+			public void close() {
 				// Suppress the call.
 			} });
 		
@@ -122,6 +122,6 @@ public class ReplicationDownloader extends BaseReplicationDownloader implements 
 	 */
 	@Override
 	protected void processRelease() {
-		changeSorter.release();
+		changeSorter.close();
 	}
 }

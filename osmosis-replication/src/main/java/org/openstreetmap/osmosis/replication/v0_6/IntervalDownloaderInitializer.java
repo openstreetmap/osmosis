@@ -94,7 +94,7 @@ public class IntervalDownloaderInitializer implements RunnableTask {
 			fileLock.unlock();
 			
 		} finally {
-			fileLock.release();
+			fileLock.close();
 		}
 	}
 }

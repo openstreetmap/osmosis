@@ -46,10 +46,9 @@ public class FileBasedSortTest {
 				}
 			}
 		};
-		FileBasedSort<SampleStoreable> fileBasedSort =
-				new FileBasedSort<SampleStoreable>(objectFactory, comparator, true);
 
-		try {
+		try (FileBasedSort<SampleStoreable> fileBasedSort =
+				new FileBasedSort<SampleStoreable>(objectFactory, comparator, true)) {
 			// Add randomly generated test values into the sorter.
 			Random random = new Random();
 			for (long i = 0; i < itemCount; i++) {
@@ -58,20 +57,14 @@ public class FileBasedSortTest {
 
 			// Read back all values in the sorter and verify that they are
 			// sorted correctly.
-			ReleasableIterator<SampleStoreable> resultIterator = fileBasedSort.iterate();
-			try {
+			try (ReleasableIterator<SampleStoreable> resultIterator = fileBasedSort.iterate()) {
 				int lastValue = Integer.MIN_VALUE;
 				while (resultIterator.hasNext()) {
 					int currentValue = resultIterator.next().getValue();
 					Assert.assertTrue(currentValue >= lastValue);
 					lastValue = currentValue;
 				}
-			} finally {
-				resultIterator.release();
 			}
-
-		} finally {
-			fileBasedSort.release();
 		}
 	}
 }

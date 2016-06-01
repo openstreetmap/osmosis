@@ -101,7 +101,7 @@ public class DeltaToDiffReader implements ReleasableIterator<ChangeContainer> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		sourceIterator.release();
+	public void close() {
+		sourceIterator.close();
 	}
 }

@@ -57,26 +57,14 @@ public class OsmHandlerTest {
 
 
 	private void parseString(String input) {
-		InputStream inputStream = null;
-		try {
-			inputStream = new ByteArrayInputStream(input.getBytes("UTF-8"));
+		try (InputStream inputStream = new ByteArrayInputStream(input.getBytes("UTF-8"))) {
 			parser.parse(inputStream, new OsmHandler(entityInspector, true));
 		} catch (UnsupportedEncodingException e) {
 			throw new OsmosisRuntimeException("String encoding exception", e);
-		} catch (SAXException e) {
-			throw new OsmosisRuntimeException("Parse exception", e);
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("IOException", e);
-		} finally {
-			try {
-				if (inputStream != null) {
-					inputStream.close();
-				}
-			} catch (IOException e) {
-				throw new OsmosisRuntimeException("IOException", e);
-			} finally {
-				inputStream = null;
-			}
+		} catch (SAXException e) {
+			throw new OsmosisRuntimeException("Parse exception", e);
 		}
 	}
 

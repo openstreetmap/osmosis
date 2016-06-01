@@ -28,7 +28,7 @@ public class ApidbTruncator implements RunnableTask {
 			"way_nodes", "way_tags", "ways", "node_tags", "nodes",
 			"changeset_tags", "changesets", "users"});
 
-	private final DatabaseContext dbCtx;
+	private DatabaseLoginCredentials loginCredentials;
 
 	private final SchemaVersionValidator schemaVersionValidator;
 
@@ -42,7 +42,7 @@ public class ApidbTruncator implements RunnableTask {
 	 *            Contains preferences configuring database behaviour.
 	 */
 	public ApidbTruncator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
-		dbCtx = new DatabaseContext(loginCredentials);
+		this.loginCredentials = loginCredentials;
 
 		schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
 	}
@@ -52,15 +52,12 @@ public class ApidbTruncator implements RunnableTask {
 	 * Truncates all data from the database.
 	 */
 	public void run() {
-		try {
+		try (DatabaseContext dbCtx = new DatabaseContext(loginCredentials)) {
 			schemaVersionValidator.validateVersion(ApidbVersionConstants.SCHEMA_MIGRATIONS);
 
 			dbCtx.truncateTables(TRUNCATE_TABLES);
 			
 			dbCtx.commit();
-
-		} finally {
-			dbCtx.release();
 		}
 	}
 }

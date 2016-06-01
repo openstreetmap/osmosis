@@ -110,7 +110,7 @@ public class ReplicationDataClient implements RunnableChangeSource {
 
 
 		@Override
-		public void release() {
+		public void close() {
 			// Do nothing.
 		}
 
@@ -121,7 +121,7 @@ public class ReplicationDataClient implements RunnableChangeSource {
 		 * the change sink release method.
 		 */
 		public void realRelease() {
-			changeSink.release();
+			changeSink.close();
 		}
 	}
 }

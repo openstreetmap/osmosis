@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 
 
 /**
@@ -23,7 +23,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  * 
  * @author Brett Henderson
  */
-public final class DataSourceManager implements Releasable {
+public final class DataSourceManager implements Closeable {
 	
 	private static final Logger LOG = Logger.getLogger(DataSourceManager.class.getName());
 	
@@ -162,7 +162,7 @@ public final class DataSourceManager implements Releasable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		if (localDataSource != null) {
 			try {
 				localDataSource.close();

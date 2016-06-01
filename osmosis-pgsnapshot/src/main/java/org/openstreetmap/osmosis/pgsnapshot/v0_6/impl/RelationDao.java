@@ -164,7 +164,7 @@ public class RelationDao extends EntityDao<Relation> {
 			
 		} finally {
 			if (sortingStore != null) {
-				sortingStore.release();
+				sortingStore.close();
 			}
 		}
 	}

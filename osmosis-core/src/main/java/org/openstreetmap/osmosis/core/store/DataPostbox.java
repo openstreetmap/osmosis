@@ -340,13 +340,13 @@ public class DataPostbox<T> implements Initializable {
 
 	/**
 	 * This method conforms to the
-	 * {@link org.openstreetmap.osmosis.core.lifecycle.Releasable} contract,
+	 * {@link org.openstreetmap.osmosis.core.lifecycle.Closeable} contract,
 	 * however there are limitations around calling it multiple times. Each call
 	 * to this method must be matched by a call to the outputRelease method in a
 	 * separate thread or deadlock will occur.
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		lock.lock();
 
 		try {

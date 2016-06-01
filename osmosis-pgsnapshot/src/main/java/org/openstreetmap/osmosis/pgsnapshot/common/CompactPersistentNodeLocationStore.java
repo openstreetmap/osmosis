@@ -63,11 +63,11 @@ public class CompactPersistentNodeLocationStore implements NodeLocationStore {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		if (nodeLocationsReader != null) {
-			nodeLocationsReader.release();
+			nodeLocationsReader.close();
 		}
 		
-		nodeLocations.release();
+		nodeLocations.close();
 	}
 }

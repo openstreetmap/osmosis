@@ -67,8 +67,8 @@ public class FlattenFilter extends SortedDuplicateEntityPipeValidator {
 
 
 		@Override
-		public void release() {
-			sink.release();
+		public void close() {
+			sink.close();
 		}
 	};
 

@@ -61,7 +61,7 @@ public class ReleasableAdaptorForIterator<T> implements ReleasableIterator<T> {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		// Do nothing.
 	}
 }

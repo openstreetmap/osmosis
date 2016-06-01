@@ -2,7 +2,7 @@
 package org.openstreetmap.osmosis.dataset.v0_6.impl;
 
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableContainer;
 import org.openstreetmap.osmosis.core.store.IndexStoreReader;
 import org.openstreetmap.osmosis.core.store.IntegerLongIndexElement;
@@ -14,7 +14,7 @@ import org.openstreetmap.osmosis.core.store.RandomAccessObjectStoreReader;
  * 
  * @author Brett Henderson
  */
-public class NodeStorageContainer implements Releasable {
+public class NodeStorageContainer implements Closeable {
 	private ReleasableContainer releasableContainer;
 	private RandomAccessObjectStoreReader<Node> nodeObjectReader;
 	private IndexStoreReader<Long, LongLongIndexElement> nodeObjectOffsetIndexReader;
@@ -108,7 +108,7 @@ public class NodeStorageContainer implements Releasable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		releasableContainer.release();
+	public void close() {
+		releasableContainer.close();
 	}
 }

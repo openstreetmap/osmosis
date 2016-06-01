@@ -49,7 +49,7 @@ public class MysqlIdentityValueLoader2 implements IdentityValueLoader {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		// Do nothing.
 	}
 }

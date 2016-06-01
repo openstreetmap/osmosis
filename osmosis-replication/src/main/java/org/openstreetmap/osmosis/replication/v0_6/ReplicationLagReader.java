@@ -156,7 +156,7 @@ public class ReplicationLagReader implements RunnableTask {
 			fileLock.unlock();
 			
 		} finally {
-			fileLock.release();
+			fileLock.close();
 		}
 	}
 }

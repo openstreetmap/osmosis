@@ -7,15 +7,13 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.openstreetmap.osmosis.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableContainer;
 import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
@@ -25,9 +23,7 @@ import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
  * 
  * @author Brett Henderson
  */
-public class ChangesetManager implements Releasable {
-
-	private static final Logger LOG = Logger.getLogger(ChangesetManager.class.getName());
+public class ChangesetManager implements Closeable {
 	
 	private static final int MAX_CHANGESET_ID_CACHE_SIZE = 32768;
 
@@ -72,28 +68,11 @@ public class ChangesetManager implements Releasable {
     
     
     private int readChangesetCount(ResultSet countSet) {
-    	ResultSet resultSet = countSet;
-    	
-    	try {
-    		int changesetCount;
-    		
-    		resultSet.next();
-    		changesetCount = resultSet.getInt("changesetCount");
-    		resultSet.close();
-    		resultSet = null;
-    		
-    		return changesetCount;
-    		
+    	try (ResultSet resultSet = countSet) {
+            resultSet.next();
+    		return resultSet.getInt("changesetCount");
     	} catch (SQLException e) {
     		throw new OsmosisRuntimeException("Unable to read the changeset count.", e);
-    	} finally {
-    		if (resultSet != null) {
-    			try {
-    				resultSet.close();
-    			} catch (SQLException e) {
-    				LOG.log(Level.WARNING, "Unable to close result set.", e);
-    			}
-    		}
     	}
     }
     
@@ -181,7 +160,7 @@ public class ChangesetManager implements Releasable {
      * {@inheritDoc}
      */
     @Override
-    public void release() {
-        releasableContainer.release();
+    public void close() {
+        releasableContainer.close();
     }
 }

@@ -83,7 +83,7 @@ public class ReplicationFileMergerInitializer implements RunnableTask {
 			fileLock.unlock();
 			
 		} finally {
-			fileLock.release();
+			fileLock.close();
 		}
 	}
 }

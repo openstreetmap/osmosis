@@ -43,7 +43,7 @@ public class NullWriter implements Sink {
 	/**
 	 * Cleans up any open file handles.
 	 */
-	public void release() {
+	public void close() {
 		// Nothing to do.
 	}
 }

@@ -103,7 +103,7 @@ public class EntitySnapshotReader implements ReleasableIterator<EntityContainer>
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		sourceIterator.release();
+	public void close() {
+		sourceIterator.close();
 	}
 }

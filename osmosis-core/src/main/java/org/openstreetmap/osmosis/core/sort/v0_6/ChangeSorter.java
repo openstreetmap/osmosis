@@ -64,20 +64,12 @@ public class ChangeSorter implements ChangeSinkChangeSource {
 	 * {@inheritDoc}
 	 */
 	public void complete() {
-		ReleasableIterator<ChangeContainer> iterator = null;
-		
-		try {
-			iterator = fileBasedSort.iterate();
-			
+		try (ReleasableIterator<ChangeContainer> iterator = fileBasedSort.iterate()) {
 			while (iterator.hasNext()) {
 				changeSink.process(iterator.next());
 			}
 			
 			changeSink.complete();
-		} finally {
-			if (iterator != null) {
-				iterator.release();
-			}
 		}
 	}
 	
@@ -85,8 +77,8 @@ public class ChangeSorter implements ChangeSinkChangeSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		fileBasedSort.release();
-		changeSink.release();
+	public void close() {
+		fileBasedSort.close();
+		changeSink.close();
 	}
 }

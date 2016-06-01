@@ -145,7 +145,7 @@ public class UsedNodeFilter implements SinkSource, EntityProcessor {
 			}
 			sink.process(nodeContainer);
 		}
-		nodeIterator.release();
+		nodeIterator.close();
 		nodeIterator = null;
 
 		// send on all ways
@@ -153,7 +153,7 @@ public class UsedNodeFilter implements SinkSource, EntityProcessor {
 		while (wayIterator.hasNext()) {
 			sink.process(wayIterator.next());
 		}
-		wayIterator.release();
+		wayIterator.close();
 		wayIterator = null;
 
 		// send on all relations
@@ -161,7 +161,7 @@ public class UsedNodeFilter implements SinkSource, EntityProcessor {
 		while (relationIterator.hasNext()) {
 			sink.process(relationIterator.next());
 		}
-		relationIterator.release();
+		relationIterator.close();
 		relationIterator = null;
 
 		// done
@@ -172,17 +172,17 @@ public class UsedNodeFilter implements SinkSource, EntityProcessor {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		if (allNodes != null) {
-			allNodes.release();
+			allNodes.close();
 		}
 		if (allWays != null) {
-			allWays.release();			
+			allWays.close();			
 		}
 		if (allRelations != null) {
-			allRelations.release();
+			allRelations.close();
 		}
-		sink.release();
+		sink.close();
 	}
 	
 	

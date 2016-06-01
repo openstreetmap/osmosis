@@ -2,7 +2,7 @@
 package org.openstreetmap.osmosis.core.task.v0_6;
 
 import org.openstreetmap.osmosis.core.container.v0_6.Dataset;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 import org.openstreetmap.osmosis.core.task.common.Task;
 
 
@@ -11,7 +11,7 @@ import org.openstreetmap.osmosis.core.task.common.Task;
  * 
  * @author Brett Henderson
  */
-public interface DatasetSink extends Task, Releasable {
+public interface DatasetSink extends Task, Closeable {
 	
 	/**
 	 * Process the dataset. This must only be called once. This will perform all

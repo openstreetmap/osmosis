@@ -51,7 +51,7 @@ public class PostgresqlIdentityValueLoader2 implements IdentityValueLoader {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		// Do nothing.
 	}
 }

@@ -135,11 +135,11 @@ public abstract class BaseTableReader<T> implements ReleasableIterator<T> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		nextValue = null;
 		resultSet = null;
 		
-		dbCtx.release();
+		dbCtx.close();
 	}
 	
 	

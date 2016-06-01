@@ -76,7 +76,7 @@ public class ReplicationDownloaderInitializer implements RunnableTask {
 			fileLock.unlock();
 			
 		} finally {
-			fileLock.release();
+			fileLock.close();
 		}
 	}
 }

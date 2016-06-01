@@ -103,7 +103,7 @@ public class IndexedObjectStore<T extends Storeable> implements Completable {
 			
 		} finally {
 			if (objectStoreReader != null) {
-				objectStoreReader.release();
+				objectStoreReader.close();
 			}
 		}
 	}
@@ -122,8 +122,8 @@ public class IndexedObjectStore<T extends Storeable> implements Completable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		objectStore.release();
-		indexStore.release();
+	public void close() {
+		objectStore.close();
+		indexStore.close();
 	}
 }

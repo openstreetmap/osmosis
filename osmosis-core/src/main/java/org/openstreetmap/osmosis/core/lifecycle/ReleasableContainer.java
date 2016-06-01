@@ -15,15 +15,15 @@ import java.util.List;
  * 
  * @author Brett Henderson
  */
-public class ReleasableContainer implements Releasable {
-	private List<Releasable> objects;
+public class ReleasableContainer implements Closeable {
+	private List<Closeable> objects;
 	
 	
 	/**
 	 * Creates a new instance.
 	 */
 	public ReleasableContainer() {
-		objects = new ArrayList<Releasable>();
+		objects = new ArrayList<Closeable>();
 	}
 	
 	
@@ -37,7 +37,7 @@ public class ReleasableContainer implements Releasable {
 	 *            The object to be stored.
 	 * @return The object that was stored.
 	 */
-	public <T extends Releasable> T add(T object) {
+	public <T extends Closeable> T add(T object) {
 		objects.add(object);
 		
 		return object;
@@ -56,9 +56,9 @@ public class ReleasableContainer implements Releasable {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		for (Releasable object : objects) {
-			object.release();
+	public void close() {
+		for (Closeable object : objects) {
+			object.close();
 		}
 		objects.clear();
 	}

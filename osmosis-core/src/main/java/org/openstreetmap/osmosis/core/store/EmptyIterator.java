@@ -43,7 +43,7 @@ public class EmptyIterator<DataType> implements ReleasableIterator<DataType> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		// Nothing to do.
 	}
 }

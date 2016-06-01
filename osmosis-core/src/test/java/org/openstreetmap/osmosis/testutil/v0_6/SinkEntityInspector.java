@@ -60,7 +60,7 @@ public class SinkEntityInspector implements Sink {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		// Nothing to do here
 	}
 

@@ -6,23 +6,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.apidb.common.DatabaseContext;
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
+
 
 /**
  * Creates or loads the details of the Osmosis user in the database.
  * 
  * @author Brett Henderson
  */
-public class UserManager implements Releasable {
-
-    private static final Logger LOG = Logger.getLogger(UserManager.class.getName());
+public class UserManager implements Closeable {
 
     private static final String SELECT_SQL_USER_EXISTS = "SELECT Count(id) AS userCount FROM users WHERE id = ?";
 
@@ -64,46 +61,21 @@ public class UserManager implements Releasable {
      * @return True if the user exists, false otherwise.
      */
     private boolean doesUserExistInDb(OsmUser user) {
-        int prmIndex;
-        ResultSet resultSet;
-
         if (statementExists == null) {
             statementExists = statementContainer.add(dbCtx.prepareStatementForStreaming(SELECT_SQL_USER_EXISTS));
         }
 
-        resultSet = null;
         try {
-            boolean result;
-
-            prmIndex = 1;
-            statementExists.setInt(prmIndex++, user.getId());
-
-            resultSet = statementExists.executeQuery();
-            resultSet.next();
-
-            if (resultSet.getInt("userCount") == 0) {
-                result = false;
-            } else {
-                result = true;
-            }
-
-            resultSet.close();
-            resultSet = null;
-
-            return result;
-
+	        statementExists.setInt(1, user.getId());
+	        
+	        try (ResultSet resultSet = statementExists.executeQuery()) {
+	        	resultSet.next();
+	        	
+	        	return resultSet.getInt("userCount") != 0;
+	        }
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to check if user with id " + user.getId()
                     + " exists in the database.", e);
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    // We are already in an error condition so log and continue.
-                    LOG.log(Level.WARNING, "Unable to close existing user result set.", e);
-                }
-            }
         }
     }
 
@@ -199,7 +171,7 @@ public class UserManager implements Releasable {
      * {@inheritDoc}
      */
     @Override
-    public void release() {
-        statementContainer.release();
+    public void close() {
+        statementContainer.close();
     }
 }

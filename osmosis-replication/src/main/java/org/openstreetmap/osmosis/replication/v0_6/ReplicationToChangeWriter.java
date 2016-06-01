@@ -89,8 +89,8 @@ public class ReplicationToChangeWriter implements ChangeSinkChangeSource {
 
 
 	@Override
-	public void release() {
-		changeSink.release();
-		stateWriter.release();
+	public void close() {
+		changeSink.close();
+		stateWriter.close();
 	}
 }

@@ -211,7 +211,7 @@ public class XmlDownloader implements RunnableSource {
         } catch (IOException e) {
             throw new OsmosisRuntimeException("Unable to read XML.", e);
         } finally {
-            mySink.release();
+            mySink.close();
 
             cleanup();
         }

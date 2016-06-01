@@ -22,7 +22,7 @@ import org.openstreetmap.osmosis.core.database.DatabaseType;
  * 
  * @author Brett Henderson
  */
-public class DatabaseContext {
+public class DatabaseContext implements AutoCloseable {
 
     private static final Logger LOG = Logger.getLogger(DatabaseContext.class.getName());
 
@@ -448,9 +448,19 @@ public class DatabaseContext {
     /**
      * Releases all database resources. This method is guaranteed not to throw transactions and
      * should always be called in a finally block whenever this class is used.
+     * 
+     * @deprecated Use {@link #close()} instead.
      */
     public void release() {
-    	identityValueLoader.release();
+    	close();
+    }
+
+    /**
+     * Releases all database resources. This method is guaranteed not to throw transactions and
+     * should always be called in a finally or try-with-resources block whenever this class is used.
+     */
+    public void close() {
+    	identityValueLoader.close();
     	
         if (statement != null) {
             try {
@@ -502,31 +512,13 @@ public class DatabaseContext {
      * @return True if the column exists, false otherwise.
      */
     public boolean doesColumnExist(String tableName, String columnName) {
-        ResultSet resultSet = null;
-        boolean result;
+    	LOG.finest("Checking if column {" + columnName + "} in table {" + tableName + "} exists.");
 
-        try {
-            LOG.finest("Checking if column {" + columnName + "} in table {" + tableName + "} exists.");
-
-            resultSet = getConnection().getMetaData().getColumns(null, null, tableName, columnName);
-            result = resultSet.next();
-            resultSet.close();
-            resultSet = null;
-
-            return result;
-
+        try (ResultSet resultSet = getConnection().getMetaData().getColumns(null, null, tableName, columnName)) {
+        	return resultSet.next();
         } catch (SQLException e) {
-            throw new OsmosisRuntimeException("Unable to check for the existence of column " + tableName + "."
-                    + columnName + ".", e);
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    // We are already in an error condition so log and continue.
-                    LOG.log(Level.WARNING, "Unable to close column existence result set.", e);
-                }
-            }
+        	throw new OsmosisRuntimeException("Unable to check for the existence of column " + tableName + "."
+                  + columnName + ".", e);
         }
     }
 
@@ -537,30 +529,14 @@ public class DatabaseContext {
      * @return True if the table exists, false otherwise.
      */
     public boolean doesTableExist(String tableName) {
-        ResultSet resultSet = null;
-        boolean result;
-
-        try {
+        try (ResultSet resultSet =
+                     getConnection().getMetaData().getTables(null, null, tableName, new String[] {"TABLE"})) {
             LOG.finest("Checking if table {" + tableName + "} exists.");
 
-            resultSet = getConnection().getMetaData().getTables(null, null, tableName, new String[] {"TABLE"});
-            result = resultSet.next();
-            resultSet.close();
-            resultSet = null;
-
-            return result;
+            return resultSet.next();
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to check for the existence of table " + tableName + ".", e);
-        } finally {
-            if (resultSet != null) {
-                try {
-                    resultSet.close();
-                } catch (SQLException e) {
-                    // We are already in an error condition so log and continue.
-                    LOG.log(Level.WARNING, "Unable to close table existence result set.", e);
-                }
-            }
         }
     }
 
@@ -572,7 +548,7 @@ public class DatabaseContext {
      */
     @Override
     protected void finalize() throws Throwable {
-        release();
+        close();
 
         super.finalize();
     }

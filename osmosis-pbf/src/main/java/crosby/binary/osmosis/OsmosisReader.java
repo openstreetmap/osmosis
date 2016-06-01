@@ -47,7 +47,7 @@ public class OsmosisReader implements RunnableSource {
         } catch (IOException e) {
             throw new OsmosisRuntimeException("Unable to process PBF stream", e);
         } finally {
-        	sink.release();
+        	sink.close();
         }
     }
     /** Store the input stream we're using. */

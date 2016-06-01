@@ -233,7 +233,7 @@ public class IntegrityReporter implements Sink, EntityProcessor {
 	/**
 	 * Cleans up any open file handles.
 	 */
-	public void release() {
+	public void close() {
 		try {
 			try {
 				if (writer != null) {

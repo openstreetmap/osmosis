@@ -98,8 +98,8 @@ public abstract class TransformHelper<T extends Task & Initializable> implements
 
 
 	@Override
-	public void release() {
-		sink.release();
+	public void close() {
+		sink.close();
 	}
 
 

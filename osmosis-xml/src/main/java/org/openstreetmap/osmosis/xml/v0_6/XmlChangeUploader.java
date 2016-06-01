@@ -305,7 +305,7 @@ public class XmlChangeUploader implements ChangeSink {
      * {@inheritDoc}
      */
     @Override
-    public final void release() {
+    public final void close() {
         if (this.myChangesetNumber != -1) {
             try {
                 LOG.fine("release() called");

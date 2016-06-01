@@ -162,11 +162,9 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 			if (!sorted) {
 				final Comparator<K> keyOrdering = ordering;
 				
-				FileBasedSort<T> fileSort;
-				
 				// Create a new file based sort instance ordering elements by their
 				// identifiers.
-				fileSort = new FileBasedSort<T>(
+				try (FileBasedSort<T> fileSort = new FileBasedSort<T>(
 					serializationFactory,
 					new Comparator<T>() {
 						private Comparator<K> elementKeyOrdering = keyOrdering;
@@ -177,15 +175,9 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 						}
 					},
 					true
-				);
-				
-				try {
-					RandomAccessObjectStoreReader<T> indexStoreReader;
-					ReleasableIterator<T> sortIterator;
-					
+				)) {
 					// Read all data from the index store into the sorting store.
-					indexStoreReader = indexStore.createReader();
-					try {
+					try (RandomAccessObjectStoreReader<T> indexStoreReader = indexStore.createReader()) {
 						Iterator<T> indexIterator;
 						
 						indexIterator = indexStoreReader.iterate();
@@ -193,12 +185,10 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 						while (indexIterator.hasNext()) {
 							fileSort.add(indexIterator.next());
 						}
-					} finally {
-						indexStoreReader.release();
 					}
 					
 					// Release the existing index store and create a new one.
-					indexStore.release();
+					indexStore.close();
 					if (indexFile != null) {
 						indexStore = new RandomAccessObjectStore<T>(serializationFactory, indexFile);
 					} else {
@@ -206,17 +196,12 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 					}
 					
 					// Read all data from the sorting store back into the index store.
-					sortIterator = fileSort.iterate();
-					try {
+					try (ReleasableIterator<T> sortIterator = fileSort.iterate()) {
 						while (sortIterator.hasNext()) {
 							indexStore.add(sortIterator.next());
 						}
-					} finally {
-						sortIterator.release();
 					}
 					
-				} finally {
-					fileSort.release();
 				}
 			}
 			
@@ -228,7 +213,7 @@ public class IndexStore<K, T extends IndexElement<K>> implements Completable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		indexStore.release();
+	public void close() {
+		indexStore.close();
 	}
 }

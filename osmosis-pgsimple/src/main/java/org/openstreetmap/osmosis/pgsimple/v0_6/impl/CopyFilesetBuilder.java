@@ -252,8 +252,8 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 	/**
 	 * Releases all resources.
 	 */
-	public void release() {
-		writerContainer.release();
-		wayGeometryBuilder.release();
+	public void close() {
+		writerContainer.close();
+		wayGeometryBuilder.close();
 	}
 }

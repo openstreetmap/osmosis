@@ -156,7 +156,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 
 
 			@Override
-			public void release() {
+			public void close() {
 				// Suppress the call.
 			}
 		});
@@ -264,7 +264,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 				LOG.finer("Closing change sink for interval with sequence number "
 						+ currentDataState.getSequenceNumber());
 				changeSink.complete();
-				changeSink.release();
+				changeSink.close();
 
 				replicationStore.saveState(currentDataState);
 
@@ -305,7 +305,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 			changeSink.complete();
 			replicationStore.saveState(currentDataState);
 
-			changeSink.release();
+			changeSink.close();
 			changeSink = null;
 
 			sinkActive = false;
@@ -319,7 +319,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	@Override
 	protected void processRelease() {
 		if (sinkActive) {
-			changeSink.release();
+			changeSink.close();
 			sinkActive = false;
 		}
 	}

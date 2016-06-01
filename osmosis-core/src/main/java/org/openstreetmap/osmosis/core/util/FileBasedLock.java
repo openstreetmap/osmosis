@@ -9,7 +9,7 @@ import java.nio.channels.FileLock;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.lifecycle.Releasable;
+import org.openstreetmap.osmosis.core.lifecycle.Closeable;
 
 
 /**
@@ -18,7 +18,7 @@ import org.openstreetmap.osmosis.core.lifecycle.Releasable;
  * 
  * @author Brett Henderson
  */
-public class FileBasedLock implements Releasable {
+public class FileBasedLock implements Closeable {
 	
 	private static final Logger LOG = Logger.getLogger(FileBasedLock.class.getName());
 	
@@ -103,7 +103,7 @@ public class FileBasedLock implements Releasable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		if (outputStream != null) {
 			try {
 				outputStream.close();

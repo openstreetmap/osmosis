@@ -53,7 +53,7 @@ public class PostgreSqlDatasetReader implements RunnableDatasetSource, Dataset {
 			datasetSink.process(this);
 			
 		} finally {
-			datasetSink.release();
+			datasetSink.close();
 		}
 	}
 	

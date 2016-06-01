@@ -136,7 +136,7 @@ public abstract class BaseTableReader<T> implements ReleasableIterator<T> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		if (resultSet != null) {
 			try {
 				resultSet.close();

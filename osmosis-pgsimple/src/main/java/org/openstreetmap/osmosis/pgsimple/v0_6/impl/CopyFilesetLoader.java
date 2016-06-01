@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
@@ -64,35 +63,15 @@ public class CopyFilesetLoader implements Runnable {
 	 *            The table to load the data into.
 	 */
     public void loadCopyFile(DatabaseContext dbCtx, File copyFile, String tableName) {
-    	CopyManager copyManager;
-    	InputStream inStream = null;
-    	
-    	try {
-    		InputStream bufferedInStream;
-    		
-    		inStream = new FileInputStream(copyFile);
-    		bufferedInStream = new BufferedInputStream(inStream, 65536);
-    		
-    		copyManager = new CopyManager((BaseConnection) dbCtx.getConnection());
+    	try (InputStream bufferedInStream = new BufferedInputStream(new FileInputStream(copyFile), 65536)) {
+    		CopyManager copyManager = new CopyManager((BaseConnection) dbCtx.getConnection());
     		
     		copyManager.copyIn("COPY " + tableName + " FROM STDIN", bufferedInStream);
-			
-    		inStream.close();
-			inStream = null;
 			
     	} catch (IOException e) {
     		throw new OsmosisRuntimeException("Unable to process COPY file " + copyFile + ".", e);
     	} catch (SQLException e) {
     		throw new OsmosisRuntimeException("Unable to process COPY file " + copyFile + ".", e);
-    	} finally {
-    		if (inStream != null) {
-				try {
-					inStream.close();
-				} catch (Exception e) {
-					LOG.log(Level.SEVERE, "Unable to close COPY file.", e);
-				}
-				inStream = null;
-			}
     	}
     }
     
@@ -101,9 +80,7 @@ public class CopyFilesetLoader implements Runnable {
      * Reads all data from the database and send it to the sink.
      */
     public void run() {
-    	DatabaseContext dbCtx = new DatabaseContext(loginCredentials);
-    	
-    	try {
+    	try (DatabaseContext dbCtx = new DatabaseContext(loginCredentials)) {
 			IndexManager indexManager;
 			
 			new SchemaVersionValidator(dbCtx, preferences)
@@ -147,9 +124,6 @@ public class CopyFilesetLoader implements Runnable {
     		dbCtx.executeStatement("VACUUM ANALYZE");
     		
     		LOG.fine("Complete.");
-    		
-    	} finally {
-    		dbCtx.release();
     	}
     }
 }

@@ -829,10 +829,10 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		statementContainer.release();
-		wayGeometryBuilder.release();
+	public void close() {
+		statementContainer.close();
+		wayGeometryBuilder.close();
 		
-		dbCtx.release();
+		dbCtx.close();
 	}
 }

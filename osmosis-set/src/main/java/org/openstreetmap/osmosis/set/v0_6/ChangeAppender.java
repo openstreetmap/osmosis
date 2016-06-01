@@ -105,7 +105,7 @@ public class ChangeAppender implements MultiChangeSinkRunnableChangeSource {
 			}
 		
 		} finally {
-			changeSink.release();
+			changeSink.close();
 
 			// Release all input sources.
 			for (DataPostbox<ChangeContainer> source : sources) {

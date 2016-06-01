@@ -7,9 +7,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -97,7 +95,6 @@ public class IntervalDownloader implements RunnableChangeSource {
 	 */
 	private Date getServerTimestamp(URL baseUrl) {
 		URL timestampUrl;
-		InputStream timestampStream = null;
 		
 		try {
 			timestampUrl = new URL(baseUrl, SERVER_TSTAMP_FILE);
@@ -106,35 +103,21 @@ public class IntervalDownloader implements RunnableChangeSource {
 		}
 		
 		try {
-			BufferedReader reader;
 			Date result;
 			
 			URLConnection connection = timestampUrl.openConnection();
 			connection.setReadTimeout(15 * 60 * 1000); // timeout 15 minutes
 			connection.setConnectTimeout(15 * 60 * 1000); // timeout 15 minutes
 			connection.setRequestProperty("User-Agent", "Osmosis/" + OsmosisConstants.VERSION);
-			timestampStream = connection.getInputStream();
 			
-			reader = new BufferedReader(new InputStreamReader(timestampStream));
-			
-			result = dateParser.parse(reader.readLine());
-			
-			timestampStream.close();
-			timestampStream = null;
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+				result = dateParser.parse(reader.readLine());
+			}
 			
 			return result;
 			
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to read the timestamp from the server.", e);
-		} finally {
-			try {
-				if (timestampStream != null) {
-					timestampStream.close();
-				}
-			} catch (IOException e) {
-				// We are already in an error condition so log and continue.
-				LOG.log(Level.WARNING, "Unable to close timestamp stream.", e);
-			}
 		}
 	}
 	
@@ -151,8 +134,6 @@ public class IntervalDownloader implements RunnableChangeSource {
 	 */
 	private File downloadChangesetFile(String fileName, URL baseUrl) {
 		URL changesetUrl;
-		InputStream inputStream = null;
-		OutputStream outputStream = null;
 		
 		try {
 			changesetUrl = new URL(baseUrl, fileName);
@@ -161,59 +142,31 @@ public class IntervalDownloader implements RunnableChangeSource {
 		}
 		
 		try {
-			BufferedInputStream source;
-			BufferedOutputStream sink;
 			File outputFile;
-			byte[] buffer;
 			
 			// Open an input stream for the changeset file on the server.
 			URLConnection connection = changesetUrl.openConnection();
 			connection.setReadTimeout(15 * 60 * 1000); // timeout 15 minutes
 			connection.setConnectTimeout(15 * 60 * 1000); // timeout 15 minutes
-			inputStream = connection.getInputStream();
-			source = new BufferedInputStream(inputStream, 65536);
-			
-			// Create a temporary file to write the data to.
-			outputFile = File.createTempFile("change", null);
-			
-			// Open a output stream for the destination file.
-			outputStream = new FileOutputStream(outputFile);
-			sink = new BufferedOutputStream(outputStream, 65536);
-			
-			// Download the file.
-			buffer = new byte[65536];
-			for (int bytesRead = source.read(buffer); bytesRead > 0; bytesRead = source.read(buffer)) {
-				sink.write(buffer, 0, bytesRead);
+			try (BufferedInputStream source = new BufferedInputStream(connection.getInputStream(), 65536)) {
+
+				// Create a temporary file to write the data to.
+				outputFile = File.createTempFile("change", null);
+				
+				// Open a output stream for the destination file.
+				try (BufferedOutputStream sink = new BufferedOutputStream(new FileOutputStream(outputFile), 65536)) {
+					// Download the file.
+					byte[] buffer = new byte[65536];
+					for (int bytesRead = source.read(buffer); bytesRead > 0; bytesRead = source.read(buffer)) {
+						sink.write(buffer, 0, bytesRead);
+					}
+				}
 			}
-			sink.flush();
-			
-			// Clean up all file handles.
-			inputStream.close();
-			inputStream = null;
-			outputStream.close();
-			outputStream = null;
 			
 			return outputFile;
 			
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to read the changeset file " + fileName + " from the server.", e);
-		} finally {
-			try {
-				if (inputStream != null) {
-					inputStream.close();
-				}
-			} catch (IOException e) {
-				// We are already in an error condition so log and continue.
-				LOG.log(Level.WARNING, "Unable to changeset download stream.", e);
-			}
-			try {
-				if (outputStream != null) {
-					outputStream.close();
-				}
-			} catch (IOException e) {
-				// We are already in an error condition so log and continue.
-				LOG.log(Level.WARNING, "Unable to changeset output stream.", e);
-			}
 		}
 	}
 	
@@ -408,8 +361,8 @@ public class IntervalDownloader implements RunnableChangeSource {
 			fileLock.unlock();
 			
 		} finally {
-			changeSink.release();
-			fileLock.release();
+			changeSink.close();
+			fileLock.close();
 		}
 	}
 }

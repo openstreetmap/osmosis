@@ -130,7 +130,7 @@ public class WayDao extends EntityDao<Way> {
 			
 		} finally {
 			if (sortingStore != null) {
-				sortingStore.release();
+				sortingStore.close();
 			}
 		}
 	}

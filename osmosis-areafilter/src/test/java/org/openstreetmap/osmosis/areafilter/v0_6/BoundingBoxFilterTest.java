@@ -82,7 +82,7 @@ public class BoundingBoxFilterTest {
 	 */
 	@After
 	public void tearDown() {
-		simpleAreaFilter.release();
+		simpleAreaFilter.close();
 	}
 
 

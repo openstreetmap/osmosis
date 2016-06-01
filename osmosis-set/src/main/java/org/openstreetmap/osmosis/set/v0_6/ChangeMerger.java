@@ -199,7 +199,7 @@ public class ChangeMerger implements MultiChangeSinkRunnableChangeSource {
 			postbox1.outputComplete();
 			
 		} finally {
-			changeSink.release();
+			changeSink.close();
 			
 			postbox0.outputRelease();
 			postbox1.outputRelease();

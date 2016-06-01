@@ -86,7 +86,7 @@ public class MockReplicationDestination implements ChangeSink {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
+	public void close() {
 		// Do nothing.
 	}
 	

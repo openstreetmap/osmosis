@@ -4,8 +4,6 @@ package org.openstreetmap.osmosis.extract.apidb.v0_6;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
@@ -20,10 +18,6 @@ import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
  * @author Brett Henderson
  */
 public class DatabaseTimeLoader {
-	
-	private static final Logger LOG = Logger.getLogger(DatabaseTimeLoader.class.getName());
-	
-	
 	private DatabaseLoginCredentials loginCredentials;
 	
 	
@@ -38,30 +32,15 @@ public class DatabaseTimeLoader {
 	
 	
 	private Date readTimeField(ResultSet timeSet) {
-		ResultSet rs = timeSet;
-		try {
+		try (ResultSet rs = timeSet) {
 			Date dbTime;
-			Date result;
 			timeSet.next();
 			
 			dbTime = timeSet.getTimestamp("SystemTime");
-			result = new Date(dbTime.getTime());
-			
-			rs.close();
-			rs = null;
-			
-			return result;
+			return new Date(dbTime.getTime());
 
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to read the time from the database server.", e);
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					LOG.log(Level.WARNING, "Unable to close result set.", e);
-				}
-			}
 		}
 	}
 	
@@ -72,9 +51,7 @@ public class DatabaseTimeLoader {
 	 * @return The current system time.
 	 */
 	public Date getDatabaseTime() {
-		DatabaseContext dbCtx = new DatabaseContext(loginCredentials);
-		
-		try {
+		try (DatabaseContext dbCtx = new DatabaseContext(loginCredentials)) {
 			ResultSet rs;
 			Date result;
 			
@@ -83,8 +60,6 @@ public class DatabaseTimeLoader {
 			
 			return result;
 			
-		} finally {
-			dbCtx.release();
 		}
 	}
 }

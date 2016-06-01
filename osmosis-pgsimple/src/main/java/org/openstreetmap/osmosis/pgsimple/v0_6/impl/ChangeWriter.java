@@ -196,18 +196,14 @@ public class ChangeWriter {
 	 * Performs post-change database updates.
 	 */
 	public void complete() {
-		ReleasableStatementContainer statementContainer;
 		CallableStatement updateStatement;
 		
-		statementContainer = new ReleasableStatementContainer();
-		try {
+		try (ReleasableStatementContainer statementContainer = new ReleasableStatementContainer()) {
 			updateStatement = statementContainer.add(dbCtx.prepareCall("{call osmosisUpdate()}"));
 			updateStatement.executeUpdate();
 			
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException("Unable to invoke the osmosis update stored function.", e);
-		} finally {
-			statementContainer.release();
 		}
 		
 		// Clear all action records.

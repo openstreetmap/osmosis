@@ -221,7 +221,7 @@ public class MergeBoundTest {
 				sink.process(new NodeContainer(createNode()));
 				sink.complete();
 			} finally {
-				sink.release();
+				sink.close();
 			}
 		}
 		

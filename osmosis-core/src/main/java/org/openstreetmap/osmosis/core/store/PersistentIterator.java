@@ -55,7 +55,7 @@ public class PersistentIterator<T extends Storeable> implements ReleasableIterat
 			while (sourceIterator.hasNext()) {
 				store.add(sourceIterator.next());
 			}
-			sourceIterator.release();
+			sourceIterator.close();
 			sourceIterator = null;
 			
 			storeIterator = store.iterate();
@@ -90,16 +90,16 @@ public class PersistentIterator<T extends Storeable> implements ReleasableIterat
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
+	public void close() {
 		if (storeIterator != null) {
-			storeIterator.release();
+			storeIterator.close();
 			storeIterator = null;
 		}
 		
-		store.release();
+		store.close();
 		
 		if (sourceIterator != null) {
-			sourceIterator.release();
+			sourceIterator.close();
 			sourceIterator = null;
 		}
 	}

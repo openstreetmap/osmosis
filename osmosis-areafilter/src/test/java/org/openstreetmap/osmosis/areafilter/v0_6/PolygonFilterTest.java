@@ -73,7 +73,7 @@ public class PolygonFilterTest {
 	 */
 	@After
 	public void tearDown() {
-		polyAreaFilter.release();
+		polyAreaFilter.close();
 	}
 
 

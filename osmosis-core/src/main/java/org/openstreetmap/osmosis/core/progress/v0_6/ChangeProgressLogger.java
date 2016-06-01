@@ -94,8 +94,8 @@ public class ChangeProgressLogger implements ChangeSinkChangeSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		changeSink.release();
+	public void close() {
+		changeSink.close();
 	}
 	
 	

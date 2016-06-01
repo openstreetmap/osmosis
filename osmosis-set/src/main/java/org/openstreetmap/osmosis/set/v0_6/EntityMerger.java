@@ -246,7 +246,7 @@ public class EntityMerger implements MultiSinkRunnableSource {
 			postbox1.outputComplete();
 			
 		} finally {
-			sink.release();
+			sink.close();
 			
 			postbox0.outputRelease();
 			postbox1.outputRelease();

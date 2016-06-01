@@ -9,7 +9,7 @@ package org.openstreetmap.osmosis.core.lifecycle;
  * 
  * @author Brett Henderson
  */
-public interface Completable extends Releasable {
+public interface Completable extends Closeable {
 
 	/**
 	 * Ensures that all information is fully persisted. This includes database

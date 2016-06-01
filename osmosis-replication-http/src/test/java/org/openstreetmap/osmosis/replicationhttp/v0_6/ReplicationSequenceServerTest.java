@@ -40,7 +40,7 @@ public class ReplicationSequenceServerTest extends AbstractDataTest {
 				server.complete();
 			}
 		} finally {
-			server.release();
+			server.close();
 		}
 	}
 }

@@ -184,7 +184,7 @@ public abstract class EntityDao<T extends Entity> {
 			
 		} finally {
 			if (sortingStore != null) {
-				sortingStore.release();
+				sortingStore.close();
 			}
 		}
 	}
@@ -246,7 +246,7 @@ public abstract class EntityDao<T extends Entity> {
 			
 		} finally {
 			if (sortingStore != null) {
-				sortingStore.release();
+				sortingStore.close();
 			}
 		}
 	}
@@ -282,7 +282,7 @@ public abstract class EntityDao<T extends Entity> {
 			return entityHistoryReader;
 			
 		} finally {
-			releasableContainer.release();
+			releasableContainer.close();
 		}
 	}
 	

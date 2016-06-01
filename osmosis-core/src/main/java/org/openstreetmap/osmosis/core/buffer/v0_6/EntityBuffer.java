@@ -60,8 +60,8 @@ public class EntityBuffer implements SinkRunnableSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void release() {
-		buffer.release();
+	public void close() {
+		buffer.close();
 	}
 	
 	
@@ -88,7 +88,7 @@ public class EntityBuffer implements SinkRunnableSource {
 			buffer.outputComplete();
 			
 		} finally {
-			sink.release();
+			sink.close();
 			buffer.outputRelease();
 		}
 	}

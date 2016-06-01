@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DbFeature;
@@ -27,8 +25,7 @@ import org.openstreetmap.osmosis.pgsimple.common.NoSuchRecordException;
  *            The entity type to be supported.
  */
 public abstract class EntityDao<T extends Entity> extends BaseDao {
-	private static final Logger LOG = Logger.getLogger(EntityDao.class.getName());
-	
+
 	private EntityFeatureDao<Tag, DbFeature<Tag>> tagDao;
 	private ActionDao actionDao;
 	private EntityMapper<T> entityMapper;
@@ -67,45 +64,31 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	 * @return True if the entity exists in the database.
 	 */
 	public boolean exists(long entityId) {
-		ResultSet resultSet = null;
-		
 		if (countStatement == null) {
 			countStatement = prepareStatement(entityMapper.getSqlSelectCount(true));
 		}
 		
 		try {
-			boolean result;
-			
 			countStatement.setLong(1, entityId);
-			
-			resultSet = countStatement.executeQuery();
-			
-			if (!resultSet.next()) {
-				throw new OsmosisRuntimeException(
-						"Entity count query didn't return any rows.");
+
+			try (ResultSet resultSet = countStatement.executeQuery()) {
+				boolean result;
+				
+				if (!resultSet.next()) {
+					throw new OsmosisRuntimeException(
+							"Entity count query didn't return any rows.");
+				}
+				result = resultSet.getLong("count") > 0;
+				
+				return result;
 			}
-			result = resultSet.getLong("count") > 0;
-			
-			resultSet.close();
-			resultSet = null;
-			
-			return result;
-			
+
 		} catch (SQLException e) {
 			throw new OsmosisRuntimeException(
 				"Count query failed for "
 					+ entityMapper.getEntityName() + " " + entityId + ".",
 				e
 			);
-		} finally {
-			if (resultSet != null) {
-				try {
-					resultSet.close();
-				} catch (SQLException e) {
-					// We are already in an error condition so log and continue.
-					LOG.log(Level.WARNING, "Unable to close result set.", e);
-				}
-			}
 		}
 	}
 	
@@ -118,7 +101,6 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 	 * @return The loaded entity.
 	 */
 	public T getEntity(long entityId) {
-		ResultSet resultSet = null;
 		T entity;
 		
 		if (getStatement == null) {
@@ -127,17 +109,14 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 		
 		try {
 			getStatement.setLong(1, entityId);
-			
-			resultSet = getStatement.executeQuery();
-			
-			if (!resultSet.next()) {
-				throw new NoSuchRecordException(entityMapper.getEntityName()
-						+ " " + entityId + " doesn't exist.");
+	
+			try (ResultSet resultSet = getStatement.executeQuery()) {			
+				if (!resultSet.next()) {
+					throw new NoSuchRecordException(entityMapper.getEntityName()
+							+ " " + entityId + " doesn't exist.");
+				}
+				entity = entityMapper.parseRecord(resultSet);
 			}
-			entity = entityMapper.parseRecord(resultSet);
-			
-			resultSet.close();
-			resultSet = null;
 			
 			for (DbFeature<Tag> dbTag : tagDao.getAll(entityId)) {
 				entity.getTags().add(dbTag.getFeature());
@@ -154,15 +133,6 @@ public abstract class EntityDao<T extends Entity> extends BaseDao {
 					+ entityMapper.getEntityName() + " " + entityId + ".",
 				e
 			);
-		} finally {
-			if (resultSet != null) {
-				try {
-					resultSet.close();
-				} catch (SQLException e) {
-					// We are already in an error condition so log and continue.
-					LOG.log(Level.WARNING, "Unable to close result set.", e);
-				}
-			}
 		}
 	}
 	

@@ -68,8 +68,6 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 	 */
 	@Override
 	public void process(Dataset dataset) {
-		ReleasableIterator<EntityContainer> bboxData;
-		
 		if (datasetReader != null) {
 			throw new OsmosisRuntimeException("process may only be invoked once.");
 		}
@@ -77,8 +75,9 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 		datasetReader = dataset.createReader();
 		
 		// Pass all data within the bounding box to the sink.
-		bboxData = datasetReader.iterateBoundingBox(left, right, top, bottom, completeWays);
-		try {
+		try (ReleasableIterator<EntityContainer> bboxData =
+				datasetReader.iterateBoundingBox(left, right, top, bottom, completeWays)) {
+
 			sink.initialize(Collections.<String, Object>emptyMap());
 			
 			while (bboxData.hasNext()) {
@@ -87,8 +86,6 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 			
 			sink.complete();
 			
-		} finally {
-			bboxData.release();
 		}
 	}
 	
@@ -97,11 +94,11 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void release() {
-		sink.release();
+	public void close() {
+		sink.close();
 		
 		if (datasetReader != null) {
-			datasetReader.release();
+			datasetReader.close();
 		}
 	}
 }

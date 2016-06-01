@@ -212,7 +212,7 @@ public abstract class BaseXmlWriter {
 	/**
 	 * Cleans up any open file handles.
 	 */
-	public void release() {
+	public void close() {
 		try {
 			if (closeRequired) {
 				try {
