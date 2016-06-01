@@ -12,13 +12,6 @@ import java.util.logging.Level;
 public final class LogLevels {
 
 	/**
-	 * This class cannot be instantiated.
-	 */
-	private LogLevels() {
-		// Not callable.
-	}
-
-	/**
 	 * This is the default offset into the LOG_LEVELS array.
 	 */
 	public static final int DEFAULT_LEVEL_INDEX = 3;
@@ -27,14 +20,21 @@ public final class LogLevels {
 	 * Defines the log levels supported from the command line.
 	 */
 	public static final Level [] LOG_LEVELS = {
-		Level.OFF,
-		Level.SEVERE,
-		Level.WARNING,
-		Level.INFO,
-		Level.FINE,
-		Level.FINER,
-		Level.FINEST
+			Level.OFF,
+			Level.SEVERE,
+			Level.WARNING,
+			Level.INFO,
+			Level.FINE,
+			Level.FINER,
+			Level.FINEST
 	};
+
+	/**
+	 * This class cannot be instantiated.
+	 */
+	private LogLevels() {
+		// Not callable.
+	}
 
 
 	/**
