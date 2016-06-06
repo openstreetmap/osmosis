@@ -216,7 +216,7 @@ public final class Fileformat {
      * </pre>
      */
     public boolean hasRaw() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return (bitField0_ & 0x00000001) == 0x00000001;
     }
     /**
      * <code>optional bytes raw = 1;</code>
@@ -239,7 +239,7 @@ public final class Fileformat {
      * </pre>
      */
     public boolean hasRawSize() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return (bitField0_ & 0x00000002) == 0x00000002;
     }
     /**
      * <code>optional int32 raw_size = 2;</code>
@@ -262,7 +262,7 @@ public final class Fileformat {
      * </pre>
      */
     public boolean hasZlibData() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return (bitField0_ & 0x00000004) == 0x00000004;
     }
     /**
      * <code>optional bytes zlib_data = 3;</code>
@@ -285,7 +285,7 @@ public final class Fileformat {
      * </pre>
      */
     public boolean hasLzmaData() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return (bitField0_ & 0x00000008) == 0x00000008;
     }
     /**
      * <code>optional bytes lzma_data = 4;</code>
@@ -308,7 +308,7 @@ public final class Fileformat {
      * </pre>
      */
     @java.lang.Deprecated public boolean hasOBSOLETEBzip2Data() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
+      return (bitField0_ & 0x00000010) == 0x00000010;
     }
     /**
      * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
@@ -341,19 +341,19 @@ public final class Fileformat {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if ((bitField0_ & 0x00000001) == 0x00000001) {
         output.writeBytes(1, raw_);
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if ((bitField0_ & 0x00000002) == 0x00000002) {
         output.writeInt32(2, rawSize_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      if ((bitField0_ & 0x00000004) == 0x00000004) {
         output.writeBytes(3, zlibData_);
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if ((bitField0_ & 0x00000008) == 0x00000008) {
         output.writeBytes(4, lzmaData_);
       }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+      if ((bitField0_ & 0x00000010) == 0x00000010) {
         output.writeBytes(5, oBSOLETEBzip2Data_);
       }
       output.writeRawBytes(unknownFields);
@@ -365,23 +365,23 @@ public final class Fileformat {
       if (size != -1) return size;
 
       size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if ((bitField0_ & 0x00000001) == 0x00000001) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(1, raw_);
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if ((bitField0_ & 0x00000002) == 0x00000002) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(2, rawSize_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      if ((bitField0_ & 0x00000004) == 0x00000004) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, zlibData_);
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if ((bitField0_ & 0x00000008) == 0x00000008) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(4, lzmaData_);
       }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+      if ((bitField0_ & 0x00000010) == 0x00000010) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(5, oBSOLETEBzip2Data_);
       }
@@ -480,15 +480,15 @@ public final class Fileformat {
       public Builder clear() {
         super.clear();
         raw_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = bitField0_ & ~0x00000001;
         rawSize_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = bitField0_ & ~0x00000002;
         zlibData_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = bitField0_ & ~0x00000004;
         lzmaData_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = bitField0_ & ~0x00000008;
         oBSOLETEBzip2Data_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = bitField0_ & ~0x00000010;
         return this;
       }
 
@@ -512,23 +512,23 @@ public final class Fileformat {
         org.openstreetmap.osmosis.osmbinary.Fileformat.Blob result = new org.openstreetmap.osmosis.osmbinary.Fileformat.Blob(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+        if ((from_bitField0_ & 0x00000001) == 0x00000001) {
           to_bitField0_ |= 0x00000001;
         }
         result.raw_ = raw_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+        if ((from_bitField0_ & 0x00000002) == 0x00000002) {
           to_bitField0_ |= 0x00000002;
         }
         result.rawSize_ = rawSize_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+        if ((from_bitField0_ & 0x00000004) == 0x00000004) {
           to_bitField0_ |= 0x00000004;
         }
         result.zlibData_ = zlibData_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+        if ((from_bitField0_ & 0x00000008) == 0x00000008) {
           to_bitField0_ |= 0x00000008;
         }
         result.lzmaData_ = lzmaData_;
-        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+        if ((from_bitField0_ & 0x00000010) == 0x00000010) {
           to_bitField0_ |= 0x00000010;
         }
         result.oBSOLETEBzip2Data_ = oBSOLETEBzip2Data_;
@@ -590,7 +590,7 @@ public final class Fileformat {
        * </pre>
        */
       public boolean hasRaw() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
+        return (bitField0_ & 0x00000001) == 0x00000001;
       }
       /**
        * <code>optional bytes raw = 1;</code>
@@ -626,7 +626,7 @@ public final class Fileformat {
        * </pre>
        */
       public Builder clearRaw() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = bitField0_ & ~0x00000001;
         raw_ = getDefaultInstance().getRaw();
         
         return this;
@@ -641,7 +641,7 @@ public final class Fileformat {
        * </pre>
        */
       public boolean hasRawSize() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return (bitField0_ & 0x00000002) == 0x00000002;
       }
       /**
        * <code>optional int32 raw_size = 2;</code>
@@ -674,7 +674,7 @@ public final class Fileformat {
        * </pre>
        */
       public Builder clearRawSize() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = bitField0_ & ~0x00000002;
         rawSize_ = 0;
         
         return this;
@@ -689,7 +689,7 @@ public final class Fileformat {
        * </pre>
        */
       public boolean hasZlibData() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+        return (bitField0_ & 0x00000004) == 0x00000004;
       }
       /**
        * <code>optional bytes zlib_data = 3;</code>
@@ -725,7 +725,7 @@ public final class Fileformat {
        * </pre>
        */
       public Builder clearZlibData() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = bitField0_ & ~0x00000004;
         zlibData_ = getDefaultInstance().getZlibData();
         
         return this;
@@ -740,7 +740,7 @@ public final class Fileformat {
        * </pre>
        */
       public boolean hasLzmaData() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return (bitField0_ & 0x00000008) == 0x00000008;
       }
       /**
        * <code>optional bytes lzma_data = 4;</code>
@@ -776,7 +776,7 @@ public final class Fileformat {
        * </pre>
        */
       public Builder clearLzmaData() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = bitField0_ & ~0x00000008;
         lzmaData_ = getDefaultInstance().getLzmaData();
         
         return this;
@@ -791,7 +791,7 @@ public final class Fileformat {
        * </pre>
        */
       @java.lang.Deprecated public boolean hasOBSOLETEBzip2Data() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
+        return (bitField0_ & 0x00000010) == 0x00000010;
       }
       /**
        * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
@@ -827,7 +827,7 @@ public final class Fileformat {
        * </pre>
        */
       @java.lang.Deprecated public Builder clearOBSOLETEBzip2Data() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = bitField0_ & ~0x00000010;
         oBSOLETEBzip2Data_ = getDefaultInstance().getOBSOLETEBzip2Data();
         
         return this;
@@ -986,7 +986,7 @@ public final class Fileformat {
      * <code>required string type = 1;</code>
      */
     public boolean hasType() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return (bitField0_ & 0x00000001) == 0x00000001;
     }
     /**
      * <code>required string type = 1;</code>
@@ -1028,7 +1028,7 @@ public final class Fileformat {
      * <code>optional bytes indexdata = 2;</code>
      */
     public boolean hasIndexdata() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return (bitField0_ & 0x00000002) == 0x00000002;
     }
     /**
      * <code>optional bytes indexdata = 2;</code>
@@ -1043,7 +1043,7 @@ public final class Fileformat {
      * <code>required int32 datasize = 3;</code>
      */
     public boolean hasDatasize() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return (bitField0_ & 0x00000004) == 0x00000004;
     }
     /**
      * <code>required int32 datasize = 3;</code>
@@ -1078,13 +1078,13 @@ public final class Fileformat {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if ((bitField0_ & 0x00000001) == 0x00000001) {
         output.writeBytes(1, getTypeBytes());
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if ((bitField0_ & 0x00000002) == 0x00000002) {
         output.writeBytes(2, indexdata_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      if ((bitField0_ & 0x00000004) == 0x00000004) {
         output.writeInt32(3, datasize_);
       }
       output.writeRawBytes(unknownFields);
@@ -1096,15 +1096,15 @@ public final class Fileformat {
       if (size != -1) return size;
 
       size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if ((bitField0_ & 0x00000001) == 0x00000001) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(1, getTypeBytes());
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if ((bitField0_ & 0x00000002) == 0x00000002) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(2, indexdata_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      if ((bitField0_ & 0x00000004) == 0x00000004) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(3, datasize_);
       }
@@ -1203,11 +1203,11 @@ public final class Fileformat {
       public Builder clear() {
         super.clear();
         type_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = bitField0_ & ~0x00000001;
         indexdata_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = bitField0_ & ~0x00000002;
         datasize_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = bitField0_ & ~0x00000004;
         return this;
       }
 
@@ -1231,15 +1231,15 @@ public final class Fileformat {
         org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader result = new org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+        if ((from_bitField0_ & 0x00000001) == 0x00000001) {
           to_bitField0_ |= 0x00000001;
         }
         result.type_ = type_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+        if ((from_bitField0_ & 0x00000002) == 0x00000002) {
           to_bitField0_ |= 0x00000002;
         }
         result.indexdata_ = indexdata_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+        if ((from_bitField0_ & 0x00000004) == 0x00000004) {
           to_bitField0_ |= 0x00000004;
         }
         result.datasize_ = datasize_;
@@ -1301,7 +1301,7 @@ public final class Fileformat {
        * <code>required string type = 1;</code>
        */
       public boolean hasType() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
+        return (bitField0_ & 0x00000001) == 0x00000001;
       }
       /**
        * <code>required string type = 1;</code>
@@ -1353,7 +1353,7 @@ public final class Fileformat {
        * <code>required string type = 1;</code>
        */
       public Builder clearType() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = bitField0_ & ~0x00000001;
         type_ = getDefaultInstance().getType();
         
         return this;
@@ -1377,7 +1377,7 @@ public final class Fileformat {
        * <code>optional bytes indexdata = 2;</code>
        */
       public boolean hasIndexdata() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return (bitField0_ & 0x00000002) == 0x00000002;
       }
       /**
        * <code>optional bytes indexdata = 2;</code>
@@ -1401,7 +1401,7 @@ public final class Fileformat {
        * <code>optional bytes indexdata = 2;</code>
        */
       public Builder clearIndexdata() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = bitField0_ & ~0x00000002;
         indexdata_ = getDefaultInstance().getIndexdata();
         
         return this;
@@ -1412,7 +1412,7 @@ public final class Fileformat {
        * <code>required int32 datasize = 3;</code>
        */
       public boolean hasDatasize() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+        return (bitField0_ & 0x00000004) == 0x00000004;
       }
       /**
        * <code>required int32 datasize = 3;</code>
@@ -1433,7 +1433,7 @@ public final class Fileformat {
        * <code>required int32 datasize = 3;</code>
        */
       public Builder clearDatasize() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = bitField0_ & ~0x00000004;
         datasize_ = 0;
         
         return this;
