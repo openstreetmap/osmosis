@@ -35,9 +35,6 @@ public class Replicator {
 	 */
 	private static final int TRANSACTION_QUERY_SIZE_MAX = 25000;
 
-	private static final String FROM_THE_DATABASE = " from the database.";
-	private static final String LOADED_SYSTEM_TIME = "Loaded system time ";
-
 	private ChangeSink changeSink;
 	private ReplicationSource source;
 	private TransactionManager txnManager;
@@ -308,7 +305,7 @@ public class Replicator {
 			 */
 			systemTimestamp = systemTimeLoader.getSystemTime();
 			if (LOG.isLoggable(Level.FINER)) {
-				LOG.finer(LOADED_SYSTEM_TIME + systemTimestamp + FROM_THE_DATABASE);
+				LOG.finer("Loaded system time " + systemTimestamp + " from the database.");
 			}
 			
 			// Continue onto next step if we've reached the minimum interval or
@@ -337,7 +334,7 @@ public class Replicator {
 			
 			systemTimestamp = systemTimeLoader.getSystemTime();
 			if (LOG.isLoggable(Level.FINER)) {
-				LOG.finer(LOADED_SYSTEM_TIME + systemTimestamp + FROM_THE_DATABASE);
+				LOG.finer("Loaded system time " + systemTimestamp + " from the database.");
 			}
 			
 			// Continue onto next step if we've reached the maximum interval or
@@ -368,7 +365,7 @@ public class Replicator {
 		 */
 		systemTimestamp = systemTimeLoader.getSystemTime();
 		if (LOG.isLoggable(Level.FINER)) {
-			LOG.finer(LOADED_SYSTEM_TIME + systemTimestamp + FROM_THE_DATABASE);
+			LOG.finer("Loaded system time " + systemTimestamp + " from the database.");
 		}
 		
 		// If this is the first interval we are setting an initial state but not

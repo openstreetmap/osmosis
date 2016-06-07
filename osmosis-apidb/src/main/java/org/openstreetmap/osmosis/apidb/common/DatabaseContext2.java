@@ -30,7 +30,6 @@ public class DatabaseContext2 implements AutoCloseable {
 
     private static final Logger LOG = Logger.getLogger(DatabaseContext.class.getName());
 
-    private static final String UNKNOWN_DATABASE_TYPE = "Unknown database type ";
     private BasicDataSource dataSource;
     private PlatformTransactionManager txnManager;
     private TransactionTemplate txnTemplate;
@@ -61,7 +60,7 @@ public class DatabaseContext2 implements AutoCloseable {
             identityValueLoader = new MysqlIdentityValueLoader2(this);
             break;
         default:
-            throw new OsmosisRuntimeException(UNKNOWN_DATABASE_TYPE + loginCredentials.getDbType() + ".");
+            throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
         }
     }
     
@@ -111,7 +110,7 @@ public class DatabaseContext2 implements AutoCloseable {
         	jdbcTemplate.setFetchSize(Integer.MIN_VALUE);
 			break;
 		default:
-			throw new OsmosisRuntimeException(UNKNOWN_DATABASE_TYPE + dbType + ".");
+			throw new OsmosisRuntimeException("Unknown database type " + dbType + ".");
 		}
     }
 	
@@ -145,7 +144,7 @@ public class DatabaseContext2 implements AutoCloseable {
 			}
 			break;
 		default:
-			throw new OsmosisRuntimeException(UNKNOWN_DATABASE_TYPE + dbType + ".");
+			throw new OsmosisRuntimeException("Unknown database type " + dbType + ".");
 		}
 	}
 	
@@ -167,7 +166,7 @@ public class DatabaseContext2 implements AutoCloseable {
 			}
 			break;
 		default:
-			throw new OsmosisRuntimeException(UNKNOWN_DATABASE_TYPE + dbType + ".");
+			throw new OsmosisRuntimeException("Unknown database type " + dbType + ".");
 		}
 	}
 	
@@ -189,7 +188,7 @@ public class DatabaseContext2 implements AutoCloseable {
 			}
 			break;
 		default:
-			throw new OsmosisRuntimeException(UNKNOWN_DATABASE_TYPE + dbType + ".");
+			throw new OsmosisRuntimeException("Unknown database type " + dbType + ".");
 		}
 	}
 	
@@ -221,7 +220,7 @@ public class DatabaseContext2 implements AutoCloseable {
         	jdbcTemplate.update(statementBuilder.toString());
 			break;
 		default:
-			throw new OsmosisRuntimeException(UNKNOWN_DATABASE_TYPE + dbType + ".");
+			throw new OsmosisRuntimeException("Unknown database type " + dbType + ".");
 		}
 	}
 	
@@ -241,7 +240,7 @@ public class DatabaseContext2 implements AutoCloseable {
         	jdbcTemplate.update("UNLOCK TABLES");
 			break;
 		default:
-			throw new OsmosisRuntimeException(UNKNOWN_DATABASE_TYPE + dbType + ".");
+			throw new OsmosisRuntimeException("Unknown database type " + dbType + ".");
 		}
 	}
 
