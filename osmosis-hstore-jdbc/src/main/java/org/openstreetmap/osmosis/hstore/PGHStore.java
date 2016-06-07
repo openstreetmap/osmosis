@@ -94,7 +94,7 @@ public class PGHStore extends PGobject implements Serializable, Cloneable, Map<S
      */
     public String getValue()
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
         Iterator<String> i = _map.keySet().iterator();
         boolean first = true;
         while (i.hasNext()) {
@@ -104,18 +104,18 @@ public class PGHStore extends PGobject implements Serializable, Cloneable, Map<S
             if (first) {
                 first = false;
             } else {
-                buf.append(',');
+                builder.append(',');
             }
 
-            writeValue(buf, key);
-            buf.append("=>");
-            writeValue(buf, value);
+            writeValue(builder, key);
+            builder.append("=>");
+            writeValue(builder, value);
         }
 
-        return buf.toString();
+        return builder.toString();
     }
 
-    private static void writeValue(StringBuffer buf, Object o) {
+    private static void writeValue(StringBuilder buf, Object o) {
         if (o == null) {
             buf.append("NULL");
             return;
@@ -159,7 +159,7 @@ public class PGHStore extends PGobject implements Serializable, Cloneable, Map<S
     private static class Parser {
         private String value;
         private int ptr;
-        private StringBuffer cur;
+        private StringBuilder cur;
         private boolean escaped;
 
         private List<String> keys;
@@ -199,7 +199,7 @@ public class PGHStore extends PGobject implements Serializable, Cloneable, Map<S
         private boolean getValue(boolean ignoreEqual) throws SQLException {
             int state = GV_WAITVAL;
 
-            cur = new StringBuffer();
+            cur = new StringBuilder();
             escaped = false;
 
             while (true) {
