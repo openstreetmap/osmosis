@@ -9,4 +9,4 @@ cd "${scriptDir}"
 ./build-support/docker/build.sh
 
 # Run our interactive gradle enabled build environment.
-./build-support/docker/run.sh
+./build-support/docker/run.sh "${@}"
