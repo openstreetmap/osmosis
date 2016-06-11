@@ -1,4 +1,4 @@
-host=localhost
+host=db
 database=pgosmsnap06_test
 user=osm
 password=password
