@@ -1,5 +1,4 @@
 include 'build-support'
-include 'db-server'
 include 'osmosis-areafilter'
 include 'osmosis-apidb'
 include 'osmosis-core'
