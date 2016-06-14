@@ -1,0 +1,20 @@
+env:
+  DOCKER_COMPOSE_VERSION: 1.7.1
+
+services:
+  - docker
+
+before_install:
+  # We need at least Docker 1.9 to support build arguments
+  # See this for details: http://blog.awolski.com/upgrade-docker-on-travis-ci/
+  - sudo apt-get update
+  - sudo apt-get install -o Dpkg::Options::="--force-confold" --force-yes -y docker-engine
+  # We also need a more modern version of docker-compose
+  # See this for details: https://docs.travis-ci.com/user/docker/
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+
+script:
+  - ./docker.sh ./gradlew build
