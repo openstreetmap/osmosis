@@ -1,4 +1,7 @@
-# Overview
+# Osmosis
+[![Build Status](https://travis-ci.org/openstreetmap/osmosis.svg?branch=master)](https://travis-ci.org/openstreetmap/osmosis)
+
+## Overview
 
 Osmosis is a command line Java application for processing Open Street Map
 (http://www.openstreetmap.org) data.
@@ -14,7 +17,7 @@ Some brief build, running and installation notes are provided below, however
 most documentation may be found on the project wiki page.
 http://wiki.openstreetmap.org/wiki/Osmosis
 
-# Installation
+## Installation
 
 It is recommended to use a pre-built distribution archive rather than compile
 from source.  The location of the latest builds are specified on the project
@@ -23,7 +26,7 @@ sub-directory should either be added to your PATH, or in the case of UNIX-like
 environments the "osmosis" script may be symlinked into an existing directory
 already on the PATH.
 
-# Development
+## Development
 
 The easiest way to perform a full Osmosis build is to use the docker-based
 development environment.  If you have docker and docker-compose installed,
