@@ -15,11 +15,6 @@ import org.openstreetmap.osmosis.testutil.AbstractDataTest;
  */
 public class ApidbFileReplicatorTest extends AbstractDataTest {
 
-    private static final String REPLICATE_APIDB_0_6 = "--replicate-apidb-0.6";
-    private static final String AUTH_FILE = "authFile=";
-    private static final String ALLOW_INCORRECT_SCHEMA_VERSION_TRUE = "allowIncorrectSchemaVersion=true";
-    private static final String WRITE_REPLICATION = "--write-replication";
-    private static final String WORKING_DIRECTORY = "workingDirectory=";
     private final DatabaseUtilities dbUtils = new DatabaseUtilities(dataUtils);
 
 
@@ -48,81 +43,81 @@ public class ApidbFileReplicatorTest extends AbstractDataTest {
         
         // Initialise replication.
         Osmosis.run(new String[] {
-                "-q",
-                REPLICATE_APIDB_0_6,
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE,
-                WRITE_REPLICATION,
-                WORKING_DIRECTORY + workingDirectory.getPath()
+        		"-q",
+        		"--replicate-apidb-0.6",
+        		"authFile=" + authFile.getPath(),
+                "allowIncorrectSchemaVersion=true",
+        		"--write-replication",
+        		"workingDirectory=" + workingDirectory.getPath()
                 });
 
         // Load the database with a dataset.
         Osmosis.run(new String[] {
-                "-q",
-                "--read-xml-0.6",
-                snapshotFile.getPath(),
-                "--write-apidb-0.6",
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE
+        		"-q",
+        		"--read-xml-0.6",
+        		snapshotFile.getPath(),
+        		"--write-apidb-0.6",
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true"
                 });
         
         // Run replication.
         Osmosis.run(new String[] {
-                "-q",
-                REPLICATE_APIDB_0_6,
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE,
-                WRITE_REPLICATION,
-                WORKING_DIRECTORY + workingDirectory.getPath()
+        		"-q",
+        		"--replicate-apidb-0.6",
+        		"authFile=" + authFile.getPath(),
+                "allowIncorrectSchemaVersion=true",
+        		"--write-replication",
+        		"workingDirectory=" + workingDirectory.getPath()
                 });
 
         // Apply the changeset file to the database.
         Osmosis.run(new String[] {
-                "-q",
-                "--read-xml-change-0.6",
-                changesetFile.getPath(),
-                "--write-apidb-change-0.6",
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE});
+        		"-q",
+        		"--read-xml-change-0.6",
+        		changesetFile.getPath(),
+        		"--write-apidb-change-0.6",
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true" });
         
         // Run replication.
         Osmosis.run(new String[] {
-                "-q",
-                REPLICATE_APIDB_0_6,
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE,
-                WRITE_REPLICATION,
-                WORKING_DIRECTORY + workingDirectory.getPath()
+        		"-q",
+        		"--replicate-apidb-0.6",
+        		"authFile=" + authFile.getPath(),
+                "allowIncorrectSchemaVersion=true",
+        		"--write-replication",
+        		"workingDirectory=" + workingDirectory.getPath()
                 });
         
         // Ensure that replication runs successfully even if no data is available.
         Osmosis.run(new String[] {
-                "-q",
-                REPLICATE_APIDB_0_6,
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE,
-                WRITE_REPLICATION,
-                WORKING_DIRECTORY + workingDirectory.getPath()
+        		"-q",
+        		"--replicate-apidb-0.6",
+        		"authFile=" + authFile.getPath(),
+                "allowIncorrectSchemaVersion=true",
+        		"--write-replication",
+        		"workingDirectory=" + workingDirectory.getPath()
                 });
         
         // Ensure that replication can run with multiple loops.
         Osmosis.run(new String[] {
-                "-q",
-                REPLICATE_APIDB_0_6,
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE,
-                "iterations=2",
-                WRITE_REPLICATION,
-                WORKING_DIRECTORY + workingDirectory.getPath()
+        		"-q",
+        		"--replicate-apidb-0.6",
+        		"authFile=" + authFile.getPath(),
+                "allowIncorrectSchemaVersion=true",
+        		"iterations=2",
+        		"--write-replication",
+        		"workingDirectory=" + workingDirectory.getPath()
                 });
         
         // Decompress the result file.
         Osmosis.run(new String[] {
-                "-q",
-                "--read-xml-change-0.6",
-                new File(workingDirectory, "000/000/002.osc.gz").getPath(),
-                "--write-xml-change-0.6",
-                outputFile.getPath()
+        		"-q",
+        		"--read-xml-change-0.6",
+        		new File(workingDirectory, "000/000/002.osc.gz").getPath(),
+        		"--write-xml-change-0.6",
+        		outputFile.getPath()
                 });
 
         // Validate that the replicated file matches the input file.

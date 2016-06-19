@@ -50,25 +50,25 @@ public class ApidbWriter implements Sink, EntityProcessor {
     // on how many rows of data are to be inserted at a time.
 	private static final String INSERT_SQL_NODE_COLUMNS =
 		"INSERT INTO nodes(node_id, timestamp, version, visible, changeset_id, latitude, longitude, tile)";
-	private static final String INSERT_SQL_NODE_PARAMS = createQuestionMarks(8);
+	private static final String INSERT_SQL_NODE_PARAMS = createParamPlaceholders(8);
 	private static final int INSERT_PRM_COUNT_NODE = 8;
 
     private static final String INSERT_SQL_NODE_TAG_COLUMNS = "INSERT INTO node_tags (node_id, k, v, version)";
-    private static final String INSERT_SQL_NODE_TAG_PARAMS = createQuestionMarks(4);
+    private static final String INSERT_SQL_NODE_TAG_PARAMS = createParamPlaceholders(4);
 	private static final int INSERT_PRM_COUNT_NODE_TAG = 4;
 
     private static final String INSERT_SQL_WAY_COLUMNS =
     	"INSERT INTO ways (way_id, timestamp, version, visible, changeset_id)";
-    private static final String INSERT_SQL_WAY_PARAMS = createQuestionMarks(5);
+    private static final String INSERT_SQL_WAY_PARAMS = createParamPlaceholders(5);
 	private static final int INSERT_PRM_COUNT_WAY = 5;
 
     private static final String INSERT_SQL_WAY_TAG_COLUMNS = "INSERT INTO way_tags (way_id, k, v, version)";
-    private static final String INSERT_SQL_WAY_TAG_PARAMS = createQuestionMarks(4);
+    private static final String INSERT_SQL_WAY_TAG_PARAMS = createParamPlaceholders(4);
 	private static final int INSERT_PRM_COUNT_WAY_TAG = 4;
 
     private static final String INSERT_SQL_WAY_NODE_COLUMNS =
     	"INSERT INTO way_nodes (way_id, node_id, sequence_id, version)";
-    private static final String INSERT_SQL_WAY_NODE_PARAMS = createQuestionMarks(4);
+    private static final String INSERT_SQL_WAY_NODE_PARAMS = createParamPlaceholders(4);
 	private static final int INSERT_PRM_COUNT_WAY_NODE = 4;
 
     private static final String INSERT_SQL_RELATION_COLUMNS =
@@ -79,7 +79,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
     private static final String INSERT_SQL_RELATION_TAG_COLUMNS =
         "INSERT INTO relation_tags (relation_id, k, v, version)";
-    private static final String INSERT_SQL_RELATION_TAG_PARAMS = createQuestionMarks(4);
+    private static final String INSERT_SQL_RELATION_TAG_PARAMS = createParamPlaceholders(4);
 	private static final int INSERT_PRM_COUNT_RELATION_TAG = 4;
 
     private static final String INSERT_SQL_RELATION_MEMBER_COLUMNS =
@@ -111,19 +111,19 @@ public class ApidbWriter implements Sink, EntityProcessor {
     private static final String LOAD_CURRENT_NODE_TAGS =
     	"INSERT INTO current_node_tags SELECT node_id, k, v FROM node_tags WHERE node_id >= ? AND node_id < ?";
 
-    private static final String WHERE_WAY_ID_AND_WAY_ID = " WHERE way_id >= ? AND way_id < ?";
+    private static final String WHERE_WAY_ID_IN_RANGE = " WHERE way_id >= ? AND way_id < ?";
 
     private static final String LOAD_CURRENT_WAYS =
     	"INSERT INTO current_ways SELECT way_id, changeset_id, timestamp, visible, version FROM ways"
-            + WHERE_WAY_ID_AND_WAY_ID;
+            + WHERE_WAY_ID_IN_RANGE;
 
     private static final String LOAD_CURRENT_WAY_TAGS =
     	"INSERT INTO current_way_tags SELECT way_id, k, v FROM way_tags"
-            + WHERE_WAY_ID_AND_WAY_ID;
+            + WHERE_WAY_ID_IN_RANGE;
 
     private static final String LOAD_CURRENT_WAY_NODES =
     	"INSERT INTO current_way_nodes SELECT way_id, node_id, sequence_id FROM way_nodes"
-            + WHERE_WAY_ID_AND_WAY_ID;
+            + WHERE_WAY_ID_IN_RANGE;
 
     private static final String LOAD_CURRENT_RELATIONS =
     	"INSERT INTO current_relations SELECT relation_id, changeset_id, timestamp, visible, version"
@@ -154,7 +154,6 @@ public class ApidbWriter implements Sink, EntityProcessor {
     private static final int INSERT_BULK_ROW_COUNT_RELATION = 100;
     private static final int INSERT_BULK_ROW_COUNT_RELATION_TAG = 100;
     private static final int INSERT_BULK_ROW_COUNT_RELATION_MEMBER = 100;
-    private static final String DOES_NOT_HAVE_A_TIMESTAMP_SET = " does not have a timestamp set.";
     private String insertSqlSingleNode;
     private String insertSqlBulkNode;
     private String insertSqlSingleNodeTag;
@@ -322,6 +321,11 @@ public class ApidbWriter implements Sink, EntityProcessor {
     }
 
 
+    private OsmosisRuntimeException createUnknownDbTypeException() {
+        return new OsmosisRuntimeException("Unknown database type " + dbCtx.getDatabaseType() + ".");
+    }
+
+
     /**
      * Initialises prepared statements and obtains database locks. Can be called multiple times.
      */
@@ -345,7 +349,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
     					INSERT_SQL_RELATION_MEMBER_PARAMS_MYSQL, INSERT_BULK_ROW_COUNT_RELATION_MEMBER);
                 break;
             default:
-                throwOsmosisRuntimeException("Unknown database type " + dbCtx.getDatabaseType() + ".");
+                throw createUnknownDbTypeException();
             }
 
             bulkNodeStatement = dbCtx.prepareStatement(insertSqlBulkNode);
@@ -386,6 +390,13 @@ public class ApidbWriter implements Sink, EntityProcessor {
         }
     }
 
+    private void assertEntityHasTimestamp(Entity entity) {
+        if (entity.getTimestamp() == null) {
+            throw new OsmosisRuntimeException(
+                    entity.getType().toString() + " " + entity.getId() + " does not have a timestamp set.");
+        }
+    }
+
     /**
      * Sets node values as bind variable parameters to a node insert query.
      *
@@ -398,10 +409,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
         prmIndex = initialIndex;
 
-        // We can't write an entity with a null timestamp.
-        if (node.getTimestamp() == null) {
-            throwOsmosisRuntimeException("Node " + node.getId() + DOES_NOT_HAVE_A_TIMESTAMP_SET);
-        }
+        assertEntityHasTimestamp(node);
 
         try {
             statement.setLong(prmIndex++, node.getId());
@@ -418,11 +426,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
         }
     }
 
-    private void throwOsmosisRuntimeException(String message) {
-        throw new OsmosisRuntimeException(message);
-    }
-
-    private static String createQuestionMarks(int amount) {
+    private static String createParamPlaceholders(int amount) {
         StringBuilder questionMarks = new StringBuilder();
         for(int i = 0; i < amount; i++) {
             questionMarks.append("?");
@@ -445,10 +449,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
         prmIndex = initialIndex;
 
-        // We can't write an entity with a null timestamp.
-        if (way.getTimestamp() == null) {
-            throwOsmosisRuntimeException("Way " + way.getId() + DOES_NOT_HAVE_A_TIMESTAMP_SET);
-        }
+        assertEntityHasTimestamp(way);
 
         try {
             statement.setLong(prmIndex++, way.getId());
@@ -525,10 +526,7 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
         prmIndex = initialIndex;
 
-        // We can't write an entity with a null timestamp.
-        if (relation.getTimestamp() == null) {
-            throwOsmosisRuntimeException("Relation " + relation.getId() + DOES_NOT_HAVE_A_TIMESTAMP_SET);
-        }
+        assertEntityHasTimestamp(relation);
 
         try {
             statement.setLong(prmIndex++, relation.getId());

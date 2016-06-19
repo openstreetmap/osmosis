@@ -11,6 +11,7 @@ import org.openstreetmap.osmosis.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
+import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
@@ -151,10 +152,6 @@ public class ChangeWriter implements Completable {
     private static final String DELETE_SQL_RELATION_MEMBER_CURRENT =
     	"DELETE FROM current_relation_members WHERE relation_id = ?";
 
-    private static final String DOES_NOT_HAVE_A_TIMESTAMP_SET = " does not have a timestamp set.";
-    private static final String EXISTS = " exists.";
-    private static final String AND_KEY = " and key=(";
-
     private final DatabaseContext dbCtx;
     private final UserManager userManager;
     private final ChangesetManager changesetManager;
@@ -259,6 +256,13 @@ public class ChangeWriter implements Completable {
     	}
     }
 
+    private void assertEntityHasTimestamp(Entity entity) {
+        if (entity.getTimestamp() == null) {
+            throw new OsmosisRuntimeException(
+                    entity.getType().toString() + " " + entity.getId() + " does not have a timestamp set.");
+        }
+    }
+
     /**
      * Writes the specified node change to the database.
      * 
@@ -270,10 +274,7 @@ public class ChangeWriter implements Completable {
         boolean exists;
         int prmIndex;
 
-        // We can't write an entity with a null timestamp.
-        if (node.getTimestamp() == null) {
-            throw new OsmosisRuntimeException("Node " + node.getId() + DOES_NOT_HAVE_A_TIMESTAMP_SET);
-        }
+        assertEntityHasTimestamp(node);
 
         // Add or update the user in the database.
         userManager.addOrUpdateUser(node.getUser());
@@ -318,7 +319,7 @@ public class ChangeWriter implements Completable {
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException(
-            		"Unable to check if current node with id=" + node.getId() + EXISTS, e);
+            		"Unable to check if current node with id=" + node.getId() + " exists.", e);
         }
         if (exists) {
             // Update the node in the history table.
@@ -377,7 +378,7 @@ public class ChangeWriter implements Completable {
 
             } catch (SQLException e) {
                 throw new OsmosisRuntimeException("Unable to insert history node tag with id=" + node.getId()
-                        + AND_KEY + tag.getKey() + ").", e);
+                        + " and key=(" + tag.getKey() + ").", e);
             }
         }
 
@@ -399,7 +400,7 @@ public class ChangeWriter implements Completable {
 
             } catch (SQLException e) {
                 throw new OsmosisRuntimeException("Unable to check if current node with id=" + node.getId()
-                        + EXISTS, e);
+                        + " exists.", e);
             }
             if (exists) {
                 // Update the node in the current table.
@@ -457,7 +458,7 @@ public class ChangeWriter implements Completable {
 
                 } catch (SQLException e) {
                     throw new OsmosisRuntimeException("Unable to insert current node tag with id=" + node.getId()
-                            + AND_KEY + tag.getKey() + ").", e);
+                            + " and key=(" + tag.getKey() + ").", e);
                 }
             }
         }
@@ -475,10 +476,7 @@ public class ChangeWriter implements Completable {
         int prmIndex;
         List<WayNode> nodeReferenceList;
 
-        // We can't write an entity with a null timestamp.
-        if (way.getTimestamp() == null) {
-            throw new OsmosisRuntimeException("Way " + way.getId() + DOES_NOT_HAVE_A_TIMESTAMP_SET);
-        }
+        assertEntityHasTimestamp(way);
 
         // Add or update the user in the database.
         userManager.addOrUpdateUser(way.getUser());
@@ -541,7 +539,7 @@ public class ChangeWriter implements Completable {
             exists = checkIfEntityHistoryExists(selectWayCountStatement, way.getId(), way.getVersion());
 
         } catch (SQLException e) {
-            throw new OsmosisRuntimeException("Unable to check if current way with id=" + way.getId() + EXISTS, e);
+            throw new OsmosisRuntimeException("Unable to check if current way with id=" + way.getId() + " exists.", e);
         }
         if (exists) {
             // Update the way in the history table.
@@ -588,7 +586,7 @@ public class ChangeWriter implements Completable {
 
             } catch (SQLException e) {
                 throw new OsmosisRuntimeException("Unable to insert history way tag with id=" + way.getId()
-                        + AND_KEY + tag.getKey() + ").", e);
+                        + " and key=(" + tag.getKey() + ").", e);
             }
         }
 
@@ -638,7 +636,7 @@ public class ChangeWriter implements Completable {
                 exists = checkIfEntityExists(selectWayCurrentCountStatement, way.getId());
 
             } catch (SQLException e) {
-                throw new OsmosisRuntimeException("Unable to check if current way with id=" + way.getId() + EXISTS,
+                throw new OsmosisRuntimeException("Unable to check if current way with id=" + way.getId() + " exists.",
                         e);
             }
             if (exists) {
@@ -685,7 +683,7 @@ public class ChangeWriter implements Completable {
 
                 } catch (SQLException e) {
                     throw new OsmosisRuntimeException("Unable to insert current way tag with id=" + way.getId()
-                            + AND_KEY + tag.getKey() + ").", e);
+                            + " and key=(" + tag.getKey() + ").", e);
                 }
             }
 
@@ -723,10 +721,7 @@ public class ChangeWriter implements Completable {
         int prmIndex;
         List<RelationMember> relationMemberList;
 
-        // We can't write an entity with a null timestamp.
-        if (relation.getTimestamp() == null) {
-            throw new OsmosisRuntimeException("Relation " + relation.getId() + DOES_NOT_HAVE_A_TIMESTAMP_SET);
-        }
+        assertEntityHasTimestamp(relation);
 
         // Add or update the user in the database.
         userManager.addOrUpdateUser(relation.getUser());
@@ -817,7 +812,7 @@ public class ChangeWriter implements Completable {
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to check if current relation with id=" + relation.getId()
-                    + EXISTS, e);
+                    + " exists.", e);
         }
         if (exists) {
             // Update the relation in the history table.
@@ -866,7 +861,7 @@ public class ChangeWriter implements Completable {
 
             } catch (SQLException e) {
                 throw new OsmosisRuntimeException("Unable to insert history relation tag with id=" + relation.getId()
-                        + AND_KEY + tag.getKey() + ").", e);
+                        + " and key=(" + tag.getKey() + ").", e);
             }
         }
 
@@ -923,7 +918,7 @@ public class ChangeWriter implements Completable {
 
             } catch (SQLException e) {
                 throw new OsmosisRuntimeException("Unable to check if current relation with id=" + relation.getId()
-                        + EXISTS, e);
+                        + " exists.", e);
             }
             if (exists) {
                 // Update the relation in the current table.
@@ -973,7 +968,7 @@ public class ChangeWriter implements Completable {
 
                 } catch (SQLException e) {
                     throw new OsmosisRuntimeException("Unable to insert current relation tag with id="
-                            + relation.getId() + AND_KEY + tag.getKey() + ").", e);
+                            + relation.getId() + " and key=(" + tag.getKey() + ").", e);
                 }
             }
 

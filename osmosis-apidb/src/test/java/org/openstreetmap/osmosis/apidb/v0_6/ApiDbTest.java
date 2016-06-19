@@ -24,19 +24,9 @@ import org.openstreetmap.osmosis.testutil.AbstractDataTest;
 public class ApiDbTest extends AbstractDataTest {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd_HH:mm:ss";
-    private static final String V0_6_DB_SNAPSHOT_OSM = "v0_6/db-snapshot.osm";
-    private static final String READ_XML_0_6 = "--read-xml-0.6";
-    private static final String WRITE_APIDB_0_6 = "--write-apidb-0.6";
-    private static final String AUTH_FILE = "authFile=";
-    private static final String ALLOW_INCORRECT_SCHEMA_VERSION_TRUE = "allowIncorrectSchemaVersion=true";
-    private static final String READ_APIDB_0_6 = "--read-apidb-0.6";
-    private static final String TAG_SORT_0_6 = "--tag-sort-0.6";
-    private static final String WRITE_XML_0_6 = "--write-xml-0.6";
-    private static final String V0_6_DB_CHANGESET_OSC = "v0_6/db-changeset.osc";
-    private static final String READ_XML_CHANGE_0_6 = "--read-xml-change-0.6";
-    private static final String WRITE_APIDB_CHANGE_0_6 = "--write-apidb-change-0.6";
-
-    private final DatabaseUtilities dbUtils = new DatabaseUtilities(dataUtils);
+	
+	private final DatabaseUtilities dbUtils = new DatabaseUtilities(dataUtils);
+	
 
     private String convertUTCTimeToLocalTime(String dateString) throws ParseException {
         DateFormat inFormat;
@@ -66,7 +56,7 @@ public class ApiDbTest extends AbstractDataTest {
 
         // Generate input files.
         authFile = dbUtils.getAuthorizationFile();
-        inputFile = dataUtils.createDataFile(V0_6_DB_SNAPSHOT_OSM);
+        inputFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
         outputFile = dataUtils.newFile();
 
         // Remove all existing data from the database.
@@ -74,22 +64,22 @@ public class ApiDbTest extends AbstractDataTest {
 
         // Load the database with a dataset.
         Osmosis.run(new String[] {
-                "-q",
-                READ_XML_0_6,
-                inputFile.getPath(),
-                WRITE_APIDB_0_6,
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE
+        		"-q",
+        		"--read-xml-0.6",
+        		inputFile.getPath(),
+        		"--write-apidb-0.6",
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true"
                 });
 
         // Dump the database to an osm file.
         Osmosis.run(new String[] {
-                "-q",
-                READ_APIDB_0_6,
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE,
-                TAG_SORT_0_6,
-                WRITE_XML_0_6,
+        		"-q",
+        		"--read-apidb-0.6",
+        		"authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true",
+        		"--tag-sort-0.6",
+                "--write-xml-0.6",
                 outputFile.getPath()
                 });
 
@@ -111,7 +101,7 @@ public class ApiDbTest extends AbstractDataTest {
 
         // Generate input files.
         authFile = dbUtils.getAuthorizationFile();
-        inputFile = dataUtils.createDataFile(V0_6_DB_SNAPSHOT_OSM);
+        inputFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
         outputFile = File.createTempFile("test", ".osm");
 
         // Remove all existing data from the database.
@@ -119,21 +109,21 @@ public class ApiDbTest extends AbstractDataTest {
 
         // Load the database with a dataset.
         Osmosis.run(new String[] {
-                "-q",
-                READ_XML_0_6,
-                inputFile.getPath(),
-                WRITE_APIDB_0_6,
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE
+        		"-q",
+        		"--read-xml-0.6",
+        		inputFile.getPath(),
+        		"--write-apidb-0.6",
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true"
                 });
 
         // Dump the database to an osm file.
         Osmosis.run(new String[] {
-                "-q",
-                "--read-apidb-current-0.6",
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE,
-                TAG_SORT_0_6, WRITE_XML_0_6, outputFile.getPath() });
+        		"-q",
+        		"--read-apidb-current-0.6",
+        		"authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true",
+                "--tag-sort-0.6", "--write-xml-0.6", outputFile.getPath() });
 
         // Validate that the output file matches the input file.
         dataUtils.compareFiles(inputFile, outputFile);
@@ -155,8 +145,8 @@ public class ApiDbTest extends AbstractDataTest {
 
         // Generate input files.
         authFile = dbUtils.getAuthorizationFile();
-        snapshotFile = dataUtils.createDataFile(V0_6_DB_SNAPSHOT_OSM);
-        changesetFile = dataUtils.createDataFile(V0_6_DB_CHANGESET_OSC);
+        snapshotFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
+        changesetFile = dataUtils.createDataFile("v0_6/db-changeset.osc");
         expectedResultFile = dataUtils.createDataFile("v0_6/db-changeset-expected.osm");
         actualResultFile = File.createTempFile("test", ".osm");
 
@@ -165,30 +155,30 @@ public class ApiDbTest extends AbstractDataTest {
 
         // Load the database with the snapshot file.
         Osmosis.run(new String[] {
-                "-q",
-                READ_XML_0_6,
-                snapshotFile.getPath(),
-                WRITE_APIDB_0_6,
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE});
+        		"-q",
+        		"--read-xml-0.6",
+        		snapshotFile.getPath(),
+        		"--write-apidb-0.6",
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true" });
 
         // Apply the changeset file to the database.
         Osmosis.run(new String[] {
-                "-q",
-                READ_XML_CHANGE_0_6,
-                changesetFile.getPath(),
-                WRITE_APIDB_CHANGE_0_6,
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE});
+        		"-q",
+        		"--read-xml-change-0.6",
+        		changesetFile.getPath(),
+        		"--write-apidb-change-0.6",
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true" });
 
         // Dump the database to an osm file.
         Osmosis.run(new String[] {
-                "-q",
-                READ_APIDB_0_6,
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE,
-                TAG_SORT_0_6,
-                WRITE_XML_0_6, actualResultFile.getPath() });
+        		"-q",
+        		"--read-apidb-0.6",
+        		"authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true",
+        		"--tag-sort-0.6",
+                "--write-xml-0.6", actualResultFile.getPath() });
 
         // Validate that the dumped file matches the expected result.
         dataUtils.compareFiles(expectedResultFile, actualResultFile);
@@ -211,8 +201,8 @@ public class ApiDbTest extends AbstractDataTest {
 
         // Generate input files.
         authFile = dbUtils.getAuthorizationFile();
-        snapshotFile = dataUtils.createDataFile(V0_6_DB_SNAPSHOT_OSM);
-        changesetFile = dataUtils.createDataFile(V0_6_DB_CHANGESET_OSC);
+        snapshotFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
+        changesetFile = dataUtils.createDataFile("v0_6/db-changeset.osc");
         expectedResultFile = dataUtils.createDataFile("v0_6/db-snapshot-b.osm");
         actualResultFile = File.createTempFile("test", ".osm");
 
@@ -221,33 +211,33 @@ public class ApiDbTest extends AbstractDataTest {
 
         // Load the database with the snapshot file.
         Osmosis.run(new String[] {
-                "-q",
-                READ_XML_0_6,
-                snapshotFile.getPath(),
-                WRITE_APIDB_0_6,
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE
+        		"-q",
+        		"--read-xml-0.6",
+        		snapshotFile.getPath(),
+        		"--write-apidb-0.6",
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true"
                 });
 
         // Apply the changeset file to the database.
         Osmosis.run(new String[] {
-                "-q",
-                READ_XML_CHANGE_0_6,
-                changesetFile.getPath(),
-                WRITE_APIDB_CHANGE_0_6,
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE
+        		"-q",
+        		"--read-xml-change-0.6",
+        		changesetFile.getPath(),
+        		"--write-apidb-change-0.6",
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true"
                 });
 
         // Dump the database to an osm file.
         Osmosis.run(new String[] {
-                "-q",
-                READ_APIDB_0_6,
+        		"-q",
+        		"--read-apidb-0.6",
                 "snapshotInstant=" + convertUTCTimeToLocalTime("2008-01-03_00:00:00"),
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE,
-                TAG_SORT_0_6,
-                WRITE_XML_0_6,
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true",
+                "--tag-sort-0.6",
+                "--write-xml-0.6",
                 actualResultFile.getPath() });
 
         // Validate that the dumped file matches the expected result.
@@ -271,8 +261,8 @@ public class ApiDbTest extends AbstractDataTest {
 
         // Generate input files.
         authFile = dbUtils.getAuthorizationFile();
-        snapshotFile = dataUtils.createDataFile(V0_6_DB_SNAPSHOT_OSM);
-        changesetFile = dataUtils.createDataFile(V0_6_DB_CHANGESET_OSC);
+        snapshotFile = dataUtils.createDataFile("v0_6/db-snapshot.osm");
+        changesetFile = dataUtils.createDataFile("v0_6/db-changeset.osc");
         expectedResultFile = dataUtils.createDataFile("v0_6/db-changeset-b.osc");
         actualResultFile = File.createTempFile("test", ".osm");
 
@@ -281,32 +271,32 @@ public class ApiDbTest extends AbstractDataTest {
 
         // Load the database with the snapshot file.
         Osmosis.run(new String[] {
-                "-q",
-                READ_XML_0_6,
-                snapshotFile.getPath(),
-                WRITE_APIDB_0_6,
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE
+        		"-q",
+        		"--read-xml-0.6",
+        		snapshotFile.getPath(),
+        		"--write-apidb-0.6",
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true"
                 });
 
         // Apply the changeset file to the database.
         Osmosis.run(new String[] {
-                "-q",
-                READ_XML_CHANGE_0_6,
-                changesetFile.getPath(),
-                WRITE_APIDB_CHANGE_0_6,
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE
+        		"-q",
+        		"--read-xml-change-0.6",
+        		changesetFile.getPath(),
+        		"--write-apidb-change-0.6",
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true"
                 });
 
         // Dump the changeset to an osm file.
         Osmosis.run(new String[] {
-                "-q",
-                "--read-apidb-change-0.6",
+        		"-q",
+        		"--read-apidb-change-0.6",
                 "intervalBegin=" + convertUTCTimeToLocalTime("2008-01-03_00:00:00"),
                 "intervalEnd=" + convertUTCTimeToLocalTime("2008-01-04_00:00:00"),
-                AUTH_FILE + authFile.getPath(),
-                ALLOW_INCORRECT_SCHEMA_VERSION_TRUE,
+                "authFile=" + authFile.getPath(),
+        		"allowIncorrectSchemaVersion=true",
                 "--write-xml-change-0.6", actualResultFile.getPath()
                 });
 
