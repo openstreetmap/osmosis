@@ -6,7 +6,7 @@ To build the docker image, run the following script.
     ./build.sh
 
 To run the docker image, run the following command.  To stop the server, press Ctrl-C.
-    docker run -ti --rm=true --name osmosis-build -p 5432:5432 bretth/osmosis-build
+    docker run -ti --rm=true --name osmosis-build -p 5432:5432 openstreetmap.org/osmosis-db
 
 If you wish to troubleshoot a running server, you may run the following command to get a bash prompt
 inside the docker container.
