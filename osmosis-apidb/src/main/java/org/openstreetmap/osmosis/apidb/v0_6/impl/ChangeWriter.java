@@ -11,6 +11,7 @@ import org.openstreetmap.osmosis.apidb.common.DatabaseContext;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.ReleasableStatementContainer;
+import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Relation;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
@@ -255,6 +256,13 @@ public class ChangeWriter implements Completable {
     	}
     }
 
+    private void assertEntityHasTimestamp(Entity entity) {
+        if (entity.getTimestamp() == null) {
+            throw new OsmosisRuntimeException(
+                    entity.getType().toString() + " " + entity.getId() + " does not have a timestamp set.");
+        }
+    }
+
     /**
      * Writes the specified node change to the database.
      * 
@@ -266,10 +274,7 @@ public class ChangeWriter implements Completable {
         boolean exists;
         int prmIndex;
 
-        // We can't write an entity with a null timestamp.
-        if (node.getTimestamp() == null) {
-            throw new OsmosisRuntimeException("Node " + node.getId() + " does not have a timestamp set.");
-        }
+        assertEntityHasTimestamp(node);
 
         // Add or update the user in the database.
         userManager.addOrUpdateUser(node.getUser());
@@ -471,10 +476,7 @@ public class ChangeWriter implements Completable {
         int prmIndex;
         List<WayNode> nodeReferenceList;
 
-        // We can't write an entity with a null timestamp.
-        if (way.getTimestamp() == null) {
-            throw new OsmosisRuntimeException("Way " + way.getId() + " does not have a timestamp set.");
-        }
+        assertEntityHasTimestamp(way);
 
         // Add or update the user in the database.
         userManager.addOrUpdateUser(way.getUser());
@@ -719,10 +721,7 @@ public class ChangeWriter implements Completable {
         int prmIndex;
         List<RelationMember> relationMemberList;
 
-        // We can't write an entity with a null timestamp.
-        if (relation.getTimestamp() == null) {
-            throw new OsmosisRuntimeException("Relation " + relation.getId() + " does not have a timestamp set.");
-        }
+        assertEntityHasTimestamp(relation);
 
         // Add or update the user in the database.
         userManager.addOrUpdateUser(relation.getUser());

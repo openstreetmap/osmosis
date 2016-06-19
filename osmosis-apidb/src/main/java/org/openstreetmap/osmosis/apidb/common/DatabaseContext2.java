@@ -60,9 +60,14 @@ public class DatabaseContext2 implements AutoCloseable {
             identityValueLoader = new MysqlIdentityValueLoader2(this);
             break;
         default:
-            throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+			throw createUnknownDbTypeException();
         }
     }
+
+
+	private OsmosisRuntimeException createUnknownDbTypeException() {
+		return new OsmosisRuntimeException("Unknown database type " + dbType + ".");
+	}
     
     
     /**
@@ -110,7 +115,7 @@ public class DatabaseContext2 implements AutoCloseable {
         	jdbcTemplate.setFetchSize(Integer.MIN_VALUE);
 			break;
 		default:
-			throw new OsmosisRuntimeException("Unknown database type " + dbType + ".");
+			throw createUnknownDbTypeException();
 		}
     }
 	
@@ -144,7 +149,7 @@ public class DatabaseContext2 implements AutoCloseable {
 			}
 			break;
 		default:
-			throw new OsmosisRuntimeException("Unknown database type " + dbType + ".");
+			throw createUnknownDbTypeException();
 		}
 	}
 	
@@ -166,7 +171,7 @@ public class DatabaseContext2 implements AutoCloseable {
 			}
 			break;
 		default:
-			throw new OsmosisRuntimeException("Unknown database type " + dbType + ".");
+			throw createUnknownDbTypeException();
 		}
 	}
 	
@@ -188,7 +193,7 @@ public class DatabaseContext2 implements AutoCloseable {
 			}
 			break;
 		default:
-			throw new OsmosisRuntimeException("Unknown database type " + dbType + ".");
+			throw createUnknownDbTypeException();
 		}
 	}
 	
@@ -220,7 +225,7 @@ public class DatabaseContext2 implements AutoCloseable {
         	jdbcTemplate.update(statementBuilder.toString());
 			break;
 		default:
-			throw new OsmosisRuntimeException("Unknown database type " + dbType + ".");
+			throw createUnknownDbTypeException();
 		}
 	}
 	
@@ -240,7 +245,7 @@ public class DatabaseContext2 implements AutoCloseable {
         	jdbcTemplate.update("UNLOCK TABLES");
 			break;
 		default:
-			throw new OsmosisRuntimeException("Unknown database type " + dbType + ".");
+			throw createUnknownDbTypeException();
 		}
 	}
 

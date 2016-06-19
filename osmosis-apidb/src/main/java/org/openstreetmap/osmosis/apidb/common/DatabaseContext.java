@@ -60,13 +60,16 @@ public class DatabaseContext implements AutoCloseable {
                 identityValueLoader = new MysqlIdentityValueLoader(this);
                 break;
             default:
-                throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+                throw createUnknownDbTypeException();
             }
 
         } catch (ClassNotFoundException e) {
             throw new OsmosisRuntimeException("Unable to find database driver.", e);
         }
+    }
 
+    private OsmosisRuntimeException createUnknownDbTypeException() {
+        return new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
     }
 
     /**
@@ -85,7 +88,7 @@ public class DatabaseContext implements AutoCloseable {
                 connection = getMysqlConnection();
                 break;
             default:
-                throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
+                throw createUnknownDbTypeException();
             }
         }
         
@@ -187,8 +190,8 @@ public class DatabaseContext implements AutoCloseable {
 			}
 			break;
 		default:
-			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
-		}
+            throw createUnknownDbTypeException();
+        }
 	}
 	
 	
@@ -209,8 +212,8 @@ public class DatabaseContext implements AutoCloseable {
 			}
 			break;
 		default:
-			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
-		}
+            throw createUnknownDbTypeException();
+        }
 	}
 	
 	
@@ -231,8 +234,8 @@ public class DatabaseContext implements AutoCloseable {
 			}
 			break;
 		default:
-			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
-		}
+            throw createUnknownDbTypeException();
+        }
 	}
 	
 	
@@ -263,8 +266,8 @@ public class DatabaseContext implements AutoCloseable {
         	executeStatement(statementBuilder.toString());
 			break;
 		default:
-			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
-		}
+            throw createUnknownDbTypeException();
+        }
 	}
 	
 	
@@ -283,8 +286,8 @@ public class DatabaseContext implements AutoCloseable {
         	executeStatement("UNLOCK TABLES");
 			break;
 		default:
-			throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
-		}
+            throw createUnknownDbTypeException();
+        }
 	}
 
 
@@ -363,13 +366,12 @@ public class DatabaseContext implements AutoCloseable {
 	        	streamingStatement.setFetchSize(Integer.MIN_VALUE);
 				break;
 			default:
-				throw new OsmosisRuntimeException("Unknown database type " + loginCredentials.getDbType() + ".");
-			}
+                throw createUnknownDbTypeException();
+            }
     	} catch (SQLException e) {
     		throw new OsmosisRuntimeException("Unable to update statement fetch size.", e);
     	}
     }
-    
 
     /**
 	 * Creates a new database statement that is configured so that any result sets created using it
