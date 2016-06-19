@@ -428,9 +428,9 @@ public class ApidbWriter implements Sink, EntityProcessor {
 
     private static String createParamPlaceholders(int amount) {
         StringBuilder questionMarks = new StringBuilder();
-        for(int i = 0; i < amount; i++) {
+        for (int i = 0; i < amount; i++) {
             questionMarks.append("?");
-            if(i != amount -1) {
+            if (i != amount - 1) {
                 questionMarks.append(", ");
             }
         }
