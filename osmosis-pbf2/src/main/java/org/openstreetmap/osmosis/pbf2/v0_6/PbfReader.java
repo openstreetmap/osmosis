@@ -63,7 +63,7 @@ public class PbfReader implements RunnableSource {
 		ExecutorService executorService = Executors.newFixedThreadPool(workers);
 
 		try {
-			sink.initialize(Collections.<String, Object> emptyMap());
+			sink.initialize(Collections.<String, Object>emptyMap());
 
 			// Create a stream splitter to break the PBF stream into blobs.
 			streamSplitter = new PbfStreamSplitter(new DataInputStream(inputStream));
