@@ -16,7 +16,6 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.pbf2.v0_6.impl.PbfDecoder;
 import org.openstreetmap.osmosis.pbf2.v0_6.impl.PbfStreamSplitter;
 
-
 /**
  * An OSM data source reading from a PBF file. The entire contents of the file
  * are read.
@@ -24,11 +23,9 @@ import org.openstreetmap.osmosis.pbf2.v0_6.impl.PbfStreamSplitter;
  * @author Brett Henderson
  */
 public class PbfReader implements RunnableSource {
-
-	private File file;
+	private final InputStream inputStream;
+	private final int workers;
 	private Sink sink;
-	private int workers;
-
 
 	/**
 	 * Creates a new instance.
@@ -39,16 +36,26 @@ public class PbfReader implements RunnableSource {
 	 *            The number of worker threads for decoding PBF blocks.
 	 */
 	public PbfReader(File file, int workers) {
-		this.file = file;
-		this.workers = workers;
+		this(streamFor(file), workers);
 	}
 
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param inputStream
+	 *            The source stream.
+	 * @param workers
+	 *            The number of worker threads for decoding PBF blocks.
+	 */
+	public PbfReader(InputStream inputStream, int workers) {
+		this.inputStream = inputStream;
+		this.workers = workers;
+	}
 
 	@Override
 	public void setSink(Sink sink) {
 		this.sink = sink;
 	}
-
 
 	@Override
 	public void run() {
@@ -56,16 +63,7 @@ public class PbfReader implements RunnableSource {
 		ExecutorService executorService = Executors.newFixedThreadPool(workers);
 
 		try {
-			InputStream inputStream;
-
 			sink.initialize(Collections.<String, Object>emptyMap());
-
-			// make "-" an alias for /dev/stdin
-			if (file.getName().equals("-")) {
-				inputStream = System.in;
-			} else {
-				inputStream = new FileInputStream(file);
-			}
 
 			// Create a stream splitter to break the PBF stream into blobs.
 			streamSplitter = new PbfStreamSplitter(new DataInputStream(inputStream));
@@ -80,9 +78,6 @@ public class PbfReader implements RunnableSource {
 			pbfDecoder.run();
 
 			sink.complete();
-
-		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to read PBF file " + file + ".", e);
 		} finally {
 			sink.close();
 
@@ -91,6 +86,18 @@ public class PbfReader implements RunnableSource {
 			if (streamSplitter != null) {
 				streamSplitter.close();
 			}
+		}
+	}
+
+	private static InputStream streamFor(File file) {
+		try {
+			// make "-" an alias for /dev/stdin
+			if (file.getName().equals("-")) {
+				return System.in;
+			}
+			return new FileInputStream(file);
+		} catch (IOException e) {
+			throw new OsmosisRuntimeException("Unable to read PBF file " + file + ".", e);
 		}
 	}
 }
