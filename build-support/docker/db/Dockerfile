@@ -1,10 +1,13 @@
-FROM fedora:21
+FROM fedora:24
+
+# Install UTF8 locale support
+RUN dnf install -y langpacks-en.noarch
 
 # Install PostgreSQL
-RUN yum install -y postgresql-server postgresql-contrib
+RUN dnf install -y postgresql-server postgresql-contrib
 
 # Install PostGIS
-RUN yum install -y postgis
+RUN dnf install -y postgis
 
 EXPOSE 5432
 

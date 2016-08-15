@@ -4,9 +4,6 @@ DATADIR="/var/lib/pgsql/data"
 
 # test if DATADIR has content
 if [ ! "$(ls -A $DATADIR)" ]; then
-	# Create the en_US.UTF-8 locale.  We need UTF-8 support in the database.
-	localedef -v -c -i en_US -f UTF-8 en_US.UTF-8
-
 	echo "Initializing Postgres Database at $DATADIR"
 	su postgres sh -lc "initdb --encoding=UTF-8 --locale=en_US.UTF-8"
 
