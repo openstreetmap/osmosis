@@ -42,7 +42,8 @@ public class EntitySorter implements SinkSource {
 	 *            If true, the storage files will be compressed.
 	 */
 	public EntitySorter(Comparator<EntityContainer> comparator, boolean useCompression) {
-		fileBasedSort = new FileBasedSort<EntityContainer>(new GenericObjectSerializationFactory(), comparator, useCompression);
+		fileBasedSort = new FileBasedSort<EntityContainer>(
+			new GenericObjectSerializationFactory(), comparator, useCompression);
 	}
 
 
