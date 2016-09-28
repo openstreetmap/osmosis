@@ -34,7 +34,7 @@ import org.openstreetmap.osmosis.osmbinary.Fileformat;
  * 
  */
 public class FileBlockHead extends FileBlockReference {
-    protected FileBlockHead(String type, ByteString indexdata) {
+    public FileBlockHead(String type, ByteString indexdata) {
         super(type, indexdata);
     }
 
@@ -42,7 +42,7 @@ public class FileBlockHead extends FileBlockReference {
      * Read the header. After reading the header, either the contents must be
      * skipped or read
      */
-    static FileBlockHead readHead(InputStream input) throws IOException {
+    public static FileBlockHead readHead(InputStream input) throws IOException {
         DataInputStream datinput = new DataInputStream(input);
         int headersize = datinput.readInt();
         // System.out.format("Header size %d %x\n",headersize,headersize);
@@ -77,7 +77,7 @@ public class FileBlockHead extends FileBlockReference {
      * 
      * @throws IOException
      */
-    void skipContents(InputStream input) throws IOException {
+    public void skipContents(InputStream input) throws IOException {
         if (input.skip(getDatasize()) != getDatasize())
             assert false : "SHORT READ";
     }
@@ -88,7 +88,7 @@ public class FileBlockHead extends FileBlockReference {
      * 
      * @throws IOException
      */
-    FileBlock readContents(InputStream input) throws IOException {
+    public FileBlock readContents(InputStream input) throws IOException {
         DataInputStream datinput = new DataInputStream(input);
         byte buf[] = new byte[getDatasize()];
         datinput.readFully(buf);
