@@ -15,22 +15,35 @@ import org.openstreetmap.osmosis.core.task.v0_6.SinkSource;
 /**
  * A data stream filter that sorts entities. The sort order is specified by
  * comparator provided during instantiation.
- * 
+ *
  * @author Brett Henderson
  */
 public class EntitySorter implements SinkSource {
 	private FileBasedSort<EntityContainer> fileBasedSort;
 	private Sink sink;
-	
-	
+
+
 	/**
 	 * Creates a new instance.
-	 * 
+	 *
 	 * @param comparator
 	 *            The comparator to use for sorting.
 	 */
 	public EntitySorter(Comparator<EntityContainer> comparator) {
-		fileBasedSort = new FileBasedSort<EntityContainer>(new GenericObjectSerializationFactory(), comparator, true);
+		this(comparator, true);
+	}
+
+	/**
+	 * Creates a new instance.
+	 *
+	 * @param comparator
+	 *            The comparator to use for sorting.
+	 * @param useCompression
+	 *            If true, the storage files will be compressed.
+	 */
+	public EntitySorter(Comparator<EntityContainer> comparator, boolean useCompression) {
+		fileBasedSort = new FileBasedSort<EntityContainer>(
+			new GenericObjectSerializationFactory(), comparator, useCompression);
 	}
 
 
@@ -40,24 +53,24 @@ public class EntitySorter implements SinkSource {
 	public void initialize(Map<String, Object> metaData) {
 		sink.initialize(metaData);
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void process(EntityContainer entityContainer) {
 		fileBasedSort.add(entityContainer);
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public void setSink(Sink sink) {
 		this.sink = sink;
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -66,12 +79,12 @@ public class EntitySorter implements SinkSource {
 			while (iterator.hasNext()) {
 				sink.process(iterator.next());
 			}
-			
+
 			sink.complete();
 		}
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
