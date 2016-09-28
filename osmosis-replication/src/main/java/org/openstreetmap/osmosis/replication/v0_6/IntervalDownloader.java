@@ -32,6 +32,12 @@ import org.openstreetmap.osmosis.set.v0_6.ChangeMerger;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlChangeReader;
 
+import java.util.Map;
+import java.util.HashMap;
+import java.net.URI;
+import java.net.Authenticator;
+import java.net.MalformedURLException;
+import java.net.PasswordAuthentication;
 
 /**
  * Downloads a set of change files from a HTTP server, and merges them into a
@@ -84,8 +90,27 @@ public class IntervalDownloader implements RunnableChangeSource {
 	public void setChangeSink(ChangeSink changeSink) {
 		this.changeSink = changeSink;
 	}
-	
-	
+
+	public static Map<String,String> getEnvProxy(String envvar)
+	{
+	Map<String,String> proxy = new HashMap<String,String>();
+	String envproxy = System.getenv(envvar);
+	if (envproxy != null) {
+	    URI uri = URI.create(envproxy);
+	    proxy.put("HOST", uri.getHost());
+	    proxy.put("PORT", Integer.toString(uri.getPort()));
+	    String userinfo = uri.getUserInfo();
+	    if (userinfo != null) {
+	        String[] userpassinfo = userinfo.split(":", 0);
+	        proxy.put("USER", userpassinfo[0]);
+	        if (userpassinfo.length > 1) {
+	            proxy.put("PASSWORD", userpassinfo[1]);
+	        }
+	    }
+	}
+	return proxy;
+	}
+
 	/**
 	 * Retrieves the latest timestamp from the server.
 	 * 
@@ -101,6 +126,21 @@ public class IntervalDownloader implements RunnableChangeSource {
 		} catch (MalformedURLException e) {
 			throw new OsmosisRuntimeException("The server timestamp URL could not be created.", e);
 		}
+
+	        final Map<String,String> proxy = getEnvProxy("http_proxy");
+	        if (proxy.containsKey("HOST")) {
+	            System.setProperty("proxySet", "true");
+	            System.setProperty("proxyHost", proxy.get("HOST"));
+	            System.setProperty("proxyPort", proxy.get("PORT"));
+	            if (proxy.containsKey("USER")) {
+	                Authenticator.setDefault(new Authenticator() {
+	                    @Override
+	                    protected PasswordAuthentication getPasswordAuthentication() {
+	                        return new PasswordAuthentication(proxy.get("USER"), proxy.get("PASSWORD").toCharArray());
+	                    }
+	                });
+	            }
+	        }
 		
 		try {
 			Date result;
