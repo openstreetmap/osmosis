@@ -221,7 +221,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	 */
 	@Override
 	public ReleasableIterator<EntityContainer> iterateBoundingBox(
-			double left, double right, double top, double bottom, boolean completeWays) {
+			double left, double right, double top, double bottom, boolean completeWays, boolean completeRelations) {
 		List<Bound> bounds;
 		Point[] bboxPoints;
 		Polygon bboxPolygon;
@@ -374,6 +374,35 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 		LOG.finer("Updating query analyzer statistics on the temporary relations table.");
 		jdbcTemplate.update("ANALYZE bbox_relations");
 		
+		// If complete relations is set, select all ways contained by the relations into the ways temp table.
+		if (completeRelations) {
+			LOG.finer("Selecting all ways for selected relations.");
+			jdbcTemplate.update(
+					"CREATE TEMPORARY TABLE bbox_relation_ways ON COMMIT DROP AS"
+					+ " SELECT way_id AS id FROM ("
+					+ "     SELECT rm.member_id AS way_id FROM relation_members rm"
+					+ "     INNER JOIN bbox_relations br ON rm.relation_id = br.id"
+					+ "     WHERE rm.member_type = 'W'"
+					+ " ) wids GROUP BY way_id"
+			);
+			jdbcTemplate.update(
+					"CREATE TEMPORARY TABLE bbox_missing_ways ON COMMIT DROP AS "
+					+ "SELECT buw.id FROM (SELECT DISTINCT brw.id FROM bbox_relation_ways brw) buw "
+					+ "WHERE NOT EXISTS ("
+					+ "    SELECT * FROM bbox_ways WHERE id = buw.id"
+					+ ");"
+			);
+			jdbcTemplate.update("ALTER TABLE ONLY bbox_missing_ways"
+					+ " ADD CONSTRAINT pk_bbox_missing_ways PRIMARY KEY (id)");
+			jdbcTemplate.update("ANALYZE bbox_missing_ways");
+			rowCount = jdbcTemplate.update("INSERT INTO bbox_ways "
+					+ "SELECT w.* FROM ways w INNER JOIN bbox_missing_ways bw ON w.id = bw.id;");
+			LOG.finer(rowCount + " rows affected.");
+
+			LOG.finer("Updating query analyzer statistics on the temporary ways table.");
+			jdbcTemplate.update("ANALYZE bbox_ways");
+		}
+
 		// If complete ways is set, select all nodes contained by the ways into the node temp table.
 		if (completeWays) {
 			LOG.finer("Selecting all nodes for selected ways.");

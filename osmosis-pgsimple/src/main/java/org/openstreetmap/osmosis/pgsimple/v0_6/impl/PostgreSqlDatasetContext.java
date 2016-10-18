@@ -226,7 +226,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	 */
 	@Override
 	public ReleasableIterator<EntityContainer> iterateBoundingBox(
-			double left, double right, double top, double bottom, boolean completeWays) {
+			double left, double right, double top, double bottom, boolean completeWays, boolean completeRelations) {
 		List<Bound> bounds;
 		PreparedStatement preparedStatement = null;
 		int prmIndex;

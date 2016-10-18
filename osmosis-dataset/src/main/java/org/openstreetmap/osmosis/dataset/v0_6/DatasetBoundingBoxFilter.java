@@ -25,6 +25,7 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 	private double top;
 	private double bottom;
 	private boolean completeWays;
+	private boolean completeRelations;
 	private DatasetContext datasetReader;
 	
 	
@@ -44,13 +45,17 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 	 * @param completeWays
 	 *            Include all nodes for ways which have some portion inside the
 	 *            filtered area.
+	 * @param completeRelations
+	 *            Include all ways for relations which have some portion inside the
+	 *            filtered area.
 	 */
-	public DatasetBoundingBoxFilter(double left, double right, double top, double bottom, boolean completeWays) {
+	public DatasetBoundingBoxFilter(double left, double right, double top, double bottom, boolean completeWays, boolean completeRelations) {
 		this.left = left;
 		this.right = right;
 		this.top = top;
 		this.bottom = bottom;
 		this.completeWays = completeWays;
+		this.completeRelations = completeRelations;
 	}
 	
 	
@@ -76,7 +81,7 @@ public class DatasetBoundingBoxFilter implements DatasetSinkSource {
 		
 		// Pass all data within the bounding box to the sink.
 		try (ReleasableIterator<EntityContainer> bboxData =
-				datasetReader.iterateBoundingBox(left, right, top, bottom, completeWays)) {
+				datasetReader.iterateBoundingBox(left, right, top, bottom, completeWays, completeRelations)) {
 
 			sink.initialize(Collections.<String, Object>emptyMap());
 			

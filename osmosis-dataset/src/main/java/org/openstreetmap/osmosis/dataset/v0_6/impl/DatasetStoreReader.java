@@ -472,7 +472,7 @@ public class DatasetStoreReader implements DatasetContext {
 	 */
 	@Override
 	public ReleasableIterator<EntityContainer> iterateBoundingBox(
-			double left, double right, double top, double bottom, boolean completeWays) {
+			double left, double right, double top, double bottom, boolean completeWays, boolean completeRelations) {
 		BoundingBoxContext bboxCtx;
 		
 		LOG.fine("Beginning bounding box iteration.");
