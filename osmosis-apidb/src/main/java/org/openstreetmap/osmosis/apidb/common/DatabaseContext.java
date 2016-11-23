@@ -104,7 +104,8 @@ public class DatabaseContext implements AutoCloseable {
             LOG.finer("Creating a new database connection.");
 
             newConnection = DriverManager.getConnection(
-            		"jdbc:postgresql://" + loginCredentials.getHost() + "/"
+            		"jdbc:postgresql://" + loginCredentials.getHost() + ":"
+                    + loginCredentials.getPort() + "/" 
                     + loginCredentials.getDatabase(), // + "?logLevel=2"
                     loginCredentials.getUser(),
                     loginCredentials.getPassword()

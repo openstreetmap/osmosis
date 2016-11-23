@@ -34,7 +34,9 @@ public final class DataSourceFactory {
         switch (credentials.getDbType()) {
         case POSTGRESQL:
         	dataSource.setDriverClassName("org.postgresql.Driver");
-        	dataSource.setUrl("jdbc:postgresql://" + credentials.getHost() + "/" + credentials.getDatabase()
+        	dataSource.setUrl("jdbc:postgresql://" + credentials.getHost() + ":" 
+                + credentials.getPort() + "/" 
+                + credentials.getDatabase()
         			/*+ "?loglevel=2"*/);
         	break;
         case MYSQL:

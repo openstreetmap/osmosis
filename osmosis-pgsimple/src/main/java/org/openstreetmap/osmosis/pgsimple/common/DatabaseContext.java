@@ -62,7 +62,8 @@ public class DatabaseContext implements AutoCloseable {
 	private Connection getConnectionFromDriverManager() {
 		try {
 			return DriverManager.getConnection(
-				"jdbc:postgresql://" + loginCredentials.getHost() + "/"
+				"jdbc:postgresql://" + loginCredentials.getHost() + ":" 
+                + loginCredentials.getPort() + "/"
 				+ loginCredentials.getDatabase(),
 		    	// + "?logLevel=2"
 		    	loginCredentials.getUser(),
