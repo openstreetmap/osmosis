@@ -135,6 +135,9 @@ public class OsmosisBinaryParser extends BinaryParser {
                 tmp = new Node(new CommonEntityData(id, NOVERSION, NODATE, OsmUser.NONE,
                         NOCHANGESET, tags), latf, lonf);
             }
+
+            tmp.getMetaTags().put("visible", nodes.getDenseinfo().getVisible(i));
+
             sink.process(new NodeContainer(tmp));
         }
     }
@@ -168,6 +171,9 @@ public class OsmosisBinaryParser extends BinaryParser {
                 tmp = new Way(new CommonEntityData(id, NOVERSION, NODATE, OsmUser.NONE, NOCHANGESET,
                         tags), nodes);
             }
+
+            tmp.getMetaTags().put("visible", i.getInfo().getVisible());
+
             sink.process(new WayContainer(tmp));
         }
     }
@@ -215,6 +221,9 @@ public class OsmosisBinaryParser extends BinaryParser {
                 tmp = new Relation(new CommonEntityData(id, NOVERSION, NODATE, OsmUser.NONE,
                         NOCHANGESET, tags), nodes);
             }
+
+            tmp.getMetaTags().put("visible", i.getInfo().getVisible());
+
             sink.process(new RelationContainer(tmp));
         }
     }
@@ -226,6 +235,9 @@ public class OsmosisBinaryParser extends BinaryParser {
               continue; // We can parse this.
             }
             if (s.equals("DenseNodes")) {
+              continue; // We can parse this.
+            }
+            if (s.equals("HistoricalInformation")) {
               continue; // We can parse this.
             }
            throw new OsmosisRuntimeException("File requires unknown feature: " + s);
