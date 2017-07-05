@@ -1,2 +1,2 @@
-buildCmd: 'gradle clean assemble'
-testCmd: 'gradle test -x compileJava'
+buildCmd: './gradlew clean assemble'
+testCmd: './gradlew test -x compileJava'
