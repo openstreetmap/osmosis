@@ -72,3 +72,7 @@ on a Windows environment use the "osmosis.bat" script.
 
 Distribution archives in zip and tar gzipped formats are contained in the
 package/build/distribution directory.
+
+## Issue Tracking
+
+See https://trac.openstreetmap.org/query?status=!closed&component=osmosis
