@@ -7,7 +7,7 @@ services:
     links:
       - db
     volumes:
-      - ${gradleUserDir}:/home/builder/.gradle
+      - ${gradleUserDir}:/gradle
       - ${projectDir}:/project
   db:
     image: openstreetmap.org/osmosis-db
