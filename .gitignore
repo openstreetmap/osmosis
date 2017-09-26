@@ -1,4 +1,5 @@
 .gradle
+.idea
 *.javaEe
 *.javae
 *.iml
