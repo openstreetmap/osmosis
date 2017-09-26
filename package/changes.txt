@@ -1,3 +1,14 @@
+0.46
+Require Java 8 as a minimum.
+Leverage Java 7 Autocloseable functionality and remove Releasable interface.
+Apply minor code cleanups contributed by devfactory.com.
+Add tests for pgsimple tasks.
+Introduce docker-based build environment.
+Introduce Travis CI testing.
+Add support for reading protobuf from InputStream.  Useful when using Osmosis as a library.
+Upgrade to protobuf 3.
+Make compression optional in EntitySorter.
+
 0.45
 Add postgresSchema option to pgsnapshot tasks.
 Verify XML parser on startup to verify support for multi-char unicode characters.
@@ -230,11 +241,11 @@ Removed the old postgresql tasks.
 Removed "simple" from the names of the simple pgsql tasks.
 Added plugin support allowing new tasks in external jar files to be registered with osmosis.
 Added command line checks to ensure all task and option arguments are recognised, any misspelt arguments will now raise an error.
-Removed all static methods from the task registrar and task manager factory classes to avoid global data and simplify testing. 
+Removed all static methods from the task registrar and task manager factory classes to avoid global data and simplify testing.
 Added the --node-key and --node-key-value tasks.
 
 0.28
-Added a maximum file download count feature to the change downloader to limit processing overhead when synchronising long time intervals. 
+Added a maximum file download count feature to the change downloader to limit processing overhead when synchronising long time intervals.
 Fixed a major error in the TaskRegistrar from 0.27 where multiple tasks had the same name preventing osmosis from launching.
 
 0.27
@@ -242,7 +253,7 @@ Added change downloader tasks providing the basis for automatic synchronisation 
 
 0.26
 Removed the bdb dataset implementation.
-Fixed an incorrect constant bug in the mysql tile calculator causing incorrect tile values to be generated.  
+Fixed an incorrect constant bug in the mysql tile calculator causing incorrect tile values to be generated.
 
 0.25
 Added a new osmosis-extract-mysql application for extracting regular changesets from mysql.
