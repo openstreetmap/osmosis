@@ -209,7 +209,7 @@ public class ChangeApplierTest extends AbstractDataTest {
 		actualOutputFile = dataUtils.newFile();
 
 		Osmosis.run(
-				new String [] {
+				new String[] {
 					"-q",
 					"--read-xml-change-0.6", changeFile.getPath(),
 					"--read-xml-0.6", sourceFile.getPath(),

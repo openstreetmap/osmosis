@@ -121,7 +121,7 @@ public class ChangeDeriverTest extends AbstractDataTest {
 		actualOutputFile = dataUtils.newFile();
 
 		Osmosis.run(
-				new String [] {
+				new String[] {
 					"-q",
 					"--read-xml-0.6", rightFile.getPath(),
 					"--read-xml-0.6", leftFile.getPath(),

@@ -59,7 +59,7 @@ public class CommandLineParser {
 	 * @param programArgs
 	 *            The arguments.
 	 */
-	public void parse(String [] programArgs) {
+	public void parse(String[] programArgs) {
 		List<GlobalOptionConfiguration> globalOptions;
 		
 		// Create the global options list.
@@ -202,7 +202,7 @@ public class CommandLineParser {
 	 *            The current offset through the command line arguments.
 	 * @return The new offset through the command line arguments.
 	 */
-	private int parseGlobalOption(List<GlobalOptionConfiguration> globalOptions, String [] programArgs, int offset) {
+	private int parseGlobalOption(List<GlobalOptionConfiguration> globalOptions, String[] programArgs, int offset) {
 		int i;
 		String argument;
 		GlobalOptionConfiguration globalOption;
@@ -235,7 +235,7 @@ public class CommandLineParser {
 	 *            The current offset through the command line arguments.
 	 * @return The new offset through the command line arguments.
 	 */
-	private int parseTask(String [] programArgs, int offset) {
+	private int parseTask(String[] programArgs, int offset) {
 		int i;
 		String taskType;
 		Map<String, String> taskArgs;
@@ -377,7 +377,7 @@ public class CommandLineParser {
 		/**
 		 * Creates a new instance.
 		 */
-		public GlobalOptionConfiguration() {
+		GlobalOptionConfiguration() {
 			parameters = new ArrayList<String>();
 		}
 	}

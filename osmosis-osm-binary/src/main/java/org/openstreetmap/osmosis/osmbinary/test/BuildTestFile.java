@@ -145,7 +145,7 @@ public class BuildTestFile {
   }
   
   
-  public static void main(String [] args) {
+  public static void main(String[] args) {
     try {
       BuildTestFile out1a = new BuildTestFile("TestFile1-deflate.osm.pbf","deflate");
       out1a.makeSimpleFileBlock1();

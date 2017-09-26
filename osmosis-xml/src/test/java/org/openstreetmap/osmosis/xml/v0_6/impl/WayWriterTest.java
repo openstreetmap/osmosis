@@ -100,7 +100,7 @@ public class WayWriterTest {
 			e.printStackTrace();
 			fail("IOException");
 		}
-		String [] strArray = testWriter.toString().split("\\n", 5);
+		String[] strArray = testWriter.toString().split("\\n", 5);
 		assertTrue("Way opening element does not match.", strArray[0].matches(wayOpeningMatch));
 		assertTrue("Way node 1 does not match.", strArray[1].matches(wayNode1Match));
 		assertTrue("Way node 2 does not match.", strArray[2].matches(wayNode2Match));
@@ -132,7 +132,7 @@ public class WayWriterTest {
 	        + "version=['\"]2['\"]\\s*"
 			+ "timestamp=['\"]2013-10-07T10:24:31Z?['\"]\\s*"
 	        + ">\\s*";
-		String [] strArray = testWriter.toString().split("\\n", 5);
+		String[] strArray = testWriter.toString().split("\\n", 5);
 		assertTrue("Way opening element does not match.", strArray[0].matches(wayOpeningNoUserMatch));
 		assertTrue("Way node 1 does not match.", strArray[1].matches(wayNode1Match));
 		assertTrue("Way node 2 does not match.", strArray[2].matches(wayNode2Match));
@@ -158,7 +158,7 @@ public class WayWriterTest {
 			e.printStackTrace();
 			fail("IOException");
 		}
-		String [] strArray = testWriter.toString().split("\\n", 4);
+		String[] strArray = testWriter.toString().split("\\n", 4);
 		assertTrue("Way opening element does not match.", strArray[0].matches(wayOpeningMatch));
 		assertTrue("Way node 1 does not match.", strArray[1].matches(wayNode1Match));
 		assertTrue("Way node 2 does not match.", strArray[2].matches(wayNode2Match));

@@ -36,7 +36,7 @@ public class CustomDbTest extends AbstractDataTest {
 		
 		// Load the database with a dataset.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6",
 				inputFile.getPath(),
@@ -47,7 +47,7 @@ public class CustomDbTest extends AbstractDataTest {
 		
 		// Dump the database to an osm file.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-customdb-0.6",
 				"directory=" + dataDir,

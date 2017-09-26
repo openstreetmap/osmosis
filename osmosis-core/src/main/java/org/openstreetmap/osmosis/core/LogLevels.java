@@ -19,7 +19,7 @@ public final class LogLevels {
 	/**
 	 * Defines the log levels supported from the command line.
 	 */
-	public static final Level [] LOG_LEVELS = {
+	public static final Level[] LOG_LEVELS = {
 			Level.OFF,
 			Level.SEVERE,
 			Level.WARNING,

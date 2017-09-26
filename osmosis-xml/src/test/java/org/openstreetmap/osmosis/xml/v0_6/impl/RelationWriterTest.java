@@ -114,7 +114,7 @@ public class RelationWriterTest {
 			e.printStackTrace();
 			fail("IOException");
 		}
-		String [] strArray = testWriter.toString().split("\\n", 6);
+		String[] strArray = testWriter.toString().split("\\n", 6);
 		assertTrue("Relation opening element does not match.", strArray[0].matches(relationOpeningMatch));
 		assertTrue("Relation member node does not match.", strArray[1].matches(nodeMemberMatch));
 		assertTrue("Relation member way does not match.", strArray[2].matches(wayMemberMatch));
@@ -148,7 +148,7 @@ public class RelationWriterTest {
 				+ "version=['\"]2['\"]\\s*"
 				+ "timestamp=['\"]2013-10-07T10:24:31Z?['\"]\\s*"
 				+ ">\\s*";
-		String [] strArray = testWriter.toString().split("\\n", 6);
+		String[] strArray = testWriter.toString().split("\\n", 6);
 		assertTrue(strArray[0].matches(relationOpeningNoUserMatch));
 		assertTrue(strArray[1].matches(nodeMemberMatch));
 		assertTrue(strArray[2].matches(wayMemberMatch));
@@ -176,7 +176,7 @@ public class RelationWriterTest {
 			e.printStackTrace();
 			fail("IOException");
 		}
-		String [] strArray = testWriter.toString().split("\\n", 5);
+		String[] strArray = testWriter.toString().split("\\n", 5);
 		assertTrue(strArray[0].matches(relationOpeningMatch));
 		assertTrue(strArray[1].matches(nodeMemberMatch));
 		assertTrue(strArray[2].matches(wayMemberMatch));

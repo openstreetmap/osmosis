@@ -101,7 +101,7 @@ public class NodeWriterTest {
 			e.printStackTrace();
 			fail("IOException");
 		}
-		String [] strArray = testWriter.toString().split("\\n", 3);
+		String[] strArray = testWriter.toString().split("\\n", 3);
 		assertTrue("Node opening element does not match.", strArray[0].matches(nodeOpeningMatch));
 		assertTrue("Node tag does not match.", strArray[1].matches(nodeTagMatch));
 		assertTrue("Node closing element does not match.", strArray[2].matches(nodeClosingMatch));
@@ -161,7 +161,7 @@ public class NodeWriterTest {
 	        + "lat=['\"]20.1234568['\"]\\s*"
 	        + "lon=['\"]-21.9876543['\"]\\s*"
 	        + ">\\s*";
-		String [] strArray = testWriter.toString().split("\\n", 3);
+		String[] strArray = testWriter.toString().split("\\n", 3);
 		assertTrue("Node opening element does not match.", strArray[0].matches(nodeOpeningNoUserMatch));
 		assertTrue("Node tag does not match.", strArray[1].matches(nodeTagMatch));
 		assertTrue("Node closing element does not match.", strArray[2].matches(nodeClosingMatch));

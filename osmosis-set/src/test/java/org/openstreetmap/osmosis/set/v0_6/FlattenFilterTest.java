@@ -32,7 +32,7 @@ public class FlattenFilterTest extends AbstractDataTest {
 		actualOutputFile = dataUtils.newFile();
 		
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6", sourceFile.getPath(),
 				"--flatten-0.6",
@@ -62,7 +62,7 @@ public class FlattenFilterTest extends AbstractDataTest {
 		actualOutputFile = dataUtils.newFile();
 
 		Osmosis.run(
-				new String [] {
+				new String[] {
 					"-q",
 					"--read-xml-0.6", sourceFile.getPath(),
 					"--flatten-0.6",
@@ -89,7 +89,7 @@ public class FlattenFilterTest extends AbstractDataTest {
 		actualOutputFile = dataUtils.newFile();
 
 		Osmosis.run(
-				new String [] {
+				new String[] {
 					"-q",
 					"--read-empty-0.6",
 					"--flatten-0.6",

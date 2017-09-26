@@ -37,7 +37,7 @@ public class ChangeAppenderTest extends AbstractDataTest  {
 		
 		// Append the two source files into the destination file.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-change-0.6",
 				sourceFile2.getPath(),

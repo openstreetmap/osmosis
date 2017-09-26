@@ -41,7 +41,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		
 		// Remove all existing data from the database.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--truncate-pgsimp-0.6",
 				"authFile=" + authFile.getPath()
@@ -50,7 +50,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		
 		// Load the database with a dataset.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6",
 				inputFile.getPath(),
@@ -61,7 +61,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		
 		// Dump the database to an osm file.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-pgsimp-0.6",
 				"authFile=" + authFile.getPath(),
@@ -97,7 +97,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		
 		// Remove all existing data from the database.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--truncate-pgsimp-0.6",
 				"authFile=" + authFile.getPath()
@@ -106,7 +106,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		
 		// Load the database with a dataset.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6",
 				inputFile.getPath(),
@@ -117,7 +117,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		
 		// Dump the database to an osm file.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-pgsimp-0.6",
 				"authFile=" + authFile.getPath(),
@@ -157,7 +157,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		
 		// Remove all existing data from the database.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--truncate-pgsimp-0.6",
 				"authFile=" + authFile.getPath()
@@ -166,7 +166,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		
 		// Load the database with the snapshot file.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6",
 				snapshotFile.getPath(),
@@ -177,7 +177,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		
 		// Apply the changeset file to the database.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-change-0.6",
 				changesetFile.getPath(),
@@ -188,7 +188,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		
 		// Dump the database to an osm file.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-pgsimp-0.6",
 				"authFile=" + authFile.getPath(),
@@ -226,7 +226,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		
 		// Remove all existing data from the database.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--truncate-pgsimp-0.6",
 				"authFile=" + authFile.getPath()
@@ -235,7 +235,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		
 		// Load the database with the snapshot file.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6",
 				snapshotFile.getPath(),
@@ -246,7 +246,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		
 		// Invoke the dataset driver task task to manipulate the database.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"-p",
 				DatasetDriverPlugin.class.getName(),
@@ -258,7 +258,7 @@ public class PostgreSqlTest extends AbstractDataTest {
 		
 		// Dump the database to an osm file.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-pgsimp-0.6",
 				"authFile=" + authFile.getPath(),

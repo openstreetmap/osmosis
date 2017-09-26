@@ -34,7 +34,7 @@ public class TagRemoverTest extends AbstractDataTest {
 		
 		// Remove all created_by tags.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6",
 				inputFile.getPath(),
@@ -68,7 +68,7 @@ public class TagRemoverTest extends AbstractDataTest {
 		
 		// Remove all created_by tags.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6",
 				inputFile.getPath(),

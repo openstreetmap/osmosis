@@ -45,7 +45,7 @@ public class ChangeSimplifierTest extends AbstractDataTest {
 		actualOutputFile = dataUtils.newFile();
 		
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-change-0.6",
 				sourceFile.getPath(),
@@ -77,7 +77,7 @@ public class ChangeSimplifierTest extends AbstractDataTest {
 		actualOutputFile = dataUtils.newFile();
 
 		Osmosis.run(
-				new String [] {
+				new String[] {
 					"-q",
 					"--read-xml-change-0.6", sourceFile.getPath(),
 					"--simplify-change-0.6",
@@ -104,7 +104,7 @@ public class ChangeSimplifierTest extends AbstractDataTest {
 		actualOutputFile = dataUtils.newFile();
 
 		Osmosis.run(
-				new String [] {
+				new String[] {
 					"-q",
 					"--read-empty-change-0.6",
 					"--simplify-change-0.6",

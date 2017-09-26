@@ -42,7 +42,7 @@ public class EntityMergerTest extends AbstractDataTest {
 		
 		// Run the merge.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6", sourceFile.getPath(),
 				"--read-empty-0.6",
@@ -73,7 +73,7 @@ public class EntityMergerTest extends AbstractDataTest {
 		
 		// Run the merge.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-empty-0.6",
 				"--read-xml-0.6", sourceFile.getPath(),
@@ -106,7 +106,7 @@ public class EntityMergerTest extends AbstractDataTest {
 		
 		// Run the merge.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6", sourceFile2.getPath(),
 				"--read-xml-0.6", sourceFile1.getPath(),
@@ -139,7 +139,7 @@ public class EntityMergerTest extends AbstractDataTest {
 		
 		// Run the merge.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6", sourceFile2.getPath(),
 				"--read-xml-0.6", sourceFile1.getPath(),
@@ -156,7 +156,7 @@ public class EntityMergerTest extends AbstractDataTest {
 		
 		// Run the merge.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6", sourceFile1.getPath(),
 				"--read-xml-0.6", sourceFile2.getPath(),
@@ -191,7 +191,7 @@ public class EntityMergerTest extends AbstractDataTest {
 		
 		// Run the merge.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6", sourceFile2.getPath(),
 				"--read-xml-0.6", sourceFile1.getPath(),
@@ -208,7 +208,7 @@ public class EntityMergerTest extends AbstractDataTest {
 		
 		// Run the merge.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6", sourceFile1.getPath(),
 				"--read-xml-0.6", sourceFile2.getPath(),
@@ -243,7 +243,7 @@ public class EntityMergerTest extends AbstractDataTest {
 		
 		// Run the merge.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6", sourceFile2.getPath(),
 				"--read-xml-0.6", sourceFile1.getPath(),
@@ -265,7 +265,7 @@ public class EntityMergerTest extends AbstractDataTest {
 
 		// Run the merge.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6", sourceFile1.getPath(),
 				"--read-xml-0.6", sourceFile2.getPath(),
@@ -300,7 +300,7 @@ public class EntityMergerTest extends AbstractDataTest {
 		
 		// Run the merge.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6", sourceFile2.getPath(),
 				"--read-xml-0.6", sourceFile1.getPath(),
@@ -316,7 +316,7 @@ public class EntityMergerTest extends AbstractDataTest {
 		
 		// Run the merge.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6", sourceFile1.getPath(),
 				"--read-xml-0.6", sourceFile2.getPath(),

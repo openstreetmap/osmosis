@@ -25,22 +25,22 @@ public class CommandLineParserTest {
 		CommandLineParser commandLineParser;
 		
 		commandLineParser = new CommandLineParser();
-		commandLineParser.parse(new String [] {});
+		commandLineParser.parse(new String[] {});
 		Assert.assertEquals("Incorrect default log level.", Level.INFO,
 				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
-		commandLineParser.parse(new String [] {"-q"});
+		commandLineParser.parse(new String[] {"-q"});
 		Assert.assertEquals("Incorrect quiet log level.", Level.WARNING,
 				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
-		commandLineParser.parse(new String [] {"-q", "1"});
+		commandLineParser.parse(new String[] {"-q", "1"});
 		Assert.assertEquals("Incorrect very quiet log level.", Level.SEVERE,
 				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
-		commandLineParser.parse(new String [] {"-q", "2"});
+		commandLineParser.parse(new String[] {"-q", "2"});
 		Assert.assertEquals("Incorrect very very quiet log level.", Level.OFF,
 				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 	}
@@ -54,27 +54,27 @@ public class CommandLineParserTest {
 		CommandLineParser commandLineParser;
 		
 		commandLineParser = new CommandLineParser();
-		commandLineParser.parse(new String [] {});
+		commandLineParser.parse(new String[] {});
 		Assert.assertEquals("Incorrect default log level.", Level.INFO,
 				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
-		commandLineParser.parse(new String [] {"-v"});
+		commandLineParser.parse(new String[] {"-v"});
 		Assert.assertEquals("Incorrect verbose log level.", Level.FINE,
 				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
-		commandLineParser.parse(new String [] {"-v", "1"});
+		commandLineParser.parse(new String[] {"-v", "1"});
 		Assert.assertEquals("Incorrect very verbose log level.", Level.FINER,
 				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
-		commandLineParser.parse(new String [] {"-v", "2"});
+		commandLineParser.parse(new String[] {"-v", "2"});
 		Assert.assertEquals("Incorrect very very verbose log level.", Level.FINEST,
 				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
-		commandLineParser.parse(new String [] {"-v", "3"});
+		commandLineParser.parse(new String[] {"-v", "3"});
 		Assert.assertEquals(
 				"Incorrect very very very verbose log level.",
 				Level.FINEST,
@@ -90,22 +90,22 @@ public class CommandLineParserTest {
 		CommandLineParser commandLineParser;
 		
 		commandLineParser = new CommandLineParser();
-		commandLineParser.parse(new String [] {});
+		commandLineParser.parse(new String[] {});
 		Assert.assertEquals("Incorrect default log level.", Level.INFO,
 				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
-		commandLineParser.parse(new String [] {"-v", "-q"});
+		commandLineParser.parse(new String[] {"-v", "-q"});
 		Assert.assertEquals("Incorrect default log level.", Level.INFO,
 				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
-		commandLineParser.parse(new String [] {"-v", "1", "-q", "1"});
+		commandLineParser.parse(new String[] {"-v", "1", "-q", "1"});
 		Assert.assertEquals("Incorrect default log level.", Level.INFO,
 				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 		
 		commandLineParser = new CommandLineParser();
-		commandLineParser.parse(new String [] {"-v", "1", "-q", "2"});
+		commandLineParser.parse(new String[] {"-v", "1", "-q", "2"});
 		Assert.assertEquals("Incorrect quiet log level.", Level.WARNING,
 				LogLevels.getLogLevel(commandLineParser.getLogLevelIndex()));
 	}
@@ -119,7 +119,7 @@ public class CommandLineParserTest {
 		CommandLineParser commandLineParser;
 		
 		commandLineParser = new CommandLineParser();
-		commandLineParser.parse(new String [] {"-p", "plugin1", "-p", "plugin2"});
+		commandLineParser.parse(new String[] {"-p", "plugin1", "-p", "plugin2"});
 		Assert.assertEquals(
 				"Incorrect plugin list.",
 				Arrays.asList("plugin1", "plugin2"),
@@ -135,6 +135,6 @@ public class CommandLineParserTest {
 		CommandLineParser commandLineParser;
 		
 		commandLineParser = new CommandLineParser();
-		commandLineParser.parse(new String [] {"-a"});
+		commandLineParser.parse(new String[] {"-a"});
 	}
 }

@@ -34,7 +34,7 @@ public class XmlReaderWriterTest extends AbstractDataTest {
 		
 		// Run the pipeline.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6",
 				inputFile.getPath(),
@@ -71,7 +71,7 @@ public class XmlReaderWriterTest extends AbstractDataTest {
 		
 		// Run the pipeline.
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",
 				"--read-xml-0.6",
 				inputFile.getPath(),

@@ -44,7 +44,7 @@ public class StoreableConstructorCache {
 			constructor = cache.get(clazz);
 		} else {
 			try {
-				constructor = clazz.getConstructor(new Class [] {StoreReader.class, StoreClassRegister.class});
+				constructor = clazz.getConstructor(new Class[] {StoreReader.class, StoreClassRegister.class});
 				
 			} catch (NoSuchMethodException e) {
 				throw new OsmosisRuntimeException(

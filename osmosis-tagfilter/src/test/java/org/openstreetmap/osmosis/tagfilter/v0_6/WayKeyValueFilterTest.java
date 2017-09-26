@@ -51,7 +51,7 @@ public class WayKeyValueFilterTest extends AbstractDataTest {
 		
 		// filter by key-value pairs
 		Osmosis.run(
-			new String [] {
+			new String[] {
 				"-q",					
 				"--read-xml-0.6",
 				inputFile.getPath(),

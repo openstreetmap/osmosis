@@ -11,17 +11,17 @@ public enum BoundRemovedAction {
 	/**
 	 * Continue processing quietly.
 	 */
-	Ignore ("ignore"),
+	Ignore("ignore"),
 	
 	/**
 	 * Continue processing but emit a warning to the log.
 	 */
-	Warn ("warn"),
+	Warn("warn"),
 	
 	/**
 	 * Stop processing and emit an error message to the log.
 	 */
-	Fail ("fail");
+	Fail("fail");
 	
 	private final String keyword;
 	
