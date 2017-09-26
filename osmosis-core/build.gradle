@@ -1,6 +1,4 @@
 configurations {
-    // Exclude because all necessary APIs are included in the JDK.
-    all*.exclude group: 'xml-apis', module: 'xml-apis'
     // Exclude because Stax is included in the JDK from java 1.6 onwards.
     all*.exclude group: 'javax.xml.stream', module: 'stax-api'
 }
