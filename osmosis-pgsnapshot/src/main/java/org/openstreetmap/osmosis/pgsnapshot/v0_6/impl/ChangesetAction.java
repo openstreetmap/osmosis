@@ -29,9 +29,14 @@ public enum ChangesetAction {
 	
 	
 	private final String dbValue;
-	
-	
-	private ChangesetAction(String dbValue) {
+
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param dbValue See {@link ChangesetAction#getDatabaseValue()}.
+	 */
+	ChangesetAction(String dbValue) {
 		this.dbValue = dbValue;
 	}
 	

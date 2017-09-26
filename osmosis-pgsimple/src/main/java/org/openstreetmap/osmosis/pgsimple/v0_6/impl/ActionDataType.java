@@ -27,9 +27,14 @@ public enum ActionDataType {
 	
 	
 	private final String dbValue;
-	
-	
-	private ActionDataType(String dbValue) {
+
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param dbValue See {@link ActionDataType#getDatabaseValue()}
+	 */
+	ActionDataType(String dbValue) {
 		this.dbValue = dbValue;
 	}
 	

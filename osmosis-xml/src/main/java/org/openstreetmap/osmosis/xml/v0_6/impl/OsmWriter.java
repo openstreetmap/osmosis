@@ -119,7 +119,7 @@ public class OsmWriter extends ElementWriter {
 		 * @param indentLevel
 		 *            The indent level of the sub-elements.
 		 */
-		public SubElementWriter(int indentLevel, boolean legacyBound) {
+		SubElementWriter(int indentLevel, boolean legacyBound) {
 			nodeWriter = new NodeWriter("node", indentLevel);
 			wayWriter = new WayWriter("way", indentLevel);
 			relationWriter = new RelationWriter("relation", indentLevel);

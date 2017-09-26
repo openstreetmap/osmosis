@@ -24,8 +24,13 @@ public enum BoundRemovedAction {
 	Fail("fail");
 	
 	private final String keyword;
-	
-	private BoundRemovedAction(String keyword) {
+
+	/**
+	 * Create a new instance.
+	 *
+	 * @param keyword The string representation of this enum instance.
+	 */
+	BoundRemovedAction(String keyword) {
 		this.keyword = keyword;
 	}
 	

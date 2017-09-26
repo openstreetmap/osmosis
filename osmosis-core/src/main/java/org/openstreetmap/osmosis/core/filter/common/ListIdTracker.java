@@ -240,7 +240,7 @@ public class ListIdTracker implements IdTracker {
 		/**
 		 * Creates a new instance.
 		 */
-		public IdIterator() {
+		IdIterator() {
 			iteratorOffset = 0;
 		}
 		

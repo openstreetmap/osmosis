@@ -231,7 +231,7 @@ public class EntityReporter implements Sink {
 		 *            The name of the user that this statistics record relates
 		 *            to.
 		 */
-		public UserStatistics(String userName) {
+		UserStatistics(String userName) {
 			this.userName = userName;
 		}
 		

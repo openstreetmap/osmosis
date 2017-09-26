@@ -115,7 +115,7 @@ public class ChangeTee implements ChangeSinkMultiChangeSource {
 		/**
 		 * Creates a new instance.
 		 */
-		public ProxyChangeSinkChangeSource() {
+		ProxyChangeSinkChangeSource() {
 			// Nothing to do.
 		}
 		

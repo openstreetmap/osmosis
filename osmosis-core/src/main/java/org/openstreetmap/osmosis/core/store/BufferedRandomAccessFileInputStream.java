@@ -215,7 +215,7 @@ public class BufferedRandomAccessFileInputStream extends InputStream {
 		 * @throws FileNotFoundException
 		 *             if the file cannot be opened.
 		 */
-		public BufferedReader(
+		BufferedReader(
 				RandomAccessFile randomFile, int initialBufferSize,
 				int maxBufferSize, float bufferIncreaseFactor) {
 			this.randomFile = randomFile;

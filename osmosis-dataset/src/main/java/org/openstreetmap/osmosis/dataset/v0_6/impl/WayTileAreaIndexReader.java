@@ -102,7 +102,7 @@ public class WayTileAreaIndexReader implements Closeable {
 		 * @param sources
 		 *            The input sources.
 		 */
-		public ResultIterator(Iterator<Iterator<IntegerLongIndexElement>> sources) {
+		ResultIterator(Iterator<Iterator<IntegerLongIndexElement>> sources) {
 			this.sources = sources;
 			
 			currentSourceAvailable = false;

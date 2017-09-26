@@ -123,7 +123,7 @@ public class ChangeSourceElementProcessor extends BaseElementProcessor {
 		 * @param action
 		 *            The action to apply to all data received.
 		 */
-		public ChangeSinkAdapter(ChangeSink changeSink, ChangeAction action) {
+		ChangeSinkAdapter(ChangeSink changeSink, ChangeAction action) {
 			this.changeSink = changeSink;
 			this.action = action;
 		}

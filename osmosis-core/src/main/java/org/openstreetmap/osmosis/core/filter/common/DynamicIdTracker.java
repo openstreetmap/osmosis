@@ -202,7 +202,7 @@ public class DynamicIdTracker implements IdTracker {
 		 * @param segments
 		 *            The segments to iterate over.
 		 */
-		public SegmentIdIterator(Iterator<DynamicIdTrackerSegment> segments) {
+		SegmentIdIterator(Iterator<DynamicIdTrackerSegment> segments) {
 			this.segments = segments;
 		}
 

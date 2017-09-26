@@ -118,7 +118,7 @@ public class BitSetIdTracker implements IdTracker {
 		/**
 		 * Creates a new instance.
 		 */
-		public IdIterator() {
+		IdIterator() {
 			readingPositive = false;
 			nextIdAvailable = false;
 			

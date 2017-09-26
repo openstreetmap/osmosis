@@ -197,7 +197,7 @@ public class MergeBoundTest {
 		private Bound bound;
 		private boolean publishBound;
 
-		public BoundSource(Bound bound, boolean publishBound) {
+		BoundSource(Bound bound, boolean publishBound) {
 			if (bound == null) {
 				throw new IllegalArgumentException("bound must not be null");
 			}

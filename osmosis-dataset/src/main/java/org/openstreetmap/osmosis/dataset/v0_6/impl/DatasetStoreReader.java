@@ -533,7 +533,7 @@ public class DatasetStoreReader implements DatasetContext {
 		 * @param relationIdList
 		 *            The set of relations to be returned.
 		 */
-		public ResultIterator(IdTracker nodeIdList, IdTracker wayIdList, IdTracker relationIdList) {
+		ResultIterator(IdTracker nodeIdList, IdTracker wayIdList, IdTracker relationIdList) {
 			nodeIds = nodeIdList.iterator();
 			wayIds = wayIdList.iterator();
 			relationIds = relationIdList.iterator();

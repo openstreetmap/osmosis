@@ -200,7 +200,7 @@ public class ReplicationDataClientHandler extends SequenceClientHandler {
 		 * @param changeSink
 		 *            The wrapped change sink.
 		 */
-		public NoLifecycleChangeSinkWrapper(ChangeSink changeSink) {
+		NoLifecycleChangeSinkWrapper(ChangeSink changeSink) {
 			this.changeSink = changeSink;
 		}
 

@@ -73,7 +73,7 @@ public final class DataPostboxLoadInjector implements Runnable {
 		private Node node;
 		private NodeContainer nodeContainer;
 
-		public Writer() {
+		Writer() {
 			node = new Node(new CommonEntityData(1, 2, new Date(), OsmUser.NONE, 3), 10, 10);
 			nodeContainer = new NodeContainer(node);
 		}

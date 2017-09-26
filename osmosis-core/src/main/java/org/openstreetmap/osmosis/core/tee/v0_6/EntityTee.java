@@ -115,7 +115,7 @@ public class EntityTee implements SinkMultiSource {
 		/**
 		 * Creates a new instance.
 		 */
-		public ProxySinkSource() {
+		ProxySinkSource() {
 			// Nothing to do.
 		}
 		

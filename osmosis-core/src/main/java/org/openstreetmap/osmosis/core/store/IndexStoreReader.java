@@ -254,7 +254,7 @@ public class IndexStoreReader<K, T extends IndexElement<K>> implements Closeable
 		 * @param key
 		 *            The key of the index element compared against.
 		 */
-		public ComparisonElement(long indexOffset, K key) {
+		ComparisonElement(long indexOffset, K key) {
 			this.indexOffset = indexOffset;
 			this.key = key;
 		}

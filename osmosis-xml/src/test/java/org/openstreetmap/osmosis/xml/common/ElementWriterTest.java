@@ -45,7 +45,7 @@ public class ElementWriterTest {
 	
 	
 	private static class MyElementWriter extends ElementWriter {
-		public MyElementWriter() {
+		MyElementWriter() {
 			super("testElement", 1);
 		}
 		
