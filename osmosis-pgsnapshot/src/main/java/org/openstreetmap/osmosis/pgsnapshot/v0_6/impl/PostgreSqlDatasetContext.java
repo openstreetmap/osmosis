@@ -204,7 +204,8 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 		sources = new ArrayList<ReleasableIterator<EntityContainer>>();
 		
 		sources.add(new UpcastIterator<EntityContainer, BoundContainer>(
-				new BoundContainerIterator(new ReleasableAdaptorForIterator<Bound>(bounds.iterator()))));
+				new BoundContainerIterator(
+					new ReleasableAdaptorForIterator<Bound>(bounds.iterator()))));
 		sources.add(new UpcastIterator<EntityContainer, NodeContainer>(
 				new NodeContainerIterator(nodeDao.iterate())));
 		sources.add(new UpcastIterator<EntityContainer, WayContainer>(
@@ -221,7 +222,8 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	 */
 	@Override
 	public ReleasableIterator<EntityContainer> iterateBoundingBox(
-			double left, double right, double top, double bottom, boolean completeWays, boolean completeRelations) {
+			double left, double right, double top, double bottom, boolean completeWays,
+			boolean completeRelations) {
 		List<Bound> bounds;
 		Point[] bboxPoints;
 		Polygon bboxPolygon;
@@ -295,8 +297,9 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			rowCount = jdbcTemplate.update(
 				"CREATE TEMPORARY TABLE bbox_ways ON COMMIT DROP AS"
 					+ " SELECT w.* FROM ("
-					+ "SELECT c.id AS id, First(c.version) AS version, First(c.user_id) AS user_id,"
-					+ " First(c.tstamp) AS tstamp, First(c.changeset_id) AS changeset_id, First(c.tags) AS tags,"
+					+ "SELECT c.id AS id, First(c.version) AS version, First(c.user_id)"
+					+ " AS user_id, First(c.tstamp) AS tstamp, First(c.changeset_id)"
+					+ " AS changeset_id, First(c.tags) AS tags,"
 					+ " First(c.nodes) AS nodes, ST_MakeLine(c.geom) AS way_line FROM ("
 					+ "SELECT w.*, n.geom AS geom FROM nodes n"
 					+ " INNER JOIN way_nodes wn ON n.id = wn.node_id"
@@ -349,7 +352,8 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 		LOG.finer(rowCount + " rows affected.");
 		
 		LOG.finer("Adding a primary key to the temporary relations table.");
-		jdbcTemplate.update("ALTER TABLE ONLY bbox_relations ADD CONSTRAINT pk_bbox_relations PRIMARY KEY (id)");
+		jdbcTemplate.update("ALTER TABLE ONLY bbox_relations ADD CONSTRAINT"
+				+ "pk_bbox_relations PRIMARY KEY (id)");
 		
 		LOG.finer("Updating query analyzer statistics on the temporary relations table.");
 		jdbcTemplate.update("ANALYZE bbox_relations");
@@ -387,8 +391,8 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			);
 			jdbcTemplate.update(
 					"CREATE TEMPORARY TABLE bbox_missing_ways ON COMMIT DROP AS "
-					+ "SELECT buw.id FROM (SELECT DISTINCT brw.id FROM bbox_relation_ways brw) buw "
-					+ "WHERE NOT EXISTS ("
+					+ "SELECT buw.id FROM (SELECT DISTINCT brw.id FROM bbox_relation_ways brw) buw"
+					+ " WHERE NOT EXISTS ("
 					+ "    SELECT * FROM bbox_ways WHERE id = buw.id"
 					+ ");"
 			);
@@ -418,8 +422,8 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			jdbcTemplate.update("ALTER TABLE ONLY bbox_missing_way_nodes"
 					+ " ADD CONSTRAINT pk_bbox_missing_way_nodes PRIMARY KEY (id)");
 			jdbcTemplate.update("ANALYZE bbox_missing_way_nodes");
-			rowCount = jdbcTemplate.update("INSERT INTO bbox_nodes "
-					+ "SELECT n.* FROM nodes n INNER JOIN bbox_missing_way_nodes bwn ON n.id = bwn.id;");
+			rowCount = jdbcTemplate.update("INSERT INTO bbox_nodes SELECT"
+					+ " n.* FROM nodes n INNER JOIN bbox_missing_way_nodes bwn ON n.id = bwn.id;");
 			LOG.finer(rowCount + " rows affected.");
 		}
 		
@@ -431,7 +435,8 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 		resultSets = new ArrayList<ReleasableIterator<EntityContainer>>();
 		resultSets.add(
 				new UpcastIterator<EntityContainer, BoundContainer>(
-						new BoundContainerIterator(new ReleasableAdaptorForIterator<Bound>(bounds.iterator()))));
+						new BoundContainerIterator(
+							new ReleasableAdaptorForIterator<Bound>(bounds.iterator()))));
 		resultSets.add(
 				new UpcastIterator<EntityContainer, NodeContainer>(
 						new NodeContainerIterator(nodeDao.iterate("bbox_"))));

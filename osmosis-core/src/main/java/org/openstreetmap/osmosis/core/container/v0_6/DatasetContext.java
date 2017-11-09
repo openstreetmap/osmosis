@@ -105,5 +105,6 @@ public interface DatasetContext extends Completable {
 	 * @return An iterator pointing to the start of the result data.
 	 */
 	ReleasableIterator<EntityContainer> iterateBoundingBox(
-			double left, double right, double top, double bottom, boolean completeWays, boolean completeRelations);
+			double left, double right, double top, double bottom, boolean completeWays,
+			boolean completeRelations);
 }

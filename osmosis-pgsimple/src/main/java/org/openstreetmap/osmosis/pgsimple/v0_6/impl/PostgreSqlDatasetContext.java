@@ -209,7 +209,8 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 		sources = new ArrayList<ReleasableIterator<EntityContainer>>();
 		
 		sources.add(new UpcastIterator<EntityContainer, BoundContainer>(
-				new BoundContainerIterator(new ReleasableAdaptorForIterator<Bound>(bounds.iterator()))));
+				new BoundContainerIterator(
+				    new ReleasableAdaptorForIterator<Bound>(bounds.iterator()))));
 		sources.add(new UpcastIterator<EntityContainer, NodeContainer>(
 				new NodeContainerIterator(nodeDao.iterate())));
 		sources.add(new UpcastIterator<EntityContainer, WayContainer>(
@@ -226,7 +227,8 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	 */
 	@Override
 	public ReleasableIterator<EntityContainer> iterateBoundingBox(
-			double left, double right, double top, double bottom, boolean completeWays, boolean completeRelations) {
+			double left, double right, double top, double bottom, boolean completeWays,
+			boolean completeRelations) {
 		List<Bound> bounds;
 		PreparedStatement preparedStatement = null;
 		int prmIndex;
@@ -255,13 +257,16 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			
 			// Create a temporary table capable of holding node ids.
 			LOG.finer("Creating node id temp table.");
-			dbCtx.executeStatement("CREATE TEMPORARY TABLE box_node_list (id bigint PRIMARY KEY) ON COMMIT DROP");
+			dbCtx.executeStatement(
+			      "CREATE TEMPORARY TABLE box_node_list (id bigint PRIMARY KEY) ON COMMIT DROP");
 			// Create a temporary table capable of holding way ids.
 			LOG.finer("Creating way id temp table.");
-			dbCtx.executeStatement("CREATE TEMPORARY TABLE box_way_list (id bigint PRIMARY KEY) ON COMMIT DROP");
+			dbCtx.executeStatement(
+			      "CREATE TEMPORARY TABLE box_way_list (id bigint PRIMARY KEY) ON COMMIT DROP");
 			// Create a temporary table capable of holding relation ids.
 			LOG.finer("Creating relation id temp table.");
-			dbCtx.executeStatement("CREATE TEMPORARY TABLE box_relation_list (id bigint PRIMARY KEY) ON COMMIT DROP");
+			dbCtx.executeStatement(
+			      "CREATE TEMPORARY TABLE box_relation_list (id bigint PRIMARY KEY) ON COMMIT DROP");
 			
 			// Build a polygon representing the bounding box.
 			// Sample box for query testing may be:
@@ -338,7 +343,8 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 				// the selected nodes.
 				preparedStatement = dbCtx.prepareStatement(
 					"INSERT INTO box_way_list "
-						+ "SELECT wn.way_id FROM way_nodes wn INNER JOIN box_node_list n ON wn.node_id = n.id"
+						+ "SELECT wn.way_id FROM way_nodes wn INNER JOIN box_node_list n"
+						+ " ON wn.node_id = n.id"
 						+ " GROUP BY wn.way_id"
 				);
 			}
@@ -352,8 +358,8 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			preparedStatement = dbCtx.prepareStatement(
 				"INSERT INTO box_relation_list ("
 					+ "SELECT rm.relation_id AS relation_id FROM relation_members rm"
-					+ " INNER JOIN box_node_list n ON rm.member_id = n.id WHERE rm.member_type = ? "
-					+ "UNION "
+					+ " INNER JOIN box_node_list n ON rm.member_id = n.id WHERE rm.member_type = ?"
+					+ " UNION "
 					+ "SELECT rm.relation_id AS relation_id FROM relation_members rm"
 					+ " INNER JOIN box_way_list w ON rm.member_id = w.id WHERE rm.member_type = ?"
 					+ ")"
@@ -373,12 +379,14 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 				preparedStatement = dbCtx.prepareStatement(
 					"INSERT INTO box_relation_list "
 						+ "SELECT rm.relation_id AS relation_id FROM relation_members rm"
-						+ " INNER JOIN box_relation_list r ON rm.member_id = r.id WHERE rm.member_type = ? "
+						+ " INNER JOIN box_relation_list r ON rm.member_id = r.id "
+						+ "WHERE rm.member_type = ? "
 						+ "EXCEPT "
 						+ "SELECT id AS relation_id FROM box_relation_list"
 				);
 				prmIndex = 1;
-				preparedStatement.setString(prmIndex++, memberTypeValueMapper.getMemberType(EntityType.Relation));
+				preparedStatement.setString(prmIndex++,
+							    memberTypeValueMapper.getMemberType(EntityType.Relation));
 				rowCount = preparedStatement.executeUpdate();
 				preparedStatement.close();
 				preparedStatement = null;
@@ -390,7 +398,8 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 				LOG.finer("Selecting all node ids for selected ways.");
 				preparedStatement = dbCtx.prepareStatement(
 					"INSERT INTO box_node_list "
-						+ "SELECT wn.node_id AS id FROM way_nodes wn INNER JOIN box_way_list bw ON wn.way_id = bw.id "
+						+ "SELECT wn.node_id AS id FROM way_nodes wn INNER JOIN box_way_list bw"
+						+ " ON wn.way_id = bw.id "
 						+ "EXCEPT "
 						+ "SELECT id AS node_id FROM box_node_list"
 				);
@@ -411,16 +420,18 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			resultSets = new ArrayList<ReleasableIterator<EntityContainer>>();
 			resultSets.add(
 					new UpcastIterator<EntityContainer, BoundContainer>(
-							new BoundContainerIterator(new ReleasableAdaptorForIterator<Bound>(bounds.iterator()))));
+						new BoundContainerIterator(
+							new ReleasableAdaptorForIterator<Bound>(bounds.iterator()))));
 			resultSets.add(
 					new UpcastIterator<EntityContainer, NodeContainer>(
-							new NodeContainerIterator(new NodeReader(dbCtx, "box_node_list"))));
+						new NodeContainerIterator(new NodeReader(dbCtx, "box_node_list"))));
 			resultSets.add(
 					new UpcastIterator<EntityContainer, WayContainer>(
-							new WayContainerIterator(new WayReader(dbCtx, "box_way_list"))));
+						new WayContainerIterator(new WayReader(dbCtx, "box_way_list"))));
 			resultSets.add(
 					new UpcastIterator<EntityContainer, RelationContainer>(
-							new RelationContainerIterator(new RelationReader(dbCtx, "box_relation_list"))));
+						new RelationContainerIterator(
+							new RelationReader(dbCtx, "box_relation_list"))));
 			
 			// Merge all readers into a single result iterator and return.			
 			return new MultipleSourceIterator<EntityContainer>(resultSets);
