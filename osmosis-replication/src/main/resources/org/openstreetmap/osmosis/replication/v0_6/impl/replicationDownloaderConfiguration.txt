@@ -1,5 +1,5 @@
 # The URL of the directory containing change files.
-baseUrl=http://planet.openstreetmap.org/replication/minute
+baseUrl=https://planet.openstreetmap.org/replication/minute
 
 # Defines the maximum time interval in seconds to download in a single invocation.
 # Setting to 0 disables this feature.
