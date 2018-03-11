@@ -248,9 +248,12 @@ public class OsmosisBinaryParser extends BinaryParser {
         }
     }
 
-    
+
     /**
-     * {@inheritDoc}
+     * Sets the osm sink to send data to.
+     *
+     * @param sink
+     *            The sink for receiving all produced data.
      */
     public void setSink(Sink sink) {
        this.sink = sink;

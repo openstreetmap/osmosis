@@ -423,10 +423,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void processBounds(Bound entity) {
+    private void processBounds(Bound entity) {
         Osmformat.HeaderBlock.Builder headerblock = Osmformat.HeaderBlock
                 .newBuilder();
         
