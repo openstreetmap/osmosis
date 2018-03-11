@@ -28,7 +28,7 @@ public final class Osmformat {
      *
      * <code>repeated string required_features = 4;</code>
      */
-    java.util.List<String>
+    java.util.List<java.lang.String>
         getRequiredFeaturesList();
     /**
      * <pre>
@@ -59,7 +59,7 @@ public final class Osmformat {
     /**
      * <code>repeated string optional_features = 5;</code>
      */
-    java.util.List<String>
+    java.util.List<java.lang.String>
         getOptionalFeaturesList();
     /**
      * <code>repeated string optional_features = 5;</code>
@@ -248,7 +248,7 @@ public final class Osmformat {
     }
 
     public static final int REQUIRED_FEATURES_FIELD_NUMBER = 4;
-    private com.google.protobuf.Internal.ProtobufList<String> requiredFeatures_;
+    private com.google.protobuf.Internal.ProtobufList<java.lang.String> requiredFeatures_;
     /**
      * <pre>
      * Additional tags to aid in parsing this dataset 
@@ -256,7 +256,7 @@ public final class Osmformat {
      *
      * <code>repeated string required_features = 4;</code>
      */
-    public java.util.List<String> getRequiredFeaturesList() {
+    public java.util.List<java.lang.String> getRequiredFeaturesList() {
       return requiredFeatures_;
     }
     /**
@@ -367,11 +367,11 @@ public final class Osmformat {
     }
 
     public static final int OPTIONAL_FEATURES_FIELD_NUMBER = 5;
-    private com.google.protobuf.Internal.ProtobufList<String> optionalFeatures_;
+    private com.google.protobuf.Internal.ProtobufList<java.lang.String> optionalFeatures_;
     /**
      * <code>repeated string optional_features = 5;</code>
      */
-    public java.util.List<String> getOptionalFeaturesList() {
+    public java.util.List<java.lang.String> getOptionalFeaturesList() {
       return optionalFeatures_;
     }
     /**
@@ -830,6 +830,19 @@ public final class Osmformat {
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
@@ -891,10 +904,10 @@ public final class Osmformat {
     }
 
     public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
+      return (Builder) DEFAULT_INSTANCE.createBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -963,7 +976,7 @@ public final class Osmformat {
        *
        * <code>repeated string required_features = 4;</code>
        */
-      public java.util.List<String>
+      public java.util.List<java.lang.String>
           getRequiredFeaturesList() {
         return java.util.Collections.unmodifiableList(
             instance.getRequiredFeaturesList());
@@ -1067,7 +1080,7 @@ public final class Osmformat {
       /**
        * <code>repeated string optional_features = 5;</code>
        */
-      public java.util.List<String>
+      public java.util.List<java.lang.String>
           getOptionalFeaturesList() {
         return java.util.Collections.unmodifiableList(
             instance.getOptionalFeaturesList());
@@ -1422,10 +1435,11 @@ public final class Osmformat {
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.HeaderBlock)
     }
-    private byte memoizedIsInitialized = -1;
-    protected final Object dynamicMethod(
+    private byte memoizedIsInitialized = 2;
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
         com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
+        java.lang.Object arg0, java.lang.Object arg1) {
       switch (method) {
         case NEW_MUTABLE_INSTANCE: {
           return new org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock();
@@ -1438,13 +1452,9 @@ public final class Osmformat {
           boolean shouldMemoize = ((Boolean) arg0).booleanValue();
           if (hasBbox()) {
             if (!getBbox().isInitialized()) {
-              if (shouldMemoize) {
-                memoizedIsInitialized = 0;
-              }
               return null;
             }
           }
-          if (shouldMemoize) memoizedIsInitialized = 1;
           return DEFAULT_INSTANCE;
 
         }
@@ -1488,6 +1498,9 @@ public final class Osmformat {
               (com.google.protobuf.CodedInputStream) arg0;
           com.google.protobuf.ExtensionRegistryLite extensionRegistry =
               (com.google.protobuf.ExtensionRegistryLite) arg1;
+          if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
+          }
           try {
             boolean done = false;
             while (!done) {
@@ -1516,7 +1529,7 @@ public final class Osmformat {
                   break;
                 }
                 case 34: {
-                  String s = input.readString();
+                  java.lang.String s = input.readString();
                   if (!requiredFeatures_.isModifiable()) {
                     requiredFeatures_ =
                         com.google.protobuf.GeneratedMessageLite.mutableCopy(requiredFeatures_);
@@ -1525,7 +1538,7 @@ public final class Osmformat {
                   break;
                 }
                 case 42: {
-                  String s = input.readString();
+                  java.lang.String s = input.readString();
                   if (!optionalFeatures_.isModifiable()) {
                     optionalFeatures_ =
                         com.google.protobuf.GeneratedMessageLite.mutableCopy(optionalFeatures_);
@@ -1534,13 +1547,13 @@ public final class Osmformat {
                   break;
                 }
                 case 130: {
-                  String s = input.readString();
+                  java.lang.String s = input.readString();
                   bitField0_ |= 0x00000002;
                   writingprogram_ = s;
                   break;
                 }
                 case 138: {
-                  String s = input.readString();
+                  java.lang.String s = input.readString();
                   bitField0_ |= 0x00000004;
                   source_ = s;
                   break;
@@ -1556,7 +1569,7 @@ public final class Osmformat {
                   break;
                 }
                 case 274: {
-                  String s = input.readString();
+                  java.lang.String s = input.readString();
                   bitField0_ |= 0x00000020;
                   osmosisReplicationBaseUrl_ = s;
                   break;
@@ -1572,6 +1585,7 @@ public final class Osmformat {
           } finally {
           }
         }
+        // fall through
         case GET_DEFAULT_INSTANCE: {
           return DEFAULT_INSTANCE;
         }
@@ -1583,7 +1597,14 @@ public final class Osmformat {
             }
           }
           return PARSER;
-        }
+      }
+      case GET_MEMOIZED_IS_INITIALIZED: {
+        return memoizedIsInitialized;
+      }
+      case SET_MEMOIZED_IS_INITIALIZED: {
+        memoizedIsInitialized = (byte) (arg0 == null ? 0 : 1);
+        return null;
+      }
       }
       throw new UnsupportedOperationException();
     }
@@ -1818,6 +1839,19 @@ public final class Osmformat {
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
@@ -1879,10 +1913,10 @@ public final class Osmformat {
     }
 
     public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
+      return (Builder) DEFAULT_INSTANCE.createBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -2017,10 +2051,11 @@ public final class Osmformat {
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.HeaderBBox)
     }
-    private byte memoizedIsInitialized = -1;
-    protected final Object dynamicMethod(
+    private byte memoizedIsInitialized = 2;
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
         com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
+        java.lang.Object arg0, java.lang.Object arg1) {
       switch (method) {
         case NEW_MUTABLE_INSTANCE: {
           return new org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox();
@@ -2032,30 +2067,17 @@ public final class Osmformat {
 
           boolean shouldMemoize = ((Boolean) arg0).booleanValue();
           if (!hasLeft()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
             return null;
           }
           if (!hasRight()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
             return null;
           }
           if (!hasTop()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
             return null;
           }
           if (!hasBottom()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
             return null;
           }
-          if (shouldMemoize) memoizedIsInitialized = 1;
           return DEFAULT_INSTANCE;
 
         }
@@ -2091,6 +2113,9 @@ public final class Osmformat {
               (com.google.protobuf.CodedInputStream) arg0;
           com.google.protobuf.ExtensionRegistryLite extensionRegistry =
               (com.google.protobuf.ExtensionRegistryLite) arg1;
+          if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
+          }
           try {
             boolean done = false;
             while (!done) {
@@ -2136,6 +2161,7 @@ public final class Osmformat {
           } finally {
           }
         }
+        // fall through
         case GET_DEFAULT_INSTANCE: {
           return DEFAULT_INSTANCE;
         }
@@ -2147,7 +2173,14 @@ public final class Osmformat {
             }
           }
           return PARSER;
-        }
+      }
+      case GET_MEMOIZED_IS_INITIALIZED: {
+        return memoizedIsInitialized;
+      }
+      case SET_MEMOIZED_IS_INITIALIZED: {
+        memoizedIsInitialized = (byte) (arg0 == null ? 0 : 1);
+        return null;
+      }
       }
       throw new UnsupportedOperationException();
     }
@@ -2666,6 +2699,19 @@ public final class Osmformat {
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
@@ -2727,10 +2773,10 @@ public final class Osmformat {
     }
 
     public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
+      return (Builder) DEFAULT_INSTANCE.createBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -3055,10 +3101,11 @@ public final class Osmformat {
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.PrimitiveBlock)
     }
-    private byte memoizedIsInitialized = -1;
-    protected final Object dynamicMethod(
+    private byte memoizedIsInitialized = 2;
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
         com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
+        java.lang.Object arg0, java.lang.Object arg1) {
       switch (method) {
         case NEW_MUTABLE_INSTANCE: {
           return new org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock();
@@ -3070,20 +3117,13 @@ public final class Osmformat {
 
           boolean shouldMemoize = ((Boolean) arg0).booleanValue();
           if (!hasStringtable()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
             return null;
           }
           for (int i = 0; i < getPrimitivegroupCount(); i++) {
             if (!getPrimitivegroup(i).isInitialized()) {
-              if (shouldMemoize) {
-                memoizedIsInitialized = 0;
-              }
               return null;
             }
           }
-          if (shouldMemoize) memoizedIsInitialized = 1;
           return DEFAULT_INSTANCE;
 
         }
@@ -3122,6 +3162,9 @@ public final class Osmformat {
               (com.google.protobuf.CodedInputStream) arg0;
           com.google.protobuf.ExtensionRegistryLite extensionRegistry =
               (com.google.protobuf.ExtensionRegistryLite) arg1;
+          if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
+          }
           try {
             boolean done = false;
             while (!done) {
@@ -3189,6 +3232,7 @@ public final class Osmformat {
           } finally {
           }
         }
+        // fall through
         case GET_DEFAULT_INSTANCE: {
           return DEFAULT_INSTANCE;
         }
@@ -3200,7 +3244,14 @@ public final class Osmformat {
             }
           }
           return PARSER;
-        }
+      }
+      case GET_MEMOIZED_IS_INITIALIZED: {
+        return memoizedIsInitialized;
+      }
+      case SET_MEMOIZED_IS_INITIALIZED: {
+        memoizedIsInitialized = (byte) (arg0 == null ? 0 : 1);
+        return null;
+      }
       }
       throw new UnsupportedOperationException();
     }
@@ -3895,6 +3946,19 @@ public final class Osmformat {
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
@@ -3956,10 +4020,10 @@ public final class Osmformat {
     }
 
     public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
+      return (Builder) DEFAULT_INSTANCE.createBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -4415,10 +4479,11 @@ public final class Osmformat {
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.PrimitiveGroup)
     }
-    private byte memoizedIsInitialized = -1;
-    protected final Object dynamicMethod(
+    private byte memoizedIsInitialized = 2;
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
         com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
+        java.lang.Object arg0, java.lang.Object arg1) {
       switch (method) {
         case NEW_MUTABLE_INSTANCE: {
           return new org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup();
@@ -4431,37 +4496,24 @@ public final class Osmformat {
           boolean shouldMemoize = ((Boolean) arg0).booleanValue();
           for (int i = 0; i < getNodesCount(); i++) {
             if (!getNodes(i).isInitialized()) {
-              if (shouldMemoize) {
-                memoizedIsInitialized = 0;
-              }
               return null;
             }
           }
           for (int i = 0; i < getWaysCount(); i++) {
             if (!getWays(i).isInitialized()) {
-              if (shouldMemoize) {
-                memoizedIsInitialized = 0;
-              }
               return null;
             }
           }
           for (int i = 0; i < getRelationsCount(); i++) {
             if (!getRelations(i).isInitialized()) {
-              if (shouldMemoize) {
-                memoizedIsInitialized = 0;
-              }
               return null;
             }
           }
           for (int i = 0; i < getChangesetsCount(); i++) {
             if (!getChangesets(i).isInitialized()) {
-              if (shouldMemoize) {
-                memoizedIsInitialized = 0;
-              }
               return null;
             }
           }
-          if (shouldMemoize) memoizedIsInitialized = 1;
           return DEFAULT_INSTANCE;
 
         }
@@ -4494,6 +4546,9 @@ public final class Osmformat {
               (com.google.protobuf.CodedInputStream) arg0;
           com.google.protobuf.ExtensionRegistryLite extensionRegistry =
               (com.google.protobuf.ExtensionRegistryLite) arg1;
+          if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
+          }
           try {
             boolean done = false;
             while (!done) {
@@ -4568,6 +4623,7 @@ public final class Osmformat {
           } finally {
           }
         }
+        // fall through
         case GET_DEFAULT_INSTANCE: {
           return DEFAULT_INSTANCE;
         }
@@ -4579,7 +4635,14 @@ public final class Osmformat {
             }
           }
           return PARSER;
-        }
+      }
+      case GET_MEMOIZED_IS_INITIALIZED: {
+        return memoizedIsInitialized;
+      }
+      case SET_MEMOIZED_IS_INITIALIZED: {
+        memoizedIsInitialized = (byte) (arg0 == null ? 0 : 1);
+        return null;
+      }
       }
       throw new UnsupportedOperationException();
     }
@@ -4729,6 +4792,19 @@ public final class Osmformat {
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
@@ -4790,10 +4866,10 @@ public final class Osmformat {
     }
 
     public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
+      return (Builder) DEFAULT_INSTANCE.createBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -4873,9 +4949,10 @@ public final class Osmformat {
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.StringTable)
     }
-    protected final Object dynamicMethod(
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
         com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
+        java.lang.Object arg0, java.lang.Object arg1) {
       switch (method) {
         case NEW_MUTABLE_INSTANCE: {
           return new org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable();
@@ -4904,6 +4981,9 @@ public final class Osmformat {
               (com.google.protobuf.CodedInputStream) arg0;
           com.google.protobuf.ExtensionRegistryLite extensionRegistry =
               (com.google.protobuf.ExtensionRegistryLite) arg1;
+          if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
+          }
           try {
             boolean done = false;
             while (!done) {
@@ -4937,6 +5017,7 @@ public final class Osmformat {
           } finally {
           }
         }
+        // fall through
         case GET_DEFAULT_INSTANCE: {
           return DEFAULT_INSTANCE;
         }
@@ -4948,7 +5029,13 @@ public final class Osmformat {
             }
           }
           return PARSER;
-        }
+      }
+      case GET_MEMOIZED_IS_INITIALIZED: {
+        return (byte) 1;
+      }
+      case SET_MEMOIZED_IS_INITIALIZED: {
+        return null;
+      }
       }
       throw new UnsupportedOperationException();
     }
@@ -5368,6 +5455,19 @@ public final class Osmformat {
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Info parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.Info parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.Info parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
@@ -5429,10 +5529,10 @@ public final class Osmformat {
     }
 
     public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
+      return (Builder) DEFAULT_INSTANCE.createBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.Info prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -5689,9 +5789,10 @@ public final class Osmformat {
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.Info)
     }
-    protected final Object dynamicMethod(
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
         com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
+        java.lang.Object arg0, java.lang.Object arg1) {
       switch (method) {
         case NEW_MUTABLE_INSTANCE: {
           return new org.openstreetmap.osmosis.osmbinary.Osmformat.Info();
@@ -5737,6 +5838,9 @@ public final class Osmformat {
               (com.google.protobuf.CodedInputStream) arg0;
           com.google.protobuf.ExtensionRegistryLite extensionRegistry =
               (com.google.protobuf.ExtensionRegistryLite) arg1;
+          if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
+          }
           try {
             boolean done = false;
             while (!done) {
@@ -5792,6 +5896,7 @@ public final class Osmformat {
           } finally {
           }
         }
+        // fall through
         case GET_DEFAULT_INSTANCE: {
           return DEFAULT_INSTANCE;
         }
@@ -5803,7 +5908,13 @@ public final class Osmformat {
             }
           }
           return PARSER;
-        }
+      }
+      case GET_MEMOIZED_IS_INITIALIZED: {
+        return (byte) 1;
+      }
+      case SET_MEMOIZED_IS_INITIALIZED: {
+        return null;
+      }
       }
       throw new UnsupportedOperationException();
     }
@@ -6693,6 +6804,19 @@ public final class Osmformat {
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
@@ -6754,10 +6878,10 @@ public final class Osmformat {
     }
 
     public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
+      return (Builder) DEFAULT_INSTANCE.createBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -7299,9 +7423,10 @@ public final class Osmformat {
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.DenseInfo)
     }
-    protected final Object dynamicMethod(
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
         com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
+        java.lang.Object arg0, java.lang.Object arg1) {
       switch (method) {
         case NEW_MUTABLE_INSTANCE: {
           return new org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo();
@@ -7340,6 +7465,9 @@ public final class Osmformat {
               (com.google.protobuf.CodedInputStream) arg0;
           com.google.protobuf.ExtensionRegistryLite extensionRegistry =
               (com.google.protobuf.ExtensionRegistryLite) arg1;
+          if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
+          }
           try {
             boolean done = false;
             while (!done) {
@@ -7492,6 +7620,7 @@ public final class Osmformat {
           } finally {
           }
         }
+        // fall through
         case GET_DEFAULT_INSTANCE: {
           return DEFAULT_INSTANCE;
         }
@@ -7503,7 +7632,13 @@ public final class Osmformat {
             }
           }
           return PARSER;
-        }
+      }
+      case GET_MEMOIZED_IS_INITIALIZED: {
+        return (byte) 1;
+      }
+      case SET_MEMOIZED_IS_INITIALIZED: {
+        return null;
+      }
       }
       throw new UnsupportedOperationException();
     }
@@ -7656,6 +7791,19 @@ public final class Osmformat {
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
@@ -7717,10 +7865,10 @@ public final class Osmformat {
     }
 
     public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
+      return (Builder) DEFAULT_INSTANCE.createBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -7805,10 +7953,11 @@ public final class Osmformat {
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.ChangeSet)
     }
-    private byte memoizedIsInitialized = -1;
-    protected final Object dynamicMethod(
+    private byte memoizedIsInitialized = 2;
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
         com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
+        java.lang.Object arg0, java.lang.Object arg1) {
       switch (method) {
         case NEW_MUTABLE_INSTANCE: {
           return new org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet();
@@ -7820,12 +7969,8 @@ public final class Osmformat {
 
           boolean shouldMemoize = ((Boolean) arg0).booleanValue();
           if (!hasId()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
             return null;
           }
-          if (shouldMemoize) memoizedIsInitialized = 1;
           return DEFAULT_INSTANCE;
 
         }
@@ -7852,6 +7997,9 @@ public final class Osmformat {
               (com.google.protobuf.CodedInputStream) arg0;
           com.google.protobuf.ExtensionRegistryLite extensionRegistry =
               (com.google.protobuf.ExtensionRegistryLite) arg1;
+          if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
+          }
           try {
             boolean done = false;
             while (!done) {
@@ -7882,6 +8030,7 @@ public final class Osmformat {
           } finally {
           }
         }
+        // fall through
         case GET_DEFAULT_INSTANCE: {
           return DEFAULT_INSTANCE;
         }
@@ -7893,7 +8042,14 @@ public final class Osmformat {
             }
           }
           return PARSER;
-        }
+      }
+      case GET_MEMOIZED_IS_INITIALIZED: {
+        return memoizedIsInitialized;
+      }
+      case SET_MEMOIZED_IS_INITIALIZED: {
+        memoizedIsInitialized = (byte) (arg0 == null ? 0 : 1);
+        return null;
+      }
       }
       throw new UnsupportedOperationException();
     }
@@ -8452,6 +8608,19 @@ public final class Osmformat {
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Node parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.Node parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.Node parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
@@ -8513,10 +8682,10 @@ public final class Osmformat {
     }
 
     public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
+      return (Builder) DEFAULT_INSTANCE.createBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.Node prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -8857,10 +9026,11 @@ public final class Osmformat {
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.Node)
     }
-    private byte memoizedIsInitialized = -1;
-    protected final Object dynamicMethod(
+    private byte memoizedIsInitialized = 2;
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
         com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
+        java.lang.Object arg0, java.lang.Object arg1) {
       switch (method) {
         case NEW_MUTABLE_INSTANCE: {
           return new org.openstreetmap.osmosis.osmbinary.Osmformat.Node();
@@ -8872,24 +9042,14 @@ public final class Osmformat {
 
           boolean shouldMemoize = ((Boolean) arg0).booleanValue();
           if (!hasId()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
             return null;
           }
           if (!hasLat()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
             return null;
           }
           if (!hasLon()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
             return null;
           }
-          if (shouldMemoize) memoizedIsInitialized = 1;
           return DEFAULT_INSTANCE;
 
         }
@@ -8927,6 +9087,9 @@ public final class Osmformat {
               (com.google.protobuf.CodedInputStream) arg0;
           com.google.protobuf.ExtensionRegistryLite extensionRegistry =
               (com.google.protobuf.ExtensionRegistryLite) arg1;
+          if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
+          }
           try {
             boolean done = false;
             while (!done) {
@@ -9022,6 +9185,7 @@ public final class Osmformat {
           } finally {
           }
         }
+        // fall through
         case GET_DEFAULT_INSTANCE: {
           return DEFAULT_INSTANCE;
         }
@@ -9033,7 +9197,14 @@ public final class Osmformat {
             }
           }
           return PARSER;
-        }
+      }
+      case GET_MEMOIZED_IS_INITIALIZED: {
+        return memoizedIsInitialized;
+      }
+      case SET_MEMOIZED_IS_INITIALIZED: {
+        memoizedIsInitialized = (byte) (arg0 == null ? 0 : 1);
+        return null;
+      }
       }
       throw new UnsupportedOperationException();
     }
@@ -9725,6 +9896,19 @@ public final class Osmformat {
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
@@ -9786,10 +9970,10 @@ public final class Osmformat {
     }
 
     public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
+      return (Builder) DEFAULT_INSTANCE.createBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -10209,9 +10393,10 @@ public final class Osmformat {
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.DenseNodes)
     }
-    protected final Object dynamicMethod(
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
         com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
+        java.lang.Object arg0, java.lang.Object arg1) {
       switch (method) {
         case NEW_MUTABLE_INSTANCE: {
           return new org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes();
@@ -10248,6 +10433,9 @@ public final class Osmformat {
               (com.google.protobuf.CodedInputStream) arg0;
           com.google.protobuf.ExtensionRegistryLite extensionRegistry =
               (com.google.protobuf.ExtensionRegistryLite) arg1;
+          if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
+          }
           try {
             boolean done = false;
             while (!done) {
@@ -10370,6 +10558,7 @@ public final class Osmformat {
           } finally {
           }
         }
+        // fall through
         case GET_DEFAULT_INSTANCE: {
           return DEFAULT_INSTANCE;
         }
@@ -10381,7 +10570,13 @@ public final class Osmformat {
             }
           }
           return PARSER;
-        }
+      }
+      case GET_MEMOIZED_IS_INITIALIZED: {
+        return (byte) 1;
+      }
+      case SET_MEMOIZED_IS_INITIALIZED: {
+        return null;
+      }
       }
       throw new UnsupportedOperationException();
     }
@@ -10912,6 +11107,19 @@ public final class Osmformat {
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Way parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.Way parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.Way parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
@@ -10973,10 +11181,10 @@ public final class Osmformat {
     }
 
     public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
+      return (Builder) DEFAULT_INSTANCE.createBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.Way prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -11290,10 +11498,11 @@ public final class Osmformat {
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.Way)
     }
-    private byte memoizedIsInitialized = -1;
-    protected final Object dynamicMethod(
+    private byte memoizedIsInitialized = 2;
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
         com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
+        java.lang.Object arg0, java.lang.Object arg1) {
       switch (method) {
         case NEW_MUTABLE_INSTANCE: {
           return new org.openstreetmap.osmosis.osmbinary.Osmformat.Way();
@@ -11305,12 +11514,8 @@ public final class Osmformat {
 
           boolean shouldMemoize = ((Boolean) arg0).booleanValue();
           if (!hasId()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
             return null;
           }
-          if (shouldMemoize) memoizedIsInitialized = 1;
           return DEFAULT_INSTANCE;
 
         }
@@ -11344,6 +11549,9 @@ public final class Osmformat {
               (com.google.protobuf.CodedInputStream) arg0;
           com.google.protobuf.ExtensionRegistryLite extensionRegistry =
               (com.google.protobuf.ExtensionRegistryLite) arg1;
+          if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
+          }
           try {
             boolean done = false;
             while (!done) {
@@ -11450,6 +11658,7 @@ public final class Osmformat {
           } finally {
           }
         }
+        // fall through
         case GET_DEFAULT_INSTANCE: {
           return DEFAULT_INSTANCE;
         }
@@ -11461,7 +11670,14 @@ public final class Osmformat {
             }
           }
           return PARSER;
-        }
+      }
+      case GET_MEMOIZED_IS_INITIALIZED: {
+        return memoizedIsInitialized;
+      }
+      case SET_MEMOIZED_IS_INITIALIZED: {
+        memoizedIsInitialized = (byte) (arg0 == null ? 0 : 1);
+        return null;
+      }
       }
       throw new UnsupportedOperationException();
     }
@@ -12309,6 +12525,19 @@ public final class Osmformat {
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Relation parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.Relation parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return com.google.protobuf.GeneratedMessageLite.parseFrom(
+          DEFAULT_INSTANCE, data, extensionRegistry);
+    }
+    public static org.openstreetmap.osmosis.osmbinary.Osmformat.Relation parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return com.google.protobuf.GeneratedMessageLite.parseFrom(
@@ -12370,10 +12599,10 @@ public final class Osmformat {
     }
 
     public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
+      return (Builder) DEFAULT_INSTANCE.createBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.Relation prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
     }
 
     /**
@@ -12822,10 +13051,11 @@ public final class Osmformat {
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.Relation)
     }
-    private byte memoizedIsInitialized = -1;
-    protected final Object dynamicMethod(
+    private byte memoizedIsInitialized = 2;
+    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
+    protected final java.lang.Object dynamicMethod(
         com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        Object arg0, Object arg1) {
+        java.lang.Object arg0, java.lang.Object arg1) {
       switch (method) {
         case NEW_MUTABLE_INSTANCE: {
           return new org.openstreetmap.osmosis.osmbinary.Osmformat.Relation();
@@ -12837,12 +13067,8 @@ public final class Osmformat {
 
           boolean shouldMemoize = ((Boolean) arg0).booleanValue();
           if (!hasId()) {
-            if (shouldMemoize) {
-              memoizedIsInitialized = 0;
-            }
             return null;
           }
-          if (shouldMemoize) memoizedIsInitialized = 1;
           return DEFAULT_INSTANCE;
 
         }
@@ -12880,6 +13106,9 @@ public final class Osmformat {
               (com.google.protobuf.CodedInputStream) arg0;
           com.google.protobuf.ExtensionRegistryLite extensionRegistry =
               (com.google.protobuf.ExtensionRegistryLite) arg1;
+          if (extensionRegistry == null) {
+            throw new java.lang.NullPointerException();
+          }
           try {
             boolean done = false;
             while (!done) {
@@ -13040,6 +13269,7 @@ public final class Osmformat {
           } finally {
           }
         }
+        // fall through
         case GET_DEFAULT_INSTANCE: {
           return DEFAULT_INSTANCE;
         }
@@ -13051,7 +13281,14 @@ public final class Osmformat {
             }
           }
           return PARSER;
-        }
+      }
+      case GET_MEMOIZED_IS_INITIALIZED: {
+        return memoizedIsInitialized;
+      }
+      case SET_MEMOIZED_IS_INITIALIZED: {
+        memoizedIsInitialized = (byte) (arg0 == null ? 0 : 1);
+        return null;
+      }
       }
       throw new UnsupportedOperationException();
     }
