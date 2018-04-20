@@ -18,7 +18,7 @@ public class PbfReaderFactory extends TaskManagerFactory {
 	private static final String ARG_FILE_NAME = "file";
 	private static final String DEFAULT_FILE_NAME = "dump.osm.pbf";
 	private static final String ARG_WORKERS = "workers";
-	private static final int DEFAULT_WORKERS = 1;
+	private static final int DEFAULT_WORKERS = 0;
 
 
 	/**

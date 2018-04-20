@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
+import com.google.common.util.concurrent.MoreExecutors;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
@@ -74,7 +75,14 @@ public class PbfReader implements RunnableSource {
 	@Override
 	public void run() {
 		PbfStreamSplitter streamSplitter = null;
-		ExecutorService executorService = Executors.newFixedThreadPool(workers);
+
+		ExecutorService executorService;
+
+		if (workers > 0) {
+			executorService = Executors.newFixedThreadPool(workers);
+		} else {
+			executorService = MoreExecutors.newDirectExecutorService();
+		}
 
 		try {
 			sink.initialize(Collections.<String, Object>emptyMap());
