@@ -4,7 +4,7 @@ package org.openstreetmap.osmosis.pbf2.v0_6.impl;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executor;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -22,7 +22,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
  */
 public class PbfDecoder implements Runnable {
 	private PbfStreamSplitter streamSplitter;
-	private ExecutorService executorService;
+	private Executor executor;
 	private int maxPendingBlobs;
 	private Sink sink;
 	private Lock lock;
@@ -36,7 +36,7 @@ public class PbfDecoder implements Runnable {
 	 * @param streamSplitter
 	 *            The PBF stream splitter providing the source of blobs to be
 	 *            decoded.
-	 * @param executorService
+	 * @param executor
 	 *            The executor service managing the thread pool.
 	 * @param maxPendingBlobs
 	 *            The maximum number of blobs to have in progress at any point
@@ -44,10 +44,10 @@ public class PbfDecoder implements Runnable {
 	 * @param sink
 	 *            The sink to send all decoded entities to.
 	 */
-	public PbfDecoder(PbfStreamSplitter streamSplitter, ExecutorService executorService, int maxPendingBlobs,
-			Sink sink) {
+	public PbfDecoder(PbfStreamSplitter streamSplitter, Executor executor, int maxPendingBlobs,
+					  Sink sink) {
 		this.streamSplitter = streamSplitter;
-		this.executorService = executorService;
+		this.executor = executor;
 		this.maxPendingBlobs = maxPendingBlobs;
 		this.sink = sink;
 
@@ -155,7 +155,7 @@ public class PbfDecoder implements Runnable {
 
 			// Create the blob decoder itself and execute it on a worker thread.
 			PbfBlobDecoder blobDecoder = new PbfBlobDecoder(rawBlob.getType(), rawBlob.getData(), decoderListener);
-			executorService.execute(blobDecoder);
+			executor.execute(blobDecoder);
 
 			// If the number of pending blobs has reached capacity we must begin
 			// sending results to the sink. This method will block until blob
