@@ -15,7 +15,8 @@ import org.openstreetmap.osmosis.core.store.Storeable;
 public class WayNode implements Comparable<WayNode>, Storeable {
 	
 	private long nodeId;
-	
+	private double latitude;
+	private double longitude;
 	
 	/**
 	 * Creates a new instance.
@@ -27,6 +28,21 @@ public class WayNode implements Comparable<WayNode>, Storeable {
 		this.nodeId = nodeId;
 	}
 	
+	/**
+	 * Creates a new instance.
+	 * 
+	 * @param nodeId
+	 *            The unique identifier of the node being referred to.
+	 * @param latitude
+	 *            The node's latitude
+	 * @param longitude
+	 *            The node's longitude
+	 */
+	public WayNode(long nodeId, double latitude, double longitude) {
+		this(nodeId);
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
 	
 	/**
 	 * Creates a new instance.
@@ -38,7 +54,7 @@ public class WayNode implements Comparable<WayNode>, Storeable {
 	 *            within the store.
 	 */
 	public WayNode(StoreReader sr, StoreClassRegister scr) {
-		this(sr.readLong());
+		this(sr.readLong(), sr.readDouble(), sr.readDouble());
 	}
 	
 	
@@ -47,6 +63,8 @@ public class WayNode implements Comparable<WayNode>, Storeable {
 	 */
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		sw.writeLong(nodeId);
+		sw.writeDouble(latitude);
+		sw.writeDouble(longitude);
 	}
 	
 	
@@ -73,7 +91,20 @@ public class WayNode implements Comparable<WayNode>, Storeable {
 		}
 	}
 	
-	
+	/**
+	 * @return The latitude (if the PBF file was built with osmium command 'add-locations-to-ways')
+	 */
+	public double getLatitude() {
+		return latitude;
+	}
+
+	/**
+	 * @return The longitude (if the PBF file was built with osmium command 'add-locations-to-ways')
+	 */
+	public double getLongitude() {
+		return longitude;
+	}
+
 	/**
 	 * @return The nodeId.
 	 */

@@ -61,7 +61,9 @@ public class PbfBlobDecoder implements Runnable {
 	private byte[] rawBlob;
 	private PbfBlobDecoderListener listener;
 	private List<EntityContainer> decodedEntities;
-
+	private int granularity;
+	private long latOffset;
+	private long lonOffset;
 
 	/**
 	 * Creates a new instance.
@@ -326,15 +328,50 @@ public class PbfBlobDecoder implements Runnable {
 			// the previous one.
 			long nodeId = 0;
 			List<WayNode> wayNodes = osmWay.getWayNodes();
+
 			for (long nodeIdOffset : way.getRefsList()) {
 				nodeId += nodeIdOffset;
+
 				wayNodes.add(new WayNode(nodeId));
 			}
+
+            long lastId = 0;
+            long lastLat = 0;
+            long lastLon = 0;
+            List<WayNode> nodes = new ArrayList<WayNode>();
+            for (int index = 0; index < way.getRefsCount(); index++) {
+            	    long identifier = lastId + way.getRefs(index);
+            		if (index < way.getLatCount() && index < way.getLonCount()) {
+	            	    long lat = lastLat + way.getLat(index);
+	            	    long lon = lastLon + way.getLon(index);
+	            	    nodes.add(new WayNode(identifier, parseLat(lat), parseLon(lon)));
+	            	    lastLat = lat;
+	            	    lastLon = lon;
+            		} else {
+                		nodes.add(new WayNode(identifier));
+            		}
+                lastId = identifier;
+            }
 
 			decodedEntities.add(new WayContainer(osmWay));
 		}
 	}
 
+    /**
+	 * Convert a latitude value stored in a protobuf into a double, compensating for granularity and latitude offset
+	 */
+    private double parseLat(long degree) {
+      // Support non-zero offsets. (We don't currently generate them)
+      return (granularity * degree + latOffset) * .000000001;
+    }
+
+    /**
+	 * Convert a longitude value stored in a protobuf into a double, compensating for granularity and longitude offset
+	 */
+    private double parseLon(long degree) {
+      // Support non-zero offsets. (We don't currently generate them)
+       return (granularity * degree + lonOffset) * .000000001;
+    }
 
 	private void buildRelationMembers(org.openstreetmap.osmosis.core.domain.v0_6.Relation relation,
 			List<Long> memberIds, List<Integer> memberRoles, List<MemberType> memberTypes,
@@ -406,6 +443,9 @@ public class PbfBlobDecoder implements Runnable {
 
 	private void processOsmPrimitives(byte[] data) throws InvalidProtocolBufferException {
 		Osmformat.PrimitiveBlock block = Osmformat.PrimitiveBlock.parseFrom(data);
+		granularity = block.getGranularity();
+		latOffset = block.getLatOffset();
+		lonOffset = block.getLonOffset();
 		PbfFieldDecoder fieldDecoder = new PbfFieldDecoder(block);
 
 		for (PrimitiveGroup primitiveGroup : block.getPrimitivegroupList()) {

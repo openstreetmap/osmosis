@@ -146,12 +146,24 @@ public class OsmosisBinaryParser extends BinaryParser {
             for (int j = 0; j < i.getKeysCount(); j++) {
                 tags.add(new Tag(getStringById(i.getKeys(j)), getStringById(i.getVals(j))));
             }
-                
             long lastId = 0;
+            long lastLat = 0;
+            long lastLon = 0;
             List<WayNode> nodes = new ArrayList<WayNode>();
-            for (long j : i.getRefsList()) {
-                nodes.add(new WayNode(j + lastId));
-                lastId = j + lastId;
+            for (int index = 0; index < i.getRefsCount(); index++) {
+            	    long identifier = lastId + i.getRefs(index);
+            		WayNode node;
+            		if (index < i.getLatCount() && index < i.getLonCount()) {
+	            	    long lat = lastLat + i.getLat(index);
+	            	    long lon = lastLon + i.getLon(index);
+	            	    node = new WayNode(identifier, parseLat(lat), parseLon(lon));
+	            	    lastLat = lat;
+	            	    lastLon = lon;
+            		} else {
+            			node = new WayNode(identifier);
+            		}
+                nodes.add(node);
+                lastId = identifier;
             }
 
             long id = i.getId();

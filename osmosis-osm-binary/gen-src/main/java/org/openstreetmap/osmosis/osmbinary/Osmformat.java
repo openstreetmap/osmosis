@@ -10684,6 +10684,32 @@ public final class Osmformat {
      * <code>repeated sint64 refs = 8 [packed = true];</code>
      */
     long getRefs(int index);
+
+    /**
+     * <code>repeated sint64 lat = 9 [packed = true];</code>
+     */
+    java.util.List<java.lang.Long> getLatList();
+    /**
+     * <code>repeated sint64 lat = 9 [packed = true];</code>
+     */
+    int getLatCount();
+    /**
+     * <code>repeated sint64 lat = 9 [packed = true];</code>
+     */
+    long getLat(int index);
+
+    /**
+     * <code>repeated sint64 lon = 10 [packed = true];</code>
+     */
+    java.util.List<java.lang.Long> getLonList();
+    /**
+     * <code>repeated sint64 lon = 10 [packed = true];</code>
+     */
+    int getLonCount();
+    /**
+     * <code>repeated sint64 lon = 10 [packed = true];</code>
+     */
+    long getLon(int index);
   }
   /**
    * Protobuf type {@code OSMPBF.Way}
@@ -10697,6 +10723,8 @@ public final class Osmformat {
       keys_ = emptyIntList();
       vals_ = emptyIntList();
       refs_ = emptyLongList();
+      lat_ = emptyLongList();
+      lon_ = emptyLongList();
     }
     private int bitField0_;
     public static final int ID_FIELD_NUMBER = 1;
@@ -11013,6 +11041,124 @@ public final class Osmformat {
       refs_ = emptyLongList();
     }
 
+    public static final int LAT_FIELD_NUMBER = 9;
+    private com.google.protobuf.Internal.LongList lat_;
+    /**
+     * <code>repeated sint64 lat = 9 [packed = true];</code>
+     */
+    public java.util.List<java.lang.Long>
+        getLatList() {
+      return lat_;
+    }
+    /**
+     * <code>repeated sint64 lat = 9 [packed = true];</code>
+     */
+    public int getLatCount() {
+      return lat_.size();
+    }
+    /**
+     * <code>repeated sint64 lat = 9 [packed = true];</code>
+     */
+    public long getLat(int index) {
+      return lat_.getLong(index);
+    }
+    private int latMemoizedSerializedSize = -1;
+    private void ensureLatIsMutable() {
+      if (!lat_.isModifiable()) {
+        lat_ =
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(lat_);
+       }
+    }
+    /**
+     * <code>repeated sint64 lat = 9 [packed = true];</code>
+     */
+    private void setLat(
+        int index, long value) {
+      ensureLatIsMutable();
+      lat_.setLong(index, value);
+    }
+    /**
+     * <code>repeated sint64 lat = 9 [packed = true];</code>
+     */
+    private void addLat(long value) {
+      ensureLatIsMutable();
+      lat_.addLong(value);
+    }
+    /**
+     * <code>repeated sint64 lat = 9 [packed = true];</code>
+     */
+    private void addAllLat(
+        java.lang.Iterable<? extends java.lang.Long> values) {
+      ensureLatIsMutable();
+      com.google.protobuf.AbstractMessageLite.addAll(
+          values, lat_);
+    }
+    /**
+     * <code>repeated sint64 lat = 9 [packed = true];</code>
+     */
+    private void clearLat() {
+      lat_ = emptyLongList();
+    }
+
+    public static final int LON_FIELD_NUMBER = 10;
+    private com.google.protobuf.Internal.LongList lon_;
+    /**
+     * <code>repeated sint64 lon = 10 [packed = true];</code>
+     */
+    public java.util.List<java.lang.Long>
+        getLonList() {
+      return lon_;
+    }
+    /**
+     * <code>repeated sint64 lon = 10 [packed = true];</code>
+     */
+    public int getLonCount() {
+      return lon_.size();
+    }
+    /**
+     * <code>repeated sint64 lon = 10 [packed = true];</code>
+     */
+    public long getLon(int index) {
+      return lon_.getLong(index);
+    }
+    private int lonMemoizedSerializedSize = -1;
+    private void ensureLonIsMutable() {
+      if (!lon_.isModifiable()) {
+        lon_ =
+            com.google.protobuf.GeneratedMessageLite.mutableCopy(lon_);
+       }
+    }
+    /**
+     * <code>repeated sint64 lon = 10 [packed = true];</code>
+     */
+    private void setLon(
+        int index, long value) {
+      ensureLonIsMutable();
+      lon_.setLong(index, value);
+    }
+    /**
+     * <code>repeated sint64 lon = 10 [packed = true];</code>
+     */
+    private void addLon(long value) {
+      ensureLonIsMutable();
+      lon_.addLong(value);
+    }
+    /**
+     * <code>repeated sint64 lon = 10 [packed = true];</code>
+     */
+    private void addAllLon(
+        java.lang.Iterable<? extends java.lang.Long> values) {
+      ensureLonIsMutable();
+      com.google.protobuf.AbstractMessageLite.addAll(
+          values, lon_);
+    }
+    /**
+     * <code>repeated sint64 lon = 10 [packed = true];</code>
+     */
+    private void clearLon() {
+      lon_ = emptyLongList();
+    }
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -11042,6 +11188,20 @@ public final class Osmformat {
       }
       for (int i = 0; i < refs_.size(); i++) {
         output.writeSInt64NoTag(refs_.getLong(i));
+      }
+      if (getLatList().size() > 0) {
+        output.writeUInt32NoTag(74);
+        output.writeUInt32NoTag(latMemoizedSerializedSize);
+      }
+      for (int i = 0; i < lat_.size(); i++) {
+        output.writeSInt64NoTag(lat_.getLong(i));
+      }
+      if (getLonList().size() > 0) {
+        output.writeUInt32NoTag(82);
+        output.writeUInt32NoTag(lonMemoizedSerializedSize);
+      }
+      for (int i = 0; i < lon_.size(); i++) {
+        output.writeSInt64NoTag(lon_.getLong(i));
       }
       unknownFields.writeTo(output);
     }
@@ -11100,6 +11260,34 @@ public final class Osmformat {
               .computeInt32SizeNoTag(dataSize);
         }
         refsMemoizedSerializedSize = dataSize;
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < lat_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeSInt64SizeNoTag(lat_.getLong(i));
+        }
+        size += dataSize;
+        if (!getLatList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        latMemoizedSerializedSize = dataSize;
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < lon_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeSInt64SizeNoTag(lon_.getLong(i));
+        }
+        size += dataSize;
+        if (!getLonList().isEmpty()) {
+          size += 1;
+          size += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dataSize);
+        }
+        lonMemoizedSerializedSize = dataSize;
       }
       size += unknownFields.getSerializedSize();
       memoizedSerializedSize = size;
@@ -11496,6 +11684,116 @@ public final class Osmformat {
         return this;
       }
 
+      /**
+       * <code>repeated sint64 lat = 9 [packed = true];</code>
+       */
+      public java.util.List<java.lang.Long>
+          getLatList() {
+        return java.util.Collections.unmodifiableList(
+            instance.getLatList());
+      }
+      /**
+       * <code>repeated sint64 lat = 9 [packed = true];</code>
+       */
+      public int getLatCount() {
+        return instance.getLatCount();
+      }
+      /**
+       * <code>repeated sint64 lat = 9 [packed = true];</code>
+       */
+      public long getLat(int index) {
+        return instance.getLat(index);
+      }
+      /**
+       * <code>repeated sint64 lat = 9 [packed = true];</code>
+       */
+      public Builder setLat(
+          int index, long value) {
+        copyOnWrite();
+        instance.setLat(index, value);
+        return this;
+      }
+      /**
+       * <code>repeated sint64 lat = 9 [packed = true];</code>
+       */
+      public Builder addLat(long value) {
+        copyOnWrite();
+        instance.addLat(value);
+        return this;
+      }
+      /**
+       * <code>repeated sint64 lat = 9 [packed = true];</code>
+       */
+      public Builder addAllLat(
+          java.lang.Iterable<? extends java.lang.Long> values) {
+        copyOnWrite();
+        instance.addAllLat(values);
+        return this;
+      }
+      /**
+       * <code>repeated sint64 lat = 9 [packed = true];</code>
+       */
+      public Builder clearLat() {
+        copyOnWrite();
+        instance.clearLat();
+        return this;
+      }
+
+      /**
+       * <code>repeated sint64 lon = 10 [packed = true];</code>
+       */
+      public java.util.List<java.lang.Long>
+          getLonList() {
+        return java.util.Collections.unmodifiableList(
+            instance.getLonList());
+      }
+      /**
+       * <code>repeated sint64 lon = 10 [packed = true];</code>
+       */
+      public int getLonCount() {
+        return instance.getLonCount();
+      }
+      /**
+       * <code>repeated sint64 lon = 10 [packed = true];</code>
+       */
+      public long getLon(int index) {
+        return instance.getLon(index);
+      }
+      /**
+       * <code>repeated sint64 lon = 10 [packed = true];</code>
+       */
+      public Builder setLon(
+          int index, long value) {
+        copyOnWrite();
+        instance.setLon(index, value);
+        return this;
+      }
+      /**
+       * <code>repeated sint64 lon = 10 [packed = true];</code>
+       */
+      public Builder addLon(long value) {
+        copyOnWrite();
+        instance.addLon(value);
+        return this;
+      }
+      /**
+       * <code>repeated sint64 lon = 10 [packed = true];</code>
+       */
+      public Builder addAllLon(
+          java.lang.Iterable<? extends java.lang.Long> values) {
+        copyOnWrite();
+        instance.addAllLon(values);
+        return this;
+      }
+      /**
+       * <code>repeated sint64 lon = 10 [packed = true];</code>
+       */
+      public Builder clearLon() {
+        copyOnWrite();
+        instance.clearLon();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:OSMPBF.Way)
     }
     private byte memoizedIsInitialized = 2;
@@ -11523,6 +11821,8 @@ public final class Osmformat {
           keys_.makeImmutable();
           vals_.makeImmutable();
           refs_.makeImmutable();
+          lat_.makeImmutable();
+          lon_.makeImmutable();
           return null;
         }
         case NEW_BUILDER: {
@@ -11538,6 +11838,8 @@ public final class Osmformat {
           vals_= visitor.visitIntList(vals_, other.vals_);
           info_ = visitor.visitMessage(info_, other.info_);
           refs_= visitor.visitLongList(refs_, other.refs_);
+          lat_= visitor.visitLongList(lat_, other.lat_);
+          lon_= visitor.visitLongList(lon_, other.lon_);
           if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
               .INSTANCE) {
             bitField0_ |= other.bitField0_;
@@ -11643,6 +11945,48 @@ public final class Osmformat {
                   }
                   while (input.getBytesUntilLimit() > 0) {
                     refs_.addLong(input.readSInt64());
+                  }
+                  input.popLimit(limit);
+                  break;
+                }
+                case 72: {
+                  if (!lat_.isModifiable()) {
+                    lat_ =
+                        com.google.protobuf.GeneratedMessageLite.mutableCopy(lat_);
+                  }
+                  lat_.addLong(input.readSInt64());
+                  break;
+                }
+                case 74: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  if (!lat_.isModifiable() && input.getBytesUntilLimit() > 0) {
+                    lat_ =
+                        com.google.protobuf.GeneratedMessageLite.mutableCopy(lat_);
+                  }
+                  while (input.getBytesUntilLimit() > 0) {
+                    lat_.addLong(input.readSInt64());
+                  }
+                  input.popLimit(limit);
+                  break;
+                }
+                case 80: {
+                  if (!lon_.isModifiable()) {
+                    lon_ =
+                        com.google.protobuf.GeneratedMessageLite.mutableCopy(lon_);
+                  }
+                  lon_.addLong(input.readSInt64());
+                  break;
+                }
+                case 82: {
+                  int length = input.readRawVarint32();
+                  int limit = input.pushLimit(length);
+                  if (!lon_.isModifiable() && input.getBytesUntilLimit() > 0) {
+                    lon_ =
+                        com.google.protobuf.GeneratedMessageLite.mutableCopy(lon_);
+                  }
+                  while (input.getBytesUntilLimit() > 0) {
+                    lon_.addLong(input.readSInt64());
                   }
                   input.popLimit(limit);
                   break;
