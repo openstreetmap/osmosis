@@ -1,25 +1,11 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pbf2.v0_6.impl;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.zip.DataFormatException;
-import java.util.zip.Inflater;
-
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
-import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
 import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
@@ -27,18 +13,21 @@ import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.osmbinary.Osmformat;
-import org.openstreetmap.osmosis.osmbinary.Fileformat.Blob;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes;
-import org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.Info;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.Node;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.Relation;
-import org.openstreetmap.osmosis.osmbinary.Osmformat.Way;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType;
+import org.openstreetmap.osmosis.osmbinary.Osmformat.Way;
 
-import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Logger;
 
 
 /**
@@ -52,97 +41,29 @@ public class PbfBlobDecoder implements Runnable {
 
 	private static Logger log = Logger.getLogger(PbfBlobDecoder.class.getName());
 
-	private static final double COORDINATE_SCALING_FACTOR = 0.000000001;
 	private static final int EMPTY_VERSION = -1;
 	private static final Date EMPTY_TIMESTAMP = new Date(0);
 	private static final long EMPTY_CHANGESET = -1;
 
-	private String blobType;
-	private byte[] rawBlob;
+	private BlobToBlockMapper blobToBlockMapper;
+
+	private RawBlob rawBlob;
 	private PbfBlobDecoderListener listener;
 	private List<EntityContainer> decodedEntities;
-	private int granularity;
-	private long latOffset;
-	private long lonOffset;
 
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param blobType
-	 *            The type of blob.
 	 * @param rawBlob
 	 *            The raw data of the blob.
 	 * @param listener
 	 *            The listener for receiving decoding results.
 	 */
-	public PbfBlobDecoder(String blobType, byte[] rawBlob, PbfBlobDecoderListener listener) {
-		this.blobType = blobType;
+	public PbfBlobDecoder(RawBlob rawBlob, PbfBlobDecoderListener listener) {
+		this.blobToBlockMapper = new BlobToBlockMapper();
+
 		this.rawBlob = rawBlob;
 		this.listener = listener;
-	}
-
-
-	private byte[] readBlobContent() throws IOException {
-		Blob blob = Blob.parseFrom(rawBlob);
-		byte[] blobData;
-
-		if (blob.hasRaw()) {
-			blobData = blob.getRaw().toByteArray();
-		} else if (blob.hasZlibData()) {
-			Inflater inflater = new Inflater();
-			inflater.setInput(blob.getZlibData().toByteArray());
-			blobData = new byte[blob.getRawSize()];
-			try {
-				inflater.inflate(blobData);
-			} catch (DataFormatException e) {
-				throw new OsmosisRuntimeException("Unable to decompress PBF blob.", e);
-			}
-			if (!inflater.finished()) {
-				throw new OsmosisRuntimeException("PBF blob contains incomplete compressed data.");
-			}
-		} else {
-			throw new OsmosisRuntimeException("PBF blob uses unsupported compression, only raw or zlib may be used.");
-		}
-
-		return blobData;
-	}
-
-
-	private void processOsmHeader(byte[] data) throws InvalidProtocolBufferException {
-		Osmformat.HeaderBlock header = Osmformat.HeaderBlock.parseFrom(data);
-
-		// Build the list of active and unsupported features in the file.
-		List<String> supportedFeatures = Arrays.asList("OsmSchema-V0.6", "DenseNodes");
-		List<String> activeFeatures = new ArrayList<String>();
-		List<String> unsupportedFeatures = new ArrayList<String>();
-		for (String feature : header.getRequiredFeaturesList()) {
-			if (supportedFeatures.contains(feature)) {
-				activeFeatures.add(feature);
-			} else {
-				unsupportedFeatures.add(feature);
-			}
-		}
-
-		// We can't continue if there are any unsupported features. We wait
-		// until now so that we can display all unsupported features instead of
-		// just the first one we encounter.
-		if (unsupportedFeatures.size() > 0) {
-			throw new OsmosisRuntimeException("PBF file contains unsupported features " + unsupportedFeatures);
-		}
-
-		// Build a new bound object which corresponds to the header.
-		Bound bound;
-		if (header.hasBbox()) {
-			HeaderBBox bbox = header.getBbox();
-			bound = new Bound(bbox.getRight() * COORDINATE_SCALING_FACTOR, bbox.getLeft() * COORDINATE_SCALING_FACTOR,
-					bbox.getTop() * COORDINATE_SCALING_FACTOR, bbox.getBottom() * COORDINATE_SCALING_FACTOR,
-					header.getSource());
-		} else {
-			bound = new Bound(header.getSource());
-		}
-
-		// Add the bound object to the results.
-		decodedEntities.add(new BoundContainer(bound));
 	}
 
 
@@ -214,7 +135,7 @@ public class PbfBlobDecoder implements Runnable {
 			}
 
 			osmNode = new org.openstreetmap.osmosis.core.domain.v0_6.Node(entityData, fieldDecoder.decodeLatitude(node
-					.getLat()), fieldDecoder.decodeLatitude(node.getLon()));
+					.getLat()), fieldDecoder.decodeLongitude(node.getLon()));
 
 			// Add the bound object to the results.
 			decodedEntities.add(new NodeContainer(osmNode));
@@ -327,51 +248,29 @@ public class PbfBlobDecoder implements Runnable {
 			// delta encoded meaning that each id is stored as a delta against
 			// the previous one.
 			long nodeId = 0;
+			long latitude = 0;
+			long longitude = 0;
 			List<WayNode> wayNodes = osmWay.getWayNodes();
 
-			for (long nodeIdOffset : way.getRefsList()) {
-				nodeId += nodeIdOffset;
+			for (int i = 0; i < way.getRefsCount(); i++) {
+				nodeId += way.getRefs(i);
 
-				wayNodes.add(new WayNode(nodeId));
+				if (i < way.getLatCount() && i < way.getLonCount()) {
+					latitude += way.getLat(i);
+					longitude += way.getLon(i);
+					wayNodes.add(new WayNode(
+							nodeId,
+							fieldDecoder.decodeLatitude(latitude),
+							fieldDecoder.decodeLongitude(longitude))
+					);
+				} else {
+					wayNodes.add(new WayNode(nodeId));
+				}
 			}
-
-            long lastId = 0;
-            long lastLat = 0;
-            long lastLon = 0;
-            List<WayNode> nodes = new ArrayList<WayNode>();
-            for (int index = 0; index < way.getRefsCount(); index++) {
-            	    long identifier = lastId + way.getRefs(index);
-            		if (index < way.getLatCount() && index < way.getLonCount()) {
-	            	    long lat = lastLat + way.getLat(index);
-	            	    long lon = lastLon + way.getLon(index);
-	            	    nodes.add(new WayNode(identifier, parseLat(lat), parseLon(lon)));
-	            	    lastLat = lat;
-	            	    lastLon = lon;
-            		} else {
-                		nodes.add(new WayNode(identifier));
-            		}
-                lastId = identifier;
-            }
 
 			decodedEntities.add(new WayContainer(osmWay));
 		}
 	}
-
-    /**
-	 * Convert a latitude value stored in a protobuf into a double, compensating for granularity and latitude offset
-	 */
-    private double parseLat(long degree) {
-      // Support non-zero offsets. (We don't currently generate them)
-      return (granularity * degree + latOffset) * .000000001;
-    }
-
-    /**
-	 * Convert a longitude value stored in a protobuf into a double, compensating for granularity and longitude offset
-	 */
-    private double parseLon(long degree) {
-      // Support non-zero offsets. (We don't currently generate them)
-       return (granularity * degree + lonOffset) * .000000001;
-    }
 
 	private void buildRelationMembers(org.openstreetmap.osmosis.core.domain.v0_6.Relation relation,
 			List<Long> memberIds, List<Integer> memberRoles, List<MemberType> memberTypes,
@@ -441,11 +340,7 @@ public class PbfBlobDecoder implements Runnable {
 	}
 
 
-	private void processOsmPrimitives(byte[] data) throws InvalidProtocolBufferException {
-		Osmformat.PrimitiveBlock block = Osmformat.PrimitiveBlock.parseFrom(data);
-		granularity = block.getGranularity();
-		latOffset = block.getLatOffset();
-		lonOffset = block.getLonOffset();
+	private void processOsmPrimitives(Osmformat.PrimitiveBlock block) {
 		PbfFieldDecoder fieldDecoder = new PbfFieldDecoder(block);
 
 		for (PrimitiveGroup primitiveGroup : block.getPrimitivegroupList()) {
@@ -458,32 +353,24 @@ public class PbfBlobDecoder implements Runnable {
 	}
 
 
-	private void runAndTrapExceptions() {
-		try {
-			decodedEntities = new ArrayList<EntityContainer>();
+	private void runAndValidate() {
+		decodedEntities = new ArrayList<>();
 
-			if ("OSMHeader".equals(blobType)) {
-				processOsmHeader(readBlobContent());
+		// Parse the blob.
+		PbfBlock pbfBlock = blobToBlockMapper.apply(rawBlob);
 
-			} else if ("OSMData".equals(blobType)) {
-				processOsmPrimitives(readBlobContent());
-
-			} else {
-				if (log.isLoggable(Level.FINER)) {
-					log.finer("Skipping unrecognised blob type " + blobType);
-				}
-			}
-
-		} catch (IOException e) {
-			throw new OsmosisRuntimeException("Unable to process PBF blob", e);
+		// We don't expect to see more than one header per file.
+		if (pbfBlock.getHeaderBlock().isPresent()) {
+			throw new OsmosisRuntimeException("Received more than one PBF header block.");
 		}
-	}
 
+		pbfBlock.getPrimitiveBlock().ifPresent(this::processOsmPrimitives);
+	}
 
 	@Override
 	public void run() {
 		try {
-			runAndTrapExceptions();
+			runAndValidate();
 
 			listener.complete(decodedEntities);
 

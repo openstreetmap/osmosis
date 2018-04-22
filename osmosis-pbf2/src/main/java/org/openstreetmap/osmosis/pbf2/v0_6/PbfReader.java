@@ -6,17 +6,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
 import com.google.common.util.concurrent.MoreExecutors;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
+import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
+import org.openstreetmap.osmosis.osmbinary.Osmformat;
+import org.openstreetmap.osmosis.pbf2.v0_6.impl.HeaderBoundReader;
+import org.openstreetmap.osmosis.pbf2.v0_6.impl.HeaderMetadataReader;
+import org.openstreetmap.osmosis.pbf2.v0_6.impl.HeaderSeeker;
 import org.openstreetmap.osmosis.pbf2.v0_6.impl.PbfDecoder;
-import org.openstreetmap.osmosis.pbf2.v0_6.impl.PbfStreamSplitter;
+import org.openstreetmap.osmosis.pbf2.v0_6.impl.StreamSplitter;
+
 
 /**
  * An OSM data source reading from a PBF file. The entire contents of the file
@@ -38,18 +44,15 @@ public class PbfReader implements RunnableSource {
 	 *            The number of worker threads for decoding PBF blocks.
 	 */
 	public PbfReader(final File file, int workers) {
-		this(new Supplier<InputStream>() {
-			@Override
-			public InputStream get() {
-				// make "-" an alias for /dev/stdin
-				if (file.getName().equals("-")) {
-					return System.in;
-				}
-				try {
-					return new FileInputStream(file);
-				} catch (IOException e) {
-					throw new OsmosisRuntimeException("Unable to read PBF file " + file + ".", e);
-				}
+		this(() -> {
+			// make "-" an alias for /dev/stdin
+			if (file.getName().equals("-")) {
+				return System.in;
+			}
+			try {
+				return new FileInputStream(file);
+			} catch (IOException e) {
+				throw new OsmosisRuntimeException("Unable to read PBF file " + file + ".", e);
 			}
 		}, workers);
 	}
@@ -74,7 +77,7 @@ public class PbfReader implements RunnableSource {
 
 	@Override
 	public void run() {
-		PbfStreamSplitter streamSplitter = null;
+		StreamSplitter streamSplitter = null;
 
 		ExecutorService executorService;
 
@@ -85,12 +88,22 @@ public class PbfReader implements RunnableSource {
 		}
 
 		try {
-			sink.initialize(Collections.<String, Object>emptyMap());
-
 			InputStream inputStream = supplier.get();
 
 			// Create a stream splitter to break the PBF stream into blobs.
-			streamSplitter = new PbfStreamSplitter(new DataInputStream(inputStream));
+			streamSplitter = new StreamSplitter(new DataInputStream(inputStream));
+
+			// Obtain the header block.
+			Osmformat.HeaderBlock header = new HeaderSeeker().apply(streamSplitter);
+
+			// Get the pipeline metadata (e.g. do ways include location information) from header.
+			Map<String, Object> metadata = new HeaderMetadataReader().apply(header);
+
+			sink.initialize(metadata);
+
+			// Get Bound information from the header.
+			BoundContainer bound = new HeaderBoundReader().apply(header);
+			sink.process(bound);
 
 			// Process all blobs of data in the stream using threads from the
 			// executor service. We allow the decoder to issue an extra blob

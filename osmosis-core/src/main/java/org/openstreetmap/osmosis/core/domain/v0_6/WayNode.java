@@ -13,6 +13,12 @@ import org.openstreetmap.osmosis.core.store.Storeable;
  * @author Brett Henderson
  */
 public class WayNode implements Comparable<WayNode>, Storeable {
+
+	/**
+	 * When sending way nodes with location information included through the Osmosis pipeline, a metadata key with this
+	 * value should be set to true so that downstream tasks know that they are able to use it.
+	 */
+	public static final String METADATA_KEY_LOCATION_INCLUDED = "way_node.location_included";
 	
 	private long nodeId;
 	private double latitude;

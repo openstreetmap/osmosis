@@ -20,14 +20,14 @@ import org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader;
  * 
  * @author Brett Henderson
  */
-public class PbfStreamSplitter implements Iterator<PbfRawBlob>, Closeable {
+public class StreamSplitter implements Iterator<RawBlob>, Closeable {
 
-	private static Logger log = Logger.getLogger(PbfStreamSplitter.class.getName());
+	private static Logger log = Logger.getLogger(StreamSplitter.class.getName());
 
 	private DataInputStream dis;
 	private int dataBlockCount;
 	private boolean eof;
-	private PbfRawBlob nextBlob;
+	private RawBlob nextBlob;
 
 
 	/**
@@ -36,7 +36,7 @@ public class PbfStreamSplitter implements Iterator<PbfRawBlob>, Closeable {
 	 * @param pbfStream
 	 *            The PBF data stream to be parsed.
 	 */
-	public PbfStreamSplitter(DataInputStream pbfStream) {
+	public StreamSplitter(DataInputStream pbfStream) {
 		dis = pbfStream;
 		dataBlockCount = 0;
 		eof = false;
@@ -85,7 +85,7 @@ public class PbfStreamSplitter implements Iterator<PbfRawBlob>, Closeable {
 			}
 			byte[] blobData = readRawBlob(blobHeader);
 
-			nextBlob = new PbfRawBlob(blobHeader.getType(), blobData);
+			nextBlob = new RawBlob(blobHeader.getType(), blobData);
 
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to get next blob from PBF stream.", e);
@@ -104,8 +104,8 @@ public class PbfStreamSplitter implements Iterator<PbfRawBlob>, Closeable {
 
 
 	@Override
-	public PbfRawBlob next() {
-		PbfRawBlob result = nextBlob;
+	public RawBlob next() {
+		RawBlob result = nextBlob;
 		nextBlob = null;
 
 		return result;

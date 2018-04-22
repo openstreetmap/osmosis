@@ -21,7 +21,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
  * @author Brett Henderson
  */
 public class PbfDecoder implements Runnable {
-	private PbfStreamSplitter streamSplitter;
+	private StreamSplitter streamSplitter;
 	private Executor executor;
 	private int maxPendingBlobs;
 	private Sink sink;
@@ -44,7 +44,7 @@ public class PbfDecoder implements Runnable {
 	 * @param sink
 	 *            The sink to send all decoded entities to.
 	 */
-	public PbfDecoder(PbfStreamSplitter streamSplitter, Executor executor, int maxPendingBlobs,
+	public PbfDecoder(StreamSplitter streamSplitter, Executor executor, int maxPendingBlobs,
 					  Sink sink) {
 		this.streamSplitter = streamSplitter;
 		this.executor = executor;
@@ -56,7 +56,7 @@ public class PbfDecoder implements Runnable {
 		dataWaitCondition = lock.newCondition();
 
 		// Create the queue of blobs being decoded.
-		blobResults = new LinkedList<PbfBlobResult>();
+		blobResults = new LinkedList<>();
 	}
 
 
@@ -116,7 +116,7 @@ public class PbfDecoder implements Runnable {
 		// Process until the PBF stream is exhausted.
 		while (streamSplitter.hasNext()) {
 			// Obtain the next raw blob from the PBF stream.
-			PbfRawBlob rawBlob = streamSplitter.next();
+			RawBlob rawBlob = streamSplitter.next();
 
 			// Create the result object to capture the results of the decoded
 			// blob and add it to the blob results queue.
@@ -154,7 +154,7 @@ public class PbfDecoder implements Runnable {
 			};
 
 			// Create the blob decoder itself and execute it on a worker thread.
-			PbfBlobDecoder blobDecoder = new PbfBlobDecoder(rawBlob.getType(), rawBlob.getData(), decoderListener);
+			PbfBlobDecoder blobDecoder = new PbfBlobDecoder(rawBlob, decoderListener);
 			executor.execute(blobDecoder);
 
 			// If the number of pending blobs has reached capacity we must begin

@@ -2,12 +2,13 @@
 package org.openstreetmap.osmosis.pbf2.v0_6.impl;
 
 /**
- * Represents a single piece of raw blob data extracted from the PBF stream. It
- * has not yet been decoded into a PBF blob object.
+ * Represents a single piece of raw blob data extracted from the PBF stream. It has not yet been decoded into a
+ * {@link org.openstreetmap.osmosis.osmbinary.Fileformat.Blob} object. We delay this additional parsing until later when
+ * we can spread the work across multiple threads.
  * 
  * @author Brett Henderson
  */
-public class PbfRawBlob {
+public class RawBlob {
 	private String type;
 	private byte[] data;
 
@@ -21,7 +22,7 @@ public class PbfRawBlob {
 	 * @param data
 	 *            The raw contents of the blob in binary undecoded form.
 	 */
-	public PbfRawBlob(String type, byte[] data) {
+	public RawBlob(String type, byte[] data) {
 		this.type = type;
 		this.data = data;
 	}

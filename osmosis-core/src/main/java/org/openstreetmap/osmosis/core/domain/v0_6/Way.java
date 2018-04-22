@@ -21,7 +21,7 @@ import org.openstreetmap.osmosis.core.store.StoreWriter;
  * @author Brett Henderson
  */
 public class Way extends Entity implements Comparable<Way> {
-	
+
 	private List<WayNode> wayNodes;
 	
 	
