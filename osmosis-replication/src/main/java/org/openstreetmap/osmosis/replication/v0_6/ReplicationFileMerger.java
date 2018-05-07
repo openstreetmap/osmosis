@@ -69,8 +69,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Date calculateMaximumTimestamp(ReplicationDownloaderConfiguration configuration, Date serverTimestamp,
-			Date localTimestamp) {
+	protected Date calculateMaximumTimestamp(Date serverTimestamp, Date localTimestamp) {
 		Date maximumTimestamp;
 		long intervalLength;
 
@@ -78,7 +77,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		currentDataState = replicationStore.getCurrentState();
 
 		// Get the default maximum timestamp according to base calculations.
-		maximumTimestamp = super.calculateMaximumTimestamp(configuration, serverTimestamp, localTimestamp);
+		maximumTimestamp = super.calculateMaximumTimestamp(serverTimestamp, localTimestamp);
 
 		// Align the maximum timestamp to an interval boundary.
 		intervalLength = getConfiguration().getIntervalLength();

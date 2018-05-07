@@ -19,6 +19,7 @@ import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.core.task.common.RunnableTask;
 import org.openstreetmap.osmosis.core.util.FileBasedLock;
 import org.openstreetmap.osmosis.core.util.PropertiesPersister;
+import org.openstreetmap.osmosis.replication.common.ReplicationCookie;
 import org.openstreetmap.osmosis.replication.common.ReplicationSequenceFormatter;
 import org.openstreetmap.osmosis.replication.common.ReplicationState;
 import org.openstreetmap.osmosis.replication.common.ServerStateReader;
@@ -45,6 +46,8 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 	private File workingDirectory;
 	private ReplicationSequenceFormatter sequenceFormatter;
 	private ServerStateReader serverStateReader;
+	protected ReplicationDownloaderConfiguration configuration;
+	private ReplicationCookie cookie;
 	
 	
 	/**
@@ -58,6 +61,12 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 		
 		sequenceFormatter = new ReplicationSequenceFormatter(9, 3);
 		serverStateReader = new ServerStateReader();
+
+		configuration = new ReplicationDownloaderConfiguration(new File(workingDirectory, CONFIG_FILE));
+		cookie = new ReplicationCookie(workingDirectory.toPath());
+		if (configuration.getAttachCookie()) {
+			cookie.read();
+		}
 	}
 	
 	
@@ -98,7 +107,10 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			connection.setReadTimeout(15 * 60 * 1000); // timeout 15 minutes
 			connection.setConnectTimeout(15 * 60 * 1000); // timeout 15 minutes
 			connection.setRequestProperty("User-Agent", "Osmosis/" + OsmosisConstants.VERSION);
-			
+			if (cookie.valid()) {
+				connection.setRequestProperty("Cookie", cookie.toString());
+			}
+
 			try (BufferedInputStream source = new BufferedInputStream(connection.getInputStream(), 65536)) {
 				// Create a temporary file to write the data to.
 				outputFile = File.createTempFile("change", null);
@@ -146,16 +158,13 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 	 * limit the maximum timestamp further if needed. A sub-class may never increase the maximum
 	 * timestamp beyond that calculated by this method.
 	 * 
-	 * @param configuration
-	 *            The configuration.
 	 * @param serverTimestamp
 	 *            The timestamp of the latest data on the server.
 	 * @param localTimestamp
 	 *            The timestamp of the most recently downloaded data.
 	 * @return The maximum timestamp for this invocation.
 	 */
-	protected Date calculateMaximumTimestamp(ReplicationDownloaderConfiguration configuration, Date serverTimestamp,
-			Date localTimestamp) {
+	protected Date calculateMaximumTimestamp(Date serverTimestamp, Date localTimestamp) {
 		Date maximumTimestamp;
 		
 		maximumTimestamp = serverTimestamp;
@@ -174,8 +183,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 	}
 	
 	
-	private ReplicationState download(ReplicationDownloaderConfiguration configuration, ReplicationState serverState,
-			ReplicationState initialLocalState) {
+	private ReplicationState download(ReplicationState serverState, ReplicationState initialLocalState) {
 		URL baseUrl;
 		ReplicationState localState;
 		Date maximumDownloadTimestamp;
@@ -187,7 +195,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 		
 		// Determine the maximum timestamp that can be downloaded.
 		maximumDownloadTimestamp =
-			calculateMaximumTimestamp(configuration, serverState.getTimestamp(), localState.getTimestamp());
+			calculateMaximumTimestamp(serverState.getTimestamp(), localState.getTimestamp());
 		LOG.fine("The maximum timestamp to be downloaded is " + maximumDownloadTimestamp + ".");
 		
 		// Download all files and send their contents to the sink.
@@ -210,7 +218,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			LOG.finer("Processing replication sequence " + sequenceNumber + ".");
 			
 			// Get the state associated with the next file.
-			fileReplicationState = serverStateReader.getServerState(baseUrl, sequenceNumber);
+			fileReplicationState = serverStateReader.getServerState(baseUrl, sequenceNumber, cookie);
 			
 			// Ensure that the next state is within the allowable timestamp
 			// range. We must stop if the next data takes us beyond the maximum
@@ -244,17 +252,13 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 	
 	private void runImpl() {
 		try {
-			ReplicationDownloaderConfiguration configuration;
 			ReplicationState serverState;
 			ReplicationState localState;
 			PropertiesPersister localStatePersistor;
 			
-			// Instantiate utility objects.
-			configuration = new ReplicationDownloaderConfiguration(new File(workingDirectory, CONFIG_FILE));
-			
 			// Obtain the server state.
 			LOG.fine("Reading current server state.");
-			serverState = serverStateReader.getServerState(configuration.getBaseUrl());
+			serverState = serverStateReader.getServerState(configuration.getBaseUrl(), cookie);
 			
 			// Build the local state persister which is used for both loading and storing local state.
 			localStatePersistor = new PropertiesPersister(new File(workingDirectory, LOCAL_STATE_FILE));
@@ -268,7 +272,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 				localState = new ReplicationState(localStatePersistor.loadMap());
 				
 				// Download and process the replication files.
-				localState = download(configuration, serverState, localState);
+				localState = download(serverState, localState);
 				
 			} else {
 				localState = serverState;

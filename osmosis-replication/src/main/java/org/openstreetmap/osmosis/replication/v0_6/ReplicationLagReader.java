@@ -9,6 +9,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.task.common.RunnableTask;
 import org.openstreetmap.osmosis.core.util.FileBasedLock;
 import org.openstreetmap.osmosis.core.util.PropertiesPersister;
+import org.openstreetmap.osmosis.replication.common.ReplicationCookie;
 import org.openstreetmap.osmosis.replication.common.ReplicationState;
 import org.openstreetmap.osmosis.replication.common.ServerStateReader;
 import org.openstreetmap.osmosis.replication.v0_6.impl.ReplicationDownloaderConfiguration;
@@ -59,10 +60,16 @@ public class ReplicationLagReader implements RunnableTask {
 		
 		// Instantiate utility objects.
 		configuration = new ReplicationDownloaderConfiguration(new File(workingDirectory, CONFIG_FILE));
+
+		// read cookie if necessary
+		ReplicationCookie cookie = new ReplicationCookie(workingDirectory.toPath());
+		if (configuration.getAttachCookie()) {
+			cookie.read();
+		}
 		
 		// Obtain the server state.
 		LOG.fine("Reading current server state.");
-		serverState = serverStateReader.getServerState(configuration.getBaseUrl());
+		serverState = serverStateReader.getServerState(configuration.getBaseUrl(), cookie);
 		
 		// Build the local state persister which is used for both loading and storing local state.
 		localStatePersistor = new PropertiesPersister(new File(workingDirectory, LOCAL_STATE_FILE));

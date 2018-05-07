@@ -38,18 +38,36 @@ public class ServerStateReader {
 	/**
 	 * Retrieves the latest state from the server.
 	 * 
+	 * No cookie will be sent with the HTTP request.
+	 *
 	 * @param baseUrl
 	 *            The url of the directory containing change files.
 	 * @return The state.
 	 */
 	public ReplicationState getServerState(URL baseUrl) {
-		return getServerState(baseUrl, SERVER_STATE_FILE);
+		return getServerState(baseUrl, SERVER_STATE_FILE, new ReplicationCookie());
+	}
+
+
+	/**
+	 * Retrieves the latest state from the server.
+	 *
+	 * @param baseUrl
+	 *            The url of the directory containing change files.
+	 * @param cookie
+	 *            Cookie to send with each HTTP request.
+	 * @return The state.
+	 */
+	public ReplicationState getServerState(URL baseUrl, ReplicationCookie cookie) {
+		return getServerState(baseUrl, SERVER_STATE_FILE, cookie);
 	}
 	
 	
 	/**
 	 * Retrieves the specified state from the server.
 	 * 
+	 * No cookie will be sent with the HTTP request.
+	 *
 	 * @param baseUrl
 	 *            The url of the directory containing change files.
 	 * @param sequenceNumber
@@ -57,7 +75,23 @@ public class ServerStateReader {
 	 * @return The state.
 	 */
 	public ReplicationState getServerState(URL baseUrl, long sequenceNumber) {
-		return getServerState(baseUrl, sequenceFormatter.getFormattedName(sequenceNumber, SEQUENCE_STATE_FILE_SUFFIX));
+		return getServerState(baseUrl, sequenceNumber, new ReplicationCookie());
+	}
+
+
+	/**
+	 * Retrieves the specified state from the server.
+	 *
+	 * @param baseUrl
+	 *            The url of the directory containing change files.
+	 * @param sequenceNumber
+	 *            The sequence number of the state to be retrieved from the server.
+	 * @param cookie
+	 *            Cookie to send with each HTTP request.
+	 * @return The state.
+	 */
+	public ReplicationState getServerState(URL baseUrl, long sequenceNumber, ReplicationCookie cookie) {
+		return getServerState(baseUrl, sequenceFormatter.getFormattedName(sequenceNumber, SEQUENCE_STATE_FILE_SUFFIX), cookie);
 	}
 
 
@@ -68,9 +102,11 @@ public class ServerStateReader {
 	 *            The url of the directory containing change files.
 	 * @param stateFile
 	 *            The state file to be retrieved.
+	 * @param cookie
+	 *            Cookie to send with each HTTP request.
 	 * @return The state.
 	 */
-	private ReplicationState getServerState(URL baseUrl, String stateFile) {
+	private ReplicationState getServerState(URL baseUrl, String stateFile, ReplicationCookie cookie) {
 		URL stateUrl;
 		
 		try {
@@ -88,6 +124,9 @@ public class ServerStateReader {
 			connection.setReadTimeout(15 * 60 * 1000); // timeout 15 minutes
 			connection.setConnectTimeout(15 * 60 * 1000); // timeout 15 minutes
 			connection.setRequestProperty("User-Agent", "Osmosis/" + OsmosisConstants.VERSION);
+			if (cookie.valid()) {
+				connection.setRequestProperty("Cookie", cookie.toString());
+			}
 			try (BufferedReader reader  = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
 				stateProperties = new Properties();
 				stateProperties.load(reader);
