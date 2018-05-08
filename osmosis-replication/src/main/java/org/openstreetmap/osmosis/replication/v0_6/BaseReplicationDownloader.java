@@ -46,7 +46,12 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 	private File workingDirectory;
 	private ReplicationSequenceFormatter sequenceFormatter;
 	private ServerStateReader serverStateReader;
+
+	/**
+	 * configuration of the downloader
+	 */
 	protected ReplicationDownloaderConfiguration configuration;
+
 	private ReplicationCookie cookie;
 	
 	
@@ -63,7 +68,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 		serverStateReader = new ServerStateReader();
 
 		configuration = new ReplicationDownloaderConfiguration(new File(workingDirectory, CONFIG_FILE));
-		cookie = new ReplicationCookie(workingDirectory.toPath());
+		cookie = new ReplicationCookie(workingDirectory.toPath(), configuration.getCookieStatusAPI());
 		if (configuration.getAttachCookie()) {
 			cookie.read();
 		}

@@ -91,7 +91,8 @@ public class ServerStateReader {
 	 * @return The state.
 	 */
 	public ReplicationState getServerState(URL baseUrl, long sequenceNumber, ReplicationCookie cookie) {
-		return getServerState(baseUrl, sequenceFormatter.getFormattedName(sequenceNumber, SEQUENCE_STATE_FILE_SUFFIX), cookie);
+		return getServerState(baseUrl, sequenceFormatter.getFormattedName(sequenceNumber, SEQUENCE_STATE_FILE_SUFFIX),
+				cookie);
 	}
 
 

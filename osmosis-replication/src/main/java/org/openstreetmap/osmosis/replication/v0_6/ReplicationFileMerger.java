@@ -13,7 +13,6 @@ import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.replication.common.FileReplicationStore;
 import org.openstreetmap.osmosis.replication.common.ReplicationState;
 import org.openstreetmap.osmosis.replication.common.ReplicationStore;
-import org.openstreetmap.osmosis.replication.v0_6.impl.ReplicationDownloaderConfiguration;
 import org.openstreetmap.osmosis.replication.v0_6.impl.ReplicationFileMergerConfiguration;
 import org.openstreetmap.osmosis.xml.v0_6.XmlChangeReader;
 import org.openstreetmap.osmosis.xml.v0_6.XmlChangeWriter;

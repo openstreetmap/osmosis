@@ -62,9 +62,13 @@ public class ReplicationLagReader implements RunnableTask {
 		configuration = new ReplicationDownloaderConfiguration(new File(workingDirectory, CONFIG_FILE));
 
 		// read cookie if necessary
-		ReplicationCookie cookie = new ReplicationCookie(workingDirectory.toPath());
+		ReplicationCookie cookie = new ReplicationCookie(workingDirectory.toPath(),
+				configuration.getCookieStatusAPI());
 		if (configuration.getAttachCookie()) {
 			cookie.read();
+			// Throw an exception if the cookie is expired. Fail with a understandable error now because further
+			// requests will fail.
+			cookie.throw_if_expired();
 		}
 		
 		// Obtain the server state.
