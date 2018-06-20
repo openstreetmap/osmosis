@@ -2,17 +2,17 @@
 # -*- sh -*-
 
 # load the munin plugin helper
-. $MUNIN_LIBDIR/plugins/plugin.sh
+. "$MUNIN_LIBDIR/plugins/plugin.sh"
 
-# if no workingDirectory has been configures
-if [ ! $workingDirectory ]; then
+# if no workingDirectory has been configured
+if [ ! "$workingDirectory" ]; then
 	# exit with an error
 	echo "no workingDirectory configured" >&2
 	exit 1
 fi
 
 # path to osmosis binary
-[ $osmosis ]  || osmosis="osmosis"
+[ "$osmosis" ] || osmosis="osmosis"
 
 # configuration section
 if [ "$1" = "config" ]; then
@@ -21,10 +21,10 @@ if [ "$1" = "config" ]; then
 	echo 'graph_args --base 1000'
 	echo 'graph_vlabel seconds behind main database'
 	echo 'graph_category osm'
-	
+
 	echo 'lag.label replication lag'
 	echo 'lag.draw LINE'
-	
+
 	exit 0
 fi
 
