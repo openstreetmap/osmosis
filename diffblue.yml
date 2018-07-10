@@ -1,2 +1,0 @@
-buildCmd: './gradlew clean assemble'
-testCmd: './gradlew test -x compileJava'
