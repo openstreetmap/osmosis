@@ -67,7 +67,7 @@ public class ChangeWriter implements Completable {
     	"INSERT INTO ways (way_id, version, timestamp, visible, changeset_id) VALUES (?, ?, ?, ?, ?)";
 
     private static final String UPDATE_SQL_WAY =
-    	"UPDATE current_ways SET timestamp = ?, visible = ?, changeset_id = ? WHERE id = ? AND version = ?";
+    	"UPDATE ways SET timestamp = ?, visible = ?, changeset_id = ? WHERE way_id = ? AND version = ?";
 
     private static final String SELECT_SQL_WAY_COUNT =
     	"SELECT Count(way_id) AS rowCount FROM ways WHERE way_id = ? AND version = ?";
