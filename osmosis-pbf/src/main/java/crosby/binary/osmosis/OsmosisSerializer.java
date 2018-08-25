@@ -28,12 +28,11 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
-
 import org.openstreetmap.osmosis.osmbinary.BinarySerializer;
 import org.openstreetmap.osmosis.osmbinary.Osmformat;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo;
-import org.openstreetmap.osmosis.osmbinary.StringTable;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType;
+import org.openstreetmap.osmosis.osmbinary.StringTable;
 import org.openstreetmap.osmosis.osmbinary.file.BlockOutputStream;
 import org.openstreetmap.osmosis.osmbinary.file.FileBlock;
 
@@ -118,9 +117,11 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
 				int userSid = stable.getIndex(e.getUser().getName());
 				int timestamp = (int) (e.getTimestamp().getTime() / date_granularity);
 				int version = e.getVersion();
+				boolean visible = e.isVisible();
 				long changeset = e.getChangesetId();
 
 				b.addVersion(version);
+				b.addVisible(visible);
 				b.addTimestamp(timestamp - lasttimestamp);
 				lasttimestamp = timestamp;
 				b.addChangeset(changeset - lastchangeset);
@@ -146,6 +147,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
                 }
                 b.setTimestamp((int) (e.getTimestamp().getTime() / date_granularity));
                 b.setVersion(e.getVersion());
+                b.setVisible(e.isVisible());
                 b.setChangeset(e.getChangesetId());
             }
             return b;
