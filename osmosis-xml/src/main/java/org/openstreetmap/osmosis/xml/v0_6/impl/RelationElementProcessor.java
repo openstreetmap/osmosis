@@ -1,6 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.xml.v0_6.impl;
 
+import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.domain.common.TimestampContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
@@ -12,7 +13,6 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.xml.common.BaseElementProcessor;
 import org.openstreetmap.osmosis.xml.common.ElementProcessor;
 import org.xml.sax.Attributes;
-import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 
 
 /**
@@ -29,6 +29,7 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 	private static final String ATTRIBUTE_NAME_USERID = "uid";
 	private static final String ATTRIBUTE_NAME_CHANGESET_ID = "changeset";
 	private static final String ATTRIBUTE_NAME_VERSION = "version";
+	private static final String ATTRIBUTE_NAME_VISIBLE = "visible";
 	
 	private TagElementProcessor tagElementProcessor;
 	private RelationMemberElementProcessor relationMemberElementProcessor;
@@ -61,6 +62,8 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 		long id;
 		String sversion;
 		int version;
+		String svisible;
+		boolean visible;
 		TimestampContainer timestampContainer;
 		String rawUserId;
 		String rawUserName;
@@ -75,6 +78,12 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 		} else {
 			version = Integer.parseInt(sversion);
 		}
+		svisible = attributes.getValue(ATTRIBUTE_NAME_VISIBLE);
+		if(svisible == null) {
+			visible = true;
+		}else {
+			visible = Boolean.parseBoolean(svisible);
+		}
 		timestampContainer = createTimestampContainer(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
 		rawUserId = attributes.getValue(ATTRIBUTE_NAME_USERID);
 		rawUserName = attributes.getValue(ATTRIBUTE_NAME_USER);
@@ -82,7 +91,7 @@ public class RelationElementProcessor extends EntityElementProcessor implements 
 		
 		user = buildUser(rawUserId, rawUserName);
 		
-		relation = new Relation(new CommonEntityData(id, version, timestampContainer, user, changesetId));
+		relation = new Relation(new CommonEntityData(id, version, visible, timestampContainer, user, changesetId));
 	}
 	
 	
