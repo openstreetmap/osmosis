@@ -54,6 +54,7 @@ public class PbfBlobDecoder implements Runnable {
 
 	private static final double COORDINATE_SCALING_FACTOR = 0.000000001;
 	private static final int EMPTY_VERSION = -1;
+	private static final boolean DEFAULT_VISIBLE = true;
 	private static final Date EMPTY_TIMESTAMP = new Date(0);
 	private static final long EMPTY_CHANGESET = -1;
 
@@ -110,7 +111,7 @@ public class PbfBlobDecoder implements Runnable {
 		Osmformat.HeaderBlock header = Osmformat.HeaderBlock.parseFrom(data);
 
 		// Build the list of active and unsupported features in the file.
-		List<String> supportedFeatures = Arrays.asList("OsmSchema-V0.6", "DenseNodes");
+		List<String> supportedFeatures = Arrays.asList("OsmSchema-V0.6", "DenseNodes","HistoricalInformation");
 		List<String> activeFeatures = new ArrayList<String>();
 		List<String> unsupportedFeatures = new ArrayList<String>();
 		for (String feature : header.getRequiredFeaturesList()) {
@@ -177,7 +178,7 @@ public class PbfBlobDecoder implements Runnable {
 			user = OsmUser.NONE;
 		}
 
-		entityData = new CommonEntityData(entityId, info.getVersion(),
+		entityData = new CommonEntityData(entityId, info.getVersion(),info.hasVisible()?info.getVisible():DEFAULT_VISIBLE,
 				fieldDecoder.decodeTimestamp(info.getTimestamp()), user, info.getChangeset());
 
 		buildTags(entityData, keys, values, fieldDecoder);
@@ -190,7 +191,7 @@ public class PbfBlobDecoder implements Runnable {
 			PbfFieldDecoder fieldDecoder) {
 		CommonEntityData entityData;
 
-		entityData = new CommonEntityData(entityId, EMPTY_VERSION, EMPTY_TIMESTAMP, OsmUser.NONE, EMPTY_CHANGESET);
+		entityData = new CommonEntityData(entityId, EMPTY_VERSION, DEFAULT_VISIBLE, EMPTY_TIMESTAMP, OsmUser.NONE, EMPTY_CHANGESET);
 
 		buildTags(entityData, keys, values, fieldDecoder);
 
@@ -271,10 +272,10 @@ public class PbfBlobDecoder implements Runnable {
 					user = OsmUser.NONE;
 				}
 
-				entityData = new CommonEntityData(nodeId, denseInfo.getVersion(i),
+				entityData = new CommonEntityData(nodeId, denseInfo.getVersion(i), (denseInfo.getVisibleCount() > 0)?denseInfo.getVisible(i):DEFAULT_VISIBLE,
 						fieldDecoder.decodeTimestamp(timestamp), user, changesetId);
 			} else {
-				entityData = new CommonEntityData(nodeId, EMPTY_VERSION, EMPTY_TIMESTAMP, OsmUser.NONE,
+				entityData = new CommonEntityData(nodeId, EMPTY_VERSION, DEFAULT_VISIBLE, EMPTY_TIMESTAMP, OsmUser.NONE,
 						EMPTY_CHANGESET);
 			}
 
