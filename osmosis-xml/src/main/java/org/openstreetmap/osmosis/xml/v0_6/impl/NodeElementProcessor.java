@@ -77,6 +77,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void begin(Attributes attributes) {
 		long id;
 		String sversion;
@@ -100,9 +101,9 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 			version = Integer.parseInt(sversion);
 		}
 		svisible = attributes.getValue(ATTRIBUTE_NAME_VISIBLE);
-		if(svisible == null) {
+		if (svisible == null) {
 			visible = true;
-		}else {
+		} else {
 			visible = Boolean.parseBoolean(svisible);
 		}
 		timestampContainer = createTimestampContainer(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
@@ -115,7 +116,8 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 		
 		user = buildUser(rawUserId, rawUserName);
 		
-		node = new Node(new CommonEntityData(id, version, visible, timestampContainer, user, changesetId), latitude, longitude);
+		node = new Node(new CommonEntityData(id, version, visible, timestampContainer, user, changesetId),
+				latitude, longitude);
 	}
 	
 	/**
@@ -143,6 +145,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void end() {
 		getSink().process(new NodeContainer(node));
 	}
@@ -155,6 +158,7 @@ public class NodeElementProcessor extends EntityElementProcessor implements TagL
 	 * @param tag
 	 *            The tag to be processed.
 	 */
+	@Override
 	public void processTag(Tag tag) {
 		node.getTags().add(tag);
 	}

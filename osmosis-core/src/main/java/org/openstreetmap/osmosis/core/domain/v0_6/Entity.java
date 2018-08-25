@@ -232,11 +232,11 @@ public abstract class Entity implements Storeable {
 	/**
 	 * Sets the visible flag.
 	 * 
-	 * @param isVisible
+	 * @param visible
 	 *            The visible flag, it indicates if entity has been delete. visible=false.
 	 */
-	public void isVisible(boolean isVisible) {
-		this.entityData.isVisible(isVisible);
+	public void isVisible(boolean visible) {
+		this.entityData.setVisible(visible);
 	}
 
 

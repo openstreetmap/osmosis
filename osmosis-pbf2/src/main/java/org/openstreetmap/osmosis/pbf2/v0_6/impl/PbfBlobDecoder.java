@@ -26,8 +26,8 @@ import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
-import org.openstreetmap.osmosis.osmbinary.Osmformat;
 import org.openstreetmap.osmosis.osmbinary.Fileformat.Blob;
+import org.openstreetmap.osmosis.osmbinary.Osmformat;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox;
@@ -35,8 +35,8 @@ import org.openstreetmap.osmosis.osmbinary.Osmformat.Info;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.Node;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.Relation;
-import org.openstreetmap.osmosis.osmbinary.Osmformat.Way;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType;
+import org.openstreetmap.osmosis.osmbinary.Osmformat.Way;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -111,9 +111,9 @@ public class PbfBlobDecoder implements Runnable {
 		Osmformat.HeaderBlock header = Osmformat.HeaderBlock.parseFrom(data);
 
 		// Build the list of active and unsupported features in the file.
-		List<String> supportedFeatures = Arrays.asList("OsmSchema-V0.6", "DenseNodes","HistoricalInformation");
-		List<String> activeFeatures = new ArrayList<String>();
-		List<String> unsupportedFeatures = new ArrayList<String>();
+		List<String> supportedFeatures = Arrays.asList("OsmSchema-V0.6", "DenseNodes", "HistoricalInformation");
+		List<String> activeFeatures = new ArrayList<>();
+		List<String> unsupportedFeatures = new ArrayList<>();
 		for (String feature : header.getRequiredFeaturesList()) {
 			if (supportedFeatures.contains(feature)) {
 				activeFeatures.add(feature);
@@ -178,8 +178,13 @@ public class PbfBlobDecoder implements Runnable {
 			user = OsmUser.NONE;
 		}
 
-		entityData = new CommonEntityData(entityId, info.getVersion(),info.hasVisible()?info.getVisible():DEFAULT_VISIBLE,
+		if (info.hasVisible()) {
+			entityData = new CommonEntityData(entityId, info.getVersion(), info.getVisible(),
 				fieldDecoder.decodeTimestamp(info.getTimestamp()), user, info.getChangeset());
+		} else {
+			entityData = new CommonEntityData(entityId, info.getVersion(), DEFAULT_VISIBLE,
+					fieldDecoder.decodeTimestamp(info.getTimestamp()), user, info.getChangeset());
+		}
 
 		buildTags(entityData, keys, values, fieldDecoder);
 
@@ -191,7 +196,8 @@ public class PbfBlobDecoder implements Runnable {
 			PbfFieldDecoder fieldDecoder) {
 		CommonEntityData entityData;
 
-		entityData = new CommonEntityData(entityId, EMPTY_VERSION, DEFAULT_VISIBLE, EMPTY_TIMESTAMP, OsmUser.NONE, EMPTY_CHANGESET);
+		entityData = new CommonEntityData(entityId, EMPTY_VERSION, DEFAULT_VISIBLE, EMPTY_TIMESTAMP, 
+				OsmUser.NONE, EMPTY_CHANGESET);
 
 		buildTags(entityData, keys, values, fieldDecoder);
 
@@ -271,9 +277,13 @@ public class PbfBlobDecoder implements Runnable {
 				} else {
 					user = OsmUser.NONE;
 				}
-
-				entityData = new CommonEntityData(nodeId, denseInfo.getVersion(i), (denseInfo.getVisibleCount() > 0)?denseInfo.getVisible(i):DEFAULT_VISIBLE,
+				if (denseInfo.getVisibleCount() > 0) {
+					entityData = new CommonEntityData(nodeId, denseInfo.getVersion(i), denseInfo.getVisible(i),
 						fieldDecoder.decodeTimestamp(timestamp), user, changesetId);
+				} else {
+					entityData = new CommonEntityData(nodeId, denseInfo.getVersion(i), DEFAULT_VISIBLE,
+							fieldDecoder.decodeTimestamp(timestamp), user, changesetId);
+				}
 			} else {
 				entityData = new CommonEntityData(nodeId, EMPTY_VERSION, DEFAULT_VISIBLE, EMPTY_TIMESTAMP, OsmUser.NONE,
 						EMPTY_CHANGESET);
@@ -421,7 +431,7 @@ public class PbfBlobDecoder implements Runnable {
 
 	private void runAndTrapExceptions() {
 		try {
-			decodedEntities = new ArrayList<EntityContainer>();
+			decodedEntities = new ArrayList<>();
 
 			if ("OSMHeader".equals(blobType)) {
 				processOsmHeader(readBlobContent());

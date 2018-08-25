@@ -29,7 +29,7 @@ public class CommonEntityData implements Storeable {
 	
 	private long id;
 	private int version;
-	private boolean isVisible;
+	private boolean visible;
 	private int changesetId;
 	private TimestampContainer timestampContainer;
 	private OsmUser user;
@@ -134,7 +134,7 @@ public class CommonEntityData implements Storeable {
 	 *            The unique identifier.
 	 * @param version
 	 *            The version of the entity.
-	 * @param isVisible
+	 * @param visible
 	 * 			  The visible flag, it indicates if entity has been delete. visible=false
 	 * @param timestamp
 	 *            The last updated timestamp.
@@ -143,9 +143,9 @@ public class CommonEntityData implements Storeable {
 	 * @param changesetId
 	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	public CommonEntityData(long id, int version, boolean isVisible, Date timestamp, OsmUser user, long changesetId) {
+	public CommonEntityData(long id, int version, boolean visible, Date timestamp, OsmUser user, long changesetId) {
 		// Chain to the more specific constructor
-		this(id, version, isVisible, new SimpleTimestampContainer(timestamp), user, changesetId);
+		this(id, version, visible, new SimpleTimestampContainer(timestamp), user, changesetId);
 	}
 
 
@@ -156,7 +156,7 @@ public class CommonEntityData implements Storeable {
 	 *            The unique identifier.
 	 * @param version
 	 *            The version of the entity.
-	 * @param isVisible
+	 * @param visible
 	 *            The visible flag, it indicates if entity has been delete. visible=false
 	 * @param timestampContainer
 	 *            The container holding the timestamp in an alternative
@@ -167,8 +167,9 @@ public class CommonEntityData implements Storeable {
 	 *            The id of the changeset that this version of the entity was created by.
 	 */
 	public CommonEntityData(
-			long id, int version, boolean isVisible, TimestampContainer timestampContainer, OsmUser user, long changesetId) {
-		init(id, timestampContainer, user, version, isVisible, changesetId);
+			long id, int version, boolean visible, TimestampContainer timestampContainer, OsmUser user, 
+			long changesetId) {
+		init(id, timestampContainer, user, version, visible, changesetId);
 		tags = new TagCollectionImpl();
 		metaTags = new LazyHashMap<>();
 	}
@@ -181,7 +182,7 @@ public class CommonEntityData implements Storeable {
 	 *            The unique identifier.
 	 * @param version
 	 *            The version of the entity.
-	 * @param isVisible
+	 * @param visible
 	 *            The visible flag, it indicates if entity has been delete. visible=false
 	 * @param timestamp
 	 *            The last updated timestamp.
@@ -193,9 +194,10 @@ public class CommonEntityData implements Storeable {
 	 *            The tags to apply to the object.
 	 */
 	public CommonEntityData(
-			long id, int version, boolean isVisible, Date timestamp, OsmUser user, long changesetId, Collection<Tag> tags) {
+			long id, int version, boolean visible, Date timestamp, OsmUser user, long changesetId, 
+			Collection<Tag> tags) {
 		// Chain to the more specific constructor
-		this(id, version, isVisible, new SimpleTimestampContainer(timestamp), user, changesetId, tags);
+		this(id, version, visible, new SimpleTimestampContainer(timestamp), user, changesetId, tags);
 	}
 
 
@@ -206,7 +208,7 @@ public class CommonEntityData implements Storeable {
 	 *            The unique identifier.
 	 * @param version
 	 *            The version of the entity.
-	 * @param isVisible
+	 * @param visible
 	 *            The visible flag, it indicates if entity has been delete. visible=false
 	 * @param timestampContainer
 	 *            The container holding the timestamp in an alternative
@@ -218,9 +220,9 @@ public class CommonEntityData implements Storeable {
 	 * @param tags
 	 *            The tags to apply to the object.
 	 */
-	public CommonEntityData(long id, int version, boolean isVisible, TimestampContainer timestampContainer, OsmUser user, long changesetId,
-			Collection<Tag> tags) {
-		init(id, timestampContainer, user, version, isVisible, changesetId);
+	public CommonEntityData(long id, int version, boolean visible, TimestampContainer timestampContainer, 
+			OsmUser user, long changesetId, Collection<Tag> tags) {
+		init(id, timestampContainer, user, version, visible, changesetId);
 		this.tags = new TagCollectionImpl(tags);
 		metaTags = new LazyHashMap<String, Object>();
 	}
@@ -237,18 +239,18 @@ public class CommonEntityData implements Storeable {
 	 *            The user that last modified this entity.
 	 * @param newVersion
 	 *            The version of the entity.
-	 * @param newIsVisible
+	 * @param newVisible
 	 *            The visible flag, it indicates if entity has been delete. visible=false
 	 * @param changesetId
 	 *            The id of the changeset that this version of the entity was created by.
 	 */
-	private void init(long newId, TimestampContainer newTimestampContainer, OsmUser newUser, int newVersion, boolean newIsVisible,
-			long newChangesetId) {
+	private void init(long newId, TimestampContainer newTimestampContainer, OsmUser newUser, int newVersion, 
+			boolean newVisible, long newChangesetId) {
 		this.id = newId;
 		this.timestampContainer = newTimestampContainer;
 		this.user = newUser;
 		this.version = newVersion;
-		this.isVisible = newIsVisible;
+		this.visible = newVisible;
 		this.changesetId = LongAsInt.longToInt(newChangesetId);
 	}
 	
@@ -317,7 +319,7 @@ public class CommonEntityData implements Storeable {
 		sw.writeLong(id);
 		
 		sw.writeInteger(version);
-		sw.writeBoolean(isVisible);
+		sw.writeBoolean(visible);
 		
 		if (getTimestamp() != null) {
 			sw.writeBoolean(true);
@@ -430,20 +432,20 @@ public class CommonEntityData implements Storeable {
 	 * @return The visible flag, it indicates if entity has been delete. visible=false.
 	 */
 	public boolean isVisible() {
-		return isVisible;
+		return visible;
 	}
 	
 	
 	/**
 	 * Sets the visible flag.
 	 * 
-	 * @param isVisible
+	 * @param visible
 	 *            The visible flag, it indicates if entity has been delete. visible=false.
 	 */
-	public void isVisible(boolean isVisible) {
+	public void setVisible(boolean visible) {
 		assertWriteable();
 		
-		this.isVisible = isVisible;
+		this.visible = visible;
 	}
 	
 
@@ -630,7 +632,7 @@ public class CommonEntityData implements Storeable {
 	 */
 	public CommonEntityData getWriteableInstance() {
 		if (isReadOnly()) {
-			return new CommonEntityData(id, version, isVisible, timestampContainer, user, changesetId, tags);
+			return new CommonEntityData(id, version, visible, timestampContainer, user, changesetId, tags);
 		} else {
 			return this;
 		}

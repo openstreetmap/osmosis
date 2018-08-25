@@ -37,8 +37,9 @@ public class EntityWriter extends ElementWriter {
 	protected void addCommonAttributes(Entity entity) {
 		addAttribute("id", Long.toString(entity.getId()));
 		addAttribute("version", Integer.toString(entity.getVersion()));
-		if(!entity.isVisible())
+		if (!entity.isVisible()) {
 			addAttribute("visible", Boolean.toString(entity.isVisible()));
+		}
 		addAttribute("timestamp", entity.getFormattedTimestamp(getTimestampFormat()));
 
 		OsmUser user = entity.getUser();

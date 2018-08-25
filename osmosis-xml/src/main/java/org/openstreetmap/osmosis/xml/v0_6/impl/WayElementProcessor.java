@@ -58,6 +58,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void begin(Attributes attributes) {
 		long id;
 		String sversion;
@@ -79,9 +80,9 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 			version = Integer.parseInt(sversion);
 		}
 		svisible = attributes.getValue(ATTRIBUTE_NAME_VISIBLE);
-		if(svisible == null) {
+		if (svisible == null) {
 			visible = true;
-		}else {
+		} else {
 			visible = Boolean.parseBoolean(svisible);
 		}
 		timestampContainer = createTimestampContainer(attributes.getValue(ATTRIBUTE_NAME_TIMESTAMP));
@@ -122,6 +123,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void end() {
 		getSink().process(new WayContainer(way));
 	}
@@ -134,6 +136,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 	 * @param tag
 	 *            The tag to be processed.
 	 */
+	@Override
 	public void processTag(Tag tag) {
 		way.getTags().add(tag);
 	}
@@ -146,6 +149,7 @@ public class WayElementProcessor extends EntityElementProcessor implements TagLi
 	 * @param wayNode
 	 *            The wayNode to be processed.
 	 */
+	@Override
 	public void processWayNode(WayNode wayNode) {
 		way.getWayNodes().add(wayNode);
 	}
