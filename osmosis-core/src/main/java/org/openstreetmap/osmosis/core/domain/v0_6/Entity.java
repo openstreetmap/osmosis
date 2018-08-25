@@ -107,7 +107,7 @@ public abstract class Entity implements Storeable {
 	 */
 	public Entity(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
 			Collection<Tag> tags) {
-		entityData = new CommonEntityData(id, version, timestampContainer, user, changesetId, tags);
+		entityData = new CommonEntityData(id, version, true, timestampContainer, user, changesetId, tags);
 	}
 	
 	
@@ -219,6 +219,27 @@ public abstract class Entity implements Storeable {
 	}
 	
 	
+	/**
+	 * Gets the visible flag.
+	 * 
+	 * @return The visible flag, it indicates if entity has been delete. visible=false.
+	 */
+	public boolean isVisible() {
+		return this.entityData.isVisible();
+	}
+
+
+	/**
+	 * Sets the visible flag.
+	 * 
+	 * @param isVisible
+	 *            The visible flag, it indicates if entity has been delete. visible=false.
+	 */
+	public void isVisible(boolean isVisible) {
+		this.entityData.isVisible(isVisible);
+	}
+
+
 	/**
 	 * Gets the timestamp in date form. This is the standard method for
 	 * retrieving timestamp information.
