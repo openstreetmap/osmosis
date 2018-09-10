@@ -135,7 +135,8 @@ public class DatasetStoreReader implements DatasetContext {
 	 */
 	private ReleasableIterator<Long> getRelationIdsOwningRelation(long relationId) {
 		return new RelationalIndexValueIdIterator(
-				relationStorageContainer.getRelationRelationIndexReader().getRange(relationId, relationId));
+				relationStorageContainer.getRelationRelationIndexReader().getRange(relationId,
+												   relationId));
 	}
 	
 	
@@ -343,8 +344,9 @@ public class DatasetStoreReader implements DatasetContext {
 						// Ignore any referential integrity problems.
 						if (LOG.isLoggable(Level.FINER)) {
 							LOG.finest(
-								"Ignoring referential integrity problem where way " + wayId
-								+ " refers to non-existent node " + wayNode.getNodeId() + "."
+								"Ignoring referential integrity problem where way "
+								+ wayId + " refers to non-existent node "
+								+ wayNode.getNodeId() + "."
 							);
 						}
 					}
@@ -449,7 +451,8 @@ public class DatasetStoreReader implements DatasetContext {
 			moreParents = false;
 			
 			for (Long relationId : bboxCtx.relationIdTracker) {
-				try (ReleasableIterator<Long> relationIdIterator = getRelationIdsOwningRelation(relationId)) {
+				try (ReleasableIterator<Long> relationIdIterator
+				     = getRelationIdsOwningRelation(relationId)) {
 					while (relationIdIterator.hasNext()) {
 						long parentRelationId;
 						
@@ -472,7 +475,8 @@ public class DatasetStoreReader implements DatasetContext {
 	 */
 	@Override
 	public ReleasableIterator<EntityContainer> iterateBoundingBox(
-			double left, double right, double top, double bottom, boolean completeWays) {
+			double left, double right, double top, double bottom, boolean completeWays,
+			boolean completeRelations) {
 		BoundingBoxContext bboxCtx;
 		
 		LOG.fine("Beginning bounding box iteration.");

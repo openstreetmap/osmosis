@@ -22,7 +22,9 @@ public class DatasetBoundingBoxFilterFactory extends TaskManagerFactory {
 	private static final double DEFAULT_TOP = 90;
 	private static final double DEFAULT_BOTTOM = -90;
 	private static final String ARG_COMPLETE_WAYS = "completeWays";
+	private static final String ARG_COMPLETE_RELATIONS = "completeRelations";
 	private static final boolean DEFAULT_COMPLETE_WAYS = false;
+	private static final boolean DEFAULT_COMPLETE_RELATIONS = false;
 	
 	
 	/**
@@ -35,6 +37,7 @@ public class DatasetBoundingBoxFilterFactory extends TaskManagerFactory {
 		double top;
 		double bottom;
 		boolean completeWays;
+		boolean completeRelations;
 		
 		// Get the task arguments.
 		left = getDoubleArgument(taskConfig, ARG_LEFT, DEFAULT_LEFT);
@@ -42,10 +45,11 @@ public class DatasetBoundingBoxFilterFactory extends TaskManagerFactory {
 		top = getDoubleArgument(taskConfig, ARG_TOP, DEFAULT_TOP);
 		bottom = getDoubleArgument(taskConfig, ARG_BOTTOM, DEFAULT_BOTTOM);
 		completeWays = getBooleanArgument(taskConfig, ARG_COMPLETE_WAYS, DEFAULT_COMPLETE_WAYS);
+		completeRelations = getBooleanArgument(taskConfig, ARG_COMPLETE_RELATIONS, DEFAULT_COMPLETE_RELATIONS);
 		
 		return new DatasetSinkSourceManager(
 			taskConfig.getId(),
-			new DatasetBoundingBoxFilter(left, right, top, bottom, completeWays),
+			new DatasetBoundingBoxFilter(left, right, top, bottom, completeWays, completeRelations),
 			taskConfig.getPipeArgs()
 		);
 	}

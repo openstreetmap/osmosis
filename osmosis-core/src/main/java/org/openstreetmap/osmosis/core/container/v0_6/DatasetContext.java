@@ -99,8 +99,12 @@ public interface DatasetContext extends Completable {
 	 * @param completeWays
 	 *            If true, all nodes within the ways will be returned even if
 	 *            they lie outside the box.
+	 * @param completeRelations
+	 *            If true, all ways within the relations will be returned even if
+	 *            they lie outside the box.
 	 * @return An iterator pointing to the start of the result data.
 	 */
 	ReleasableIterator<EntityContainer> iterateBoundingBox(
-			double left, double right, double top, double bottom, boolean completeWays);
+			double left, double right, double top, double bottom, boolean completeWays,
+			boolean completeRelations);
 }
