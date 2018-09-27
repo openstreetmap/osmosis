@@ -1,4 +1,4 @@
-FROM fedora:27
+FROM fedora:28
 
 # Install UTF8 locale support
 RUN dnf install -y langpacks-en.noarch
