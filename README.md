@@ -35,7 +35,7 @@ required to run the full build and test suite.
 
     ./docker.sh
 
-Osmosis is built using the Gradle (http://gradle.org) built tool.  Gradle itself
+Osmosis is built using the Gradle (http://gradle.org) build tool.  Gradle itself
 does not need to be installed because the gradlew script will install Gradle on
 first usage.  The only requirements are a 1.7 JDK, and an Internet connection.
 Note that in the docker environment all downloads will still occur and be cached
