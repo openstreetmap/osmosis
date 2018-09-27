@@ -121,6 +121,7 @@ public final class Fileformat {
      *
      * <code>optional bytes raw = 1;</code>
      */
+    @java.lang.Override
     public boolean hasRaw() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
@@ -131,6 +132,7 @@ public final class Fileformat {
      *
      * <code>optional bytes raw = 1;</code>
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString getRaw() {
       return raw_;
     }
@@ -169,6 +171,7 @@ public final class Fileformat {
      *
      * <code>optional int32 raw_size = 2;</code>
      */
+    @java.lang.Override
     public boolean hasRawSize() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
@@ -179,6 +182,7 @@ public final class Fileformat {
      *
      * <code>optional int32 raw_size = 2;</code>
      */
+    @java.lang.Override
     public int getRawSize() {
       return rawSize_;
     }
@@ -214,6 +218,7 @@ public final class Fileformat {
      *
      * <code>optional bytes zlib_data = 3;</code>
      */
+    @java.lang.Override
     public boolean hasZlibData() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
@@ -224,6 +229,7 @@ public final class Fileformat {
      *
      * <code>optional bytes zlib_data = 3;</code>
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString getZlibData() {
       return zlibData_;
     }
@@ -262,6 +268,7 @@ public final class Fileformat {
      *
      * <code>optional bytes lzma_data = 4;</code>
      */
+    @java.lang.Override
     public boolean hasLzmaData() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
@@ -272,6 +279,7 @@ public final class Fileformat {
      *
      * <code>optional bytes lzma_data = 4;</code>
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString getLzmaData() {
       return lzmaData_;
     }
@@ -310,6 +318,7 @@ public final class Fileformat {
      *
      * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
      */
+    @java.lang.Override
     @java.lang.Deprecated public boolean hasOBSOLETEBzip2Data() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
@@ -320,6 +329,7 @@ public final class Fileformat {
      *
      * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
      */
+    @java.lang.Override
     @java.lang.Deprecated public com.google.protobuf.ByteString getOBSOLETEBzip2Data() {
       return oBSOLETEBzip2Data_;
     }
@@ -349,6 +359,7 @@ public final class Fileformat {
       oBSOLETEBzip2Data_ = getDefaultInstance().getOBSOLETEBzip2Data();
     }
 
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -369,6 +380,7 @@ public final class Fileformat {
       unknownFields.writeTo(output);
     }
 
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
@@ -501,6 +513,7 @@ public final class Fileformat {
        *
        * <code>optional bytes raw = 1;</code>
        */
+      @java.lang.Override
       public boolean hasRaw() {
         return instance.hasRaw();
       }
@@ -511,6 +524,7 @@ public final class Fileformat {
        *
        * <code>optional bytes raw = 1;</code>
        */
+      @java.lang.Override
       public com.google.protobuf.ByteString getRaw() {
         return instance.getRaw();
       }
@@ -546,6 +560,7 @@ public final class Fileformat {
        *
        * <code>optional int32 raw_size = 2;</code>
        */
+      @java.lang.Override
       public boolean hasRawSize() {
         return instance.hasRawSize();
       }
@@ -556,6 +571,7 @@ public final class Fileformat {
        *
        * <code>optional int32 raw_size = 2;</code>
        */
+      @java.lang.Override
       public int getRawSize() {
         return instance.getRawSize();
       }
@@ -591,6 +607,7 @@ public final class Fileformat {
        *
        * <code>optional bytes zlib_data = 3;</code>
        */
+      @java.lang.Override
       public boolean hasZlibData() {
         return instance.hasZlibData();
       }
@@ -601,6 +618,7 @@ public final class Fileformat {
        *
        * <code>optional bytes zlib_data = 3;</code>
        */
+      @java.lang.Override
       public com.google.protobuf.ByteString getZlibData() {
         return instance.getZlibData();
       }
@@ -636,6 +654,7 @@ public final class Fileformat {
        *
        * <code>optional bytes lzma_data = 4;</code>
        */
+      @java.lang.Override
       public boolean hasLzmaData() {
         return instance.hasLzmaData();
       }
@@ -646,6 +665,7 @@ public final class Fileformat {
        *
        * <code>optional bytes lzma_data = 4;</code>
        */
+      @java.lang.Override
       public com.google.protobuf.ByteString getLzmaData() {
         return instance.getLzmaData();
       }
@@ -681,6 +701,7 @@ public final class Fileformat {
        *
        * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
        */
+      @java.lang.Override
       @java.lang.Deprecated public boolean hasOBSOLETEBzip2Data() {
         return instance.hasOBSOLETEBzip2Data();
       }
@@ -691,6 +712,7 @@ public final class Fileformat {
        *
        * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
        */
+      @java.lang.Override
       @java.lang.Deprecated public com.google.protobuf.ByteString getOBSOLETEBzip2Data() {
         return instance.getOBSOLETEBzip2Data();
       }
@@ -721,6 +743,7 @@ public final class Fileformat {
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.Blob)
     }
+    @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
     protected final java.lang.Object dynamicMethod(
         com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
@@ -729,14 +752,14 @@ public final class Fileformat {
         case NEW_MUTABLE_INSTANCE: {
           return new org.openstreetmap.osmosis.osmbinary.Fileformat.Blob();
         }
+        case NEW_BUILDER: {
+          return new Builder();
+        }
         case IS_INITIALIZED: {
           return DEFAULT_INSTANCE;
         }
         case MAKE_IMMUTABLE: {
           return null;
-        }
-        case NEW_BUILDER: {
-          return new Builder();
         }
         case VISIT: {
           Visitor visitor = (Visitor) arg0;
@@ -778,12 +801,6 @@ public final class Fileformat {
                 case 0:
                   done = true;
                   break;
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
                 case 10: {
                   bitField0_ |= 0x00000001;
                   raw_ = input.readBytes();
@@ -809,6 +826,12 @@ public final class Fileformat {
                   oBSOLETEBzip2Data_ = input.readBytes();
                   break;
                 }
+                default: {
+                  if (!parseUnknownField(tag, input)) {
+                    done = true;
+                  }
+                  break;
+                }
               }
             }
           } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -825,13 +848,17 @@ public final class Fileformat {
           return DEFAULT_INSTANCE;
         }
         case GET_PARSER: {
-          if (PARSER == null) {    synchronized (org.openstreetmap.osmosis.osmbinary.Fileformat.Blob.class) {
-              if (PARSER == null) {
-                PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
+          com.google.protobuf.Parser<org.openstreetmap.osmosis.osmbinary.Fileformat.Blob> parser = PARSER;
+          if (parser == null) {
+            synchronized (org.openstreetmap.osmosis.osmbinary.Fileformat.Blob.class) {
+              parser = PARSER;
+              if (parser == null) {
+                parser = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
+                PARSER = parser;
               }
             }
           }
-          return PARSER;
+          return parser;
       }
       case GET_MEMOIZED_IS_INITIALIZED: {
         return (byte) 1;
@@ -847,8 +874,9 @@ public final class Fileformat {
     // @@protoc_insertion_point(class_scope:OSMPBF.Blob)
     private static final org.openstreetmap.osmosis.osmbinary.Fileformat.Blob DEFAULT_INSTANCE;
     static {
+      // New instances are implicitly immutable so no need to make
+      // immutable.
       DEFAULT_INSTANCE = new Blob();
-      DEFAULT_INSTANCE.makeImmutable();
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Fileformat.Blob getDefaultInstance() {
@@ -916,18 +944,21 @@ public final class Fileformat {
     /**
      * <code>required string type = 1;</code>
      */
+    @java.lang.Override
     public boolean hasType() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
      * <code>required string type = 1;</code>
      */
+    @java.lang.Override
     public java.lang.String getType() {
       return type_;
     }
     /**
      * <code>required string type = 1;</code>
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString
         getTypeBytes() {
       return com.google.protobuf.ByteString.copyFromUtf8(type_);
@@ -967,12 +998,14 @@ public final class Fileformat {
     /**
      * <code>optional bytes indexdata = 2;</code>
      */
+    @java.lang.Override
     public boolean hasIndexdata() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
      * <code>optional bytes indexdata = 2;</code>
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString getIndexdata() {
       return indexdata_;
     }
@@ -999,12 +1032,14 @@ public final class Fileformat {
     /**
      * <code>required int32 datasize = 3;</code>
      */
+    @java.lang.Override
     public boolean hasDatasize() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
      * <code>required int32 datasize = 3;</code>
      */
+    @java.lang.Override
     public int getDatasize() {
       return datasize_;
     }
@@ -1023,6 +1058,7 @@ public final class Fileformat {
       datasize_ = 0;
     }
 
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -1037,6 +1073,7 @@ public final class Fileformat {
       unknownFields.writeTo(output);
     }
 
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
@@ -1157,18 +1194,21 @@ public final class Fileformat {
       /**
        * <code>required string type = 1;</code>
        */
+      @java.lang.Override
       public boolean hasType() {
         return instance.hasType();
       }
       /**
        * <code>required string type = 1;</code>
        */
+      @java.lang.Override
       public java.lang.String getType() {
         return instance.getType();
       }
       /**
        * <code>required string type = 1;</code>
        */
+      @java.lang.Override
       public com.google.protobuf.ByteString
           getTypeBytes() {
         return instance.getTypeBytes();
@@ -1203,12 +1243,14 @@ public final class Fileformat {
       /**
        * <code>optional bytes indexdata = 2;</code>
        */
+      @java.lang.Override
       public boolean hasIndexdata() {
         return instance.hasIndexdata();
       }
       /**
        * <code>optional bytes indexdata = 2;</code>
        */
+      @java.lang.Override
       public com.google.protobuf.ByteString getIndexdata() {
         return instance.getIndexdata();
       }
@@ -1232,12 +1274,14 @@ public final class Fileformat {
       /**
        * <code>required int32 datasize = 3;</code>
        */
+      @java.lang.Override
       public boolean hasDatasize() {
         return instance.hasDatasize();
       }
       /**
        * <code>required int32 datasize = 3;</code>
        */
+      @java.lang.Override
       public int getDatasize() {
         return instance.getDatasize();
       }
@@ -1261,6 +1305,7 @@ public final class Fileformat {
       // @@protoc_insertion_point(builder_scope:OSMPBF.BlobHeader)
     }
     private byte memoizedIsInitialized = 2;
+    @java.lang.Override
     @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
     protected final java.lang.Object dynamicMethod(
         com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
@@ -1268,6 +1313,9 @@ public final class Fileformat {
       switch (method) {
         case NEW_MUTABLE_INSTANCE: {
           return new org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader();
+        }
+        case NEW_BUILDER: {
+          return new Builder();
         }
         case IS_INITIALIZED: {
           byte isInitialized = memoizedIsInitialized;
@@ -1286,9 +1334,6 @@ public final class Fileformat {
         }
         case MAKE_IMMUTABLE: {
           return null;
-        }
-        case NEW_BUILDER: {
-          return new Builder();
         }
         case VISIT: {
           Visitor visitor = (Visitor) arg0;
@@ -1324,12 +1369,6 @@ public final class Fileformat {
                 case 0:
                   done = true;
                   break;
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
                 case 10: {
                   java.lang.String s = input.readString();
                   bitField0_ |= 0x00000001;
@@ -1344,6 +1383,12 @@ public final class Fileformat {
                 case 24: {
                   bitField0_ |= 0x00000004;
                   datasize_ = input.readInt32();
+                  break;
+                }
+                default: {
+                  if (!parseUnknownField(tag, input)) {
+                    done = true;
+                  }
                   break;
                 }
               }
@@ -1362,13 +1407,17 @@ public final class Fileformat {
           return DEFAULT_INSTANCE;
         }
         case GET_PARSER: {
-          if (PARSER == null) {    synchronized (org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader.class) {
-              if (PARSER == null) {
-                PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
+          com.google.protobuf.Parser<org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader> parser = PARSER;
+          if (parser == null) {
+            synchronized (org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader.class) {
+              parser = PARSER;
+              if (parser == null) {
+                parser = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
+                PARSER = parser;
               }
             }
           }
-          return PARSER;
+          return parser;
       }
       case GET_MEMOIZED_IS_INITIALIZED: {
         return memoizedIsInitialized;
@@ -1385,8 +1434,9 @@ public final class Fileformat {
     // @@protoc_insertion_point(class_scope:OSMPBF.BlobHeader)
     private static final org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader DEFAULT_INSTANCE;
     static {
+      // New instances are implicitly immutable so no need to make
+      // immutable.
       DEFAULT_INSTANCE = new BlobHeader();
-      DEFAULT_INSTANCE.makeImmutable();
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader getDefaultInstance() {
