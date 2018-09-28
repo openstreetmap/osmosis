@@ -14,7 +14,7 @@ public abstract class OsmosisException extends Exception {
 	
 	
 	/**
-     * Constructs a new exception with <code>null</code> as its detail message.
+     * Constructs a new exception.
      */
     public OsmosisException() {
 		super();
@@ -22,9 +22,7 @@ public abstract class OsmosisException extends Exception {
 	
 	
     /**
-     * Constructs a new exception with the specified detail message.  The
-     * cause is not initialized, and may subsequently be initialized by
-     * a call to {@link #initCause}.
+     * Constructs a new exception with the specified detail message.
      *
      * @param message the detail message.
      */
@@ -34,9 +32,7 @@ public abstract class OsmosisException extends Exception {
 	
     
     /**
-     * Constructs a new exception with the specified cause and a detail
-     * message of <tt>(cause==null ? null : cause.toString())</tt> (which
-     * typically contains the class and detail message of <tt>cause</tt>).
+     * Constructs a new exception with the specified cause.
      * 
      * @param cause the cause.
      */
