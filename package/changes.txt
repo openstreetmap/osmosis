@@ -1,3 +1,13 @@
+0.47
+Build using Java 11 now that Java has moved to a 6 month release cycle with no (free) long term support.
+Use https for all replication URLs.
+Use single-threaded PBF reading by default.
+Add support for PBF way location attributes.
+Remove customdb dataset implementation.  It performed poorly and was superseded long ago by pgsimple/pgsnapshot.
+Fix munin replication lag shell script.
+Modify --write-apidb to commit every 10000 to allow large databases to be populated.
+Fix --write-apidb-change to correctly write way history.
+
 0.46
 Require Java 8 as a minimum.
 Leverage Java 7 Autocloseable functionality and remove Releasable interface.
