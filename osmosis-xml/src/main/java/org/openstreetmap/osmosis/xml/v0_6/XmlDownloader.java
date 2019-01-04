@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
@@ -24,7 +25,6 @@ import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
-import org.openstreetmap.osmosis.core.util.MultiMemberGZIPInputStream;
 import org.openstreetmap.osmosis.xml.v0_6.impl.OsmHandler;
 import org.openstreetmap.osmosis.xml.v0_6.impl.XmlConstants;
 
@@ -265,7 +265,7 @@ public class XmlDownloader implements RunnableSource {
 
         responseStream = myActiveConnection.getInputStream();
         if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
-            responseStream = new MultiMemberGZIPInputStream(responseStream);
+            responseStream = new GZIPInputStream(responseStream);
         } else if (encoding != null && encoding.equalsIgnoreCase("deflate")) {
             responseStream = new InflaterInputStream(responseStream, new Inflater(true));
         }

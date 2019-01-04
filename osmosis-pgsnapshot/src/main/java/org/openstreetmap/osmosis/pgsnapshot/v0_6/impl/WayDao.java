@@ -49,9 +49,11 @@ public class WayDao extends EntityDao<Way> {
 	 *            The database context to use for accessing the database.
 	 * @param actionDao
 	 *            The dao to use for adding action records to the database.
+	 * @param logging
+	 * 			  Verbose logging directly to the database
 	 */
-	public WayDao(DatabaseContext dbCtx, ActionDao actionDao) {
-		super(dbCtx.getJdbcTemplate(), new WayMapper(), actionDao);
+	public WayDao(DatabaseContext dbCtx, ActionDao actionDao, boolean logging) {
+		super(dbCtx.getJdbcTemplate(), new WayMapper(), actionDao, logging);
 		
 		jdbcTemplate = dbCtx.getJdbcTemplate();
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);

@@ -63,6 +63,6 @@ public class PostgreSqlDatasetReader implements RunnableDatasetSource, Dataset {
 	 */
 	@Override
 	public DatasetContext createReader() {
-		return new PostgreSqlDatasetContext(loginCredentials, preferences);
+		return new PostgreSqlDatasetContext(loginCredentials, preferences, false);
 	}
 }

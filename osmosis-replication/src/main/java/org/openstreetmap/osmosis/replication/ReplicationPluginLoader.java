@@ -31,7 +31,7 @@ public class ReplicationPluginLoader implements PluginLoader {
 	public Map<String, TaskManagerFactory> loadTaskFactories() {
 		Map<String, TaskManagerFactory> factoryMap;
 		
-		factoryMap = new HashMap<String, TaskManagerFactory>();
+		factoryMap = new HashMap<>();
 		
 		factoryMap.put("read-change-interval", new IntervalDownloaderFactory());
 		factoryMap.put("rci", new IntervalDownloaderFactory());

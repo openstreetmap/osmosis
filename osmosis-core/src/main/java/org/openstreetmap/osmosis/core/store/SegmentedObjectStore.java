@@ -12,12 +12,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.lifecycle.Completable;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
-import org.openstreetmap.osmosis.core.util.MultiMemberGZIPInputStream;
 
 
 /**
@@ -274,7 +274,7 @@ public class SegmentedObjectStore<T extends Storeable> implements Completable {
 				if (useCompression) {
 					dataInStream = new DataInputStream(
 							new BufferedInputStream(
-									new MultiMemberGZIPInputStream(fileStream), 65536));
+									new GZIPInputStream(fileStream), 65536));
 				} else {
 					dataInStream = new DataInputStream(new BufferedInputStream(fileStream, 65536));
 				}

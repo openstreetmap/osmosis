@@ -48,9 +48,11 @@ public class NodeDao extends EntityDao<Node> {
 	 *            The database context to use for accessing the database.
 	 * @param actionDao
 	 *            The dao to use for adding action records to the database.
+	 * @param logging
+	 * 			  Verbose logging directly to the database
 	 */
-	public NodeDao(DatabaseContext dbCtx, ActionDao actionDao) {
-		super(dbCtx.getJdbcTemplate(), new NodeMapper(), actionDao);
+	public NodeDao(DatabaseContext dbCtx, ActionDao actionDao, boolean logging) {
+		super(dbCtx.getJdbcTemplate(), new NodeMapper(), actionDao, logging);
 		
 		jdbcTemplate = dbCtx.getJdbcTemplate();
 		capabilityChecker = new DatabaseCapabilityChecker(dbCtx);

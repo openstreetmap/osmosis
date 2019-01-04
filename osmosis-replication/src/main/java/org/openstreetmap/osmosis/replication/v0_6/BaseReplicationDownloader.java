@@ -31,50 +31,55 @@ import org.openstreetmap.osmosis.xml.v0_6.XmlChangeReader;
  * This class downloads a set of replication files from a HTTP server and tracks the progress of
  * which files have already been processed. The actual processing of changeset files is performed by
  * sub-classes. This class forms the basis of a replication mechanism.
- * 
+ *
  * @author Brett Henderson
  */
 public abstract class BaseReplicationDownloader implements RunnableTask {
-	
+
 	private static final Logger LOG = Logger.getLogger(BaseReplicationDownloader.class.getName());
 	private static final String LOCK_FILE = "download.lock";
 	private static final String CONFIG_FILE = "configuration.txt";
 	private static final String LOCAL_STATE_FILE = "state.txt";
-	
-	
+	private static final String CUSTOM_SERVER_STATE_FILE = "custom.state.txt";
+
+
 	private File workingDirectory;
 	private ReplicationSequenceFormatter sequenceFormatter;
 	private ServerStateReader serverStateReader;
-	
-	
+	private boolean single;
+
+
 	/**
 	 * Creates a new instance.
-	 * 
+	 *
 	 * @param workingDirectory
 	 *            The directory containing configuration and tracking files.
+	 * @param single
+	 * 			  Set to true if you want to only replication a single diff file from the server
 	 */
-	public BaseReplicationDownloader(File workingDirectory) {
+	public BaseReplicationDownloader(File workingDirectory, boolean single) {
 		this.workingDirectory = workingDirectory;
-		
+
 		sequenceFormatter = new ReplicationSequenceFormatter(9, 3);
 		serverStateReader = new ServerStateReader();
+		this.single = single;
 	}
-	
-	
+
+
 	/**
 	 * Provides sub-classes with access to the working directory.
-	 * 
+	 *
 	 * @return The working directory for the task.
 	 */
 	protected File getWorkingDirectory() {
 		return workingDirectory;
 	}
-	
-	
+
+
 	/**
 	 * Downloads the file from the server with the specified name and writes it
 	 * to a local temporary file.
-	 * 
+	 *
 	 * @param fileName
 	 *            The name of the file to download.
 	 * @param baseUrl
@@ -83,22 +88,22 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 	 */
 	private File downloadReplicationFile(String fileName, URL baseUrl) {
 		URL changesetUrl;
-		
+
 		try {
 			changesetUrl = new URL(baseUrl, fileName);
 		} catch (MalformedURLException e) {
 			throw new OsmosisRuntimeException("The server file URL could not be created.", e);
 		}
-		
+
 		try {
 			File outputFile;
-			
+
 			// Open an input stream for the changeset file on the server.
 			URLConnection connection = changesetUrl.openConnection();
 			connection.setReadTimeout(15 * 60 * 1000); // timeout 15 minutes
 			connection.setConnectTimeout(15 * 60 * 1000); // timeout 15 minutes
 			connection.setRequestProperty("User-Agent", "Osmosis/" + OsmosisConstants.VERSION);
-			
+
 			try (BufferedInputStream source = new BufferedInputStream(connection.getInputStream(), 65536)) {
 				// Create a temporary file to write the data to.
 				outputFile = File.createTempFile("change", null);
@@ -112,26 +117,26 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 					}
 				}
 			}
-			
+
 			return outputFile;
-			
+
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException("Unable to read the changeset file " + fileName + " from the server.", e);
 		}
 	}
-	
-	
+
+
 	private void processReplicationFile(File replicationFile, ReplicationState replicationState) {
 		try {
 			XmlChangeReader xmlReader;
-			
+
 			// Send the contents of the replication file to the sink but suppress the complete
 			// and release methods.
 			xmlReader = new XmlChangeReader(replicationFile, true, CompressionMethod.GZip);
-			
+
 			// Delegate to the sub-class to process the xml.
 			processChangeset(xmlReader, replicationState);
-			
+
 		} finally {
 			if (!replicationFile.delete()) {
 				LOG.warning("Unable to delete file " + replicationFile.getName());
@@ -145,7 +150,7 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 	 * overriden by sub-classes, but the sub-classes must call this implemention first and then
 	 * limit the maximum timestamp further if needed. A sub-class may never increase the maximum
 	 * timestamp beyond that calculated by this method.
-	 * 
+	 *
 	 * @param configuration
 	 *            The configuration.
 	 * @param serverTimestamp
@@ -157,9 +162,9 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 	protected Date calculateMaximumTimestamp(ReplicationDownloaderConfiguration configuration, Date serverTimestamp,
 			Date localTimestamp) {
 		Date maximumTimestamp;
-		
+
 		maximumTimestamp = serverTimestamp;
-		
+
 		// Limit the duration according to the maximum defined in the configuration.
 		if (configuration.getMaxInterval() > 0) {
 			if ((serverTimestamp.getTime() - localTimestamp.getTime())
@@ -167,35 +172,35 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 				maximumTimestamp = new Date(localTimestamp.getTime() + configuration.getMaxInterval());
 			}
 		}
-		
+
 		LOG.finer("Maximum timestamp is " + maximumTimestamp);
-		
+
 		return maximumTimestamp;
 	}
-	
-	
+
+
 	private ReplicationState download(ReplicationDownloaderConfiguration configuration, ReplicationState serverState,
 			ReplicationState initialLocalState) {
 		URL baseUrl;
 		ReplicationState localState;
 		Date maximumDownloadTimestamp;
-		
+
 		localState = initialLocalState;
-		
+
 		// Determine the location of download files.
 		baseUrl = configuration.getBaseUrl();
-		
+
 		// Determine the maximum timestamp that can be downloaded.
 		maximumDownloadTimestamp =
 			calculateMaximumTimestamp(configuration, serverState.getTimestamp(), localState.getTimestamp());
 		LOG.fine("The maximum timestamp to be downloaded is " + maximumDownloadTimestamp + ".");
-		
+
 		// Download all files and send their contents to the sink.
 		while (localState.getSequenceNumber() < serverState.getSequenceNumber()) {
 			File replicationFile;
 			long sequenceNumber;
 			ReplicationState fileReplicationState;
-			
+
 			// Check to see if our local state has already reached the maximum
 			// allowable timestamp. This will typically occur if a job is run
 			// again before new data becomes available, or if an implementation
@@ -204,14 +209,14 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			if (localState.getTimestamp().compareTo(maximumDownloadTimestamp) >= 0) {
 				break;
 			}
-			
+
 			// Calculate the next sequence number.
 			sequenceNumber = localState.getSequenceNumber() + 1;
 			LOG.finer("Processing replication sequence " + sequenceNumber + ".");
-			
+
 			// Get the state associated with the next file.
 			fileReplicationState = serverStateReader.getServerState(baseUrl, sequenceNumber);
-			
+
 			// Ensure that the next state is within the allowable timestamp
 			// range. We must stop if the next data takes us beyond the maximum
 			// timestamp. This will either occur if a maximum download time
@@ -226,92 +231,105 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 					break;
 				}
 			}
-			
+
 			// Download the next replication file to a temporary file.
 			replicationFile =
 				downloadReplicationFile(sequenceFormatter.getFormattedName(sequenceNumber, ".osc.gz"), baseUrl);
-			
+
 			// Process the file and send its contents to the sink.
 			processReplicationFile(replicationFile, fileReplicationState);
-			
+
 			// Update the local state to reflect the file state just processed.
 			localState = fileReplicationState;
+
+			// if single is set to true if means that we only want to get a single replication file
+			// and not up to the current.
+            if (single) {
+                break;
+            }
 		}
-		
+
 		return localState;
 	}
-	
-	
+
+
 	private void runImpl() {
 		try {
 			ReplicationDownloaderConfiguration configuration;
 			ReplicationState serverState;
 			ReplicationState localState;
 			PropertiesPersister localStatePersistor;
-			
+
 			// Instantiate utility objects.
 			configuration = new ReplicationDownloaderConfiguration(new File(workingDirectory, CONFIG_FILE));
-			
-			// Obtain the server state.
-			LOG.fine("Reading current server state.");
-			serverState = serverStateReader.getServerState(configuration.getBaseUrl());
-			
+
+			// check for custom server state file
+			File customServerStateFile = new File(workingDirectory, CUSTOM_SERVER_STATE_FILE);
+			if (customServerStateFile.exists()) {
+				serverState = new ReplicationState(new PropertiesPersister(customServerStateFile).loadMap());
+				LOG.info(String.format("Reading custom server state. [%s]", serverState.toString()));
+			} else {
+				// Obtain the server state.
+				serverState = serverStateReader.getServerState(configuration.getBaseUrl());
+				LOG.info(String.format("Reading current server state. [%s]", serverState.toString()));
+			}
+
 			// Build the local state persister which is used for both loading and storing local state.
 			localStatePersistor = new PropertiesPersister(new File(workingDirectory, LOCAL_STATE_FILE));
-			
+
 			// Begin processing.
 			processInitialize(Collections.<String, Object>emptyMap());
-			
+
 			// If local state isn't available we need to copy server state to be the initial local state
 			// then exit.
 			if (localStatePersistor.exists()) {
 				localState = new ReplicationState(localStatePersistor.loadMap());
-				
+
 				// Download and process the replication files.
 				localState = download(configuration, serverState, localState);
-				
+
 			} else {
 				localState = serverState;
-				
+
 				processInitializeState(localState);
 			}
-			
+
 			// Commit downstream changes.
 			processComplete();
-			
+
 			// Persist the local state.
 			localStatePersistor.store(localState.store());
-			
+
 		} finally {
 			processRelease();
 		}
 	}
-	
-	
+
+
 	/**
 	 * This is called prior to any processing being performed. It allows any
 	 * setup activities to be performed.
-	 * 
+	 *
 	 * @param metaData
 	 *            The meta data associated with this processing request (empty
 	 *            in the current implementation).
 	 */
 	protected abstract void processInitialize(Map<String, Object> metaData);
-	
-	
+
+
 	/**
 	 * Invoked once during the first execution run to allow initialisation based on the initial
 	 * replication state downloaded from the server.
-	 * 
+	 *
 	 * @param initialState
 	 *            The first server state.
 	 */
 	protected abstract void processInitializeState(ReplicationState initialState);
-	
-	
+
+
 	/**
 	 * Processes the changeset.
-	 * 
+	 *
 	 * @param xmlReader
 	 *            The changeset reader initialised to point to the changeset file.
 	 * @param replicationState
@@ -333,24 +351,24 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 	 * closing files or releasing database connections.
 	 */
 	protected abstract void processRelease();
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public void run() {
 		FileBasedLock fileLock;
-		
+
 		fileLock = new FileBasedLock(new File(workingDirectory, LOCK_FILE));
-		
+
 		try {
 			fileLock.lock();
-			
+
 			runImpl();
-			
+
 			fileLock.unlock();
-			
+
 		} finally {
 			fileLock.close();
 		}
