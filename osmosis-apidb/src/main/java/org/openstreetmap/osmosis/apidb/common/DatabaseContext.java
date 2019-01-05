@@ -104,7 +104,8 @@ public class DatabaseContext implements AutoCloseable {
             LOG.finer("Creating a new database connection.");
 
             newConnection = DriverManager.getConnection(
-            		"jdbc:postgresql://" + loginCredentials.getHost() + "/"
+            		"jdbc:postgresql://" + loginCredentials.getHost() + ":"
+            		+ loginCredentials.getPort() + "/"
                     + loginCredentials.getDatabase(), // + "?logLevel=2"
                     loginCredentials.getUser(),
                     loginCredentials.getPassword()
@@ -126,8 +127,10 @@ public class DatabaseContext implements AutoCloseable {
         try {
             String url;
 
-            url = "jdbc:mysql://" + loginCredentials.getHost() + "/" + loginCredentials.getDatabase() + "?user="
-                    + loginCredentials.getUser() + "&password=" + loginCredentials.getPassword();
+            url = "jdbc:mysql://" + loginCredentials.getHost() + ":" + loginCredentials.getPort()
+            		+ "/" + loginCredentials.getDatabase()
+            		+ "?user=" + loginCredentials.getUser()
+                    + "&password=" + loginCredentials.getPassword();
 
             if (loginCredentials.getForceUtf8()) {
                 url += "&useUnicode=true&characterEncoding=UTF-8";

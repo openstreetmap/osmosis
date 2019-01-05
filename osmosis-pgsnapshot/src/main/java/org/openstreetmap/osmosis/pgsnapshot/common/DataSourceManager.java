@@ -47,7 +47,8 @@ public final class DataSourceManager implements Closeable {
 		localDataSource = new BasicDataSource();
 		
 		localDataSource.setDriverClassName("org.postgresql.Driver");
-		localDataSource.setUrl("jdbc:postgresql://" + credentials.getHost() + "/" + credentials.getDatabase()
+		localDataSource.setUrl("jdbc:postgresql://" + credentials.getHost() + ":" + credentials.getPort() + "/"
+          + credentials.getDatabase()
     			/*+ "?loglevel=2"*/);
         
 		localDataSource.setUsername(credentials.getUser());
@@ -87,7 +88,7 @@ public final class DataSourceManager implements Closeable {
 			}
 			
 			return DriverManager.getConnection(
-				"jdbc:postgresql://" + credentials.getHost() + "/"
+				"jdbc:postgresql://" + credentials.getHost() + ":" + credentials.getPort() + "/"
 				+ credentials.getDatabase(),
 		    	// + "?logLevel=2"
 				credentials.getUser(),
