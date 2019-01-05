@@ -20,6 +20,7 @@ import org.openstreetmap.osmosis.core.database.DatabaseType;
 public class Configuration {
 
 	private static final String KEY_HOST = "host";
+	private static final String KEY_PORT = "port";
 	private static final String KEY_DATABASE = "database";
 	private static final String KEY_USER = "user";
 	private static final String KEY_PASSWORD = "password";
@@ -80,6 +81,15 @@ public class Configuration {
 	 */
 	public String getHost() {
 		return getProperty(KEY_HOST);
+	}
+
+	/**
+	 * Returns the database port.
+	 * 
+	 * @return The database port.
+	 */
+	public String getPort() {
+		return getProperty(KEY_PORT);
 	}
 
 
@@ -201,7 +211,7 @@ public class Configuration {
 	 * @return The database login credentials.
 	 */
 	public DatabaseLoginCredentials getDatabaseLoginCredentials() {
-		return new DatabaseLoginCredentials(getHost(), getDatabase(), getUser(), getPassword(), false, false,
+		return new DatabaseLoginCredentials(getHost(), getPort(), getDatabase(), getUser(), getPassword(), false, false,
 				getDbType());
 	}
 	
