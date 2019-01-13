@@ -29,8 +29,8 @@ public class AndMatcher implements Matcher {
 
 
 	@Override
-	public Collection<Match> match(Map<String, String> tags, TTEntityType entityType, String entityUname,
-			int entityUid) {
+	public Collection<Match> match(long entityId, Map<String, String> tags, TTEntityType entityType, String entityUname,
+                                   int entityUid) {
 		if (this.type != null && this.type != entityType) {
 			return null;
 		}
@@ -43,7 +43,7 @@ public class AndMatcher implements Matcher {
 
 		List<Match> allMatches = new ArrayList<Match>();
 		for (Matcher matcher : matchers) {
-			Collection<Match> matches = matcher.match(tags, entityType, entityUname, entityUid);
+			Collection<Match> matches = matcher.match(entityId, tags, entityType, entityUname, entityUid);
 			if (matches == null || matches.isEmpty()) {
 				return null;
 			}

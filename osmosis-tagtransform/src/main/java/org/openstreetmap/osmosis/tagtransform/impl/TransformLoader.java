@@ -3,7 +3,9 @@ package org.openstreetmap.osmosis.tagtransform.impl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -154,8 +156,26 @@ public class TransformLoader {
 			String k = matcher.getAttribute("k");
 			String v = matcher.getAttribute("v");
 			return new NoTagMatcher(k, v);
+		} else if (name.equals("ids")) {
+			return parseIds(matcher);
 		}
 		return null;
+	}
+
+	private Matcher parseIds(Element idsElement) {
+		NodeList children = idsElement.getChildNodes();
+		Set<Long> ids = new HashSet<>();
+		for (int i = 0; i < children.getLength(); i++) {
+			if (!(children.item(i) instanceof Element)) {
+				continue;
+			}
+			Element element = (Element)children.item(i);
+			if (element.getTagName().equals("id")) {
+				Long id = Long.valueOf(element.getTextContent());
+				ids.add(id);
+			}
+		}
+		return new IdMatcher(ids);
 	}
 
 

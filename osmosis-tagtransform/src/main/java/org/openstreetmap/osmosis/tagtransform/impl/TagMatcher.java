@@ -30,7 +30,7 @@ public class TagMatcher implements Matcher {
 
 
 	@Override
-	public Collection<Match> match(Map<String, String> tags, TTEntityType type, String uname, int uid) {
+	public Collection<Match> match(long id, Map<String, String> tags, TTEntityType type, String uname, int uid) {
 		List<Match> matches = new ArrayList<Match>();
 
 		// loop through the tags to find matches
