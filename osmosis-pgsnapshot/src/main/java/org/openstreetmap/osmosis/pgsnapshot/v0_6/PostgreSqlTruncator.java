@@ -3,6 +3,7 @@ package org.openstreetmap.osmosis.pgsnapshot.v0_6;
 
 import java.util.logging.Logger;
 
+import org.openstreetmap.osmosis.core.database.DatabaseLocker;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.task.common.RunnableTask;
@@ -33,7 +34,7 @@ public class PostgreSqlTruncator implements RunnableTask {
 	
 	private DatabaseContext dbCtx;
 	private SchemaVersionValidator schemaVersionValidator;
-	
+	private DatabaseLocker locker;
 	
 	/**
 	 * Creates a new instance.
@@ -45,7 +46,7 @@ public class PostgreSqlTruncator implements RunnableTask {
 	 */
 	public PostgreSqlTruncator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
 		dbCtx = new DatabaseContext(loginCredentials);
-		
+		this.locker = new DatabaseLocker(this.dbCtx.getJdbcTemplate());
 		schemaVersionValidator = new SchemaVersionValidator(dbCtx.getJdbcTemplate(), preferences);
 	}
 	
@@ -58,7 +59,7 @@ public class PostgreSqlTruncator implements RunnableTask {
 			schemaVersionValidator.validateVersion(PostgreSqlVersionConstants.SCHEMA_VERSION);
 			
 			dbCtx.beginTransaction();
-			
+			this.locker.lockDatabase(this.getClass().getSimpleName());
 			LOG.fine("Truncating tables.");
 			for (int i = 0; i < SQL_TABLE_NAMES.length; i++) {
 				if (dbCtx.doesTableExist(SQL_TABLE_NAMES[i])) {
@@ -77,6 +78,7 @@ public class PostgreSqlTruncator implements RunnableTask {
 			LOG.fine("Complete.");
 			
 		} finally {
+			this.locker.unlockDatabase();
 			dbCtx.close();
 		}
 	}

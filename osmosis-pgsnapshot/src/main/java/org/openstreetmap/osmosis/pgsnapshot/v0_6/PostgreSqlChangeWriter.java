@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
+import org.openstreetmap.osmosis.core.database.DatabaseLocker;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
@@ -44,7 +44,7 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	private long earliestTimestamp = 9999999999999L;
 	private long latestTimestamp = 0L;
 	private final Map<String, Integer> modifications;
-	private final AtomicInteger counter;
+	private final DatabaseLocker locker;
 
 	/**
 	 * Creates a new instance.
@@ -77,12 +77,12 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 		appliedChangeSets = new HashSet<>();
 		modifications = new HashMap<>();
 		initialized = false;
-		counter = new AtomicInteger();
-
+		locker = new DatabaseLocker(dbCtx.getJdbcTemplate());
 	}
 
 	private void initialize() {
 		if (!initialized) {
+			this.locker.lockDatabase(this.getClass().getSimpleName());
 			dbCtx.beginTransaction();
 
 			initialized = true;
@@ -153,6 +153,9 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 				modifications.getOrDefault(EntityType.Relation.name() + "-" + ChangeAction.Delete, 0),
                 appliedChangeSets.stream().map(id -> id + "").collect(Collectors.joining(",")),
 				FORMATTER.format(new Date(earliestTimestamp)), FORMATTER.format(new Date(latestTimestamp))));
+
+		// now that we are finished, unlock the database
+		this.locker.unlockDatabase();
 
 		dbCtx.commitTransaction();
 	}

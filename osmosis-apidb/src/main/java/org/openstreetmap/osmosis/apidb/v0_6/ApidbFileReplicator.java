@@ -10,6 +10,7 @@ import org.openstreetmap.osmosis.apidb.v0_6.impl.SystemTimeLoader;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.TimeDao;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.TransactionDao;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.TransactionManager;
+import org.openstreetmap.osmosis.core.database.DatabaseLocker;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
@@ -95,8 +96,13 @@ public class ApidbFileReplicator implements RunnableChangeSource {
 	 */
 	@Override
 	public void run() {
-        try (DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials)) {
+        try (DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials);
+			 DatabaseLocker locker = new DatabaseLocker(dbCtx.getJdbcTemplate())) {
+        	locker.lockDatabase(this.getClass().getSimpleName());
         	runImpl(dbCtx);
-        }
+        	locker.unlockDatabase();
+        } catch (final Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

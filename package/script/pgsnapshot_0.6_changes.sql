@@ -15,10 +15,7 @@ CREATE TABLE replication_changes (
     relations_deleted INT NOT NULL DEFAULT (0),
     changesets_applied BIGINT [] NOT NULL,
     earliest_timestamp TIMESTAMP without time zone NOT NULL,
-    latest_timestamp TIMESTAMP without time zone NOT NULL,
-    node_table_count BIGINT NOT NULL DEFAULT(0),
-    ways_table_count BIGINT NOT NULL DEFAULT(0),
-    relation_table_count BIGINT NOT NULL DEFAULT(0)
+    latest_timestamp TIMESTAMP without time zone NOT NULL
 );
 
 DROP TABLE IF EXISTS sql_changes;
@@ -41,32 +38,52 @@ CREATE TABLE state (
   id SERIAL,
   tstamp TIMESTAMP without time zone NOT NULL DEFAULT(NOW()),
   sequence_number BIGINT NOT NULL,
-  state_timestamp TIMESTAMP WITHOUT time zone NOT NULL
+  state_timestamp TIMESTAMP WITHOUT time zone NOT NULL,
+  disabled BOOLEAN NOT NULL DEFAULT(false)
 );
 
 DROP TABLE IF EXISTS locked;
 
 CREATE TABLE locked (
-  started TIMESTAMP WITHOUT time zone NOT NULL DEFAULT(NOW()) PRIMARY KEY,
+  id SERIAL,
+  started TIMESTAMP WITHOUT time zone NOT NULL DEFAULT(NOW()),
   process TEXT NOT NULL,
   source TEXT NOT NULL,
   location TEXT NOT NULL
 );
 
-CREATE OR REPLACE FUNCTION count_update() RETURNS trigger AS
-$BODY$
+CREATE OR REPLACE FUNCTION lock_database(new_process TEXT, new_source TEXT, new_location TEXT) RETURNS INT AS $$
+  DECLARE locked_id INT;
+  DECLARE current_id INT;
+  DECLARE current_process TEXT;
+  DECLARE current_source TEXT;
+  DECLARE current_location TEXT;
 BEGIN
-	UPDATE replication_changes
-		SET node_table_count = (SELECT COUNT(*) FROM nodes),
-			ways_table_count = (SELECT COUNT(*) FROM ways),
-			relation_table_count = (SELECT COUNT(*) FROM relations)
-		WHERE ID = new.id;
-	RETURN new;
-END
-$BODY$
-	LANGUAGE plpgsql VOLATILE;
+  SELECT id, process, source, location INTO current_id, current_process, current_source, current_location FROM locked LIMIT 1;
+  IF (CHAR_LENGTH(current_process) > 0) THEN
+    RAISE EXCEPTION 'Database is locked by another id {%}, process {%}, source {%}, location {%}', current_id, current_process, current_source, current_location;
+  ELSE
+    INSERT INTO locked (process, source, location) VALUES (new_process, new_source, new_location) RETURNING id INTO locked_id;
+    RETURN locked_id;
+  END IF;
+END;
+$$ LANGUAGE plpgsql VOLATILE;
 
-DROP TRIGGER IF EXISTS replication_counts_trigger ON replication_changes;
-CREATE TRIGGER replication_counts_trigger AFTER INSERT ON replication_changes
-FOR EACH ROW
-	EXECUTE PROCEDURE count_update();
+CREATE OR REPLACE FUNCTION unlock_database(locked_id INT) RETURNS BOOLEAN AS $$
+  DECLARE response BOOLEAN;
+  DECLARE exist_count INT;
+BEGIN
+  IF (locked_id = -1) THEN
+    DELETE FROM locked;
+    RETURN true;
+  ELSE
+    SELECT COUNT(*) INTO exist_count FROM locked WHERE id = locked_id;
+    IF (exist_count = 1) THEN
+      DELETE FROM locked WHERE id = locked_id;
+      RETURN true;
+    ELSE
+      RETURN false;
+    END IF;
+  END IF;
+END;
+$$ LANGUAGE plpgsql VOLATILE;
