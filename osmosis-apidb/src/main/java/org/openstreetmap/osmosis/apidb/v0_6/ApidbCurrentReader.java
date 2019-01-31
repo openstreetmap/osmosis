@@ -99,7 +99,6 @@ public class ApidbCurrentReader implements RunnableSource {
 				protected void doInTransactionWithoutResult(TransactionStatus arg0) {
 					locker.lockDatabase(this.getClass().getSimpleName());
 					runImpl(dbCtx);
-					locker.unlockDatabase();
 				} });
         } catch (final Exception e) {
         	throw new RuntimeException(e);

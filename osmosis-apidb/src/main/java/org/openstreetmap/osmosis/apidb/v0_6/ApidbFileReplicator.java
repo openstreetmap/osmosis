@@ -100,7 +100,6 @@ public class ApidbFileReplicator implements RunnableChangeSource {
 			 DatabaseLocker locker = new DatabaseLocker(dbCtx.getJdbcTemplate())) {
         	locker.lockDatabase(this.getClass().getSimpleName());
         	runImpl(dbCtx);
-        	locker.unlockDatabase();
         } catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
