@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -20,9 +21,26 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
  */
 public class DatabaseLocker implements AutoCloseable {
 
-    private Logger logger = Logger.getLogger(DatabaseLocker.class.getSimpleName());
+    private static Logger logger = Logger.getLogger(DatabaseLocker.class.getSimpleName());
     private final JdbcTemplate jdbc;
     private int lockedIdentifier = -1;
+
+    public static void fullUnlockDatabase(final JdbcTemplate jdbc) {
+        final int[] argumentTypes = new int[] {
+                Types.INTEGER
+        };
+        final SqlRowSet result = jdbc.query(new PreparedStatementCreatorFactory("SELECT unlock_database(?)",
+                        argumentTypes).newPreparedStatementCreator(Collections.singletonList(-1)),
+                new SqlRowSetResultSetExtractor());
+        if (result.next()) {
+            final boolean unlocked = result.getBoolean(1);
+            if (unlocked) {
+                logger.info("Unlocked database.");
+                return;
+            }
+        }
+        throw new RuntimeException("Failed to unlock the database");
+    }
 
     /**
      * Default Constructor.
@@ -70,7 +88,7 @@ public class DatabaseLocker implements AutoCloseable {
                         new SqlRowSetResultSetExtractor());
         if (result.next()) {
             this.lockedIdentifier = result.getInt(1);
-            this.logger.info(String.format("Locking database for process: %s from source: '%s', with lockedID: %d",
+            logger.info(String.format("Locking database for process: %s from source: '%s', with lockedID: %d",
                     process, source, this.lockedIdentifier));
         } else {
             throw new RuntimeException("Failed to lock the database.");
@@ -93,12 +111,16 @@ public class DatabaseLocker implements AutoCloseable {
             if (result.next()) {
                 final boolean unlocked = result.getBoolean(1);
                 if (unlocked) {
-                    this.logger.info(String.format("Unlocking database with locked ID: %d", this.lockedIdentifier));
+                    logger.info(String.format("Unlocking database with locked ID: %d", this.lockedIdentifier));
                     return;
                 }
             }
             throw new RuntimeException("Failed to unlock the database.");
         }
+    }
+
+    public void fullUnlockDatabase() {
+        fullUnlockDatabase(this.jdbc);
     }
 
     @Override
