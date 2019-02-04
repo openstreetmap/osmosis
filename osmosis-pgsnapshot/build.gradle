@@ -12,5 +12,6 @@ dependencies {
     compile group: 'org.postgresql', name: 'postgresql', version: dependencyVersionPostgreSql
     testCompile project(':osmosis-dataset')
     testCompile project(':osmosis-testutil')
-    testCompile project(':osmosis-xml')
+    // todo add to compile group
+    testCompile project(':osmosis-xml') 
 }
