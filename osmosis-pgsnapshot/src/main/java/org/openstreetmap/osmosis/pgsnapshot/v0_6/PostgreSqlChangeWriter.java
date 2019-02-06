@@ -77,7 +77,7 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 		appliedChangeSets = new HashSet<>();
 		modifications = new HashMap<>();
 		initialized = false;
-		locker = new DatabaseLocker(dbCtx.getJdbcTemplate());
+		locker = new DatabaseLocker(dbCtx.getDataSource());
 	}
 
 	private void initialize() {
@@ -154,9 +154,6 @@ public class PostgreSqlChangeWriter implements ChangeSink {
                 appliedChangeSets.stream().map(id -> id + "").collect(Collectors.joining(",")),
 				FORMATTER.format(new Date(earliestTimestamp)), FORMATTER.format(new Date(latestTimestamp))));
 
-		// now that we are finished, unlock the database
-		this.locker.unlockDatabase();
-
 		dbCtx.commitTransaction();
 	}
 
@@ -164,8 +161,10 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	 * {@inheritDoc}
 	 */
 	public void close() {
-		changeWriter.release();
+		// now that we are finished, unlock the database
+		this.locker.unlockDatabase();
 
+		changeWriter.release();
 		dbCtx.close();
 	}
 }

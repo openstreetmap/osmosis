@@ -19,7 +19,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 /**
  * A change sink writing to database tables. This aims to be suitable for running at regular
  * intervals with database overhead proportional to changeset size.
- * 
+ *
  * @author Brett Henderson
  */
 public class ApidbChangeWriter implements ChangeSink {
@@ -34,7 +34,7 @@ public class ApidbChangeWriter implements ChangeSink {
 
     /**
      * Creates a new instance.
-     * 
+     *
      * @param loginCredentials Contains all information required to connect to the database.
      * @param preferences Contains preferences configuring database behaviour.
      * @param populateCurrentTables If true, the current tables will be populated as well as history
@@ -50,7 +50,7 @@ public class ApidbChangeWriter implements ChangeSink {
 
         schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
         dbCtx = new DatabaseContext2(loginCredentials);
-        locker = new DatabaseLocker(dbCtx.getJdbcTemplate());
+        locker = new DatabaseLocker(dbCtx.getDataSource());
     }
 
     /**
@@ -85,7 +85,6 @@ public class ApidbChangeWriter implements ChangeSink {
      * {@inheritDoc}
      */
     public void complete() {
-        this.locker.unlockDatabase();
         changeWriter.complete();
     }
 
@@ -93,6 +92,7 @@ public class ApidbChangeWriter implements ChangeSink {
      * {@inheritDoc}
      */
     public void close() {
+        this.locker.unlockDatabase();
         changeWriter.close();
         dbCtx.close();
     }

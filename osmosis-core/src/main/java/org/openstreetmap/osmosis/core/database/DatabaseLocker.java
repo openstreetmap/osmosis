@@ -3,16 +3,14 @@ package org.openstreetmap.osmosis.core.database;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Logger;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
-import org.springframework.jdbc.core.SqlRowSetResultSetExtractor;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
+import javax.sql.DataSource;
 
 /**
  * A check against the database to see if it is locked.
@@ -22,43 +20,49 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 public class DatabaseLocker implements AutoCloseable {
 
     private static Logger logger = Logger.getLogger(DatabaseLocker.class.getSimpleName());
-    private final JdbcTemplate jdbc;
+    private final DataSource source;
     private boolean enabled = true;
     private int lockedIdentifier = -1;
 
     /**
      * Static function to fully unlock the database.
      *
-     * @param jdbc {@link JdbcTemplate} to execute the query
+     * @param source {@link DataSource} to execute the query
      */
-    public static void fullUnlockDatabase(final JdbcTemplate jdbc) {
-        final int[] argumentTypes = new int[] {
-                Types.INTEGER
-        };
-        final SqlRowSet result = jdbc.query(new PreparedStatementCreatorFactory("SELECT unlock_database(?)",
-                        argumentTypes).newPreparedStatementCreator(Collections.singletonList(-1)),
-                new SqlRowSetResultSetExtractor());
-        if (result.next()) {
-            final boolean unlocked = result.getBoolean(1);
-            if (unlocked) {
-                logger.info("Unlocked database.");
-                return;
+    public static void fullUnlockDatabase(final DataSource source) {
+        unlockDatabase(-1, source);
+    }
+
+    private static void unlockDatabase(final int identifier, final DataSource source) {
+        try (Connection connection = source.getConnection();
+                PreparedStatement statement = connection.prepareStatement("SELECT unlock_database(?)")) {
+            statement.setInt(1, identifier);
+            final ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                final boolean unlocked = result.getBoolean(1);
+                if (unlocked) {
+                    logger.info(String.format("Unlocked database using identifier %d.", identifier));
+                    return;
+                }
             }
+            throw new RuntimeException("Failed to unlock the database");
+        } catch (final SQLException e) {
+            throw new RuntimeException("Failed to unlock the database", e);
         }
-        throw new RuntimeException("Failed to unlock the database");
     }
 
     /**
      * Default Constructor.
      *
-     * @param jdbc The Spring JDBC template object
+     * @param source The DataSource for the connection
      */
-    public DatabaseLocker(final JdbcTemplate jdbc) {
-        this.jdbc = jdbc;
+    public DatabaseLocker(final DataSource source) {
+        this.source = source;
         // check to see if the function exists in the database and if it doesn't then throw a
         // warning on the log and don't try any locking
-        try {
-            this.jdbc.query("SELECT 'unlock_database'::regproc", new SqlRowSetResultSetExtractor());
+        try (Connection connection = source.getConnection();
+                Statement statement = connection.createStatement()) {
+            statement.executeQuery("SELECT 'unlock_database'::regproc");
         } catch (final Exception e) {
             logger.warning("Locking functions do not exist in database. Disabling locking.");
             this.enabled = false;
@@ -79,34 +83,27 @@ public class DatabaseLocker implements AutoCloseable {
      *
      * @param process
      *          The process that will lock the database. This would be something like "Extracts" or "Replication".
-     * @param source
+     * @param description
      *          The source of the process. This is basically a description for the process, like
      *          "Pipeline Extraction for Build X".
      */
-    public void lockDatabase(final String process, final String source) {
+    public void lockDatabase(final String process, final String description) {
         if (this.enabled) {
-            final int[] argumentTypes = new int[] {
-                    Types.VARCHAR, Types.VARCHAR, Types.VARCHAR
-            };
-            final List<String> params = new ArrayList<>();
-            params.add(process);
-            params.add(source);
-            try {
-                params.add(InetAddress.getLocalHost().getHostName());
-            } catch (final UnknownHostException e) {
-                throw new RuntimeException(e);
-            }
-
-            final SqlRowSet result = this.jdbc
-                    .query(new PreparedStatementCreatorFactory("SELECT lock_database(?, ?, ?)",
-                                    argumentTypes).newPreparedStatementCreator(params),
-                            new SqlRowSetResultSetExtractor());
-            if (result.next()) {
-                this.lockedIdentifier = result.getInt(1);
-                logger.info(String.format("Locking database for process: %s from source: '%s', with lockedID: %d",
-                        process, source, this.lockedIdentifier));
-            } else {
-                throw new RuntimeException("Failed to lock the database.");
+            try (Connection connection = source.getConnection();
+                    PreparedStatement statement = connection.prepareStatement("SELECT lock_database(?, ?, ?)")) {
+                statement.setString(1, process);
+                statement.setString(2, description);
+                statement.setString(3, InetAddress.getLocalHost().getHostName());
+                final ResultSet result = statement.executeQuery();
+                if (result.next()) {
+                    this.lockedIdentifier = result.getInt(1);
+                    logger.info(String.format("Locking database for process: %s from source: '%s', with lockedID: %d",
+                            process, description, this.lockedIdentifier));
+                } else {
+                    throw new RuntimeException("Failed to lock the database.");
+                }
+            } catch (final SQLException | UnknownHostException e) {
+                throw new RuntimeException("Failed to lock the database.", e);
             }
         }
     }
@@ -117,22 +114,7 @@ public class DatabaseLocker implements AutoCloseable {
     public void unlockDatabase() {
         if (this.enabled) {
             if (this.lockedIdentifier > 0) {
-                final int[] argumentTypes = new int[] {
-                        Types.INTEGER
-                };
-                final List<Integer> params = new ArrayList<>();
-                params.add(this.lockedIdentifier);
-
-                final SqlRowSet result = jdbc.query(new PreparedStatementCreatorFactory("SELECT unlock_database(?)",
-                        argumentTypes).newPreparedStatementCreator(params), new SqlRowSetResultSetExtractor());
-                if (result.next()) {
-                    final boolean unlocked = result.getBoolean(1);
-                    if (unlocked) {
-                        logger.info(String.format("Unlocking database with locked ID: %d", this.lockedIdentifier));
-                        return;
-                    }
-                }
-                throw new RuntimeException("Failed to unlock the database.");
+                unlockDatabase(this.lockedIdentifier, this.source);
             }
         }
     }
@@ -142,7 +124,7 @@ public class DatabaseLocker implements AutoCloseable {
      */
     public void fullUnlockDatabase() {
         if (this.enabled) {
-            fullUnlockDatabase(this.jdbc);
+            fullUnlockDatabase(this.source);
         }
     }
 

@@ -111,13 +111,12 @@ public class ApidbChangeReader implements RunnableChangeSource {
      */
     public void run() {
         try (DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials);
-			 DatabaseLocker locker = new DatabaseLocker(dbCtx.getJdbcTemplate())) {
+			 DatabaseLocker locker = new DatabaseLocker(dbCtx.getDataSource())) {
         	dbCtx.executeWithinTransaction(new TransactionCallbackWithoutResult() {
 				@Override
 				protected void doInTransactionWithoutResult(TransactionStatus arg0) {
 					locker.lockDatabase(this.getClass().getSimpleName());
 					runImpl(dbCtx);
-					locker.unlockDatabase();
 				} });
 
         } catch (final Exception e) {
