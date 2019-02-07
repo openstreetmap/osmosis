@@ -46,7 +46,7 @@ public class PostgreSqlTruncator implements RunnableTask {
 	 */
 	public PostgreSqlTruncator(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
 		dbCtx = new DatabaseContext(loginCredentials);
-		this.locker = new DatabaseLocker(this.dbCtx.getJdbcTemplate());
+		this.locker = new DatabaseLocker(this.dbCtx.getDataSource());
 		schemaVersionValidator = new SchemaVersionValidator(dbCtx.getJdbcTemplate(), preferences);
 	}
 	

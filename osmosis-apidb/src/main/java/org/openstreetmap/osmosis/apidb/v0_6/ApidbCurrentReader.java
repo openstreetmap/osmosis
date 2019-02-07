@@ -92,7 +92,7 @@ public class ApidbCurrentReader implements RunnableSource {
      */
     public void run() {
         try (DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials);
-			 DatabaseLocker locker = new DatabaseLocker(dbCtx.getJdbcTemplate())) {
+			 DatabaseLocker locker = new DatabaseLocker(dbCtx.getDataSource())) {
         	dbCtx.executeWithinTransaction(new TransactionCallbackWithoutResult() {
 
 				@Override

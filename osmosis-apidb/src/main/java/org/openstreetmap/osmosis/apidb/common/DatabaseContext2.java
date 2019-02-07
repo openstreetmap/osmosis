@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.dbcp.BasicDataSource;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
@@ -63,6 +65,15 @@ public class DatabaseContext2 implements AutoCloseable {
 			throw createUnknownDbTypeException();
         }
     }
+
+	/**
+	 * Retrieves the data source associated with this database context.
+	 *
+	 * @return {@link DataSource}
+	 */
+	public DataSource getDataSource() {
+    	return this.dataSource;
+	}
 
 
 	private OsmosisRuntimeException createUnknownDbTypeException() {
