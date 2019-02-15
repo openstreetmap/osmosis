@@ -87,7 +87,6 @@ configure(javaProjects) {
 	    archives sourcesJar
 	}
 
-	// Fat jar is used to deploy the spark job
 	shadowJar {
 		baseName = project.name
 		mergeServiceFiles()

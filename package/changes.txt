@@ -1,3 +1,16 @@
+0.48
+Added new schema changes sql that includes extra tables for locking, state management and logging.
+Added a new DatabaseLocker class that can be used by the plugins to standardize the way a database is locked. And make sure that all plugins that use a database lock the database correctly when running.
+Updated plugins pgsnapshot and apidb to use the new DatabaseLocker
+Added the ability to load a plugin manually so that you can run Osmosis as a library
+Added an OsmosisRunner and OsmosisTask class to support running Osmosis as a library instead of through a command line
+Removed the custom GZipInputStream class that was originally developed to address a bug in Java that has long since been fixed.
+Updated the PBFReader plugin to download a pbf from an http server given a URL, instead of having to download the file manually.
+Added different kinds of logging that can be used in the pgsnapshot plugin to track specifically what is being put in the database.
+Added functionality to allow for a custom server state file when using the replication plugin
+Consolidated the working directory get function that was used across multiple classes.
+Refactored the XMLReader to share code from a base class, and fix a potential bug with XML reading.
+
 0.47
 Build using Java 11 now that Java has moved to a 6 month release cycle with no (free) long term support.
 Use https for all replication URLs.
