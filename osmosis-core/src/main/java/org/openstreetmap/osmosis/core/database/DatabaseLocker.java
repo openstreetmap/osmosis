@@ -68,7 +68,6 @@ public class DatabaseLocker implements AutoCloseable {
             statement.executeQuery("SELECT 'lock_database'::regproc, 'unlock_database'::regproc");
         } catch (final Exception e) {
             logger.warning("Locking functions do not exist in database. Disabling locking.");
-            logger.warning(e.getMessage());
             this.enabled = false;
         }
     }
