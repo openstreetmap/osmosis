@@ -63,7 +63,7 @@ public class PostgreSqlCopyWriter implements Sink {
 		this.storeType = storeType;
 		this.keepInvalidWays = keepInvalidWays;
 		this.dbCtx = new DatabaseContext(loginCredentials);
-		this.locker = new DatabaseLocker(dbCtx.getDataSource());
+		this.locker = new DatabaseLocker(dbCtx.getDataSource(), true);
 		copyFileset = new TempCopyFileset();
 	}
 
