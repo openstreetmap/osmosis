@@ -77,7 +77,7 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 		appliedChangeSets = new HashSet<>();
 		modifications = new HashMap<>();
 		initialized = false;
-		locker = new DatabaseLocker(dbCtx.getDataSource());
+		locker = new DatabaseLocker(dbCtx.getDataSource(), true);
 	}
 
 	private void initialize() {

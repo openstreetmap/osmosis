@@ -97,7 +97,7 @@ public class ApidbFileReplicator implements RunnableChangeSource {
 	@Override
 	public void run() {
         try (DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials);
-			 DatabaseLocker locker = new DatabaseLocker(dbCtx.getDataSource())) {
+			 DatabaseLocker locker = new DatabaseLocker(dbCtx.getDataSource(), false)) {
         	locker.lockDatabase(this.getClass().getSimpleName());
         	runImpl(dbCtx);
         } catch (final Exception e) {

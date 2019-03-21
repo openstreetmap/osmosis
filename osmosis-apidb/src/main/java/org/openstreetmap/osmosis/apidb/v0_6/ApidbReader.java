@@ -97,7 +97,7 @@ public class ApidbReader implements RunnableSource {
      */
     public void run() {
         try (DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials);
-			 DatabaseLocker locker = new DatabaseLocker(dbCtx.getDataSource())) {
+			 DatabaseLocker locker = new DatabaseLocker(dbCtx.getDataSource(), false)) {
         	dbCtx.executeWithinTransaction(new TransactionCallbackWithoutResult() {
 				@Override
 				protected void doInTransactionWithoutResult(TransactionStatus arg0) {

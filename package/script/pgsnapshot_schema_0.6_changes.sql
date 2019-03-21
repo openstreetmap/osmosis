@@ -49,22 +49,28 @@ CREATE TABLE locked (
   started TIMESTAMP WITHOUT time zone NOT NULL DEFAULT(NOW()),
   process TEXT NOT NULL,
   source TEXT NOT NULL,
-  location TEXT NOT NULL
+  location TEXT NOT NULL,
+  write_lock BOOLEAN NOT NULL DEFAULT(false)
 );
 
-CREATE OR REPLACE FUNCTION lock_database(new_process TEXT, new_source TEXT, new_location TEXT) RETURNS INT AS $$
+DROP FUNCTION IF EXIST lock_database(TEXT, TEXT, TEXT);
+CREATE OR REPLACE FUNCTION lock_database(new_process TEXT, new_source TEXT, new_location TEXT, request_write_lock BOOLEAN) RETURNS INT AS $$
   DECLARE locked_id INT;
   DECLARE current_id INT;
   DECLARE current_process TEXT;
   DECLARE current_source TEXT;
   DECLARE current_location TEXT;
+  DECLARE current_write_lock BOOLEAN;
 BEGIN
-  SELECT id, process, source, location INTO current_id, current_process, current_source, current_location FROM locked LIMIT 1;
-  IF (CHAR_LENGTH(current_process) > 0) THEN
-    RAISE EXCEPTION 'Database is locked by another id {%}, process {%}, source {%}, location {%}', current_id, current_process, current_source, current_location;
-  ELSE
-    INSERT INTO locked (process, source, location) VALUES (new_process, new_source, new_location) RETURNING id INTO locked_id;
+
+  SELECT id, process, source, location, write_lock
+    INTO current_id, current_process, current_source, current_location, current_write_lock
+    FROM locked ORDER BY write_lock DESC NULLS LAST LIMIT 1;
+  IF (current_process IS NULL OR CHAR_LENGTH(current_process) = 0 OR (request_write_lock = FALSE AND current_write_lock = FALSE)) THEN
+    INSERT INTO locked (process, source, location, write_lock) VALUES (new_process, new_source, new_location, request_write_lock) RETURNING id INTO locked_id;
     RETURN locked_id;
+  ELSE
+    RAISE EXCEPTION 'Database is locked by another id {%}, process {%}, source {%}, location {%}', current_id, current_process, current_source, current_location;
   END IF;
 END;
 $$ LANGUAGE plpgsql VOLATILE;

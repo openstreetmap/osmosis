@@ -50,7 +50,7 @@ public class ApidbChangeWriter implements ChangeSink {
 
         schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
         dbCtx = new DatabaseContext2(loginCredentials);
-        locker = new DatabaseLocker(dbCtx.getDataSource());
+        locker = new DatabaseLocker(dbCtx.getDataSource(), true);
     }
 
     /**

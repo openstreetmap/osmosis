@@ -52,7 +52,7 @@ public class PostgreSqlDatasetReader implements RunnableDatasetSource, Dataset {
 	@Override
 	public void run() {
 		try (DatabaseContext context = new DatabaseContext(this.loginCredentials);
-			 DatabaseLocker locker = new DatabaseLocker(context.getDataSource())) {
+			 DatabaseLocker locker = new DatabaseLocker(context.getDataSource(), false)) {
 			locker.lockDatabase(this.getClass().getSimpleName());
 			datasetSink.process(this);
 		} catch (final Exception e) {

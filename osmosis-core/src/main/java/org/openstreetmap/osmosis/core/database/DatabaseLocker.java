@@ -21,6 +21,7 @@ public class DatabaseLocker implements AutoCloseable {
 
     private static Logger logger = Logger.getLogger(DatabaseLocker.class.getSimpleName());
     private final DataSource source;
+    private final boolean writeLock;
     private boolean enabled = true;
     private int lockedIdentifier = -1;
 
@@ -55,14 +56,16 @@ public class DatabaseLocker implements AutoCloseable {
      * Default Constructor.
      *
      * @param source The DataSource for the connection
+     * @param writeLock Whether the lock that is being requested is a write lock
      */
-    public DatabaseLocker(final DataSource source) {
+    public DatabaseLocker(final DataSource source, final boolean writeLock) {
         this.source = source;
+        this.writeLock = writeLock;
         // check to see if the function exists in the database and if it doesn't then throw a
         // warning on the log and don't try any locking
         try (Connection connection = source.getConnection();
                 Statement statement = connection.createStatement()) {
-            statement.executeQuery("SELECT 'unlock_database'::regproc");
+            statement.executeQuery("SELECT 'lock_database'::regproc, 'unlock_database'::regproc");
         } catch (final Exception e) {
             logger.warning("Locking functions do not exist in database. Disabling locking.");
             this.enabled = false;
@@ -89,18 +92,24 @@ public class DatabaseLocker implements AutoCloseable {
      */
     public void lockDatabase(final String process, final String description) {
         if (this.enabled) {
+            String lockName = "read";
+            if (this.writeLock) {
+                lockName = "write";
+            }
             try (Connection connection = source.getConnection();
-                    PreparedStatement statement = connection.prepareStatement("SELECT lock_database(?, ?, ?)")) {
+                    PreparedStatement statement = connection.prepareStatement("SELECT lock_database(?, ?, ?, ?)")) {
                 statement.setString(1, process);
                 statement.setString(2, description);
                 statement.setString(3, InetAddress.getLocalHost().getHostName());
+                statement.setBoolean(4, this.writeLock);
                 final ResultSet result = statement.executeQuery();
                 if (result.next()) {
                     this.lockedIdentifier = result.getInt(1);
-                    logger.info(String.format("Locking database for process: %s from source: '%s', with lockedID: %d",
-                            process, description, this.lockedIdentifier));
+                    logger.info(String.format("Obtained %s lock to database for process: %s "
+                                    + "from source: '%s', with lockedID: %d",
+                            lockName, process, description, this.lockedIdentifier));
                 } else {
-                    throw new RuntimeException("Failed to lock the database.");
+                    throw new RuntimeException("Failed to retrieve lock for the database.");
                 }
             } catch (final SQLException | UnknownHostException e) {
                 throw new RuntimeException("Failed to lock the database.", e);
