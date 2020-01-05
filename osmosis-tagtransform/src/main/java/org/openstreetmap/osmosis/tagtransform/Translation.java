@@ -10,6 +10,9 @@ public interface Translation {
 	Collection<Match> match(Map<String, String> tags, TTEntityType entityType, String uname, int uid);
 
 
+	Map<String, DataSource> getDataSources();
+
+
 	boolean isDropOnMatch();
 
 

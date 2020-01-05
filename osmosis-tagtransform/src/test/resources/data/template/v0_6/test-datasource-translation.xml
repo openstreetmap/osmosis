@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<translations>
+  <translation>
+      <name>Join postcodes</name>
+      <description>Join postcodes from CSV file</description>
+      <data>
+          <source source_id="postal_code" type="CSV" file="postal_code.csv" csvFormat="Excel" lookup="0" return="1" fallback="0"/>
+      </data>
+
+      <match type="relation" mode="or">
+          <tag match_id="pc" k="postal_code" v=".*"/>
+      </match>
+      <output>
+          <copy-all/>
+          <tag from_match="pc" value_datasource="postal_code" k="gsg:amount" v="{0}"/>
+      </output>
+  </translation>
+</translations>

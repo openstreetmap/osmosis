@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.common.TimestampFormat;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
@@ -137,7 +136,7 @@ public abstract class TransformHelper<T extends Task & Initializable> implements
 
 			Map<String, String> newTags = new HashMap<String, String>();
 			for (Output output : translation.getOutputs()) {
-				output.apply(tagMap, newTags, matches);
+				output.apply(tagMap, newTags, matches, translation.getDataSources());
 			}
 			tagMap = newTags;
 		}

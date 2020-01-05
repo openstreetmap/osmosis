@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
+import org.openstreetmap.osmosis.tagtransform.DataSource;
 import org.openstreetmap.osmosis.tagtransform.Match;
 import org.openstreetmap.osmosis.tagtransform.Matcher;
 import org.openstreetmap.osmosis.tagtransform.Output;
@@ -18,15 +18,17 @@ public class TranslationImpl implements Translation {
 	private String name;
 	private String description;
 	private Matcher matcher;
+	private Map<String, DataSource> dataSources;
 	private List<Output> output;
 	private Matcher finder;
 
 
-	public TranslationImpl(String name, String description, Matcher matcher, Matcher finder, List<Output> output) {
+	public TranslationImpl(String name, String description, Matcher matcher, Matcher finder, Map<String, DataSource> dataSources, List<Output> output) {
 		this.name = name;
 		this.description = description;
 		this.matcher = matcher;
 		this.finder = finder;
+                this.dataSources = dataSources;
 		this.output = output;
 	}
 
@@ -36,6 +38,10 @@ public class TranslationImpl implements Translation {
 		return output;
 	}
 
+	@Override
+	public Map<String, DataSource> getDataSources() {
+		return dataSources;
+	}
 
 	@Override
 	public boolean isDropOnMatch() {
