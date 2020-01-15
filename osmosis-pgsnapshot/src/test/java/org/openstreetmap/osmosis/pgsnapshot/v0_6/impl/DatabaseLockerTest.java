@@ -95,13 +95,18 @@ public class DatabaseLockerTest {
     @Test
     public void readWithReadLockTest() throws Exception {
         final DatabaseLocker[] lockers = new DatabaseLocker[10];
-        for (int i = 0; i < 10; i++) {
-            lockers[i] = new DatabaseLocker(this.dataSource(), false);
-            lockers[i].lockDatabase("ReadLock" + i, "READ_WITH_READ_LOCK_TEST_" + i);
-        }
-        // unlock all the databases
-        for (int i = 0; i < 10; i++) {
-            lockers[i].unlockDatabase();
+        try {
+            for (int i = 0; i < 10; i++) {
+                lockers[i] = new DatabaseLocker(this.dataSource(), false);
+                lockers[i].lockDatabase("ReadLock" + i, "READ_WITH_READ_LOCK_TEST_" + i);
+            }
+        } finally {
+            // unlock all the databases
+            for (int i = 0; i < 10; i++) {
+                if (lockers[i] != null) {
+                    lockers[i].unlockDatabase();
+                }
+            }
         }
     }
 
