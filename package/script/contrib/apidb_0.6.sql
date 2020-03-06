@@ -2756,7 +2756,6 @@ CREATE TABLE users (
     home_lat double precision,
     home_lon double precision,
     home_zoom smallint DEFAULT 3,
-    nearby integer DEFAULT 50,
     pass_salt character varying(255),
     image text,
     email_valid boolean DEFAULT false NOT NULL,
