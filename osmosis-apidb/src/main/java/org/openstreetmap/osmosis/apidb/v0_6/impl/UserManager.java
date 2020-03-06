@@ -25,8 +25,8 @@ public class UserManager implements Closeable {
 
     private static final String INSERT_SQL_USER = "INSERT INTO users (id, email, pass_crypt,"
             + " creation_time, display_name, data_public, description, home_lat, home_lon, home_zoom,"
-            + " nearby, pass_salt) VALUES (?, ?, '00000000000000000000000000000000', NOW(), ?, ?,"
-            + " ?, 0, 0, 3, 50, '00000000')";
+            + " pass_salt) VALUES (?, ?, '00000000000000000000000000000000', NOW(), ?, ?,"
+            + " ?, 0, 0, 3, '00000000')";
 
     private static final String UPDATE_SQL_USER = "UPDATE users SET display_name = ? WHERE id = ?";
 
