@@ -11,6 +11,9 @@ if [ ! -d "${gradleUserDir}" ]; then
     mkdir "${gradleUserDir}"
 fi
 
+# Set up running containers as background daemons
+docker-compose up -d
+
 # Launch our docker build container interactively and destroy on exit.
 runCommand="docker-compose run --rm build"
 if [ $# -eq 0 ]; then

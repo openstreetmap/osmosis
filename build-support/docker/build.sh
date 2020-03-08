@@ -11,3 +11,6 @@ cd "${scriptDir}"
 
 # Build the docker image for the database server used for running database task integration tests.
 ./db/build.sh
+
+# Build the docker image for the database server used for running database task integration tests.
+docker build db2

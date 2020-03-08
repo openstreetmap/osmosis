@@ -11,3 +11,12 @@ services:
       - ${projectDir}:/project
   db:
     image: openstreetmap.org/osmosis-db
+  db2:
+     build:
+       context: db2
+       dockerfile: Dockerfile
+     ports:
+       - "54321:5432"
+     environment:
+       POSTGRES_HOST_AUTH_METHOD: trust
+       POSTGRES_DB: api06_test
