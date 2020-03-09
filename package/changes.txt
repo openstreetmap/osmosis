@@ -11,6 +11,9 @@ Added functionality to allow for a custom server state file when using the repli
 Consolidated the working directory get function that was used across multiple classes.
 Refactored the XMLReader to share code from a base class, and fix a potential bug with XML reading.
 
+0.47.1
+Update APIDB schema to remove users.nearby column (PR #54)
+
 0.47
 Build using Java 11 now that Java has moved to a 6 month release cycle with no (free) long term support.
 Use https for all replication URLs.
