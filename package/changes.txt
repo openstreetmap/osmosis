@@ -1,3 +1,7 @@
+0.47.2
+Removed explicit dependency on xerces in favor of JDK version (PR #51)
+Added $gnupgUserDir to Docker setup (PR #56)
+
 0.47.1
 Update APIDB schema to remove users.nearby column (PR #54)
 
