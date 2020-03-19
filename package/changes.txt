@@ -11,6 +11,10 @@ Added functionality to allow for a custom server state file when using the repli
 Consolidated the working directory get function that was used across multiple classes.
 Refactored the XMLReader to share code from a base class, and fix a potential bug with XML reading.
 
+0.47.2
+Removed explicit dependency on xerces in favor of JDK version (PR #51)
+Added $gnupgUserDir to Docker setup (PR #56)
+
 0.47.1
 Update APIDB schema to remove users.nearby column (PR #54)
 
