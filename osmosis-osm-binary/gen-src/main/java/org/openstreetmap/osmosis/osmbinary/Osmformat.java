@@ -8,18 +8,30 @@ public final class Osmformat {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
   }
+
+  public static void registerAllExtensions(
+      com.google.protobuf.ExtensionRegistry registry) {
+    registerAllExtensions(
+        (com.google.protobuf.ExtensionRegistryLite) registry);
+  }
   public interface HeaderBlockOrBuilder extends
       // @@protoc_insertion_point(interface_extends:OSMPBF.HeaderBlock)
-      com.google.protobuf.MessageLiteOrBuilder {
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
+     * @return Whether the bbox field is set.
      */
     boolean hasBbox();
     /**
      * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
+     * @return The bbox.
      */
     org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox getBbox();
+    /**
+     * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
+     */
+    org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBoxOrBuilder getBboxOrBuilder();
 
     /**
      * <pre>
@@ -27,6 +39,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @return A list containing the requiredFeatures.
      */
     java.util.List<java.lang.String>
         getRequiredFeaturesList();
@@ -36,6 +49,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @return The count of requiredFeatures.
      */
     int getRequiredFeaturesCount();
     /**
@@ -44,6 +58,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @param index The index of the element to return.
+     * @return The requiredFeatures at the given index.
      */
     java.lang.String getRequiredFeatures(int index);
     /**
@@ -52,39 +68,50 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the requiredFeatures at the given index.
      */
     com.google.protobuf.ByteString
         getRequiredFeaturesBytes(int index);
 
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @return A list containing the optionalFeatures.
      */
     java.util.List<java.lang.String>
         getOptionalFeaturesList();
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @return The count of optionalFeatures.
      */
     int getOptionalFeaturesCount();
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @param index The index of the element to return.
+     * @return The optionalFeatures at the given index.
      */
     java.lang.String getOptionalFeatures(int index);
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the optionalFeatures at the given index.
      */
     com.google.protobuf.ByteString
         getOptionalFeaturesBytes(int index);
 
     /**
      * <code>optional string writingprogram = 16;</code>
+     * @return Whether the writingprogram field is set.
      */
     boolean hasWritingprogram();
     /**
      * <code>optional string writingprogram = 16;</code>
+     * @return The writingprogram.
      */
     java.lang.String getWritingprogram();
     /**
      * <code>optional string writingprogram = 16;</code>
+     * @return The bytes for writingprogram.
      */
     com.google.protobuf.ByteString
         getWritingprogramBytes();
@@ -95,6 +122,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string source = 17;</code>
+     * @return Whether the source field is set.
      */
     boolean hasSource();
     /**
@@ -103,6 +131,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string source = 17;</code>
+     * @return The source.
      */
     java.lang.String getSource();
     /**
@@ -111,6 +140,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string source = 17;</code>
+     * @return The bytes for source.
      */
     com.google.protobuf.ByteString
         getSourceBytes();
@@ -123,6 +153,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 osmosis_replication_timestamp = 32;</code>
+     * @return Whether the osmosisReplicationTimestamp field is set.
      */
     boolean hasOsmosisReplicationTimestamp();
     /**
@@ -133,6 +164,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 osmosis_replication_timestamp = 32;</code>
+     * @return The osmosisReplicationTimestamp.
      */
     long getOsmosisReplicationTimestamp();
 
@@ -142,6 +174,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 osmosis_replication_sequence_number = 33;</code>
+     * @return Whether the osmosisReplicationSequenceNumber field is set.
      */
     boolean hasOsmosisReplicationSequenceNumber();
     /**
@@ -150,6 +183,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 osmosis_replication_sequence_number = 33;</code>
+     * @return The osmosisReplicationSequenceNumber.
      */
     long getOsmosisReplicationSequenceNumber();
 
@@ -159,6 +193,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string osmosis_replication_base_url = 34;</code>
+     * @return Whether the osmosisReplicationBaseUrl field is set.
      */
     boolean hasOsmosisReplicationBaseUrl();
     /**
@@ -167,6 +202,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string osmosis_replication_base_url = 34;</code>
+     * @return The osmosisReplicationBaseUrl.
      */
     java.lang.String getOsmosisReplicationBaseUrl();
     /**
@@ -175,6 +211,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string osmosis_replication_base_url = 34;</code>
+     * @return The bytes for osmosisReplicationBaseUrl.
      */
     com.google.protobuf.ByteString
         getOsmosisReplicationBaseUrlBytes();
@@ -183,87 +220,186 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.HeaderBlock}
    */
   public  static final class HeaderBlock extends
-      com.google.protobuf.GeneratedMessageLite<
-          HeaderBlock, HeaderBlock.Builder> implements
+      com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:OSMPBF.HeaderBlock)
       HeaderBlockOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use HeaderBlock.newBuilder() to construct.
+    private HeaderBlock(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
     private HeaderBlock() {
-      requiredFeatures_ = com.google.protobuf.GeneratedMessageLite.emptyProtobufList();
-      optionalFeatures_ = com.google.protobuf.GeneratedMessageLite.emptyProtobufList();
+      requiredFeatures_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      optionalFeatures_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       writingprogram_ = "";
       source_ = "";
       osmosisReplicationBaseUrl_ = "";
     }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new HeaderBlock();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private HeaderBlock(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) != 0)) {
+                subBuilder = bbox_.toBuilder();
+              }
+              bbox_ = input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(bbox_);
+                bbox_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+            case 34: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+                requiredFeatures_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              requiredFeatures_.add(bs);
+              break;
+            }
+            case 42: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
+                optionalFeatures_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              optionalFeatures_.add(bs);
+              break;
+            }
+            case 130: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000002;
+              writingprogram_ = bs;
+              break;
+            }
+            case 138: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000004;
+              source_ = bs;
+              break;
+            }
+            case 256: {
+              bitField0_ |= 0x00000008;
+              osmosisReplicationTimestamp_ = input.readInt64();
+              break;
+            }
+            case 264: {
+              bitField0_ |= 0x00000010;
+              osmosisReplicationSequenceNumber_ = input.readInt64();
+              break;
+            }
+            case 274: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000020;
+              osmosisReplicationBaseUrl_ = bs;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) != 0)) {
+          requiredFeatures_ = requiredFeatures_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00000004) != 0)) {
+          optionalFeatures_ = optionalFeatures_.getUnmodifiableView();
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_HeaderBlock_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_HeaderBlock_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock.class, org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock.Builder.class);
+    }
+
     private int bitField0_;
     public static final int BBOX_FIELD_NUMBER = 1;
     private org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox bbox_;
     /**
      * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
+     * @return Whether the bbox field is set.
      */
-    @java.lang.Override
     public boolean hasBbox() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
+     * @return The bbox.
      */
-    @java.lang.Override
     public org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox getBbox() {
       return bbox_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.getDefaultInstance() : bbox_;
     }
     /**
      * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
      */
-    private void setBbox(org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      bbox_ = value;
-      bitField0_ |= 0x00000001;
-      }
-    /**
-     * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
-     */
-    private void setBbox(
-        org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.Builder builderForValue) {
-      bbox_ = builderForValue.build();
-      bitField0_ |= 0x00000001;
-    }
-    /**
-     * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
-     */
-    @java.lang.SuppressWarnings({"ReferenceEquality"})
-    private void mergeBbox(org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      if (bbox_ != null &&
-          bbox_ != org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.getDefaultInstance()) {
-        bbox_ =
-          org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.newBuilder(bbox_).mergeFrom(value).buildPartial();
-      } else {
-        bbox_ = value;
-      }
-      bitField0_ |= 0x00000001;
-    }
-    /**
-     * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
-     */
-    private void clearBbox() {  bbox_ = null;
-      bitField0_ = (bitField0_ & ~0x00000001);
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBoxOrBuilder getBboxOrBuilder() {
+      return bbox_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.getDefaultInstance() : bbox_;
     }
 
     public static final int REQUIRED_FEATURES_FIELD_NUMBER = 4;
-    private com.google.protobuf.Internal.ProtobufList<java.lang.String> requiredFeatures_;
+    private com.google.protobuf.LazyStringList requiredFeatures_;
     /**
      * <pre>
      * Additional tags to aid in parsing this dataset 
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @return A list containing the requiredFeatures.
      */
-    @java.lang.Override
-    public java.util.List<java.lang.String> getRequiredFeaturesList() {
+    public com.google.protobuf.ProtocolStringList
+        getRequiredFeaturesList() {
       return requiredFeatures_;
     }
     /**
@@ -272,8 +408,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @return The count of requiredFeatures.
      */
-    @java.lang.Override
     public int getRequiredFeaturesCount() {
       return requiredFeatures_.size();
     }
@@ -283,8 +419,9 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @param index The index of the element to return.
+     * @return The requiredFeatures at the given index.
      */
-    @java.lang.Override
     public java.lang.String getRequiredFeatures(int index) {
       return requiredFeatures_.get(index);
     }
@@ -294,241 +431,106 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated string required_features = 4;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the requiredFeatures at the given index.
      */
-    @java.lang.Override
     public com.google.protobuf.ByteString
         getRequiredFeaturesBytes(int index) {
-      return com.google.protobuf.ByteString.copyFromUtf8(
-          requiredFeatures_.get(index));
-    }
-    private void ensureRequiredFeaturesIsMutable() {
-      if (!requiredFeatures_.isModifiable()) {
-        requiredFeatures_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(requiredFeatures_);
-       }
-    }
-    /**
-     * <pre>
-     * Additional tags to aid in parsing this dataset 
-     * </pre>
-     *
-     * <code>repeated string required_features = 4;</code>
-     */
-    private void setRequiredFeatures(
-        int index, java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureRequiredFeaturesIsMutable();
-      requiredFeatures_.set(index, value);
-    }
-    /**
-     * <pre>
-     * Additional tags to aid in parsing this dataset 
-     * </pre>
-     *
-     * <code>repeated string required_features = 4;</code>
-     */
-    private void addRequiredFeatures(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureRequiredFeaturesIsMutable();
-      requiredFeatures_.add(value);
-    }
-    /**
-     * <pre>
-     * Additional tags to aid in parsing this dataset 
-     * </pre>
-     *
-     * <code>repeated string required_features = 4;</code>
-     */
-    private void addAllRequiredFeatures(
-        java.lang.Iterable<java.lang.String> values) {
-      ensureRequiredFeaturesIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, requiredFeatures_);
-    }
-    /**
-     * <pre>
-     * Additional tags to aid in parsing this dataset 
-     * </pre>
-     *
-     * <code>repeated string required_features = 4;</code>
-     */
-    private void clearRequiredFeatures() {
-      requiredFeatures_ = com.google.protobuf.GeneratedMessageLite.emptyProtobufList();
-    }
-    /**
-     * <pre>
-     * Additional tags to aid in parsing this dataset 
-     * </pre>
-     *
-     * <code>repeated string required_features = 4;</code>
-     */
-    private void addRequiredFeaturesBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureRequiredFeaturesIsMutable();
-      requiredFeatures_.add(value.toStringUtf8());
+      return requiredFeatures_.getByteString(index);
     }
 
     public static final int OPTIONAL_FEATURES_FIELD_NUMBER = 5;
-    private com.google.protobuf.Internal.ProtobufList<java.lang.String> optionalFeatures_;
+    private com.google.protobuf.LazyStringList optionalFeatures_;
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @return A list containing the optionalFeatures.
      */
-    @java.lang.Override
-    public java.util.List<java.lang.String> getOptionalFeaturesList() {
+    public com.google.protobuf.ProtocolStringList
+        getOptionalFeaturesList() {
       return optionalFeatures_;
     }
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @return The count of optionalFeatures.
      */
-    @java.lang.Override
     public int getOptionalFeaturesCount() {
       return optionalFeatures_.size();
     }
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @param index The index of the element to return.
+     * @return The optionalFeatures at the given index.
      */
-    @java.lang.Override
     public java.lang.String getOptionalFeatures(int index) {
       return optionalFeatures_.get(index);
     }
     /**
      * <code>repeated string optional_features = 5;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the optionalFeatures at the given index.
      */
-    @java.lang.Override
     public com.google.protobuf.ByteString
         getOptionalFeaturesBytes(int index) {
-      return com.google.protobuf.ByteString.copyFromUtf8(
-          optionalFeatures_.get(index));
-    }
-    private void ensureOptionalFeaturesIsMutable() {
-      if (!optionalFeatures_.isModifiable()) {
-        optionalFeatures_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(optionalFeatures_);
-       }
-    }
-    /**
-     * <code>repeated string optional_features = 5;</code>
-     */
-    private void setOptionalFeatures(
-        int index, java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureOptionalFeaturesIsMutable();
-      optionalFeatures_.set(index, value);
-    }
-    /**
-     * <code>repeated string optional_features = 5;</code>
-     */
-    private void addOptionalFeatures(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureOptionalFeaturesIsMutable();
-      optionalFeatures_.add(value);
-    }
-    /**
-     * <code>repeated string optional_features = 5;</code>
-     */
-    private void addAllOptionalFeatures(
-        java.lang.Iterable<java.lang.String> values) {
-      ensureOptionalFeaturesIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, optionalFeatures_);
-    }
-    /**
-     * <code>repeated string optional_features = 5;</code>
-     */
-    private void clearOptionalFeatures() {
-      optionalFeatures_ = com.google.protobuf.GeneratedMessageLite.emptyProtobufList();
-    }
-    /**
-     * <code>repeated string optional_features = 5;</code>
-     */
-    private void addOptionalFeaturesBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureOptionalFeaturesIsMutable();
-      optionalFeatures_.add(value.toStringUtf8());
+      return optionalFeatures_.getByteString(index);
     }
 
     public static final int WRITINGPROGRAM_FIELD_NUMBER = 16;
-    private java.lang.String writingprogram_;
+    private volatile java.lang.Object writingprogram_;
     /**
      * <code>optional string writingprogram = 16;</code>
+     * @return Whether the writingprogram field is set.
      */
-    @java.lang.Override
     public boolean hasWritingprogram() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <code>optional string writingprogram = 16;</code>
+     * @return The writingprogram.
      */
-    @java.lang.Override
     public java.lang.String getWritingprogram() {
-      return writingprogram_;
+      java.lang.Object ref = writingprogram_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          writingprogram_ = s;
+        }
+        return s;
+      }
     }
     /**
      * <code>optional string writingprogram = 16;</code>
+     * @return The bytes for writingprogram.
      */
-    @java.lang.Override
     public com.google.protobuf.ByteString
         getWritingprogramBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(writingprogram_);
-    }
-    /**
-     * <code>optional string writingprogram = 16;</code>
-     */
-    private void setWritingprogram(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-      writingprogram_ = value;
-    }
-    /**
-     * <code>optional string writingprogram = 16;</code>
-     */
-    private void clearWritingprogram() {
-      bitField0_ = (bitField0_ & ~0x00000002);
-      writingprogram_ = getDefaultInstance().getWritingprogram();
-    }
-    /**
-     * <code>optional string writingprogram = 16;</code>
-     */
-    private void setWritingprogramBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-      writingprogram_ = value.toStringUtf8();
+      java.lang.Object ref = writingprogram_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        writingprogram_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int SOURCE_FIELD_NUMBER = 17;
-    private java.lang.String source_;
+    private volatile java.lang.Object source_;
     /**
      * <pre>
      * From the bbox field.
      * </pre>
      *
      * <code>optional string source = 17;</code>
+     * @return Whether the source field is set.
      */
-    @java.lang.Override
     public boolean hasSource() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
      * <pre>
@@ -536,10 +538,21 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string source = 17;</code>
+     * @return The source.
      */
-    @java.lang.Override
     public java.lang.String getSource() {
-      return source_;
+      java.lang.Object ref = source_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          source_ = s;
+        }
+        return s;
+      }
     }
     /**
      * <pre>
@@ -547,52 +560,20 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string source = 17;</code>
+     * @return The bytes for source.
      */
-    @java.lang.Override
     public com.google.protobuf.ByteString
         getSourceBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(source_);
-    }
-    /**
-     * <pre>
-     * From the bbox field.
-     * </pre>
-     *
-     * <code>optional string source = 17;</code>
-     */
-    private void setSource(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-      source_ = value;
-    }
-    /**
-     * <pre>
-     * From the bbox field.
-     * </pre>
-     *
-     * <code>optional string source = 17;</code>
-     */
-    private void clearSource() {
-      bitField0_ = (bitField0_ & ~0x00000004);
-      source_ = getDefaultInstance().getSource();
-    }
-    /**
-     * <pre>
-     * From the bbox field.
-     * </pre>
-     *
-     * <code>optional string source = 17;</code>
-     */
-    private void setSourceBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-      source_ = value.toStringUtf8();
+      java.lang.Object ref = source_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        source_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int OSMOSIS_REPLICATION_TIMESTAMP_FIELD_NUMBER = 32;
@@ -605,10 +586,10 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 osmosis_replication_timestamp = 32;</code>
+     * @return Whether the osmosisReplicationTimestamp field is set.
      */
-    @java.lang.Override
     public boolean hasOsmosisReplicationTimestamp() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000008) != 0);
     }
     /**
      * <pre>
@@ -618,36 +599,10 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 osmosis_replication_timestamp = 32;</code>
+     * @return The osmosisReplicationTimestamp.
      */
-    @java.lang.Override
     public long getOsmosisReplicationTimestamp() {
       return osmosisReplicationTimestamp_;
-    }
-    /**
-     * <pre>
-     * replication timestamp, expressed in seconds since the epoch, 
-     * otherwise the same value as in the "timestamp=..." field
-     * in the state.txt file used by Osmosis
-     * </pre>
-     *
-     * <code>optional int64 osmosis_replication_timestamp = 32;</code>
-     */
-    private void setOsmosisReplicationTimestamp(long value) {
-      bitField0_ |= 0x00000008;
-      osmosisReplicationTimestamp_ = value;
-    }
-    /**
-     * <pre>
-     * replication timestamp, expressed in seconds since the epoch, 
-     * otherwise the same value as in the "timestamp=..." field
-     * in the state.txt file used by Osmosis
-     * </pre>
-     *
-     * <code>optional int64 osmosis_replication_timestamp = 32;</code>
-     */
-    private void clearOsmosisReplicationTimestamp() {
-      bitField0_ = (bitField0_ & ~0x00000008);
-      osmosisReplicationTimestamp_ = 0L;
     }
 
     public static final int OSMOSIS_REPLICATION_SEQUENCE_NUMBER_FIELD_NUMBER = 33;
@@ -658,10 +613,10 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 osmosis_replication_sequence_number = 33;</code>
+     * @return Whether the osmosisReplicationSequenceNumber field is set.
      */
-    @java.lang.Override
     public boolean hasOsmosisReplicationSequenceNumber() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
+      return ((bitField0_ & 0x00000010) != 0);
     }
     /**
      * <pre>
@@ -669,46 +624,24 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 osmosis_replication_sequence_number = 33;</code>
+     * @return The osmosisReplicationSequenceNumber.
      */
-    @java.lang.Override
     public long getOsmosisReplicationSequenceNumber() {
       return osmosisReplicationSequenceNumber_;
     }
-    /**
-     * <pre>
-     * replication sequence number (sequenceNumber in state.txt)
-     * </pre>
-     *
-     * <code>optional int64 osmosis_replication_sequence_number = 33;</code>
-     */
-    private void setOsmosisReplicationSequenceNumber(long value) {
-      bitField0_ |= 0x00000010;
-      osmosisReplicationSequenceNumber_ = value;
-    }
-    /**
-     * <pre>
-     * replication sequence number (sequenceNumber in state.txt)
-     * </pre>
-     *
-     * <code>optional int64 osmosis_replication_sequence_number = 33;</code>
-     */
-    private void clearOsmosisReplicationSequenceNumber() {
-      bitField0_ = (bitField0_ & ~0x00000010);
-      osmosisReplicationSequenceNumber_ = 0L;
-    }
 
     public static final int OSMOSIS_REPLICATION_BASE_URL_FIELD_NUMBER = 34;
-    private java.lang.String osmosisReplicationBaseUrl_;
+    private volatile java.lang.Object osmosisReplicationBaseUrl_;
     /**
      * <pre>
      * replication base URL (from Osmosis' configuration.txt file)
      * </pre>
      *
      * <code>optional string osmosis_replication_base_url = 34;</code>
+     * @return Whether the osmosisReplicationBaseUrl field is set.
      */
-    @java.lang.Override
     public boolean hasOsmosisReplicationBaseUrl() {
-      return ((bitField0_ & 0x00000020) == 0x00000020);
+      return ((bitField0_ & 0x00000020) != 0);
     }
     /**
      * <pre>
@@ -716,10 +649,21 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string osmosis_replication_base_url = 34;</code>
+     * @return The osmosisReplicationBaseUrl.
      */
-    @java.lang.Override
     public java.lang.String getOsmosisReplicationBaseUrl() {
-      return osmosisReplicationBaseUrl_;
+      java.lang.Object ref = osmosisReplicationBaseUrl_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          osmosisReplicationBaseUrl_ = s;
+        }
+        return s;
+      }
     }
     /**
      * <pre>
@@ -727,99 +671,83 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional string osmosis_replication_base_url = 34;</code>
+     * @return The bytes for osmosisReplicationBaseUrl.
      */
-    @java.lang.Override
     public com.google.protobuf.ByteString
         getOsmosisReplicationBaseUrlBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(osmosisReplicationBaseUrl_);
+      java.lang.Object ref = osmosisReplicationBaseUrl_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        osmosisReplicationBaseUrl_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
-    /**
-     * <pre>
-     * replication base URL (from Osmosis' configuration.txt file)
-     * </pre>
-     *
-     * <code>optional string osmosis_replication_base_url = 34;</code>
-     */
-    private void setOsmosisReplicationBaseUrl(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000020;
-      osmosisReplicationBaseUrl_ = value;
-    }
-    /**
-     * <pre>
-     * replication base URL (from Osmosis' configuration.txt file)
-     * </pre>
-     *
-     * <code>optional string osmosis_replication_base_url = 34;</code>
-     */
-    private void clearOsmosisReplicationBaseUrl() {
-      bitField0_ = (bitField0_ & ~0x00000020);
-      osmosisReplicationBaseUrl_ = getDefaultInstance().getOsmosisReplicationBaseUrl();
-    }
-    /**
-     * <pre>
-     * replication base URL (from Osmosis' configuration.txt file)
-     * </pre>
-     *
-     * <code>optional string osmosis_replication_base_url = 34;</code>
-     */
-    private void setOsmosisReplicationBaseUrlBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000020;
-      osmosisReplicationBaseUrl_ = value.toStringUtf8();
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (hasBbox()) {
+        if (!getBbox().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         output.writeMessage(1, getBbox());
       }
       for (int i = 0; i < requiredFeatures_.size(); i++) {
-        output.writeString(4, requiredFeatures_.get(i));
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, requiredFeatures_.getRaw(i));
       }
       for (int i = 0; i < optionalFeatures_.size(); i++) {
-        output.writeString(5, optionalFeatures_.get(i));
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 5, optionalFeatures_.getRaw(i));
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeString(16, getWritingprogram());
+      if (((bitField0_ & 0x00000002) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 16, writingprogram_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeString(17, getSource());
+      if (((bitField0_ & 0x00000004) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 17, source_);
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if (((bitField0_ & 0x00000008) != 0)) {
         output.writeInt64(32, osmosisReplicationTimestamp_);
       }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+      if (((bitField0_ & 0x00000010) != 0)) {
         output.writeInt64(33, osmosisReplicationSequenceNumber_);
       }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        output.writeString(34, getOsmosisReplicationBaseUrl());
+      if (((bitField0_ & 0x00000020) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 34, osmosisReplicationBaseUrl_);
       }
       unknownFields.writeTo(output);
     }
 
     @java.lang.Override
     public int getSerializedSize() {
-      int size = memoizedSerializedSize;
+      int size = memoizedSize;
       if (size != -1) return size;
 
       size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, getBbox());
       }
       {
         int dataSize = 0;
         for (int i = 0; i < requiredFeatures_.size(); i++) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeStringSizeNoTag(requiredFeatures_.get(i));
+          dataSize += computeStringSizeNoTag(requiredFeatures_.getRaw(i));
         }
         size += dataSize;
         size += 1 * getRequiredFeaturesList().size();
@@ -827,191 +755,608 @@ public final class Osmformat {
       {
         int dataSize = 0;
         for (int i = 0; i < optionalFeatures_.size(); i++) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeStringSizeNoTag(optionalFeatures_.get(i));
+          dataSize += computeStringSizeNoTag(optionalFeatures_.getRaw(i));
         }
         size += dataSize;
         size += 1 * getOptionalFeaturesList().size();
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(16, getWritingprogram());
+      if (((bitField0_ & 0x00000002) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(16, writingprogram_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(17, getSource());
+      if (((bitField0_ & 0x00000004) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(17, source_);
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if (((bitField0_ & 0x00000008) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(32, osmosisReplicationTimestamp_);
       }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+      if (((bitField0_ & 0x00000010) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(33, osmosisReplicationSequenceNumber_);
       }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeStringSize(34, getOsmosisReplicationBaseUrl());
+      if (((bitField0_ & 0x00000020) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(34, osmosisReplicationBaseUrl_);
       }
       size += unknownFields.getSerializedSize();
-      memoizedSerializedSize = size;
+      memoizedSize = size;
       return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock)) {
+        return super.equals(obj);
+      }
+      org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock other = (org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock) obj;
+
+      if (hasBbox() != other.hasBbox()) return false;
+      if (hasBbox()) {
+        if (!getBbox()
+            .equals(other.getBbox())) return false;
+      }
+      if (!getRequiredFeaturesList()
+          .equals(other.getRequiredFeaturesList())) return false;
+      if (!getOptionalFeaturesList()
+          .equals(other.getOptionalFeaturesList())) return false;
+      if (hasWritingprogram() != other.hasWritingprogram()) return false;
+      if (hasWritingprogram()) {
+        if (!getWritingprogram()
+            .equals(other.getWritingprogram())) return false;
+      }
+      if (hasSource() != other.hasSource()) return false;
+      if (hasSource()) {
+        if (!getSource()
+            .equals(other.getSource())) return false;
+      }
+      if (hasOsmosisReplicationTimestamp() != other.hasOsmosisReplicationTimestamp()) return false;
+      if (hasOsmosisReplicationTimestamp()) {
+        if (getOsmosisReplicationTimestamp()
+            != other.getOsmosisReplicationTimestamp()) return false;
+      }
+      if (hasOsmosisReplicationSequenceNumber() != other.hasOsmosisReplicationSequenceNumber()) return false;
+      if (hasOsmosisReplicationSequenceNumber()) {
+        if (getOsmosisReplicationSequenceNumber()
+            != other.getOsmosisReplicationSequenceNumber()) return false;
+      }
+      if (hasOsmosisReplicationBaseUrl() != other.hasOsmosisReplicationBaseUrl()) return false;
+      if (hasOsmosisReplicationBaseUrl()) {
+        if (!getOsmosisReplicationBaseUrl()
+            .equals(other.getOsmosisReplicationBaseUrl())) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasBbox()) {
+        hash = (37 * hash) + BBOX_FIELD_NUMBER;
+        hash = (53 * hash) + getBbox().hashCode();
+      }
+      if (getRequiredFeaturesCount() > 0) {
+        hash = (37 * hash) + REQUIRED_FEATURES_FIELD_NUMBER;
+        hash = (53 * hash) + getRequiredFeaturesList().hashCode();
+      }
+      if (getOptionalFeaturesCount() > 0) {
+        hash = (37 * hash) + OPTIONAL_FEATURES_FIELD_NUMBER;
+        hash = (53 * hash) + getOptionalFeaturesList().hashCode();
+      }
+      if (hasWritingprogram()) {
+        hash = (37 * hash) + WRITINGPROGRAM_FIELD_NUMBER;
+        hash = (53 * hash) + getWritingprogram().hashCode();
+      }
+      if (hasSource()) {
+        hash = (37 * hash) + SOURCE_FIELD_NUMBER;
+        hash = (53 * hash) + getSource().hashCode();
+      }
+      if (hasOsmosisReplicationTimestamp()) {
+        hash = (37 * hash) + OSMOSIS_REPLICATION_TIMESTAMP_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getOsmosisReplicationTimestamp());
+      }
+      if (hasOsmosisReplicationSequenceNumber()) {
+        hash = (37 * hash) + OSMOSIS_REPLICATION_SEQUENCE_NUMBER_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getOsmosisReplicationSequenceNumber());
+      }
+      if (hasOsmosisReplicationBaseUrl()) {
+        hash = (37 * hash) + OSMOSIS_REPLICATION_BASE_URL_FIELD_NUMBER;
+        hash = (53 * hash) + getOsmosisReplicationBaseUrl().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
-      return (Builder) DEFAULT_INSTANCE.createBuilder();
+      return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock prototype) {
-      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * Protobuf type {@code OSMPBF.HeaderBlock}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock, Builder> implements
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:OSMPBF.HeaderBlock)
         org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlockOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_HeaderBlock_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_HeaderBlock_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock.class, org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock.Builder.class);
+      }
+
       // Construct using org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getBboxFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (bboxBuilder_ == null) {
+          bbox_ = null;
+        } else {
+          bboxBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        requiredFeatures_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        optionalFeatures_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        writingprogram_ = "";
+        bitField0_ = (bitField0_ & ~0x00000008);
+        source_ = "";
+        bitField0_ = (bitField0_ & ~0x00000010);
+        osmosisReplicationTimestamp_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000020);
+        osmosisReplicationSequenceNumber_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000040);
+        osmosisReplicationBaseUrl_ = "";
+        bitField0_ = (bitField0_ & ~0x00000080);
+        return this;
+      }
 
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_HeaderBlock_descriptor;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock getDefaultInstanceForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock build() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock buildPartial() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock result = new org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          if (bboxBuilder_ == null) {
+            result.bbox_ = bbox_;
+          } else {
+            result.bbox_ = bboxBuilder_.build();
+          }
+          to_bitField0_ |= 0x00000001;
+        }
+        if (((bitField0_ & 0x00000002) != 0)) {
+          requiredFeatures_ = requiredFeatures_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.requiredFeatures_ = requiredFeatures_;
+        if (((bitField0_ & 0x00000004) != 0)) {
+          optionalFeatures_ = optionalFeatures_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.optionalFeatures_ = optionalFeatures_;
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.writingprogram_ = writingprogram_;
+        if (((from_bitField0_ & 0x00000010) != 0)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.source_ = source_;
+        if (((from_bitField0_ & 0x00000020) != 0)) {
+          result.osmosisReplicationTimestamp_ = osmosisReplicationTimestamp_;
+          to_bitField0_ |= 0x00000008;
+        }
+        if (((from_bitField0_ & 0x00000040) != 0)) {
+          result.osmosisReplicationSequenceNumber_ = osmosisReplicationSequenceNumber_;
+          to_bitField0_ |= 0x00000010;
+        }
+        if (((from_bitField0_ & 0x00000080) != 0)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.osmosisReplicationBaseUrl_ = osmosisReplicationBaseUrl_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock) {
+          return mergeFrom((org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock other) {
+        if (other == org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock.getDefaultInstance()) return this;
+        if (other.hasBbox()) {
+          mergeBbox(other.getBbox());
+        }
+        if (!other.requiredFeatures_.isEmpty()) {
+          if (requiredFeatures_.isEmpty()) {
+            requiredFeatures_ = other.requiredFeatures_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureRequiredFeaturesIsMutable();
+            requiredFeatures_.addAll(other.requiredFeatures_);
+          }
+          onChanged();
+        }
+        if (!other.optionalFeatures_.isEmpty()) {
+          if (optionalFeatures_.isEmpty()) {
+            optionalFeatures_ = other.optionalFeatures_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureOptionalFeaturesIsMutable();
+            optionalFeatures_.addAll(other.optionalFeatures_);
+          }
+          onChanged();
+        }
+        if (other.hasWritingprogram()) {
+          bitField0_ |= 0x00000008;
+          writingprogram_ = other.writingprogram_;
+          onChanged();
+        }
+        if (other.hasSource()) {
+          bitField0_ |= 0x00000010;
+          source_ = other.source_;
+          onChanged();
+        }
+        if (other.hasOsmosisReplicationTimestamp()) {
+          setOsmosisReplicationTimestamp(other.getOsmosisReplicationTimestamp());
+        }
+        if (other.hasOsmosisReplicationSequenceNumber()) {
+          setOsmosisReplicationSequenceNumber(other.getOsmosisReplicationSequenceNumber());
+        }
+        if (other.hasOsmosisReplicationBaseUrl()) {
+          bitField0_ |= 0x00000080;
+          osmosisReplicationBaseUrl_ = other.osmosisReplicationBaseUrl_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        if (hasBbox()) {
+          if (!getBbox().isInitialized()) {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox bbox_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox, org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBoxOrBuilder> bboxBuilder_;
       /**
        * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
+       * @return Whether the bbox field is set.
        */
-      @java.lang.Override
       public boolean hasBbox() {
-        return instance.hasBbox();
+        return ((bitField0_ & 0x00000001) != 0);
       }
       /**
        * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
+       * @return The bbox.
        */
-      @java.lang.Override
       public org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox getBbox() {
-        return instance.getBbox();
+        if (bboxBuilder_ == null) {
+          return bbox_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.getDefaultInstance() : bbox_;
+        } else {
+          return bboxBuilder_.getMessage();
+        }
       }
       /**
        * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
        */
       public Builder setBbox(org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox value) {
-        copyOnWrite();
-        instance.setBbox(value);
-        return this;
+        if (bboxBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          bbox_ = value;
+          onChanged();
+        } else {
+          bboxBuilder_.setMessage(value);
         }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
       /**
        * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
        */
       public Builder setBbox(
           org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.Builder builderForValue) {
-        copyOnWrite();
-        instance.setBbox(builderForValue);
+        if (bboxBuilder_ == null) {
+          bbox_ = builderForValue.build();
+          onChanged();
+        } else {
+          bboxBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
         return this;
       }
       /**
        * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
        */
       public Builder mergeBbox(org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox value) {
-        copyOnWrite();
-        instance.mergeBbox(value);
+        if (bboxBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0) &&
+              bbox_ != null &&
+              bbox_ != org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.getDefaultInstance()) {
+            bbox_ =
+              org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.newBuilder(bbox_).mergeFrom(value).buildPartial();
+          } else {
+            bbox_ = value;
+          }
+          onChanged();
+        } else {
+          bboxBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
         return this;
       }
       /**
        * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
        */
-      public Builder clearBbox() {  copyOnWrite();
-        instance.clearBbox();
+      public Builder clearBbox() {
+        if (bboxBuilder_ == null) {
+          bbox_ = null;
+          onChanged();
+        } else {
+          bboxBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
+      /**
+       * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.Builder getBboxBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getBboxFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBoxOrBuilder getBboxOrBuilder() {
+        if (bboxBuilder_ != null) {
+          return bboxBuilder_.getMessageOrBuilder();
+        } else {
+          return bbox_ == null ?
+              org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.getDefaultInstance() : bbox_;
+        }
+      }
+      /**
+       * <code>optional .OSMPBF.HeaderBBox bbox = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox, org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBoxOrBuilder> 
+          getBboxFieldBuilder() {
+        if (bboxBuilder_ == null) {
+          bboxBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox, org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBoxOrBuilder>(
+                  getBbox(),
+                  getParentForChildren(),
+                  isClean());
+          bbox_ = null;
+        }
+        return bboxBuilder_;
+      }
 
+      private com.google.protobuf.LazyStringList requiredFeatures_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureRequiredFeaturesIsMutable() {
+        if (!((bitField0_ & 0x00000002) != 0)) {
+          requiredFeatures_ = new com.google.protobuf.LazyStringArrayList(requiredFeatures_);
+          bitField0_ |= 0x00000002;
+         }
+      }
       /**
        * <pre>
        * Additional tags to aid in parsing this dataset 
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @return A list containing the requiredFeatures.
        */
-      @java.lang.Override
-      public java.util.List<java.lang.String>
+      public com.google.protobuf.ProtocolStringList
           getRequiredFeaturesList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getRequiredFeaturesList());
+        return requiredFeatures_.getUnmodifiableView();
       }
       /**
        * <pre>
@@ -1019,10 +1364,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @return The count of requiredFeatures.
        */
-      @java.lang.Override
       public int getRequiredFeaturesCount() {
-        return instance.getRequiredFeaturesCount();
+        return requiredFeatures_.size();
       }
       /**
        * <pre>
@@ -1030,10 +1375,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @param index The index of the element to return.
+       * @return The requiredFeatures at the given index.
        */
-      @java.lang.Override
       public java.lang.String getRequiredFeatures(int index) {
-        return instance.getRequiredFeatures(index);
+        return requiredFeatures_.get(index);
       }
       /**
        * <pre>
@@ -1041,11 +1387,12 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the requiredFeatures at the given index.
        */
-      @java.lang.Override
       public com.google.protobuf.ByteString
           getRequiredFeaturesBytes(int index) {
-        return instance.getRequiredFeaturesBytes(index);
+        return requiredFeatures_.getByteString(index);
       }
       /**
        * <pre>
@@ -1053,11 +1400,18 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @param index The index to set the value at.
+       * @param value The requiredFeatures to set.
+       * @return This builder for chaining.
        */
       public Builder setRequiredFeatures(
           int index, java.lang.String value) {
-        copyOnWrite();
-        instance.setRequiredFeatures(index, value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureRequiredFeaturesIsMutable();
+        requiredFeatures_.set(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -1066,11 +1420,17 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @param value The requiredFeatures to add.
+       * @return This builder for chaining.
        */
       public Builder addRequiredFeatures(
           java.lang.String value) {
-        copyOnWrite();
-        instance.addRequiredFeatures(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureRequiredFeaturesIsMutable();
+        requiredFeatures_.add(value);
+        onChanged();
         return this;
       }
       /**
@@ -1079,11 +1439,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @param values The requiredFeatures to add.
+       * @return This builder for chaining.
        */
       public Builder addAllRequiredFeatures(
           java.lang.Iterable<java.lang.String> values) {
-        copyOnWrite();
-        instance.addAllRequiredFeatures(values);
+        ensureRequiredFeaturesIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, requiredFeatures_);
+        onChanged();
         return this;
       }
       /**
@@ -1092,10 +1456,12 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @return This builder for chaining.
        */
       public Builder clearRequiredFeatures() {
-        copyOnWrite();
-        instance.clearRequiredFeatures();
+        requiredFeatures_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
         return this;
       }
       /**
@@ -1104,149 +1470,224 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated string required_features = 4;</code>
+       * @param value The bytes of the requiredFeatures to add.
+       * @return This builder for chaining.
        */
       public Builder addRequiredFeaturesBytes(
           com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.addRequiredFeaturesBytes(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureRequiredFeaturesIsMutable();
+        requiredFeatures_.add(value);
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.LazyStringList optionalFeatures_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureOptionalFeaturesIsMutable() {
+        if (!((bitField0_ & 0x00000004) != 0)) {
+          optionalFeatures_ = new com.google.protobuf.LazyStringArrayList(optionalFeatures_);
+          bitField0_ |= 0x00000004;
+         }
+      }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @return A list containing the optionalFeatures.
        */
-      @java.lang.Override
-      public java.util.List<java.lang.String>
+      public com.google.protobuf.ProtocolStringList
           getOptionalFeaturesList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getOptionalFeaturesList());
+        return optionalFeatures_.getUnmodifiableView();
       }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @return The count of optionalFeatures.
        */
-      @java.lang.Override
       public int getOptionalFeaturesCount() {
-        return instance.getOptionalFeaturesCount();
+        return optionalFeatures_.size();
       }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @param index The index of the element to return.
+       * @return The optionalFeatures at the given index.
        */
-      @java.lang.Override
       public java.lang.String getOptionalFeatures(int index) {
-        return instance.getOptionalFeatures(index);
+        return optionalFeatures_.get(index);
       }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the optionalFeatures at the given index.
        */
-      @java.lang.Override
       public com.google.protobuf.ByteString
           getOptionalFeaturesBytes(int index) {
-        return instance.getOptionalFeaturesBytes(index);
+        return optionalFeatures_.getByteString(index);
       }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @param index The index to set the value at.
+       * @param value The optionalFeatures to set.
+       * @return This builder for chaining.
        */
       public Builder setOptionalFeatures(
           int index, java.lang.String value) {
-        copyOnWrite();
-        instance.setOptionalFeatures(index, value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureOptionalFeaturesIsMutable();
+        optionalFeatures_.set(index, value);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @param value The optionalFeatures to add.
+       * @return This builder for chaining.
        */
       public Builder addOptionalFeatures(
           java.lang.String value) {
-        copyOnWrite();
-        instance.addOptionalFeatures(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureOptionalFeaturesIsMutable();
+        optionalFeatures_.add(value);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @param values The optionalFeatures to add.
+       * @return This builder for chaining.
        */
       public Builder addAllOptionalFeatures(
           java.lang.Iterable<java.lang.String> values) {
-        copyOnWrite();
-        instance.addAllOptionalFeatures(values);
+        ensureOptionalFeaturesIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, optionalFeatures_);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @return This builder for chaining.
        */
       public Builder clearOptionalFeatures() {
-        copyOnWrite();
-        instance.clearOptionalFeatures();
+        optionalFeatures_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated string optional_features = 5;</code>
+       * @param value The bytes of the optionalFeatures to add.
+       * @return This builder for chaining.
        */
       public Builder addOptionalFeaturesBytes(
           com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.addOptionalFeaturesBytes(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureOptionalFeaturesIsMutable();
+        optionalFeatures_.add(value);
+        onChanged();
         return this;
       }
 
+      private java.lang.Object writingprogram_ = "";
       /**
        * <code>optional string writingprogram = 16;</code>
+       * @return Whether the writingprogram field is set.
        */
-      @java.lang.Override
       public boolean hasWritingprogram() {
-        return instance.hasWritingprogram();
+        return ((bitField0_ & 0x00000008) != 0);
       }
       /**
        * <code>optional string writingprogram = 16;</code>
+       * @return The writingprogram.
        */
-      @java.lang.Override
       public java.lang.String getWritingprogram() {
-        return instance.getWritingprogram();
+        java.lang.Object ref = writingprogram_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            writingprogram_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <code>optional string writingprogram = 16;</code>
+       * @return The bytes for writingprogram.
        */
-      @java.lang.Override
       public com.google.protobuf.ByteString
           getWritingprogramBytes() {
-        return instance.getWritingprogramBytes();
+        java.lang.Object ref = writingprogram_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          writingprogram_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>optional string writingprogram = 16;</code>
+       * @param value The writingprogram to set.
+       * @return This builder for chaining.
        */
       public Builder setWritingprogram(
           java.lang.String value) {
-        copyOnWrite();
-        instance.setWritingprogram(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        writingprogram_ = value;
+        onChanged();
         return this;
       }
       /**
        * <code>optional string writingprogram = 16;</code>
+       * @return This builder for chaining.
        */
       public Builder clearWritingprogram() {
-        copyOnWrite();
-        instance.clearWritingprogram();
+        bitField0_ = (bitField0_ & ~0x00000008);
+        writingprogram_ = getDefaultInstance().getWritingprogram();
+        onChanged();
         return this;
       }
       /**
        * <code>optional string writingprogram = 16;</code>
+       * @param value The bytes for writingprogram to set.
+       * @return This builder for chaining.
        */
       public Builder setWritingprogramBytes(
           com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setWritingprogramBytes(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        writingprogram_ = value;
+        onChanged();
         return this;
       }
 
+      private java.lang.Object source_ = "";
       /**
        * <pre>
        * From the bbox field.
        * </pre>
        *
        * <code>optional string source = 17;</code>
+       * @return Whether the source field is set.
        */
-      @java.lang.Override
       public boolean hasSource() {
-        return instance.hasSource();
+        return ((bitField0_ & 0x00000010) != 0);
       }
       /**
        * <pre>
@@ -1254,10 +1695,21 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional string source = 17;</code>
+       * @return The source.
        */
-      @java.lang.Override
       public java.lang.String getSource() {
-        return instance.getSource();
+        java.lang.Object ref = source_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            source_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <pre>
@@ -1265,11 +1717,20 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional string source = 17;</code>
+       * @return The bytes for source.
        */
-      @java.lang.Override
       public com.google.protobuf.ByteString
           getSourceBytes() {
-        return instance.getSourceBytes();
+        java.lang.Object ref = source_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          source_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <pre>
@@ -1277,11 +1738,17 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional string source = 17;</code>
+       * @param value The source to set.
+       * @return This builder for chaining.
        */
       public Builder setSource(
           java.lang.String value) {
-        copyOnWrite();
-        instance.setSource(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        source_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -1290,10 +1757,12 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional string source = 17;</code>
+       * @return This builder for chaining.
        */
       public Builder clearSource() {
-        copyOnWrite();
-        instance.clearSource();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        source_ = getDefaultInstance().getSource();
+        onChanged();
         return this;
       }
       /**
@@ -1302,14 +1771,21 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional string source = 17;</code>
+       * @param value The bytes for source to set.
+       * @return This builder for chaining.
        */
       public Builder setSourceBytes(
           com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setSourceBytes(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        source_ = value;
+        onChanged();
         return this;
       }
 
+      private long osmosisReplicationTimestamp_ ;
       /**
        * <pre>
        * replication timestamp, expressed in seconds since the epoch, 
@@ -1318,10 +1794,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int64 osmosis_replication_timestamp = 32;</code>
+       * @return Whether the osmosisReplicationTimestamp field is set.
        */
-      @java.lang.Override
       public boolean hasOsmosisReplicationTimestamp() {
-        return instance.hasOsmosisReplicationTimestamp();
+        return ((bitField0_ & 0x00000020) != 0);
       }
       /**
        * <pre>
@@ -1331,10 +1807,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int64 osmosis_replication_timestamp = 32;</code>
+       * @return The osmosisReplicationTimestamp.
        */
-      @java.lang.Override
       public long getOsmosisReplicationTimestamp() {
-        return instance.getOsmosisReplicationTimestamp();
+        return osmosisReplicationTimestamp_;
       }
       /**
        * <pre>
@@ -1344,10 +1820,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int64 osmosis_replication_timestamp = 32;</code>
+       * @param value The osmosisReplicationTimestamp to set.
+       * @return This builder for chaining.
        */
       public Builder setOsmosisReplicationTimestamp(long value) {
-        copyOnWrite();
-        instance.setOsmosisReplicationTimestamp(value);
+        bitField0_ |= 0x00000020;
+        osmosisReplicationTimestamp_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -1358,23 +1837,26 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int64 osmosis_replication_timestamp = 32;</code>
+       * @return This builder for chaining.
        */
       public Builder clearOsmosisReplicationTimestamp() {
-        copyOnWrite();
-        instance.clearOsmosisReplicationTimestamp();
+        bitField0_ = (bitField0_ & ~0x00000020);
+        osmosisReplicationTimestamp_ = 0L;
+        onChanged();
         return this;
       }
 
+      private long osmosisReplicationSequenceNumber_ ;
       /**
        * <pre>
        * replication sequence number (sequenceNumber in state.txt)
        * </pre>
        *
        * <code>optional int64 osmosis_replication_sequence_number = 33;</code>
+       * @return Whether the osmosisReplicationSequenceNumber field is set.
        */
-      @java.lang.Override
       public boolean hasOsmosisReplicationSequenceNumber() {
-        return instance.hasOsmosisReplicationSequenceNumber();
+        return ((bitField0_ & 0x00000040) != 0);
       }
       /**
        * <pre>
@@ -1382,10 +1864,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int64 osmosis_replication_sequence_number = 33;</code>
+       * @return The osmosisReplicationSequenceNumber.
        */
-      @java.lang.Override
       public long getOsmosisReplicationSequenceNumber() {
-        return instance.getOsmosisReplicationSequenceNumber();
+        return osmosisReplicationSequenceNumber_;
       }
       /**
        * <pre>
@@ -1393,10 +1875,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int64 osmosis_replication_sequence_number = 33;</code>
+       * @param value The osmosisReplicationSequenceNumber to set.
+       * @return This builder for chaining.
        */
       public Builder setOsmosisReplicationSequenceNumber(long value) {
-        copyOnWrite();
-        instance.setOsmosisReplicationSequenceNumber(value);
+        bitField0_ |= 0x00000040;
+        osmosisReplicationSequenceNumber_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -1405,23 +1890,26 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int64 osmosis_replication_sequence_number = 33;</code>
+       * @return This builder for chaining.
        */
       public Builder clearOsmosisReplicationSequenceNumber() {
-        copyOnWrite();
-        instance.clearOsmosisReplicationSequenceNumber();
+        bitField0_ = (bitField0_ & ~0x00000040);
+        osmosisReplicationSequenceNumber_ = 0L;
+        onChanged();
         return this;
       }
 
+      private java.lang.Object osmosisReplicationBaseUrl_ = "";
       /**
        * <pre>
        * replication base URL (from Osmosis' configuration.txt file)
        * </pre>
        *
        * <code>optional string osmosis_replication_base_url = 34;</code>
+       * @return Whether the osmosisReplicationBaseUrl field is set.
        */
-      @java.lang.Override
       public boolean hasOsmosisReplicationBaseUrl() {
-        return instance.hasOsmosisReplicationBaseUrl();
+        return ((bitField0_ & 0x00000080) != 0);
       }
       /**
        * <pre>
@@ -1429,10 +1917,21 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional string osmosis_replication_base_url = 34;</code>
+       * @return The osmosisReplicationBaseUrl.
        */
-      @java.lang.Override
       public java.lang.String getOsmosisReplicationBaseUrl() {
-        return instance.getOsmosisReplicationBaseUrl();
+        java.lang.Object ref = osmosisReplicationBaseUrl_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            osmosisReplicationBaseUrl_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <pre>
@@ -1440,11 +1939,20 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional string osmosis_replication_base_url = 34;</code>
+       * @return The bytes for osmosisReplicationBaseUrl.
        */
-      @java.lang.Override
       public com.google.protobuf.ByteString
           getOsmosisReplicationBaseUrlBytes() {
-        return instance.getOsmosisReplicationBaseUrlBytes();
+        java.lang.Object ref = osmosisReplicationBaseUrl_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          osmosisReplicationBaseUrl_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <pre>
@@ -1452,11 +1960,17 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional string osmosis_replication_base_url = 34;</code>
+       * @param value The osmosisReplicationBaseUrl to set.
+       * @return This builder for chaining.
        */
       public Builder setOsmosisReplicationBaseUrl(
           java.lang.String value) {
-        copyOnWrite();
-        instance.setOsmosisReplicationBaseUrl(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
+        osmosisReplicationBaseUrl_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -1465,10 +1979,12 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional string osmosis_replication_base_url = 34;</code>
+       * @return This builder for chaining.
        */
       public Builder clearOsmosisReplicationBaseUrl() {
-        copyOnWrite();
-        instance.clearOsmosisReplicationBaseUrl();
+        bitField0_ = (bitField0_ & ~0x00000080);
+        osmosisReplicationBaseUrl_ = getDefaultInstance().getOsmosisReplicationBaseUrl();
+        onChanged();
         return this;
       }
       /**
@@ -1477,252 +1993,117 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional string osmosis_replication_base_url = 34;</code>
+       * @param value The bytes for osmosisReplicationBaseUrl to set.
+       * @return This builder for chaining.
        */
       public Builder setOsmosisReplicationBaseUrlBytes(
           com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setOsmosisReplicationBaseUrlBytes(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
+        osmosisReplicationBaseUrl_ = value;
+        onChanged();
         return this;
       }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.HeaderBlock)
     }
-    private byte memoizedIsInitialized = 2;
-    @java.lang.Override
-    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        java.lang.Object arg0, java.lang.Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock();
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case IS_INITIALIZED: {
-          byte isInitialized = memoizedIsInitialized;
-          if (isInitialized == 1) return DEFAULT_INSTANCE;
-          if (isInitialized == 0) return null;
-
-          boolean shouldMemoize = ((Boolean) arg0).booleanValue();
-          if (hasBbox()) {
-            if (!getBbox().isInitialized()) {
-              return null;
-            }
-          }
-          return DEFAULT_INSTANCE;
-
-        }
-        case MAKE_IMMUTABLE: {
-          requiredFeatures_.makeImmutable();
-          optionalFeatures_.makeImmutable();
-          return null;
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock other = (org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock) arg1;
-          bbox_ = visitor.visitMessage(bbox_, other.bbox_);
-          requiredFeatures_= visitor.visitList(requiredFeatures_, other.requiredFeatures_);
-          optionalFeatures_= visitor.visitList(optionalFeatures_, other.optionalFeatures_);
-          writingprogram_ = visitor.visitString(
-              hasWritingprogram(), writingprogram_,
-              other.hasWritingprogram(), other.writingprogram_);
-          source_ = visitor.visitString(
-              hasSource(), source_,
-              other.hasSource(), other.source_);
-          osmosisReplicationTimestamp_ = visitor.visitLong(
-              hasOsmosisReplicationTimestamp(), osmosisReplicationTimestamp_,
-              other.hasOsmosisReplicationTimestamp(), other.osmosisReplicationTimestamp_);
-          osmosisReplicationSequenceNumber_ = visitor.visitLong(
-              hasOsmosisReplicationSequenceNumber(), osmosisReplicationSequenceNumber_,
-              other.hasOsmosisReplicationSequenceNumber(), other.osmosisReplicationSequenceNumber_);
-          osmosisReplicationBaseUrl_ = visitor.visitString(
-              hasOsmosisReplicationBaseUrl(), osmosisReplicationBaseUrl_,
-              other.hasOsmosisReplicationBaseUrl(), other.osmosisReplicationBaseUrl_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-            bitField0_ |= other.bitField0_;
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-          }
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                case 10: {
-                  org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.Builder subBuilder = null;
-                  if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                    subBuilder = bbox_.toBuilder();
-                  }
-                  bbox_ = input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.parser(), extensionRegistry);
-                  if (subBuilder != null) {
-                    subBuilder.mergeFrom(bbox_);
-                    bbox_ = subBuilder.buildPartial();
-                  }
-                  bitField0_ |= 0x00000001;
-                  break;
-                }
-                case 34: {
-                  java.lang.String s = input.readString();
-                  if (!requiredFeatures_.isModifiable()) {
-                    requiredFeatures_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(requiredFeatures_);
-                  }
-                  requiredFeatures_.add(s);
-                  break;
-                }
-                case 42: {
-                  java.lang.String s = input.readString();
-                  if (!optionalFeatures_.isModifiable()) {
-                    optionalFeatures_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(optionalFeatures_);
-                  }
-                  optionalFeatures_.add(s);
-                  break;
-                }
-                case 130: {
-                  java.lang.String s = input.readString();
-                  bitField0_ |= 0x00000002;
-                  writingprogram_ = s;
-                  break;
-                }
-                case 138: {
-                  java.lang.String s = input.readString();
-                  bitField0_ |= 0x00000004;
-                  source_ = s;
-                  break;
-                }
-                case 256: {
-                  bitField0_ |= 0x00000008;
-                  osmosisReplicationTimestamp_ = input.readInt64();
-                  break;
-                }
-                case 264: {
-                  bitField0_ |= 0x00000010;
-                  osmosisReplicationSequenceNumber_ = input.readInt64();
-                  break;
-                }
-                case 274: {
-                  java.lang.String s = input.readString();
-                  bitField0_ |= 0x00000020;
-                  osmosisReplicationBaseUrl_ = s;
-                  break;
-                }
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        // fall through
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          com.google.protobuf.Parser<org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock> parser = PARSER;
-          if (parser == null) {
-            synchronized (org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock.class) {
-              parser = PARSER;
-              if (parser == null) {
-                parser = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-                PARSER = parser;
-              }
-            }
-          }
-          return parser;
-      }
-      case GET_MEMOIZED_IS_INITIALIZED: {
-        return memoizedIsInitialized;
-      }
-      case SET_MEMOIZED_IS_INITIALIZED: {
-        memoizedIsInitialized = (byte) (arg0 == null ? 0 : 1);
-        return null;
-      }
-      }
-      throw new UnsupportedOperationException();
-    }
-
 
     // @@protoc_insertion_point(class_scope:OSMPBF.HeaderBlock)
     private static final org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock DEFAULT_INSTANCE;
     static {
-      // New instances are implicitly immutable so no need to make
-      // immutable.
-      DEFAULT_INSTANCE = new HeaderBlock();
+      DEFAULT_INSTANCE = new org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock();
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static volatile com.google.protobuf.Parser<HeaderBlock> PARSER;
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<HeaderBlock>
+        PARSER = new com.google.protobuf.AbstractParser<HeaderBlock>() {
+      @java.lang.Override
+      public HeaderBlock parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new HeaderBlock(input, extensionRegistry);
+      }
+    };
 
     public static com.google.protobuf.Parser<HeaderBlock> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
+      return PARSER;
     }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<HeaderBlock> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBlock getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
   public interface HeaderBBoxOrBuilder extends
       // @@protoc_insertion_point(interface_extends:OSMPBF.HeaderBBox)
-      com.google.protobuf.MessageLiteOrBuilder {
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>required sint64 left = 1;</code>
+     * @return Whether the left field is set.
      */
     boolean hasLeft();
     /**
      * <code>required sint64 left = 1;</code>
+     * @return The left.
      */
     long getLeft();
 
     /**
      * <code>required sint64 right = 2;</code>
+     * @return Whether the right field is set.
      */
     boolean hasRight();
     /**
      * <code>required sint64 right = 2;</code>
+     * @return The right.
      */
     long getRight();
 
     /**
      * <code>required sint64 top = 3;</code>
+     * @return Whether the top field is set.
      */
     boolean hasTop();
     /**
      * <code>required sint64 top = 3;</code>
+     * @return The top.
      */
     long getTop();
 
     /**
      * <code>required sint64 bottom = 4;</code>
+     * @return Whether the bottom field is set.
      */
     boolean hasBottom();
     /**
      * <code>required sint64 bottom = 4;</code>
+     * @return The bottom.
      */
     long getBottom();
   }
@@ -1730,150 +2111,209 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.HeaderBBox}
    */
   public  static final class HeaderBBox extends
-      com.google.protobuf.GeneratedMessageLite<
-          HeaderBBox, HeaderBBox.Builder> implements
+      com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:OSMPBF.HeaderBBox)
       HeaderBBoxOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use HeaderBBox.newBuilder() to construct.
+    private HeaderBBox(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
     private HeaderBBox() {
     }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new HeaderBBox();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private HeaderBBox(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              bitField0_ |= 0x00000001;
+              left_ = input.readSInt64();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              right_ = input.readSInt64();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              top_ = input.readSInt64();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              bottom_ = input.readSInt64();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_HeaderBBox_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_HeaderBBox_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.class, org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.Builder.class);
+    }
+
     private int bitField0_;
     public static final int LEFT_FIELD_NUMBER = 1;
     private long left_;
     /**
      * <code>required sint64 left = 1;</code>
+     * @return Whether the left field is set.
      */
-    @java.lang.Override
     public boolean hasLeft() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <code>required sint64 left = 1;</code>
+     * @return The left.
      */
-    @java.lang.Override
     public long getLeft() {
       return left_;
-    }
-    /**
-     * <code>required sint64 left = 1;</code>
-     */
-    private void setLeft(long value) {
-      bitField0_ |= 0x00000001;
-      left_ = value;
-    }
-    /**
-     * <code>required sint64 left = 1;</code>
-     */
-    private void clearLeft() {
-      bitField0_ = (bitField0_ & ~0x00000001);
-      left_ = 0L;
     }
 
     public static final int RIGHT_FIELD_NUMBER = 2;
     private long right_;
     /**
      * <code>required sint64 right = 2;</code>
+     * @return Whether the right field is set.
      */
-    @java.lang.Override
     public boolean hasRight() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <code>required sint64 right = 2;</code>
+     * @return The right.
      */
-    @java.lang.Override
     public long getRight() {
       return right_;
-    }
-    /**
-     * <code>required sint64 right = 2;</code>
-     */
-    private void setRight(long value) {
-      bitField0_ |= 0x00000002;
-      right_ = value;
-    }
-    /**
-     * <code>required sint64 right = 2;</code>
-     */
-    private void clearRight() {
-      bitField0_ = (bitField0_ & ~0x00000002);
-      right_ = 0L;
     }
 
     public static final int TOP_FIELD_NUMBER = 3;
     private long top_;
     /**
      * <code>required sint64 top = 3;</code>
+     * @return Whether the top field is set.
      */
-    @java.lang.Override
     public boolean hasTop() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
      * <code>required sint64 top = 3;</code>
+     * @return The top.
      */
-    @java.lang.Override
     public long getTop() {
       return top_;
-    }
-    /**
-     * <code>required sint64 top = 3;</code>
-     */
-    private void setTop(long value) {
-      bitField0_ |= 0x00000004;
-      top_ = value;
-    }
-    /**
-     * <code>required sint64 top = 3;</code>
-     */
-    private void clearTop() {
-      bitField0_ = (bitField0_ & ~0x00000004);
-      top_ = 0L;
     }
 
     public static final int BOTTOM_FIELD_NUMBER = 4;
     private long bottom_;
     /**
      * <code>required sint64 bottom = 4;</code>
+     * @return Whether the bottom field is set.
      */
-    @java.lang.Override
     public boolean hasBottom() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000008) != 0);
     }
     /**
      * <code>required sint64 bottom = 4;</code>
+     * @return The bottom.
      */
-    @java.lang.Override
     public long getBottom() {
       return bottom_;
     }
-    /**
-     * <code>required sint64 bottom = 4;</code>
-     */
-    private void setBottom(long value) {
-      bitField0_ |= 0x00000008;
-      bottom_ = value;
-    }
-    /**
-     * <code>required sint64 bottom = 4;</code>
-     */
-    private void clearBottom() {
-      bitField0_ = (bitField0_ & ~0x00000008);
-      bottom_ = 0L;
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasLeft()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasRight()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTop()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasBottom()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         output.writeSInt64(1, left_);
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if (((bitField0_ & 0x00000002) != 0)) {
         output.writeSInt64(2, right_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      if (((bitField0_ & 0x00000004) != 0)) {
         output.writeSInt64(3, top_);
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if (((bitField0_ & 0x00000008) != 0)) {
         output.writeSInt64(4, bottom_);
       }
       unknownFields.writeTo(output);
@@ -1881,423 +2321,598 @@ public final class Osmformat {
 
     @java.lang.Override
     public int getSerializedSize() {
-      int size = memoizedSerializedSize;
+      int size = memoizedSize;
       if (size != -1) return size;
 
       size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeSInt64Size(1, left_);
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeSInt64Size(2, right_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      if (((bitField0_ & 0x00000004) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeSInt64Size(3, top_);
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if (((bitField0_ & 0x00000008) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeSInt64Size(4, bottom_);
       }
       size += unknownFields.getSerializedSize();
-      memoizedSerializedSize = size;
+      memoizedSize = size;
       return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox)) {
+        return super.equals(obj);
+      }
+      org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox other = (org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox) obj;
+
+      if (hasLeft() != other.hasLeft()) return false;
+      if (hasLeft()) {
+        if (getLeft()
+            != other.getLeft()) return false;
+      }
+      if (hasRight() != other.hasRight()) return false;
+      if (hasRight()) {
+        if (getRight()
+            != other.getRight()) return false;
+      }
+      if (hasTop() != other.hasTop()) return false;
+      if (hasTop()) {
+        if (getTop()
+            != other.getTop()) return false;
+      }
+      if (hasBottom() != other.hasBottom()) return false;
+      if (hasBottom()) {
+        if (getBottom()
+            != other.getBottom()) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasLeft()) {
+        hash = (37 * hash) + LEFT_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getLeft());
+      }
+      if (hasRight()) {
+        hash = (37 * hash) + RIGHT_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getRight());
+      }
+      if (hasTop()) {
+        hash = (37 * hash) + TOP_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getTop());
+      }
+      if (hasBottom()) {
+        hash = (37 * hash) + BOTTOM_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getBottom());
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
-      return (Builder) DEFAULT_INSTANCE.createBuilder();
+      return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox prototype) {
-      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * Protobuf type {@code OSMPBF.HeaderBBox}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox, Builder> implements
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:OSMPBF.HeaderBBox)
         org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBoxOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_HeaderBBox_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_HeaderBBox_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.class, org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.Builder.class);
+      }
+
       // Construct using org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        left_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        right_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        top_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        bottom_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
 
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_HeaderBBox_descriptor;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox getDefaultInstanceForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox build() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox buildPartial() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox result = new org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.left_ = left_;
+          to_bitField0_ |= 0x00000001;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.right_ = right_;
+          to_bitField0_ |= 0x00000002;
+        }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          result.top_ = top_;
+          to_bitField0_ |= 0x00000004;
+        }
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          result.bottom_ = bottom_;
+          to_bitField0_ |= 0x00000008;
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox) {
+          return mergeFrom((org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox other) {
+        if (other == org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.getDefaultInstance()) return this;
+        if (other.hasLeft()) {
+          setLeft(other.getLeft());
+        }
+        if (other.hasRight()) {
+          setRight(other.getRight());
+        }
+        if (other.hasTop()) {
+          setTop(other.getTop());
+        }
+        if (other.hasBottom()) {
+          setBottom(other.getBottom());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        if (!hasLeft()) {
+          return false;
+        }
+        if (!hasRight()) {
+          return false;
+        }
+        if (!hasTop()) {
+          return false;
+        }
+        if (!hasBottom()) {
+          return false;
+        }
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private long left_ ;
       /**
        * <code>required sint64 left = 1;</code>
+       * @return Whether the left field is set.
        */
-      @java.lang.Override
       public boolean hasLeft() {
-        return instance.hasLeft();
+        return ((bitField0_ & 0x00000001) != 0);
       }
       /**
        * <code>required sint64 left = 1;</code>
+       * @return The left.
        */
-      @java.lang.Override
       public long getLeft() {
-        return instance.getLeft();
+        return left_;
       }
       /**
        * <code>required sint64 left = 1;</code>
+       * @param value The left to set.
+       * @return This builder for chaining.
        */
       public Builder setLeft(long value) {
-        copyOnWrite();
-        instance.setLeft(value);
+        bitField0_ |= 0x00000001;
+        left_ = value;
+        onChanged();
         return this;
       }
       /**
        * <code>required sint64 left = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearLeft() {
-        copyOnWrite();
-        instance.clearLeft();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        left_ = 0L;
+        onChanged();
         return this;
       }
 
+      private long right_ ;
       /**
        * <code>required sint64 right = 2;</code>
+       * @return Whether the right field is set.
        */
-      @java.lang.Override
       public boolean hasRight() {
-        return instance.hasRight();
+        return ((bitField0_ & 0x00000002) != 0);
       }
       /**
        * <code>required sint64 right = 2;</code>
+       * @return The right.
        */
-      @java.lang.Override
       public long getRight() {
-        return instance.getRight();
+        return right_;
       }
       /**
        * <code>required sint64 right = 2;</code>
+       * @param value The right to set.
+       * @return This builder for chaining.
        */
       public Builder setRight(long value) {
-        copyOnWrite();
-        instance.setRight(value);
+        bitField0_ |= 0x00000002;
+        right_ = value;
+        onChanged();
         return this;
       }
       /**
        * <code>required sint64 right = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearRight() {
-        copyOnWrite();
-        instance.clearRight();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        right_ = 0L;
+        onChanged();
         return this;
       }
 
+      private long top_ ;
       /**
        * <code>required sint64 top = 3;</code>
+       * @return Whether the top field is set.
        */
-      @java.lang.Override
       public boolean hasTop() {
-        return instance.hasTop();
+        return ((bitField0_ & 0x00000004) != 0);
       }
       /**
        * <code>required sint64 top = 3;</code>
+       * @return The top.
        */
-      @java.lang.Override
       public long getTop() {
-        return instance.getTop();
+        return top_;
       }
       /**
        * <code>required sint64 top = 3;</code>
+       * @param value The top to set.
+       * @return This builder for chaining.
        */
       public Builder setTop(long value) {
-        copyOnWrite();
-        instance.setTop(value);
+        bitField0_ |= 0x00000004;
+        top_ = value;
+        onChanged();
         return this;
       }
       /**
        * <code>required sint64 top = 3;</code>
+       * @return This builder for chaining.
        */
       public Builder clearTop() {
-        copyOnWrite();
-        instance.clearTop();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        top_ = 0L;
+        onChanged();
         return this;
       }
 
+      private long bottom_ ;
       /**
        * <code>required sint64 bottom = 4;</code>
+       * @return Whether the bottom field is set.
        */
-      @java.lang.Override
       public boolean hasBottom() {
-        return instance.hasBottom();
+        return ((bitField0_ & 0x00000008) != 0);
       }
       /**
        * <code>required sint64 bottom = 4;</code>
+       * @return The bottom.
        */
-      @java.lang.Override
       public long getBottom() {
-        return instance.getBottom();
+        return bottom_;
       }
       /**
        * <code>required sint64 bottom = 4;</code>
+       * @param value The bottom to set.
+       * @return This builder for chaining.
        */
       public Builder setBottom(long value) {
-        copyOnWrite();
-        instance.setBottom(value);
+        bitField0_ |= 0x00000008;
+        bottom_ = value;
+        onChanged();
         return this;
       }
       /**
        * <code>required sint64 bottom = 4;</code>
+       * @return This builder for chaining.
        */
       public Builder clearBottom() {
-        copyOnWrite();
-        instance.clearBottom();
+        bitField0_ = (bitField0_ & ~0x00000008);
+        bottom_ = 0L;
+        onChanged();
         return this;
       }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.HeaderBBox)
     }
-    private byte memoizedIsInitialized = 2;
-    @java.lang.Override
-    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        java.lang.Object arg0, java.lang.Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox();
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case IS_INITIALIZED: {
-          byte isInitialized = memoizedIsInitialized;
-          if (isInitialized == 1) return DEFAULT_INSTANCE;
-          if (isInitialized == 0) return null;
-
-          boolean shouldMemoize = ((Boolean) arg0).booleanValue();
-          if (!hasLeft()) {
-            return null;
-          }
-          if (!hasRight()) {
-            return null;
-          }
-          if (!hasTop()) {
-            return null;
-          }
-          if (!hasBottom()) {
-            return null;
-          }
-          return DEFAULT_INSTANCE;
-
-        }
-        case MAKE_IMMUTABLE: {
-          return null;
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox other = (org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox) arg1;
-          left_ = visitor.visitLong(
-              hasLeft(), left_,
-              other.hasLeft(), other.left_);
-          right_ = visitor.visitLong(
-              hasRight(), right_,
-              other.hasRight(), other.right_);
-          top_ = visitor.visitLong(
-              hasTop(), top_,
-              other.hasTop(), other.top_);
-          bottom_ = visitor.visitLong(
-              hasBottom(), bottom_,
-              other.hasBottom(), other.bottom_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-            bitField0_ |= other.bitField0_;
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-          }
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                case 8: {
-                  bitField0_ |= 0x00000001;
-                  left_ = input.readSInt64();
-                  break;
-                }
-                case 16: {
-                  bitField0_ |= 0x00000002;
-                  right_ = input.readSInt64();
-                  break;
-                }
-                case 24: {
-                  bitField0_ |= 0x00000004;
-                  top_ = input.readSInt64();
-                  break;
-                }
-                case 32: {
-                  bitField0_ |= 0x00000008;
-                  bottom_ = input.readSInt64();
-                  break;
-                }
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        // fall through
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          com.google.protobuf.Parser<org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox> parser = PARSER;
-          if (parser == null) {
-            synchronized (org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox.class) {
-              parser = PARSER;
-              if (parser == null) {
-                parser = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-                PARSER = parser;
-              }
-            }
-          }
-          return parser;
-      }
-      case GET_MEMOIZED_IS_INITIALIZED: {
-        return memoizedIsInitialized;
-      }
-      case SET_MEMOIZED_IS_INITIALIZED: {
-        memoizedIsInitialized = (byte) (arg0 == null ? 0 : 1);
-        return null;
-      }
-      }
-      throw new UnsupportedOperationException();
-    }
-
 
     // @@protoc_insertion_point(class_scope:OSMPBF.HeaderBBox)
     private static final org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox DEFAULT_INSTANCE;
     static {
-      // New instances are implicitly immutable so no need to make
-      // immutable.
-      DEFAULT_INSTANCE = new HeaderBBox();
+      DEFAULT_INSTANCE = new org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox();
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static volatile com.google.protobuf.Parser<HeaderBBox> PARSER;
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<HeaderBBox>
+        PARSER = new com.google.protobuf.AbstractParser<HeaderBBox>() {
+      @java.lang.Override
+      public HeaderBBox parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new HeaderBBox(input, extensionRegistry);
+      }
+    };
 
     public static com.google.protobuf.Parser<HeaderBBox> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
+      return PARSER;
     }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<HeaderBBox> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.HeaderBBox getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
   public interface PrimitiveBlockOrBuilder extends
       // @@protoc_insertion_point(interface_extends:OSMPBF.PrimitiveBlock)
-      com.google.protobuf.MessageLiteOrBuilder {
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>required .OSMPBF.StringTable stringtable = 1;</code>
+     * @return Whether the stringtable field is set.
      */
     boolean hasStringtable();
     /**
      * <code>required .OSMPBF.StringTable stringtable = 1;</code>
+     * @return The stringtable.
      */
     org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable getStringtable();
+    /**
+     * <code>required .OSMPBF.StringTable stringtable = 1;</code>
+     */
+    org.openstreetmap.osmosis.osmbinary.Osmformat.StringTableOrBuilder getStringtableOrBuilder();
 
     /**
      * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
@@ -2312,6 +2927,16 @@ public final class Osmformat {
      * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
      */
     int getPrimitivegroupCount();
+    /**
+     * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
+     */
+    java.util.List<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroupOrBuilder> 
+        getPrimitivegroupOrBuilderList();
+    /**
+     * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
+     */
+    org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroupOrBuilder getPrimitivegroupOrBuilder(
+        int index);
 
     /**
      * <pre>
@@ -2319,6 +2944,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 granularity = 17 [default = 100];</code>
+     * @return Whether the granularity field is set.
      */
     boolean hasGranularity();
     /**
@@ -2327,6 +2953,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 granularity = 17 [default = 100];</code>
+     * @return The granularity.
      */
     int getGranularity();
 
@@ -2336,6 +2963,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 lat_offset = 19 [default = 0];</code>
+     * @return Whether the latOffset field is set.
      */
     boolean hasLatOffset();
     /**
@@ -2344,15 +2972,18 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 lat_offset = 19 [default = 0];</code>
+     * @return The latOffset.
      */
     long getLatOffset();
 
     /**
      * <code>optional int64 lon_offset = 20 [default = 0];</code>
+     * @return Whether the lonOffset field is set.
      */
     boolean hasLonOffset();
     /**
      * <code>optional int64 lon_offset = 20 [default = 0];</code>
+     * @return The lonOffset.
      */
     long getLonOffset();
 
@@ -2362,6 +2993,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+     * @return Whether the dateGranularity field is set.
      */
     boolean hasDateGranularity();
     /**
@@ -2370,6 +3002,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+     * @return The dateGranularity.
      */
     int getDateGranularity();
   }
@@ -2377,80 +3010,157 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.PrimitiveBlock}
    */
   public  static final class PrimitiveBlock extends
-      com.google.protobuf.GeneratedMessageLite<
-          PrimitiveBlock, PrimitiveBlock.Builder> implements
+      com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:OSMPBF.PrimitiveBlock)
       PrimitiveBlockOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use PrimitiveBlock.newBuilder() to construct.
+    private PrimitiveBlock(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
     private PrimitiveBlock() {
-      primitivegroup_ = emptyProtobufList();
+      primitivegroup_ = java.util.Collections.emptyList();
       granularity_ = 100;
       dateGranularity_ = 1000;
     }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new PrimitiveBlock();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private PrimitiveBlock(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) != 0)) {
+                subBuilder = stringtable_.toBuilder();
+              }
+              stringtable_ = input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(stringtable_);
+                stringtable_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+                primitivegroup_ = new java.util.ArrayList<org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              primitivegroup_.add(
+                  input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.PARSER, extensionRegistry));
+              break;
+            }
+            case 136: {
+              bitField0_ |= 0x00000002;
+              granularity_ = input.readInt32();
+              break;
+            }
+            case 144: {
+              bitField0_ |= 0x00000010;
+              dateGranularity_ = input.readInt32();
+              break;
+            }
+            case 152: {
+              bitField0_ |= 0x00000004;
+              latOffset_ = input.readInt64();
+              break;
+            }
+            case 160: {
+              bitField0_ |= 0x00000008;
+              lonOffset_ = input.readInt64();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) != 0)) {
+          primitivegroup_ = java.util.Collections.unmodifiableList(primitivegroup_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_PrimitiveBlock_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_PrimitiveBlock_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock.class, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock.Builder.class);
+    }
+
     private int bitField0_;
     public static final int STRINGTABLE_FIELD_NUMBER = 1;
     private org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable stringtable_;
     /**
      * <code>required .OSMPBF.StringTable stringtable = 1;</code>
+     * @return Whether the stringtable field is set.
      */
-    @java.lang.Override
     public boolean hasStringtable() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <code>required .OSMPBF.StringTable stringtable = 1;</code>
+     * @return The stringtable.
      */
-    @java.lang.Override
     public org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable getStringtable() {
       return stringtable_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.getDefaultInstance() : stringtable_;
     }
     /**
      * <code>required .OSMPBF.StringTable stringtable = 1;</code>
      */
-    private void setStringtable(org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      stringtable_ = value;
-      bitField0_ |= 0x00000001;
-      }
-    /**
-     * <code>required .OSMPBF.StringTable stringtable = 1;</code>
-     */
-    private void setStringtable(
-        org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.Builder builderForValue) {
-      stringtable_ = builderForValue.build();
-      bitField0_ |= 0x00000001;
-    }
-    /**
-     * <code>required .OSMPBF.StringTable stringtable = 1;</code>
-     */
-    @java.lang.SuppressWarnings({"ReferenceEquality"})
-    private void mergeStringtable(org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      if (stringtable_ != null &&
-          stringtable_ != org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.getDefaultInstance()) {
-        stringtable_ =
-          org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.newBuilder(stringtable_).mergeFrom(value).buildPartial();
-      } else {
-        stringtable_ = value;
-      }
-      bitField0_ |= 0x00000001;
-    }
-    /**
-     * <code>required .OSMPBF.StringTable stringtable = 1;</code>
-     */
-    private void clearStringtable() {  stringtable_ = null;
-      bitField0_ = (bitField0_ & ~0x00000001);
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.StringTableOrBuilder getStringtableOrBuilder() {
+      return stringtable_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.getDefaultInstance() : stringtable_;
     }
 
     public static final int PRIMITIVEGROUP_FIELD_NUMBER = 2;
-    private com.google.protobuf.Internal.ProtobufList<org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup> primitivegroup_;
+    private java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup> primitivegroup_;
     /**
      * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
      */
-    @java.lang.Override
     public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup> getPrimitivegroupList() {
       return primitivegroup_;
     }
@@ -2464,14 +3174,12 @@ public final class Osmformat {
     /**
      * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
      */
-    @java.lang.Override
     public int getPrimitivegroupCount() {
       return primitivegroup_.size();
     }
     /**
      * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
      */
-    @java.lang.Override
     public org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup getPrimitivegroup(int index) {
       return primitivegroup_.get(index);
     }
@@ -2482,91 +3190,6 @@ public final class Osmformat {
         int index) {
       return primitivegroup_.get(index);
     }
-    private void ensurePrimitivegroupIsMutable() {
-      if (!primitivegroup_.isModifiable()) {
-        primitivegroup_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(primitivegroup_);
-       }
-    }
-
-    /**
-     * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
-     */
-    private void setPrimitivegroup(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensurePrimitivegroupIsMutable();
-      primitivegroup_.set(index, value);
-    }
-    /**
-     * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
-     */
-    private void setPrimitivegroup(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.Builder builderForValue) {
-      ensurePrimitivegroupIsMutable();
-      primitivegroup_.set(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
-     */
-    private void addPrimitivegroup(org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensurePrimitivegroupIsMutable();
-      primitivegroup_.add(value);
-    }
-    /**
-     * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
-     */
-    private void addPrimitivegroup(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensurePrimitivegroupIsMutable();
-      primitivegroup_.add(index, value);
-    }
-    /**
-     * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
-     */
-    private void addPrimitivegroup(
-        org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.Builder builderForValue) {
-      ensurePrimitivegroupIsMutable();
-      primitivegroup_.add(builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
-     */
-    private void addPrimitivegroup(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.Builder builderForValue) {
-      ensurePrimitivegroupIsMutable();
-      primitivegroup_.add(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
-     */
-    private void addAllPrimitivegroup(
-        java.lang.Iterable<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup> values) {
-      ensurePrimitivegroupIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, primitivegroup_);
-    }
-    /**
-     * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
-     */
-    private void clearPrimitivegroup() {
-      primitivegroup_ = emptyProtobufList();
-    }
-    /**
-     * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
-     */
-    private void removePrimitivegroup(int index) {
-      ensurePrimitivegroupIsMutable();
-      primitivegroup_.remove(index);
-    }
 
     public static final int GRANULARITY_FIELD_NUMBER = 17;
     private int granularity_;
@@ -2576,10 +3199,10 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 granularity = 17 [default = 100];</code>
+     * @return Whether the granularity field is set.
      */
-    @java.lang.Override
     public boolean hasGranularity() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <pre>
@@ -2587,32 +3210,10 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 granularity = 17 [default = 100];</code>
+     * @return The granularity.
      */
-    @java.lang.Override
     public int getGranularity() {
       return granularity_;
-    }
-    /**
-     * <pre>
-     * Granularity, units of nanodegrees, used to store coordinates in this block
-     * </pre>
-     *
-     * <code>optional int32 granularity = 17 [default = 100];</code>
-     */
-    private void setGranularity(int value) {
-      bitField0_ |= 0x00000002;
-      granularity_ = value;
-    }
-    /**
-     * <pre>
-     * Granularity, units of nanodegrees, used to store coordinates in this block
-     * </pre>
-     *
-     * <code>optional int32 granularity = 17 [default = 100];</code>
-     */
-    private void clearGranularity() {
-      bitField0_ = (bitField0_ & ~0x00000002);
-      granularity_ = 100;
     }
 
     public static final int LAT_OFFSET_FIELD_NUMBER = 19;
@@ -2623,10 +3224,10 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 lat_offset = 19 [default = 0];</code>
+     * @return Whether the latOffset field is set.
      */
-    @java.lang.Override
     public boolean hasLatOffset() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
      * <pre>
@@ -2634,63 +3235,27 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int64 lat_offset = 19 [default = 0];</code>
+     * @return The latOffset.
      */
-    @java.lang.Override
     public long getLatOffset() {
       return latOffset_;
-    }
-    /**
-     * <pre>
-     * Offset value between the output coordinates coordinates and the granularity grid in unites of nanodegrees.
-     * </pre>
-     *
-     * <code>optional int64 lat_offset = 19 [default = 0];</code>
-     */
-    private void setLatOffset(long value) {
-      bitField0_ |= 0x00000004;
-      latOffset_ = value;
-    }
-    /**
-     * <pre>
-     * Offset value between the output coordinates coordinates and the granularity grid in unites of nanodegrees.
-     * </pre>
-     *
-     * <code>optional int64 lat_offset = 19 [default = 0];</code>
-     */
-    private void clearLatOffset() {
-      bitField0_ = (bitField0_ & ~0x00000004);
-      latOffset_ = 0L;
     }
 
     public static final int LON_OFFSET_FIELD_NUMBER = 20;
     private long lonOffset_;
     /**
      * <code>optional int64 lon_offset = 20 [default = 0];</code>
+     * @return Whether the lonOffset field is set.
      */
-    @java.lang.Override
     public boolean hasLonOffset() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000008) != 0);
     }
     /**
      * <code>optional int64 lon_offset = 20 [default = 0];</code>
+     * @return The lonOffset.
      */
-    @java.lang.Override
     public long getLonOffset() {
       return lonOffset_;
-    }
-    /**
-     * <code>optional int64 lon_offset = 20 [default = 0];</code>
-     */
-    private void setLonOffset(long value) {
-      bitField0_ |= 0x00000008;
-      lonOffset_ = value;
-    }
-    /**
-     * <code>optional int64 lon_offset = 20 [default = 0];</code>
-     */
-    private void clearLonOffset() {
-      bitField0_ = (bitField0_ & ~0x00000008);
-      lonOffset_ = 0L;
     }
 
     public static final int DATE_GRANULARITY_FIELD_NUMBER = 18;
@@ -2701,10 +3266,10 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+     * @return Whether the dateGranularity field is set.
      */
-    @java.lang.Override
     public boolean hasDateGranularity() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
+      return ((bitField0_ & 0x00000010) != 0);
     }
     /**
      * <pre>
@@ -2712,53 +3277,52 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+     * @return The dateGranularity.
      */
-    @java.lang.Override
     public int getDateGranularity() {
       return dateGranularity_;
     }
-    /**
-     * <pre>
-     * Granularity of dates, normally represented in units of milliseconds since the 1970 epoch.
-     * </pre>
-     *
-     * <code>optional int32 date_granularity = 18 [default = 1000];</code>
-     */
-    private void setDateGranularity(int value) {
-      bitField0_ |= 0x00000010;
-      dateGranularity_ = value;
-    }
-    /**
-     * <pre>
-     * Granularity of dates, normally represented in units of milliseconds since the 1970 epoch.
-     * </pre>
-     *
-     * <code>optional int32 date_granularity = 18 [default = 1000];</code>
-     */
-    private void clearDateGranularity() {
-      bitField0_ = (bitField0_ & ~0x00000010);
-      dateGranularity_ = 1000;
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasStringtable()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      for (int i = 0; i < getPrimitivegroupCount(); i++) {
+        if (!getPrimitivegroup(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         output.writeMessage(1, getStringtable());
       }
       for (int i = 0; i < primitivegroup_.size(); i++) {
         output.writeMessage(2, primitivegroup_.get(i));
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if (((bitField0_ & 0x00000002) != 0)) {
         output.writeInt32(17, granularity_);
       }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+      if (((bitField0_ & 0x00000010) != 0)) {
         output.writeInt32(18, dateGranularity_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      if (((bitField0_ & 0x00000004) != 0)) {
         output.writeInt64(19, latOffset_);
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if (((bitField0_ & 0x00000008) != 0)) {
         output.writeInt64(20, lonOffset_);
       }
       unknownFields.writeTo(output);
@@ -2766,11 +3330,11 @@ public final class Osmformat {
 
     @java.lang.Override
     public int getSerializedSize() {
-      int size = memoizedSerializedSize;
+      int size = memoizedSize;
       if (size != -1) return size;
 
       size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, getStringtable());
       }
@@ -2778,197 +3342,622 @@ public final class Osmformat {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, primitivegroup_.get(i));
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(17, granularity_);
       }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+      if (((bitField0_ & 0x00000010) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(18, dateGranularity_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      if (((bitField0_ & 0x00000004) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(19, latOffset_);
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if (((bitField0_ & 0x00000008) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(20, lonOffset_);
       }
       size += unknownFields.getSerializedSize();
-      memoizedSerializedSize = size;
+      memoizedSize = size;
       return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock)) {
+        return super.equals(obj);
+      }
+      org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock other = (org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock) obj;
+
+      if (hasStringtable() != other.hasStringtable()) return false;
+      if (hasStringtable()) {
+        if (!getStringtable()
+            .equals(other.getStringtable())) return false;
+      }
+      if (!getPrimitivegroupList()
+          .equals(other.getPrimitivegroupList())) return false;
+      if (hasGranularity() != other.hasGranularity()) return false;
+      if (hasGranularity()) {
+        if (getGranularity()
+            != other.getGranularity()) return false;
+      }
+      if (hasLatOffset() != other.hasLatOffset()) return false;
+      if (hasLatOffset()) {
+        if (getLatOffset()
+            != other.getLatOffset()) return false;
+      }
+      if (hasLonOffset() != other.hasLonOffset()) return false;
+      if (hasLonOffset()) {
+        if (getLonOffset()
+            != other.getLonOffset()) return false;
+      }
+      if (hasDateGranularity() != other.hasDateGranularity()) return false;
+      if (hasDateGranularity()) {
+        if (getDateGranularity()
+            != other.getDateGranularity()) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasStringtable()) {
+        hash = (37 * hash) + STRINGTABLE_FIELD_NUMBER;
+        hash = (53 * hash) + getStringtable().hashCode();
+      }
+      if (getPrimitivegroupCount() > 0) {
+        hash = (37 * hash) + PRIMITIVEGROUP_FIELD_NUMBER;
+        hash = (53 * hash) + getPrimitivegroupList().hashCode();
+      }
+      if (hasGranularity()) {
+        hash = (37 * hash) + GRANULARITY_FIELD_NUMBER;
+        hash = (53 * hash) + getGranularity();
+      }
+      if (hasLatOffset()) {
+        hash = (37 * hash) + LAT_OFFSET_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getLatOffset());
+      }
+      if (hasLonOffset()) {
+        hash = (37 * hash) + LON_OFFSET_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getLonOffset());
+      }
+      if (hasDateGranularity()) {
+        hash = (37 * hash) + DATE_GRANULARITY_FIELD_NUMBER;
+        hash = (53 * hash) + getDateGranularity();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
-      return (Builder) DEFAULT_INSTANCE.createBuilder();
+      return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock prototype) {
-      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * Protobuf type {@code OSMPBF.PrimitiveBlock}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock, Builder> implements
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:OSMPBF.PrimitiveBlock)
         org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlockOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_PrimitiveBlock_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_PrimitiveBlock_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock.class, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock.Builder.class);
+      }
+
       // Construct using org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getStringtableFieldBuilder();
+          getPrimitivegroupFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (stringtableBuilder_ == null) {
+          stringtable_ = null;
+        } else {
+          stringtableBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        if (primitivegroupBuilder_ == null) {
+          primitivegroup_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        } else {
+          primitivegroupBuilder_.clear();
+        }
+        granularity_ = 100;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        latOffset_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        lonOffset_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000010);
+        dateGranularity_ = 1000;
+        bitField0_ = (bitField0_ & ~0x00000020);
+        return this;
+      }
 
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_PrimitiveBlock_descriptor;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock getDefaultInstanceForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock build() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock buildPartial() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock result = new org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          if (stringtableBuilder_ == null) {
+            result.stringtable_ = stringtable_;
+          } else {
+            result.stringtable_ = stringtableBuilder_.build();
+          }
+          to_bitField0_ |= 0x00000001;
+        }
+        if (primitivegroupBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) != 0)) {
+            primitivegroup_ = java.util.Collections.unmodifiableList(primitivegroup_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.primitivegroup_ = primitivegroup_;
+        } else {
+          result.primitivegroup_ = primitivegroupBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.granularity_ = granularity_;
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          result.latOffset_ = latOffset_;
+          to_bitField0_ |= 0x00000004;
+        }
+        if (((from_bitField0_ & 0x00000010) != 0)) {
+          result.lonOffset_ = lonOffset_;
+          to_bitField0_ |= 0x00000008;
+        }
+        if (((from_bitField0_ & 0x00000020) != 0)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.dateGranularity_ = dateGranularity_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock) {
+          return mergeFrom((org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock other) {
+        if (other == org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock.getDefaultInstance()) return this;
+        if (other.hasStringtable()) {
+          mergeStringtable(other.getStringtable());
+        }
+        if (primitivegroupBuilder_ == null) {
+          if (!other.primitivegroup_.isEmpty()) {
+            if (primitivegroup_.isEmpty()) {
+              primitivegroup_ = other.primitivegroup_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensurePrimitivegroupIsMutable();
+              primitivegroup_.addAll(other.primitivegroup_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.primitivegroup_.isEmpty()) {
+            if (primitivegroupBuilder_.isEmpty()) {
+              primitivegroupBuilder_.dispose();
+              primitivegroupBuilder_ = null;
+              primitivegroup_ = other.primitivegroup_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+              primitivegroupBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getPrimitivegroupFieldBuilder() : null;
+            } else {
+              primitivegroupBuilder_.addAllMessages(other.primitivegroup_);
+            }
+          }
+        }
+        if (other.hasGranularity()) {
+          setGranularity(other.getGranularity());
+        }
+        if (other.hasLatOffset()) {
+          setLatOffset(other.getLatOffset());
+        }
+        if (other.hasLonOffset()) {
+          setLonOffset(other.getLonOffset());
+        }
+        if (other.hasDateGranularity()) {
+          setDateGranularity(other.getDateGranularity());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        if (!hasStringtable()) {
+          return false;
+        }
+        for (int i = 0; i < getPrimitivegroupCount(); i++) {
+          if (!getPrimitivegroup(i).isInitialized()) {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable stringtable_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable, org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.StringTableOrBuilder> stringtableBuilder_;
       /**
        * <code>required .OSMPBF.StringTable stringtable = 1;</code>
+       * @return Whether the stringtable field is set.
        */
-      @java.lang.Override
       public boolean hasStringtable() {
-        return instance.hasStringtable();
+        return ((bitField0_ & 0x00000001) != 0);
       }
       /**
        * <code>required .OSMPBF.StringTable stringtable = 1;</code>
+       * @return The stringtable.
        */
-      @java.lang.Override
       public org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable getStringtable() {
-        return instance.getStringtable();
+        if (stringtableBuilder_ == null) {
+          return stringtable_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.getDefaultInstance() : stringtable_;
+        } else {
+          return stringtableBuilder_.getMessage();
+        }
       }
       /**
        * <code>required .OSMPBF.StringTable stringtable = 1;</code>
        */
       public Builder setStringtable(org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable value) {
-        copyOnWrite();
-        instance.setStringtable(value);
-        return this;
+        if (stringtableBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          stringtable_ = value;
+          onChanged();
+        } else {
+          stringtableBuilder_.setMessage(value);
         }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
       /**
        * <code>required .OSMPBF.StringTable stringtable = 1;</code>
        */
       public Builder setStringtable(
           org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.Builder builderForValue) {
-        copyOnWrite();
-        instance.setStringtable(builderForValue);
+        if (stringtableBuilder_ == null) {
+          stringtable_ = builderForValue.build();
+          onChanged();
+        } else {
+          stringtableBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
         return this;
       }
       /**
        * <code>required .OSMPBF.StringTable stringtable = 1;</code>
        */
       public Builder mergeStringtable(org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable value) {
-        copyOnWrite();
-        instance.mergeStringtable(value);
+        if (stringtableBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0) &&
+              stringtable_ != null &&
+              stringtable_ != org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.getDefaultInstance()) {
+            stringtable_ =
+              org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.newBuilder(stringtable_).mergeFrom(value).buildPartial();
+          } else {
+            stringtable_ = value;
+          }
+          onChanged();
+        } else {
+          stringtableBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
         return this;
       }
       /**
        * <code>required .OSMPBF.StringTable stringtable = 1;</code>
        */
-      public Builder clearStringtable() {  copyOnWrite();
-        instance.clearStringtable();
+      public Builder clearStringtable() {
+        if (stringtableBuilder_ == null) {
+          stringtable_ = null;
+          onChanged();
+        } else {
+          stringtableBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
+      /**
+       * <code>required .OSMPBF.StringTable stringtable = 1;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.Builder getStringtableBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getStringtableFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .OSMPBF.StringTable stringtable = 1;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.StringTableOrBuilder getStringtableOrBuilder() {
+        if (stringtableBuilder_ != null) {
+          return stringtableBuilder_.getMessageOrBuilder();
+        } else {
+          return stringtable_ == null ?
+              org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.getDefaultInstance() : stringtable_;
+        }
+      }
+      /**
+       * <code>required .OSMPBF.StringTable stringtable = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable, org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.StringTableOrBuilder> 
+          getStringtableFieldBuilder() {
+        if (stringtableBuilder_ == null) {
+          stringtableBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable, org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.StringTableOrBuilder>(
+                  getStringtable(),
+                  getParentForChildren(),
+                  isClean());
+          stringtable_ = null;
+        }
+        return stringtableBuilder_;
+      }
+
+      private java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup> primitivegroup_ =
+        java.util.Collections.emptyList();
+      private void ensurePrimitivegroupIsMutable() {
+        if (!((bitField0_ & 0x00000002) != 0)) {
+          primitivegroup_ = new java.util.ArrayList<org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup>(primitivegroup_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroupOrBuilder> primitivegroupBuilder_;
 
       /**
        * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
        */
-      @java.lang.Override
       public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup> getPrimitivegroupList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getPrimitivegroupList());
+        if (primitivegroupBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(primitivegroup_);
+        } else {
+          return primitivegroupBuilder_.getMessageList();
+        }
       }
       /**
        * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
        */
-      @java.lang.Override
       public int getPrimitivegroupCount() {
-        return instance.getPrimitivegroupCount();
-      }/**
+        if (primitivegroupBuilder_ == null) {
+          return primitivegroup_.size();
+        } else {
+          return primitivegroupBuilder_.getCount();
+        }
+      }
+      /**
        * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
        */
-      @java.lang.Override
       public org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup getPrimitivegroup(int index) {
-        return instance.getPrimitivegroup(index);
+        if (primitivegroupBuilder_ == null) {
+          return primitivegroup_.get(index);
+        } else {
+          return primitivegroupBuilder_.getMessage(index);
+        }
       }
       /**
        * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
        */
       public Builder setPrimitivegroup(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup value) {
-        copyOnWrite();
-        instance.setPrimitivegroup(index, value);
+        if (primitivegroupBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensurePrimitivegroupIsMutable();
+          primitivegroup_.set(index, value);
+          onChanged();
+        } else {
+          primitivegroupBuilder_.setMessage(index, value);
+        }
         return this;
       }
       /**
@@ -2976,16 +3965,29 @@ public final class Osmformat {
        */
       public Builder setPrimitivegroup(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.Builder builderForValue) {
-        copyOnWrite();
-        instance.setPrimitivegroup(index, builderForValue);
+        if (primitivegroupBuilder_ == null) {
+          ensurePrimitivegroupIsMutable();
+          primitivegroup_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          primitivegroupBuilder_.setMessage(index, builderForValue.build());
+        }
         return this;
       }
       /**
        * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
        */
       public Builder addPrimitivegroup(org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup value) {
-        copyOnWrite();
-        instance.addPrimitivegroup(value);
+        if (primitivegroupBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensurePrimitivegroupIsMutable();
+          primitivegroup_.add(value);
+          onChanged();
+        } else {
+          primitivegroupBuilder_.addMessage(value);
+        }
         return this;
       }
       /**
@@ -2993,8 +3995,16 @@ public final class Osmformat {
        */
       public Builder addPrimitivegroup(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup value) {
-        copyOnWrite();
-        instance.addPrimitivegroup(index, value);
+        if (primitivegroupBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensurePrimitivegroupIsMutable();
+          primitivegroup_.add(index, value);
+          onChanged();
+        } else {
+          primitivegroupBuilder_.addMessage(index, value);
+        }
         return this;
       }
       /**
@@ -3002,8 +4012,13 @@ public final class Osmformat {
        */
       public Builder addPrimitivegroup(
           org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.Builder builderForValue) {
-        copyOnWrite();
-        instance.addPrimitivegroup(builderForValue);
+        if (primitivegroupBuilder_ == null) {
+          ensurePrimitivegroupIsMutable();
+          primitivegroup_.add(builderForValue.build());
+          onChanged();
+        } else {
+          primitivegroupBuilder_.addMessage(builderForValue.build());
+        }
         return this;
       }
       /**
@@ -3011,8 +4026,13 @@ public final class Osmformat {
        */
       public Builder addPrimitivegroup(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.Builder builderForValue) {
-        copyOnWrite();
-        instance.addPrimitivegroup(index, builderForValue);
+        if (primitivegroupBuilder_ == null) {
+          ensurePrimitivegroupIsMutable();
+          primitivegroup_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          primitivegroupBuilder_.addMessage(index, builderForValue.build());
+        }
         return this;
       }
       /**
@@ -3020,37 +4040,118 @@ public final class Osmformat {
        */
       public Builder addAllPrimitivegroup(
           java.lang.Iterable<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup> values) {
-        copyOnWrite();
-        instance.addAllPrimitivegroup(values);
+        if (primitivegroupBuilder_ == null) {
+          ensurePrimitivegroupIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, primitivegroup_);
+          onChanged();
+        } else {
+          primitivegroupBuilder_.addAllMessages(values);
+        }
         return this;
       }
       /**
        * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
        */
       public Builder clearPrimitivegroup() {
-        copyOnWrite();
-        instance.clearPrimitivegroup();
+        if (primitivegroupBuilder_ == null) {
+          primitivegroup_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+        } else {
+          primitivegroupBuilder_.clear();
+        }
         return this;
       }
       /**
        * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
        */
       public Builder removePrimitivegroup(int index) {
-        copyOnWrite();
-        instance.removePrimitivegroup(index);
+        if (primitivegroupBuilder_ == null) {
+          ensurePrimitivegroupIsMutable();
+          primitivegroup_.remove(index);
+          onChanged();
+        } else {
+          primitivegroupBuilder_.remove(index);
+        }
         return this;
       }
+      /**
+       * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.Builder getPrimitivegroupBuilder(
+          int index) {
+        return getPrimitivegroupFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroupOrBuilder getPrimitivegroupOrBuilder(
+          int index) {
+        if (primitivegroupBuilder_ == null) {
+          return primitivegroup_.get(index);  } else {
+          return primitivegroupBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
+       */
+      public java.util.List<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroupOrBuilder> 
+           getPrimitivegroupOrBuilderList() {
+        if (primitivegroupBuilder_ != null) {
+          return primitivegroupBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(primitivegroup_);
+        }
+      }
+      /**
+       * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.Builder addPrimitivegroupBuilder() {
+        return getPrimitivegroupFieldBuilder().addBuilder(
+            org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.Builder addPrimitivegroupBuilder(
+          int index) {
+        return getPrimitivegroupFieldBuilder().addBuilder(
+            index, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .OSMPBF.PrimitiveGroup primitivegroup = 2;</code>
+       */
+      public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.Builder> 
+           getPrimitivegroupBuilderList() {
+        return getPrimitivegroupFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroupOrBuilder> 
+          getPrimitivegroupFieldBuilder() {
+        if (primitivegroupBuilder_ == null) {
+          primitivegroupBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroupOrBuilder>(
+                  primitivegroup_,
+                  ((bitField0_ & 0x00000002) != 0),
+                  getParentForChildren(),
+                  isClean());
+          primitivegroup_ = null;
+        }
+        return primitivegroupBuilder_;
+      }
 
+      private int granularity_ = 100;
       /**
        * <pre>
        * Granularity, units of nanodegrees, used to store coordinates in this block
        * </pre>
        *
        * <code>optional int32 granularity = 17 [default = 100];</code>
+       * @return Whether the granularity field is set.
        */
-      @java.lang.Override
       public boolean hasGranularity() {
-        return instance.hasGranularity();
+        return ((bitField0_ & 0x00000004) != 0);
       }
       /**
        * <pre>
@@ -3058,10 +4159,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int32 granularity = 17 [default = 100];</code>
+       * @return The granularity.
        */
-      @java.lang.Override
       public int getGranularity() {
-        return instance.getGranularity();
+        return granularity_;
       }
       /**
        * <pre>
@@ -3069,10 +4170,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int32 granularity = 17 [default = 100];</code>
+       * @param value The granularity to set.
+       * @return This builder for chaining.
        */
       public Builder setGranularity(int value) {
-        copyOnWrite();
-        instance.setGranularity(value);
+        bitField0_ |= 0x00000004;
+        granularity_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -3081,23 +4185,26 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int32 granularity = 17 [default = 100];</code>
+       * @return This builder for chaining.
        */
       public Builder clearGranularity() {
-        copyOnWrite();
-        instance.clearGranularity();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        granularity_ = 100;
+        onChanged();
         return this;
       }
 
+      private long latOffset_ ;
       /**
        * <pre>
        * Offset value between the output coordinates coordinates and the granularity grid in unites of nanodegrees.
        * </pre>
        *
        * <code>optional int64 lat_offset = 19 [default = 0];</code>
+       * @return Whether the latOffset field is set.
        */
-      @java.lang.Override
       public boolean hasLatOffset() {
-        return instance.hasLatOffset();
+        return ((bitField0_ & 0x00000008) != 0);
       }
       /**
        * <pre>
@@ -3105,10 +4212,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int64 lat_offset = 19 [default = 0];</code>
+       * @return The latOffset.
        */
-      @java.lang.Override
       public long getLatOffset() {
-        return instance.getLatOffset();
+        return latOffset_;
       }
       /**
        * <pre>
@@ -3116,10 +4223,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int64 lat_offset = 19 [default = 0];</code>
+       * @param value The latOffset to set.
+       * @return This builder for chaining.
        */
       public Builder setLatOffset(long value) {
-        copyOnWrite();
-        instance.setLatOffset(value);
+        bitField0_ |= 0x00000008;
+        latOffset_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -3128,54 +4238,63 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int64 lat_offset = 19 [default = 0];</code>
+       * @return This builder for chaining.
        */
       public Builder clearLatOffset() {
-        copyOnWrite();
-        instance.clearLatOffset();
+        bitField0_ = (bitField0_ & ~0x00000008);
+        latOffset_ = 0L;
+        onChanged();
         return this;
       }
 
+      private long lonOffset_ ;
       /**
        * <code>optional int64 lon_offset = 20 [default = 0];</code>
+       * @return Whether the lonOffset field is set.
        */
-      @java.lang.Override
       public boolean hasLonOffset() {
-        return instance.hasLonOffset();
+        return ((bitField0_ & 0x00000010) != 0);
       }
       /**
        * <code>optional int64 lon_offset = 20 [default = 0];</code>
+       * @return The lonOffset.
        */
-      @java.lang.Override
       public long getLonOffset() {
-        return instance.getLonOffset();
+        return lonOffset_;
       }
       /**
        * <code>optional int64 lon_offset = 20 [default = 0];</code>
+       * @param value The lonOffset to set.
+       * @return This builder for chaining.
        */
       public Builder setLonOffset(long value) {
-        copyOnWrite();
-        instance.setLonOffset(value);
+        bitField0_ |= 0x00000010;
+        lonOffset_ = value;
+        onChanged();
         return this;
       }
       /**
        * <code>optional int64 lon_offset = 20 [default = 0];</code>
+       * @return This builder for chaining.
        */
       public Builder clearLonOffset() {
-        copyOnWrite();
-        instance.clearLonOffset();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        lonOffset_ = 0L;
+        onChanged();
         return this;
       }
 
+      private int dateGranularity_ = 1000;
       /**
        * <pre>
        * Granularity of dates, normally represented in units of milliseconds since the 1970 epoch.
        * </pre>
        *
        * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+       * @return Whether the dateGranularity field is set.
        */
-      @java.lang.Override
       public boolean hasDateGranularity() {
-        return instance.hasDateGranularity();
+        return ((bitField0_ & 0x00000020) != 0);
       }
       /**
        * <pre>
@@ -3183,10 +4302,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+       * @return The dateGranularity.
        */
-      @java.lang.Override
       public int getDateGranularity() {
-        return instance.getDateGranularity();
+        return dateGranularity_;
       }
       /**
        * <pre>
@@ -3194,10 +4313,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+       * @param value The dateGranularity to set.
+       * @return This builder for chaining.
        */
       public Builder setDateGranularity(int value) {
-        copyOnWrite();
-        instance.setDateGranularity(value);
+        bitField0_ |= 0x00000020;
+        dateGranularity_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -3206,198 +4328,70 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional int32 date_granularity = 18 [default = 1000];</code>
+       * @return This builder for chaining.
        */
       public Builder clearDateGranularity() {
-        copyOnWrite();
-        instance.clearDateGranularity();
+        bitField0_ = (bitField0_ & ~0x00000020);
+        dateGranularity_ = 1000;
+        onChanged();
         return this;
       }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.PrimitiveBlock)
     }
-    private byte memoizedIsInitialized = 2;
-    @java.lang.Override
-    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        java.lang.Object arg0, java.lang.Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock();
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case IS_INITIALIZED: {
-          byte isInitialized = memoizedIsInitialized;
-          if (isInitialized == 1) return DEFAULT_INSTANCE;
-          if (isInitialized == 0) return null;
-
-          boolean shouldMemoize = ((Boolean) arg0).booleanValue();
-          if (!hasStringtable()) {
-            return null;
-          }
-          for (int i = 0; i < getPrimitivegroupCount(); i++) {
-            if (!getPrimitivegroup(i).isInitialized()) {
-              return null;
-            }
-          }
-          return DEFAULT_INSTANCE;
-
-        }
-        case MAKE_IMMUTABLE: {
-          primitivegroup_.makeImmutable();
-          return null;
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock other = (org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock) arg1;
-          stringtable_ = visitor.visitMessage(stringtable_, other.stringtable_);
-          primitivegroup_= visitor.visitList(primitivegroup_, other.primitivegroup_);
-          granularity_ = visitor.visitInt(
-              hasGranularity(), granularity_,
-              other.hasGranularity(), other.granularity_);
-          latOffset_ = visitor.visitLong(
-              hasLatOffset(), latOffset_,
-              other.hasLatOffset(), other.latOffset_);
-          lonOffset_ = visitor.visitLong(
-              hasLonOffset(), lonOffset_,
-              other.hasLonOffset(), other.lonOffset_);
-          dateGranularity_ = visitor.visitInt(
-              hasDateGranularity(), dateGranularity_,
-              other.hasDateGranularity(), other.dateGranularity_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-            bitField0_ |= other.bitField0_;
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-          }
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                case 10: {
-                  org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.Builder subBuilder = null;
-                  if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                    subBuilder = stringtable_.toBuilder();
-                  }
-                  stringtable_ = input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.parser(), extensionRegistry);
-                  if (subBuilder != null) {
-                    subBuilder.mergeFrom(stringtable_);
-                    stringtable_ = subBuilder.buildPartial();
-                  }
-                  bitField0_ |= 0x00000001;
-                  break;
-                }
-                case 18: {
-                  if (!primitivegroup_.isModifiable()) {
-                    primitivegroup_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(primitivegroup_);
-                  }
-                  primitivegroup_.add(
-                      input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.parser(), extensionRegistry));
-                  break;
-                }
-                case 136: {
-                  bitField0_ |= 0x00000002;
-                  granularity_ = input.readInt32();
-                  break;
-                }
-                case 144: {
-                  bitField0_ |= 0x00000010;
-                  dateGranularity_ = input.readInt32();
-                  break;
-                }
-                case 152: {
-                  bitField0_ |= 0x00000004;
-                  latOffset_ = input.readInt64();
-                  break;
-                }
-                case 160: {
-                  bitField0_ |= 0x00000008;
-                  lonOffset_ = input.readInt64();
-                  break;
-                }
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        // fall through
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          com.google.protobuf.Parser<org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock> parser = PARSER;
-          if (parser == null) {
-            synchronized (org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock.class) {
-              parser = PARSER;
-              if (parser == null) {
-                parser = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-                PARSER = parser;
-              }
-            }
-          }
-          return parser;
-      }
-      case GET_MEMOIZED_IS_INITIALIZED: {
-        return memoizedIsInitialized;
-      }
-      case SET_MEMOIZED_IS_INITIALIZED: {
-        memoizedIsInitialized = (byte) (arg0 == null ? 0 : 1);
-        return null;
-      }
-      }
-      throw new UnsupportedOperationException();
-    }
-
 
     // @@protoc_insertion_point(class_scope:OSMPBF.PrimitiveBlock)
     private static final org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock DEFAULT_INSTANCE;
     static {
-      // New instances are implicitly immutable so no need to make
-      // immutable.
-      DEFAULT_INSTANCE = new PrimitiveBlock();
+      DEFAULT_INSTANCE = new org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock();
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static volatile com.google.protobuf.Parser<PrimitiveBlock> PARSER;
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<PrimitiveBlock>
+        PARSER = new com.google.protobuf.AbstractParser<PrimitiveBlock>() {
+      @java.lang.Override
+      public PrimitiveBlock parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new PrimitiveBlock(input, extensionRegistry);
+      }
+    };
 
     public static com.google.protobuf.Parser<PrimitiveBlock> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
+      return PARSER;
     }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PrimitiveBlock> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
   public interface PrimitiveGroupOrBuilder extends
       // @@protoc_insertion_point(interface_extends:OSMPBF.PrimitiveGroup)
-      com.google.protobuf.MessageLiteOrBuilder {
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>repeated .OSMPBF.Node nodes = 1;</code>
@@ -3412,15 +4406,31 @@ public final class Osmformat {
      * <code>repeated .OSMPBF.Node nodes = 1;</code>
      */
     int getNodesCount();
+    /**
+     * <code>repeated .OSMPBF.Node nodes = 1;</code>
+     */
+    java.util.List<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.NodeOrBuilder> 
+        getNodesOrBuilderList();
+    /**
+     * <code>repeated .OSMPBF.Node nodes = 1;</code>
+     */
+    org.openstreetmap.osmosis.osmbinary.Osmformat.NodeOrBuilder getNodesOrBuilder(
+        int index);
 
     /**
      * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
+     * @return Whether the dense field is set.
      */
     boolean hasDense();
     /**
      * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
+     * @return The dense.
      */
     org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes getDense();
+    /**
+     * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
+     */
+    org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodesOrBuilder getDenseOrBuilder();
 
     /**
      * <code>repeated .OSMPBF.Way ways = 3;</code>
@@ -3435,6 +4445,16 @@ public final class Osmformat {
      * <code>repeated .OSMPBF.Way ways = 3;</code>
      */
     int getWaysCount();
+    /**
+     * <code>repeated .OSMPBF.Way ways = 3;</code>
+     */
+    java.util.List<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.WayOrBuilder> 
+        getWaysOrBuilderList();
+    /**
+     * <code>repeated .OSMPBF.Way ways = 3;</code>
+     */
+    org.openstreetmap.osmosis.osmbinary.Osmformat.WayOrBuilder getWaysOrBuilder(
+        int index);
 
     /**
      * <code>repeated .OSMPBF.Relation relations = 4;</code>
@@ -3449,6 +4469,16 @@ public final class Osmformat {
      * <code>repeated .OSMPBF.Relation relations = 4;</code>
      */
     int getRelationsCount();
+    /**
+     * <code>repeated .OSMPBF.Relation relations = 4;</code>
+     */
+    java.util.List<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.RelationOrBuilder> 
+        getRelationsOrBuilderList();
+    /**
+     * <code>repeated .OSMPBF.Relation relations = 4;</code>
+     */
+    org.openstreetmap.osmosis.osmbinary.Osmformat.RelationOrBuilder getRelationsOrBuilder(
+        int index);
 
     /**
      * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
@@ -3463,6 +4493,16 @@ public final class Osmformat {
      * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
      */
     int getChangesetsCount();
+    /**
+     * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
+     */
+    java.util.List<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSetOrBuilder> 
+        getChangesetsOrBuilderList();
+    /**
+     * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
+     */
+    org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSetOrBuilder getChangesetsOrBuilder(
+        int index);
   }
   /**
    * <pre>
@@ -3472,23 +4512,151 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.PrimitiveGroup}
    */
   public  static final class PrimitiveGroup extends
-      com.google.protobuf.GeneratedMessageLite<
-          PrimitiveGroup, PrimitiveGroup.Builder> implements
+      com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:OSMPBF.PrimitiveGroup)
       PrimitiveGroupOrBuilder {
-    private PrimitiveGroup() {
-      nodes_ = emptyProtobufList();
-      ways_ = emptyProtobufList();
-      relations_ = emptyProtobufList();
-      changesets_ = emptyProtobufList();
+  private static final long serialVersionUID = 0L;
+    // Use PrimitiveGroup.newBuilder() to construct.
+    private PrimitiveGroup(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
     }
+    private PrimitiveGroup() {
+      nodes_ = java.util.Collections.emptyList();
+      ways_ = java.util.Collections.emptyList();
+      relations_ = java.util.Collections.emptyList();
+      changesets_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new PrimitiveGroup();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private PrimitiveGroup(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                nodes_ = new java.util.ArrayList<org.openstreetmap.osmosis.osmbinary.Osmformat.Node>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              nodes_.add(
+                  input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.Node.PARSER, extensionRegistry));
+              break;
+            }
+            case 18: {
+              org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) != 0)) {
+                subBuilder = dense_.toBuilder();
+              }
+              dense_ = input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(dense_);
+                dense_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
+                ways_ = new java.util.ArrayList<org.openstreetmap.osmosis.osmbinary.Osmformat.Way>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              ways_.add(
+                  input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.Way.PARSER, extensionRegistry));
+              break;
+            }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) != 0)) {
+                relations_ = new java.util.ArrayList<org.openstreetmap.osmosis.osmbinary.Osmformat.Relation>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              relations_.add(
+                  input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.PARSER, extensionRegistry));
+              break;
+            }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000010) != 0)) {
+                changesets_ = new java.util.ArrayList<org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet>();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              changesets_.add(
+                  input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.PARSER, extensionRegistry));
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          nodes_ = java.util.Collections.unmodifiableList(nodes_);
+        }
+        if (((mutable_bitField0_ & 0x00000004) != 0)) {
+          ways_ = java.util.Collections.unmodifiableList(ways_);
+        }
+        if (((mutable_bitField0_ & 0x00000008) != 0)) {
+          relations_ = java.util.Collections.unmodifiableList(relations_);
+        }
+        if (((mutable_bitField0_ & 0x00000010) != 0)) {
+          changesets_ = java.util.Collections.unmodifiableList(changesets_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_PrimitiveGroup_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_PrimitiveGroup_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.class, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.Builder.class);
+    }
+
     private int bitField0_;
     public static final int NODES_FIELD_NUMBER = 1;
-    private com.google.protobuf.Internal.ProtobufList<org.openstreetmap.osmosis.osmbinary.Osmformat.Node> nodes_;
+    private java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Node> nodes_;
     /**
      * <code>repeated .OSMPBF.Node nodes = 1;</code>
      */
-    @java.lang.Override
     public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Node> getNodesList() {
       return nodes_;
     }
@@ -3502,14 +4670,12 @@ public final class Osmformat {
     /**
      * <code>repeated .OSMPBF.Node nodes = 1;</code>
      */
-    @java.lang.Override
     public int getNodesCount() {
       return nodes_.size();
     }
     /**
      * <code>repeated .OSMPBF.Node nodes = 1;</code>
      */
-    @java.lang.Override
     public org.openstreetmap.osmosis.osmbinary.Osmformat.Node getNodes(int index) {
       return nodes_.get(index);
     }
@@ -3520,156 +4686,35 @@ public final class Osmformat {
         int index) {
       return nodes_.get(index);
     }
-    private void ensureNodesIsMutable() {
-      if (!nodes_.isModifiable()) {
-        nodes_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(nodes_);
-       }
-    }
-
-    /**
-     * <code>repeated .OSMPBF.Node nodes = 1;</code>
-     */
-    private void setNodes(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Node value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureNodesIsMutable();
-      nodes_.set(index, value);
-    }
-    /**
-     * <code>repeated .OSMPBF.Node nodes = 1;</code>
-     */
-    private void setNodes(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Node.Builder builderForValue) {
-      ensureNodesIsMutable();
-      nodes_.set(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.Node nodes = 1;</code>
-     */
-    private void addNodes(org.openstreetmap.osmosis.osmbinary.Osmformat.Node value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureNodesIsMutable();
-      nodes_.add(value);
-    }
-    /**
-     * <code>repeated .OSMPBF.Node nodes = 1;</code>
-     */
-    private void addNodes(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Node value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureNodesIsMutable();
-      nodes_.add(index, value);
-    }
-    /**
-     * <code>repeated .OSMPBF.Node nodes = 1;</code>
-     */
-    private void addNodes(
-        org.openstreetmap.osmosis.osmbinary.Osmformat.Node.Builder builderForValue) {
-      ensureNodesIsMutable();
-      nodes_.add(builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.Node nodes = 1;</code>
-     */
-    private void addNodes(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Node.Builder builderForValue) {
-      ensureNodesIsMutable();
-      nodes_.add(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.Node nodes = 1;</code>
-     */
-    private void addAllNodes(
-        java.lang.Iterable<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.Node> values) {
-      ensureNodesIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, nodes_);
-    }
-    /**
-     * <code>repeated .OSMPBF.Node nodes = 1;</code>
-     */
-    private void clearNodes() {
-      nodes_ = emptyProtobufList();
-    }
-    /**
-     * <code>repeated .OSMPBF.Node nodes = 1;</code>
-     */
-    private void removeNodes(int index) {
-      ensureNodesIsMutable();
-      nodes_.remove(index);
-    }
 
     public static final int DENSE_FIELD_NUMBER = 2;
     private org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes dense_;
     /**
      * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
+     * @return Whether the dense field is set.
      */
-    @java.lang.Override
     public boolean hasDense() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
+     * @return The dense.
      */
-    @java.lang.Override
     public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes getDense() {
       return dense_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.getDefaultInstance() : dense_;
     }
     /**
      * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
      */
-    private void setDense(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      dense_ = value;
-      bitField0_ |= 0x00000001;
-      }
-    /**
-     * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
-     */
-    private void setDense(
-        org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.Builder builderForValue) {
-      dense_ = builderForValue.build();
-      bitField0_ |= 0x00000001;
-    }
-    /**
-     * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
-     */
-    @java.lang.SuppressWarnings({"ReferenceEquality"})
-    private void mergeDense(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      if (dense_ != null &&
-          dense_ != org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.getDefaultInstance()) {
-        dense_ =
-          org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.newBuilder(dense_).mergeFrom(value).buildPartial();
-      } else {
-        dense_ = value;
-      }
-      bitField0_ |= 0x00000001;
-    }
-    /**
-     * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
-     */
-    private void clearDense() {  dense_ = null;
-      bitField0_ = (bitField0_ & ~0x00000001);
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodesOrBuilder getDenseOrBuilder() {
+      return dense_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.getDefaultInstance() : dense_;
     }
 
     public static final int WAYS_FIELD_NUMBER = 3;
-    private com.google.protobuf.Internal.ProtobufList<org.openstreetmap.osmosis.osmbinary.Osmformat.Way> ways_;
+    private java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Way> ways_;
     /**
      * <code>repeated .OSMPBF.Way ways = 3;</code>
      */
-    @java.lang.Override
     public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Way> getWaysList() {
       return ways_;
     }
@@ -3683,14 +4728,12 @@ public final class Osmformat {
     /**
      * <code>repeated .OSMPBF.Way ways = 3;</code>
      */
-    @java.lang.Override
     public int getWaysCount() {
       return ways_.size();
     }
     /**
      * <code>repeated .OSMPBF.Way ways = 3;</code>
      */
-    @java.lang.Override
     public org.openstreetmap.osmosis.osmbinary.Osmformat.Way getWays(int index) {
       return ways_.get(index);
     }
@@ -3701,98 +4744,12 @@ public final class Osmformat {
         int index) {
       return ways_.get(index);
     }
-    private void ensureWaysIsMutable() {
-      if (!ways_.isModifiable()) {
-        ways_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(ways_);
-       }
-    }
-
-    /**
-     * <code>repeated .OSMPBF.Way ways = 3;</code>
-     */
-    private void setWays(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Way value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureWaysIsMutable();
-      ways_.set(index, value);
-    }
-    /**
-     * <code>repeated .OSMPBF.Way ways = 3;</code>
-     */
-    private void setWays(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Way.Builder builderForValue) {
-      ensureWaysIsMutable();
-      ways_.set(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.Way ways = 3;</code>
-     */
-    private void addWays(org.openstreetmap.osmosis.osmbinary.Osmformat.Way value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureWaysIsMutable();
-      ways_.add(value);
-    }
-    /**
-     * <code>repeated .OSMPBF.Way ways = 3;</code>
-     */
-    private void addWays(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Way value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureWaysIsMutable();
-      ways_.add(index, value);
-    }
-    /**
-     * <code>repeated .OSMPBF.Way ways = 3;</code>
-     */
-    private void addWays(
-        org.openstreetmap.osmosis.osmbinary.Osmformat.Way.Builder builderForValue) {
-      ensureWaysIsMutable();
-      ways_.add(builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.Way ways = 3;</code>
-     */
-    private void addWays(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Way.Builder builderForValue) {
-      ensureWaysIsMutable();
-      ways_.add(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.Way ways = 3;</code>
-     */
-    private void addAllWays(
-        java.lang.Iterable<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.Way> values) {
-      ensureWaysIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, ways_);
-    }
-    /**
-     * <code>repeated .OSMPBF.Way ways = 3;</code>
-     */
-    private void clearWays() {
-      ways_ = emptyProtobufList();
-    }
-    /**
-     * <code>repeated .OSMPBF.Way ways = 3;</code>
-     */
-    private void removeWays(int index) {
-      ensureWaysIsMutable();
-      ways_.remove(index);
-    }
 
     public static final int RELATIONS_FIELD_NUMBER = 4;
-    private com.google.protobuf.Internal.ProtobufList<org.openstreetmap.osmosis.osmbinary.Osmformat.Relation> relations_;
+    private java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Relation> relations_;
     /**
      * <code>repeated .OSMPBF.Relation relations = 4;</code>
      */
-    @java.lang.Override
     public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Relation> getRelationsList() {
       return relations_;
     }
@@ -3806,14 +4763,12 @@ public final class Osmformat {
     /**
      * <code>repeated .OSMPBF.Relation relations = 4;</code>
      */
-    @java.lang.Override
     public int getRelationsCount() {
       return relations_.size();
     }
     /**
      * <code>repeated .OSMPBF.Relation relations = 4;</code>
      */
-    @java.lang.Override
     public org.openstreetmap.osmosis.osmbinary.Osmformat.Relation getRelations(int index) {
       return relations_.get(index);
     }
@@ -3824,98 +4779,12 @@ public final class Osmformat {
         int index) {
       return relations_.get(index);
     }
-    private void ensureRelationsIsMutable() {
-      if (!relations_.isModifiable()) {
-        relations_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(relations_);
-       }
-    }
-
-    /**
-     * <code>repeated .OSMPBF.Relation relations = 4;</code>
-     */
-    private void setRelations(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureRelationsIsMutable();
-      relations_.set(index, value);
-    }
-    /**
-     * <code>repeated .OSMPBF.Relation relations = 4;</code>
-     */
-    private void setRelations(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.Builder builderForValue) {
-      ensureRelationsIsMutable();
-      relations_.set(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.Relation relations = 4;</code>
-     */
-    private void addRelations(org.openstreetmap.osmosis.osmbinary.Osmformat.Relation value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureRelationsIsMutable();
-      relations_.add(value);
-    }
-    /**
-     * <code>repeated .OSMPBF.Relation relations = 4;</code>
-     */
-    private void addRelations(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureRelationsIsMutable();
-      relations_.add(index, value);
-    }
-    /**
-     * <code>repeated .OSMPBF.Relation relations = 4;</code>
-     */
-    private void addRelations(
-        org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.Builder builderForValue) {
-      ensureRelationsIsMutable();
-      relations_.add(builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.Relation relations = 4;</code>
-     */
-    private void addRelations(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.Builder builderForValue) {
-      ensureRelationsIsMutable();
-      relations_.add(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.Relation relations = 4;</code>
-     */
-    private void addAllRelations(
-        java.lang.Iterable<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.Relation> values) {
-      ensureRelationsIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, relations_);
-    }
-    /**
-     * <code>repeated .OSMPBF.Relation relations = 4;</code>
-     */
-    private void clearRelations() {
-      relations_ = emptyProtobufList();
-    }
-    /**
-     * <code>repeated .OSMPBF.Relation relations = 4;</code>
-     */
-    private void removeRelations(int index) {
-      ensureRelationsIsMutable();
-      relations_.remove(index);
-    }
 
     public static final int CHANGESETS_FIELD_NUMBER = 5;
-    private com.google.protobuf.Internal.ProtobufList<org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet> changesets_;
+    private java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet> changesets_;
     /**
      * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
      */
-    @java.lang.Override
     public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet> getChangesetsList() {
       return changesets_;
     }
@@ -3929,14 +4798,12 @@ public final class Osmformat {
     /**
      * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
      */
-    @java.lang.Override
     public int getChangesetsCount() {
       return changesets_.size();
     }
     /**
      * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
      */
-    @java.lang.Override
     public org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet getChangesets(int index) {
       return changesets_.get(index);
     }
@@ -3947,90 +4814,40 @@ public final class Osmformat {
         int index) {
       return changesets_.get(index);
     }
-    private void ensureChangesetsIsMutable() {
-      if (!changesets_.isModifiable()) {
-        changesets_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(changesets_);
-       }
-    }
 
-    /**
-     * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
-     */
-    private void setChangesets(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet value) {
-      if (value == null) {
-        throw new NullPointerException();
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      for (int i = 0; i < getNodesCount(); i++) {
+        if (!getNodes(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
-      ensureChangesetsIsMutable();
-      changesets_.set(index, value);
-    }
-    /**
-     * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
-     */
-    private void setChangesets(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.Builder builderForValue) {
-      ensureChangesetsIsMutable();
-      changesets_.set(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
-     */
-    private void addChangesets(org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet value) {
-      if (value == null) {
-        throw new NullPointerException();
+      for (int i = 0; i < getWaysCount(); i++) {
+        if (!getWays(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
-      ensureChangesetsIsMutable();
-      changesets_.add(value);
-    }
-    /**
-     * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
-     */
-    private void addChangesets(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet value) {
-      if (value == null) {
-        throw new NullPointerException();
+      for (int i = 0; i < getRelationsCount(); i++) {
+        if (!getRelations(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
-      ensureChangesetsIsMutable();
-      changesets_.add(index, value);
-    }
-    /**
-     * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
-     */
-    private void addChangesets(
-        org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.Builder builderForValue) {
-      ensureChangesetsIsMutable();
-      changesets_.add(builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
-     */
-    private void addChangesets(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.Builder builderForValue) {
-      ensureChangesetsIsMutable();
-      changesets_.add(index, builderForValue.build());
-    }
-    /**
-     * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
-     */
-    private void addAllChangesets(
-        java.lang.Iterable<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet> values) {
-      ensureChangesetsIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, changesets_);
-    }
-    /**
-     * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
-     */
-    private void clearChangesets() {
-      changesets_ = emptyProtobufList();
-    }
-    /**
-     * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
-     */
-    private void removeChangesets(int index) {
-      ensureChangesetsIsMutable();
-      changesets_.remove(index);
+      for (int i = 0; i < getChangesetsCount(); i++) {
+        if (!getChangesets(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     @java.lang.Override
@@ -4039,7 +4856,7 @@ public final class Osmformat {
       for (int i = 0; i < nodes_.size(); i++) {
         output.writeMessage(1, nodes_.get(i));
       }
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         output.writeMessage(2, getDense());
       }
       for (int i = 0; i < ways_.size(); i++) {
@@ -4056,7 +4873,7 @@ public final class Osmformat {
 
     @java.lang.Override
     public int getSerializedSize() {
-      int size = memoizedSerializedSize;
+      int size = memoizedSize;
       if (size != -1) return size;
 
       size = 0;
@@ -4064,7 +4881,7 @@ public final class Osmformat {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, nodes_.get(i));
       }
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, getDense());
       }
@@ -4081,91 +4898,159 @@ public final class Osmformat {
           .computeMessageSize(5, changesets_.get(i));
       }
       size += unknownFields.getSerializedSize();
-      memoizedSerializedSize = size;
+      memoizedSize = size;
       return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup)) {
+        return super.equals(obj);
+      }
+      org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup other = (org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup) obj;
+
+      if (!getNodesList()
+          .equals(other.getNodesList())) return false;
+      if (hasDense() != other.hasDense()) return false;
+      if (hasDense()) {
+        if (!getDense()
+            .equals(other.getDense())) return false;
+      }
+      if (!getWaysList()
+          .equals(other.getWaysList())) return false;
+      if (!getRelationsList()
+          .equals(other.getRelationsList())) return false;
+      if (!getChangesetsList()
+          .equals(other.getChangesetsList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getNodesCount() > 0) {
+        hash = (37 * hash) + NODES_FIELD_NUMBER;
+        hash = (53 * hash) + getNodesList().hashCode();
+      }
+      if (hasDense()) {
+        hash = (37 * hash) + DENSE_FIELD_NUMBER;
+        hash = (53 * hash) + getDense().hashCode();
+      }
+      if (getWaysCount() > 0) {
+        hash = (37 * hash) + WAYS_FIELD_NUMBER;
+        hash = (53 * hash) + getWaysList().hashCode();
+      }
+      if (getRelationsCount() > 0) {
+        hash = (37 * hash) + RELATIONS_FIELD_NUMBER;
+        hash = (53 * hash) + getRelationsList().hashCode();
+      }
+      if (getChangesetsCount() > 0) {
+        hash = (37 * hash) + CHANGESETS_FIELD_NUMBER;
+        hash = (53 * hash) + getChangesetsList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
-      return (Builder) DEFAULT_INSTANCE.createBuilder();
+      return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup prototype) {
-      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * <pre>
      * Group of OSMPrimitives. All primitives in a group must be the same type.
@@ -4174,44 +5059,410 @@ public final class Osmformat {
      * Protobuf type {@code OSMPBF.PrimitiveGroup}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup, Builder> implements
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:OSMPBF.PrimitiveGroup)
         org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroupOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_PrimitiveGroup_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_PrimitiveGroup_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.class, org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.Builder.class);
+      }
+
       // Construct using org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getNodesFieldBuilder();
+          getDenseFieldBuilder();
+          getWaysFieldBuilder();
+          getRelationsFieldBuilder();
+          getChangesetsFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        if (nodesBuilder_ == null) {
+          nodes_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          nodesBuilder_.clear();
+        }
+        if (denseBuilder_ == null) {
+          dense_ = null;
+        } else {
+          denseBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        if (waysBuilder_ == null) {
+          ways_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        } else {
+          waysBuilder_.clear();
+        }
+        if (relationsBuilder_ == null) {
+          relations_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        } else {
+          relationsBuilder_.clear();
+        }
+        if (changesetsBuilder_ == null) {
+          changesets_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+        } else {
+          changesetsBuilder_.clear();
+        }
+        return this;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_PrimitiveGroup_descriptor;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup getDefaultInstanceForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup build() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup buildPartial() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup result = new org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (nodesBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            nodes_ = java.util.Collections.unmodifiableList(nodes_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.nodes_ = nodes_;
+        } else {
+          result.nodes_ = nodesBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          if (denseBuilder_ == null) {
+            result.dense_ = dense_;
+          } else {
+            result.dense_ = denseBuilder_.build();
+          }
+          to_bitField0_ |= 0x00000001;
+        }
+        if (waysBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) != 0)) {
+            ways_ = java.util.Collections.unmodifiableList(ways_);
+            bitField0_ = (bitField0_ & ~0x00000004);
+          }
+          result.ways_ = ways_;
+        } else {
+          result.ways_ = waysBuilder_.build();
+        }
+        if (relationsBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) != 0)) {
+            relations_ = java.util.Collections.unmodifiableList(relations_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.relations_ = relations_;
+        } else {
+          result.relations_ = relationsBuilder_.build();
+        }
+        if (changesetsBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) != 0)) {
+            changesets_ = java.util.Collections.unmodifiableList(changesets_);
+            bitField0_ = (bitField0_ & ~0x00000010);
+          }
+          result.changesets_ = changesets_;
+        } else {
+          result.changesets_ = changesetsBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup) {
+          return mergeFrom((org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup other) {
+        if (other == org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.getDefaultInstance()) return this;
+        if (nodesBuilder_ == null) {
+          if (!other.nodes_.isEmpty()) {
+            if (nodes_.isEmpty()) {
+              nodes_ = other.nodes_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureNodesIsMutable();
+              nodes_.addAll(other.nodes_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.nodes_.isEmpty()) {
+            if (nodesBuilder_.isEmpty()) {
+              nodesBuilder_.dispose();
+              nodesBuilder_ = null;
+              nodes_ = other.nodes_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              nodesBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getNodesFieldBuilder() : null;
+            } else {
+              nodesBuilder_.addAllMessages(other.nodes_);
+            }
+          }
+        }
+        if (other.hasDense()) {
+          mergeDense(other.getDense());
+        }
+        if (waysBuilder_ == null) {
+          if (!other.ways_.isEmpty()) {
+            if (ways_.isEmpty()) {
+              ways_ = other.ways_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+            } else {
+              ensureWaysIsMutable();
+              ways_.addAll(other.ways_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.ways_.isEmpty()) {
+            if (waysBuilder_.isEmpty()) {
+              waysBuilder_.dispose();
+              waysBuilder_ = null;
+              ways_ = other.ways_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+              waysBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getWaysFieldBuilder() : null;
+            } else {
+              waysBuilder_.addAllMessages(other.ways_);
+            }
+          }
+        }
+        if (relationsBuilder_ == null) {
+          if (!other.relations_.isEmpty()) {
+            if (relations_.isEmpty()) {
+              relations_ = other.relations_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureRelationsIsMutable();
+              relations_.addAll(other.relations_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.relations_.isEmpty()) {
+            if (relationsBuilder_.isEmpty()) {
+              relationsBuilder_.dispose();
+              relationsBuilder_ = null;
+              relations_ = other.relations_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              relationsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getRelationsFieldBuilder() : null;
+            } else {
+              relationsBuilder_.addAllMessages(other.relations_);
+            }
+          }
+        }
+        if (changesetsBuilder_ == null) {
+          if (!other.changesets_.isEmpty()) {
+            if (changesets_.isEmpty()) {
+              changesets_ = other.changesets_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+            } else {
+              ensureChangesetsIsMutable();
+              changesets_.addAll(other.changesets_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.changesets_.isEmpty()) {
+            if (changesetsBuilder_.isEmpty()) {
+              changesetsBuilder_.dispose();
+              changesetsBuilder_ = null;
+              changesets_ = other.changesets_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+              changesetsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getChangesetsFieldBuilder() : null;
+            } else {
+              changesetsBuilder_.addAllMessages(other.changesets_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        for (int i = 0; i < getNodesCount(); i++) {
+          if (!getNodes(i).isInitialized()) {
+            return false;
+          }
+        }
+        for (int i = 0; i < getWaysCount(); i++) {
+          if (!getWays(i).isInitialized()) {
+            return false;
+          }
+        }
+        for (int i = 0; i < getRelationsCount(); i++) {
+          if (!getRelations(i).isInitialized()) {
+            return false;
+          }
+        }
+        for (int i = 0; i < getChangesetsCount(); i++) {
+          if (!getChangesets(i).isInitialized()) {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Node> nodes_ =
+        java.util.Collections.emptyList();
+      private void ensureNodesIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          nodes_ = new java.util.ArrayList<org.openstreetmap.osmosis.osmbinary.Osmformat.Node>(nodes_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.Node, org.openstreetmap.osmosis.osmbinary.Osmformat.Node.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.NodeOrBuilder> nodesBuilder_;
 
       /**
        * <code>repeated .OSMPBF.Node nodes = 1;</code>
        */
-      @java.lang.Override
       public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Node> getNodesList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getNodesList());
+        if (nodesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(nodes_);
+        } else {
+          return nodesBuilder_.getMessageList();
+        }
       }
       /**
        * <code>repeated .OSMPBF.Node nodes = 1;</code>
        */
-      @java.lang.Override
       public int getNodesCount() {
-        return instance.getNodesCount();
-      }/**
+        if (nodesBuilder_ == null) {
+          return nodes_.size();
+        } else {
+          return nodesBuilder_.getCount();
+        }
+      }
+      /**
        * <code>repeated .OSMPBF.Node nodes = 1;</code>
        */
-      @java.lang.Override
       public org.openstreetmap.osmosis.osmbinary.Osmformat.Node getNodes(int index) {
-        return instance.getNodes(index);
+        if (nodesBuilder_ == null) {
+          return nodes_.get(index);
+        } else {
+          return nodesBuilder_.getMessage(index);
+        }
       }
       /**
        * <code>repeated .OSMPBF.Node nodes = 1;</code>
        */
       public Builder setNodes(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Node value) {
-        copyOnWrite();
-        instance.setNodes(index, value);
+        if (nodesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNodesIsMutable();
+          nodes_.set(index, value);
+          onChanged();
+        } else {
+          nodesBuilder_.setMessage(index, value);
+        }
         return this;
       }
       /**
@@ -4219,16 +5470,29 @@ public final class Osmformat {
        */
       public Builder setNodes(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Node.Builder builderForValue) {
-        copyOnWrite();
-        instance.setNodes(index, builderForValue);
+        if (nodesBuilder_ == null) {
+          ensureNodesIsMutable();
+          nodes_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          nodesBuilder_.setMessage(index, builderForValue.build());
+        }
         return this;
       }
       /**
        * <code>repeated .OSMPBF.Node nodes = 1;</code>
        */
       public Builder addNodes(org.openstreetmap.osmosis.osmbinary.Osmformat.Node value) {
-        copyOnWrite();
-        instance.addNodes(value);
+        if (nodesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNodesIsMutable();
+          nodes_.add(value);
+          onChanged();
+        } else {
+          nodesBuilder_.addMessage(value);
+        }
         return this;
       }
       /**
@@ -4236,8 +5500,16 @@ public final class Osmformat {
        */
       public Builder addNodes(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Node value) {
-        copyOnWrite();
-        instance.addNodes(index, value);
+        if (nodesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureNodesIsMutable();
+          nodes_.add(index, value);
+          onChanged();
+        } else {
+          nodesBuilder_.addMessage(index, value);
+        }
         return this;
       }
       /**
@@ -4245,8 +5517,13 @@ public final class Osmformat {
        */
       public Builder addNodes(
           org.openstreetmap.osmosis.osmbinary.Osmformat.Node.Builder builderForValue) {
-        copyOnWrite();
-        instance.addNodes(builderForValue);
+        if (nodesBuilder_ == null) {
+          ensureNodesIsMutable();
+          nodes_.add(builderForValue.build());
+          onChanged();
+        } else {
+          nodesBuilder_.addMessage(builderForValue.build());
+        }
         return this;
       }
       /**
@@ -4254,8 +5531,13 @@ public final class Osmformat {
        */
       public Builder addNodes(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Node.Builder builderForValue) {
-        copyOnWrite();
-        instance.addNodes(index, builderForValue);
+        if (nodesBuilder_ == null) {
+          ensureNodesIsMutable();
+          nodes_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          nodesBuilder_.addMessage(index, builderForValue.build());
+        }
         return this;
       }
       /**
@@ -4263,102 +5545,284 @@ public final class Osmformat {
        */
       public Builder addAllNodes(
           java.lang.Iterable<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.Node> values) {
-        copyOnWrite();
-        instance.addAllNodes(values);
+        if (nodesBuilder_ == null) {
+          ensureNodesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, nodes_);
+          onChanged();
+        } else {
+          nodesBuilder_.addAllMessages(values);
+        }
         return this;
       }
       /**
        * <code>repeated .OSMPBF.Node nodes = 1;</code>
        */
       public Builder clearNodes() {
-        copyOnWrite();
-        instance.clearNodes();
+        if (nodesBuilder_ == null) {
+          nodes_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          nodesBuilder_.clear();
+        }
         return this;
       }
       /**
        * <code>repeated .OSMPBF.Node nodes = 1;</code>
        */
       public Builder removeNodes(int index) {
-        copyOnWrite();
-        instance.removeNodes(index);
+        if (nodesBuilder_ == null) {
+          ensureNodesIsMutable();
+          nodes_.remove(index);
+          onChanged();
+        } else {
+          nodesBuilder_.remove(index);
+        }
         return this;
       }
+      /**
+       * <code>repeated .OSMPBF.Node nodes = 1;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Node.Builder getNodesBuilder(
+          int index) {
+        return getNodesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .OSMPBF.Node nodes = 1;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.NodeOrBuilder getNodesOrBuilder(
+          int index) {
+        if (nodesBuilder_ == null) {
+          return nodes_.get(index);  } else {
+          return nodesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .OSMPBF.Node nodes = 1;</code>
+       */
+      public java.util.List<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.NodeOrBuilder> 
+           getNodesOrBuilderList() {
+        if (nodesBuilder_ != null) {
+          return nodesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(nodes_);
+        }
+      }
+      /**
+       * <code>repeated .OSMPBF.Node nodes = 1;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Node.Builder addNodesBuilder() {
+        return getNodesFieldBuilder().addBuilder(
+            org.openstreetmap.osmosis.osmbinary.Osmformat.Node.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .OSMPBF.Node nodes = 1;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Node.Builder addNodesBuilder(
+          int index) {
+        return getNodesFieldBuilder().addBuilder(
+            index, org.openstreetmap.osmosis.osmbinary.Osmformat.Node.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .OSMPBF.Node nodes = 1;</code>
+       */
+      public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Node.Builder> 
+           getNodesBuilderList() {
+        return getNodesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.Node, org.openstreetmap.osmosis.osmbinary.Osmformat.Node.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.NodeOrBuilder> 
+          getNodesFieldBuilder() {
+        if (nodesBuilder_ == null) {
+          nodesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Node, org.openstreetmap.osmosis.osmbinary.Osmformat.Node.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.NodeOrBuilder>(
+                  nodes_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          nodes_ = null;
+        }
+        return nodesBuilder_;
+      }
 
+      private org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes dense_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes, org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodesOrBuilder> denseBuilder_;
       /**
        * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
+       * @return Whether the dense field is set.
        */
-      @java.lang.Override
       public boolean hasDense() {
-        return instance.hasDense();
+        return ((bitField0_ & 0x00000002) != 0);
       }
       /**
        * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
+       * @return The dense.
        */
-      @java.lang.Override
       public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes getDense() {
-        return instance.getDense();
+        if (denseBuilder_ == null) {
+          return dense_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.getDefaultInstance() : dense_;
+        } else {
+          return denseBuilder_.getMessage();
+        }
       }
       /**
        * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
        */
       public Builder setDense(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes value) {
-        copyOnWrite();
-        instance.setDense(value);
-        return this;
+        if (denseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          dense_ = value;
+          onChanged();
+        } else {
+          denseBuilder_.setMessage(value);
         }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
       /**
        * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
        */
       public Builder setDense(
           org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.Builder builderForValue) {
-        copyOnWrite();
-        instance.setDense(builderForValue);
+        if (denseBuilder_ == null) {
+          dense_ = builderForValue.build();
+          onChanged();
+        } else {
+          denseBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
         return this;
       }
       /**
        * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
        */
       public Builder mergeDense(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes value) {
-        copyOnWrite();
-        instance.mergeDense(value);
+        if (denseBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) != 0) &&
+              dense_ != null &&
+              dense_ != org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.getDefaultInstance()) {
+            dense_ =
+              org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.newBuilder(dense_).mergeFrom(value).buildPartial();
+          } else {
+            dense_ = value;
+          }
+          onChanged();
+        } else {
+          denseBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
         return this;
       }
       /**
        * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
        */
-      public Builder clearDense() {  copyOnWrite();
-        instance.clearDense();
+      public Builder clearDense() {
+        if (denseBuilder_ == null) {
+          dense_ = null;
+          onChanged();
+        } else {
+          denseBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
+      /**
+       * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.Builder getDenseBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getDenseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodesOrBuilder getDenseOrBuilder() {
+        if (denseBuilder_ != null) {
+          return denseBuilder_.getMessageOrBuilder();
+        } else {
+          return dense_ == null ?
+              org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.getDefaultInstance() : dense_;
+        }
+      }
+      /**
+       * <code>optional .OSMPBF.DenseNodes dense = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes, org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodesOrBuilder> 
+          getDenseFieldBuilder() {
+        if (denseBuilder_ == null) {
+          denseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes, org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodesOrBuilder>(
+                  getDense(),
+                  getParentForChildren(),
+                  isClean());
+          dense_ = null;
+        }
+        return denseBuilder_;
+      }
+
+      private java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Way> ways_ =
+        java.util.Collections.emptyList();
+      private void ensureWaysIsMutable() {
+        if (!((bitField0_ & 0x00000004) != 0)) {
+          ways_ = new java.util.ArrayList<org.openstreetmap.osmosis.osmbinary.Osmformat.Way>(ways_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.Way, org.openstreetmap.osmosis.osmbinary.Osmformat.Way.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.WayOrBuilder> waysBuilder_;
 
       /**
        * <code>repeated .OSMPBF.Way ways = 3;</code>
        */
-      @java.lang.Override
       public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Way> getWaysList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getWaysList());
+        if (waysBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(ways_);
+        } else {
+          return waysBuilder_.getMessageList();
+        }
       }
       /**
        * <code>repeated .OSMPBF.Way ways = 3;</code>
        */
-      @java.lang.Override
       public int getWaysCount() {
-        return instance.getWaysCount();
-      }/**
+        if (waysBuilder_ == null) {
+          return ways_.size();
+        } else {
+          return waysBuilder_.getCount();
+        }
+      }
+      /**
        * <code>repeated .OSMPBF.Way ways = 3;</code>
        */
-      @java.lang.Override
       public org.openstreetmap.osmosis.osmbinary.Osmformat.Way getWays(int index) {
-        return instance.getWays(index);
+        if (waysBuilder_ == null) {
+          return ways_.get(index);
+        } else {
+          return waysBuilder_.getMessage(index);
+        }
       }
       /**
        * <code>repeated .OSMPBF.Way ways = 3;</code>
        */
       public Builder setWays(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Way value) {
-        copyOnWrite();
-        instance.setWays(index, value);
+        if (waysBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureWaysIsMutable();
+          ways_.set(index, value);
+          onChanged();
+        } else {
+          waysBuilder_.setMessage(index, value);
+        }
         return this;
       }
       /**
@@ -4366,16 +5830,29 @@ public final class Osmformat {
        */
       public Builder setWays(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Way.Builder builderForValue) {
-        copyOnWrite();
-        instance.setWays(index, builderForValue);
+        if (waysBuilder_ == null) {
+          ensureWaysIsMutable();
+          ways_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          waysBuilder_.setMessage(index, builderForValue.build());
+        }
         return this;
       }
       /**
        * <code>repeated .OSMPBF.Way ways = 3;</code>
        */
       public Builder addWays(org.openstreetmap.osmosis.osmbinary.Osmformat.Way value) {
-        copyOnWrite();
-        instance.addWays(value);
+        if (waysBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureWaysIsMutable();
+          ways_.add(value);
+          onChanged();
+        } else {
+          waysBuilder_.addMessage(value);
+        }
         return this;
       }
       /**
@@ -4383,8 +5860,16 @@ public final class Osmformat {
        */
       public Builder addWays(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Way value) {
-        copyOnWrite();
-        instance.addWays(index, value);
+        if (waysBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureWaysIsMutable();
+          ways_.add(index, value);
+          onChanged();
+        } else {
+          waysBuilder_.addMessage(index, value);
+        }
         return this;
       }
       /**
@@ -4392,8 +5877,13 @@ public final class Osmformat {
        */
       public Builder addWays(
           org.openstreetmap.osmosis.osmbinary.Osmformat.Way.Builder builderForValue) {
-        copyOnWrite();
-        instance.addWays(builderForValue);
+        if (waysBuilder_ == null) {
+          ensureWaysIsMutable();
+          ways_.add(builderForValue.build());
+          onChanged();
+        } else {
+          waysBuilder_.addMessage(builderForValue.build());
+        }
         return this;
       }
       /**
@@ -4401,8 +5891,13 @@ public final class Osmformat {
        */
       public Builder addWays(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Way.Builder builderForValue) {
-        copyOnWrite();
-        instance.addWays(index, builderForValue);
+        if (waysBuilder_ == null) {
+          ensureWaysIsMutable();
+          ways_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          waysBuilder_.addMessage(index, builderForValue.build());
+        }
         return this;
       }
       /**
@@ -4410,55 +5905,164 @@ public final class Osmformat {
        */
       public Builder addAllWays(
           java.lang.Iterable<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.Way> values) {
-        copyOnWrite();
-        instance.addAllWays(values);
+        if (waysBuilder_ == null) {
+          ensureWaysIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, ways_);
+          onChanged();
+        } else {
+          waysBuilder_.addAllMessages(values);
+        }
         return this;
       }
       /**
        * <code>repeated .OSMPBF.Way ways = 3;</code>
        */
       public Builder clearWays() {
-        copyOnWrite();
-        instance.clearWays();
+        if (waysBuilder_ == null) {
+          ways_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          onChanged();
+        } else {
+          waysBuilder_.clear();
+        }
         return this;
       }
       /**
        * <code>repeated .OSMPBF.Way ways = 3;</code>
        */
       public Builder removeWays(int index) {
-        copyOnWrite();
-        instance.removeWays(index);
+        if (waysBuilder_ == null) {
+          ensureWaysIsMutable();
+          ways_.remove(index);
+          onChanged();
+        } else {
+          waysBuilder_.remove(index);
+        }
         return this;
       }
+      /**
+       * <code>repeated .OSMPBF.Way ways = 3;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Way.Builder getWaysBuilder(
+          int index) {
+        return getWaysFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .OSMPBF.Way ways = 3;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.WayOrBuilder getWaysOrBuilder(
+          int index) {
+        if (waysBuilder_ == null) {
+          return ways_.get(index);  } else {
+          return waysBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .OSMPBF.Way ways = 3;</code>
+       */
+      public java.util.List<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.WayOrBuilder> 
+           getWaysOrBuilderList() {
+        if (waysBuilder_ != null) {
+          return waysBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(ways_);
+        }
+      }
+      /**
+       * <code>repeated .OSMPBF.Way ways = 3;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Way.Builder addWaysBuilder() {
+        return getWaysFieldBuilder().addBuilder(
+            org.openstreetmap.osmosis.osmbinary.Osmformat.Way.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .OSMPBF.Way ways = 3;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Way.Builder addWaysBuilder(
+          int index) {
+        return getWaysFieldBuilder().addBuilder(
+            index, org.openstreetmap.osmosis.osmbinary.Osmformat.Way.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .OSMPBF.Way ways = 3;</code>
+       */
+      public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Way.Builder> 
+           getWaysBuilderList() {
+        return getWaysFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.Way, org.openstreetmap.osmosis.osmbinary.Osmformat.Way.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.WayOrBuilder> 
+          getWaysFieldBuilder() {
+        if (waysBuilder_ == null) {
+          waysBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Way, org.openstreetmap.osmosis.osmbinary.Osmformat.Way.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.WayOrBuilder>(
+                  ways_,
+                  ((bitField0_ & 0x00000004) != 0),
+                  getParentForChildren(),
+                  isClean());
+          ways_ = null;
+        }
+        return waysBuilder_;
+      }
+
+      private java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Relation> relations_ =
+        java.util.Collections.emptyList();
+      private void ensureRelationsIsMutable() {
+        if (!((bitField0_ & 0x00000008) != 0)) {
+          relations_ = new java.util.ArrayList<org.openstreetmap.osmosis.osmbinary.Osmformat.Relation>(relations_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.Relation, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.RelationOrBuilder> relationsBuilder_;
 
       /**
        * <code>repeated .OSMPBF.Relation relations = 4;</code>
        */
-      @java.lang.Override
       public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Relation> getRelationsList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getRelationsList());
+        if (relationsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(relations_);
+        } else {
+          return relationsBuilder_.getMessageList();
+        }
       }
       /**
        * <code>repeated .OSMPBF.Relation relations = 4;</code>
        */
-      @java.lang.Override
       public int getRelationsCount() {
-        return instance.getRelationsCount();
-      }/**
+        if (relationsBuilder_ == null) {
+          return relations_.size();
+        } else {
+          return relationsBuilder_.getCount();
+        }
+      }
+      /**
        * <code>repeated .OSMPBF.Relation relations = 4;</code>
        */
-      @java.lang.Override
       public org.openstreetmap.osmosis.osmbinary.Osmformat.Relation getRelations(int index) {
-        return instance.getRelations(index);
+        if (relationsBuilder_ == null) {
+          return relations_.get(index);
+        } else {
+          return relationsBuilder_.getMessage(index);
+        }
       }
       /**
        * <code>repeated .OSMPBF.Relation relations = 4;</code>
        */
       public Builder setRelations(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation value) {
-        copyOnWrite();
-        instance.setRelations(index, value);
+        if (relationsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRelationsIsMutable();
+          relations_.set(index, value);
+          onChanged();
+        } else {
+          relationsBuilder_.setMessage(index, value);
+        }
         return this;
       }
       /**
@@ -4466,16 +6070,29 @@ public final class Osmformat {
        */
       public Builder setRelations(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.Builder builderForValue) {
-        copyOnWrite();
-        instance.setRelations(index, builderForValue);
+        if (relationsBuilder_ == null) {
+          ensureRelationsIsMutable();
+          relations_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          relationsBuilder_.setMessage(index, builderForValue.build());
+        }
         return this;
       }
       /**
        * <code>repeated .OSMPBF.Relation relations = 4;</code>
        */
       public Builder addRelations(org.openstreetmap.osmosis.osmbinary.Osmformat.Relation value) {
-        copyOnWrite();
-        instance.addRelations(value);
+        if (relationsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRelationsIsMutable();
+          relations_.add(value);
+          onChanged();
+        } else {
+          relationsBuilder_.addMessage(value);
+        }
         return this;
       }
       /**
@@ -4483,8 +6100,16 @@ public final class Osmformat {
        */
       public Builder addRelations(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation value) {
-        copyOnWrite();
-        instance.addRelations(index, value);
+        if (relationsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureRelationsIsMutable();
+          relations_.add(index, value);
+          onChanged();
+        } else {
+          relationsBuilder_.addMessage(index, value);
+        }
         return this;
       }
       /**
@@ -4492,8 +6117,13 @@ public final class Osmformat {
        */
       public Builder addRelations(
           org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.Builder builderForValue) {
-        copyOnWrite();
-        instance.addRelations(builderForValue);
+        if (relationsBuilder_ == null) {
+          ensureRelationsIsMutable();
+          relations_.add(builderForValue.build());
+          onChanged();
+        } else {
+          relationsBuilder_.addMessage(builderForValue.build());
+        }
         return this;
       }
       /**
@@ -4501,8 +6131,13 @@ public final class Osmformat {
        */
       public Builder addRelations(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.Builder builderForValue) {
-        copyOnWrite();
-        instance.addRelations(index, builderForValue);
+        if (relationsBuilder_ == null) {
+          ensureRelationsIsMutable();
+          relations_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          relationsBuilder_.addMessage(index, builderForValue.build());
+        }
         return this;
       }
       /**
@@ -4510,55 +6145,164 @@ public final class Osmformat {
        */
       public Builder addAllRelations(
           java.lang.Iterable<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.Relation> values) {
-        copyOnWrite();
-        instance.addAllRelations(values);
+        if (relationsBuilder_ == null) {
+          ensureRelationsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, relations_);
+          onChanged();
+        } else {
+          relationsBuilder_.addAllMessages(values);
+        }
         return this;
       }
       /**
        * <code>repeated .OSMPBF.Relation relations = 4;</code>
        */
       public Builder clearRelations() {
-        copyOnWrite();
-        instance.clearRelations();
+        if (relationsBuilder_ == null) {
+          relations_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          onChanged();
+        } else {
+          relationsBuilder_.clear();
+        }
         return this;
       }
       /**
        * <code>repeated .OSMPBF.Relation relations = 4;</code>
        */
       public Builder removeRelations(int index) {
-        copyOnWrite();
-        instance.removeRelations(index);
+        if (relationsBuilder_ == null) {
+          ensureRelationsIsMutable();
+          relations_.remove(index);
+          onChanged();
+        } else {
+          relationsBuilder_.remove(index);
+        }
         return this;
       }
+      /**
+       * <code>repeated .OSMPBF.Relation relations = 4;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.Builder getRelationsBuilder(
+          int index) {
+        return getRelationsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .OSMPBF.Relation relations = 4;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.RelationOrBuilder getRelationsOrBuilder(
+          int index) {
+        if (relationsBuilder_ == null) {
+          return relations_.get(index);  } else {
+          return relationsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .OSMPBF.Relation relations = 4;</code>
+       */
+      public java.util.List<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.RelationOrBuilder> 
+           getRelationsOrBuilderList() {
+        if (relationsBuilder_ != null) {
+          return relationsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(relations_);
+        }
+      }
+      /**
+       * <code>repeated .OSMPBF.Relation relations = 4;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.Builder addRelationsBuilder() {
+        return getRelationsFieldBuilder().addBuilder(
+            org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .OSMPBF.Relation relations = 4;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.Builder addRelationsBuilder(
+          int index) {
+        return getRelationsFieldBuilder().addBuilder(
+            index, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .OSMPBF.Relation relations = 4;</code>
+       */
+      public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.Builder> 
+           getRelationsBuilderList() {
+        return getRelationsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.Relation, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.RelationOrBuilder> 
+          getRelationsFieldBuilder() {
+        if (relationsBuilder_ == null) {
+          relationsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Relation, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.RelationOrBuilder>(
+                  relations_,
+                  ((bitField0_ & 0x00000008) != 0),
+                  getParentForChildren(),
+                  isClean());
+          relations_ = null;
+        }
+        return relationsBuilder_;
+      }
+
+      private java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet> changesets_ =
+        java.util.Collections.emptyList();
+      private void ensureChangesetsIsMutable() {
+        if (!((bitField0_ & 0x00000010) != 0)) {
+          changesets_ = new java.util.ArrayList<org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet>(changesets_);
+          bitField0_ |= 0x00000010;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSetOrBuilder> changesetsBuilder_;
 
       /**
        * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
        */
-      @java.lang.Override
       public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet> getChangesetsList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getChangesetsList());
+        if (changesetsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(changesets_);
+        } else {
+          return changesetsBuilder_.getMessageList();
+        }
       }
       /**
        * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
        */
-      @java.lang.Override
       public int getChangesetsCount() {
-        return instance.getChangesetsCount();
-      }/**
+        if (changesetsBuilder_ == null) {
+          return changesets_.size();
+        } else {
+          return changesetsBuilder_.getCount();
+        }
+      }
+      /**
        * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
        */
-      @java.lang.Override
       public org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet getChangesets(int index) {
-        return instance.getChangesets(index);
+        if (changesetsBuilder_ == null) {
+          return changesets_.get(index);
+        } else {
+          return changesetsBuilder_.getMessage(index);
+        }
       }
       /**
        * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
        */
       public Builder setChangesets(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet value) {
-        copyOnWrite();
-        instance.setChangesets(index, value);
+        if (changesetsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureChangesetsIsMutable();
+          changesets_.set(index, value);
+          onChanged();
+        } else {
+          changesetsBuilder_.setMessage(index, value);
+        }
         return this;
       }
       /**
@@ -4566,16 +6310,29 @@ public final class Osmformat {
        */
       public Builder setChangesets(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.Builder builderForValue) {
-        copyOnWrite();
-        instance.setChangesets(index, builderForValue);
+        if (changesetsBuilder_ == null) {
+          ensureChangesetsIsMutable();
+          changesets_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          changesetsBuilder_.setMessage(index, builderForValue.build());
+        }
         return this;
       }
       /**
        * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
        */
       public Builder addChangesets(org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet value) {
-        copyOnWrite();
-        instance.addChangesets(value);
+        if (changesetsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureChangesetsIsMutable();
+          changesets_.add(value);
+          onChanged();
+        } else {
+          changesetsBuilder_.addMessage(value);
+        }
         return this;
       }
       /**
@@ -4583,8 +6340,16 @@ public final class Osmformat {
        */
       public Builder addChangesets(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet value) {
-        copyOnWrite();
-        instance.addChangesets(index, value);
+        if (changesetsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureChangesetsIsMutable();
+          changesets_.add(index, value);
+          onChanged();
+        } else {
+          changesetsBuilder_.addMessage(index, value);
+        }
         return this;
       }
       /**
@@ -4592,8 +6357,13 @@ public final class Osmformat {
        */
       public Builder addChangesets(
           org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.Builder builderForValue) {
-        copyOnWrite();
-        instance.addChangesets(builderForValue);
+        if (changesetsBuilder_ == null) {
+          ensureChangesetsIsMutable();
+          changesets_.add(builderForValue.build());
+          onChanged();
+        } else {
+          changesetsBuilder_.addMessage(builderForValue.build());
+        }
         return this;
       }
       /**
@@ -4601,8 +6371,13 @@ public final class Osmformat {
        */
       public Builder addChangesets(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.Builder builderForValue) {
-        copyOnWrite();
-        instance.addChangesets(index, builderForValue);
+        if (changesetsBuilder_ == null) {
+          ensureChangesetsIsMutable();
+          changesets_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          changesetsBuilder_.addMessage(index, builderForValue.build());
+        }
         return this;
       }
       /**
@@ -4610,236 +6385,177 @@ public final class Osmformat {
        */
       public Builder addAllChangesets(
           java.lang.Iterable<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet> values) {
-        copyOnWrite();
-        instance.addAllChangesets(values);
+        if (changesetsBuilder_ == null) {
+          ensureChangesetsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, changesets_);
+          onChanged();
+        } else {
+          changesetsBuilder_.addAllMessages(values);
+        }
         return this;
       }
       /**
        * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
        */
       public Builder clearChangesets() {
-        copyOnWrite();
-        instance.clearChangesets();
+        if (changesetsBuilder_ == null) {
+          changesets_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+          onChanged();
+        } else {
+          changesetsBuilder_.clear();
+        }
         return this;
       }
       /**
        * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
        */
       public Builder removeChangesets(int index) {
-        copyOnWrite();
-        instance.removeChangesets(index);
+        if (changesetsBuilder_ == null) {
+          ensureChangesetsIsMutable();
+          changesets_.remove(index);
+          onChanged();
+        } else {
+          changesetsBuilder_.remove(index);
+        }
         return this;
       }
+      /**
+       * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.Builder getChangesetsBuilder(
+          int index) {
+        return getChangesetsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSetOrBuilder getChangesetsOrBuilder(
+          int index) {
+        if (changesetsBuilder_ == null) {
+          return changesets_.get(index);  } else {
+          return changesetsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
+       */
+      public java.util.List<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSetOrBuilder> 
+           getChangesetsOrBuilderList() {
+        if (changesetsBuilder_ != null) {
+          return changesetsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(changesets_);
+        }
+      }
+      /**
+       * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.Builder addChangesetsBuilder() {
+        return getChangesetsFieldBuilder().addBuilder(
+            org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.Builder addChangesetsBuilder(
+          int index) {
+        return getChangesetsFieldBuilder().addBuilder(
+            index, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .OSMPBF.ChangeSet changesets = 5;</code>
+       */
+      public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.Builder> 
+           getChangesetsBuilderList() {
+        return getChangesetsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSetOrBuilder> 
+          getChangesetsFieldBuilder() {
+        if (changesetsBuilder_ == null) {
+          changesetsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSetOrBuilder>(
+                  changesets_,
+                  ((bitField0_ & 0x00000010) != 0),
+                  getParentForChildren(),
+                  isClean());
+          changesets_ = null;
+        }
+        return changesetsBuilder_;
+      }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.PrimitiveGroup)
     }
-    private byte memoizedIsInitialized = 2;
-    @java.lang.Override
-    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        java.lang.Object arg0, java.lang.Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup();
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case IS_INITIALIZED: {
-          byte isInitialized = memoizedIsInitialized;
-          if (isInitialized == 1) return DEFAULT_INSTANCE;
-          if (isInitialized == 0) return null;
-
-          boolean shouldMemoize = ((Boolean) arg0).booleanValue();
-          for (int i = 0; i < getNodesCount(); i++) {
-            if (!getNodes(i).isInitialized()) {
-              return null;
-            }
-          }
-          for (int i = 0; i < getWaysCount(); i++) {
-            if (!getWays(i).isInitialized()) {
-              return null;
-            }
-          }
-          for (int i = 0; i < getRelationsCount(); i++) {
-            if (!getRelations(i).isInitialized()) {
-              return null;
-            }
-          }
-          for (int i = 0; i < getChangesetsCount(); i++) {
-            if (!getChangesets(i).isInitialized()) {
-              return null;
-            }
-          }
-          return DEFAULT_INSTANCE;
-
-        }
-        case MAKE_IMMUTABLE: {
-          nodes_.makeImmutable();
-          ways_.makeImmutable();
-          relations_.makeImmutable();
-          changesets_.makeImmutable();
-          return null;
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup other = (org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup) arg1;
-          nodes_= visitor.visitList(nodes_, other.nodes_);
-          dense_ = visitor.visitMessage(dense_, other.dense_);
-          ways_= visitor.visitList(ways_, other.ways_);
-          relations_= visitor.visitList(relations_, other.relations_);
-          changesets_= visitor.visitList(changesets_, other.changesets_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-            bitField0_ |= other.bitField0_;
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-          }
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                case 10: {
-                  if (!nodes_.isModifiable()) {
-                    nodes_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(nodes_);
-                  }
-                  nodes_.add(
-                      input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.Node.parser(), extensionRegistry));
-                  break;
-                }
-                case 18: {
-                  org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.Builder subBuilder = null;
-                  if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                    subBuilder = dense_.toBuilder();
-                  }
-                  dense_ = input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.parser(), extensionRegistry);
-                  if (subBuilder != null) {
-                    subBuilder.mergeFrom(dense_);
-                    dense_ = subBuilder.buildPartial();
-                  }
-                  bitField0_ |= 0x00000001;
-                  break;
-                }
-                case 26: {
-                  if (!ways_.isModifiable()) {
-                    ways_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(ways_);
-                  }
-                  ways_.add(
-                      input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.Way.parser(), extensionRegistry));
-                  break;
-                }
-                case 34: {
-                  if (!relations_.isModifiable()) {
-                    relations_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(relations_);
-                  }
-                  relations_.add(
-                      input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.parser(), extensionRegistry));
-                  break;
-                }
-                case 42: {
-                  if (!changesets_.isModifiable()) {
-                    changesets_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(changesets_);
-                  }
-                  changesets_.add(
-                      input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.parser(), extensionRegistry));
-                  break;
-                }
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        // fall through
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          com.google.protobuf.Parser<org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup> parser = PARSER;
-          if (parser == null) {
-            synchronized (org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup.class) {
-              parser = PARSER;
-              if (parser == null) {
-                parser = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-                PARSER = parser;
-              }
-            }
-          }
-          return parser;
-      }
-      case GET_MEMOIZED_IS_INITIALIZED: {
-        return memoizedIsInitialized;
-      }
-      case SET_MEMOIZED_IS_INITIALIZED: {
-        memoizedIsInitialized = (byte) (arg0 == null ? 0 : 1);
-        return null;
-      }
-      }
-      throw new UnsupportedOperationException();
-    }
-
 
     // @@protoc_insertion_point(class_scope:OSMPBF.PrimitiveGroup)
     private static final org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup DEFAULT_INSTANCE;
     static {
-      // New instances are implicitly immutable so no need to make
-      // immutable.
-      DEFAULT_INSTANCE = new PrimitiveGroup();
+      DEFAULT_INSTANCE = new org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup();
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static volatile com.google.protobuf.Parser<PrimitiveGroup> PARSER;
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<PrimitiveGroup>
+        PARSER = new com.google.protobuf.AbstractParser<PrimitiveGroup>() {
+      @java.lang.Override
+      public PrimitiveGroup parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new PrimitiveGroup(input, extensionRegistry);
+      }
+    };
 
     public static com.google.protobuf.Parser<PrimitiveGroup> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
+      return PARSER;
     }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PrimitiveGroup> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
   public interface StringTableOrBuilder extends
       // @@protoc_insertion_point(interface_extends:OSMPBF.StringTable)
-      com.google.protobuf.MessageLiteOrBuilder {
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>repeated bytes s = 1;</code>
+     * @return A list containing the s.
      */
     java.util.List<com.google.protobuf.ByteString> getSList();
     /**
      * <code>repeated bytes s = 1;</code>
+     * @return The count of s.
      */
     int getSCount();
     /**
      * <code>repeated bytes s = 1;</code>
+     * @param index The index of the element to return.
+     * @return The s at the given index.
      */
     com.google.protobuf.ByteString getS(int index);
   }
@@ -4853,78 +6569,127 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.StringTable}
    */
   public  static final class StringTable extends
-      com.google.protobuf.GeneratedMessageLite<
-          StringTable, StringTable.Builder> implements
+      com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:OSMPBF.StringTable)
       StringTableOrBuilder {
-    private StringTable() {
-      s_ = emptyProtobufList();
+  private static final long serialVersionUID = 0L;
+    // Use StringTable.newBuilder() to construct.
+    private StringTable(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
     }
+    private StringTable() {
+      s_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new StringTable();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private StringTable(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                s_ = new java.util.ArrayList<com.google.protobuf.ByteString>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              s_.add(input.readBytes());
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          s_ = java.util.Collections.unmodifiableList(s_); // C
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_StringTable_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_StringTable_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.class, org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.Builder.class);
+    }
+
     public static final int S_FIELD_NUMBER = 1;
-    private com.google.protobuf.Internal.ProtobufList<com.google.protobuf.ByteString> s_;
+    private java.util.List<com.google.protobuf.ByteString> s_;
     /**
      * <code>repeated bytes s = 1;</code>
+     * @return A list containing the s.
      */
-    @java.lang.Override
     public java.util.List<com.google.protobuf.ByteString>
         getSList() {
       return s_;
     }
     /**
      * <code>repeated bytes s = 1;</code>
+     * @return The count of s.
      */
-    @java.lang.Override
     public int getSCount() {
       return s_.size();
     }
     /**
      * <code>repeated bytes s = 1;</code>
+     * @param index The index of the element to return.
+     * @return The s at the given index.
      */
-    @java.lang.Override
     public com.google.protobuf.ByteString getS(int index) {
       return s_.get(index);
     }
-    private void ensureSIsMutable() {
-      if (!s_.isModifiable()) {
-        s_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(s_);
-       }
-    }
-    /**
-     * <code>repeated bytes s = 1;</code>
-     */
-    private void setS(
-        int index, com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureSIsMutable();
-      s_.set(index, value);
-    }
-    /**
-     * <code>repeated bytes s = 1;</code>
-     */
-    private void addS(com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureSIsMutable();
-      s_.add(value);
-    }
-    /**
-     * <code>repeated bytes s = 1;</code>
-     */
-    private void addAllS(
-        java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
-      ensureSIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, s_);
-    }
-    /**
-     * <code>repeated bytes s = 1;</code>
-     */
-    private void clearS() {
-      s_ = emptyProtobufList();
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     @java.lang.Override
@@ -4938,7 +6703,7 @@ public final class Osmformat {
 
     @java.lang.Override
     public int getSerializedSize() {
-      int size = memoizedSerializedSize;
+      int size = memoizedSize;
       if (size != -1) return size;
 
       size = 0;
@@ -4952,91 +6717,132 @@ public final class Osmformat {
         size += 1 * getSList().size();
       }
       size += unknownFields.getSerializedSize();
-      memoizedSerializedSize = size;
+      memoizedSize = size;
       return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable)) {
+        return super.equals(obj);
+      }
+      org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable other = (org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable) obj;
+
+      if (!getSList()
+          .equals(other.getSList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getSCount() > 0) {
+        hash = (37 * hash) + S_FIELD_NUMBER;
+        hash = (53 * hash) + getSList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
-      return (Builder) DEFAULT_INSTANCE.createBuilder();
+      return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable prototype) {
-      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * <pre>
      ** String table, contains the common strings in each block.
@@ -5047,229 +6853,344 @@ public final class Osmformat {
      * Protobuf type {@code OSMPBF.StringTable}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable, Builder> implements
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:OSMPBF.StringTable)
         org.openstreetmap.osmosis.osmbinary.Osmformat.StringTableOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_StringTable_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_StringTable_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.class, org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.Builder.class);
+      }
+
       // Construct using org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        s_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
 
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_StringTable_descriptor;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable getDefaultInstanceForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable build() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable buildPartial() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable result = new org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable(this);
+        int from_bitField0_ = bitField0_;
+        if (((bitField0_ & 0x00000001) != 0)) {
+          s_ = java.util.Collections.unmodifiableList(s_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.s_ = s_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable) {
+          return mergeFrom((org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable other) {
+        if (other == org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.getDefaultInstance()) return this;
+        if (!other.s_.isEmpty()) {
+          if (s_.isEmpty()) {
+            s_ = other.s_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureSIsMutable();
+            s_.addAll(other.s_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.util.List<com.google.protobuf.ByteString> s_ = java.util.Collections.emptyList();
+      private void ensureSIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          s_ = new java.util.ArrayList<com.google.protobuf.ByteString>(s_);
+          bitField0_ |= 0x00000001;
+         }
+      }
       /**
        * <code>repeated bytes s = 1;</code>
+       * @return A list containing the s.
        */
-      @java.lang.Override
       public java.util.List<com.google.protobuf.ByteString>
           getSList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getSList());
+        return ((bitField0_ & 0x00000001) != 0) ?
+                 java.util.Collections.unmodifiableList(s_) : s_;
       }
       /**
        * <code>repeated bytes s = 1;</code>
+       * @return The count of s.
        */
-      @java.lang.Override
       public int getSCount() {
-        return instance.getSCount();
+        return s_.size();
       }
       /**
        * <code>repeated bytes s = 1;</code>
+       * @param index The index of the element to return.
+       * @return The s at the given index.
        */
-      @java.lang.Override
       public com.google.protobuf.ByteString getS(int index) {
-        return instance.getS(index);
+        return s_.get(index);
       }
       /**
        * <code>repeated bytes s = 1;</code>
+       * @param index The index to set the value at.
+       * @param value The s to set.
+       * @return This builder for chaining.
        */
       public Builder setS(
           int index, com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setS(index, value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureSIsMutable();
+        s_.set(index, value);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated bytes s = 1;</code>
+       * @param value The s to add.
+       * @return This builder for chaining.
        */
       public Builder addS(com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.addS(value);
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureSIsMutable();
+        s_.add(value);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated bytes s = 1;</code>
+       * @param values The s to add.
+       * @return This builder for chaining.
        */
       public Builder addAllS(
           java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
-        copyOnWrite();
-        instance.addAllS(values);
+        ensureSIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, s_);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated bytes s = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearS() {
-        copyOnWrite();
-        instance.clearS();
+        s_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
         return this;
       }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.StringTable)
     }
-    @java.lang.Override
-    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        java.lang.Object arg0, java.lang.Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable();
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case IS_INITIALIZED: {
-          return DEFAULT_INSTANCE;
-        }
-        case MAKE_IMMUTABLE: {
-          s_.makeImmutable();
-          return null;
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable other = (org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable) arg1;
-          s_= visitor.visitList(s_, other.s_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-          }
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                case 10: {
-                  if (!s_.isModifiable()) {
-                    s_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(s_);
-                  }
-                  s_.add(input.readBytes());
-                  break;
-                }
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        // fall through
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          com.google.protobuf.Parser<org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable> parser = PARSER;
-          if (parser == null) {
-            synchronized (org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable.class) {
-              parser = PARSER;
-              if (parser == null) {
-                parser = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-                PARSER = parser;
-              }
-            }
-          }
-          return parser;
-      }
-      case GET_MEMOIZED_IS_INITIALIZED: {
-        return (byte) 1;
-      }
-      case SET_MEMOIZED_IS_INITIALIZED: {
-        return null;
-      }
-      }
-      throw new UnsupportedOperationException();
-    }
-
 
     // @@protoc_insertion_point(class_scope:OSMPBF.StringTable)
     private static final org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable DEFAULT_INSTANCE;
     static {
-      // New instances are implicitly immutable so no need to make
-      // immutable.
-      DEFAULT_INSTANCE = new StringTable();
+      DEFAULT_INSTANCE = new org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable();
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static volatile com.google.protobuf.Parser<StringTable> PARSER;
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<StringTable>
+        PARSER = new com.google.protobuf.AbstractParser<StringTable>() {
+      @java.lang.Override
+      public StringTable parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new StringTable(input, extensionRegistry);
+      }
+    };
 
     public static com.google.protobuf.Parser<StringTable> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
+      return PARSER;
     }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<StringTable> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
   public interface InfoOrBuilder extends
       // @@protoc_insertion_point(interface_extends:OSMPBF.Info)
-      com.google.protobuf.MessageLiteOrBuilder {
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>optional int32 version = 1 [default = -1];</code>
+     * @return Whether the version field is set.
      */
     boolean hasVersion();
     /**
      * <code>optional int32 version = 1 [default = -1];</code>
+     * @return The version.
      */
     int getVersion();
 
     /**
      * <code>optional int64 timestamp = 2;</code>
+     * @return Whether the timestamp field is set.
      */
     boolean hasTimestamp();
     /**
      * <code>optional int64 timestamp = 2;</code>
+     * @return The timestamp.
      */
     long getTimestamp();
 
     /**
      * <code>optional int64 changeset = 3;</code>
+     * @return Whether the changeset field is set.
      */
     boolean hasChangeset();
     /**
      * <code>optional int64 changeset = 3;</code>
+     * @return The changeset.
      */
     long getChangeset();
 
     /**
      * <code>optional int32 uid = 4;</code>
+     * @return Whether the uid field is set.
      */
     boolean hasUid();
     /**
      * <code>optional int32 uid = 4;</code>
+     * @return The uid.
      */
     int getUid();
 
@@ -5279,6 +7200,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional uint32 user_sid = 5;</code>
+     * @return Whether the userSid field is set.
      */
     boolean hasUserSid();
     /**
@@ -5287,6 +7209,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional uint32 user_sid = 5;</code>
+     * @return The userSid.
      */
     int getUserSid();
 
@@ -5303,6 +7226,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional bool visible = 6;</code>
+     * @return Whether the visible field is set.
      */
     boolean hasVisible();
     /**
@@ -5318,6 +7242,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional bool visible = 6;</code>
+     * @return The visible.
      */
     boolean getVisible();
   }
@@ -5329,136 +7254,178 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.Info}
    */
   public  static final class Info extends
-      com.google.protobuf.GeneratedMessageLite<
-          Info, Info.Builder> implements
+      com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:OSMPBF.Info)
       InfoOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Info.newBuilder() to construct.
+    private Info(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
     private Info() {
       version_ = -1;
     }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new Info();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Info(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              bitField0_ |= 0x00000001;
+              version_ = input.readInt32();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              timestamp_ = input.readInt64();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              changeset_ = input.readInt64();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              uid_ = input.readInt32();
+              break;
+            }
+            case 40: {
+              bitField0_ |= 0x00000010;
+              userSid_ = input.readUInt32();
+              break;
+            }
+            case 48: {
+              bitField0_ |= 0x00000020;
+              visible_ = input.readBool();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Info_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Info_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Info.class, org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder.class);
+    }
+
     private int bitField0_;
     public static final int VERSION_FIELD_NUMBER = 1;
     private int version_;
     /**
      * <code>optional int32 version = 1 [default = -1];</code>
+     * @return Whether the version field is set.
      */
-    @java.lang.Override
     public boolean hasVersion() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <code>optional int32 version = 1 [default = -1];</code>
+     * @return The version.
      */
-    @java.lang.Override
     public int getVersion() {
       return version_;
-    }
-    /**
-     * <code>optional int32 version = 1 [default = -1];</code>
-     */
-    private void setVersion(int value) {
-      bitField0_ |= 0x00000001;
-      version_ = value;
-    }
-    /**
-     * <code>optional int32 version = 1 [default = -1];</code>
-     */
-    private void clearVersion() {
-      bitField0_ = (bitField0_ & ~0x00000001);
-      version_ = -1;
     }
 
     public static final int TIMESTAMP_FIELD_NUMBER = 2;
     private long timestamp_;
     /**
      * <code>optional int64 timestamp = 2;</code>
+     * @return Whether the timestamp field is set.
      */
-    @java.lang.Override
     public boolean hasTimestamp() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <code>optional int64 timestamp = 2;</code>
+     * @return The timestamp.
      */
-    @java.lang.Override
     public long getTimestamp() {
       return timestamp_;
-    }
-    /**
-     * <code>optional int64 timestamp = 2;</code>
-     */
-    private void setTimestamp(long value) {
-      bitField0_ |= 0x00000002;
-      timestamp_ = value;
-    }
-    /**
-     * <code>optional int64 timestamp = 2;</code>
-     */
-    private void clearTimestamp() {
-      bitField0_ = (bitField0_ & ~0x00000002);
-      timestamp_ = 0L;
     }
 
     public static final int CHANGESET_FIELD_NUMBER = 3;
     private long changeset_;
     /**
      * <code>optional int64 changeset = 3;</code>
+     * @return Whether the changeset field is set.
      */
-    @java.lang.Override
     public boolean hasChangeset() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
      * <code>optional int64 changeset = 3;</code>
+     * @return The changeset.
      */
-    @java.lang.Override
     public long getChangeset() {
       return changeset_;
-    }
-    /**
-     * <code>optional int64 changeset = 3;</code>
-     */
-    private void setChangeset(long value) {
-      bitField0_ |= 0x00000004;
-      changeset_ = value;
-    }
-    /**
-     * <code>optional int64 changeset = 3;</code>
-     */
-    private void clearChangeset() {
-      bitField0_ = (bitField0_ & ~0x00000004);
-      changeset_ = 0L;
     }
 
     public static final int UID_FIELD_NUMBER = 4;
     private int uid_;
     /**
      * <code>optional int32 uid = 4;</code>
+     * @return Whether the uid field is set.
      */
-    @java.lang.Override
     public boolean hasUid() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000008) != 0);
     }
     /**
      * <code>optional int32 uid = 4;</code>
+     * @return The uid.
      */
-    @java.lang.Override
     public int getUid() {
       return uid_;
-    }
-    /**
-     * <code>optional int32 uid = 4;</code>
-     */
-    private void setUid(int value) {
-      bitField0_ |= 0x00000008;
-      uid_ = value;
-    }
-    /**
-     * <code>optional int32 uid = 4;</code>
-     */
-    private void clearUid() {
-      bitField0_ = (bitField0_ & ~0x00000008);
-      uid_ = 0;
     }
 
     public static final int USER_SID_FIELD_NUMBER = 5;
@@ -5469,10 +7436,10 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional uint32 user_sid = 5;</code>
+     * @return Whether the userSid field is set.
      */
-    @java.lang.Override
     public boolean hasUserSid() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
+      return ((bitField0_ & 0x00000010) != 0);
     }
     /**
      * <pre>
@@ -5480,32 +7447,10 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional uint32 user_sid = 5;</code>
+     * @return The userSid.
      */
-    @java.lang.Override
     public int getUserSid() {
       return userSid_;
-    }
-    /**
-     * <pre>
-     * String IDs
-     * </pre>
-     *
-     * <code>optional uint32 user_sid = 5;</code>
-     */
-    private void setUserSid(int value) {
-      bitField0_ |= 0x00000010;
-      userSid_ = value;
-    }
-    /**
-     * <pre>
-     * String IDs
-     * </pre>
-     *
-     * <code>optional uint32 user_sid = 5;</code>
-     */
-    private void clearUserSid() {
-      bitField0_ = (bitField0_ & ~0x00000010);
-      userSid_ = 0;
     }
 
     public static final int VISIBLE_FIELD_NUMBER = 6;
@@ -5523,10 +7468,10 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional bool visible = 6;</code>
+     * @return Whether the visible field is set.
      */
-    @java.lang.Override
     public boolean hasVisible() {
-      return ((bitField0_ & 0x00000020) == 0x00000020);
+      return ((bitField0_ & 0x00000020) != 0);
     }
     /**
      * <pre>
@@ -5541,67 +7486,42 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional bool visible = 6;</code>
+     * @return The visible.
      */
-    @java.lang.Override
     public boolean getVisible() {
       return visible_;
     }
-    /**
-     * <pre>
-     * The visible flag is used to store history information. It indicates that
-     * the current object version has been created by a delete operation on the
-     * OSM API.
-     * When a writer sets this flag, it MUST add a required_features tag with
-     * value "HistoricalInformation" to the HeaderBlock.
-     * If this flag is not available for some object it MUST be assumed to be
-     * true if the file has the required_features tag "HistoricalInformation"
-     * set.
-     * </pre>
-     *
-     * <code>optional bool visible = 6;</code>
-     */
-    private void setVisible(boolean value) {
-      bitField0_ |= 0x00000020;
-      visible_ = value;
-    }
-    /**
-     * <pre>
-     * The visible flag is used to store history information. It indicates that
-     * the current object version has been created by a delete operation on the
-     * OSM API.
-     * When a writer sets this flag, it MUST add a required_features tag with
-     * value "HistoricalInformation" to the HeaderBlock.
-     * If this flag is not available for some object it MUST be assumed to be
-     * true if the file has the required_features tag "HistoricalInformation"
-     * set.
-     * </pre>
-     *
-     * <code>optional bool visible = 6;</code>
-     */
-    private void clearVisible() {
-      bitField0_ = (bitField0_ & ~0x00000020);
-      visible_ = false;
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         output.writeInt32(1, version_);
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if (((bitField0_ & 0x00000002) != 0)) {
         output.writeInt64(2, timestamp_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      if (((bitField0_ & 0x00000004) != 0)) {
         output.writeInt64(3, changeset_);
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if (((bitField0_ & 0x00000008) != 0)) {
         output.writeInt32(4, uid_);
       }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+      if (((bitField0_ & 0x00000010) != 0)) {
         output.writeUInt32(5, userSid_);
       }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+      if (((bitField0_ & 0x00000020) != 0)) {
         output.writeBool(6, visible_);
       }
       unknownFields.writeTo(output);
@@ -5609,120 +7529,212 @@ public final class Osmformat {
 
     @java.lang.Override
     public int getSerializedSize() {
-      int size = memoizedSerializedSize;
+      int size = memoizedSize;
       if (size != -1) return size;
 
       size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, version_);
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(2, timestamp_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      if (((bitField0_ & 0x00000004) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(3, changeset_);
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if (((bitField0_ & 0x00000008) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(4, uid_);
       }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+      if (((bitField0_ & 0x00000010) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(5, userSid_);
       }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+      if (((bitField0_ & 0x00000020) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(6, visible_);
       }
       size += unknownFields.getSerializedSize();
-      memoizedSerializedSize = size;
+      memoizedSize = size;
       return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.Info)) {
+        return super.equals(obj);
+      }
+      org.openstreetmap.osmosis.osmbinary.Osmformat.Info other = (org.openstreetmap.osmosis.osmbinary.Osmformat.Info) obj;
+
+      if (hasVersion() != other.hasVersion()) return false;
+      if (hasVersion()) {
+        if (getVersion()
+            != other.getVersion()) return false;
+      }
+      if (hasTimestamp() != other.hasTimestamp()) return false;
+      if (hasTimestamp()) {
+        if (getTimestamp()
+            != other.getTimestamp()) return false;
+      }
+      if (hasChangeset() != other.hasChangeset()) return false;
+      if (hasChangeset()) {
+        if (getChangeset()
+            != other.getChangeset()) return false;
+      }
+      if (hasUid() != other.hasUid()) return false;
+      if (hasUid()) {
+        if (getUid()
+            != other.getUid()) return false;
+      }
+      if (hasUserSid() != other.hasUserSid()) return false;
+      if (hasUserSid()) {
+        if (getUserSid()
+            != other.getUserSid()) return false;
+      }
+      if (hasVisible() != other.hasVisible()) return false;
+      if (hasVisible()) {
+        if (getVisible()
+            != other.getVisible()) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasVersion()) {
+        hash = (37 * hash) + VERSION_FIELD_NUMBER;
+        hash = (53 * hash) + getVersion();
+      }
+      if (hasTimestamp()) {
+        hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getTimestamp());
+      }
+      if (hasChangeset()) {
+        hash = (37 * hash) + CHANGESET_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getChangeset());
+      }
+      if (hasUid()) {
+        hash = (37 * hash) + UID_FIELD_NUMBER;
+        hash = (53 * hash) + getUid();
+      }
+      if (hasUserSid()) {
+        hash = (37 * hash) + USER_SID_FIELD_NUMBER;
+        hash = (53 * hash) + getUserSid();
+      }
+      if (hasVisible()) {
+        hash = (37 * hash) + VISIBLE_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+            getVisible());
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Info parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Info parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Info parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Info parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Info parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Info parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Info parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Info parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Info parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Info parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Info parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Info parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
-      return (Builder) DEFAULT_INSTANCE.createBuilder();
+      return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.Info prototype) {
-      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * <pre>
      * Optional metadata that may be included into each primitive. 
@@ -5731,150 +7743,360 @@ public final class Osmformat {
      * Protobuf type {@code OSMPBF.Info}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          org.openstreetmap.osmosis.osmbinary.Osmformat.Info, Builder> implements
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:OSMPBF.Info)
         org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Info_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Info_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.openstreetmap.osmosis.osmbinary.Osmformat.Info.class, org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder.class);
+      }
+
       // Construct using org.openstreetmap.osmosis.osmbinary.Osmformat.Info.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        version_ = -1;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        timestamp_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        changeset_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        uid_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        userSid_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000010);
+        visible_ = false;
+        bitField0_ = (bitField0_ & ~0x00000020);
+        return this;
+      }
 
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Info_descriptor;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Info getDefaultInstanceForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Info build() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.Info result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Info buildPartial() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.Info result = new org.openstreetmap.osmosis.osmbinary.Osmformat.Info(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.version_ = version_;
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.timestamp_ = timestamp_;
+          to_bitField0_ |= 0x00000002;
+        }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
+          result.changeset_ = changeset_;
+          to_bitField0_ |= 0x00000004;
+        }
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          result.uid_ = uid_;
+          to_bitField0_ |= 0x00000008;
+        }
+        if (((from_bitField0_ & 0x00000010) != 0)) {
+          result.userSid_ = userSid_;
+          to_bitField0_ |= 0x00000010;
+        }
+        if (((from_bitField0_ & 0x00000020) != 0)) {
+          result.visible_ = visible_;
+          to_bitField0_ |= 0x00000020;
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.Info) {
+          return mergeFrom((org.openstreetmap.osmosis.osmbinary.Osmformat.Info)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.openstreetmap.osmosis.osmbinary.Osmformat.Info other) {
+        if (other == org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance()) return this;
+        if (other.hasVersion()) {
+          setVersion(other.getVersion());
+        }
+        if (other.hasTimestamp()) {
+          setTimestamp(other.getTimestamp());
+        }
+        if (other.hasChangeset()) {
+          setChangeset(other.getChangeset());
+        }
+        if (other.hasUid()) {
+          setUid(other.getUid());
+        }
+        if (other.hasUserSid()) {
+          setUserSid(other.getUserSid());
+        }
+        if (other.hasVisible()) {
+          setVisible(other.getVisible());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.Info parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.openstreetmap.osmosis.osmbinary.Osmformat.Info) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private int version_ = -1;
       /**
        * <code>optional int32 version = 1 [default = -1];</code>
+       * @return Whether the version field is set.
        */
-      @java.lang.Override
       public boolean hasVersion() {
-        return instance.hasVersion();
+        return ((bitField0_ & 0x00000001) != 0);
       }
       /**
        * <code>optional int32 version = 1 [default = -1];</code>
+       * @return The version.
        */
-      @java.lang.Override
       public int getVersion() {
-        return instance.getVersion();
+        return version_;
       }
       /**
        * <code>optional int32 version = 1 [default = -1];</code>
+       * @param value The version to set.
+       * @return This builder for chaining.
        */
       public Builder setVersion(int value) {
-        copyOnWrite();
-        instance.setVersion(value);
+        bitField0_ |= 0x00000001;
+        version_ = value;
+        onChanged();
         return this;
       }
       /**
        * <code>optional int32 version = 1 [default = -1];</code>
+       * @return This builder for chaining.
        */
       public Builder clearVersion() {
-        copyOnWrite();
-        instance.clearVersion();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        version_ = -1;
+        onChanged();
         return this;
       }
 
+      private long timestamp_ ;
       /**
        * <code>optional int64 timestamp = 2;</code>
+       * @return Whether the timestamp field is set.
        */
-      @java.lang.Override
       public boolean hasTimestamp() {
-        return instance.hasTimestamp();
+        return ((bitField0_ & 0x00000002) != 0);
       }
       /**
        * <code>optional int64 timestamp = 2;</code>
+       * @return The timestamp.
        */
-      @java.lang.Override
       public long getTimestamp() {
-        return instance.getTimestamp();
+        return timestamp_;
       }
       /**
        * <code>optional int64 timestamp = 2;</code>
+       * @param value The timestamp to set.
+       * @return This builder for chaining.
        */
       public Builder setTimestamp(long value) {
-        copyOnWrite();
-        instance.setTimestamp(value);
+        bitField0_ |= 0x00000002;
+        timestamp_ = value;
+        onChanged();
         return this;
       }
       /**
        * <code>optional int64 timestamp = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearTimestamp() {
-        copyOnWrite();
-        instance.clearTimestamp();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        timestamp_ = 0L;
+        onChanged();
         return this;
       }
 
+      private long changeset_ ;
       /**
        * <code>optional int64 changeset = 3;</code>
+       * @return Whether the changeset field is set.
        */
-      @java.lang.Override
       public boolean hasChangeset() {
-        return instance.hasChangeset();
+        return ((bitField0_ & 0x00000004) != 0);
       }
       /**
        * <code>optional int64 changeset = 3;</code>
+       * @return The changeset.
        */
-      @java.lang.Override
       public long getChangeset() {
-        return instance.getChangeset();
+        return changeset_;
       }
       /**
        * <code>optional int64 changeset = 3;</code>
+       * @param value The changeset to set.
+       * @return This builder for chaining.
        */
       public Builder setChangeset(long value) {
-        copyOnWrite();
-        instance.setChangeset(value);
+        bitField0_ |= 0x00000004;
+        changeset_ = value;
+        onChanged();
         return this;
       }
       /**
        * <code>optional int64 changeset = 3;</code>
+       * @return This builder for chaining.
        */
       public Builder clearChangeset() {
-        copyOnWrite();
-        instance.clearChangeset();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        changeset_ = 0L;
+        onChanged();
         return this;
       }
 
+      private int uid_ ;
       /**
        * <code>optional int32 uid = 4;</code>
+       * @return Whether the uid field is set.
        */
-      @java.lang.Override
       public boolean hasUid() {
-        return instance.hasUid();
+        return ((bitField0_ & 0x00000008) != 0);
       }
       /**
        * <code>optional int32 uid = 4;</code>
+       * @return The uid.
        */
-      @java.lang.Override
       public int getUid() {
-        return instance.getUid();
+        return uid_;
       }
       /**
        * <code>optional int32 uid = 4;</code>
+       * @param value The uid to set.
+       * @return This builder for chaining.
        */
       public Builder setUid(int value) {
-        copyOnWrite();
-        instance.setUid(value);
+        bitField0_ |= 0x00000008;
+        uid_ = value;
+        onChanged();
         return this;
       }
       /**
        * <code>optional int32 uid = 4;</code>
+       * @return This builder for chaining.
        */
       public Builder clearUid() {
-        copyOnWrite();
-        instance.clearUid();
+        bitField0_ = (bitField0_ & ~0x00000008);
+        uid_ = 0;
+        onChanged();
         return this;
       }
 
+      private int userSid_ ;
       /**
        * <pre>
        * String IDs
        * </pre>
        *
        * <code>optional uint32 user_sid = 5;</code>
+       * @return Whether the userSid field is set.
        */
-      @java.lang.Override
       public boolean hasUserSid() {
-        return instance.hasUserSid();
+        return ((bitField0_ & 0x00000010) != 0);
       }
       /**
        * <pre>
@@ -5882,10 +8104,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional uint32 user_sid = 5;</code>
+       * @return The userSid.
        */
-      @java.lang.Override
       public int getUserSid() {
-        return instance.getUserSid();
+        return userSid_;
       }
       /**
        * <pre>
@@ -5893,10 +8115,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional uint32 user_sid = 5;</code>
+       * @param value The userSid to set.
+       * @return This builder for chaining.
        */
       public Builder setUserSid(int value) {
-        copyOnWrite();
-        instance.setUserSid(value);
+        bitField0_ |= 0x00000010;
+        userSid_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -5905,13 +8130,16 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional uint32 user_sid = 5;</code>
+       * @return This builder for chaining.
        */
       public Builder clearUserSid() {
-        copyOnWrite();
-        instance.clearUserSid();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        userSid_ = 0;
+        onChanged();
         return this;
       }
 
+      private boolean visible_ ;
       /**
        * <pre>
        * The visible flag is used to store history information. It indicates that
@@ -5925,10 +8153,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional bool visible = 6;</code>
+       * @return Whether the visible field is set.
        */
-      @java.lang.Override
       public boolean hasVisible() {
-        return instance.hasVisible();
+        return ((bitField0_ & 0x00000020) != 0);
       }
       /**
        * <pre>
@@ -5943,10 +8171,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional bool visible = 6;</code>
+       * @return The visible.
        */
-      @java.lang.Override
       public boolean getVisible() {
-        return instance.getVisible();
+        return visible_;
       }
       /**
        * <pre>
@@ -5961,10 +8189,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional bool visible = 6;</code>
+       * @param value The visible to set.
+       * @return This builder for chaining.
        */
       public Builder setVisible(boolean value) {
-        copyOnWrite();
-        instance.setVisible(value);
+        bitField0_ |= 0x00000020;
+        visible_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -5980,184 +8211,85 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional bool visible = 6;</code>
+       * @return This builder for chaining.
        */
       public Builder clearVisible() {
-        copyOnWrite();
-        instance.clearVisible();
+        bitField0_ = (bitField0_ & ~0x00000020);
+        visible_ = false;
+        onChanged();
         return this;
       }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.Info)
     }
-    @java.lang.Override
-    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        java.lang.Object arg0, java.lang.Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new org.openstreetmap.osmosis.osmbinary.Osmformat.Info();
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case IS_INITIALIZED: {
-          return DEFAULT_INSTANCE;
-        }
-        case MAKE_IMMUTABLE: {
-          return null;
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          org.openstreetmap.osmosis.osmbinary.Osmformat.Info other = (org.openstreetmap.osmosis.osmbinary.Osmformat.Info) arg1;
-          version_ = visitor.visitInt(
-              hasVersion(), version_,
-              other.hasVersion(), other.version_);
-          timestamp_ = visitor.visitLong(
-              hasTimestamp(), timestamp_,
-              other.hasTimestamp(), other.timestamp_);
-          changeset_ = visitor.visitLong(
-              hasChangeset(), changeset_,
-              other.hasChangeset(), other.changeset_);
-          uid_ = visitor.visitInt(
-              hasUid(), uid_,
-              other.hasUid(), other.uid_);
-          userSid_ = visitor.visitInt(
-              hasUserSid(), userSid_,
-              other.hasUserSid(), other.userSid_);
-          visible_ = visitor.visitBoolean(
-              hasVisible(), visible_,
-              other.hasVisible(), other.visible_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-            bitField0_ |= other.bitField0_;
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-          }
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                case 8: {
-                  bitField0_ |= 0x00000001;
-                  version_ = input.readInt32();
-                  break;
-                }
-                case 16: {
-                  bitField0_ |= 0x00000002;
-                  timestamp_ = input.readInt64();
-                  break;
-                }
-                case 24: {
-                  bitField0_ |= 0x00000004;
-                  changeset_ = input.readInt64();
-                  break;
-                }
-                case 32: {
-                  bitField0_ |= 0x00000008;
-                  uid_ = input.readInt32();
-                  break;
-                }
-                case 40: {
-                  bitField0_ |= 0x00000010;
-                  userSid_ = input.readUInt32();
-                  break;
-                }
-                case 48: {
-                  bitField0_ |= 0x00000020;
-                  visible_ = input.readBool();
-                  break;
-                }
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        // fall through
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          com.google.protobuf.Parser<org.openstreetmap.osmosis.osmbinary.Osmformat.Info> parser = PARSER;
-          if (parser == null) {
-            synchronized (org.openstreetmap.osmosis.osmbinary.Osmformat.Info.class) {
-              parser = PARSER;
-              if (parser == null) {
-                parser = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-                PARSER = parser;
-              }
-            }
-          }
-          return parser;
-      }
-      case GET_MEMOIZED_IS_INITIALIZED: {
-        return (byte) 1;
-      }
-      case SET_MEMOIZED_IS_INITIALIZED: {
-        return null;
-      }
-      }
-      throw new UnsupportedOperationException();
-    }
-
 
     // @@protoc_insertion_point(class_scope:OSMPBF.Info)
     private static final org.openstreetmap.osmosis.osmbinary.Osmformat.Info DEFAULT_INSTANCE;
     static {
-      // New instances are implicitly immutable so no need to make
-      // immutable.
-      DEFAULT_INSTANCE = new Info();
+      DEFAULT_INSTANCE = new org.openstreetmap.osmosis.osmbinary.Osmformat.Info();
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Info getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static volatile com.google.protobuf.Parser<Info> PARSER;
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<Info>
+        PARSER = new com.google.protobuf.AbstractParser<Info>() {
+      @java.lang.Override
+      public Info parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Info(input, extensionRegistry);
+      }
+    };
 
     public static com.google.protobuf.Parser<Info> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
+      return PARSER;
     }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Info> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.Info getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
   public interface DenseInfoOrBuilder extends
       // @@protoc_insertion_point(interface_extends:OSMPBF.DenseInfo)
-      com.google.protobuf.MessageLiteOrBuilder {
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>repeated int32 version = 1 [packed = true];</code>
+     * @return A list containing the version.
      */
     java.util.List<java.lang.Integer> getVersionList();
     /**
      * <code>repeated int32 version = 1 [packed = true];</code>
+     * @return The count of version.
      */
     int getVersionCount();
     /**
      * <code>repeated int32 version = 1 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The version at the given index.
      */
     int getVersion(int index);
 
@@ -6167,6 +8299,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+     * @return A list containing the timestamp.
      */
     java.util.List<java.lang.Long> getTimestampList();
     /**
@@ -6175,6 +8308,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+     * @return The count of timestamp.
      */
     int getTimestampCount();
     /**
@@ -6183,6 +8317,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The timestamp at the given index.
      */
     long getTimestamp(int index);
 
@@ -6192,6 +8328,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 changeset = 3 [packed = true];</code>
+     * @return A list containing the changeset.
      */
     java.util.List<java.lang.Long> getChangesetList();
     /**
@@ -6200,6 +8337,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 changeset = 3 [packed = true];</code>
+     * @return The count of changeset.
      */
     int getChangesetCount();
     /**
@@ -6208,6 +8346,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 changeset = 3 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The changeset at the given index.
      */
     long getChangeset(int index);
 
@@ -6217,6 +8357,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 uid = 4 [packed = true];</code>
+     * @return A list containing the uid.
      */
     java.util.List<java.lang.Integer> getUidList();
     /**
@@ -6225,6 +8366,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 uid = 4 [packed = true];</code>
+     * @return The count of uid.
      */
     int getUidCount();
     /**
@@ -6233,6 +8375,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 uid = 4 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The uid at the given index.
      */
     int getUid(int index);
 
@@ -6242,6 +8386,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+     * @return A list containing the userSid.
      */
     java.util.List<java.lang.Integer> getUserSidList();
     /**
@@ -6250,6 +8395,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+     * @return The count of userSid.
      */
     int getUserSidCount();
     /**
@@ -6258,6 +8404,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The userSid at the given index.
      */
     int getUserSid(int index);
 
@@ -6274,6 +8422,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated bool visible = 6 [packed = true];</code>
+     * @return A list containing the visible.
      */
     java.util.List<java.lang.Boolean> getVisibleList();
     /**
@@ -6289,6 +8438,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated bool visible = 6 [packed = true];</code>
+     * @return The count of visible.
      */
     int getVisibleCount();
     /**
@@ -6304,6 +8454,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated bool visible = 6 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The visible at the given index.
      */
     boolean getVisible(int index);
   }
@@ -6315,10 +8467,14 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.DenseInfo}
    */
   public  static final class DenseInfo extends
-      com.google.protobuf.GeneratedMessageLite<
-          DenseInfo, DenseInfo.Builder> implements
+      com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:OSMPBF.DenseInfo)
       DenseInfoOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use DenseInfo.newBuilder() to construct.
+    private DenseInfo(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
     private DenseInfo() {
       version_ = emptyIntList();
       timestamp_ = emptyLongList();
@@ -6327,67 +8483,240 @@ public final class Osmformat {
       userSid_ = emptyIntList();
       visible_ = emptyBooleanList();
     }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new DenseInfo();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DenseInfo(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                version_ = newIntList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              version_.addInt(input.readInt32());
+              break;
+            }
+            case 10: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000001) != 0) && input.getBytesUntilLimit() > 0) {
+                version_ = newIntList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                version_.addInt(input.readInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 16: {
+              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+                timestamp_ = newLongList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              timestamp_.addLong(input.readSInt64());
+              break;
+            }
+            case 18: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000002) != 0) && input.getBytesUntilLimit() > 0) {
+                timestamp_ = newLongList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                timestamp_.addLong(input.readSInt64());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 24: {
+              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
+                changeset_ = newLongList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              changeset_.addLong(input.readSInt64());
+              break;
+            }
+            case 26: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000004) != 0) && input.getBytesUntilLimit() > 0) {
+                changeset_ = newLongList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                changeset_.addLong(input.readSInt64());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 32: {
+              if (!((mutable_bitField0_ & 0x00000008) != 0)) {
+                uid_ = newIntList();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              uid_.addInt(input.readSInt32());
+              break;
+            }
+            case 34: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000008) != 0) && input.getBytesUntilLimit() > 0) {
+                uid_ = newIntList();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                uid_.addInt(input.readSInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 40: {
+              if (!((mutable_bitField0_ & 0x00000010) != 0)) {
+                userSid_ = newIntList();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              userSid_.addInt(input.readSInt32());
+              break;
+            }
+            case 42: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000010) != 0) && input.getBytesUntilLimit() > 0) {
+                userSid_ = newIntList();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                userSid_.addInt(input.readSInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 48: {
+              if (!((mutable_bitField0_ & 0x00000020) != 0)) {
+                visible_ = newBooleanList();
+                mutable_bitField0_ |= 0x00000020;
+              }
+              visible_.addBoolean(input.readBool());
+              break;
+            }
+            case 50: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000020) != 0) && input.getBytesUntilLimit() > 0) {
+                visible_ = newBooleanList();
+                mutable_bitField0_ |= 0x00000020;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                visible_.addBoolean(input.readBool());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          version_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000002) != 0)) {
+          timestamp_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000004) != 0)) {
+          changeset_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000008) != 0)) {
+          uid_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000010) != 0)) {
+          userSid_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000020) != 0)) {
+          visible_.makeImmutable(); // C
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_DenseInfo_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_DenseInfo_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.class, org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.Builder.class);
+    }
+
     public static final int VERSION_FIELD_NUMBER = 1;
     private com.google.protobuf.Internal.IntList version_;
     /**
      * <code>repeated int32 version = 1 [packed = true];</code>
+     * @return A list containing the version.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Integer>
         getVersionList() {
       return version_;
     }
     /**
      * <code>repeated int32 version = 1 [packed = true];</code>
+     * @return The count of version.
      */
-    @java.lang.Override
     public int getVersionCount() {
       return version_.size();
     }
     /**
      * <code>repeated int32 version = 1 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The version at the given index.
      */
-    @java.lang.Override
     public int getVersion(int index) {
       return version_.getInt(index);
     }
     private int versionMemoizedSerializedSize = -1;
-    private void ensureVersionIsMutable() {
-      if (!version_.isModifiable()) {
-        version_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(version_);
-       }
-    }
-    /**
-     * <code>repeated int32 version = 1 [packed = true];</code>
-     */
-    private void setVersion(
-        int index, int value) {
-      ensureVersionIsMutable();
-      version_.setInt(index, value);
-    }
-    /**
-     * <code>repeated int32 version = 1 [packed = true];</code>
-     */
-    private void addVersion(int value) {
-      ensureVersionIsMutable();
-      version_.addInt(value);
-    }
-    /**
-     * <code>repeated int32 version = 1 [packed = true];</code>
-     */
-    private void addAllVersion(
-        java.lang.Iterable<? extends java.lang.Integer> values) {
-      ensureVersionIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, version_);
-    }
-    /**
-     * <code>repeated int32 version = 1 [packed = true];</code>
-     */
-    private void clearVersion() {
-      version_ = emptyIntList();
-    }
 
     public static final int TIMESTAMP_FIELD_NUMBER = 2;
     private com.google.protobuf.Internal.LongList timestamp_;
@@ -6397,8 +8726,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+     * @return A list containing the timestamp.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Long>
         getTimestampList() {
       return timestamp_;
@@ -6409,8 +8738,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+     * @return The count of timestamp.
      */
-    @java.lang.Override
     public int getTimestampCount() {
       return timestamp_.size();
     }
@@ -6420,64 +8749,13 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The timestamp at the given index.
      */
-    @java.lang.Override
     public long getTimestamp(int index) {
       return timestamp_.getLong(index);
     }
     private int timestampMemoizedSerializedSize = -1;
-    private void ensureTimestampIsMutable() {
-      if (!timestamp_.isModifiable()) {
-        timestamp_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(timestamp_);
-       }
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 timestamp = 2 [packed = true];</code>
-     */
-    private void setTimestamp(
-        int index, long value) {
-      ensureTimestampIsMutable();
-      timestamp_.setLong(index, value);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 timestamp = 2 [packed = true];</code>
-     */
-    private void addTimestamp(long value) {
-      ensureTimestampIsMutable();
-      timestamp_.addLong(value);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 timestamp = 2 [packed = true];</code>
-     */
-    private void addAllTimestamp(
-        java.lang.Iterable<? extends java.lang.Long> values) {
-      ensureTimestampIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, timestamp_);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 timestamp = 2 [packed = true];</code>
-     */
-    private void clearTimestamp() {
-      timestamp_ = emptyLongList();
-    }
 
     public static final int CHANGESET_FIELD_NUMBER = 3;
     private com.google.protobuf.Internal.LongList changeset_;
@@ -6487,8 +8765,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 changeset = 3 [packed = true];</code>
+     * @return A list containing the changeset.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Long>
         getChangesetList() {
       return changeset_;
@@ -6499,8 +8777,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 changeset = 3 [packed = true];</code>
+     * @return The count of changeset.
      */
-    @java.lang.Override
     public int getChangesetCount() {
       return changeset_.size();
     }
@@ -6510,64 +8788,13 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 changeset = 3 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The changeset at the given index.
      */
-    @java.lang.Override
     public long getChangeset(int index) {
       return changeset_.getLong(index);
     }
     private int changesetMemoizedSerializedSize = -1;
-    private void ensureChangesetIsMutable() {
-      if (!changeset_.isModifiable()) {
-        changeset_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(changeset_);
-       }
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 changeset = 3 [packed = true];</code>
-     */
-    private void setChangeset(
-        int index, long value) {
-      ensureChangesetIsMutable();
-      changeset_.setLong(index, value);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 changeset = 3 [packed = true];</code>
-     */
-    private void addChangeset(long value) {
-      ensureChangesetIsMutable();
-      changeset_.addLong(value);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 changeset = 3 [packed = true];</code>
-     */
-    private void addAllChangeset(
-        java.lang.Iterable<? extends java.lang.Long> values) {
-      ensureChangesetIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, changeset_);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 changeset = 3 [packed = true];</code>
-     */
-    private void clearChangeset() {
-      changeset_ = emptyLongList();
-    }
 
     public static final int UID_FIELD_NUMBER = 4;
     private com.google.protobuf.Internal.IntList uid_;
@@ -6577,8 +8804,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 uid = 4 [packed = true];</code>
+     * @return A list containing the uid.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Integer>
         getUidList() {
       return uid_;
@@ -6589,8 +8816,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 uid = 4 [packed = true];</code>
+     * @return The count of uid.
      */
-    @java.lang.Override
     public int getUidCount() {
       return uid_.size();
     }
@@ -6600,64 +8827,13 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 uid = 4 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The uid at the given index.
      */
-    @java.lang.Override
     public int getUid(int index) {
       return uid_.getInt(index);
     }
     private int uidMemoizedSerializedSize = -1;
-    private void ensureUidIsMutable() {
-      if (!uid_.isModifiable()) {
-        uid_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(uid_);
-       }
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint32 uid = 4 [packed = true];</code>
-     */
-    private void setUid(
-        int index, int value) {
-      ensureUidIsMutable();
-      uid_.setInt(index, value);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint32 uid = 4 [packed = true];</code>
-     */
-    private void addUid(int value) {
-      ensureUidIsMutable();
-      uid_.addInt(value);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint32 uid = 4 [packed = true];</code>
-     */
-    private void addAllUid(
-        java.lang.Iterable<? extends java.lang.Integer> values) {
-      ensureUidIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, uid_);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint32 uid = 4 [packed = true];</code>
-     */
-    private void clearUid() {
-      uid_ = emptyIntList();
-    }
 
     public static final int USER_SID_FIELD_NUMBER = 5;
     private com.google.protobuf.Internal.IntList userSid_;
@@ -6667,8 +8843,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+     * @return A list containing the userSid.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Integer>
         getUserSidList() {
       return userSid_;
@@ -6679,8 +8855,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+     * @return The count of userSid.
      */
-    @java.lang.Override
     public int getUserSidCount() {
       return userSid_.size();
     }
@@ -6690,64 +8866,13 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The userSid at the given index.
      */
-    @java.lang.Override
     public int getUserSid(int index) {
       return userSid_.getInt(index);
     }
     private int userSidMemoizedSerializedSize = -1;
-    private void ensureUserSidIsMutable() {
-      if (!userSid_.isModifiable()) {
-        userSid_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(userSid_);
-       }
-    }
-    /**
-     * <pre>
-     * String IDs for usernames. DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint32 user_sid = 5 [packed = true];</code>
-     */
-    private void setUserSid(
-        int index, int value) {
-      ensureUserSidIsMutable();
-      userSid_.setInt(index, value);
-    }
-    /**
-     * <pre>
-     * String IDs for usernames. DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint32 user_sid = 5 [packed = true];</code>
-     */
-    private void addUserSid(int value) {
-      ensureUserSidIsMutable();
-      userSid_.addInt(value);
-    }
-    /**
-     * <pre>
-     * String IDs for usernames. DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint32 user_sid = 5 [packed = true];</code>
-     */
-    private void addAllUserSid(
-        java.lang.Iterable<? extends java.lang.Integer> values) {
-      ensureUserSidIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, userSid_);
-    }
-    /**
-     * <pre>
-     * String IDs for usernames. DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint32 user_sid = 5 [packed = true];</code>
-     */
-    private void clearUserSid() {
-      userSid_ = emptyIntList();
-    }
 
     public static final int VISIBLE_FIELD_NUMBER = 6;
     private com.google.protobuf.Internal.BooleanList visible_;
@@ -6764,8 +8889,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated bool visible = 6 [packed = true];</code>
+     * @return A list containing the visible.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Boolean>
         getVisibleList() {
       return visible_;
@@ -6783,8 +8908,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated bool visible = 6 [packed = true];</code>
+     * @return The count of visible.
      */
-    @java.lang.Override
     public int getVisibleCount() {
       return visible_.size();
     }
@@ -6801,91 +8926,23 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated bool visible = 6 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The visible at the given index.
      */
-    @java.lang.Override
     public boolean getVisible(int index) {
       return visible_.getBoolean(index);
     }
     private int visibleMemoizedSerializedSize = -1;
-    private void ensureVisibleIsMutable() {
-      if (!visible_.isModifiable()) {
-        visible_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(visible_);
-       }
-    }
-    /**
-     * <pre>
-     * The visible flag is used to store history information. It indicates that
-     * the current object version has been created by a delete operation on the
-     * OSM API.
-     * When a writer sets this flag, it MUST add a required_features tag with
-     * value "HistoricalInformation" to the HeaderBlock.
-     * If this flag is not available for some object it MUST be assumed to be
-     * true if the file has the required_features tag "HistoricalInformation"
-     * set.
-     * </pre>
-     *
-     * <code>repeated bool visible = 6 [packed = true];</code>
-     */
-    private void setVisible(
-        int index, boolean value) {
-      ensureVisibleIsMutable();
-      visible_.setBoolean(index, value);
-    }
-    /**
-     * <pre>
-     * The visible flag is used to store history information. It indicates that
-     * the current object version has been created by a delete operation on the
-     * OSM API.
-     * When a writer sets this flag, it MUST add a required_features tag with
-     * value "HistoricalInformation" to the HeaderBlock.
-     * If this flag is not available for some object it MUST be assumed to be
-     * true if the file has the required_features tag "HistoricalInformation"
-     * set.
-     * </pre>
-     *
-     * <code>repeated bool visible = 6 [packed = true];</code>
-     */
-    private void addVisible(boolean value) {
-      ensureVisibleIsMutable();
-      visible_.addBoolean(value);
-    }
-    /**
-     * <pre>
-     * The visible flag is used to store history information. It indicates that
-     * the current object version has been created by a delete operation on the
-     * OSM API.
-     * When a writer sets this flag, it MUST add a required_features tag with
-     * value "HistoricalInformation" to the HeaderBlock.
-     * If this flag is not available for some object it MUST be assumed to be
-     * true if the file has the required_features tag "HistoricalInformation"
-     * set.
-     * </pre>
-     *
-     * <code>repeated bool visible = 6 [packed = true];</code>
-     */
-    private void addAllVisible(
-        java.lang.Iterable<? extends java.lang.Boolean> values) {
-      ensureVisibleIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, visible_);
-    }
-    /**
-     * <pre>
-     * The visible flag is used to store history information. It indicates that
-     * the current object version has been created by a delete operation on the
-     * OSM API.
-     * When a writer sets this flag, it MUST add a required_features tag with
-     * value "HistoricalInformation" to the HeaderBlock.
-     * If this flag is not available for some object it MUST be assumed to be
-     * true if the file has the required_features tag "HistoricalInformation"
-     * set.
-     * </pre>
-     *
-     * <code>repeated bool visible = 6 [packed = true];</code>
-     */
-    private void clearVisible() {
-      visible_ = emptyBooleanList();
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     @java.lang.Override
@@ -6939,7 +8996,7 @@ public final class Osmformat {
 
     @java.lang.Override
     public int getSerializedSize() {
-      int size = memoizedSerializedSize;
+      int size = memoizedSize;
       if (size != -1) return size;
 
       size = 0;
@@ -7025,91 +9082,162 @@ public final class Osmformat {
         visibleMemoizedSerializedSize = dataSize;
       }
       size += unknownFields.getSerializedSize();
-      memoizedSerializedSize = size;
+      memoizedSize = size;
       return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo)) {
+        return super.equals(obj);
+      }
+      org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo other = (org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo) obj;
+
+      if (!getVersionList()
+          .equals(other.getVersionList())) return false;
+      if (!getTimestampList()
+          .equals(other.getTimestampList())) return false;
+      if (!getChangesetList()
+          .equals(other.getChangesetList())) return false;
+      if (!getUidList()
+          .equals(other.getUidList())) return false;
+      if (!getUserSidList()
+          .equals(other.getUserSidList())) return false;
+      if (!getVisibleList()
+          .equals(other.getVisibleList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getVersionCount() > 0) {
+        hash = (37 * hash) + VERSION_FIELD_NUMBER;
+        hash = (53 * hash) + getVersionList().hashCode();
+      }
+      if (getTimestampCount() > 0) {
+        hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
+        hash = (53 * hash) + getTimestampList().hashCode();
+      }
+      if (getChangesetCount() > 0) {
+        hash = (37 * hash) + CHANGESET_FIELD_NUMBER;
+        hash = (53 * hash) + getChangesetList().hashCode();
+      }
+      if (getUidCount() > 0) {
+        hash = (37 * hash) + UID_FIELD_NUMBER;
+        hash = (53 * hash) + getUidList().hashCode();
+      }
+      if (getUserSidCount() > 0) {
+        hash = (37 * hash) + USER_SID_FIELD_NUMBER;
+        hash = (53 * hash) + getUserSidList().hashCode();
+      }
+      if (getVisibleCount() > 0) {
+        hash = (37 * hash) + VISIBLE_FIELD_NUMBER;
+        hash = (53 * hash) + getVisibleList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
-      return (Builder) DEFAULT_INSTANCE.createBuilder();
+      return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo prototype) {
-      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * <pre>
      ** Optional metadata that may be included into each primitive. Special dense format used in DenseNodes. 
@@ -7118,86 +9246,345 @@ public final class Osmformat {
      * Protobuf type {@code OSMPBF.DenseInfo}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo, Builder> implements
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:OSMPBF.DenseInfo)
         org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfoOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_DenseInfo_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_DenseInfo_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.class, org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.Builder.class);
+      }
+
       // Construct using org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        version_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        timestamp_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        changeset_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        uid_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000008);
+        userSid_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        visible_ = emptyBooleanList();
+        bitField0_ = (bitField0_ & ~0x00000020);
+        return this;
+      }
 
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_DenseInfo_descriptor;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo getDefaultInstanceForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo build() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo buildPartial() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo result = new org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo(this);
+        int from_bitField0_ = bitField0_;
+        if (((bitField0_ & 0x00000001) != 0)) {
+          version_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.version_ = version_;
+        if (((bitField0_ & 0x00000002) != 0)) {
+          timestamp_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.timestamp_ = timestamp_;
+        if (((bitField0_ & 0x00000004) != 0)) {
+          changeset_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.changeset_ = changeset_;
+        if (((bitField0_ & 0x00000008) != 0)) {
+          uid_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        }
+        result.uid_ = uid_;
+        if (((bitField0_ & 0x00000010) != 0)) {
+          userSid_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000010);
+        }
+        result.userSid_ = userSid_;
+        if (((bitField0_ & 0x00000020) != 0)) {
+          visible_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000020);
+        }
+        result.visible_ = visible_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo) {
+          return mergeFrom((org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo other) {
+        if (other == org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.getDefaultInstance()) return this;
+        if (!other.version_.isEmpty()) {
+          if (version_.isEmpty()) {
+            version_ = other.version_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureVersionIsMutable();
+            version_.addAll(other.version_);
+          }
+          onChanged();
+        }
+        if (!other.timestamp_.isEmpty()) {
+          if (timestamp_.isEmpty()) {
+            timestamp_ = other.timestamp_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureTimestampIsMutable();
+            timestamp_.addAll(other.timestamp_);
+          }
+          onChanged();
+        }
+        if (!other.changeset_.isEmpty()) {
+          if (changeset_.isEmpty()) {
+            changeset_ = other.changeset_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureChangesetIsMutable();
+            changeset_.addAll(other.changeset_);
+          }
+          onChanged();
+        }
+        if (!other.uid_.isEmpty()) {
+          if (uid_.isEmpty()) {
+            uid_ = other.uid_;
+            bitField0_ = (bitField0_ & ~0x00000008);
+          } else {
+            ensureUidIsMutable();
+            uid_.addAll(other.uid_);
+          }
+          onChanged();
+        }
+        if (!other.userSid_.isEmpty()) {
+          if (userSid_.isEmpty()) {
+            userSid_ = other.userSid_;
+            bitField0_ = (bitField0_ & ~0x00000010);
+          } else {
+            ensureUserSidIsMutable();
+            userSid_.addAll(other.userSid_);
+          }
+          onChanged();
+        }
+        if (!other.visible_.isEmpty()) {
+          if (visible_.isEmpty()) {
+            visible_ = other.visible_;
+            bitField0_ = (bitField0_ & ~0x00000020);
+          } else {
+            ensureVisibleIsMutable();
+            visible_.addAll(other.visible_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private com.google.protobuf.Internal.IntList version_ = emptyIntList();
+      private void ensureVersionIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          version_ = mutableCopy(version_);
+          bitField0_ |= 0x00000001;
+         }
+      }
       /**
        * <code>repeated int32 version = 1 [packed = true];</code>
+       * @return A list containing the version.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Integer>
           getVersionList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getVersionList());
+        return ((bitField0_ & 0x00000001) != 0) ?
+                 java.util.Collections.unmodifiableList(version_) : version_;
       }
       /**
        * <code>repeated int32 version = 1 [packed = true];</code>
+       * @return The count of version.
        */
-      @java.lang.Override
       public int getVersionCount() {
-        return instance.getVersionCount();
+        return version_.size();
       }
       /**
        * <code>repeated int32 version = 1 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The version at the given index.
        */
-      @java.lang.Override
       public int getVersion(int index) {
-        return instance.getVersion(index);
+        return version_.getInt(index);
       }
       /**
        * <code>repeated int32 version = 1 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The version to set.
+       * @return This builder for chaining.
        */
       public Builder setVersion(
           int index, int value) {
-        copyOnWrite();
-        instance.setVersion(index, value);
+        ensureVersionIsMutable();
+        version_.setInt(index, value);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated int32 version = 1 [packed = true];</code>
+       * @param value The version to add.
+       * @return This builder for chaining.
        */
       public Builder addVersion(int value) {
-        copyOnWrite();
-        instance.addVersion(value);
+        ensureVersionIsMutable();
+        version_.addInt(value);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated int32 version = 1 [packed = true];</code>
+       * @param values The version to add.
+       * @return This builder for chaining.
        */
       public Builder addAllVersion(
           java.lang.Iterable<? extends java.lang.Integer> values) {
-        copyOnWrite();
-        instance.addAllVersion(values);
+        ensureVersionIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, version_);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated int32 version = 1 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearVersion() {
-        copyOnWrite();
-        instance.clearVersion();
+        version_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.Internal.LongList timestamp_ = emptyLongList();
+      private void ensureTimestampIsMutable() {
+        if (!((bitField0_ & 0x00000002) != 0)) {
+          timestamp_ = mutableCopy(timestamp_);
+          bitField0_ |= 0x00000002;
+         }
+      }
       /**
        * <pre>
        * DELTA coded
        * </pre>
        *
        * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+       * @return A list containing the timestamp.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Long>
           getTimestampList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getTimestampList());
+        return ((bitField0_ & 0x00000002) != 0) ?
+                 java.util.Collections.unmodifiableList(timestamp_) : timestamp_;
       }
       /**
        * <pre>
@@ -7205,10 +9592,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+       * @return The count of timestamp.
        */
-      @java.lang.Override
       public int getTimestampCount() {
-        return instance.getTimestampCount();
+        return timestamp_.size();
       }
       /**
        * <pre>
@@ -7216,10 +9603,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The timestamp at the given index.
        */
-      @java.lang.Override
       public long getTimestamp(int index) {
-        return instance.getTimestamp(index);
+        return timestamp_.getLong(index);
       }
       /**
        * <pre>
@@ -7227,11 +9615,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The timestamp to set.
+       * @return This builder for chaining.
        */
       public Builder setTimestamp(
           int index, long value) {
-        copyOnWrite();
-        instance.setTimestamp(index, value);
+        ensureTimestampIsMutable();
+        timestamp_.setLong(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -7240,10 +9632,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+       * @param value The timestamp to add.
+       * @return This builder for chaining.
        */
       public Builder addTimestamp(long value) {
-        copyOnWrite();
-        instance.addTimestamp(value);
+        ensureTimestampIsMutable();
+        timestamp_.addLong(value);
+        onChanged();
         return this;
       }
       /**
@@ -7252,11 +9647,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+       * @param values The timestamp to add.
+       * @return This builder for chaining.
        */
       public Builder addAllTimestamp(
           java.lang.Iterable<? extends java.lang.Long> values) {
-        copyOnWrite();
-        instance.addAllTimestamp(values);
+        ensureTimestampIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, timestamp_);
+        onChanged();
         return this;
       }
       /**
@@ -7265,25 +9664,34 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 timestamp = 2 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearTimestamp() {
-        copyOnWrite();
-        instance.clearTimestamp();
+        timestamp_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.Internal.LongList changeset_ = emptyLongList();
+      private void ensureChangesetIsMutable() {
+        if (!((bitField0_ & 0x00000004) != 0)) {
+          changeset_ = mutableCopy(changeset_);
+          bitField0_ |= 0x00000004;
+         }
+      }
       /**
        * <pre>
        * DELTA coded
        * </pre>
        *
        * <code>repeated sint64 changeset = 3 [packed = true];</code>
+       * @return A list containing the changeset.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Long>
           getChangesetList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getChangesetList());
+        return ((bitField0_ & 0x00000004) != 0) ?
+                 java.util.Collections.unmodifiableList(changeset_) : changeset_;
       }
       /**
        * <pre>
@@ -7291,10 +9699,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 changeset = 3 [packed = true];</code>
+       * @return The count of changeset.
        */
-      @java.lang.Override
       public int getChangesetCount() {
-        return instance.getChangesetCount();
+        return changeset_.size();
       }
       /**
        * <pre>
@@ -7302,10 +9710,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 changeset = 3 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The changeset at the given index.
        */
-      @java.lang.Override
       public long getChangeset(int index) {
-        return instance.getChangeset(index);
+        return changeset_.getLong(index);
       }
       /**
        * <pre>
@@ -7313,11 +9722,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 changeset = 3 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The changeset to set.
+       * @return This builder for chaining.
        */
       public Builder setChangeset(
           int index, long value) {
-        copyOnWrite();
-        instance.setChangeset(index, value);
+        ensureChangesetIsMutable();
+        changeset_.setLong(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -7326,10 +9739,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 changeset = 3 [packed = true];</code>
+       * @param value The changeset to add.
+       * @return This builder for chaining.
        */
       public Builder addChangeset(long value) {
-        copyOnWrite();
-        instance.addChangeset(value);
+        ensureChangesetIsMutable();
+        changeset_.addLong(value);
+        onChanged();
         return this;
       }
       /**
@@ -7338,11 +9754,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 changeset = 3 [packed = true];</code>
+       * @param values The changeset to add.
+       * @return This builder for chaining.
        */
       public Builder addAllChangeset(
           java.lang.Iterable<? extends java.lang.Long> values) {
-        copyOnWrite();
-        instance.addAllChangeset(values);
+        ensureChangesetIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, changeset_);
+        onChanged();
         return this;
       }
       /**
@@ -7351,25 +9771,34 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 changeset = 3 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearChangeset() {
-        copyOnWrite();
-        instance.clearChangeset();
+        changeset_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.Internal.IntList uid_ = emptyIntList();
+      private void ensureUidIsMutable() {
+        if (!((bitField0_ & 0x00000008) != 0)) {
+          uid_ = mutableCopy(uid_);
+          bitField0_ |= 0x00000008;
+         }
+      }
       /**
        * <pre>
        * DELTA coded
        * </pre>
        *
        * <code>repeated sint32 uid = 4 [packed = true];</code>
+       * @return A list containing the uid.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Integer>
           getUidList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getUidList());
+        return ((bitField0_ & 0x00000008) != 0) ?
+                 java.util.Collections.unmodifiableList(uid_) : uid_;
       }
       /**
        * <pre>
@@ -7377,10 +9806,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 uid = 4 [packed = true];</code>
+       * @return The count of uid.
        */
-      @java.lang.Override
       public int getUidCount() {
-        return instance.getUidCount();
+        return uid_.size();
       }
       /**
        * <pre>
@@ -7388,10 +9817,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 uid = 4 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The uid at the given index.
        */
-      @java.lang.Override
       public int getUid(int index) {
-        return instance.getUid(index);
+        return uid_.getInt(index);
       }
       /**
        * <pre>
@@ -7399,11 +9829,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 uid = 4 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The uid to set.
+       * @return This builder for chaining.
        */
       public Builder setUid(
           int index, int value) {
-        copyOnWrite();
-        instance.setUid(index, value);
+        ensureUidIsMutable();
+        uid_.setInt(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -7412,10 +9846,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 uid = 4 [packed = true];</code>
+       * @param value The uid to add.
+       * @return This builder for chaining.
        */
       public Builder addUid(int value) {
-        copyOnWrite();
-        instance.addUid(value);
+        ensureUidIsMutable();
+        uid_.addInt(value);
+        onChanged();
         return this;
       }
       /**
@@ -7424,11 +9861,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 uid = 4 [packed = true];</code>
+       * @param values The uid to add.
+       * @return This builder for chaining.
        */
       public Builder addAllUid(
           java.lang.Iterable<? extends java.lang.Integer> values) {
-        copyOnWrite();
-        instance.addAllUid(values);
+        ensureUidIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, uid_);
+        onChanged();
         return this;
       }
       /**
@@ -7437,25 +9878,34 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 uid = 4 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearUid() {
-        copyOnWrite();
-        instance.clearUid();
+        uid_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000008);
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.Internal.IntList userSid_ = emptyIntList();
+      private void ensureUserSidIsMutable() {
+        if (!((bitField0_ & 0x00000010) != 0)) {
+          userSid_ = mutableCopy(userSid_);
+          bitField0_ |= 0x00000010;
+         }
+      }
       /**
        * <pre>
        * String IDs for usernames. DELTA coded
        * </pre>
        *
        * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+       * @return A list containing the userSid.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Integer>
           getUserSidList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getUserSidList());
+        return ((bitField0_ & 0x00000010) != 0) ?
+                 java.util.Collections.unmodifiableList(userSid_) : userSid_;
       }
       /**
        * <pre>
@@ -7463,10 +9913,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+       * @return The count of userSid.
        */
-      @java.lang.Override
       public int getUserSidCount() {
-        return instance.getUserSidCount();
+        return userSid_.size();
       }
       /**
        * <pre>
@@ -7474,10 +9924,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The userSid at the given index.
        */
-      @java.lang.Override
       public int getUserSid(int index) {
-        return instance.getUserSid(index);
+        return userSid_.getInt(index);
       }
       /**
        * <pre>
@@ -7485,11 +9936,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The userSid to set.
+       * @return This builder for chaining.
        */
       public Builder setUserSid(
           int index, int value) {
-        copyOnWrite();
-        instance.setUserSid(index, value);
+        ensureUserSidIsMutable();
+        userSid_.setInt(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -7498,10 +9953,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+       * @param value The userSid to add.
+       * @return This builder for chaining.
        */
       public Builder addUserSid(int value) {
-        copyOnWrite();
-        instance.addUserSid(value);
+        ensureUserSidIsMutable();
+        userSid_.addInt(value);
+        onChanged();
         return this;
       }
       /**
@@ -7510,11 +9968,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+       * @param values The userSid to add.
+       * @return This builder for chaining.
        */
       public Builder addAllUserSid(
           java.lang.Iterable<? extends java.lang.Integer> values) {
-        copyOnWrite();
-        instance.addAllUserSid(values);
+        ensureUserSidIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, userSid_);
+        onChanged();
         return this;
       }
       /**
@@ -7523,13 +9985,22 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint32 user_sid = 5 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearUserSid() {
-        copyOnWrite();
-        instance.clearUserSid();
+        userSid_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.Internal.BooleanList visible_ = emptyBooleanList();
+      private void ensureVisibleIsMutable() {
+        if (!((bitField0_ & 0x00000020) != 0)) {
+          visible_ = mutableCopy(visible_);
+          bitField0_ |= 0x00000020;
+         }
+      }
       /**
        * <pre>
        * The visible flag is used to store history information. It indicates that
@@ -7543,12 +10014,12 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated bool visible = 6 [packed = true];</code>
+       * @return A list containing the visible.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Boolean>
           getVisibleList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getVisibleList());
+        return ((bitField0_ & 0x00000020) != 0) ?
+                 java.util.Collections.unmodifiableList(visible_) : visible_;
       }
       /**
        * <pre>
@@ -7563,10 +10034,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated bool visible = 6 [packed = true];</code>
+       * @return The count of visible.
        */
-      @java.lang.Override
       public int getVisibleCount() {
-        return instance.getVisibleCount();
+        return visible_.size();
       }
       /**
        * <pre>
@@ -7581,10 +10052,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated bool visible = 6 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The visible at the given index.
        */
-      @java.lang.Override
       public boolean getVisible(int index) {
-        return instance.getVisible(index);
+        return visible_.getBoolean(index);
       }
       /**
        * <pre>
@@ -7599,11 +10071,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated bool visible = 6 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The visible to set.
+       * @return This builder for chaining.
        */
       public Builder setVisible(
           int index, boolean value) {
-        copyOnWrite();
-        instance.setVisible(index, value);
+        ensureVisibleIsMutable();
+        visible_.setBoolean(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -7619,10 +10095,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated bool visible = 6 [packed = true];</code>
+       * @param value The visible to add.
+       * @return This builder for chaining.
        */
       public Builder addVisible(boolean value) {
-        copyOnWrite();
-        instance.addVisible(value);
+        ensureVisibleIsMutable();
+        visible_.addBoolean(value);
+        onChanged();
         return this;
       }
       /**
@@ -7638,11 +10117,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated bool visible = 6 [packed = true];</code>
+       * @param values The visible to add.
+       * @return This builder for chaining.
        */
       public Builder addAllVisible(
           java.lang.Iterable<? extends java.lang.Boolean> values) {
-        copyOnWrite();
-        instance.addAllVisible(values);
+        ensureVisibleIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, visible_);
+        onChanged();
         return this;
       }
       /**
@@ -7658,263 +10141,70 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated bool visible = 6 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearVisible() {
-        copyOnWrite();
-        instance.clearVisible();
+        visible_ = emptyBooleanList();
+        bitField0_ = (bitField0_ & ~0x00000020);
+        onChanged();
         return this;
       }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.DenseInfo)
     }
-    @java.lang.Override
-    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        java.lang.Object arg0, java.lang.Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo();
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case IS_INITIALIZED: {
-          return DEFAULT_INSTANCE;
-        }
-        case MAKE_IMMUTABLE: {
-          version_.makeImmutable();
-          timestamp_.makeImmutable();
-          changeset_.makeImmutable();
-          uid_.makeImmutable();
-          userSid_.makeImmutable();
-          visible_.makeImmutable();
-          return null;
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo other = (org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo) arg1;
-          version_= visitor.visitIntList(version_, other.version_);
-          timestamp_= visitor.visitLongList(timestamp_, other.timestamp_);
-          changeset_= visitor.visitLongList(changeset_, other.changeset_);
-          uid_= visitor.visitIntList(uid_, other.uid_);
-          userSid_= visitor.visitIntList(userSid_, other.userSid_);
-          visible_= visitor.visitBooleanList(visible_, other.visible_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-          }
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                case 8: {
-                  if (!version_.isModifiable()) {
-                    version_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(version_);
-                  }
-                  version_.addInt(input.readInt32());
-                  break;
-                }
-                case 10: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!version_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    version_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(version_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    version_.addInt(input.readInt32());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 16: {
-                  if (!timestamp_.isModifiable()) {
-                    timestamp_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(timestamp_);
-                  }
-                  timestamp_.addLong(input.readSInt64());
-                  break;
-                }
-                case 18: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!timestamp_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    timestamp_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(timestamp_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    timestamp_.addLong(input.readSInt64());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 24: {
-                  if (!changeset_.isModifiable()) {
-                    changeset_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(changeset_);
-                  }
-                  changeset_.addLong(input.readSInt64());
-                  break;
-                }
-                case 26: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!changeset_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    changeset_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(changeset_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    changeset_.addLong(input.readSInt64());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 32: {
-                  if (!uid_.isModifiable()) {
-                    uid_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(uid_);
-                  }
-                  uid_.addInt(input.readSInt32());
-                  break;
-                }
-                case 34: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!uid_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    uid_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(uid_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    uid_.addInt(input.readSInt32());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 40: {
-                  if (!userSid_.isModifiable()) {
-                    userSid_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(userSid_);
-                  }
-                  userSid_.addInt(input.readSInt32());
-                  break;
-                }
-                case 42: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!userSid_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    userSid_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(userSid_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    userSid_.addInt(input.readSInt32());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 48: {
-                  if (!visible_.isModifiable()) {
-                    visible_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(visible_);
-                  }
-                  visible_.addBoolean(input.readBool());
-                  break;
-                }
-                case 50: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!visible_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    final int currentSize = visible_.size();
-                    visible_ = visible_.mutableCopyWithCapacity(
-                        currentSize + (length/1));
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    visible_.addBoolean(input.readBool());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        // fall through
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          com.google.protobuf.Parser<org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo> parser = PARSER;
-          if (parser == null) {
-            synchronized (org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.class) {
-              parser = PARSER;
-              if (parser == null) {
-                parser = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-                PARSER = parser;
-              }
-            }
-          }
-          return parser;
-      }
-      case GET_MEMOIZED_IS_INITIALIZED: {
-        return (byte) 1;
-      }
-      case SET_MEMOIZED_IS_INITIALIZED: {
-        return null;
-      }
-      }
-      throw new UnsupportedOperationException();
-    }
-
 
     // @@protoc_insertion_point(class_scope:OSMPBF.DenseInfo)
     private static final org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo DEFAULT_INSTANCE;
     static {
-      // New instances are implicitly immutable so no need to make
-      // immutable.
-      DEFAULT_INSTANCE = new DenseInfo();
+      DEFAULT_INSTANCE = new org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo();
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static volatile com.google.protobuf.Parser<DenseInfo> PARSER;
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<DenseInfo>
+        PARSER = new com.google.protobuf.AbstractParser<DenseInfo>() {
+      @java.lang.Override
+      public DenseInfo parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DenseInfo(input, extensionRegistry);
+      }
+    };
 
     public static com.google.protobuf.Parser<DenseInfo> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
+      return PARSER;
     }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DenseInfo> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
   public interface ChangeSetOrBuilder extends
       // @@protoc_insertion_point(interface_extends:OSMPBF.ChangeSet)
-      com.google.protobuf.MessageLiteOrBuilder {
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <pre>
@@ -7926,6 +10216,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>required int64 id = 1;</code>
+     * @return Whether the id field is set.
      */
     boolean hasId();
     /**
@@ -7938,6 +10229,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>required int64 id = 1;</code>
+     * @return The id.
      */
     long getId();
   }
@@ -7950,12 +10242,85 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.ChangeSet}
    */
   public  static final class ChangeSet extends
-      com.google.protobuf.GeneratedMessageLite<
-          ChangeSet, ChangeSet.Builder> implements
+      com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:OSMPBF.ChangeSet)
       ChangeSetOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ChangeSet.newBuilder() to construct.
+    private ChangeSet(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
     private ChangeSet() {
     }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ChangeSet();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ChangeSet(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              bitField0_ |= 0x00000001;
+              id_ = input.readInt64();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_ChangeSet_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_ChangeSet_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.class, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.Builder.class);
+    }
+
     private int bitField0_;
     public static final int ID_FIELD_NUMBER = 1;
     private long id_;
@@ -7969,10 +10334,10 @@ public final class Osmformat {
      * </pre>
      *
      * <code>required int64 id = 1;</code>
+     * @return Whether the id field is set.
      */
-    @java.lang.Override
     public boolean hasId() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <pre>
@@ -7984,46 +10349,31 @@ public final class Osmformat {
      * </pre>
      *
      * <code>required int64 id = 1;</code>
+     * @return The id.
      */
-    @java.lang.Override
     public long getId() {
       return id_;
     }
-    /**
-     * <pre>
-     *   
-     *   // Parallel arrays.
-     *   repeated uint32 keys = 2 [packed = true]; // String IDs.
-     *   repeated uint32 vals = 3 [packed = true]; // String IDs.
-     *   optional Info info = 4;
-     * </pre>
-     *
-     * <code>required int64 id = 1;</code>
-     */
-    private void setId(long value) {
-      bitField0_ |= 0x00000001;
-      id_ = value;
-    }
-    /**
-     * <pre>
-     *   
-     *   // Parallel arrays.
-     *   repeated uint32 keys = 2 [packed = true]; // String IDs.
-     *   repeated uint32 vals = 3 [packed = true]; // String IDs.
-     *   optional Info info = 4;
-     * </pre>
-     *
-     * <code>required int64 id = 1;</code>
-     */
-    private void clearId() {
-      bitField0_ = (bitField0_ & ~0x00000001);
-      id_ = 0L;
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         output.writeInt64(1, id_);
       }
       unknownFields.writeTo(output);
@@ -8031,100 +10381,145 @@ public final class Osmformat {
 
     @java.lang.Override
     public int getSerializedSize() {
-      int size = memoizedSerializedSize;
+      int size = memoizedSize;
       if (size != -1) return size;
 
       size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(1, id_);
       }
       size += unknownFields.getSerializedSize();
-      memoizedSerializedSize = size;
+      memoizedSize = size;
       return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet)) {
+        return super.equals(obj);
+      }
+      org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet other = (org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet) obj;
+
+      if (hasId() != other.hasId()) return false;
+      if (hasId()) {
+        if (getId()
+            != other.getId()) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasId()) {
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getId());
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
-      return (Builder) DEFAULT_INSTANCE.createBuilder();
+      return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet prototype) {
-      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * <pre>
      * THIS IS STUB DESIGN FOR CHANGESETS. NOT USED RIGHT NOW.
@@ -8134,16 +10529,160 @@ public final class Osmformat {
      * Protobuf type {@code OSMPBF.ChangeSet}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet, Builder> implements
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:OSMPBF.ChangeSet)
         org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSetOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_ChangeSet_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_ChangeSet_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.class, org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.Builder.class);
+      }
+
       // Construct using org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        id_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
 
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_ChangeSet_descriptor;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet getDefaultInstanceForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet build() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet buildPartial() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet result = new org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.id_ = id_;
+          to_bitField0_ |= 0x00000001;
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet) {
+          return mergeFrom((org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet other) {
+        if (other == org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.getDefaultInstance()) return this;
+        if (other.hasId()) {
+          setId(other.getId());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        if (!hasId()) {
+          return false;
+        }
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private long id_ ;
       /**
        * <pre>
        *   
@@ -8154,10 +10693,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>required int64 id = 1;</code>
+       * @return Whether the id field is set.
        */
-      @java.lang.Override
       public boolean hasId() {
-        return instance.hasId();
+        return ((bitField0_ & 0x00000001) != 0);
       }
       /**
        * <pre>
@@ -8169,10 +10708,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>required int64 id = 1;</code>
+       * @return The id.
        */
-      @java.lang.Override
       public long getId() {
-        return instance.getId();
+        return id_;
       }
       /**
        * <pre>
@@ -8184,10 +10723,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>required int64 id = 1;</code>
+       * @param value The id to set.
+       * @return This builder for chaining.
        */
       public Builder setId(long value) {
-        copyOnWrite();
-        instance.setId(value);
+        bitField0_ |= 0x00000001;
+        id_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -8200,151 +10742,79 @@ public final class Osmformat {
        * </pre>
        *
        * <code>required int64 id = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearId() {
-        copyOnWrite();
-        instance.clearId();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        id_ = 0L;
+        onChanged();
         return this;
       }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.ChangeSet)
     }
-    private byte memoizedIsInitialized = 2;
-    @java.lang.Override
-    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        java.lang.Object arg0, java.lang.Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet();
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case IS_INITIALIZED: {
-          byte isInitialized = memoizedIsInitialized;
-          if (isInitialized == 1) return DEFAULT_INSTANCE;
-          if (isInitialized == 0) return null;
-
-          boolean shouldMemoize = ((Boolean) arg0).booleanValue();
-          if (!hasId()) {
-            return null;
-          }
-          return DEFAULT_INSTANCE;
-
-        }
-        case MAKE_IMMUTABLE: {
-          return null;
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet other = (org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet) arg1;
-          id_ = visitor.visitLong(
-              hasId(), id_,
-              other.hasId(), other.id_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-            bitField0_ |= other.bitField0_;
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-          }
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                case 8: {
-                  bitField0_ |= 0x00000001;
-                  id_ = input.readInt64();
-                  break;
-                }
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        // fall through
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          com.google.protobuf.Parser<org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet> parser = PARSER;
-          if (parser == null) {
-            synchronized (org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet.class) {
-              parser = PARSER;
-              if (parser == null) {
-                parser = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-                PARSER = parser;
-              }
-            }
-          }
-          return parser;
-      }
-      case GET_MEMOIZED_IS_INITIALIZED: {
-        return memoizedIsInitialized;
-      }
-      case SET_MEMOIZED_IS_INITIALIZED: {
-        memoizedIsInitialized = (byte) (arg0 == null ? 0 : 1);
-        return null;
-      }
-      }
-      throw new UnsupportedOperationException();
-    }
-
 
     // @@protoc_insertion_point(class_scope:OSMPBF.ChangeSet)
     private static final org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet DEFAULT_INSTANCE;
     static {
-      // New instances are implicitly immutable so no need to make
-      // immutable.
-      DEFAULT_INSTANCE = new ChangeSet();
+      DEFAULT_INSTANCE = new org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet();
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static volatile com.google.protobuf.Parser<ChangeSet> PARSER;
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<ChangeSet>
+        PARSER = new com.google.protobuf.AbstractParser<ChangeSet>() {
+      @java.lang.Override
+      public ChangeSet parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ChangeSet(input, extensionRegistry);
+      }
+    };
 
     public static com.google.protobuf.Parser<ChangeSet> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
+      return PARSER;
     }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ChangeSet> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.ChangeSet getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
   public interface NodeOrBuilder extends
       // @@protoc_insertion_point(interface_extends:OSMPBF.Node)
-      com.google.protobuf.MessageLiteOrBuilder {
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>required sint64 id = 1;</code>
+     * @return Whether the id field is set.
      */
     boolean hasId();
     /**
      * <code>required sint64 id = 1;</code>
+     * @return The id.
      */
     long getId();
 
@@ -8354,6 +10824,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return A list containing the keys.
      */
     java.util.List<java.lang.Integer> getKeysList();
     /**
@@ -8362,6 +10833,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return The count of keys.
      */
     int getKeysCount();
     /**
@@ -8370,6 +10842,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The keys at the given index.
      */
     int getKeys(int index);
 
@@ -8379,6 +10853,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return A list containing the vals.
      */
     java.util.List<java.lang.Integer> getValsList();
     /**
@@ -8387,6 +10862,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return The count of vals.
      */
     int getValsCount();
     /**
@@ -8395,6 +10871,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The vals at the given index.
      */
     int getVals(int index);
 
@@ -8404,6 +10882,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return Whether the info field is set.
      */
     boolean hasInfo();
     /**
@@ -8412,24 +10891,37 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return The info.
      */
     org.openstreetmap.osmosis.osmbinary.Osmformat.Info getInfo();
+    /**
+     * <pre>
+     * May be omitted in omitmeta
+     * </pre>
+     *
+     * <code>optional .OSMPBF.Info info = 4;</code>
+     */
+    org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder getInfoOrBuilder();
 
     /**
      * <code>required sint64 lat = 8;</code>
+     * @return Whether the lat field is set.
      */
     boolean hasLat();
     /**
      * <code>required sint64 lat = 8;</code>
+     * @return The lat.
      */
     long getLat();
 
     /**
      * <code>required sint64 lon = 9;</code>
+     * @return Whether the lon field is set.
      */
     boolean hasLon();
     /**
      * <code>required sint64 lon = 9;</code>
+     * @return The lon.
      */
     long getLon();
   }
@@ -8437,44 +10929,174 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.Node}
    */
   public  static final class Node extends
-      com.google.protobuf.GeneratedMessageLite<
-          Node, Node.Builder> implements
+      com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:OSMPBF.Node)
       NodeOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Node.newBuilder() to construct.
+    private Node(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
     private Node() {
       keys_ = emptyIntList();
       vals_ = emptyIntList();
     }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new Node();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Node(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              bitField0_ |= 0x00000001;
+              id_ = input.readSInt64();
+              break;
+            }
+            case 16: {
+              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+                keys_ = newIntList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              keys_.addInt(input.readUInt32());
+              break;
+            }
+            case 18: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000002) != 0) && input.getBytesUntilLimit() > 0) {
+                keys_ = newIntList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                keys_.addInt(input.readUInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 24: {
+              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
+                vals_ = newIntList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              vals_.addInt(input.readUInt32());
+              break;
+            }
+            case 26: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000004) != 0) && input.getBytesUntilLimit() > 0) {
+                vals_ = newIntList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                vals_.addInt(input.readUInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 34: {
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) != 0)) {
+                subBuilder = info_.toBuilder();
+              }
+              info_ = input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.Info.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(info_);
+                info_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
+              break;
+            }
+            case 64: {
+              bitField0_ |= 0x00000004;
+              lat_ = input.readSInt64();
+              break;
+            }
+            case 72: {
+              bitField0_ |= 0x00000008;
+              lon_ = input.readSInt64();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) != 0)) {
+          keys_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000004) != 0)) {
+          vals_.makeImmutable(); // C
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Node_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Node_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Node.class, org.openstreetmap.osmosis.osmbinary.Osmformat.Node.Builder.class);
+    }
+
     private int bitField0_;
     public static final int ID_FIELD_NUMBER = 1;
     private long id_;
     /**
      * <code>required sint64 id = 1;</code>
+     * @return Whether the id field is set.
      */
-    @java.lang.Override
     public boolean hasId() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <code>required sint64 id = 1;</code>
+     * @return The id.
      */
-    @java.lang.Override
     public long getId() {
       return id_;
-    }
-    /**
-     * <code>required sint64 id = 1;</code>
-     */
-    private void setId(long value) {
-      bitField0_ |= 0x00000001;
-      id_ = value;
-    }
-    /**
-     * <code>required sint64 id = 1;</code>
-     */
-    private void clearId() {
-      bitField0_ = (bitField0_ & ~0x00000001);
-      id_ = 0L;
     }
 
     public static final int KEYS_FIELD_NUMBER = 2;
@@ -8485,8 +11107,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return A list containing the keys.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Integer>
         getKeysList() {
       return keys_;
@@ -8497,8 +11119,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return The count of keys.
      */
-    @java.lang.Override
     public int getKeysCount() {
       return keys_.size();
     }
@@ -8508,64 +11130,13 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The keys at the given index.
      */
-    @java.lang.Override
     public int getKeys(int index) {
       return keys_.getInt(index);
     }
     private int keysMemoizedSerializedSize = -1;
-    private void ensureKeysIsMutable() {
-      if (!keys_.isModifiable()) {
-        keys_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(keys_);
-       }
-    }
-    /**
-     * <pre>
-     * Parallel arrays.
-     * </pre>
-     *
-     * <code>repeated uint32 keys = 2 [packed = true];</code>
-     */
-    private void setKeys(
-        int index, int value) {
-      ensureKeysIsMutable();
-      keys_.setInt(index, value);
-    }
-    /**
-     * <pre>
-     * Parallel arrays.
-     * </pre>
-     *
-     * <code>repeated uint32 keys = 2 [packed = true];</code>
-     */
-    private void addKeys(int value) {
-      ensureKeysIsMutable();
-      keys_.addInt(value);
-    }
-    /**
-     * <pre>
-     * Parallel arrays.
-     * </pre>
-     *
-     * <code>repeated uint32 keys = 2 [packed = true];</code>
-     */
-    private void addAllKeys(
-        java.lang.Iterable<? extends java.lang.Integer> values) {
-      ensureKeysIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, keys_);
-    }
-    /**
-     * <pre>
-     * Parallel arrays.
-     * </pre>
-     *
-     * <code>repeated uint32 keys = 2 [packed = true];</code>
-     */
-    private void clearKeys() {
-      keys_ = emptyIntList();
-    }
 
     public static final int VALS_FIELD_NUMBER = 3;
     private com.google.protobuf.Internal.IntList vals_;
@@ -8575,8 +11146,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return A list containing the vals.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Integer>
         getValsList() {
       return vals_;
@@ -8587,8 +11158,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return The count of vals.
      */
-    @java.lang.Override
     public int getValsCount() {
       return vals_.size();
     }
@@ -8598,64 +11169,13 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The vals at the given index.
      */
-    @java.lang.Override
     public int getVals(int index) {
       return vals_.getInt(index);
     }
     private int valsMemoizedSerializedSize = -1;
-    private void ensureValsIsMutable() {
-      if (!vals_.isModifiable()) {
-        vals_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(vals_);
-       }
-    }
-    /**
-     * <pre>
-     * String IDs.
-     * </pre>
-     *
-     * <code>repeated uint32 vals = 3 [packed = true];</code>
-     */
-    private void setVals(
-        int index, int value) {
-      ensureValsIsMutable();
-      vals_.setInt(index, value);
-    }
-    /**
-     * <pre>
-     * String IDs.
-     * </pre>
-     *
-     * <code>repeated uint32 vals = 3 [packed = true];</code>
-     */
-    private void addVals(int value) {
-      ensureValsIsMutable();
-      vals_.addInt(value);
-    }
-    /**
-     * <pre>
-     * String IDs.
-     * </pre>
-     *
-     * <code>repeated uint32 vals = 3 [packed = true];</code>
-     */
-    private void addAllVals(
-        java.lang.Iterable<? extends java.lang.Integer> values) {
-      ensureValsIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, vals_);
-    }
-    /**
-     * <pre>
-     * String IDs.
-     * </pre>
-     *
-     * <code>repeated uint32 vals = 3 [packed = true];</code>
-     */
-    private void clearVals() {
-      vals_ = emptyIntList();
-    }
 
     public static final int INFO_FIELD_NUMBER = 4;
     private org.openstreetmap.osmosis.osmbinary.Osmformat.Info info_;
@@ -8665,10 +11185,10 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return Whether the info field is set.
      */
-    @java.lang.Override
     public boolean hasInfo() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <pre>
@@ -8676,8 +11196,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return The info.
      */
-    @java.lang.Override
     public org.openstreetmap.osmosis.osmbinary.Osmformat.Info getInfo() {
       return info_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance() : info_;
     }
@@ -8688,124 +11208,72 @@ public final class Osmformat {
      *
      * <code>optional .OSMPBF.Info info = 4;</code>
      */
-    private void setInfo(org.openstreetmap.osmosis.osmbinary.Osmformat.Info value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      info_ = value;
-      bitField0_ |= 0x00000002;
-      }
-    /**
-     * <pre>
-     * May be omitted in omitmeta
-     * </pre>
-     *
-     * <code>optional .OSMPBF.Info info = 4;</code>
-     */
-    private void setInfo(
-        org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder builderForValue) {
-      info_ = builderForValue.build();
-      bitField0_ |= 0x00000002;
-    }
-    /**
-     * <pre>
-     * May be omitted in omitmeta
-     * </pre>
-     *
-     * <code>optional .OSMPBF.Info info = 4;</code>
-     */
-    @java.lang.SuppressWarnings({"ReferenceEquality"})
-    private void mergeInfo(org.openstreetmap.osmosis.osmbinary.Osmformat.Info value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      if (info_ != null &&
-          info_ != org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance()) {
-        info_ =
-          org.openstreetmap.osmosis.osmbinary.Osmformat.Info.newBuilder(info_).mergeFrom(value).buildPartial();
-      } else {
-        info_ = value;
-      }
-      bitField0_ |= 0x00000002;
-    }
-    /**
-     * <pre>
-     * May be omitted in omitmeta
-     * </pre>
-     *
-     * <code>optional .OSMPBF.Info info = 4;</code>
-     */
-    private void clearInfo() {  info_ = null;
-      bitField0_ = (bitField0_ & ~0x00000002);
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder getInfoOrBuilder() {
+      return info_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance() : info_;
     }
 
     public static final int LAT_FIELD_NUMBER = 8;
     private long lat_;
     /**
      * <code>required sint64 lat = 8;</code>
+     * @return Whether the lat field is set.
      */
-    @java.lang.Override
     public boolean hasLat() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
      * <code>required sint64 lat = 8;</code>
+     * @return The lat.
      */
-    @java.lang.Override
     public long getLat() {
       return lat_;
-    }
-    /**
-     * <code>required sint64 lat = 8;</code>
-     */
-    private void setLat(long value) {
-      bitField0_ |= 0x00000004;
-      lat_ = value;
-    }
-    /**
-     * <code>required sint64 lat = 8;</code>
-     */
-    private void clearLat() {
-      bitField0_ = (bitField0_ & ~0x00000004);
-      lat_ = 0L;
     }
 
     public static final int LON_FIELD_NUMBER = 9;
     private long lon_;
     /**
      * <code>required sint64 lon = 9;</code>
+     * @return Whether the lon field is set.
      */
-    @java.lang.Override
     public boolean hasLon() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000008) != 0);
     }
     /**
      * <code>required sint64 lon = 9;</code>
+     * @return The lon.
      */
-    @java.lang.Override
     public long getLon() {
       return lon_;
     }
-    /**
-     * <code>required sint64 lon = 9;</code>
-     */
-    private void setLon(long value) {
-      bitField0_ |= 0x00000008;
-      lon_ = value;
-    }
-    /**
-     * <code>required sint64 lon = 9;</code>
-     */
-    private void clearLon() {
-      bitField0_ = (bitField0_ & ~0x00000008);
-      lon_ = 0L;
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasLat()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasLon()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         output.writeSInt64(1, id_);
       }
       if (getKeysList().size() > 0) {
@@ -8822,13 +11290,13 @@ public final class Osmformat {
       for (int i = 0; i < vals_.size(); i++) {
         output.writeUInt32NoTag(vals_.getInt(i));
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if (((bitField0_ & 0x00000002) != 0)) {
         output.writeMessage(4, getInfo());
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      if (((bitField0_ & 0x00000004) != 0)) {
         output.writeSInt64(8, lat_);
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if (((bitField0_ & 0x00000008) != 0)) {
         output.writeSInt64(9, lon_);
       }
       unknownFields.writeTo(output);
@@ -8836,11 +11304,11 @@ public final class Osmformat {
 
     @java.lang.Override
     public int getSerializedSize() {
-      int size = memoizedSerializedSize;
+      int size = memoizedSize;
       if (size != -1) return size;
 
       size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeSInt64Size(1, id_);
       }
@@ -8872,161 +11340,479 @@ public final class Osmformat {
         }
         valsMemoizedSerializedSize = dataSize;
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, getInfo());
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      if (((bitField0_ & 0x00000004) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeSInt64Size(8, lat_);
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if (((bitField0_ & 0x00000008) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeSInt64Size(9, lon_);
       }
       size += unknownFields.getSerializedSize();
-      memoizedSerializedSize = size;
+      memoizedSize = size;
       return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.Node)) {
+        return super.equals(obj);
+      }
+      org.openstreetmap.osmosis.osmbinary.Osmformat.Node other = (org.openstreetmap.osmosis.osmbinary.Osmformat.Node) obj;
+
+      if (hasId() != other.hasId()) return false;
+      if (hasId()) {
+        if (getId()
+            != other.getId()) return false;
+      }
+      if (!getKeysList()
+          .equals(other.getKeysList())) return false;
+      if (!getValsList()
+          .equals(other.getValsList())) return false;
+      if (hasInfo() != other.hasInfo()) return false;
+      if (hasInfo()) {
+        if (!getInfo()
+            .equals(other.getInfo())) return false;
+      }
+      if (hasLat() != other.hasLat()) return false;
+      if (hasLat()) {
+        if (getLat()
+            != other.getLat()) return false;
+      }
+      if (hasLon() != other.hasLon()) return false;
+      if (hasLon()) {
+        if (getLon()
+            != other.getLon()) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasId()) {
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getId());
+      }
+      if (getKeysCount() > 0) {
+        hash = (37 * hash) + KEYS_FIELD_NUMBER;
+        hash = (53 * hash) + getKeysList().hashCode();
+      }
+      if (getValsCount() > 0) {
+        hash = (37 * hash) + VALS_FIELD_NUMBER;
+        hash = (53 * hash) + getValsList().hashCode();
+      }
+      if (hasInfo()) {
+        hash = (37 * hash) + INFO_FIELD_NUMBER;
+        hash = (53 * hash) + getInfo().hashCode();
+      }
+      if (hasLat()) {
+        hash = (37 * hash) + LAT_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getLat());
+      }
+      if (hasLon()) {
+        hash = (37 * hash) + LON_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getLon());
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Node parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Node parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Node parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Node parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Node parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Node parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Node parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Node parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Node parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Node parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Node parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Node parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
-      return (Builder) DEFAULT_INSTANCE.createBuilder();
+      return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.Node prototype) {
-      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * Protobuf type {@code OSMPBF.Node}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          org.openstreetmap.osmosis.osmbinary.Osmformat.Node, Builder> implements
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:OSMPBF.Node)
         org.openstreetmap.osmosis.osmbinary.Osmformat.NodeOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Node_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Node_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.openstreetmap.osmosis.osmbinary.Osmformat.Node.class, org.openstreetmap.osmosis.osmbinary.Osmformat.Node.Builder.class);
+      }
+
       // Construct using org.openstreetmap.osmosis.osmbinary.Osmformat.Node.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getInfoFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        id_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        keys_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        vals_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        if (infoBuilder_ == null) {
+          info_ = null;
+        } else {
+          infoBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000008);
+        lat_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000010);
+        lon_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000020);
+        return this;
+      }
 
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Node_descriptor;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Node getDefaultInstanceForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.Node.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Node build() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.Node result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Node buildPartial() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.Node result = new org.openstreetmap.osmosis.osmbinary.Osmformat.Node(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.id_ = id_;
+          to_bitField0_ |= 0x00000001;
+        }
+        if (((bitField0_ & 0x00000002) != 0)) {
+          keys_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.keys_ = keys_;
+        if (((bitField0_ & 0x00000004) != 0)) {
+          vals_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.vals_ = vals_;
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          if (infoBuilder_ == null) {
+            result.info_ = info_;
+          } else {
+            result.info_ = infoBuilder_.build();
+          }
+          to_bitField0_ |= 0x00000002;
+        }
+        if (((from_bitField0_ & 0x00000010) != 0)) {
+          result.lat_ = lat_;
+          to_bitField0_ |= 0x00000004;
+        }
+        if (((from_bitField0_ & 0x00000020) != 0)) {
+          result.lon_ = lon_;
+          to_bitField0_ |= 0x00000008;
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.Node) {
+          return mergeFrom((org.openstreetmap.osmosis.osmbinary.Osmformat.Node)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.openstreetmap.osmosis.osmbinary.Osmformat.Node other) {
+        if (other == org.openstreetmap.osmosis.osmbinary.Osmformat.Node.getDefaultInstance()) return this;
+        if (other.hasId()) {
+          setId(other.getId());
+        }
+        if (!other.keys_.isEmpty()) {
+          if (keys_.isEmpty()) {
+            keys_ = other.keys_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureKeysIsMutable();
+            keys_.addAll(other.keys_);
+          }
+          onChanged();
+        }
+        if (!other.vals_.isEmpty()) {
+          if (vals_.isEmpty()) {
+            vals_ = other.vals_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureValsIsMutable();
+            vals_.addAll(other.vals_);
+          }
+          onChanged();
+        }
+        if (other.hasInfo()) {
+          mergeInfo(other.getInfo());
+        }
+        if (other.hasLat()) {
+          setLat(other.getLat());
+        }
+        if (other.hasLon()) {
+          setLon(other.getLon());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        if (!hasId()) {
+          return false;
+        }
+        if (!hasLat()) {
+          return false;
+        }
+        if (!hasLon()) {
+          return false;
+        }
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.Node parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.openstreetmap.osmosis.osmbinary.Osmformat.Node) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private long id_ ;
       /**
        * <code>required sint64 id = 1;</code>
+       * @return Whether the id field is set.
        */
-      @java.lang.Override
       public boolean hasId() {
-        return instance.hasId();
+        return ((bitField0_ & 0x00000001) != 0);
       }
       /**
        * <code>required sint64 id = 1;</code>
+       * @return The id.
        */
-      @java.lang.Override
       public long getId() {
-        return instance.getId();
+        return id_;
       }
       /**
        * <code>required sint64 id = 1;</code>
+       * @param value The id to set.
+       * @return This builder for chaining.
        */
       public Builder setId(long value) {
-        copyOnWrite();
-        instance.setId(value);
+        bitField0_ |= 0x00000001;
+        id_ = value;
+        onChanged();
         return this;
       }
       /**
        * <code>required sint64 id = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearId() {
-        copyOnWrite();
-        instance.clearId();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        id_ = 0L;
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.Internal.IntList keys_ = emptyIntList();
+      private void ensureKeysIsMutable() {
+        if (!((bitField0_ & 0x00000002) != 0)) {
+          keys_ = mutableCopy(keys_);
+          bitField0_ |= 0x00000002;
+         }
+      }
       /**
        * <pre>
        * Parallel arrays.
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return A list containing the keys.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Integer>
           getKeysList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getKeysList());
+        return ((bitField0_ & 0x00000002) != 0) ?
+                 java.util.Collections.unmodifiableList(keys_) : keys_;
       }
       /**
        * <pre>
@@ -9034,10 +11820,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return The count of keys.
        */
-      @java.lang.Override
       public int getKeysCount() {
-        return instance.getKeysCount();
+        return keys_.size();
       }
       /**
        * <pre>
@@ -9045,10 +11831,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The keys at the given index.
        */
-      @java.lang.Override
       public int getKeys(int index) {
-        return instance.getKeys(index);
+        return keys_.getInt(index);
       }
       /**
        * <pre>
@@ -9056,11 +11843,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The keys to set.
+       * @return This builder for chaining.
        */
       public Builder setKeys(
           int index, int value) {
-        copyOnWrite();
-        instance.setKeys(index, value);
+        ensureKeysIsMutable();
+        keys_.setInt(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -9069,10 +11860,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param value The keys to add.
+       * @return This builder for chaining.
        */
       public Builder addKeys(int value) {
-        copyOnWrite();
-        instance.addKeys(value);
+        ensureKeysIsMutable();
+        keys_.addInt(value);
+        onChanged();
         return this;
       }
       /**
@@ -9081,11 +11875,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param values The keys to add.
+       * @return This builder for chaining.
        */
       public Builder addAllKeys(
           java.lang.Iterable<? extends java.lang.Integer> values) {
-        copyOnWrite();
-        instance.addAllKeys(values);
+        ensureKeysIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, keys_);
+        onChanged();
         return this;
       }
       /**
@@ -9094,25 +11892,34 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearKeys() {
-        copyOnWrite();
-        instance.clearKeys();
+        keys_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.Internal.IntList vals_ = emptyIntList();
+      private void ensureValsIsMutable() {
+        if (!((bitField0_ & 0x00000004) != 0)) {
+          vals_ = mutableCopy(vals_);
+          bitField0_ |= 0x00000004;
+         }
+      }
       /**
        * <pre>
        * String IDs.
        * </pre>
        *
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return A list containing the vals.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Integer>
           getValsList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getValsList());
+        return ((bitField0_ & 0x00000004) != 0) ?
+                 java.util.Collections.unmodifiableList(vals_) : vals_;
       }
       /**
        * <pre>
@@ -9120,10 +11927,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return The count of vals.
        */
-      @java.lang.Override
       public int getValsCount() {
-        return instance.getValsCount();
+        return vals_.size();
       }
       /**
        * <pre>
@@ -9131,10 +11938,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The vals at the given index.
        */
-      @java.lang.Override
       public int getVals(int index) {
-        return instance.getVals(index);
+        return vals_.getInt(index);
       }
       /**
        * <pre>
@@ -9142,11 +11950,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The vals to set.
+       * @return This builder for chaining.
        */
       public Builder setVals(
           int index, int value) {
-        copyOnWrite();
-        instance.setVals(index, value);
+        ensureValsIsMutable();
+        vals_.setInt(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -9155,10 +11967,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param value The vals to add.
+       * @return This builder for chaining.
        */
       public Builder addVals(int value) {
-        copyOnWrite();
-        instance.addVals(value);
+        ensureValsIsMutable();
+        vals_.addInt(value);
+        onChanged();
         return this;
       }
       /**
@@ -9167,11 +11982,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param values The vals to add.
+       * @return This builder for chaining.
        */
       public Builder addAllVals(
           java.lang.Iterable<? extends java.lang.Integer> values) {
-        copyOnWrite();
-        instance.addAllVals(values);
+        ensureValsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, vals_);
+        onChanged();
         return this;
       }
       /**
@@ -9180,23 +11999,28 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearVals() {
-        copyOnWrite();
-        instance.clearVals();
+        vals_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
         return this;
       }
 
+      private org.openstreetmap.osmosis.osmbinary.Osmformat.Info info_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.Info, org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder> infoBuilder_;
       /**
        * <pre>
        * May be omitted in omitmeta
        * </pre>
        *
        * <code>optional .OSMPBF.Info info = 4;</code>
+       * @return Whether the info field is set.
        */
-      @java.lang.Override
       public boolean hasInfo() {
-        return instance.hasInfo();
+        return ((bitField0_ & 0x00000008) != 0);
       }
       /**
        * <pre>
@@ -9204,10 +12028,14 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional .OSMPBF.Info info = 4;</code>
+       * @return The info.
        */
-      @java.lang.Override
       public org.openstreetmap.osmosis.osmbinary.Osmformat.Info getInfo() {
-        return instance.getInfo();
+        if (infoBuilder_ == null) {
+          return info_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance() : info_;
+        } else {
+          return infoBuilder_.getMessage();
+        }
       }
       /**
        * <pre>
@@ -9217,10 +12045,18 @@ public final class Osmformat {
        * <code>optional .OSMPBF.Info info = 4;</code>
        */
       public Builder setInfo(org.openstreetmap.osmosis.osmbinary.Osmformat.Info value) {
-        copyOnWrite();
-        instance.setInfo(value);
-        return this;
+        if (infoBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          info_ = value;
+          onChanged();
+        } else {
+          infoBuilder_.setMessage(value);
         }
+        bitField0_ |= 0x00000008;
+        return this;
+      }
       /**
        * <pre>
        * May be omitted in omitmeta
@@ -9230,8 +12066,13 @@ public final class Osmformat {
        */
       public Builder setInfo(
           org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder builderForValue) {
-        copyOnWrite();
-        instance.setInfo(builderForValue);
+        if (infoBuilder_ == null) {
+          info_ = builderForValue.build();
+          onChanged();
+        } else {
+          infoBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000008;
         return this;
       }
       /**
@@ -9242,8 +12083,20 @@ public final class Osmformat {
        * <code>optional .OSMPBF.Info info = 4;</code>
        */
       public Builder mergeInfo(org.openstreetmap.osmosis.osmbinary.Osmformat.Info value) {
-        copyOnWrite();
-        instance.mergeInfo(value);
+        if (infoBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) != 0) &&
+              info_ != null &&
+              info_ != org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance()) {
+            info_ =
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Info.newBuilder(info_).mergeFrom(value).buildPartial();
+          } else {
+            info_ = value;
+          }
+          onChanged();
+        } else {
+          infoBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000008;
         return this;
       }
       /**
@@ -9253,286 +12106,193 @@ public final class Osmformat {
        *
        * <code>optional .OSMPBF.Info info = 4;</code>
        */
-      public Builder clearInfo() {  copyOnWrite();
-        instance.clearInfo();
+      public Builder clearInfo() {
+        if (infoBuilder_ == null) {
+          info_ = null;
+          onChanged();
+        } else {
+          infoBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
+      /**
+       * <pre>
+       * May be omitted in omitmeta
+       * </pre>
+       *
+       * <code>optional .OSMPBF.Info info = 4;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder getInfoBuilder() {
+        bitField0_ |= 0x00000008;
+        onChanged();
+        return getInfoFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       * May be omitted in omitmeta
+       * </pre>
+       *
+       * <code>optional .OSMPBF.Info info = 4;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder getInfoOrBuilder() {
+        if (infoBuilder_ != null) {
+          return infoBuilder_.getMessageOrBuilder();
+        } else {
+          return info_ == null ?
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance() : info_;
+        }
+      }
+      /**
+       * <pre>
+       * May be omitted in omitmeta
+       * </pre>
+       *
+       * <code>optional .OSMPBF.Info info = 4;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.Info, org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder> 
+          getInfoFieldBuilder() {
+        if (infoBuilder_ == null) {
+          infoBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Info, org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder>(
+                  getInfo(),
+                  getParentForChildren(),
+                  isClean());
+          info_ = null;
+        }
+        return infoBuilder_;
+      }
 
+      private long lat_ ;
       /**
        * <code>required sint64 lat = 8;</code>
+       * @return Whether the lat field is set.
        */
-      @java.lang.Override
       public boolean hasLat() {
-        return instance.hasLat();
+        return ((bitField0_ & 0x00000010) != 0);
       }
       /**
        * <code>required sint64 lat = 8;</code>
+       * @return The lat.
        */
-      @java.lang.Override
       public long getLat() {
-        return instance.getLat();
+        return lat_;
       }
       /**
        * <code>required sint64 lat = 8;</code>
+       * @param value The lat to set.
+       * @return This builder for chaining.
        */
       public Builder setLat(long value) {
-        copyOnWrite();
-        instance.setLat(value);
+        bitField0_ |= 0x00000010;
+        lat_ = value;
+        onChanged();
         return this;
       }
       /**
        * <code>required sint64 lat = 8;</code>
+       * @return This builder for chaining.
        */
       public Builder clearLat() {
-        copyOnWrite();
-        instance.clearLat();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        lat_ = 0L;
+        onChanged();
         return this;
       }
 
+      private long lon_ ;
       /**
        * <code>required sint64 lon = 9;</code>
+       * @return Whether the lon field is set.
        */
-      @java.lang.Override
       public boolean hasLon() {
-        return instance.hasLon();
+        return ((bitField0_ & 0x00000020) != 0);
       }
       /**
        * <code>required sint64 lon = 9;</code>
+       * @return The lon.
        */
-      @java.lang.Override
       public long getLon() {
-        return instance.getLon();
+        return lon_;
       }
       /**
        * <code>required sint64 lon = 9;</code>
+       * @param value The lon to set.
+       * @return This builder for chaining.
        */
       public Builder setLon(long value) {
-        copyOnWrite();
-        instance.setLon(value);
+        bitField0_ |= 0x00000020;
+        lon_ = value;
+        onChanged();
         return this;
       }
       /**
        * <code>required sint64 lon = 9;</code>
+       * @return This builder for chaining.
        */
       public Builder clearLon() {
-        copyOnWrite();
-        instance.clearLon();
+        bitField0_ = (bitField0_ & ~0x00000020);
+        lon_ = 0L;
+        onChanged();
         return this;
       }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.Node)
     }
-    private byte memoizedIsInitialized = 2;
-    @java.lang.Override
-    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        java.lang.Object arg0, java.lang.Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new org.openstreetmap.osmosis.osmbinary.Osmformat.Node();
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case IS_INITIALIZED: {
-          byte isInitialized = memoizedIsInitialized;
-          if (isInitialized == 1) return DEFAULT_INSTANCE;
-          if (isInitialized == 0) return null;
-
-          boolean shouldMemoize = ((Boolean) arg0).booleanValue();
-          if (!hasId()) {
-            return null;
-          }
-          if (!hasLat()) {
-            return null;
-          }
-          if (!hasLon()) {
-            return null;
-          }
-          return DEFAULT_INSTANCE;
-
-        }
-        case MAKE_IMMUTABLE: {
-          keys_.makeImmutable();
-          vals_.makeImmutable();
-          return null;
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          org.openstreetmap.osmosis.osmbinary.Osmformat.Node other = (org.openstreetmap.osmosis.osmbinary.Osmformat.Node) arg1;
-          id_ = visitor.visitLong(
-              hasId(), id_,
-              other.hasId(), other.id_);
-          keys_= visitor.visitIntList(keys_, other.keys_);
-          vals_= visitor.visitIntList(vals_, other.vals_);
-          info_ = visitor.visitMessage(info_, other.info_);
-          lat_ = visitor.visitLong(
-              hasLat(), lat_,
-              other.hasLat(), other.lat_);
-          lon_ = visitor.visitLong(
-              hasLon(), lon_,
-              other.hasLon(), other.lon_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-            bitField0_ |= other.bitField0_;
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-          }
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                case 8: {
-                  bitField0_ |= 0x00000001;
-                  id_ = input.readSInt64();
-                  break;
-                }
-                case 16: {
-                  if (!keys_.isModifiable()) {
-                    keys_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(keys_);
-                  }
-                  keys_.addInt(input.readUInt32());
-                  break;
-                }
-                case 18: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!keys_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    keys_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(keys_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    keys_.addInt(input.readUInt32());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 24: {
-                  if (!vals_.isModifiable()) {
-                    vals_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(vals_);
-                  }
-                  vals_.addInt(input.readUInt32());
-                  break;
-                }
-                case 26: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!vals_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    vals_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(vals_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    vals_.addInt(input.readUInt32());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 34: {
-                  org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder subBuilder = null;
-                  if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                    subBuilder = info_.toBuilder();
-                  }
-                  info_ = input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.Info.parser(), extensionRegistry);
-                  if (subBuilder != null) {
-                    subBuilder.mergeFrom(info_);
-                    info_ = subBuilder.buildPartial();
-                  }
-                  bitField0_ |= 0x00000002;
-                  break;
-                }
-                case 64: {
-                  bitField0_ |= 0x00000004;
-                  lat_ = input.readSInt64();
-                  break;
-                }
-                case 72: {
-                  bitField0_ |= 0x00000008;
-                  lon_ = input.readSInt64();
-                  break;
-                }
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        // fall through
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          com.google.protobuf.Parser<org.openstreetmap.osmosis.osmbinary.Osmformat.Node> parser = PARSER;
-          if (parser == null) {
-            synchronized (org.openstreetmap.osmosis.osmbinary.Osmformat.Node.class) {
-              parser = PARSER;
-              if (parser == null) {
-                parser = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-                PARSER = parser;
-              }
-            }
-          }
-          return parser;
-      }
-      case GET_MEMOIZED_IS_INITIALIZED: {
-        return memoizedIsInitialized;
-      }
-      case SET_MEMOIZED_IS_INITIALIZED: {
-        memoizedIsInitialized = (byte) (arg0 == null ? 0 : 1);
-        return null;
-      }
-      }
-      throw new UnsupportedOperationException();
-    }
-
 
     // @@protoc_insertion_point(class_scope:OSMPBF.Node)
     private static final org.openstreetmap.osmosis.osmbinary.Osmformat.Node DEFAULT_INSTANCE;
     static {
-      // New instances are implicitly immutable so no need to make
-      // immutable.
-      DEFAULT_INSTANCE = new Node();
+      DEFAULT_INSTANCE = new org.openstreetmap.osmosis.osmbinary.Osmformat.Node();
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Node getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static volatile com.google.protobuf.Parser<Node> PARSER;
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<Node>
+        PARSER = new com.google.protobuf.AbstractParser<Node>() {
+      @java.lang.Override
+      public Node parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Node(input, extensionRegistry);
+      }
+    };
 
     public static com.google.protobuf.Parser<Node> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
+      return PARSER;
     }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Node> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.Node getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
   public interface DenseNodesOrBuilder extends
       // @@protoc_insertion_point(interface_extends:OSMPBF.DenseNodes)
-      com.google.protobuf.MessageLiteOrBuilder {
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <pre>
@@ -9540,6 +12300,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 id = 1 [packed = true];</code>
+     * @return A list containing the id.
      */
     java.util.List<java.lang.Long> getIdList();
     /**
@@ -9548,6 +12309,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 id = 1 [packed = true];</code>
+     * @return The count of id.
      */
     int getIdCount();
     /**
@@ -9556,6 +12318,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 id = 1 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The id at the given index.
      */
     long getId(int index);
 
@@ -9565,6 +12329,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
+     * @return Whether the denseinfo field is set.
      */
     boolean hasDenseinfo();
     /**
@@ -9573,8 +12338,17 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
+     * @return The denseinfo.
      */
     org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo getDenseinfo();
+    /**
+     * <pre>
+     *repeated Info info = 4;
+     * </pre>
+     *
+     * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
+     */
+    org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfoOrBuilder getDenseinfoOrBuilder();
 
     /**
      * <pre>
@@ -9582,6 +12356,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lat = 8 [packed = true];</code>
+     * @return A list containing the lat.
      */
     java.util.List<java.lang.Long> getLatList();
     /**
@@ -9590,6 +12365,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lat = 8 [packed = true];</code>
+     * @return The count of lat.
      */
     int getLatCount();
     /**
@@ -9598,6 +12374,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lat = 8 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The lat at the given index.
      */
     long getLat(int index);
 
@@ -9607,6 +12385,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lon = 9 [packed = true];</code>
+     * @return A list containing the lon.
      */
     java.util.List<java.lang.Long> getLonList();
     /**
@@ -9615,6 +12394,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lon = 9 [packed = true];</code>
+     * @return The count of lon.
      */
     int getLonCount();
     /**
@@ -9623,6 +12403,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lon = 9 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The lon at the given index.
      */
     long getLon(int index);
 
@@ -9632,6 +12414,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+     * @return A list containing the keysVals.
      */
     java.util.List<java.lang.Integer> getKeysValsList();
     /**
@@ -9640,6 +12423,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+     * @return The count of keysVals.
      */
     int getKeysValsCount();
     /**
@@ -9648,6 +12432,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The keysVals at the given index.
      */
     int getKeysVals(int index);
   }
@@ -9655,16 +12441,193 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.DenseNodes}
    */
   public  static final class DenseNodes extends
-      com.google.protobuf.GeneratedMessageLite<
-          DenseNodes, DenseNodes.Builder> implements
+      com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:OSMPBF.DenseNodes)
       DenseNodesOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use DenseNodes.newBuilder() to construct.
+    private DenseNodes(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
     private DenseNodes() {
       id_ = emptyLongList();
       lat_ = emptyLongList();
       lon_ = emptyLongList();
       keysVals_ = emptyIntList();
     }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new DenseNodes();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DenseNodes(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                id_ = newLongList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              id_.addLong(input.readSInt64());
+              break;
+            }
+            case 10: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000001) != 0) && input.getBytesUntilLimit() > 0) {
+                id_ = newLongList();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                id_.addLong(input.readSInt64());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 42: {
+              org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) != 0)) {
+                subBuilder = denseinfo_.toBuilder();
+              }
+              denseinfo_ = input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(denseinfo_);
+                denseinfo_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+            case 64: {
+              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
+                lat_ = newLongList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              lat_.addLong(input.readSInt64());
+              break;
+            }
+            case 66: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000004) != 0) && input.getBytesUntilLimit() > 0) {
+                lat_ = newLongList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                lat_.addLong(input.readSInt64());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 72: {
+              if (!((mutable_bitField0_ & 0x00000008) != 0)) {
+                lon_ = newLongList();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              lon_.addLong(input.readSInt64());
+              break;
+            }
+            case 74: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000008) != 0) && input.getBytesUntilLimit() > 0) {
+                lon_ = newLongList();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                lon_.addLong(input.readSInt64());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 80: {
+              if (!((mutable_bitField0_ & 0x00000010) != 0)) {
+                keysVals_ = newIntList();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              keysVals_.addInt(input.readInt32());
+              break;
+            }
+            case 82: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000010) != 0) && input.getBytesUntilLimit() > 0) {
+                keysVals_ = newIntList();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                keysVals_.addInt(input.readInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          id_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000004) != 0)) {
+          lat_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000008) != 0)) {
+          lon_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000010) != 0)) {
+          keysVals_.makeImmutable(); // C
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_DenseNodes_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_DenseNodes_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.class, org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.Builder.class);
+    }
+
     private int bitField0_;
     public static final int ID_FIELD_NUMBER = 1;
     private com.google.protobuf.Internal.LongList id_;
@@ -9674,8 +12637,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 id = 1 [packed = true];</code>
+     * @return A list containing the id.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Long>
         getIdList() {
       return id_;
@@ -9686,8 +12649,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 id = 1 [packed = true];</code>
+     * @return The count of id.
      */
-    @java.lang.Override
     public int getIdCount() {
       return id_.size();
     }
@@ -9697,64 +12660,13 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 id = 1 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The id at the given index.
      */
-    @java.lang.Override
     public long getId(int index) {
       return id_.getLong(index);
     }
     private int idMemoizedSerializedSize = -1;
-    private void ensureIdIsMutable() {
-      if (!id_.isModifiable()) {
-        id_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(id_);
-       }
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 id = 1 [packed = true];</code>
-     */
-    private void setId(
-        int index, long value) {
-      ensureIdIsMutable();
-      id_.setLong(index, value);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 id = 1 [packed = true];</code>
-     */
-    private void addId(long value) {
-      ensureIdIsMutable();
-      id_.addLong(value);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 id = 1 [packed = true];</code>
-     */
-    private void addAllId(
-        java.lang.Iterable<? extends java.lang.Long> values) {
-      ensureIdIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, id_);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 id = 1 [packed = true];</code>
-     */
-    private void clearId() {
-      id_ = emptyLongList();
-    }
 
     public static final int DENSEINFO_FIELD_NUMBER = 5;
     private org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo denseinfo_;
@@ -9764,10 +12676,10 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
+     * @return Whether the denseinfo field is set.
      */
-    @java.lang.Override
     public boolean hasDenseinfo() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <pre>
@@ -9775,8 +12687,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
+     * @return The denseinfo.
      */
-    @java.lang.Override
     public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo getDenseinfo() {
       return denseinfo_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.getDefaultInstance() : denseinfo_;
     }
@@ -9787,55 +12699,8 @@ public final class Osmformat {
      *
      * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
      */
-    private void setDenseinfo(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      denseinfo_ = value;
-      bitField0_ |= 0x00000001;
-      }
-    /**
-     * <pre>
-     *repeated Info info = 4;
-     * </pre>
-     *
-     * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
-     */
-    private void setDenseinfo(
-        org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.Builder builderForValue) {
-      denseinfo_ = builderForValue.build();
-      bitField0_ |= 0x00000001;
-    }
-    /**
-     * <pre>
-     *repeated Info info = 4;
-     * </pre>
-     *
-     * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
-     */
-    @java.lang.SuppressWarnings({"ReferenceEquality"})
-    private void mergeDenseinfo(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      if (denseinfo_ != null &&
-          denseinfo_ != org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.getDefaultInstance()) {
-        denseinfo_ =
-          org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.newBuilder(denseinfo_).mergeFrom(value).buildPartial();
-      } else {
-        denseinfo_ = value;
-      }
-      bitField0_ |= 0x00000001;
-    }
-    /**
-     * <pre>
-     *repeated Info info = 4;
-     * </pre>
-     *
-     * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
-     */
-    private void clearDenseinfo() {  denseinfo_ = null;
-      bitField0_ = (bitField0_ & ~0x00000001);
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfoOrBuilder getDenseinfoOrBuilder() {
+      return denseinfo_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.getDefaultInstance() : denseinfo_;
     }
 
     public static final int LAT_FIELD_NUMBER = 8;
@@ -9846,8 +12711,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lat = 8 [packed = true];</code>
+     * @return A list containing the lat.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Long>
         getLatList() {
       return lat_;
@@ -9858,8 +12723,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lat = 8 [packed = true];</code>
+     * @return The count of lat.
      */
-    @java.lang.Override
     public int getLatCount() {
       return lat_.size();
     }
@@ -9869,64 +12734,13 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lat = 8 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The lat at the given index.
      */
-    @java.lang.Override
     public long getLat(int index) {
       return lat_.getLong(index);
     }
     private int latMemoizedSerializedSize = -1;
-    private void ensureLatIsMutable() {
-      if (!lat_.isModifiable()) {
-        lat_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(lat_);
-       }
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 lat = 8 [packed = true];</code>
-     */
-    private void setLat(
-        int index, long value) {
-      ensureLatIsMutable();
-      lat_.setLong(index, value);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 lat = 8 [packed = true];</code>
-     */
-    private void addLat(long value) {
-      ensureLatIsMutable();
-      lat_.addLong(value);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 lat = 8 [packed = true];</code>
-     */
-    private void addAllLat(
-        java.lang.Iterable<? extends java.lang.Long> values) {
-      ensureLatIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, lat_);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 lat = 8 [packed = true];</code>
-     */
-    private void clearLat() {
-      lat_ = emptyLongList();
-    }
 
     public static final int LON_FIELD_NUMBER = 9;
     private com.google.protobuf.Internal.LongList lon_;
@@ -9936,8 +12750,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lon = 9 [packed = true];</code>
+     * @return A list containing the lon.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Long>
         getLonList() {
       return lon_;
@@ -9948,8 +12762,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lon = 9 [packed = true];</code>
+     * @return The count of lon.
      */
-    @java.lang.Override
     public int getLonCount() {
       return lon_.size();
     }
@@ -9959,64 +12773,13 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 lon = 9 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The lon at the given index.
      */
-    @java.lang.Override
     public long getLon(int index) {
       return lon_.getLong(index);
     }
     private int lonMemoizedSerializedSize = -1;
-    private void ensureLonIsMutable() {
-      if (!lon_.isModifiable()) {
-        lon_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(lon_);
-       }
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 lon = 9 [packed = true];</code>
-     */
-    private void setLon(
-        int index, long value) {
-      ensureLonIsMutable();
-      lon_.setLong(index, value);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 lon = 9 [packed = true];</code>
-     */
-    private void addLon(long value) {
-      ensureLonIsMutable();
-      lon_.addLong(value);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 lon = 9 [packed = true];</code>
-     */
-    private void addAllLon(
-        java.lang.Iterable<? extends java.lang.Long> values) {
-      ensureLonIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, lon_);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 lon = 9 [packed = true];</code>
-     */
-    private void clearLon() {
-      lon_ = emptyLongList();
-    }
 
     public static final int KEYS_VALS_FIELD_NUMBER = 10;
     private com.google.protobuf.Internal.IntList keysVals_;
@@ -10026,8 +12789,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+     * @return A list containing the keysVals.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Integer>
         getKeysValsList() {
       return keysVals_;
@@ -10038,8 +12801,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+     * @return The count of keysVals.
      */
-    @java.lang.Override
     public int getKeysValsCount() {
       return keysVals_.size();
     }
@@ -10049,63 +12812,23 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The keysVals at the given index.
      */
-    @java.lang.Override
     public int getKeysVals(int index) {
       return keysVals_.getInt(index);
     }
     private int keysValsMemoizedSerializedSize = -1;
-    private void ensureKeysValsIsMutable() {
-      if (!keysVals_.isModifiable()) {
-        keysVals_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(keysVals_);
-       }
-    }
-    /**
-     * <pre>
-     * Special packing of keys and vals into one array. May be empty if all nodes in this block are tagless.
-     * </pre>
-     *
-     * <code>repeated int32 keys_vals = 10 [packed = true];</code>
-     */
-    private void setKeysVals(
-        int index, int value) {
-      ensureKeysValsIsMutable();
-      keysVals_.setInt(index, value);
-    }
-    /**
-     * <pre>
-     * Special packing of keys and vals into one array. May be empty if all nodes in this block are tagless.
-     * </pre>
-     *
-     * <code>repeated int32 keys_vals = 10 [packed = true];</code>
-     */
-    private void addKeysVals(int value) {
-      ensureKeysValsIsMutable();
-      keysVals_.addInt(value);
-    }
-    /**
-     * <pre>
-     * Special packing of keys and vals into one array. May be empty if all nodes in this block are tagless.
-     * </pre>
-     *
-     * <code>repeated int32 keys_vals = 10 [packed = true];</code>
-     */
-    private void addAllKeysVals(
-        java.lang.Iterable<? extends java.lang.Integer> values) {
-      ensureKeysValsIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, keysVals_);
-    }
-    /**
-     * <pre>
-     * Special packing of keys and vals into one array. May be empty if all nodes in this block are tagless.
-     * </pre>
-     *
-     * <code>repeated int32 keys_vals = 10 [packed = true];</code>
-     */
-    private void clearKeysVals() {
-      keysVals_ = emptyIntList();
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     @java.lang.Override
@@ -10119,7 +12842,7 @@ public final class Osmformat {
       for (int i = 0; i < id_.size(); i++) {
         output.writeSInt64NoTag(id_.getLong(i));
       }
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         output.writeMessage(5, getDenseinfo());
       }
       if (getLatList().size() > 0) {
@@ -10148,7 +12871,7 @@ public final class Osmformat {
 
     @java.lang.Override
     public int getSerializedSize() {
-      int size = memoizedSerializedSize;
+      int size = memoizedSize;
       if (size != -1) return size;
 
       size = 0;
@@ -10166,7 +12889,7 @@ public final class Osmformat {
         }
         idMemoizedSerializedSize = dataSize;
       }
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(5, getDenseinfo());
       }
@@ -10213,117 +12936,409 @@ public final class Osmformat {
         keysValsMemoizedSerializedSize = dataSize;
       }
       size += unknownFields.getSerializedSize();
-      memoizedSerializedSize = size;
+      memoizedSize = size;
       return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes)) {
+        return super.equals(obj);
+      }
+      org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes other = (org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes) obj;
+
+      if (!getIdList()
+          .equals(other.getIdList())) return false;
+      if (hasDenseinfo() != other.hasDenseinfo()) return false;
+      if (hasDenseinfo()) {
+        if (!getDenseinfo()
+            .equals(other.getDenseinfo())) return false;
+      }
+      if (!getLatList()
+          .equals(other.getLatList())) return false;
+      if (!getLonList()
+          .equals(other.getLonList())) return false;
+      if (!getKeysValsList()
+          .equals(other.getKeysValsList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (getIdCount() > 0) {
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + getIdList().hashCode();
+      }
+      if (hasDenseinfo()) {
+        hash = (37 * hash) + DENSEINFO_FIELD_NUMBER;
+        hash = (53 * hash) + getDenseinfo().hashCode();
+      }
+      if (getLatCount() > 0) {
+        hash = (37 * hash) + LAT_FIELD_NUMBER;
+        hash = (53 * hash) + getLatList().hashCode();
+      }
+      if (getLonCount() > 0) {
+        hash = (37 * hash) + LON_FIELD_NUMBER;
+        hash = (53 * hash) + getLonList().hashCode();
+      }
+      if (getKeysValsCount() > 0) {
+        hash = (37 * hash) + KEYS_VALS_FIELD_NUMBER;
+        hash = (53 * hash) + getKeysValsList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
-      return (Builder) DEFAULT_INSTANCE.createBuilder();
+      return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes prototype) {
-      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * Protobuf type {@code OSMPBF.DenseNodes}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes, Builder> implements
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:OSMPBF.DenseNodes)
         org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodesOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_DenseNodes_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_DenseNodes_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.class, org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.Builder.class);
+      }
+
       // Construct using org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getDenseinfoFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        id_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        if (denseinfoBuilder_ == null) {
+          denseinfo_ = null;
+        } else {
+          denseinfoBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        lat_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        lon_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000008);
+        keysVals_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
 
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_DenseNodes_descriptor;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes getDefaultInstanceForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes build() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes buildPartial() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes result = new org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((bitField0_ & 0x00000001) != 0)) {
+          id_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.id_ = id_;
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          if (denseinfoBuilder_ == null) {
+            result.denseinfo_ = denseinfo_;
+          } else {
+            result.denseinfo_ = denseinfoBuilder_.build();
+          }
+          to_bitField0_ |= 0x00000001;
+        }
+        if (((bitField0_ & 0x00000004) != 0)) {
+          lat_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.lat_ = lat_;
+        if (((bitField0_ & 0x00000008) != 0)) {
+          lon_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        }
+        result.lon_ = lon_;
+        if (((bitField0_ & 0x00000010) != 0)) {
+          keysVals_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000010);
+        }
+        result.keysVals_ = keysVals_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes) {
+          return mergeFrom((org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes other) {
+        if (other == org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.getDefaultInstance()) return this;
+        if (!other.id_.isEmpty()) {
+          if (id_.isEmpty()) {
+            id_ = other.id_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureIdIsMutable();
+            id_.addAll(other.id_);
+          }
+          onChanged();
+        }
+        if (other.hasDenseinfo()) {
+          mergeDenseinfo(other.getDenseinfo());
+        }
+        if (!other.lat_.isEmpty()) {
+          if (lat_.isEmpty()) {
+            lat_ = other.lat_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureLatIsMutable();
+            lat_.addAll(other.lat_);
+          }
+          onChanged();
+        }
+        if (!other.lon_.isEmpty()) {
+          if (lon_.isEmpty()) {
+            lon_ = other.lon_;
+            bitField0_ = (bitField0_ & ~0x00000008);
+          } else {
+            ensureLonIsMutable();
+            lon_.addAll(other.lon_);
+          }
+          onChanged();
+        }
+        if (!other.keysVals_.isEmpty()) {
+          if (keysVals_.isEmpty()) {
+            keysVals_ = other.keysVals_;
+            bitField0_ = (bitField0_ & ~0x00000010);
+          } else {
+            ensureKeysValsIsMutable();
+            keysVals_.addAll(other.keysVals_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private com.google.protobuf.Internal.LongList id_ = emptyLongList();
+      private void ensureIdIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          id_ = mutableCopy(id_);
+          bitField0_ |= 0x00000001;
+         }
+      }
       /**
        * <pre>
        * DELTA coded
        * </pre>
        *
        * <code>repeated sint64 id = 1 [packed = true];</code>
+       * @return A list containing the id.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Long>
           getIdList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getIdList());
+        return ((bitField0_ & 0x00000001) != 0) ?
+                 java.util.Collections.unmodifiableList(id_) : id_;
       }
       /**
        * <pre>
@@ -10331,10 +13346,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 id = 1 [packed = true];</code>
+       * @return The count of id.
        */
-      @java.lang.Override
       public int getIdCount() {
-        return instance.getIdCount();
+        return id_.size();
       }
       /**
        * <pre>
@@ -10342,10 +13357,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 id = 1 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The id at the given index.
        */
-      @java.lang.Override
       public long getId(int index) {
-        return instance.getId(index);
+        return id_.getLong(index);
       }
       /**
        * <pre>
@@ -10353,11 +13369,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 id = 1 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The id to set.
+       * @return This builder for chaining.
        */
       public Builder setId(
           int index, long value) {
-        copyOnWrite();
-        instance.setId(index, value);
+        ensureIdIsMutable();
+        id_.setLong(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -10366,10 +13386,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 id = 1 [packed = true];</code>
+       * @param value The id to add.
+       * @return This builder for chaining.
        */
       public Builder addId(long value) {
-        copyOnWrite();
-        instance.addId(value);
+        ensureIdIsMutable();
+        id_.addLong(value);
+        onChanged();
         return this;
       }
       /**
@@ -10378,11 +13401,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 id = 1 [packed = true];</code>
+       * @param values The id to add.
+       * @return This builder for chaining.
        */
       public Builder addAllId(
           java.lang.Iterable<? extends java.lang.Long> values) {
-        copyOnWrite();
-        instance.addAllId(values);
+        ensureIdIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, id_);
+        onChanged();
         return this;
       }
       /**
@@ -10391,23 +13418,28 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 id = 1 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearId() {
-        copyOnWrite();
-        instance.clearId();
+        id_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
         return this;
       }
 
+      private org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo denseinfo_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo, org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfoOrBuilder> denseinfoBuilder_;
       /**
        * <pre>
        *repeated Info info = 4;
        * </pre>
        *
        * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
+       * @return Whether the denseinfo field is set.
        */
-      @java.lang.Override
       public boolean hasDenseinfo() {
-        return instance.hasDenseinfo();
+        return ((bitField0_ & 0x00000002) != 0);
       }
       /**
        * <pre>
@@ -10415,10 +13447,14 @@ public final class Osmformat {
        * </pre>
        *
        * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
+       * @return The denseinfo.
        */
-      @java.lang.Override
       public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo getDenseinfo() {
-        return instance.getDenseinfo();
+        if (denseinfoBuilder_ == null) {
+          return denseinfo_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.getDefaultInstance() : denseinfo_;
+        } else {
+          return denseinfoBuilder_.getMessage();
+        }
       }
       /**
        * <pre>
@@ -10428,10 +13464,18 @@ public final class Osmformat {
        * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
        */
       public Builder setDenseinfo(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo value) {
-        copyOnWrite();
-        instance.setDenseinfo(value);
-        return this;
+        if (denseinfoBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          denseinfo_ = value;
+          onChanged();
+        } else {
+          denseinfoBuilder_.setMessage(value);
         }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
       /**
        * <pre>
        *repeated Info info = 4;
@@ -10441,8 +13485,13 @@ public final class Osmformat {
        */
       public Builder setDenseinfo(
           org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.Builder builderForValue) {
-        copyOnWrite();
-        instance.setDenseinfo(builderForValue);
+        if (denseinfoBuilder_ == null) {
+          denseinfo_ = builderForValue.build();
+          onChanged();
+        } else {
+          denseinfoBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
         return this;
       }
       /**
@@ -10453,8 +13502,20 @@ public final class Osmformat {
        * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
        */
       public Builder mergeDenseinfo(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo value) {
-        copyOnWrite();
-        instance.mergeDenseinfo(value);
+        if (denseinfoBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) != 0) &&
+              denseinfo_ != null &&
+              denseinfo_ != org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.getDefaultInstance()) {
+            denseinfo_ =
+              org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.newBuilder(denseinfo_).mergeFrom(value).buildPartial();
+          } else {
+            denseinfo_ = value;
+          }
+          onChanged();
+        } else {
+          denseinfoBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
         return this;
       }
       /**
@@ -10464,23 +13525,83 @@ public final class Osmformat {
        *
        * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
        */
-      public Builder clearDenseinfo() {  copyOnWrite();
-        instance.clearDenseinfo();
+      public Builder clearDenseinfo() {
+        if (denseinfoBuilder_ == null) {
+          denseinfo_ = null;
+          onChanged();
+        } else {
+          denseinfoBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
+      /**
+       * <pre>
+       *repeated Info info = 4;
+       * </pre>
+       *
+       * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.Builder getDenseinfoBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getDenseinfoFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       *repeated Info info = 4;
+       * </pre>
+       *
+       * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfoOrBuilder getDenseinfoOrBuilder() {
+        if (denseinfoBuilder_ != null) {
+          return denseinfoBuilder_.getMessageOrBuilder();
+        } else {
+          return denseinfo_ == null ?
+              org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.getDefaultInstance() : denseinfo_;
+        }
+      }
+      /**
+       * <pre>
+       *repeated Info info = 4;
+       * </pre>
+       *
+       * <code>optional .OSMPBF.DenseInfo denseinfo = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo, org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfoOrBuilder> 
+          getDenseinfoFieldBuilder() {
+        if (denseinfoBuilder_ == null) {
+          denseinfoBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo, org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfoOrBuilder>(
+                  getDenseinfo(),
+                  getParentForChildren(),
+                  isClean());
+          denseinfo_ = null;
+        }
+        return denseinfoBuilder_;
+      }
 
+      private com.google.protobuf.Internal.LongList lat_ = emptyLongList();
+      private void ensureLatIsMutable() {
+        if (!((bitField0_ & 0x00000004) != 0)) {
+          lat_ = mutableCopy(lat_);
+          bitField0_ |= 0x00000004;
+         }
+      }
       /**
        * <pre>
        * DELTA coded
        * </pre>
        *
        * <code>repeated sint64 lat = 8 [packed = true];</code>
+       * @return A list containing the lat.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Long>
           getLatList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getLatList());
+        return ((bitField0_ & 0x00000004) != 0) ?
+                 java.util.Collections.unmodifiableList(lat_) : lat_;
       }
       /**
        * <pre>
@@ -10488,10 +13609,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lat = 8 [packed = true];</code>
+       * @return The count of lat.
        */
-      @java.lang.Override
       public int getLatCount() {
-        return instance.getLatCount();
+        return lat_.size();
       }
       /**
        * <pre>
@@ -10499,10 +13620,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lat = 8 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The lat at the given index.
        */
-      @java.lang.Override
       public long getLat(int index) {
-        return instance.getLat(index);
+        return lat_.getLong(index);
       }
       /**
        * <pre>
@@ -10510,11 +13632,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lat = 8 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The lat to set.
+       * @return This builder for chaining.
        */
       public Builder setLat(
           int index, long value) {
-        copyOnWrite();
-        instance.setLat(index, value);
+        ensureLatIsMutable();
+        lat_.setLong(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -10523,10 +13649,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lat = 8 [packed = true];</code>
+       * @param value The lat to add.
+       * @return This builder for chaining.
        */
       public Builder addLat(long value) {
-        copyOnWrite();
-        instance.addLat(value);
+        ensureLatIsMutable();
+        lat_.addLong(value);
+        onChanged();
         return this;
       }
       /**
@@ -10535,11 +13664,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lat = 8 [packed = true];</code>
+       * @param values The lat to add.
+       * @return This builder for chaining.
        */
       public Builder addAllLat(
           java.lang.Iterable<? extends java.lang.Long> values) {
-        copyOnWrite();
-        instance.addAllLat(values);
+        ensureLatIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, lat_);
+        onChanged();
         return this;
       }
       /**
@@ -10548,25 +13681,34 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lat = 8 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearLat() {
-        copyOnWrite();
-        instance.clearLat();
+        lat_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.Internal.LongList lon_ = emptyLongList();
+      private void ensureLonIsMutable() {
+        if (!((bitField0_ & 0x00000008) != 0)) {
+          lon_ = mutableCopy(lon_);
+          bitField0_ |= 0x00000008;
+         }
+      }
       /**
        * <pre>
        * DELTA coded
        * </pre>
        *
        * <code>repeated sint64 lon = 9 [packed = true];</code>
+       * @return A list containing the lon.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Long>
           getLonList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getLonList());
+        return ((bitField0_ & 0x00000008) != 0) ?
+                 java.util.Collections.unmodifiableList(lon_) : lon_;
       }
       /**
        * <pre>
@@ -10574,10 +13716,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lon = 9 [packed = true];</code>
+       * @return The count of lon.
        */
-      @java.lang.Override
       public int getLonCount() {
-        return instance.getLonCount();
+        return lon_.size();
       }
       /**
        * <pre>
@@ -10585,10 +13727,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lon = 9 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The lon at the given index.
        */
-      @java.lang.Override
       public long getLon(int index) {
-        return instance.getLon(index);
+        return lon_.getLong(index);
       }
       /**
        * <pre>
@@ -10596,11 +13739,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lon = 9 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The lon to set.
+       * @return This builder for chaining.
        */
       public Builder setLon(
           int index, long value) {
-        copyOnWrite();
-        instance.setLon(index, value);
+        ensureLonIsMutable();
+        lon_.setLong(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -10609,10 +13756,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lon = 9 [packed = true];</code>
+       * @param value The lon to add.
+       * @return This builder for chaining.
        */
       public Builder addLon(long value) {
-        copyOnWrite();
-        instance.addLon(value);
+        ensureLonIsMutable();
+        lon_.addLong(value);
+        onChanged();
         return this;
       }
       /**
@@ -10621,11 +13771,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lon = 9 [packed = true];</code>
+       * @param values The lon to add.
+       * @return This builder for chaining.
        */
       public Builder addAllLon(
           java.lang.Iterable<? extends java.lang.Long> values) {
-        copyOnWrite();
-        instance.addAllLon(values);
+        ensureLonIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, lon_);
+        onChanged();
         return this;
       }
       /**
@@ -10634,25 +13788,34 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 lon = 9 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearLon() {
-        copyOnWrite();
-        instance.clearLon();
+        lon_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000008);
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.Internal.IntList keysVals_ = emptyIntList();
+      private void ensureKeysValsIsMutable() {
+        if (!((bitField0_ & 0x00000010) != 0)) {
+          keysVals_ = mutableCopy(keysVals_);
+          bitField0_ |= 0x00000010;
+         }
+      }
       /**
        * <pre>
        * Special packing of keys and vals into one array. May be empty if all nodes in this block are tagless.
        * </pre>
        *
        * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+       * @return A list containing the keysVals.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Integer>
           getKeysValsList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getKeysValsList());
+        return ((bitField0_ & 0x00000010) != 0) ?
+                 java.util.Collections.unmodifiableList(keysVals_) : keysVals_;
       }
       /**
        * <pre>
@@ -10660,10 +13823,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+       * @return The count of keysVals.
        */
-      @java.lang.Override
       public int getKeysValsCount() {
-        return instance.getKeysValsCount();
+        return keysVals_.size();
       }
       /**
        * <pre>
@@ -10671,10 +13834,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The keysVals at the given index.
        */
-      @java.lang.Override
       public int getKeysVals(int index) {
-        return instance.getKeysVals(index);
+        return keysVals_.getInt(index);
       }
       /**
        * <pre>
@@ -10682,11 +13846,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The keysVals to set.
+       * @return This builder for chaining.
        */
       public Builder setKeysVals(
           int index, int value) {
-        copyOnWrite();
-        instance.setKeysVals(index, value);
+        ensureKeysValsIsMutable();
+        keysVals_.setInt(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -10695,10 +13863,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+       * @param value The keysVals to add.
+       * @return This builder for chaining.
        */
       public Builder addKeysVals(int value) {
-        copyOnWrite();
-        instance.addKeysVals(value);
+        ensureKeysValsIsMutable();
+        keysVals_.addInt(value);
+        onChanged();
         return this;
       }
       /**
@@ -10707,11 +13878,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+       * @param values The keysVals to add.
+       * @return This builder for chaining.
        */
       public Builder addAllKeysVals(
           java.lang.Iterable<? extends java.lang.Integer> values) {
-        copyOnWrite();
-        instance.addAllKeysVals(values);
+        ensureKeysValsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, keysVals_);
+        onChanged();
         return this;
       }
       /**
@@ -10720,238 +13895,79 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 keys_vals = 10 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearKeysVals() {
-        copyOnWrite();
-        instance.clearKeysVals();
+        keysVals_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        onChanged();
         return this;
       }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.DenseNodes)
     }
-    @java.lang.Override
-    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        java.lang.Object arg0, java.lang.Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes();
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case IS_INITIALIZED: {
-          return DEFAULT_INSTANCE;
-        }
-        case MAKE_IMMUTABLE: {
-          id_.makeImmutable();
-          lat_.makeImmutable();
-          lon_.makeImmutable();
-          keysVals_.makeImmutable();
-          return null;
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes other = (org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes) arg1;
-          id_= visitor.visitLongList(id_, other.id_);
-          denseinfo_ = visitor.visitMessage(denseinfo_, other.denseinfo_);
-          lat_= visitor.visitLongList(lat_, other.lat_);
-          lon_= visitor.visitLongList(lon_, other.lon_);
-          keysVals_= visitor.visitIntList(keysVals_, other.keysVals_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-            bitField0_ |= other.bitField0_;
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-          }
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                case 8: {
-                  if (!id_.isModifiable()) {
-                    id_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(id_);
-                  }
-                  id_.addLong(input.readSInt64());
-                  break;
-                }
-                case 10: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!id_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    id_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(id_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    id_.addLong(input.readSInt64());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 42: {
-                  org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.Builder subBuilder = null;
-                  if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                    subBuilder = denseinfo_.toBuilder();
-                  }
-                  denseinfo_ = input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo.parser(), extensionRegistry);
-                  if (subBuilder != null) {
-                    subBuilder.mergeFrom(denseinfo_);
-                    denseinfo_ = subBuilder.buildPartial();
-                  }
-                  bitField0_ |= 0x00000001;
-                  break;
-                }
-                case 64: {
-                  if (!lat_.isModifiable()) {
-                    lat_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(lat_);
-                  }
-                  lat_.addLong(input.readSInt64());
-                  break;
-                }
-                case 66: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!lat_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    lat_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(lat_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    lat_.addLong(input.readSInt64());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 72: {
-                  if (!lon_.isModifiable()) {
-                    lon_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(lon_);
-                  }
-                  lon_.addLong(input.readSInt64());
-                  break;
-                }
-                case 74: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!lon_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    lon_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(lon_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    lon_.addLong(input.readSInt64());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 80: {
-                  if (!keysVals_.isModifiable()) {
-                    keysVals_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(keysVals_);
-                  }
-                  keysVals_.addInt(input.readInt32());
-                  break;
-                }
-                case 82: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!keysVals_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    keysVals_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(keysVals_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    keysVals_.addInt(input.readInt32());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        // fall through
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          com.google.protobuf.Parser<org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes> parser = PARSER;
-          if (parser == null) {
-            synchronized (org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes.class) {
-              parser = PARSER;
-              if (parser == null) {
-                parser = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-                PARSER = parser;
-              }
-            }
-          }
-          return parser;
-      }
-      case GET_MEMOIZED_IS_INITIALIZED: {
-        return (byte) 1;
-      }
-      case SET_MEMOIZED_IS_INITIALIZED: {
-        return null;
-      }
-      }
-      throw new UnsupportedOperationException();
-    }
-
 
     // @@protoc_insertion_point(class_scope:OSMPBF.DenseNodes)
     private static final org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes DEFAULT_INSTANCE;
     static {
-      // New instances are implicitly immutable so no need to make
-      // immutable.
-      DEFAULT_INSTANCE = new DenseNodes();
+      DEFAULT_INSTANCE = new org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes();
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static volatile com.google.protobuf.Parser<DenseNodes> PARSER;
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<DenseNodes>
+        PARSER = new com.google.protobuf.AbstractParser<DenseNodes>() {
+      @java.lang.Override
+      public DenseNodes parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DenseNodes(input, extensionRegistry);
+      }
+    };
 
     public static com.google.protobuf.Parser<DenseNodes> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
+      return PARSER;
     }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DenseNodes> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
   public interface WayOrBuilder extends
       // @@protoc_insertion_point(interface_extends:OSMPBF.Way)
-      com.google.protobuf.MessageLiteOrBuilder {
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>required int64 id = 1;</code>
+     * @return Whether the id field is set.
      */
     boolean hasId();
     /**
      * <code>required int64 id = 1;</code>
+     * @return The id.
      */
     long getId();
 
@@ -10961,6 +13977,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return A list containing the keys.
      */
     java.util.List<java.lang.Integer> getKeysList();
     /**
@@ -10969,6 +13986,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return The count of keys.
      */
     int getKeysCount();
     /**
@@ -10977,30 +13995,42 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The keys at the given index.
      */
     int getKeys(int index);
 
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return A list containing the vals.
      */
     java.util.List<java.lang.Integer> getValsList();
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return The count of vals.
      */
     int getValsCount();
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The vals at the given index.
      */
     int getVals(int index);
 
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return Whether the info field is set.
      */
     boolean hasInfo();
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return The info.
      */
     org.openstreetmap.osmosis.osmbinary.Osmformat.Info getInfo();
+    /**
+     * <code>optional .OSMPBF.Info info = 4;</code>
+     */
+    org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder getInfoOrBuilder();
 
     /**
      * <pre>
@@ -11008,6 +14038,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 refs = 8 [packed = true];</code>
+     * @return A list containing the refs.
      */
     java.util.List<java.lang.Long> getRefsList();
     /**
@@ -11016,6 +14047,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 refs = 8 [packed = true];</code>
+     * @return The count of refs.
      */
     int getRefsCount();
     /**
@@ -11024,32 +14056,42 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 refs = 8 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The refs at the given index.
      */
     long getRefs(int index);
 
     /**
      * <code>repeated sint64 lat = 9 [packed = true];</code>
+     * @return A list containing the lat.
      */
     java.util.List<java.lang.Long> getLatList();
     /**
      * <code>repeated sint64 lat = 9 [packed = true];</code>
+     * @return The count of lat.
      */
     int getLatCount();
     /**
      * <code>repeated sint64 lat = 9 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The lat at the given index.
      */
     long getLat(int index);
 
     /**
      * <code>repeated sint64 lon = 10 [packed = true];</code>
+     * @return A list containing the lon.
      */
     java.util.List<java.lang.Long> getLonList();
     /**
      * <code>repeated sint64 lon = 10 [packed = true];</code>
+     * @return The count of lon.
      */
     int getLonCount();
     /**
      * <code>repeated sint64 lon = 10 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The lon at the given index.
      */
     long getLon(int index);
   }
@@ -11057,10 +14099,14 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.Way}
    */
   public  static final class Way extends
-      com.google.protobuf.GeneratedMessageLite<
-          Way, Way.Builder> implements
+      com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:OSMPBF.Way)
       WayOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Way.newBuilder() to construct.
+    private Way(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
     private Way() {
       keys_ = emptyIntList();
       vals_ = emptyIntList();
@@ -11068,36 +14114,224 @@ public final class Osmformat {
       lat_ = emptyLongList();
       lon_ = emptyLongList();
     }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new Way();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Way(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              bitField0_ |= 0x00000001;
+              id_ = input.readInt64();
+              break;
+            }
+            case 16: {
+              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+                keys_ = newIntList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              keys_.addInt(input.readUInt32());
+              break;
+            }
+            case 18: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000002) != 0) && input.getBytesUntilLimit() > 0) {
+                keys_ = newIntList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                keys_.addInt(input.readUInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 24: {
+              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
+                vals_ = newIntList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              vals_.addInt(input.readUInt32());
+              break;
+            }
+            case 26: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000004) != 0) && input.getBytesUntilLimit() > 0) {
+                vals_ = newIntList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                vals_.addInt(input.readUInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 34: {
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) != 0)) {
+                subBuilder = info_.toBuilder();
+              }
+              info_ = input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.Info.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(info_);
+                info_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
+              break;
+            }
+            case 64: {
+              if (!((mutable_bitField0_ & 0x00000010) != 0)) {
+                refs_ = newLongList();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              refs_.addLong(input.readSInt64());
+              break;
+            }
+            case 66: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000010) != 0) && input.getBytesUntilLimit() > 0) {
+                refs_ = newLongList();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                refs_.addLong(input.readSInt64());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 72: {
+              if (!((mutable_bitField0_ & 0x00000020) != 0)) {
+                lat_ = newLongList();
+                mutable_bitField0_ |= 0x00000020;
+              }
+              lat_.addLong(input.readSInt64());
+              break;
+            }
+            case 74: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000020) != 0) && input.getBytesUntilLimit() > 0) {
+                lat_ = newLongList();
+                mutable_bitField0_ |= 0x00000020;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                lat_.addLong(input.readSInt64());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 80: {
+              if (!((mutable_bitField0_ & 0x00000040) != 0)) {
+                lon_ = newLongList();
+                mutable_bitField0_ |= 0x00000040;
+              }
+              lon_.addLong(input.readSInt64());
+              break;
+            }
+            case 82: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000040) != 0) && input.getBytesUntilLimit() > 0) {
+                lon_ = newLongList();
+                mutable_bitField0_ |= 0x00000040;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                lon_.addLong(input.readSInt64());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) != 0)) {
+          keys_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000004) != 0)) {
+          vals_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000010) != 0)) {
+          refs_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000020) != 0)) {
+          lat_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000040) != 0)) {
+          lon_.makeImmutable(); // C
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Way_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Way_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Way.class, org.openstreetmap.osmosis.osmbinary.Osmformat.Way.Builder.class);
+    }
+
     private int bitField0_;
     public static final int ID_FIELD_NUMBER = 1;
     private long id_;
     /**
      * <code>required int64 id = 1;</code>
+     * @return Whether the id field is set.
      */
-    @java.lang.Override
     public boolean hasId() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <code>required int64 id = 1;</code>
+     * @return The id.
      */
-    @java.lang.Override
     public long getId() {
       return id_;
-    }
-    /**
-     * <code>required int64 id = 1;</code>
-     */
-    private void setId(long value) {
-      bitField0_ |= 0x00000001;
-      id_ = value;
-    }
-    /**
-     * <code>required int64 id = 1;</code>
-     */
-    private void clearId() {
-      bitField0_ = (bitField0_ & ~0x00000001);
-      id_ = 0L;
     }
 
     public static final int KEYS_FIELD_NUMBER = 2;
@@ -11108,8 +14342,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return A list containing the keys.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Integer>
         getKeysList() {
       return keys_;
@@ -11120,8 +14354,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return The count of keys.
      */
-    @java.lang.Override
     public int getKeysCount() {
       return keys_.size();
     }
@@ -11131,183 +14365,62 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The keys at the given index.
      */
-    @java.lang.Override
     public int getKeys(int index) {
       return keys_.getInt(index);
     }
     private int keysMemoizedSerializedSize = -1;
-    private void ensureKeysIsMutable() {
-      if (!keys_.isModifiable()) {
-        keys_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(keys_);
-       }
-    }
-    /**
-     * <pre>
-     * Parallel arrays.
-     * </pre>
-     *
-     * <code>repeated uint32 keys = 2 [packed = true];</code>
-     */
-    private void setKeys(
-        int index, int value) {
-      ensureKeysIsMutable();
-      keys_.setInt(index, value);
-    }
-    /**
-     * <pre>
-     * Parallel arrays.
-     * </pre>
-     *
-     * <code>repeated uint32 keys = 2 [packed = true];</code>
-     */
-    private void addKeys(int value) {
-      ensureKeysIsMutable();
-      keys_.addInt(value);
-    }
-    /**
-     * <pre>
-     * Parallel arrays.
-     * </pre>
-     *
-     * <code>repeated uint32 keys = 2 [packed = true];</code>
-     */
-    private void addAllKeys(
-        java.lang.Iterable<? extends java.lang.Integer> values) {
-      ensureKeysIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, keys_);
-    }
-    /**
-     * <pre>
-     * Parallel arrays.
-     * </pre>
-     *
-     * <code>repeated uint32 keys = 2 [packed = true];</code>
-     */
-    private void clearKeys() {
-      keys_ = emptyIntList();
-    }
 
     public static final int VALS_FIELD_NUMBER = 3;
     private com.google.protobuf.Internal.IntList vals_;
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return A list containing the vals.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Integer>
         getValsList() {
       return vals_;
     }
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return The count of vals.
      */
-    @java.lang.Override
     public int getValsCount() {
       return vals_.size();
     }
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The vals at the given index.
      */
-    @java.lang.Override
     public int getVals(int index) {
       return vals_.getInt(index);
     }
     private int valsMemoizedSerializedSize = -1;
-    private void ensureValsIsMutable() {
-      if (!vals_.isModifiable()) {
-        vals_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(vals_);
-       }
-    }
-    /**
-     * <code>repeated uint32 vals = 3 [packed = true];</code>
-     */
-    private void setVals(
-        int index, int value) {
-      ensureValsIsMutable();
-      vals_.setInt(index, value);
-    }
-    /**
-     * <code>repeated uint32 vals = 3 [packed = true];</code>
-     */
-    private void addVals(int value) {
-      ensureValsIsMutable();
-      vals_.addInt(value);
-    }
-    /**
-     * <code>repeated uint32 vals = 3 [packed = true];</code>
-     */
-    private void addAllVals(
-        java.lang.Iterable<? extends java.lang.Integer> values) {
-      ensureValsIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, vals_);
-    }
-    /**
-     * <code>repeated uint32 vals = 3 [packed = true];</code>
-     */
-    private void clearVals() {
-      vals_ = emptyIntList();
-    }
 
     public static final int INFO_FIELD_NUMBER = 4;
     private org.openstreetmap.osmosis.osmbinary.Osmformat.Info info_;
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return Whether the info field is set.
      */
-    @java.lang.Override
     public boolean hasInfo() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return The info.
      */
-    @java.lang.Override
     public org.openstreetmap.osmosis.osmbinary.Osmformat.Info getInfo() {
       return info_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance() : info_;
     }
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
      */
-    private void setInfo(org.openstreetmap.osmosis.osmbinary.Osmformat.Info value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      info_ = value;
-      bitField0_ |= 0x00000002;
-      }
-    /**
-     * <code>optional .OSMPBF.Info info = 4;</code>
-     */
-    private void setInfo(
-        org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder builderForValue) {
-      info_ = builderForValue.build();
-      bitField0_ |= 0x00000002;
-    }
-    /**
-     * <code>optional .OSMPBF.Info info = 4;</code>
-     */
-    @java.lang.SuppressWarnings({"ReferenceEquality"})
-    private void mergeInfo(org.openstreetmap.osmosis.osmbinary.Osmformat.Info value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      if (info_ != null &&
-          info_ != org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance()) {
-        info_ =
-          org.openstreetmap.osmosis.osmbinary.Osmformat.Info.newBuilder(info_).mergeFrom(value).buildPartial();
-      } else {
-        info_ = value;
-      }
-      bitField0_ |= 0x00000002;
-    }
-    /**
-     * <code>optional .OSMPBF.Info info = 4;</code>
-     */
-    private void clearInfo() {  info_ = null;
-      bitField0_ = (bitField0_ & ~0x00000002);
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder getInfoOrBuilder() {
+      return info_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance() : info_;
     }
 
     public static final int REFS_FIELD_NUMBER = 8;
@@ -11318,8 +14431,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 refs = 8 [packed = true];</code>
+     * @return A list containing the refs.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Long>
         getRefsList() {
       return refs_;
@@ -11330,8 +14443,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 refs = 8 [packed = true];</code>
+     * @return The count of refs.
      */
-    @java.lang.Override
     public int getRefsCount() {
       return refs_.size();
     }
@@ -11341,194 +14454,88 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 refs = 8 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The refs at the given index.
      */
-    @java.lang.Override
     public long getRefs(int index) {
       return refs_.getLong(index);
     }
     private int refsMemoizedSerializedSize = -1;
-    private void ensureRefsIsMutable() {
-      if (!refs_.isModifiable()) {
-        refs_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(refs_);
-       }
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 refs = 8 [packed = true];</code>
-     */
-    private void setRefs(
-        int index, long value) {
-      ensureRefsIsMutable();
-      refs_.setLong(index, value);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 refs = 8 [packed = true];</code>
-     */
-    private void addRefs(long value) {
-      ensureRefsIsMutable();
-      refs_.addLong(value);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 refs = 8 [packed = true];</code>
-     */
-    private void addAllRefs(
-        java.lang.Iterable<? extends java.lang.Long> values) {
-      ensureRefsIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, refs_);
-    }
-    /**
-     * <pre>
-     * DELTA coded
-     * </pre>
-     *
-     * <code>repeated sint64 refs = 8 [packed = true];</code>
-     */
-    private void clearRefs() {
-      refs_ = emptyLongList();
-    }
 
     public static final int LAT_FIELD_NUMBER = 9;
     private com.google.protobuf.Internal.LongList lat_;
     /**
      * <code>repeated sint64 lat = 9 [packed = true];</code>
+     * @return A list containing the lat.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Long>
         getLatList() {
       return lat_;
     }
     /**
      * <code>repeated sint64 lat = 9 [packed = true];</code>
+     * @return The count of lat.
      */
-    @java.lang.Override
     public int getLatCount() {
       return lat_.size();
     }
     /**
      * <code>repeated sint64 lat = 9 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The lat at the given index.
      */
-    @java.lang.Override
     public long getLat(int index) {
       return lat_.getLong(index);
     }
     private int latMemoizedSerializedSize = -1;
-    private void ensureLatIsMutable() {
-      if (!lat_.isModifiable()) {
-        lat_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(lat_);
-       }
-    }
-    /**
-     * <code>repeated sint64 lat = 9 [packed = true];</code>
-     */
-    private void setLat(
-        int index, long value) {
-      ensureLatIsMutable();
-      lat_.setLong(index, value);
-    }
-    /**
-     * <code>repeated sint64 lat = 9 [packed = true];</code>
-     */
-    private void addLat(long value) {
-      ensureLatIsMutable();
-      lat_.addLong(value);
-    }
-    /**
-     * <code>repeated sint64 lat = 9 [packed = true];</code>
-     */
-    private void addAllLat(
-        java.lang.Iterable<? extends java.lang.Long> values) {
-      ensureLatIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, lat_);
-    }
-    /**
-     * <code>repeated sint64 lat = 9 [packed = true];</code>
-     */
-    private void clearLat() {
-      lat_ = emptyLongList();
-    }
 
     public static final int LON_FIELD_NUMBER = 10;
     private com.google.protobuf.Internal.LongList lon_;
     /**
      * <code>repeated sint64 lon = 10 [packed = true];</code>
+     * @return A list containing the lon.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Long>
         getLonList() {
       return lon_;
     }
     /**
      * <code>repeated sint64 lon = 10 [packed = true];</code>
+     * @return The count of lon.
      */
-    @java.lang.Override
     public int getLonCount() {
       return lon_.size();
     }
     /**
      * <code>repeated sint64 lon = 10 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The lon at the given index.
      */
-    @java.lang.Override
     public long getLon(int index) {
       return lon_.getLong(index);
     }
     private int lonMemoizedSerializedSize = -1;
-    private void ensureLonIsMutable() {
-      if (!lon_.isModifiable()) {
-        lon_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(lon_);
-       }
-    }
-    /**
-     * <code>repeated sint64 lon = 10 [packed = true];</code>
-     */
-    private void setLon(
-        int index, long value) {
-      ensureLonIsMutable();
-      lon_.setLong(index, value);
-    }
-    /**
-     * <code>repeated sint64 lon = 10 [packed = true];</code>
-     */
-    private void addLon(long value) {
-      ensureLonIsMutable();
-      lon_.addLong(value);
-    }
-    /**
-     * <code>repeated sint64 lon = 10 [packed = true];</code>
-     */
-    private void addAllLon(
-        java.lang.Iterable<? extends java.lang.Long> values) {
-      ensureLonIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, lon_);
-    }
-    /**
-     * <code>repeated sint64 lon = 10 [packed = true];</code>
-     */
-    private void clearLon() {
-      lon_ = emptyLongList();
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         output.writeInt64(1, id_);
       }
       if (getKeysList().size() > 0) {
@@ -11545,7 +14552,7 @@ public final class Osmformat {
       for (int i = 0; i < vals_.size(); i++) {
         output.writeUInt32NoTag(vals_.getInt(i));
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if (((bitField0_ & 0x00000002) != 0)) {
         output.writeMessage(4, getInfo());
       }
       if (getRefsList().size() > 0) {
@@ -11574,11 +14581,11 @@ public final class Osmformat {
 
     @java.lang.Override
     public int getSerializedSize() {
-      int size = memoizedSerializedSize;
+      int size = memoizedSize;
       if (size != -1) return size;
 
       size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(1, id_);
       }
@@ -11610,7 +14617,7 @@ public final class Osmformat {
         }
         valsMemoizedSerializedSize = dataSize;
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, getInfo());
       }
@@ -11657,148 +14664,491 @@ public final class Osmformat {
         lonMemoizedSerializedSize = dataSize;
       }
       size += unknownFields.getSerializedSize();
-      memoizedSerializedSize = size;
+      memoizedSize = size;
       return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.Way)) {
+        return super.equals(obj);
+      }
+      org.openstreetmap.osmosis.osmbinary.Osmformat.Way other = (org.openstreetmap.osmosis.osmbinary.Osmformat.Way) obj;
+
+      if (hasId() != other.hasId()) return false;
+      if (hasId()) {
+        if (getId()
+            != other.getId()) return false;
+      }
+      if (!getKeysList()
+          .equals(other.getKeysList())) return false;
+      if (!getValsList()
+          .equals(other.getValsList())) return false;
+      if (hasInfo() != other.hasInfo()) return false;
+      if (hasInfo()) {
+        if (!getInfo()
+            .equals(other.getInfo())) return false;
+      }
+      if (!getRefsList()
+          .equals(other.getRefsList())) return false;
+      if (!getLatList()
+          .equals(other.getLatList())) return false;
+      if (!getLonList()
+          .equals(other.getLonList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasId()) {
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getId());
+      }
+      if (getKeysCount() > 0) {
+        hash = (37 * hash) + KEYS_FIELD_NUMBER;
+        hash = (53 * hash) + getKeysList().hashCode();
+      }
+      if (getValsCount() > 0) {
+        hash = (37 * hash) + VALS_FIELD_NUMBER;
+        hash = (53 * hash) + getValsList().hashCode();
+      }
+      if (hasInfo()) {
+        hash = (37 * hash) + INFO_FIELD_NUMBER;
+        hash = (53 * hash) + getInfo().hashCode();
+      }
+      if (getRefsCount() > 0) {
+        hash = (37 * hash) + REFS_FIELD_NUMBER;
+        hash = (53 * hash) + getRefsList().hashCode();
+      }
+      if (getLatCount() > 0) {
+        hash = (37 * hash) + LAT_FIELD_NUMBER;
+        hash = (53 * hash) + getLatList().hashCode();
+      }
+      if (getLonCount() > 0) {
+        hash = (37 * hash) + LON_FIELD_NUMBER;
+        hash = (53 * hash) + getLonList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Way parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Way parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Way parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Way parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Way parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Way parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Way parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Way parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Way parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Way parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Way parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Way parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
-      return (Builder) DEFAULT_INSTANCE.createBuilder();
+      return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.Way prototype) {
-      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * Protobuf type {@code OSMPBF.Way}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          org.openstreetmap.osmosis.osmbinary.Osmformat.Way, Builder> implements
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:OSMPBF.Way)
         org.openstreetmap.osmosis.osmbinary.Osmformat.WayOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Way_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Way_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.openstreetmap.osmosis.osmbinary.Osmformat.Way.class, org.openstreetmap.osmosis.osmbinary.Osmformat.Way.Builder.class);
+      }
+
       // Construct using org.openstreetmap.osmosis.osmbinary.Osmformat.Way.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getInfoFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        id_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        keys_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        vals_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        if (infoBuilder_ == null) {
+          info_ = null;
+        } else {
+          infoBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000008);
+        refs_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        lat_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000020);
+        lon_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000040);
+        return this;
+      }
 
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Way_descriptor;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Way getDefaultInstanceForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.Way.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Way build() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.Way result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Way buildPartial() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.Way result = new org.openstreetmap.osmosis.osmbinary.Osmformat.Way(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.id_ = id_;
+          to_bitField0_ |= 0x00000001;
+        }
+        if (((bitField0_ & 0x00000002) != 0)) {
+          keys_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.keys_ = keys_;
+        if (((bitField0_ & 0x00000004) != 0)) {
+          vals_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.vals_ = vals_;
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          if (infoBuilder_ == null) {
+            result.info_ = info_;
+          } else {
+            result.info_ = infoBuilder_.build();
+          }
+          to_bitField0_ |= 0x00000002;
+        }
+        if (((bitField0_ & 0x00000010) != 0)) {
+          refs_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000010);
+        }
+        result.refs_ = refs_;
+        if (((bitField0_ & 0x00000020) != 0)) {
+          lat_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000020);
+        }
+        result.lat_ = lat_;
+        if (((bitField0_ & 0x00000040) != 0)) {
+          lon_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000040);
+        }
+        result.lon_ = lon_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.Way) {
+          return mergeFrom((org.openstreetmap.osmosis.osmbinary.Osmformat.Way)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.openstreetmap.osmosis.osmbinary.Osmformat.Way other) {
+        if (other == org.openstreetmap.osmosis.osmbinary.Osmformat.Way.getDefaultInstance()) return this;
+        if (other.hasId()) {
+          setId(other.getId());
+        }
+        if (!other.keys_.isEmpty()) {
+          if (keys_.isEmpty()) {
+            keys_ = other.keys_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureKeysIsMutable();
+            keys_.addAll(other.keys_);
+          }
+          onChanged();
+        }
+        if (!other.vals_.isEmpty()) {
+          if (vals_.isEmpty()) {
+            vals_ = other.vals_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureValsIsMutable();
+            vals_.addAll(other.vals_);
+          }
+          onChanged();
+        }
+        if (other.hasInfo()) {
+          mergeInfo(other.getInfo());
+        }
+        if (!other.refs_.isEmpty()) {
+          if (refs_.isEmpty()) {
+            refs_ = other.refs_;
+            bitField0_ = (bitField0_ & ~0x00000010);
+          } else {
+            ensureRefsIsMutable();
+            refs_.addAll(other.refs_);
+          }
+          onChanged();
+        }
+        if (!other.lat_.isEmpty()) {
+          if (lat_.isEmpty()) {
+            lat_ = other.lat_;
+            bitField0_ = (bitField0_ & ~0x00000020);
+          } else {
+            ensureLatIsMutable();
+            lat_.addAll(other.lat_);
+          }
+          onChanged();
+        }
+        if (!other.lon_.isEmpty()) {
+          if (lon_.isEmpty()) {
+            lon_ = other.lon_;
+            bitField0_ = (bitField0_ & ~0x00000040);
+          } else {
+            ensureLonIsMutable();
+            lon_.addAll(other.lon_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        if (!hasId()) {
+          return false;
+        }
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.Way parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.openstreetmap.osmosis.osmbinary.Osmformat.Way) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private long id_ ;
       /**
        * <code>required int64 id = 1;</code>
+       * @return Whether the id field is set.
        */
-      @java.lang.Override
       public boolean hasId() {
-        return instance.hasId();
+        return ((bitField0_ & 0x00000001) != 0);
       }
       /**
        * <code>required int64 id = 1;</code>
+       * @return The id.
        */
-      @java.lang.Override
       public long getId() {
-        return instance.getId();
+        return id_;
       }
       /**
        * <code>required int64 id = 1;</code>
+       * @param value The id to set.
+       * @return This builder for chaining.
        */
       public Builder setId(long value) {
-        copyOnWrite();
-        instance.setId(value);
+        bitField0_ |= 0x00000001;
+        id_ = value;
+        onChanged();
         return this;
       }
       /**
        * <code>required int64 id = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearId() {
-        copyOnWrite();
-        instance.clearId();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        id_ = 0L;
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.Internal.IntList keys_ = emptyIntList();
+      private void ensureKeysIsMutable() {
+        if (!((bitField0_ & 0x00000002) != 0)) {
+          keys_ = mutableCopy(keys_);
+          bitField0_ |= 0x00000002;
+         }
+      }
       /**
        * <pre>
        * Parallel arrays.
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return A list containing the keys.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Integer>
           getKeysList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getKeysList());
+        return ((bitField0_ & 0x00000002) != 0) ?
+                 java.util.Collections.unmodifiableList(keys_) : keys_;
       }
       /**
        * <pre>
@@ -11806,10 +15156,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return The count of keys.
        */
-      @java.lang.Override
       public int getKeysCount() {
-        return instance.getKeysCount();
+        return keys_.size();
       }
       /**
        * <pre>
@@ -11817,10 +15167,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The keys at the given index.
        */
-      @java.lang.Override
       public int getKeys(int index) {
-        return instance.getKeys(index);
+        return keys_.getInt(index);
       }
       /**
        * <pre>
@@ -11828,11 +15179,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The keys to set.
+       * @return This builder for chaining.
        */
       public Builder setKeys(
           int index, int value) {
-        copyOnWrite();
-        instance.setKeys(index, value);
+        ensureKeysIsMutable();
+        keys_.setInt(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -11841,10 +15196,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param value The keys to add.
+       * @return This builder for chaining.
        */
       public Builder addKeys(int value) {
-        copyOnWrite();
-        instance.addKeys(value);
+        ensureKeysIsMutable();
+        keys_.addInt(value);
+        onChanged();
         return this;
       }
       /**
@@ -11853,11 +15211,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param values The keys to add.
+       * @return This builder for chaining.
        */
       public Builder addAllKeys(
           java.lang.Iterable<? extends java.lang.Integer> values) {
-        copyOnWrite();
-        instance.addAllKeys(values);
+        ensureKeysIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, keys_);
+        onChanged();
         return this;
       }
       /**
@@ -11866,130 +15228,233 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearKeys() {
-        copyOnWrite();
-        instance.clearKeys();
+        keys_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.Internal.IntList vals_ = emptyIntList();
+      private void ensureValsIsMutable() {
+        if (!((bitField0_ & 0x00000004) != 0)) {
+          vals_ = mutableCopy(vals_);
+          bitField0_ |= 0x00000004;
+         }
+      }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return A list containing the vals.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Integer>
           getValsList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getValsList());
+        return ((bitField0_ & 0x00000004) != 0) ?
+                 java.util.Collections.unmodifiableList(vals_) : vals_;
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return The count of vals.
        */
-      @java.lang.Override
       public int getValsCount() {
-        return instance.getValsCount();
+        return vals_.size();
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The vals at the given index.
        */
-      @java.lang.Override
       public int getVals(int index) {
-        return instance.getVals(index);
+        return vals_.getInt(index);
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The vals to set.
+       * @return This builder for chaining.
        */
       public Builder setVals(
           int index, int value) {
-        copyOnWrite();
-        instance.setVals(index, value);
+        ensureValsIsMutable();
+        vals_.setInt(index, value);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param value The vals to add.
+       * @return This builder for chaining.
        */
       public Builder addVals(int value) {
-        copyOnWrite();
-        instance.addVals(value);
+        ensureValsIsMutable();
+        vals_.addInt(value);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param values The vals to add.
+       * @return This builder for chaining.
        */
       public Builder addAllVals(
           java.lang.Iterable<? extends java.lang.Integer> values) {
-        copyOnWrite();
-        instance.addAllVals(values);
+        ensureValsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, vals_);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearVals() {
-        copyOnWrite();
-        instance.clearVals();
+        vals_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
         return this;
       }
 
+      private org.openstreetmap.osmosis.osmbinary.Osmformat.Info info_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.Info, org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder> infoBuilder_;
       /**
        * <code>optional .OSMPBF.Info info = 4;</code>
+       * @return Whether the info field is set.
        */
-      @java.lang.Override
       public boolean hasInfo() {
-        return instance.hasInfo();
+        return ((bitField0_ & 0x00000008) != 0);
       }
       /**
        * <code>optional .OSMPBF.Info info = 4;</code>
+       * @return The info.
        */
-      @java.lang.Override
       public org.openstreetmap.osmosis.osmbinary.Osmformat.Info getInfo() {
-        return instance.getInfo();
+        if (infoBuilder_ == null) {
+          return info_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance() : info_;
+        } else {
+          return infoBuilder_.getMessage();
+        }
       }
       /**
        * <code>optional .OSMPBF.Info info = 4;</code>
        */
       public Builder setInfo(org.openstreetmap.osmosis.osmbinary.Osmformat.Info value) {
-        copyOnWrite();
-        instance.setInfo(value);
-        return this;
+        if (infoBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          info_ = value;
+          onChanged();
+        } else {
+          infoBuilder_.setMessage(value);
         }
+        bitField0_ |= 0x00000008;
+        return this;
+      }
       /**
        * <code>optional .OSMPBF.Info info = 4;</code>
        */
       public Builder setInfo(
           org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder builderForValue) {
-        copyOnWrite();
-        instance.setInfo(builderForValue);
+        if (infoBuilder_ == null) {
+          info_ = builderForValue.build();
+          onChanged();
+        } else {
+          infoBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000008;
         return this;
       }
       /**
        * <code>optional .OSMPBF.Info info = 4;</code>
        */
       public Builder mergeInfo(org.openstreetmap.osmosis.osmbinary.Osmformat.Info value) {
-        copyOnWrite();
-        instance.mergeInfo(value);
+        if (infoBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) != 0) &&
+              info_ != null &&
+              info_ != org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance()) {
+            info_ =
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Info.newBuilder(info_).mergeFrom(value).buildPartial();
+          } else {
+            info_ = value;
+          }
+          onChanged();
+        } else {
+          infoBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000008;
         return this;
       }
       /**
        * <code>optional .OSMPBF.Info info = 4;</code>
        */
-      public Builder clearInfo() {  copyOnWrite();
-        instance.clearInfo();
+      public Builder clearInfo() {
+        if (infoBuilder_ == null) {
+          info_ = null;
+          onChanged();
+        } else {
+          infoBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
+      /**
+       * <code>optional .OSMPBF.Info info = 4;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder getInfoBuilder() {
+        bitField0_ |= 0x00000008;
+        onChanged();
+        return getInfoFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .OSMPBF.Info info = 4;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder getInfoOrBuilder() {
+        if (infoBuilder_ != null) {
+          return infoBuilder_.getMessageOrBuilder();
+        } else {
+          return info_ == null ?
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance() : info_;
+        }
+      }
+      /**
+       * <code>optional .OSMPBF.Info info = 4;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.Info, org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder> 
+          getInfoFieldBuilder() {
+        if (infoBuilder_ == null) {
+          infoBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Info, org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder>(
+                  getInfo(),
+                  getParentForChildren(),
+                  isClean());
+          info_ = null;
+        }
+        return infoBuilder_;
+      }
 
+      private com.google.protobuf.Internal.LongList refs_ = emptyLongList();
+      private void ensureRefsIsMutable() {
+        if (!((bitField0_ & 0x00000010) != 0)) {
+          refs_ = mutableCopy(refs_);
+          bitField0_ |= 0x00000010;
+         }
+      }
       /**
        * <pre>
        * DELTA coded
        * </pre>
        *
        * <code>repeated sint64 refs = 8 [packed = true];</code>
+       * @return A list containing the refs.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Long>
           getRefsList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getRefsList());
+        return ((bitField0_ & 0x00000010) != 0) ?
+                 java.util.Collections.unmodifiableList(refs_) : refs_;
       }
       /**
        * <pre>
@@ -11997,10 +15462,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 refs = 8 [packed = true];</code>
+       * @return The count of refs.
        */
-      @java.lang.Override
       public int getRefsCount() {
-        return instance.getRefsCount();
+        return refs_.size();
       }
       /**
        * <pre>
@@ -12008,10 +15473,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 refs = 8 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The refs at the given index.
        */
-      @java.lang.Override
       public long getRefs(int index) {
-        return instance.getRefs(index);
+        return refs_.getLong(index);
       }
       /**
        * <pre>
@@ -12019,11 +15485,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 refs = 8 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The refs to set.
+       * @return This builder for chaining.
        */
       public Builder setRefs(
           int index, long value) {
-        copyOnWrite();
-        instance.setRefs(index, value);
+        ensureRefsIsMutable();
+        refs_.setLong(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -12032,10 +15502,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 refs = 8 [packed = true];</code>
+       * @param value The refs to add.
+       * @return This builder for chaining.
        */
       public Builder addRefs(long value) {
-        copyOnWrite();
-        instance.addRefs(value);
+        ensureRefsIsMutable();
+        refs_.addLong(value);
+        onChanged();
         return this;
       }
       /**
@@ -12044,11 +15517,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 refs = 8 [packed = true];</code>
+       * @param values The refs to add.
+       * @return This builder for chaining.
        */
       public Builder addAllRefs(
           java.lang.Iterable<? extends java.lang.Long> values) {
-        copyOnWrite();
-        instance.addAllRefs(values);
+        ensureRefsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, refs_);
+        onChanged();
         return this;
       }
       /**
@@ -12057,396 +15534,237 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 refs = 8 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearRefs() {
-        copyOnWrite();
-        instance.clearRefs();
+        refs_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.Internal.LongList lat_ = emptyLongList();
+      private void ensureLatIsMutable() {
+        if (!((bitField0_ & 0x00000020) != 0)) {
+          lat_ = mutableCopy(lat_);
+          bitField0_ |= 0x00000020;
+         }
+      }
       /**
        * <code>repeated sint64 lat = 9 [packed = true];</code>
+       * @return A list containing the lat.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Long>
           getLatList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getLatList());
+        return ((bitField0_ & 0x00000020) != 0) ?
+                 java.util.Collections.unmodifiableList(lat_) : lat_;
       }
       /**
        * <code>repeated sint64 lat = 9 [packed = true];</code>
+       * @return The count of lat.
        */
-      @java.lang.Override
       public int getLatCount() {
-        return instance.getLatCount();
+        return lat_.size();
       }
       /**
        * <code>repeated sint64 lat = 9 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The lat at the given index.
        */
-      @java.lang.Override
       public long getLat(int index) {
-        return instance.getLat(index);
+        return lat_.getLong(index);
       }
       /**
        * <code>repeated sint64 lat = 9 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The lat to set.
+       * @return This builder for chaining.
        */
       public Builder setLat(
           int index, long value) {
-        copyOnWrite();
-        instance.setLat(index, value);
+        ensureLatIsMutable();
+        lat_.setLong(index, value);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated sint64 lat = 9 [packed = true];</code>
+       * @param value The lat to add.
+       * @return This builder for chaining.
        */
       public Builder addLat(long value) {
-        copyOnWrite();
-        instance.addLat(value);
+        ensureLatIsMutable();
+        lat_.addLong(value);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated sint64 lat = 9 [packed = true];</code>
+       * @param values The lat to add.
+       * @return This builder for chaining.
        */
       public Builder addAllLat(
           java.lang.Iterable<? extends java.lang.Long> values) {
-        copyOnWrite();
-        instance.addAllLat(values);
+        ensureLatIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, lat_);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated sint64 lat = 9 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearLat() {
-        copyOnWrite();
-        instance.clearLat();
+        lat_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000020);
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.Internal.LongList lon_ = emptyLongList();
+      private void ensureLonIsMutable() {
+        if (!((bitField0_ & 0x00000040) != 0)) {
+          lon_ = mutableCopy(lon_);
+          bitField0_ |= 0x00000040;
+         }
+      }
       /**
        * <code>repeated sint64 lon = 10 [packed = true];</code>
+       * @return A list containing the lon.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Long>
           getLonList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getLonList());
+        return ((bitField0_ & 0x00000040) != 0) ?
+                 java.util.Collections.unmodifiableList(lon_) : lon_;
       }
       /**
        * <code>repeated sint64 lon = 10 [packed = true];</code>
+       * @return The count of lon.
        */
-      @java.lang.Override
       public int getLonCount() {
-        return instance.getLonCount();
+        return lon_.size();
       }
       /**
        * <code>repeated sint64 lon = 10 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The lon at the given index.
        */
-      @java.lang.Override
       public long getLon(int index) {
-        return instance.getLon(index);
+        return lon_.getLong(index);
       }
       /**
        * <code>repeated sint64 lon = 10 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The lon to set.
+       * @return This builder for chaining.
        */
       public Builder setLon(
           int index, long value) {
-        copyOnWrite();
-        instance.setLon(index, value);
+        ensureLonIsMutable();
+        lon_.setLong(index, value);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated sint64 lon = 10 [packed = true];</code>
+       * @param value The lon to add.
+       * @return This builder for chaining.
        */
       public Builder addLon(long value) {
-        copyOnWrite();
-        instance.addLon(value);
+        ensureLonIsMutable();
+        lon_.addLong(value);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated sint64 lon = 10 [packed = true];</code>
+       * @param values The lon to add.
+       * @return This builder for chaining.
        */
       public Builder addAllLon(
           java.lang.Iterable<? extends java.lang.Long> values) {
-        copyOnWrite();
-        instance.addAllLon(values);
+        ensureLonIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, lon_);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated sint64 lon = 10 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearLon() {
-        copyOnWrite();
-        instance.clearLon();
+        lon_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000040);
+        onChanged();
         return this;
       }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.Way)
     }
-    private byte memoizedIsInitialized = 2;
-    @java.lang.Override
-    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        java.lang.Object arg0, java.lang.Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new org.openstreetmap.osmosis.osmbinary.Osmformat.Way();
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case IS_INITIALIZED: {
-          byte isInitialized = memoizedIsInitialized;
-          if (isInitialized == 1) return DEFAULT_INSTANCE;
-          if (isInitialized == 0) return null;
-
-          boolean shouldMemoize = ((Boolean) arg0).booleanValue();
-          if (!hasId()) {
-            return null;
-          }
-          return DEFAULT_INSTANCE;
-
-        }
-        case MAKE_IMMUTABLE: {
-          keys_.makeImmutable();
-          vals_.makeImmutable();
-          refs_.makeImmutable();
-          lat_.makeImmutable();
-          lon_.makeImmutable();
-          return null;
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          org.openstreetmap.osmosis.osmbinary.Osmformat.Way other = (org.openstreetmap.osmosis.osmbinary.Osmformat.Way) arg1;
-          id_ = visitor.visitLong(
-              hasId(), id_,
-              other.hasId(), other.id_);
-          keys_= visitor.visitIntList(keys_, other.keys_);
-          vals_= visitor.visitIntList(vals_, other.vals_);
-          info_ = visitor.visitMessage(info_, other.info_);
-          refs_= visitor.visitLongList(refs_, other.refs_);
-          lat_= visitor.visitLongList(lat_, other.lat_);
-          lon_= visitor.visitLongList(lon_, other.lon_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-            bitField0_ |= other.bitField0_;
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-          }
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                case 8: {
-                  bitField0_ |= 0x00000001;
-                  id_ = input.readInt64();
-                  break;
-                }
-                case 16: {
-                  if (!keys_.isModifiable()) {
-                    keys_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(keys_);
-                  }
-                  keys_.addInt(input.readUInt32());
-                  break;
-                }
-                case 18: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!keys_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    keys_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(keys_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    keys_.addInt(input.readUInt32());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 24: {
-                  if (!vals_.isModifiable()) {
-                    vals_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(vals_);
-                  }
-                  vals_.addInt(input.readUInt32());
-                  break;
-                }
-                case 26: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!vals_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    vals_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(vals_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    vals_.addInt(input.readUInt32());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 34: {
-                  org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder subBuilder = null;
-                  if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                    subBuilder = info_.toBuilder();
-                  }
-                  info_ = input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.Info.parser(), extensionRegistry);
-                  if (subBuilder != null) {
-                    subBuilder.mergeFrom(info_);
-                    info_ = subBuilder.buildPartial();
-                  }
-                  bitField0_ |= 0x00000002;
-                  break;
-                }
-                case 64: {
-                  if (!refs_.isModifiable()) {
-                    refs_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(refs_);
-                  }
-                  refs_.addLong(input.readSInt64());
-                  break;
-                }
-                case 66: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!refs_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    refs_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(refs_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    refs_.addLong(input.readSInt64());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 72: {
-                  if (!lat_.isModifiable()) {
-                    lat_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(lat_);
-                  }
-                  lat_.addLong(input.readSInt64());
-                  break;
-                }
-                case 74: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!lat_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    lat_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(lat_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    lat_.addLong(input.readSInt64());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 80: {
-                  if (!lon_.isModifiable()) {
-                    lon_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(lon_);
-                  }
-                  lon_.addLong(input.readSInt64());
-                  break;
-                }
-                case 82: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!lon_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    lon_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(lon_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    lon_.addLong(input.readSInt64());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        // fall through
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          com.google.protobuf.Parser<org.openstreetmap.osmosis.osmbinary.Osmformat.Way> parser = PARSER;
-          if (parser == null) {
-            synchronized (org.openstreetmap.osmosis.osmbinary.Osmformat.Way.class) {
-              parser = PARSER;
-              if (parser == null) {
-                parser = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-                PARSER = parser;
-              }
-            }
-          }
-          return parser;
-      }
-      case GET_MEMOIZED_IS_INITIALIZED: {
-        return memoizedIsInitialized;
-      }
-      case SET_MEMOIZED_IS_INITIALIZED: {
-        memoizedIsInitialized = (byte) (arg0 == null ? 0 : 1);
-        return null;
-      }
-      }
-      throw new UnsupportedOperationException();
-    }
-
 
     // @@protoc_insertion_point(class_scope:OSMPBF.Way)
     private static final org.openstreetmap.osmosis.osmbinary.Osmformat.Way DEFAULT_INSTANCE;
     static {
-      // New instances are implicitly immutable so no need to make
-      // immutable.
-      DEFAULT_INSTANCE = new Way();
+      DEFAULT_INSTANCE = new org.openstreetmap.osmosis.osmbinary.Osmformat.Way();
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Way getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static volatile com.google.protobuf.Parser<Way> PARSER;
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<Way>
+        PARSER = new com.google.protobuf.AbstractParser<Way>() {
+      @java.lang.Override
+      public Way parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Way(input, extensionRegistry);
+      }
+    };
 
     public static com.google.protobuf.Parser<Way> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
+      return PARSER;
     }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Way> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.Way getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
   public interface RelationOrBuilder extends
       // @@protoc_insertion_point(interface_extends:OSMPBF.Relation)
-      com.google.protobuf.MessageLiteOrBuilder {
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>required int64 id = 1;</code>
+     * @return Whether the id field is set.
      */
     boolean hasId();
     /**
      * <code>required int64 id = 1;</code>
+     * @return The id.
      */
     long getId();
 
@@ -12456,6 +15774,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return A list containing the keys.
      */
     java.util.List<java.lang.Integer> getKeysList();
     /**
@@ -12464,6 +15783,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return The count of keys.
      */
     int getKeysCount();
     /**
@@ -12472,30 +15792,42 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The keys at the given index.
      */
     int getKeys(int index);
 
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return A list containing the vals.
      */
     java.util.List<java.lang.Integer> getValsList();
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return The count of vals.
      */
     int getValsCount();
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The vals at the given index.
      */
     int getVals(int index);
 
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return Whether the info field is set.
      */
     boolean hasInfo();
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return The info.
      */
     org.openstreetmap.osmosis.osmbinary.Osmformat.Info getInfo();
+    /**
+     * <code>optional .OSMPBF.Info info = 4;</code>
+     */
+    org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder getInfoOrBuilder();
 
     /**
      * <pre>
@@ -12503,6 +15835,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+     * @return A list containing the rolesSid.
      */
     java.util.List<java.lang.Integer> getRolesSidList();
     /**
@@ -12511,6 +15844,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+     * @return The count of rolesSid.
      */
     int getRolesSidCount();
     /**
@@ -12519,6 +15853,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The rolesSid at the given index.
      */
     int getRolesSid(int index);
 
@@ -12528,6 +15864,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 memids = 9 [packed = true];</code>
+     * @return A list containing the memids.
      */
     java.util.List<java.lang.Long> getMemidsList();
     /**
@@ -12536,6 +15873,7 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 memids = 9 [packed = true];</code>
+     * @return The count of memids.
      */
     int getMemidsCount();
     /**
@@ -12544,19 +15882,25 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 memids = 9 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The memids at the given index.
      */
     long getMemids(int index);
 
     /**
      * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+     * @return A list containing the types.
      */
     java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType> getTypesList();
     /**
      * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+     * @return The count of types.
      */
     int getTypesCount();
     /**
      * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The types at the given index.
      */
     org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType getTypes(int index);
   }
@@ -12564,22 +15908,242 @@ public final class Osmformat {
    * Protobuf type {@code OSMPBF.Relation}
    */
   public  static final class Relation extends
-      com.google.protobuf.GeneratedMessageLite<
-          Relation, Relation.Builder> implements
+      com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:OSMPBF.Relation)
       RelationOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Relation.newBuilder() to construct.
+    private Relation(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
     private Relation() {
       keys_ = emptyIntList();
       vals_ = emptyIntList();
       rolesSid_ = emptyIntList();
       memids_ = emptyLongList();
-      types_ = emptyIntList();
+      types_ = java.util.Collections.emptyList();
     }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new Relation();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Relation(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+              bitField0_ |= 0x00000001;
+              id_ = input.readInt64();
+              break;
+            }
+            case 16: {
+              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+                keys_ = newIntList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              keys_.addInt(input.readUInt32());
+              break;
+            }
+            case 18: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000002) != 0) && input.getBytesUntilLimit() > 0) {
+                keys_ = newIntList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                keys_.addInt(input.readUInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 24: {
+              if (!((mutable_bitField0_ & 0x00000004) != 0)) {
+                vals_ = newIntList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              vals_.addInt(input.readUInt32());
+              break;
+            }
+            case 26: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000004) != 0) && input.getBytesUntilLimit() > 0) {
+                vals_ = newIntList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                vals_.addInt(input.readUInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 34: {
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) != 0)) {
+                subBuilder = info_.toBuilder();
+              }
+              info_ = input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.Info.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(info_);
+                info_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
+              break;
+            }
+            case 64: {
+              if (!((mutable_bitField0_ & 0x00000010) != 0)) {
+                rolesSid_ = newIntList();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              rolesSid_.addInt(input.readInt32());
+              break;
+            }
+            case 66: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000010) != 0) && input.getBytesUntilLimit() > 0) {
+                rolesSid_ = newIntList();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                rolesSid_.addInt(input.readInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 72: {
+              if (!((mutable_bitField0_ & 0x00000020) != 0)) {
+                memids_ = newLongList();
+                mutable_bitField0_ |= 0x00000020;
+              }
+              memids_.addLong(input.readSInt64());
+              break;
+            }
+            case 74: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000020) != 0) && input.getBytesUntilLimit() > 0) {
+                memids_ = newLongList();
+                mutable_bitField0_ |= 0x00000020;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                memids_.addLong(input.readSInt64());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 80: {
+              int rawValue = input.readEnum();
+              @SuppressWarnings("deprecation")
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType value = org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(10, rawValue);
+              } else {
+                if (!((mutable_bitField0_ & 0x00000040) != 0)) {
+                  types_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000040;
+                }
+                types_.add(rawValue);
+              }
+              break;
+            }
+            case 82: {
+              int length = input.readRawVarint32();
+              int oldLimit = input.pushLimit(length);
+              while(input.getBytesUntilLimit() > 0) {
+                int rawValue = input.readEnum();
+                @SuppressWarnings("deprecation")
+                org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType value = org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType.valueOf(rawValue);
+                if (value == null) {
+                  unknownFields.mergeVarintField(10, rawValue);
+                } else {
+                  if (!((mutable_bitField0_ & 0x00000040) != 0)) {
+                    types_ = new java.util.ArrayList<java.lang.Integer>();
+                    mutable_bitField0_ |= 0x00000040;
+                  }
+                  types_.add(rawValue);
+                }
+              }
+              input.popLimit(oldLimit);
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) != 0)) {
+          keys_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000004) != 0)) {
+          vals_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000010) != 0)) {
+          rolesSid_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000020) != 0)) {
+          memids_.makeImmutable(); // C
+        }
+        if (((mutable_bitField0_ & 0x00000040) != 0)) {
+          types_ = java.util.Collections.unmodifiableList(types_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Relation_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Relation_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.class, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.Builder.class);
+    }
+
     /**
      * Protobuf enum {@code OSMPBF.Relation.MemberType}
      */
     public enum MemberType
-        implements com.google.protobuf.Internal.EnumLite {
+        implements com.google.protobuf.ProtocolMessageEnum {
       /**
        * <code>NODE = 0;</code>
        */
@@ -12608,12 +16172,13 @@ public final class Osmformat {
       public static final int RELATION_VALUE = 2;
 
 
-      @java.lang.Override
       public final int getNumber() {
         return value;
       }
 
       /**
+       * @param value The numeric wire value of the corresponding enum entry.
+       * @return The enum associated with the given numeric wire value.
        * @deprecated Use {@link #forNumber(int)} instead.
        */
       @java.lang.Deprecated
@@ -12621,6 +16186,10 @@ public final class Osmformat {
         return forNumber(value);
       }
 
+      /**
+       * @param value The numeric wire value of the corresponding enum entry.
+       * @return The enum associated with the given numeric wire value.
+       */
       public static MemberType forNumber(int value) {
         switch (value) {
           case 0: return NODE;
@@ -12637,11 +16206,34 @@ public final class Osmformat {
       private static final com.google.protobuf.Internal.EnumLiteMap<
           MemberType> internalValueMap =
             new com.google.protobuf.Internal.EnumLiteMap<MemberType>() {
-              @java.lang.Override
               public MemberType findValueByNumber(int number) {
                 return MemberType.forNumber(number);
               }
             };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(ordinal());
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final MemberType[] VALUES = values();
+
+      public static MemberType valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        return VALUES[desc.getIndex()];
+      }
 
       private final int value;
 
@@ -12657,31 +16249,17 @@ public final class Osmformat {
     private long id_;
     /**
      * <code>required int64 id = 1;</code>
+     * @return Whether the id field is set.
      */
-    @java.lang.Override
     public boolean hasId() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <code>required int64 id = 1;</code>
+     * @return The id.
      */
-    @java.lang.Override
     public long getId() {
       return id_;
-    }
-    /**
-     * <code>required int64 id = 1;</code>
-     */
-    private void setId(long value) {
-      bitField0_ |= 0x00000001;
-      id_ = value;
-    }
-    /**
-     * <code>required int64 id = 1;</code>
-     */
-    private void clearId() {
-      bitField0_ = (bitField0_ & ~0x00000001);
-      id_ = 0L;
     }
 
     public static final int KEYS_FIELD_NUMBER = 2;
@@ -12692,8 +16270,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return A list containing the keys.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Integer>
         getKeysList() {
       return keys_;
@@ -12704,8 +16282,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @return The count of keys.
      */
-    @java.lang.Override
     public int getKeysCount() {
       return keys_.size();
     }
@@ -12715,183 +16293,62 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated uint32 keys = 2 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The keys at the given index.
      */
-    @java.lang.Override
     public int getKeys(int index) {
       return keys_.getInt(index);
     }
     private int keysMemoizedSerializedSize = -1;
-    private void ensureKeysIsMutable() {
-      if (!keys_.isModifiable()) {
-        keys_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(keys_);
-       }
-    }
-    /**
-     * <pre>
-     * Parallel arrays.
-     * </pre>
-     *
-     * <code>repeated uint32 keys = 2 [packed = true];</code>
-     */
-    private void setKeys(
-        int index, int value) {
-      ensureKeysIsMutable();
-      keys_.setInt(index, value);
-    }
-    /**
-     * <pre>
-     * Parallel arrays.
-     * </pre>
-     *
-     * <code>repeated uint32 keys = 2 [packed = true];</code>
-     */
-    private void addKeys(int value) {
-      ensureKeysIsMutable();
-      keys_.addInt(value);
-    }
-    /**
-     * <pre>
-     * Parallel arrays.
-     * </pre>
-     *
-     * <code>repeated uint32 keys = 2 [packed = true];</code>
-     */
-    private void addAllKeys(
-        java.lang.Iterable<? extends java.lang.Integer> values) {
-      ensureKeysIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, keys_);
-    }
-    /**
-     * <pre>
-     * Parallel arrays.
-     * </pre>
-     *
-     * <code>repeated uint32 keys = 2 [packed = true];</code>
-     */
-    private void clearKeys() {
-      keys_ = emptyIntList();
-    }
 
     public static final int VALS_FIELD_NUMBER = 3;
     private com.google.protobuf.Internal.IntList vals_;
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return A list containing the vals.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Integer>
         getValsList() {
       return vals_;
     }
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @return The count of vals.
      */
-    @java.lang.Override
     public int getValsCount() {
       return vals_.size();
     }
     /**
      * <code>repeated uint32 vals = 3 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The vals at the given index.
      */
-    @java.lang.Override
     public int getVals(int index) {
       return vals_.getInt(index);
     }
     private int valsMemoizedSerializedSize = -1;
-    private void ensureValsIsMutable() {
-      if (!vals_.isModifiable()) {
-        vals_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(vals_);
-       }
-    }
-    /**
-     * <code>repeated uint32 vals = 3 [packed = true];</code>
-     */
-    private void setVals(
-        int index, int value) {
-      ensureValsIsMutable();
-      vals_.setInt(index, value);
-    }
-    /**
-     * <code>repeated uint32 vals = 3 [packed = true];</code>
-     */
-    private void addVals(int value) {
-      ensureValsIsMutable();
-      vals_.addInt(value);
-    }
-    /**
-     * <code>repeated uint32 vals = 3 [packed = true];</code>
-     */
-    private void addAllVals(
-        java.lang.Iterable<? extends java.lang.Integer> values) {
-      ensureValsIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, vals_);
-    }
-    /**
-     * <code>repeated uint32 vals = 3 [packed = true];</code>
-     */
-    private void clearVals() {
-      vals_ = emptyIntList();
-    }
 
     public static final int INFO_FIELD_NUMBER = 4;
     private org.openstreetmap.osmosis.osmbinary.Osmformat.Info info_;
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return Whether the info field is set.
      */
-    @java.lang.Override
     public boolean hasInfo() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
+     * @return The info.
      */
-    @java.lang.Override
     public org.openstreetmap.osmosis.osmbinary.Osmformat.Info getInfo() {
       return info_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance() : info_;
     }
     /**
      * <code>optional .OSMPBF.Info info = 4;</code>
      */
-    private void setInfo(org.openstreetmap.osmosis.osmbinary.Osmformat.Info value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      info_ = value;
-      bitField0_ |= 0x00000002;
-      }
-    /**
-     * <code>optional .OSMPBF.Info info = 4;</code>
-     */
-    private void setInfo(
-        org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder builderForValue) {
-      info_ = builderForValue.build();
-      bitField0_ |= 0x00000002;
-    }
-    /**
-     * <code>optional .OSMPBF.Info info = 4;</code>
-     */
-    @java.lang.SuppressWarnings({"ReferenceEquality"})
-    private void mergeInfo(org.openstreetmap.osmosis.osmbinary.Osmformat.Info value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      if (info_ != null &&
-          info_ != org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance()) {
-        info_ =
-          org.openstreetmap.osmosis.osmbinary.Osmformat.Info.newBuilder(info_).mergeFrom(value).buildPartial();
-      } else {
-        info_ = value;
-      }
-      bitField0_ |= 0x00000002;
-    }
-    /**
-     * <code>optional .OSMPBF.Info info = 4;</code>
-     */
-    private void clearInfo() {  info_ = null;
-      bitField0_ = (bitField0_ & ~0x00000002);
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder getInfoOrBuilder() {
+      return info_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance() : info_;
     }
 
     public static final int ROLES_SID_FIELD_NUMBER = 8;
@@ -12902,8 +16359,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+     * @return A list containing the rolesSid.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Integer>
         getRolesSidList() {
       return rolesSid_;
@@ -12914,8 +16371,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+     * @return The count of rolesSid.
      */
-    @java.lang.Override
     public int getRolesSidCount() {
       return rolesSid_.size();
     }
@@ -12925,64 +16382,13 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The rolesSid at the given index.
      */
-    @java.lang.Override
     public int getRolesSid(int index) {
       return rolesSid_.getInt(index);
     }
     private int rolesSidMemoizedSerializedSize = -1;
-    private void ensureRolesSidIsMutable() {
-      if (!rolesSid_.isModifiable()) {
-        rolesSid_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(rolesSid_);
-       }
-    }
-    /**
-     * <pre>
-     * Parallel arrays
-     * </pre>
-     *
-     * <code>repeated int32 roles_sid = 8 [packed = true];</code>
-     */
-    private void setRolesSid(
-        int index, int value) {
-      ensureRolesSidIsMutable();
-      rolesSid_.setInt(index, value);
-    }
-    /**
-     * <pre>
-     * Parallel arrays
-     * </pre>
-     *
-     * <code>repeated int32 roles_sid = 8 [packed = true];</code>
-     */
-    private void addRolesSid(int value) {
-      ensureRolesSidIsMutable();
-      rolesSid_.addInt(value);
-    }
-    /**
-     * <pre>
-     * Parallel arrays
-     * </pre>
-     *
-     * <code>repeated int32 roles_sid = 8 [packed = true];</code>
-     */
-    private void addAllRolesSid(
-        java.lang.Iterable<? extends java.lang.Integer> values) {
-      ensureRolesSidIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, rolesSid_);
-    }
-    /**
-     * <pre>
-     * Parallel arrays
-     * </pre>
-     *
-     * <code>repeated int32 roles_sid = 8 [packed = true];</code>
-     */
-    private void clearRolesSid() {
-      rolesSid_ = emptyIntList();
-    }
 
     public static final int MEMIDS_FIELD_NUMBER = 9;
     private com.google.protobuf.Internal.LongList memids_;
@@ -12992,8 +16398,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 memids = 9 [packed = true];</code>
+     * @return A list containing the memids.
      */
-    @java.lang.Override
     public java.util.List<java.lang.Long>
         getMemidsList() {
       return memids_;
@@ -13004,8 +16410,8 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 memids = 9 [packed = true];</code>
+     * @return The count of memids.
      */
-    @java.lang.Override
     public int getMemidsCount() {
       return memids_.size();
     }
@@ -13015,149 +16421,71 @@ public final class Osmformat {
      * </pre>
      *
      * <code>repeated sint64 memids = 9 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The memids at the given index.
      */
-    @java.lang.Override
     public long getMemids(int index) {
       return memids_.getLong(index);
     }
     private int memidsMemoizedSerializedSize = -1;
-    private void ensureMemidsIsMutable() {
-      if (!memids_.isModifiable()) {
-        memids_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(memids_);
-       }
-    }
-    /**
-     * <pre>
-     * DELTA encoded
-     * </pre>
-     *
-     * <code>repeated sint64 memids = 9 [packed = true];</code>
-     */
-    private void setMemids(
-        int index, long value) {
-      ensureMemidsIsMutable();
-      memids_.setLong(index, value);
-    }
-    /**
-     * <pre>
-     * DELTA encoded
-     * </pre>
-     *
-     * <code>repeated sint64 memids = 9 [packed = true];</code>
-     */
-    private void addMemids(long value) {
-      ensureMemidsIsMutable();
-      memids_.addLong(value);
-    }
-    /**
-     * <pre>
-     * DELTA encoded
-     * </pre>
-     *
-     * <code>repeated sint64 memids = 9 [packed = true];</code>
-     */
-    private void addAllMemids(
-        java.lang.Iterable<? extends java.lang.Long> values) {
-      ensureMemidsIsMutable();
-      com.google.protobuf.AbstractMessageLite.addAll(
-          values, memids_);
-    }
-    /**
-     * <pre>
-     * DELTA encoded
-     * </pre>
-     *
-     * <code>repeated sint64 memids = 9 [packed = true];</code>
-     */
-    private void clearMemids() {
-      memids_ = emptyLongList();
-    }
 
     public static final int TYPES_FIELD_NUMBER = 10;
-    private com.google.protobuf.Internal.IntList types_;
+    private java.util.List<java.lang.Integer> types_;
     private static final com.google.protobuf.Internal.ListAdapter.Converter<
         java.lang.Integer, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType> types_converter_ =
             new com.google.protobuf.Internal.ListAdapter.Converter<
                 java.lang.Integer, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType>() {
-              @java.lang.Override
               public org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType convert(java.lang.Integer from) {
-                org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType result = org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType.forNumber(from);
+                @SuppressWarnings("deprecation")
+                org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType result = org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType.valueOf(from);
                 return result == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType.NODE : result;
               }
             };
     /**
      * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+     * @return A list containing the types.
      */
-    @java.lang.Override
     public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType> getTypesList() {
       return new com.google.protobuf.Internal.ListAdapter<
           java.lang.Integer, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType>(types_, types_converter_);
     }
     /**
      * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+     * @return The count of types.
      */
-    @java.lang.Override
     public int getTypesCount() {
       return types_.size();
     }
     /**
      * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+     * @param index The index of the element to return.
+     * @return The types at the given index.
      */
-    @java.lang.Override
     public org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType getTypes(int index) {
-      return types_converter_.convert(types_.getInt(index));
+      return types_converter_.convert(types_.get(index));
     }
     private int typesMemoizedSerializedSize;
-    private void ensureTypesIsMutable() {
-      if (!types_.isModifiable()) {
-        types_ =
-            com.google.protobuf.GeneratedMessageLite.mutableCopy(types_);
+
+    private byte memoizedIsInitialized = -1;
+    @java.lang.Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
       }
-    }
-    /**
-     * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
-     */
-    private void setTypes(
-        int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureTypesIsMutable();
-      types_.setInt(index, value.getNumber());
-    }
-    /**
-     * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
-     */
-    private void addTypes(org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
-      ensureTypesIsMutable();
-      types_.addInt(value.getNumber());
-    }
-    /**
-     * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
-     */
-    private void addAllTypes(
-        java.lang.Iterable<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType> values) {
-      ensureTypesIsMutable();
-      for (org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType value : values) {
-        types_.addInt(value.getNumber());
-      }
-    }
-    /**
-     * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
-     */
-    private void clearTypes() {
-      types_ = emptyIntList();
+      memoizedIsInitialized = 1;
+      return true;
     }
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         output.writeInt64(1, id_);
       }
       if (getKeysList().size() > 0) {
@@ -13174,7 +16502,7 @@ public final class Osmformat {
       for (int i = 0; i < vals_.size(); i++) {
         output.writeUInt32NoTag(vals_.getInt(i));
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if (((bitField0_ & 0x00000002) != 0)) {
         output.writeMessage(4, getInfo());
       }
       if (getRolesSidList().size() > 0) {
@@ -13196,18 +16524,18 @@ public final class Osmformat {
         output.writeUInt32NoTag(typesMemoizedSerializedSize);
       }
       for (int i = 0; i < types_.size(); i++) {
-        output.writeEnumNoTag(types_.getInt(i));
+        output.writeEnumNoTag(types_.get(i));
       }
       unknownFields.writeTo(output);
     }
 
     @java.lang.Override
     public int getSerializedSize() {
-      int size = memoizedSerializedSize;
+      int size = memoizedSize;
       if (size != -1) return size;
 
       size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(1, id_);
       }
@@ -13239,7 +16567,7 @@ public final class Osmformat {
         }
         valsMemoizedSerializedSize = dataSize;
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, getInfo());
       }
@@ -13275,7 +16603,7 @@ public final class Osmformat {
         int dataSize = 0;
         for (int i = 0; i < types_.size(); i++) {
           dataSize += com.google.protobuf.CodedOutputStream
-            .computeEnumSizeNoTag(types_.getInt(i));
+            .computeEnumSizeNoTag(types_.get(i));
         }
         size += dataSize;
         if (!getTypesList().isEmpty()) {  size += 1;
@@ -13284,148 +16612,490 @@ public final class Osmformat {
         }typesMemoizedSerializedSize = dataSize;
       }
       size += unknownFields.getSerializedSize();
-      memoizedSerializedSize = size;
+      memoizedSize = size;
       return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.Relation)) {
+        return super.equals(obj);
+      }
+      org.openstreetmap.osmosis.osmbinary.Osmformat.Relation other = (org.openstreetmap.osmosis.osmbinary.Osmformat.Relation) obj;
+
+      if (hasId() != other.hasId()) return false;
+      if (hasId()) {
+        if (getId()
+            != other.getId()) return false;
+      }
+      if (!getKeysList()
+          .equals(other.getKeysList())) return false;
+      if (!getValsList()
+          .equals(other.getValsList())) return false;
+      if (hasInfo() != other.hasInfo()) return false;
+      if (hasInfo()) {
+        if (!getInfo()
+            .equals(other.getInfo())) return false;
+      }
+      if (!getRolesSidList()
+          .equals(other.getRolesSidList())) return false;
+      if (!getMemidsList()
+          .equals(other.getMemidsList())) return false;
+      if (!types_.equals(other.types_)) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasId()) {
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getId());
+      }
+      if (getKeysCount() > 0) {
+        hash = (37 * hash) + KEYS_FIELD_NUMBER;
+        hash = (53 * hash) + getKeysList().hashCode();
+      }
+      if (getValsCount() > 0) {
+        hash = (37 * hash) + VALS_FIELD_NUMBER;
+        hash = (53 * hash) + getValsList().hashCode();
+      }
+      if (hasInfo()) {
+        hash = (37 * hash) + INFO_FIELD_NUMBER;
+        hash = (53 * hash) + getInfo().hashCode();
+      }
+      if (getRolesSidCount() > 0) {
+        hash = (37 * hash) + ROLES_SID_FIELD_NUMBER;
+        hash = (53 * hash) + getRolesSidList().hashCode();
+      }
+      if (getMemidsCount() > 0) {
+        hash = (37 * hash) + MEMIDS_FIELD_NUMBER;
+        hash = (53 * hash) + getMemidsList().hashCode();
+      }
+      if (getTypesCount() > 0) {
+        hash = (37 * hash) + TYPES_FIELD_NUMBER;
+        hash = (53 * hash) + types_.hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Relation parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Relation parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Relation parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Relation parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Relation parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+      return PARSER.parseFrom(data);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Relation parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Relation parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Relation parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Relation parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Relation parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Relation parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
     }
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Relation parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
-      return (Builder) DEFAULT_INSTANCE.createBuilder();
+      return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(org.openstreetmap.osmosis.osmbinary.Osmformat.Relation prototype) {
-      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @java.lang.Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * Protobuf type {@code OSMPBF.Relation}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          org.openstreetmap.osmosis.osmbinary.Osmformat.Relation, Builder> implements
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:OSMPBF.Relation)
         org.openstreetmap.osmosis.osmbinary.Osmformat.RelationOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Relation_descriptor;
+      }
+
+      @java.lang.Override
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Relation_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.class, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.Builder.class);
+      }
+
       // Construct using org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getInfoFieldBuilder();
+        }
+      }
+      @java.lang.Override
+      public Builder clear() {
+        super.clear();
+        id_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        keys_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        vals_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        if (infoBuilder_ == null) {
+          info_ = null;
+        } else {
+          infoBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000008);
+        rolesSid_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        memids_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000020);
+        types_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000040);
+        return this;
+      }
 
+      @java.lang.Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.internal_static_OSMPBF_Relation_descriptor;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Relation getDefaultInstanceForType() {
+        return org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.getDefaultInstance();
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Relation build() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.Relation result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @java.lang.Override
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Relation buildPartial() {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.Relation result = new org.openstreetmap.osmosis.osmbinary.Osmformat.Relation(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) != 0)) {
+          result.id_ = id_;
+          to_bitField0_ |= 0x00000001;
+        }
+        if (((bitField0_ & 0x00000002) != 0)) {
+          keys_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.keys_ = keys_;
+        if (((bitField0_ & 0x00000004) != 0)) {
+          vals_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.vals_ = vals_;
+        if (((from_bitField0_ & 0x00000008) != 0)) {
+          if (infoBuilder_ == null) {
+            result.info_ = info_;
+          } else {
+            result.info_ = infoBuilder_.build();
+          }
+          to_bitField0_ |= 0x00000002;
+        }
+        if (((bitField0_ & 0x00000010) != 0)) {
+          rolesSid_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000010);
+        }
+        result.rolesSid_ = rolesSid_;
+        if (((bitField0_ & 0x00000020) != 0)) {
+          memids_.makeImmutable();
+          bitField0_ = (bitField0_ & ~0x00000020);
+        }
+        result.memids_ = memids_;
+        if (((bitField0_ & 0x00000040) != 0)) {
+          types_ = java.util.Collections.unmodifiableList(types_);
+          bitField0_ = (bitField0_ & ~0x00000040);
+        }
+        result.types_ = types_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      @java.lang.Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @java.lang.Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.setField(field, value);
+      }
+      @java.lang.Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @java.lang.Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @java.lang.Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @java.lang.Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @java.lang.Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof org.openstreetmap.osmosis.osmbinary.Osmformat.Relation) {
+          return mergeFrom((org.openstreetmap.osmosis.osmbinary.Osmformat.Relation)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(org.openstreetmap.osmosis.osmbinary.Osmformat.Relation other) {
+        if (other == org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.getDefaultInstance()) return this;
+        if (other.hasId()) {
+          setId(other.getId());
+        }
+        if (!other.keys_.isEmpty()) {
+          if (keys_.isEmpty()) {
+            keys_ = other.keys_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureKeysIsMutable();
+            keys_.addAll(other.keys_);
+          }
+          onChanged();
+        }
+        if (!other.vals_.isEmpty()) {
+          if (vals_.isEmpty()) {
+            vals_ = other.vals_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureValsIsMutable();
+            vals_.addAll(other.vals_);
+          }
+          onChanged();
+        }
+        if (other.hasInfo()) {
+          mergeInfo(other.getInfo());
+        }
+        if (!other.rolesSid_.isEmpty()) {
+          if (rolesSid_.isEmpty()) {
+            rolesSid_ = other.rolesSid_;
+            bitField0_ = (bitField0_ & ~0x00000010);
+          } else {
+            ensureRolesSidIsMutable();
+            rolesSid_.addAll(other.rolesSid_);
+          }
+          onChanged();
+        }
+        if (!other.memids_.isEmpty()) {
+          if (memids_.isEmpty()) {
+            memids_ = other.memids_;
+            bitField0_ = (bitField0_ & ~0x00000020);
+          } else {
+            ensureMemidsIsMutable();
+            memids_.addAll(other.memids_);
+          }
+          onChanged();
+        }
+        if (!other.types_.isEmpty()) {
+          if (types_.isEmpty()) {
+            types_ = other.types_;
+            bitField0_ = (bitField0_ & ~0x00000040);
+          } else {
+            ensureTypesIsMutable();
+            types_.addAll(other.types_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @java.lang.Override
+      public final boolean isInitialized() {
+        if (!hasId()) {
+          return false;
+        }
+        return true;
+      }
+
+      @java.lang.Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        org.openstreetmap.osmosis.osmbinary.Osmformat.Relation parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (org.openstreetmap.osmosis.osmbinary.Osmformat.Relation) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private long id_ ;
       /**
        * <code>required int64 id = 1;</code>
+       * @return Whether the id field is set.
        */
-      @java.lang.Override
       public boolean hasId() {
-        return instance.hasId();
+        return ((bitField0_ & 0x00000001) != 0);
       }
       /**
        * <code>required int64 id = 1;</code>
+       * @return The id.
        */
-      @java.lang.Override
       public long getId() {
-        return instance.getId();
+        return id_;
       }
       /**
        * <code>required int64 id = 1;</code>
+       * @param value The id to set.
+       * @return This builder for chaining.
        */
       public Builder setId(long value) {
-        copyOnWrite();
-        instance.setId(value);
+        bitField0_ |= 0x00000001;
+        id_ = value;
+        onChanged();
         return this;
       }
       /**
        * <code>required int64 id = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearId() {
-        copyOnWrite();
-        instance.clearId();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        id_ = 0L;
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.Internal.IntList keys_ = emptyIntList();
+      private void ensureKeysIsMutable() {
+        if (!((bitField0_ & 0x00000002) != 0)) {
+          keys_ = mutableCopy(keys_);
+          bitField0_ |= 0x00000002;
+         }
+      }
       /**
        * <pre>
        * Parallel arrays.
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return A list containing the keys.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Integer>
           getKeysList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getKeysList());
+        return ((bitField0_ & 0x00000002) != 0) ?
+                 java.util.Collections.unmodifiableList(keys_) : keys_;
       }
       /**
        * <pre>
@@ -13433,10 +17103,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return The count of keys.
        */
-      @java.lang.Override
       public int getKeysCount() {
-        return instance.getKeysCount();
+        return keys_.size();
       }
       /**
        * <pre>
@@ -13444,10 +17114,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The keys at the given index.
        */
-      @java.lang.Override
       public int getKeys(int index) {
-        return instance.getKeys(index);
+        return keys_.getInt(index);
       }
       /**
        * <pre>
@@ -13455,11 +17126,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The keys to set.
+       * @return This builder for chaining.
        */
       public Builder setKeys(
           int index, int value) {
-        copyOnWrite();
-        instance.setKeys(index, value);
+        ensureKeysIsMutable();
+        keys_.setInt(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -13468,10 +17143,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param value The keys to add.
+       * @return This builder for chaining.
        */
       public Builder addKeys(int value) {
-        copyOnWrite();
-        instance.addKeys(value);
+        ensureKeysIsMutable();
+        keys_.addInt(value);
+        onChanged();
         return this;
       }
       /**
@@ -13480,11 +17158,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @param values The keys to add.
+       * @return This builder for chaining.
        */
       public Builder addAllKeys(
           java.lang.Iterable<? extends java.lang.Integer> values) {
-        copyOnWrite();
-        instance.addAllKeys(values);
+        ensureKeysIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, keys_);
+        onChanged();
         return this;
       }
       /**
@@ -13493,130 +17175,233 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated uint32 keys = 2 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearKeys() {
-        copyOnWrite();
-        instance.clearKeys();
+        keys_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.Internal.IntList vals_ = emptyIntList();
+      private void ensureValsIsMutable() {
+        if (!((bitField0_ & 0x00000004) != 0)) {
+          vals_ = mutableCopy(vals_);
+          bitField0_ |= 0x00000004;
+         }
+      }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return A list containing the vals.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Integer>
           getValsList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getValsList());
+        return ((bitField0_ & 0x00000004) != 0) ?
+                 java.util.Collections.unmodifiableList(vals_) : vals_;
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return The count of vals.
        */
-      @java.lang.Override
       public int getValsCount() {
-        return instance.getValsCount();
+        return vals_.size();
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The vals at the given index.
        */
-      @java.lang.Override
       public int getVals(int index) {
-        return instance.getVals(index);
+        return vals_.getInt(index);
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The vals to set.
+       * @return This builder for chaining.
        */
       public Builder setVals(
           int index, int value) {
-        copyOnWrite();
-        instance.setVals(index, value);
+        ensureValsIsMutable();
+        vals_.setInt(index, value);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param value The vals to add.
+       * @return This builder for chaining.
        */
       public Builder addVals(int value) {
-        copyOnWrite();
-        instance.addVals(value);
+        ensureValsIsMutable();
+        vals_.addInt(value);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @param values The vals to add.
+       * @return This builder for chaining.
        */
       public Builder addAllVals(
           java.lang.Iterable<? extends java.lang.Integer> values) {
-        copyOnWrite();
-        instance.addAllVals(values);
+        ensureValsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, vals_);
+        onChanged();
         return this;
       }
       /**
        * <code>repeated uint32 vals = 3 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearVals() {
-        copyOnWrite();
-        instance.clearVals();
+        vals_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
         return this;
       }
 
+      private org.openstreetmap.osmosis.osmbinary.Osmformat.Info info_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.Info, org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder> infoBuilder_;
       /**
        * <code>optional .OSMPBF.Info info = 4;</code>
+       * @return Whether the info field is set.
        */
-      @java.lang.Override
       public boolean hasInfo() {
-        return instance.hasInfo();
+        return ((bitField0_ & 0x00000008) != 0);
       }
       /**
        * <code>optional .OSMPBF.Info info = 4;</code>
+       * @return The info.
        */
-      @java.lang.Override
       public org.openstreetmap.osmosis.osmbinary.Osmformat.Info getInfo() {
-        return instance.getInfo();
+        if (infoBuilder_ == null) {
+          return info_ == null ? org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance() : info_;
+        } else {
+          return infoBuilder_.getMessage();
+        }
       }
       /**
        * <code>optional .OSMPBF.Info info = 4;</code>
        */
       public Builder setInfo(org.openstreetmap.osmosis.osmbinary.Osmformat.Info value) {
-        copyOnWrite();
-        instance.setInfo(value);
-        return this;
+        if (infoBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          info_ = value;
+          onChanged();
+        } else {
+          infoBuilder_.setMessage(value);
         }
+        bitField0_ |= 0x00000008;
+        return this;
+      }
       /**
        * <code>optional .OSMPBF.Info info = 4;</code>
        */
       public Builder setInfo(
           org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder builderForValue) {
-        copyOnWrite();
-        instance.setInfo(builderForValue);
+        if (infoBuilder_ == null) {
+          info_ = builderForValue.build();
+          onChanged();
+        } else {
+          infoBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000008;
         return this;
       }
       /**
        * <code>optional .OSMPBF.Info info = 4;</code>
        */
       public Builder mergeInfo(org.openstreetmap.osmosis.osmbinary.Osmformat.Info value) {
-        copyOnWrite();
-        instance.mergeInfo(value);
+        if (infoBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) != 0) &&
+              info_ != null &&
+              info_ != org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance()) {
+            info_ =
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Info.newBuilder(info_).mergeFrom(value).buildPartial();
+          } else {
+            info_ = value;
+          }
+          onChanged();
+        } else {
+          infoBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000008;
         return this;
       }
       /**
        * <code>optional .OSMPBF.Info info = 4;</code>
        */
-      public Builder clearInfo() {  copyOnWrite();
-        instance.clearInfo();
+      public Builder clearInfo() {
+        if (infoBuilder_ == null) {
+          info_ = null;
+          onChanged();
+        } else {
+          infoBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
+      /**
+       * <code>optional .OSMPBF.Info info = 4;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder getInfoBuilder() {
+        bitField0_ |= 0x00000008;
+        onChanged();
+        return getInfoFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .OSMPBF.Info info = 4;</code>
+       */
+      public org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder getInfoOrBuilder() {
+        if (infoBuilder_ != null) {
+          return infoBuilder_.getMessageOrBuilder();
+        } else {
+          return info_ == null ?
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Info.getDefaultInstance() : info_;
+        }
+      }
+      /**
+       * <code>optional .OSMPBF.Info info = 4;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.openstreetmap.osmosis.osmbinary.Osmformat.Info, org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder> 
+          getInfoFieldBuilder() {
+        if (infoBuilder_ == null) {
+          infoBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.openstreetmap.osmosis.osmbinary.Osmformat.Info, org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder, org.openstreetmap.osmosis.osmbinary.Osmformat.InfoOrBuilder>(
+                  getInfo(),
+                  getParentForChildren(),
+                  isClean());
+          info_ = null;
+        }
+        return infoBuilder_;
+      }
 
+      private com.google.protobuf.Internal.IntList rolesSid_ = emptyIntList();
+      private void ensureRolesSidIsMutable() {
+        if (!((bitField0_ & 0x00000010) != 0)) {
+          rolesSid_ = mutableCopy(rolesSid_);
+          bitField0_ |= 0x00000010;
+         }
+      }
       /**
        * <pre>
        * Parallel arrays
        * </pre>
        *
        * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+       * @return A list containing the rolesSid.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Integer>
           getRolesSidList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getRolesSidList());
+        return ((bitField0_ & 0x00000010) != 0) ?
+                 java.util.Collections.unmodifiableList(rolesSid_) : rolesSid_;
       }
       /**
        * <pre>
@@ -13624,10 +17409,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+       * @return The count of rolesSid.
        */
-      @java.lang.Override
       public int getRolesSidCount() {
-        return instance.getRolesSidCount();
+        return rolesSid_.size();
       }
       /**
        * <pre>
@@ -13635,10 +17420,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The rolesSid at the given index.
        */
-      @java.lang.Override
       public int getRolesSid(int index) {
-        return instance.getRolesSid(index);
+        return rolesSid_.getInt(index);
       }
       /**
        * <pre>
@@ -13646,11 +17432,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The rolesSid to set.
+       * @return This builder for chaining.
        */
       public Builder setRolesSid(
           int index, int value) {
-        copyOnWrite();
-        instance.setRolesSid(index, value);
+        ensureRolesSidIsMutable();
+        rolesSid_.setInt(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -13659,10 +17449,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+       * @param value The rolesSid to add.
+       * @return This builder for chaining.
        */
       public Builder addRolesSid(int value) {
-        copyOnWrite();
-        instance.addRolesSid(value);
+        ensureRolesSidIsMutable();
+        rolesSid_.addInt(value);
+        onChanged();
         return this;
       }
       /**
@@ -13671,11 +17464,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+       * @param values The rolesSid to add.
+       * @return This builder for chaining.
        */
       public Builder addAllRolesSid(
           java.lang.Iterable<? extends java.lang.Integer> values) {
-        copyOnWrite();
-        instance.addAllRolesSid(values);
+        ensureRolesSidIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, rolesSid_);
+        onChanged();
         return this;
       }
       /**
@@ -13684,25 +17481,34 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated int32 roles_sid = 8 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearRolesSid() {
-        copyOnWrite();
-        instance.clearRolesSid();
+        rolesSid_ = emptyIntList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.Internal.LongList memids_ = emptyLongList();
+      private void ensureMemidsIsMutable() {
+        if (!((bitField0_ & 0x00000020) != 0)) {
+          memids_ = mutableCopy(memids_);
+          bitField0_ |= 0x00000020;
+         }
+      }
       /**
        * <pre>
        * DELTA encoded
        * </pre>
        *
        * <code>repeated sint64 memids = 9 [packed = true];</code>
+       * @return A list containing the memids.
        */
-      @java.lang.Override
       public java.util.List<java.lang.Long>
           getMemidsList() {
-        return java.util.Collections.unmodifiableList(
-            instance.getMemidsList());
+        return ((bitField0_ & 0x00000020) != 0) ?
+                 java.util.Collections.unmodifiableList(memids_) : memids_;
       }
       /**
        * <pre>
@@ -13710,10 +17516,10 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 memids = 9 [packed = true];</code>
+       * @return The count of memids.
        */
-      @java.lang.Override
       public int getMemidsCount() {
-        return instance.getMemidsCount();
+        return memids_.size();
       }
       /**
        * <pre>
@@ -13721,10 +17527,11 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 memids = 9 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The memids at the given index.
        */
-      @java.lang.Override
       public long getMemids(int index) {
-        return instance.getMemids(index);
+        return memids_.getLong(index);
       }
       /**
        * <pre>
@@ -13732,11 +17539,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 memids = 9 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The memids to set.
+       * @return This builder for chaining.
        */
       public Builder setMemids(
           int index, long value) {
-        copyOnWrite();
-        instance.setMemids(index, value);
+        ensureMemidsIsMutable();
+        memids_.setLong(index, value);
+        onChanged();
         return this;
       }
       /**
@@ -13745,10 +17556,13 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 memids = 9 [packed = true];</code>
+       * @param value The memids to add.
+       * @return This builder for chaining.
        */
       public Builder addMemids(long value) {
-        copyOnWrite();
-        instance.addMemids(value);
+        ensureMemidsIsMutable();
+        memids_.addLong(value);
+        onChanged();
         return this;
       }
       /**
@@ -13757,11 +17571,15 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 memids = 9 [packed = true];</code>
+       * @param values The memids to add.
+       * @return This builder for chaining.
        */
       public Builder addAllMemids(
           java.lang.Iterable<? extends java.lang.Long> values) {
-        copyOnWrite();
-        instance.addAllMemids(values);
+        ensureMemidsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, memids_);
+        onChanged();
         return this;
       }
       /**
@@ -13770,339 +17588,343 @@ public final class Osmformat {
        * </pre>
        *
        * <code>repeated sint64 memids = 9 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearMemids() {
-        copyOnWrite();
-        instance.clearMemids();
+        memids_ = emptyLongList();
+        bitField0_ = (bitField0_ & ~0x00000020);
+        onChanged();
         return this;
       }
 
+      private java.util.List<java.lang.Integer> types_ =
+        java.util.Collections.emptyList();
+      private void ensureTypesIsMutable() {
+        if (!((bitField0_ & 0x00000040) != 0)) {
+          types_ = new java.util.ArrayList<java.lang.Integer>(types_);
+          bitField0_ |= 0x00000040;
+        }
+      }
       /**
        * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+       * @return A list containing the types.
        */
-      @java.lang.Override
       public java.util.List<org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType> getTypesList() {
-        return instance.getTypesList();
+        return new com.google.protobuf.Internal.ListAdapter<
+            java.lang.Integer, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType>(types_, types_converter_);
       }
       /**
        * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+       * @return The count of types.
        */
-      @java.lang.Override
       public int getTypesCount() {
-        return instance.getTypesCount();
+        return types_.size();
       }
       /**
        * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+       * @param index The index of the element to return.
+       * @return The types at the given index.
        */
-      @java.lang.Override
       public org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType getTypes(int index) {
-        return instance.getTypes(index);
+        return types_converter_.convert(types_.get(index));
       }
       /**
        * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+       * @param index The index to set the value at.
+       * @param value The types to set.
+       * @return This builder for chaining.
        */
       public Builder setTypes(
           int index, org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType value) {
-        copyOnWrite();
-        instance.setTypes(index, value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureTypesIsMutable();
+        types_.set(index, value.getNumber());
+        onChanged();
         return this;
       }
       /**
        * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+       * @param value The types to add.
+       * @return This builder for chaining.
        */
       public Builder addTypes(org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType value) {
-        copyOnWrite();
-        instance.addTypes(value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureTypesIsMutable();
+        types_.add(value.getNumber());
+        onChanged();
         return this;
       }
       /**
        * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+       * @param values The types to add.
+       * @return This builder for chaining.
        */
       public Builder addAllTypes(
           java.lang.Iterable<? extends org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType> values) {
-        copyOnWrite();
-        instance.addAllTypes(values);  return this;
+        ensureTypesIsMutable();
+        for (org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType value : values) {
+          types_.add(value.getNumber());
+        }
+        onChanged();
+        return this;
       }
       /**
        * <code>repeated .OSMPBF.Relation.MemberType types = 10 [packed = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearTypes() {
-        copyOnWrite();
-        instance.clearTypes();
+        types_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000040);
+        onChanged();
         return this;
       }
+      @java.lang.Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @java.lang.Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
 
       // @@protoc_insertion_point(builder_scope:OSMPBF.Relation)
     }
-    private byte memoizedIsInitialized = 2;
-    @java.lang.Override
-    @java.lang.SuppressWarnings({"unchecked", "fallthrough"})
-    protected final java.lang.Object dynamicMethod(
-        com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-        java.lang.Object arg0, java.lang.Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new org.openstreetmap.osmosis.osmbinary.Osmformat.Relation();
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case IS_INITIALIZED: {
-          byte isInitialized = memoizedIsInitialized;
-          if (isInitialized == 1) return DEFAULT_INSTANCE;
-          if (isInitialized == 0) return null;
-
-          boolean shouldMemoize = ((Boolean) arg0).booleanValue();
-          if (!hasId()) {
-            return null;
-          }
-          return DEFAULT_INSTANCE;
-
-        }
-        case MAKE_IMMUTABLE: {
-          keys_.makeImmutable();
-          vals_.makeImmutable();
-          rolesSid_.makeImmutable();
-          memids_.makeImmutable();
-          types_.makeImmutable();
-          return null;
-        }
-        case VISIT: {
-          Visitor visitor = (Visitor) arg0;
-          org.openstreetmap.osmosis.osmbinary.Osmformat.Relation other = (org.openstreetmap.osmosis.osmbinary.Osmformat.Relation) arg1;
-          id_ = visitor.visitLong(
-              hasId(), id_,
-              other.hasId(), other.id_);
-          keys_= visitor.visitIntList(keys_, other.keys_);
-          vals_= visitor.visitIntList(vals_, other.vals_);
-          info_ = visitor.visitMessage(info_, other.info_);
-          rolesSid_= visitor.visitIntList(rolesSid_, other.rolesSid_);
-          memids_= visitor.visitLongList(memids_, other.memids_);
-          types_= visitor.visitIntList(types_, other.types_);
-          if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-              .INSTANCE) {
-            bitField0_ |= other.bitField0_;
-          }
-          return this;
-        }
-        case MERGE_FROM_STREAM: {
-          com.google.protobuf.CodedInputStream input =
-              (com.google.protobuf.CodedInputStream) arg0;
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-              (com.google.protobuf.ExtensionRegistryLite) arg1;
-          if (extensionRegistry == null) {
-            throw new java.lang.NullPointerException();
-          }
-          try {
-            boolean done = false;
-            while (!done) {
-              int tag = input.readTag();
-              switch (tag) {
-                case 0:
-                  done = true;
-                  break;
-                case 8: {
-                  bitField0_ |= 0x00000001;
-                  id_ = input.readInt64();
-                  break;
-                }
-                case 16: {
-                  if (!keys_.isModifiable()) {
-                    keys_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(keys_);
-                  }
-                  keys_.addInt(input.readUInt32());
-                  break;
-                }
-                case 18: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!keys_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    keys_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(keys_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    keys_.addInt(input.readUInt32());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 24: {
-                  if (!vals_.isModifiable()) {
-                    vals_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(vals_);
-                  }
-                  vals_.addInt(input.readUInt32());
-                  break;
-                }
-                case 26: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!vals_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    vals_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(vals_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    vals_.addInt(input.readUInt32());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 34: {
-                  org.openstreetmap.osmosis.osmbinary.Osmformat.Info.Builder subBuilder = null;
-                  if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                    subBuilder = info_.toBuilder();
-                  }
-                  info_ = input.readMessage(org.openstreetmap.osmosis.osmbinary.Osmformat.Info.parser(), extensionRegistry);
-                  if (subBuilder != null) {
-                    subBuilder.mergeFrom(info_);
-                    info_ = subBuilder.buildPartial();
-                  }
-                  bitField0_ |= 0x00000002;
-                  break;
-                }
-                case 64: {
-                  if (!rolesSid_.isModifiable()) {
-                    rolesSid_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(rolesSid_);
-                  }
-                  rolesSid_.addInt(input.readInt32());
-                  break;
-                }
-                case 66: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!rolesSid_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    rolesSid_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(rolesSid_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    rolesSid_.addInt(input.readInt32());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 72: {
-                  if (!memids_.isModifiable()) {
-                    memids_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(memids_);
-                  }
-                  memids_.addLong(input.readSInt64());
-                  break;
-                }
-                case 74: {
-                  int length = input.readRawVarint32();
-                  int limit = input.pushLimit(length);
-                  if (!memids_.isModifiable() && input.getBytesUntilLimit() > 0) {
-                    memids_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(memids_);
-                  }
-                  while (input.getBytesUntilLimit() > 0) {
-                    memids_.addLong(input.readSInt64());
-                  }
-                  input.popLimit(limit);
-                  break;
-                }
-                case 80: {
-                  if (!types_.isModifiable()) {
-                    types_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(types_);
-                  }
-                  int rawValue = input.readEnum();
-                  org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType value = org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType.forNumber(rawValue);
-                  if (value == null) {
-                    super.mergeVarintField(10, rawValue);
-                  } else {
-                    types_.addInt(rawValue);
-                  }
-                  break;
-                }
-                case 82: {
-                  if (!types_.isModifiable()) {
-                    types_ =
-                        com.google.protobuf.GeneratedMessageLite.mutableCopy(types_);
-                  }
-                  int length = input.readRawVarint32();
-                  int oldLimit = input.pushLimit(length);
-                  while(input.getBytesUntilLimit() > 0) {
-                    int rawValue = input.readEnum();
-                    org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType value = org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType.forNumber(rawValue);
-                    if (value == null) {
-                      super.mergeVarintField(10, rawValue);
-                    } else {
-                      types_.addInt(rawValue);
-                    }
-                  }
-                  input.popLimit(oldLimit);
-                  break;
-                }
-                default: {
-                  if (!parseUnknownField(tag, input)) {
-                    done = true;
-                  }
-                  break;
-                }
-              }
-            }
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            throw new RuntimeException(e.setUnfinishedMessage(this));
-          } catch (java.io.IOException e) {
-            throw new RuntimeException(
-                new com.google.protobuf.InvalidProtocolBufferException(
-                    e.getMessage()).setUnfinishedMessage(this));
-          } finally {
-          }
-        }
-        // fall through
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          com.google.protobuf.Parser<org.openstreetmap.osmosis.osmbinary.Osmformat.Relation> parser = PARSER;
-          if (parser == null) {
-            synchronized (org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.class) {
-              parser = PARSER;
-              if (parser == null) {
-                parser = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-                PARSER = parser;
-              }
-            }
-          }
-          return parser;
-      }
-      case GET_MEMOIZED_IS_INITIALIZED: {
-        return memoizedIsInitialized;
-      }
-      case SET_MEMOIZED_IS_INITIALIZED: {
-        memoizedIsInitialized = (byte) (arg0 == null ? 0 : 1);
-        return null;
-      }
-      }
-      throw new UnsupportedOperationException();
-    }
-
 
     // @@protoc_insertion_point(class_scope:OSMPBF.Relation)
     private static final org.openstreetmap.osmosis.osmbinary.Osmformat.Relation DEFAULT_INSTANCE;
     static {
-      // New instances are implicitly immutable so no need to make
-      // immutable.
-      DEFAULT_INSTANCE = new Relation();
+      DEFAULT_INSTANCE = new org.openstreetmap.osmosis.osmbinary.Osmformat.Relation();
     }
 
     public static org.openstreetmap.osmosis.osmbinary.Osmformat.Relation getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static volatile com.google.protobuf.Parser<Relation> PARSER;
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<Relation>
+        PARSER = new com.google.protobuf.AbstractParser<Relation>() {
+      @java.lang.Override
+      public Relation parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Relation(input, extensionRegistry);
+      }
+    };
 
     public static com.google.protobuf.Parser<Relation> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
+      return PARSER;
     }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Relation> getParserForType() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public org.openstreetmap.osmosis.osmbinary.Osmformat.Relation getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OSMPBF_HeaderBlock_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OSMPBF_HeaderBlock_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OSMPBF_HeaderBBox_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OSMPBF_HeaderBBox_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OSMPBF_PrimitiveBlock_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OSMPBF_PrimitiveBlock_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OSMPBF_PrimitiveGroup_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OSMPBF_PrimitiveGroup_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OSMPBF_StringTable_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OSMPBF_StringTable_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OSMPBF_Info_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OSMPBF_Info_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OSMPBF_DenseInfo_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OSMPBF_DenseInfo_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OSMPBF_ChangeSet_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OSMPBF_ChangeSet_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OSMPBF_Node_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OSMPBF_Node_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OSMPBF_DenseNodes_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OSMPBF_DenseNodes_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OSMPBF_Way_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OSMPBF_Way_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_OSMPBF_Relation_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_OSMPBF_Relation_fieldAccessorTable;
 
+  public static com.google.protobuf.Descriptors.FileDescriptor
+      getDescriptor() {
+    return descriptor;
+  }
+  private static  com.google.protobuf.Descriptors.FileDescriptor
+      descriptor;
   static {
+    java.lang.String[] descriptorData = {
+      "\n!src/main/protobuf/osmformat.proto\022\006OSM" +
+      "PBF\"\207\002\n\013HeaderBlock\022 \n\004bbox\030\001 \001(\0132\022.OSMP" +
+      "BF.HeaderBBox\022\031\n\021required_features\030\004 \003(\t" +
+      "\022\031\n\021optional_features\030\005 \003(\t\022\026\n\016writingpr" +
+      "ogram\030\020 \001(\t\022\016\n\006source\030\021 \001(\t\022%\n\035osmosis_r" +
+      "eplication_timestamp\030  \001(\003\022+\n#osmosis_re" +
+      "plication_sequence_number\030! \001(\003\022$\n\034osmos" +
+      "is_replication_base_url\030\" \001(\t\"F\n\nHeaderB" +
+      "Box\022\014\n\004left\030\001 \002(\022\022\r\n\005right\030\002 \002(\022\022\013\n\003top\030" +
+      "\003 \002(\022\022\016\n\006bottom\030\004 \002(\022\"\322\001\n\016PrimitiveBlock" +
+      "\022(\n\013stringtable\030\001 \002(\0132\023.OSMPBF.StringTab" +
+      "le\022.\n\016primitivegroup\030\002 \003(\0132\026.OSMPBF.Prim" +
+      "itiveGroup\022\030\n\013granularity\030\021 \001(\005:\003100\022\025\n\n" +
+      "lat_offset\030\023 \001(\003:\0010\022\025\n\nlon_offset\030\024 \001(\003:" +
+      "\0010\022\036\n\020date_granularity\030\022 \001(\005:\0041000\"\267\001\n\016P" +
+      "rimitiveGroup\022\033\n\005nodes\030\001 \003(\0132\014.OSMPBF.No" +
+      "de\022!\n\005dense\030\002 \001(\0132\022.OSMPBF.DenseNodes\022\031\n" +
+      "\004ways\030\003 \003(\0132\013.OSMPBF.Way\022#\n\trelations\030\004 " +
+      "\003(\0132\020.OSMPBF.Relation\022%\n\nchangesets\030\005 \003(" +
+      "\0132\021.OSMPBF.ChangeSet\"\030\n\013StringTable\022\t\n\001s" +
+      "\030\001 \003(\014\"q\n\004Info\022\023\n\007version\030\001 \001(\005:\002-1\022\021\n\tt" +
+      "imestamp\030\002 \001(\003\022\021\n\tchangeset\030\003 \001(\003\022\013\n\003uid" +
+      "\030\004 \001(\005\022\020\n\010user_sid\030\005 \001(\r\022\017\n\007visible\030\006 \001(" +
+      "\010\"\212\001\n\tDenseInfo\022\023\n\007version\030\001 \003(\005B\002\020\001\022\025\n\t" +
+      "timestamp\030\002 \003(\022B\002\020\001\022\025\n\tchangeset\030\003 \003(\022B\002" +
+      "\020\001\022\017\n\003uid\030\004 \003(\021B\002\020\001\022\024\n\010user_sid\030\005 \003(\021B\002\020" +
+      "\001\022\023\n\007visible\030\006 \003(\010B\002\020\001\"\027\n\tChangeSet\022\n\n\002i" +
+      "d\030\001 \002(\003\"l\n\004Node\022\n\n\002id\030\001 \002(\022\022\020\n\004keys\030\002 \003(" +
+      "\rB\002\020\001\022\020\n\004vals\030\003 \003(\rB\002\020\001\022\032\n\004info\030\004 \001(\0132\014." +
+      "OSMPBF.Info\022\013\n\003lat\030\010 \002(\022\022\013\n\003lon\030\t \002(\022\"{\n" +
+      "\nDenseNodes\022\016\n\002id\030\001 \003(\022B\002\020\001\022$\n\tdenseinfo" +
+      "\030\005 \001(\0132\021.OSMPBF.DenseInfo\022\017\n\003lat\030\010 \003(\022B\002" +
+      "\020\001\022\017\n\003lon\030\t \003(\022B\002\020\001\022\025\n\tkeys_vals\030\n \003(\005B\002" +
+      "\020\001\"\205\001\n\003Way\022\n\n\002id\030\001 \002(\003\022\020\n\004keys\030\002 \003(\rB\002\020\001" +
+      "\022\020\n\004vals\030\003 \003(\rB\002\020\001\022\032\n\004info\030\004 \001(\0132\014.OSMPB" +
+      "F.Info\022\020\n\004refs\030\010 \003(\022B\002\020\001\022\017\n\003lat\030\t \003(\022B\002\020" +
+      "\001\022\017\n\003lon\030\n \003(\022B\002\020\001\"\340\001\n\010Relation\022\n\n\002id\030\001 " +
+      "\002(\003\022\020\n\004keys\030\002 \003(\rB\002\020\001\022\020\n\004vals\030\003 \003(\rB\002\020\001\022" +
+      "\032\n\004info\030\004 \001(\0132\014.OSMPBF.Info\022\025\n\troles_sid" +
+      "\030\010 \003(\005B\002\020\001\022\022\n\006memids\030\t \003(\022B\002\020\001\022.\n\005types\030" +
+      "\n \003(\0162\033.OSMPBF.Relation.MemberTypeB\002\020\001\"-" +
+      "\n\nMemberType\022\010\n\004NODE\020\000\022\007\n\003WAY\020\001\022\014\n\010RELAT" +
+      "ION\020\002B%\n#org.openstreetmap.osmosis.osmbi" +
+      "nary"
+    };
+    descriptor = com.google.protobuf.Descriptors.FileDescriptor
+      .internalBuildGeneratedFileFrom(descriptorData,
+        new com.google.protobuf.Descriptors.FileDescriptor[] {
+        });
+    internal_static_OSMPBF_HeaderBlock_descriptor =
+      getDescriptor().getMessageTypes().get(0);
+    internal_static_OSMPBF_HeaderBlock_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OSMPBF_HeaderBlock_descriptor,
+        new java.lang.String[] { "Bbox", "RequiredFeatures", "OptionalFeatures", "Writingprogram", "Source", "OsmosisReplicationTimestamp", "OsmosisReplicationSequenceNumber", "OsmosisReplicationBaseUrl", });
+    internal_static_OSMPBF_HeaderBBox_descriptor =
+      getDescriptor().getMessageTypes().get(1);
+    internal_static_OSMPBF_HeaderBBox_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OSMPBF_HeaderBBox_descriptor,
+        new java.lang.String[] { "Left", "Right", "Top", "Bottom", });
+    internal_static_OSMPBF_PrimitiveBlock_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_OSMPBF_PrimitiveBlock_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OSMPBF_PrimitiveBlock_descriptor,
+        new java.lang.String[] { "Stringtable", "Primitivegroup", "Granularity", "LatOffset", "LonOffset", "DateGranularity", });
+    internal_static_OSMPBF_PrimitiveGroup_descriptor =
+      getDescriptor().getMessageTypes().get(3);
+    internal_static_OSMPBF_PrimitiveGroup_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OSMPBF_PrimitiveGroup_descriptor,
+        new java.lang.String[] { "Nodes", "Dense", "Ways", "Relations", "Changesets", });
+    internal_static_OSMPBF_StringTable_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_OSMPBF_StringTable_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OSMPBF_StringTable_descriptor,
+        new java.lang.String[] { "S", });
+    internal_static_OSMPBF_Info_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_OSMPBF_Info_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OSMPBF_Info_descriptor,
+        new java.lang.String[] { "Version", "Timestamp", "Changeset", "Uid", "UserSid", "Visible", });
+    internal_static_OSMPBF_DenseInfo_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_OSMPBF_DenseInfo_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OSMPBF_DenseInfo_descriptor,
+        new java.lang.String[] { "Version", "Timestamp", "Changeset", "Uid", "UserSid", "Visible", });
+    internal_static_OSMPBF_ChangeSet_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_OSMPBF_ChangeSet_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OSMPBF_ChangeSet_descriptor,
+        new java.lang.String[] { "Id", });
+    internal_static_OSMPBF_Node_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_OSMPBF_Node_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OSMPBF_Node_descriptor,
+        new java.lang.String[] { "Id", "Keys", "Vals", "Info", "Lat", "Lon", });
+    internal_static_OSMPBF_DenseNodes_descriptor =
+      getDescriptor().getMessageTypes().get(9);
+    internal_static_OSMPBF_DenseNodes_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OSMPBF_DenseNodes_descriptor,
+        new java.lang.String[] { "Id", "Denseinfo", "Lat", "Lon", "KeysVals", });
+    internal_static_OSMPBF_Way_descriptor =
+      getDescriptor().getMessageTypes().get(10);
+    internal_static_OSMPBF_Way_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OSMPBF_Way_descriptor,
+        new java.lang.String[] { "Id", "Keys", "Vals", "Info", "Refs", "Lat", "Lon", });
+    internal_static_OSMPBF_Relation_descriptor =
+      getDescriptor().getMessageTypes().get(11);
+    internal_static_OSMPBF_Relation_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_OSMPBF_Relation_descriptor,
+        new java.lang.String[] { "Id", "Keys", "Vals", "Info", "RolesSid", "Memids", "Types", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
