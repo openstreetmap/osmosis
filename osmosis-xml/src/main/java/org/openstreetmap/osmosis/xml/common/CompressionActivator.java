@@ -4,13 +4,13 @@ package org.openstreetmap.osmosis.xml.common;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.core.util.MultiMemberGZIPInputStream;
 
 
 /**
@@ -85,7 +85,7 @@ public class CompressionActivator {
 			}
 			
 			if (CompressionMethod.GZip.equals(compressionMethod)) {
-				return new MultiMemberGZIPInputStream(sourceStream);
+				return new GZIPInputStream(sourceStream);
 			}
 			
 			if (CompressionMethod.BZip2.equals(compressionMethod)) {
