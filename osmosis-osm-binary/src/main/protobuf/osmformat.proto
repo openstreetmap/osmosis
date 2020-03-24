@@ -17,7 +17,7 @@
 
 syntax = "proto2";
 
-option optimize_for = LITE_RUNTIME;
+//option optimize_for = LITE_RUNTIME;
 option java_package = "org.openstreetmap.osmosis.osmbinary";
 package OSMPBF;
 
