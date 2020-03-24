@@ -1,3 +1,6 @@
+Updated protobuf package to 3.11.4 (#58)
+Replaced custom MultiMemberGZIPInputStream with java.util.zip.GZIPInputStream (#59)
+
 0.47.2
 Removed explicit dependency on xerces in favor of JDK version (PR #51)
 Added $gnupgUserDir to Docker setup (PR #56)
