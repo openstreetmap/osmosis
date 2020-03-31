@@ -1,3 +1,5 @@
+Refactored with BaseXMLReader and WorkingTaskManagerFactory classes (#60)
+
 0.47.3 (2020-03-24)
 Updated protobuf package to 3.11.4 (#58)
 Replaced custom MultiMemberGZIPInputStream with java.util.zip.GZIPInputStream (#59)
