@@ -88,6 +88,20 @@ public class TaskRegistrar {
 		loadJPFPlugins();
 	}
 
+	/**
+	 * Loads a plugin manually.
+	 * 
+	 * @param pluginLoader The pluginLoader that you wish to load.
+	 */
+	public void loadPlugin(final PluginLoader pluginLoader) {
+		final Map<String, TaskManagerFactory> pluginTasks = pluginLoader.loadTaskFactories();
+		// register the plugin tasks
+		pluginTasks.entrySet().forEach(task -> {
+			if (!this.factoryRegister.containsTaskType(task.getKey())) {
+				this.factoryRegister.register(task.getKey(), task.getValue());
+			}
+		});
+	}
 
 	private void loadBuiltInPlugins() {
 		final String pluginResourceName = "osmosis-plugins.conf";
