@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<osm version="0.6" generator="Osmosis -SNAPSHOT">
+<osm version="0.6" generator="Osmosis %VERSION%">
   <bounds minlon="6.93615" minlat="51.96035" maxlon="7.01271" maxlat="51.99334" origin="CGImap 0.7.5 (9130 thorn-02.openstreetmap.org)"/>
   <node id="323824770" version="2" timestamp="2009-06-23T20:42:42Z" uid="34927" user="flohoff" changeset="1605873" lat="52.0006667" lon="7.0482493"/>
   <node id="428620081" version="1" timestamp="2009-06-23T20:42:39Z" uid="34927" user="flohoff" changeset="1605873" lat="51.965472" lon="6.9308424"/>
