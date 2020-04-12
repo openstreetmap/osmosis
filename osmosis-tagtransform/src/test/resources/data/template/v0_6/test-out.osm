@@ -20,7 +20,9 @@
     <tag k="crossing" v="toucan"/>
     <tag k="highway" v="crossing"/>
   </node>
-  <way id="4" version="1" timestamp="2007-01-29T08:48:14Z"/>
+  <way id="4" version="1" timestamp="2007-01-29T08:48:14Z">
+    <tag k="highway" v="secondary"/>
+  </way>
   <way id="5" version="1" timestamp="2007-01-29T08:48:14Z">
     <tag k="highway" v="motorway"/>
   </way>
