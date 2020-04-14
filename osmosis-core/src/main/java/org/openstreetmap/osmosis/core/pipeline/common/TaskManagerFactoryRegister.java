@@ -47,6 +47,15 @@ public class TaskManagerFactoryRegister {
 		factoryMap.put(taskType, factory);
 	}
 	
+	/**
+	 * Basic check to see if the factory map contains a task type of not.
+	 * 
+	 * @param taskType The taskType to check for.
+	 * @return True if already contains the taskType.
+	 */
+	public boolean containsTaskType(final String taskType) {
+		return this.factoryMap.containsKey(taskType);
+	}
 	
 	/**
 	 * Get a task manager factory from the register.
