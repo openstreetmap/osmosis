@@ -1,3 +1,5 @@
+Adding ability to use Osmosis as a library with limited functionality (#61)
+
 0.47.4 (2020-04-07)
 Refactored with BaseXMLReader and WorkingTaskManagerFactory classes (#60)
 
