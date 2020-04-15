@@ -14,7 +14,7 @@ import org.openstreetmap.osmosis.core.pipeline.common.TaskConfiguration;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManagerFactory;
 import org.openstreetmap.osmosis.core.pipeline.v0_6.RunnableSourceManager;
-import org.springframework.util.StringUtils;
+import com.google.common.base.Strings;
 
 
 /**
@@ -122,7 +122,7 @@ public class PbfReaderFactory extends TaskManagerFactory {
     private HttpURLConnection getURLConnection(final URL url, final String proxyString,
             final int proxyPort, final int timeout, final int readTimeout) throws IOException {
         Proxy proxy = null;
-        if (!StringUtils.isEmpty(proxyString)) {
+        if (!Strings.isNullOrEmpty(proxyString)) {
             final InetSocketAddress address = new InetSocketAddress(proxyString, proxyPort);
             proxy = new Proxy(Proxy.Type.HTTP, address);
         }
