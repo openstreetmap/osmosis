@@ -18,8 +18,10 @@ import org.openstreetmap.osmosis.core.util.PropertiesPersister;
 public class ReplicationDownloaderConfiguration {
 	private static final String KEY_BASE_URL = "baseUrl";
 	private static final String KEY_MAX_INTERVAL = "maxInterval";
-	
-	
+	private static final String ATTACH_COOKIE = "attachCookie";
+	private static final String COOKIE_STATUS_API = "cookieStatusAPI";
+
+
 	private Properties properties;
 	
 	
@@ -64,5 +66,31 @@ public class ReplicationDownloaderConfiguration {
 	 */
 	public int getMaxInterval() {
 		return Integer.parseInt(properties.getProperty(KEY_MAX_INTERVAL)) * 1000;
+	}
+
+	/**
+	 * Returns whether a cookie stored in cookie.txt should be sent with each request.
+	 *
+	 * @return If a cookie should be send.
+	 */
+	public boolean getAttachCookie() {
+		return Boolean.parseBoolean(properties.getProperty(ATTACH_COOKIE));
+	}
+
+	/**
+	 * Returns the API endpoint to use to check if the cookie is expired.
+	 *
+	 * @return The URL or null if not set.
+	 */
+	public URL getCookieStatusAPI() {
+		String url = properties.getProperty(COOKIE_STATUS_API, null);
+		if (url == null) {
+			return null;
+		}
+		try {
+			return new URL(url);
+		} catch (MalformedURLException e) {
+			throw new OsmosisRuntimeException("Cookie status API URL is malformed.");
+		}
 	}
 }

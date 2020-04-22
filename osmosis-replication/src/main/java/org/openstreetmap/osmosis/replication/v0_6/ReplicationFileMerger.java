@@ -13,7 +13,6 @@ import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.replication.common.FileReplicationStore;
 import org.openstreetmap.osmosis.replication.common.ReplicationState;
 import org.openstreetmap.osmosis.replication.common.ReplicationStore;
-import org.openstreetmap.osmosis.replication.v0_6.impl.ReplicationDownloaderConfiguration;
 import org.openstreetmap.osmosis.replication.v0_6.impl.ReplicationFileMergerConfiguration;
 import org.openstreetmap.osmosis.xml.v0_6.XmlChangeReader;
 import org.openstreetmap.osmosis.xml.v0_6.XmlChangeWriter;
@@ -69,8 +68,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Date calculateMaximumTimestamp(ReplicationDownloaderConfiguration configuration, Date serverTimestamp,
-			Date localTimestamp) {
+	protected Date calculateMaximumTimestamp(Date serverTimestamp, Date localTimestamp) {
 		Date maximumTimestamp;
 		long intervalLength;
 
@@ -78,7 +76,7 @@ public class ReplicationFileMerger extends BaseReplicationDownloader {
 		currentDataState = replicationStore.getCurrentState();
 
 		// Get the default maximum timestamp according to base calculations.
-		maximumTimestamp = super.calculateMaximumTimestamp(configuration, serverTimestamp, localTimestamp);
+		maximumTimestamp = super.calculateMaximumTimestamp(serverTimestamp, localTimestamp);
 
 		// Align the maximum timestamp to an interval boundary.
 		intervalLength = getConfiguration().getIntervalLength();
