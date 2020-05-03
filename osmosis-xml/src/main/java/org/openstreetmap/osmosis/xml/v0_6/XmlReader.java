@@ -9,6 +9,7 @@ import org.openstreetmap.osmosis.xml.v0_6.impl.BaseXMLReader;
 import org.openstreetmap.osmosis.xml.v0_6.impl.OsmHandler;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Collections;
 
 
@@ -33,7 +34,22 @@ public class XmlReader extends BaseXMLReader implements RunnableSource {
 	 *            Specifies the compression method to employ.
 	 */
 	public XmlReader(File file, boolean enableDateParsing, CompressionMethod compressionMethod) {
-        super(file, enableDateParsing, compressionMethod);
+        	super(file, enableDateParsing, compressionMethod);
+	}
+
+	/**
+	 * Creates a new instance.
+	 *
+	 * @param inputStream
+	 *            The input stream to read.
+	 * @param enableDateParsing
+	 *            If true, dates will be parsed from xml data, else the current
+	 *            date will be used thus saving parsing time.
+	 * @param compressionMethod
+	 *            Specifies the compression method to employ.
+	 */
+	public XmlReader(InputStream inputStream, boolean enableDateParsing, CompressionMethod compressionMethod) {
+		super(inputStream, enableDateParsing, compressionMethod);
 	}
 	
 	/**
@@ -48,7 +64,7 @@ public class XmlReader extends BaseXMLReader implements RunnableSource {
 	 */
 	public void run() {
 		try {
-            this.sink.initialize(Collections.emptyMap());
+            this.sink.initialize(Collections.<String, Object>emptyMap());
             this.handleXML(new OsmHandler(this.sink, this.isEnableDateParsing()));
             this.sink.complete();
 		} finally {

@@ -1,6 +1,14 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.xml.v0_6;
 
+import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
+import org.openstreetmap.osmosis.core.task.v0_6.Sink;
+import org.openstreetmap.osmosis.xml.common.CompressionMethod;
+import org.openstreetmap.osmosis.xml.v0_6.impl.FastXmlParser;
+import org.openstreetmap.osmosis.xml.v0_6.impl.BaseXMLReader;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,15 +17,6 @@ import java.util.Collections;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
-import org.openstreetmap.osmosis.core.task.v0_6.Sink;
-
-import org.openstreetmap.osmosis.xml.common.CompressionMethod;
-import org.openstreetmap.osmosis.xml.v0_6.impl.BaseXMLReader;
-import org.openstreetmap.osmosis.xml.v0_6.impl.FastXmlParser;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * An OSM data source reading from an xml file. The entire contents of the file
@@ -43,8 +42,25 @@ public class FastXmlReader extends BaseXMLReader implements RunnableSource {
 	public FastXmlReader(File file, boolean enableDateParsing, CompressionMethod compressionMethod) {
         super(file, enableDateParsing, compressionMethod);
 	}
-		
-	/**
+
+
+    /**
+     * Creates a new instance.
+     *
+     * @param inputStream
+     *            The input stream to read.
+     * @param enableDateParsing
+     *            If true, dates will be parsed from xml data, else the current
+     *            date will be used thus saving parsing time.
+     * @param compressionMethod
+     *            Specifies the compression method to employ.
+     */
+    public FastXmlReader(InputStream inputStream, boolean enableDateParsing, CompressionMethod compressionMethod) {
+        super(inputStream, enableDateParsing, compressionMethod);
+    }
+
+
+    /**
 	 * {@inheritDoc}
 	 */
 	public void setSink(Sink sink) {
@@ -56,7 +72,7 @@ public class FastXmlReader extends BaseXMLReader implements RunnableSource {
 	 */
 	public void run() {
         try {
-            this.sink.initialize(Collections.emptyMap());
+            this.sink.initialize(Collections.<String, Object>emptyMap());
             this.handleXML(null);
             this.sink.complete();
         } finally {

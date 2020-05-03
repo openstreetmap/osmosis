@@ -28,6 +28,9 @@ public abstract class BaseXMLReader {
     private final File file;
     private final boolean enableDateParsing;
     private final CompressionMethod method;
+    private InputStream inputStream;
+    private String inputType;
+    private String fileName;
 
      /**
      * Default Constructor.
@@ -40,6 +43,31 @@ public abstract class BaseXMLReader {
         this.file = file;
         this.enableDateParsing = enableDateParsing;
         this.method = method;
+        this.fileName = file.getName();
+        this.inputType = "file: ";
+    }
+
+     /**
+      * Creates a new instance.
+      *
+      * @param inputStream
+      *            The input stream to read.
+      * @param enableDateParsing
+      *            If true, dates will be parsed from xml data, else the current
+      *            date will be used thus saving parsing time.
+      * @param method
+      *            Specifies the compression method to employ.
+      */
+    public BaseXMLReader(InputStream inputStream, boolean enableDateParsing, CompressionMethod method) {
+        this.enableDateParsing = enableDateParsing;
+        this.method = method;
+        if (inputStream == null) {
+            throw new Error("Null input");
+        }
+        this.file = null;
+        this.inputStream = inputStream;
+        this.fileName = "";
+        this.inputType = "input stream";
     }
 
      /**
@@ -85,7 +113,7 @@ public abstract class BaseXMLReader {
         } catch (SAXException e) {
             throw new OsmosisRuntimeException("Unable to parse XML.", e);
         } catch (IOException e) {
-            throw new OsmosisRuntimeException("Unable to read XML file " + this.file + ".", e);
+            throw new OsmosisRuntimeException("Unable to read XML " + this.inputType + this.fileName + ".", e);
         }
     }
 
@@ -106,14 +134,14 @@ public abstract class BaseXMLReader {
                 fos.write(buffer, 0, length);
             }
         } catch (IOException e) {
-            throw new OsmosisRuntimeException("Unable to unzip gz file " + this.file + ".", e);
+            throw new OsmosisRuntimeException("Unable to unzip gz " + this.inputType + this.fileName + ".", e);
         }
 
          try (InputStream unzippedStream = new FileInputStream(tempFile)) {
             this.parseXML(unzippedStream, handler);
         } catch (final SAXParseException e) {
             throw new OsmosisRuntimeException(
-                "Unable to parse xml file " + this.file
+                "Unable to parse xml " + this.inputType + this.fileName
                         + ".  publicId=(" + e.getPublicId()
                         + "), systemId=(" + e.getSystemId()
                         + "), lineNumber=" + e.getLineNumber()
@@ -122,12 +150,14 @@ public abstract class BaseXMLReader {
         } catch (SAXException e) {
             throw new OsmosisRuntimeException("Unable to parse XML.", e);
         } catch (IOException e) {
-            throw new OsmosisRuntimeException("Unable to read XML file " + this.file + ".", e);
+            throw new OsmosisRuntimeException("Unable to read XML " + this.inputType + this.fileName + ".", e);
         }
     }
 
      private InputStream getInputStream() throws FileNotFoundException {
-        if (this.file.getName().equals("-")) {
+        if (this.fileName.equals("")){
+            return this.inputStream;
+        } else if (this.fileName.equals("-")) {
             return System.in;
         } else {
             return new FileInputStream(this.file);
@@ -135,6 +165,10 @@ public abstract class BaseXMLReader {
     }
 
      private String getTempFilePrefix() {
-        return this.file.getName() + "_" + System.currentTimeMillis();
+        if (fileName.equals("")) {
+            return inputType + "_" + System.currentTimeMillis();
+        } else {
+            return fileName + "_" + System.currentTimeMillis();
+        }
     }
 }

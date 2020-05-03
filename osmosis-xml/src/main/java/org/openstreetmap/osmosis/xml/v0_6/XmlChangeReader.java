@@ -9,6 +9,7 @@ import org.openstreetmap.osmosis.xml.v0_6.impl.BaseXMLReader;
 import org.openstreetmap.osmosis.xml.v0_6.impl.OsmChangeHandler;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Collections;
 
 /**
@@ -36,6 +37,21 @@ public class XmlChangeReader extends BaseXMLReader implements RunnableChangeSour
 	}
 
 	/**
+	 * Creates a new instance.
+	 *
+	 * @param inputStream
+	 *            The input stream to read.
+	 * @param enableDateParsing
+	 *            If true, dates will be parsed from xml data, else the current
+	 *            date will be used thus saving parsing time.
+	 * @param compressionMethod
+	 *            Specifies the compression method to employ.
+	 */
+	public XmlChangeReader(InputStream inputStream, boolean enableDateParsing, CompressionMethod compressionMethod) {
+		super(inputStream, enableDateParsing, compressionMethod);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public void setChangeSink(ChangeSink changeSink) {
@@ -47,7 +63,7 @@ public class XmlChangeReader extends BaseXMLReader implements RunnableChangeSour
 	 */
 	public void run() {
 		try {
-            this.changeSink.initialize(Collections.emptyMap());
+            this.changeSink.initialize(Collections.<String, Object>emptyMap());
             this.handleXML(new OsmChangeHandler(this.changeSink, this.isEnableDateParsing()));
             this.changeSink.complete();    
 		} finally {
