@@ -3,12 +3,15 @@ package org.openstreetmap.osmosis.tagtransform.impl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
+import org.openstreetmap.osmosis.tagtransform.DataSource;
 import org.openstreetmap.osmosis.tagtransform.Matcher;
 import org.openstreetmap.osmosis.tagtransform.Output;
 import org.openstreetmap.osmosis.tagtransform.TTEntityType;
@@ -32,7 +35,7 @@ public class TransformLoader {
 
 			NodeList translationElements = doc.getDocumentElement().getElementsByTagName("translation");
 			for (int i = 0; i < translationElements.getLength(); i++) {
-				Translation t = parseTranslation((Element) translationElements.item(i));
+				Translation t = parseTranslation(file.getParentFile(), (Element) translationElements.item(i));
 				if (t != null) {
 					translations.add(t);
 				}
@@ -44,12 +47,13 @@ public class TransformLoader {
 	}
 
 
-	private Translation parseTranslation(Element element) {
+	private Translation parseTranslation(File parentDir, Element element) {
 		String name = "";
 		String description = "";
 		Matcher matcher = null;
 		Matcher finder = null;
-		List<Output> output = new ArrayList<Output>();
+		List<Output> output = new ArrayList<>();
+	Map<String, DataSource> dataSources = Collections.emptyMap();
 
 		NodeList children = element.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
@@ -66,6 +70,8 @@ public class TransformLoader {
 				matcher = parseMatcher(child);
 			} else if (nodeName.equals("find")) {
 				finder = parseMatcher(child);
+			} else if(nodeName.equals("data")) {
+				dataSources = parseDataSources(parentDir, child);
 			} else if (nodeName.equals("output")) {
 				NodeList outputs = child.getChildNodes();
 				for (int j = 0; j < outputs.getLength(); j++) {
@@ -82,7 +88,7 @@ public class TransformLoader {
 
 		if (matcher != null) {
 			LOG.info("New translation: " + name);
-			return new TranslationImpl(name, description, matcher, finder, output);
+			return new TranslationImpl(name, description, matcher, finder, dataSources, output);
 		} else {
 			return null;
 		}
@@ -101,7 +107,9 @@ public class TransformLoader {
 			String k = child.getAttribute("k");
 			String v = child.getAttribute("v");
 			String m = child.getAttribute("from_match");
-			return new TagOutput(k, v, m);
+			String kd = child.getAttribute("key_datasource");
+			String vd = child.getAttribute("value_datasource");
+			return new TagOutput(k, v, m, kd, vd);
 		}
 		return null;
 	}
@@ -127,10 +135,10 @@ public class TransformLoader {
 			}
 
 			TTEntityType type = getType(matcher.getAttribute("type"));
-			if (matcher.getAttribute("user") != "") {
+			if (matcher.getAttribute("user") != null && !matcher.getAttribute("user").isEmpty()) {
 				uname = matcher.getAttribute("user");
 			}
-			if (matcher.getAttribute("uid") != "") {
+			if (matcher.getAttribute("uid") != null && !matcher.getAttribute("uid").isEmpty()) {
 				uid = Integer.parseInt(matcher.getAttribute("uid"));
 			}
 			String mode;
@@ -158,6 +166,28 @@ public class TransformLoader {
 		return null;
 	}
 
+	private Map<String, DataSource> parseDataSources(File parentDir, Element parent) {
+		NodeList children = parent.getChildNodes();
+		Map<String, DataSource> dataSources = new HashMap<>();
+		for (int i = 0; i < children.getLength(); i++) {
+			if (!(children.item(i) instanceof Element)) {
+				continue;
+			}
+			Element child = (Element) children.item(i);
+			String name = child.getNodeName();
+			if (name.equals("source")) {
+				DataSource ds;
+				String id = child.getAttribute("source_id");
+				try {
+					ds = DataSources.valueOf(child.getAttribute("type")).create(parentDir, child.getAttributes());
+					dataSources.put(id, ds);
+				} catch(IllegalArgumentException ex) {
+					Logger.getLogger(DataSourceCSV.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+		}
+		return dataSources;
+	}
 
 	private TTEntityType getType(String type) {
 		if (type == null || type.isEmpty() || type.equals("all")) {
