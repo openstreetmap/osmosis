@@ -1,5 +1,8 @@
+0.48.0
+Improve replication state handling with single-file steps and custom state (#63)
 Add HTTP to osmosis-pbf2 module (#62)
 Adding ability to use Osmosis as a library with limited functionality (#61)
+Tag-transform can now read a row of data from an external DataSource (#52)
 
 0.47.4 (2020-04-07)
 Refactored with BaseXMLReader and WorkingTaskManagerFactory classes (#60)
