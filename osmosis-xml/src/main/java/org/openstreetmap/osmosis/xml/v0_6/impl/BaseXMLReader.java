@@ -155,7 +155,7 @@ public abstract class BaseXMLReader {
     }
 
      private InputStream getInputStream() throws FileNotFoundException {
-        if (this.fileName.equals("")){
+        if (this.fileName.equals("")) {
             return this.inputStream;
         } else if (this.fileName.equals("-")) {
             return System.in;
