@@ -4,7 +4,7 @@ package org.openstreetmap.osmosis.tagtransform.impl;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-
+import org.openstreetmap.osmosis.tagtransform.DataSource;
 import org.openstreetmap.osmosis.tagtransform.Match;
 import org.openstreetmap.osmosis.tagtransform.Output;
 
@@ -12,7 +12,7 @@ import org.openstreetmap.osmosis.tagtransform.Output;
 public class CopyUnmatched implements Output {
 
 	@Override
-	public void apply(Map<String, String> originalTags, Map<String, String> tags, Collection<Match> matches) {
+	public void apply(Map<String, String> originalTags, Map<String, String> tags, Collection<Match> matches, Map<String, DataSource> dataSources) {
 		// copy the original, then remove the matches
 		Map<String, String> toCopy = new HashMap<String, String>(originalTags);
 		for (Match match : matches) {

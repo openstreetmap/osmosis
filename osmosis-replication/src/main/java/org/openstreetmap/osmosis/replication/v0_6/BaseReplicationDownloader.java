@@ -40,11 +40,13 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 	private static final String LOCK_FILE = "download.lock";
 	private static final String CONFIG_FILE = "configuration.txt";
 	private static final String LOCAL_STATE_FILE = "state.txt";
+	private static final String CUSTOM_SERVER_STATE_FILE = "custom.state.txt";
 	
 	
 	private File workingDirectory;
 	private ReplicationSequenceFormatter sequenceFormatter;
 	private ServerStateReader serverStateReader;
+	private boolean single;
 	
 	
 	/**
@@ -52,12 +54,15 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 	 * 
 	 * @param workingDirectory
 	 *            The directory containing configuration and tracking files.
+	 * @param single
+	 * 			  Set to true if you want to only replicate a single diff file from the server
 	 */
-	public BaseReplicationDownloader(File workingDirectory) {
+	public BaseReplicationDownloader(File workingDirectory, boolean single) {
 		this.workingDirectory = workingDirectory;
 		
 		sequenceFormatter = new ReplicationSequenceFormatter(9, 3);
 		serverStateReader = new ServerStateReader();
+		this.single = single;
 	}
 	
 	
@@ -236,6 +241,12 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			
 			// Update the local state to reflect the file state just processed.
 			localState = fileReplicationState;
+
+			// if single is set to true it means that we only want to get a single replication file
+			// and not up to the current one.
+			if (single) {
+				break;
+			}
 		}
 		
 		return localState;
@@ -251,6 +262,17 @@ public abstract class BaseReplicationDownloader implements RunnableTask {
 			
 			// Instantiate utility objects.
 			configuration = new ReplicationDownloaderConfiguration(new File(workingDirectory, CONFIG_FILE));
+
+			// check for custom server state file
+			File customServerStateFile = new File(workingDirectory, CUSTOM_SERVER_STATE_FILE);
+			if (customServerStateFile.exists()) {
+				serverState = new ReplicationState(new PropertiesPersister(customServerStateFile).loadMap());
+				LOG.info(String.format("Reading custom server state. [%s]", serverState.toString()));
+			} else {
+				// Obtain the server state.
+				serverState = serverStateReader.getServerState(configuration.getBaseUrl());
+				LOG.info(String.format("Reading current server state. [%s]", serverState.toString()));
+			}
 			
 			// Obtain the server state.
 			LOG.fine("Reading current server state.");

@@ -1,6 +1,8 @@
 dependencies {
     compile project(':osmosis-core')
     compile project(':osmosis-xml')
+    compile group: 'org.apache.commons', name: 'commons-csv', version: 1.7
+
     testCompile project(':osmosis-testutil')
 }
 
