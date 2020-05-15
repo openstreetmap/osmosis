@@ -64,7 +64,7 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	private PostgreSqlEntityManager<Way> wayManager;
 	private PostgreSqlEntityManager<Relation> relationManager;
 	private PolygonBuilder polygonBuilder;
-	
+	private boolean logging;
 	
 	/**
 	 * Creates a new instance.
@@ -73,14 +73,19 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 	 *            Contains all information required to connect to the database.
 	 * @param preferences
 	 *            Contains preferences configuring database behaviour.
+	 * @param logging
+	 * 			  Verbose logging directly to the database
 	 */
-	public PostgreSqlDatasetContext(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences) {
+	public PostgreSqlDatasetContext(DatabaseLoginCredentials loginCredentials, 
+					DatabasePreferences preferences, boolean logging) {
 		this.loginCredentials = loginCredentials;
 		this.preferences = preferences;
 		
 		polygonBuilder = new PolygonBuilder();
 		
 		initialized = false;
+
+		this.logging = logging;
 	}
 	
 	
@@ -103,13 +108,13 @@ public class PostgreSqlDatasetContext implements DatasetContext {
 			
 			actionDao = new ActionDao(dbCtx);
 			userDao = new UserDao(dbCtx, actionDao);
-			nodeDao = new NodeDao(dbCtx, actionDao);
-			wayDao = new WayDao(dbCtx, actionDao);
-			relationDao = new RelationDao(dbCtx, actionDao);
+			nodeDao = new NodeDao(dbCtx, actionDao, this.logging);
+			wayDao = new WayDao(dbCtx, actionDao, this.logging);
+			relationDao = new RelationDao(dbCtx, actionDao, this.logging);
 			
-			nodeManager = new PostgreSqlEntityManager<Node>(nodeDao, userDao);
-			wayManager = new PostgreSqlEntityManager<Way>(wayDao, userDao);
-			relationManager = new PostgreSqlEntityManager<Relation>(relationDao, userDao);
+			nodeManager = new PostgreSqlEntityManager<>(nodeDao, userDao);
+			wayManager = new PostgreSqlEntityManager<>(wayDao, userDao);
+			relationManager = new PostgreSqlEntityManager<>(relationDao, userDao);
 		}
 		
 		initialized = true;

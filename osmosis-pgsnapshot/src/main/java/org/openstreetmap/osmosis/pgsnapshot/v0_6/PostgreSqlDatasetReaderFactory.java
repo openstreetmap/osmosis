@@ -21,16 +21,11 @@ public class PostgreSqlDatasetReaderFactory extends DatabaseTaskManagerFactory {
 	 */
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
-		DatabaseLoginCredentials loginCredentials;
-		DatabasePreferences preferences;
-		
-		// Get the task arguments.
-		loginCredentials = getDatabaseLoginCredentials(taskConfig);
-		preferences = getDatabasePreferences(taskConfig);
-		
 		return new RunnableDatasetSourceManager(
 			taskConfig.getId(),
-			new PostgreSqlDatasetReader(loginCredentials, preferences),
+			new PostgreSqlDatasetReader(
+				getDatabaseLoginCredentials(taskConfig), 
+				getDatabasePreferences(taskConfig)),
 			taskConfig.getPipeArgs()
 		);
 	}

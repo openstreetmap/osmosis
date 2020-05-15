@@ -18,27 +18,24 @@ public class PostgreSqlChangeWriterFactory extends DatabaseTaskManagerFactory {
 	
 	private static final String ARG_KEEP_INVALID_WAYS = "keepInvalidWays";
 	private static final boolean DEFAULT_KEEP_INVALID_WAYS = true;
+	private static final String ARG_LOGGING = "logging";
+	private static final boolean DEFAULT_LOGGING = false;
 	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
-		DatabaseLoginCredentials loginCredentials;
-		DatabasePreferences preferences;
-		
-		// Get the task arguments.
-		loginCredentials = getDatabaseLoginCredentials(taskConfig);
-		preferences = getDatabasePreferences(taskConfig);
-		
 		boolean keepInvalidWays = getBooleanArgument(taskConfig, ARG_KEEP_INVALID_WAYS, DEFAULT_KEEP_INVALID_WAYS);
+		boolean logging = getBooleanArgument(taskConfig, ARG_LOGGING, DEFAULT_LOGGING);
 		
 		return new ChangeSinkManager(
 			taskConfig.getId(),
 			new PostgreSqlChangeWriter(
-				loginCredentials,
-				preferences,
-				keepInvalidWays
+				getDatabaseLoginCredentials(taskConfig),
+				getDatabasePreferences(taskConfig),
+				keepInvalidWays,
+				logging
 			),
 			taskConfig.getPipeArgs()
 		);

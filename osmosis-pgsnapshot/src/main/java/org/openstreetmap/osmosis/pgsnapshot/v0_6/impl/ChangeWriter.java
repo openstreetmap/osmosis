@@ -42,15 +42,17 @@ public class ChangeWriter {
 	 * 
 	 * @param dbCtx
 	 *            The database context to use for accessing the database.
+	 * @param logging
+	 * 			  Verbose logging directly to the database
 	 */
-	public ChangeWriter(DatabaseContext dbCtx) {
+	public ChangeWriter(DatabaseContext dbCtx, boolean logging) {
 		this.dbCtx = dbCtx;
 		
 		actionDao = new ActionDao(dbCtx);
 		userDao = new UserDao(dbCtx, actionDao);
-		nodeDao = new NodeDao(dbCtx, actionDao);
-		wayDao = new WayDao(dbCtx, actionDao);
-		relationDao = new RelationDao(dbCtx, actionDao);
+		nodeDao = new NodeDao(dbCtx, actionDao, logging);
+		wayDao = new WayDao(dbCtx, actionDao, logging);
+		relationDao = new RelationDao(dbCtx, actionDao, logging);
 		
 		userSet = new HashSet<Integer>();
 	}

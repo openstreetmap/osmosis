@@ -40,9 +40,11 @@ public class RelationDao extends EntityDao<Relation> {
 	 *            The database context to use for accessing the database.
 	 * @param actionDao
 	 *            The dao to use for adding action records to the database.
+	 * @param logging
+	 * 			  Verbose logging directly to the database
 	 */
-	public RelationDao(DatabaseContext dbCtx, ActionDao actionDao) {
-		super(dbCtx.getJdbcTemplate(), new RelationMapper(), actionDao);
+	public RelationDao(DatabaseContext dbCtx, ActionDao actionDao, boolean logging) {
+		super(dbCtx.getJdbcTemplate(), new RelationMapper(), actionDao, logging);
 		
 		jdbcTemplate = dbCtx.getJdbcTemplate();
 		relationMemberMapper = new RelationMemberMapper();

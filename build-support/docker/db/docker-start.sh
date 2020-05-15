@@ -53,6 +53,7 @@ if [ ! "$(ls -A $DATADIR)" ]; then
 		\i /install/script/pgsnapshot_schema_0.6_action.sql
 		\i /install/script/pgsnapshot_schema_0.6_bbox.sql
 		\i /install/script/pgsnapshot_schema_0.6_linestring.sql
+		\i /install/script/pgsnapshot_schema_0.6_changes.sql
 	EOSQL
 
 	# Configure the pgosmsnap06_test_with_schema database as the OSM user.
@@ -65,6 +66,7 @@ if [ ! "$(ls -A $DATADIR)" ]; then
 		\i /install/script/pgsnapshot_schema_0.6_action.sql
 		\i /install/script/pgsnapshot_schema_0.6_bbox.sql
 		\i /install/script/pgsnapshot_schema_0.6_linestring.sql
+		\i /install/script/pgsnapshot_schema_0.6_changes.sql
 	EOSQL
 
 	# Configure the api06_test database as the OSM user.

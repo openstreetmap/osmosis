@@ -26,14 +26,9 @@ public class PostgreSqlCopyWriterFactory extends DatabaseTaskManagerFactory {
 	 */
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
-		DatabaseLoginCredentials loginCredentials;
-		DatabasePreferences preferences;
 		NodeLocationStoreType storeType;
 		boolean keepInvalidWays;
-		
-		// Get the task arguments.
-		loginCredentials = getDatabaseLoginCredentials(taskConfig);
-		preferences = getDatabasePreferences(taskConfig);
+
 		storeType = Enum.valueOf(
 				NodeLocationStoreType.class,
 				getStringArgument(taskConfig, ARG_NODE_LOCATION_STORE_TYPE, DEFAULT_NODE_LOCATION_STORE_TYPE));
@@ -41,7 +36,11 @@ public class PostgreSqlCopyWriterFactory extends DatabaseTaskManagerFactory {
 		
 		return new SinkManager(
 			taskConfig.getId(),
-			new PostgreSqlCopyWriter(loginCredentials, preferences,	storeType, keepInvalidWays),
+			new PostgreSqlCopyWriter(
+				getDatabaseLoginCredentials(taskConfig), 
+				getDatabasePreferences(taskConfig),	
+				storeType, 
+				keepInvalidWays),
 			taskConfig.getPipeArgs()
 		);
 	}
