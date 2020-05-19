@@ -1,5 +1,10 @@
+:toc: macro
+:toclevels: 4
+
 This page describes the complete set of command line options available
 for the Osmosis tool.
+
+toc::[]
 
 Global Options
 ~~~~~~~~~~~~~~
