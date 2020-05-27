@@ -6,8 +6,7 @@ for the Osmosis tool.
 
 toc::[]
 
-Global Options
-~~~~~~~~~~~~~~
+== Global Options
 
 [cols=",,",options="header",]
 |=======================================================================
@@ -28,8 +27,7 @@ interface. This option may be specified multiple times to load multiple
 plugins.
 |=======================================================================
 
-Default Arguments
-~~~~~~~~~~~~~~~~~
+== Default Arguments
 
 Some tasks can accept un-named or "default" arguments. In the tasks
 description, the argument name will be followed by "(default)".
@@ -45,24 +43,21 @@ osmosis --read-xml file=myfile.osm --write-null
 osmosis --read-xml myfile.osm --write-null
 ....
 
-Built-In Tasks
-~~~~~~~~~~~~~~
+== Built-In Tasks
 
 All tasks default to 0.6 versions from release 0.31 onwards.
 
 0.6 tasks were first introduced in release 0.30. 0.5 tasks were dropped
 as of version 0.36. 0.4 tasks were dropped as of version 0.22.
 
-API Database Tasks
-^^^^^^^^^^^^^^^^^^
+=== API Database Tasks
 
 The tasks are to be used with the schema that backs the OSM API. These
 tasks support the 0.6 database only, and support both PostgreSQL and
 MySQL variants. It is highly recommended to use PostgreSQL due to the
 better testing it receives.
 
---read-apidb (--rd)
-+++++++++++++++++++
+==== --read-apidb (--rd)
 
 Reads the contents of an API database at a specific point in time.
 
@@ -103,8 +98,7 @@ and user information will be attached to every entity. |yes, no |no
 snapshot. |format is "yyyy-MM-dd_HH:mm:ss" |(now)
 |=======================================================================
 
---read-apidb-current (--rdcur)
-++++++++++++++++++++++++++++++
+==== --read-apidb-current (--rdcur)
 
 Reads the current contents of an API database. Note that this task
 cannot be used as a starting point for replication because it does not
@@ -144,8 +138,7 @@ option is no, an error is displayed and the program aborts. |yes, no
 and user information will be attached to every entity. |yes, no |no
 |=======================================================================
 
---write-apidb (--wd)
-++++++++++++++++++++
+==== --write-apidb (--wd)
 
 Populates an empty API database.
 
@@ -190,8 +183,7 @@ tables are required, this reduces the import time by approximately 80%.
 |yes, no |yes
 |=======================================================================
 
---read-apidb-change (--rdc)
-+++++++++++++++++++++++++++
+==== --read-apidb-change (--rdc)
 
 Reads the changes for a specific time interval from an API database.
 
@@ -243,8 +235,7 @@ be able to be processed by most tools supporting the *.osc file format.
 |yes, no |no
 |=======================================================================
 
---write-apidb-change (--wdc)
-++++++++++++++++++++++++++++
+==== --write-apidb-change (--wdc)
 
 Applies a changeset to an existing populated API database.
 
@@ -283,8 +274,7 @@ populated after the initial history table population. This is useful if
 only history tables were populated during import. |yes, no |yes
 |=======================================================================
 
---truncate-apidb (--td)
-+++++++++++++++++++++++
+==== --truncate-apidb (--td)
 
 Truncates all current and history tables in an API database.
 
@@ -319,15 +309,13 @@ option is no, an error is displayed and the program aborts. |yes, no
 |yes
 |=======================================================================
 
-MySQL Tasks
-^^^^^^^^^^^
+=== MySQL Tasks
 
 The MySQL tasks are to be used with the MySQL schema that backs the OSM
 API. Please note that there are no 0.6 versions of these tasks. Instead,
 they are replaced with the "apidb" tasks.
 
---read-mysql (--rm)
-+++++++++++++++++++
+==== --read-mysql (--rm)
 
 Reads the contents of a MySQL database at a specific point in time.
 
@@ -366,8 +354,7 @@ and user information will be attached to every entity. |yes, no |no
 snapshot. |format is "yyyy-MM-dd_HH:mm:ss" |(now)
 |=======================================================================
 
---read-mysql-current (--rmcur)
-++++++++++++++++++++++++++++++
+==== --read-mysql-current (--rmcur)
 
 Reads the current contents of a MySQL database. Note that this task
 cannot be used as a starting point for replication because it does not
@@ -405,8 +392,7 @@ option is no, an error is displayed and the program aborts. |yes, no
 and user information will be attached to every entity. |yes, no |no
 |=======================================================================
 
---write-mysql (--wm)
-++++++++++++++++++++
+==== --write-mysql (--wm)
 
 Populates an empty MySQL database.
 
@@ -448,8 +434,7 @@ tables are required, this reduces the import time by approximately 80%.
 |yes, no |yes
 |=======================================================================
 
---read-mysql-change (--rmc)
-+++++++++++++++++++++++++++
+==== --read-mysql-change (--rmc)
 
 Reads the changes for a specific time interval from a MySQL database.
 
@@ -499,8 +484,7 @@ be able to be processed by most tools supporting the *.osc file format.
 |yes, no |no
 |=======================================================================
 
---write-mysql-change (--wmc)
-++++++++++++++++++++++++++++
+==== --write-mysql-change (--wmc)
 
 Applies a changeset to an existing populated MySQL database.
 
@@ -537,8 +521,7 @@ populated after the initial history table population. This is useful if
 only history tables were populated during import. |yes, no |yes
 |=======================================================================
 
---truncate-mysql (--tm)
-+++++++++++++++++++++++
+==== --truncate-mysql (--tm)
 
 Truncates all current and history tables in a MySQL database.
 
@@ -571,14 +554,12 @@ option is no, an error is displayed and the program aborts. |yes, no
 |yes
 |=======================================================================
 
-XML Tasks
-^^^^^^^^^
+=== XML Tasks
 
 The xml tasks are used to read and write "osm" data files and "osc"
 changeset files.
 
---read-xml (--rx)
-+++++++++++++++++
+==== --read-xml (--rx)
 
 Reads the current contents of an OSM XML file.
 
@@ -606,16 +587,14 @@ will be automatically determined from the file name (*.gz=gzip,
 *.bz2=bzip2). |auto, none, gzip, bzip2 |auto
 |=======================================================================
 
---fast-read-xml (no short option available)
-+++++++++++++++++++++++++++++++++++++++++++
+==== --fast-read-xml (no short option available)
 
 0.6 only. As per the --read-xml task but using a STAX XML parser instead
 of SAX for improved performance. This has undergone solid testing and
 should be reliable but all xml processing tasks have not yet been
 re-written to use the new implementation thus is not the default yet.
 
---write-xml (--wx)
-++++++++++++++++++
+==== --write-xml (--wx)
 
 Writes data to an OSM XML file.
 
@@ -637,8 +616,7 @@ will be automatically determined from the file name (*.gz=gzip,
 *.bz2=bzip2). |auto, none, gzip, bzip2 |auto
 |=======================================================================
 
---read-xml-change (--rxc)
-+++++++++++++++++++++++++
+==== --read-xml-change (--rxc)
 
 Reads the contents of an OSM XML change file.
 
@@ -666,8 +644,7 @@ will be automatically determined from the file name (*.gz=gzip,
 *.bz2=bzip2). |auto, none, gzip, bzip2 |auto
 |=======================================================================
 
---write-xml-change (--wxc)
-++++++++++++++++++++++++++
+==== --write-xml-change (--wxc)
 
 Writes changes to an OSM XML change file.
 
@@ -689,14 +666,12 @@ will be automatically determined from the file name (*.gz=gzip,
 *.bz2=bzip2). |auto, none, gzip, bzip2 |auto
 |=======================================================================
 
-Area Filtering Tasks
-^^^^^^^^^^^^^^^^^^^^
+=== Area Filtering Tasks
 
 These tasks can be used to retrieve data by filtering based on the
 location of interest.
 
---bounding-box (--bb)
-+++++++++++++++++++++
+==== --bounding-box (--bb)
 
 Extracts data within a specific bounding box defined by lat/lon
 coordinates.
@@ -772,8 +747,7 @@ otherwise they're left intact. |true, false |false
 If both lat/lon and slippy map coordinates are used then lat/lon
 coordinates are overriden by slippy map coordinates.
 
---bounding-polygon (--bp)
-+++++++++++++++++++++++++
+==== --bounding-polygon (--bp)
 
 Extracts data within a polygon defined by series of lat/lon coordinates
 loaded from a polygon file.
@@ -824,14 +798,12 @@ Dynamic |Dynamic
 false |false
 |=======================================================================
 
-Changeset Derivation and Merging
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+=== Changeset Derivation and Merging
 
 These tasks provide the glue between osm and osc files by allowing
 changes to be derived from and merged into osm files.
 
---derive-change (--dc)
-++++++++++++++++++++++
+==== --derive-change (--dc)
 
 Compares two data sources and produces a changeset of the differences.
 
@@ -854,8 +826,7 @@ of the number of entity objects to be stored. An entity corresponds to
 an OSM type such as a node. |positive integers |20
 |=======================================================================
 
---apply-change (--ac)
-+++++++++++++++++++++
+==== --apply-change (--ac)
 
 Applies a change stream to a data stream.
 
@@ -878,15 +849,13 @@ of the number of entity objects to be stored. An entity corresponds to
 an OSM type such as a node. |positive integers |20
 |=======================================================================
 
-Pipeline Control
-^^^^^^^^^^^^^^^^
+=== Pipeline Control
 
 These tasks allow the pipeline structure to be manipulated. These tasks
 do not perform any manipulation of the data flowing through the
 pipeline.
 
---write-null (--wn)
-+++++++++++++++++++
+==== --write-null (--wn)
 
 Discards all input data. This is useful for osmosis performance testing
 and for testing the integrity of input files.
@@ -903,8 +872,7 @@ and for testing the integrity of input files.
 |no arguments | | |
 |================================================
 
---write-null-change (--wnc)
-+++++++++++++++++++++++++++
+==== --write-null-change (--wnc)
 
 Discards all input change data. This is useful for osmosis performance
 testing and for testing the integrity of input files.
@@ -921,8 +889,7 @@ testing and for testing the integrity of input files.
 |no arguments | | |
 |================================================
 
---buffer (--b)
-++++++++++++++
+==== --buffer (--b)
 
 Allows the pipeline processing to be split across multiple threads. The
 thread for the input task will post data into a buffer of fixed capacity
@@ -946,8 +913,7 @@ defined in terms of the number of entity objects to be stored. An entity
 corresponds to an OSM type such as a node. | |100
 |=======================================================================
 
---buffer-change (--bc)
-++++++++++++++++++++++
+==== --buffer-change (--bc)
 
 As per --buffer but for a change stream.
 
@@ -966,8 +932,7 @@ defined in terms of the number of change objects to be stored. A change
 object consists of a single entity with an associated action. | |100
 |=======================================================================
 
---log-progress (--lp)
-+++++++++++++++++++++
+==== --log-progress (--lp)
 
 Logs progress information using jdk logging at info level at regular
 intervals. This can be inserted into the pipeline to allow the progress
@@ -989,8 +954,7 @@ of long running tasks to be tracked.
 prefixed with. | |_empty string_
 |=======================================================================
 
---log-progress-change(--lpc)
-++++++++++++++++++++++++++++
+==== --log-progress-change(--lpc)
 
 Logs progress of a change stream using jdk logging at info level at
 regular intervals. This can be inserted into the pipeline to allow the
@@ -1012,8 +976,7 @@ progress of long running tasks to be tracked.
 prefixed with. | |_empty string_
 |=======================================================================
 
---tee (--t)
-+++++++++++
+==== --tee (--t)
 
 Receives a single stream of data and sends it to multiple destinations.
 This is useful if you wish to read a single source of data and apply
@@ -1039,8 +1002,7 @@ entity stream.
 to. | |2
 |=======================================================================
 
---tee-change (--tc)
-+++++++++++++++++++
+==== --tee-change (--tc)
 
 Receives a single stream of change data and sends it to multiple
 destinations. This is useful if you wish to read a single source of
@@ -1066,8 +1028,7 @@ change stream.
 to. | |2
 |=======================================================================
 
---read-empty (--rem)
-++++++++++++++++++++
+==== --read-empty (--rem)
 
 Produces an empty entity stream. This may be used in conjunction with
 the --merge task to convert a change stream to an entity stream.
@@ -1084,8 +1045,7 @@ the --merge task to convert a change stream to an entity stream.
 |no arguments | | |
 |================================================
 
---ready-empty-change (--remc)
-+++++++++++++++++++++++++++++
+==== --ready-empty-change (--remc)
 
 Produces an empty change stream.
 
@@ -1095,15 +1055,13 @@ Produces an empty change stream.
 |outPipe.0 |Produces a change stream.
 |====================================
 
-Set Manipulation Tasks
-^^^^^^^^^^^^^^^^^^^^^^
+=== Set Manipulation Tasks
 
 These tasks allow bulk operations to be performed which operate on a
 combination of data streams allowing them to be combined or re-arranged
 in some way.
 
---sort (--s)
-++++++++++++
+==== --sort (--s)
 
 Sorts all data in an entity stream according to a specified ordering.
 This uses a file-based merge sort keeping memory usage to a minimum and
@@ -1127,8 +1085,7 @@ contains.
  |TypeThenId
 |=======================================================================
 
---sort-change (--sc)
-++++++++++++++++++++
+==== --sort-change (--sc)
 
 Sorts all data in a change stream according to a specified ordering.
 This uses a file-based merge sort keeping memory usage to a minimum and
@@ -1154,8 +1111,7 @@ without violating referential integrity.
  |streamable
 |=======================================================================
 
---merge (--m)
-+++++++++++++
+==== --merge (--m)
 
 Merges the contents of two data sources together.
 
@@ -1214,8 +1170,7 @@ the output stream.
 emitted to the output stream_. Additionally, the action specified by the
 "boundRemovedAction" keyword argument (see above) is taken.
 
---merge-change (--mc)
-+++++++++++++++++++++
+==== --merge-change (--mc)
 
 Merges the contents of two changesets together.
 
@@ -1243,8 +1198,7 @@ source if both versions are identical.
  |version
 |=======================================================================
 
---append-change (--apc)
-+++++++++++++++++++++++
+==== --append-change (--apc)
 
 Combines multiple change streams into a single change stream. The data
 from each input is consumed in sequence so that the result is a
@@ -1275,8 +1229,7 @@ of the number of entity objects to be stored. An entity corresponds to
 an OSM type such as a node. |positive integers |20
 |=======================================================================
 
---simplify-change (--simc)
-++++++++++++++++++++++++++
+==== --simplify-change (--simc)
 
 Collapses a "full-history" change stream into a "delta" change stream.
 The result of this operation is a change stream guaranteed to contain a
@@ -1299,8 +1252,7 @@ data of the modify operation.
 |N/A | | |
 |================================================
 
---convert-change-to-full-history (--cctfh)
-++++++++++++++++++++++++++++++++++++++++++
+==== --convert-change-to-full-history (--cctfh)
 
 Translates a change stream into a "full-history" stream (an entity
 stream potentially containing multiple entity versions; `visible` is
@@ -1319,14 +1271,12 @@ available in the "meta tags".
 |N/A | | |
 |================================================
 
-Data Manipulation Tasks
-^^^^^^^^^^^^^^^^^^^^^^^
+=== Data Manipulation Tasks
 
 These tasks allow the entities being passed through the pipeline to be
 manipulated.
 
---node-key (--nk)
-+++++++++++++++++
+==== --node-key (--nk)
 
 Given a list of "key" tags, this filter passes on only those nodes that
 have at least one of those tags set.
@@ -1350,8 +1300,7 @@ development branch).
 |keyList |Comma-separated list of desired keys | |N/A
 |====================================================
 
---node-key-value (--nkv)
-++++++++++++++++++++++++
+==== --node-key-value (--nkv)
 
 Given a list of "key.value" tags, this filter passes on only those nodes
 that have at least one of those tags set.
@@ -1379,8 +1328,7 @@ development branch).
 combinations, one per line | |N/A
 |=======================================================================
 
---way-key (--wk)
-++++++++++++++++
+==== --way-key (--wk)
 
 Given a list of "key" tags, this filter passes on only those ways that
 have at least one of those tags set.
@@ -1404,8 +1352,7 @@ branch).
 |keyList |Comma-separated list of desired keys | |N/A
 |====================================================
 
---way-key-value (--wkv)
-+++++++++++++++++++++++
+==== --way-key-value (--wkv)
 
 Given a list of "key.value" tags, this filter passes on only those ways
 that have at least one of those tags set.
@@ -1431,8 +1378,7 @@ passed on unmodified.
 combinations, one per line | |N/A
 |=======================================================================
 
---tag-filter (--tf)
-+++++++++++++++++++
+==== --tag-filter (--tf)
 
 Filters entities based on their type and optionally based on their tags.
 Can accept or reject entities that match the filter specification.
@@ -1542,8 +1488,7 @@ motorways and any nodes referenced by the motorways.
   --wx amenity-and-motorway.osm
 ....
 
---used-node (--un)
-++++++++++++++++++
+==== --used-node (--un)
 
 Restricts output of nodes to those that are used in ways and relations.
 
@@ -1564,8 +1509,7 @@ efficient for all smaller bounding boxes. |BitSet, IdList, Dynamic
 |Dynamic
 |=======================================================================
 
---used-way (--uw)
-+++++++++++++++++
+==== --used-way (--uw)
 
 Restricts output of ways to those that are used in relations.
 
@@ -1586,8 +1530,7 @@ efficient for all smaller bounding boxes. |BitSet, IdList, Dynamic
 |Dynamic
 |=======================================================================
 
---tag-transform (--tt)
-++++++++++++++++++++++
+==== --tag-transform (--tt)
 
 Transform the tags in the input stream according to the rules specified
 in a transform file.
@@ -1611,8 +1554,7 @@ More details are available in the Osmosis/TagTransform documentation.
 | |N/A
 |=======================================================================
 
-PostGIS Tasks (Snapshot Schema)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+=== PostGIS Tasks (Snapshot Schema)
 
 Osmosis provides a PostGIS schema for storing a snapshot of OSM data.
 All geo-spatial aspects of the data are stored using PostGIS geometry
@@ -1645,8 +1587,7 @@ loading the COPY files created by the --write-pgsql-dump task.
 Osmosis_PostGIS_Setup describes a procedure for setting up
 Postgresql/PostGIS for use with osmosis.
 
---write-pgsql (--wp)
-++++++++++++++++++++
+==== --write-pgsql (--wp)
 
 Populates an empty PostGIS database with a "simple" schema. A schema
 creation script is available in the osmosis script directory.
@@ -1707,8 +1648,7 @@ other sources like ways with multiple nodes at the same location, but
 these are not currently detected and will be included. |yes, no |yes
 |=======================================================================
 
---write-pgsql-dump (--wpd)
-++++++++++++++++++++++++++
+==== --write-pgsql-dump (--wpd)
 
 Writes a set of data files suitable for loading a PostGIS database with
 a "simple" schema using COPY statements. A schema creation script is
@@ -1758,8 +1698,7 @@ other sources like ways with multiple nodes at the same location, but
 these are not currently detected and will be included. |yes, no |yes
 |=======================================================================
 
---truncate-pgsql (--tp)
-+++++++++++++++++++++++
+==== --truncate-pgsql (--tp)
 
 Truncates all tables in a PostGIS with a "simple" schema.
 
@@ -1795,8 +1734,7 @@ option is no, an error is displayed and the program aborts. |yes, no
 |yes
 |=======================================================================
 
---read-pgsql (--rp)
-+++++++++++++++++++
+==== --read-pgsql (--rp)
 
 Reads the contents of a PostGIS database with a "simple" schema.
 
@@ -1832,8 +1770,7 @@ option is no, an error is displayed and the program aborts. |yes, no
 |yes
 |=======================================================================
 
---write-pgsql-change (--wpc)
-++++++++++++++++++++++++++++
+==== --write-pgsql-change (--wpc)
 
 Write changes to PostGIS database with "simple" schema.
 
@@ -1876,8 +1813,7 @@ other sources like ways with multiple nodes at the same location, but
 these are not currently detected and will be included. |yes, no |yes
 |=======================================================================
 
-PostGIS Tasks (Simple Schema)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+=== PostGIS Tasks (Simple Schema)
 
 This is effectively an older version of the snapshot schema where tags
 are still stored in separate tags tables instead of hstore columns. It
@@ -1904,8 +1840,7 @@ the COPY files created by the --write-pgsimp-dump task.
 Osmosis_PostGIS_Setup describes a procedure for setting up
 Postgresql/PostGIS for use with osmosis.
 
---write-pgsimp (--ws)
-+++++++++++++++++++++
+==== --write-pgsimp (--ws)
 
 Populates an empty PostGIS database with a "simple" schema. A schema
 creation script is available in the osmosis script directory.
@@ -1956,8 +1891,7 @@ is more efficient for smaller datasets. |"InMemory", "TempFile",
 "CompactTempFile" |"CompactTempFile"
 |=======================================================================
 
---write-pgsimp-dump (--wsd)
-+++++++++++++++++++++++++++
+==== --write-pgsimp-dump (--wsd)
 
 Writes a set of data files suitable for loading a PostGIS database with
 a "simple" schema using COPY statements. A schema creation script is
@@ -2000,8 +1934,7 @@ the default database geometry building implementation, or the
 |"InMemory", "TempFile", "CompactTempFile" |"CompactTempFile"
 |=======================================================================
 
---truncate-pgsimp (--ts)
-++++++++++++++++++++++++
+==== --truncate-pgsimp (--ts)
 
 Truncates all tables in a PostGIS with a "simple" schema.
 
@@ -2034,8 +1967,7 @@ option is no, an error is displayed and the program aborts. |yes, no
 |yes
 |=======================================================================
 
---read-pgsimp (--rs)
-++++++++++++++++++++
+==== --read-pgsimp (--rs)
 
 Reads the contents of a PostGIS database with a "simple" schema.
 
@@ -2068,8 +2000,7 @@ option is no, an error is displayed and the program aborts. |yes, no
 |yes
 |=======================================================================
 
---write-pgsimp-change (--wsc)
-+++++++++++++++++++++++++++++
+==== --write-pgsimp-change (--wsc)
 
 Write changes to PostGIS database with "simple" schema.
 
@@ -2102,14 +2033,12 @@ option is no, an error is displayed and the program aborts. |yes, no
 |yes
 |=======================================================================
 
-API Tasks
-^^^^^^^^^
+=== API Tasks
 
 These tasks provide the ability to interact directly with the OSM API.
 This is the API that is used directly by editors such as JOSM.
 
---read-api (--ra)
-+++++++++++++++++
+==== --read-api (--ra)
 
 Retrieves the contents of a bounding box from the API. This is subject
 to the bounding box size limitations imposed by the API.
@@ -2135,8 +2064,7 @@ to the bounding box size limitations imposed by the API.
 |https://www.openstreetmap.org/api/0.6
 |=======================================================================
 
---upload-xml-change
-+++++++++++++++++++
+==== --upload-xml-change
 
 Uploade a changeset to an existing populated API server via HTTP.
 
@@ -2160,16 +2088,14 @@ Uploade a changeset to an existing populated API server via HTTP.
 |password |The api password. | |argument is required
 |=======================================================================
 
-Dataset Tasks
-^^^^^^^^^^^^^
+=== Dataset Tasks
 
 Dataset tasks are those that act on on the generic dataset interface
 exposed by several data stores. For example the
 link:#PostGIS_Tasks[#PostGIS Tasks]. These tasks allow data queries and
 data manipulation to be performed in a storage method agnostic manner.
 
---dataset-bounding-box (--dbb)
-++++++++++++++++++++++++++++++
+==== --dataset-bounding-box (--dbb)
 
 Extracts data within a specific bounding box defined by lat/lon
 coordinates. This differs from the --bounding-box task in that it
@@ -2198,8 +2124,7 @@ box without having any nodes within that box.
 |completeWays |Include all nodes for all included ways. |yes, no |no
 |====================================================================
 
---dataset-dump (--dd)
-+++++++++++++++++++++
+==== --dataset-dump (--dd)
 
 Converts an entire dataset to an entity stream.
 
@@ -2216,13 +2141,11 @@ Converts an entire dataset to an entity stream.
 |no arguments | | |
 |================================================
 
-Reporting Tasks
-^^^^^^^^^^^^^^^
+=== Reporting Tasks
 
 These tasks provide summaries of data processed by the pipeline.
 
---report-entity (--re)
-++++++++++++++++++++++
+==== --report-entity (--re)
 
 Produces a summary report of each entity type and the users that last
 modified them.
@@ -2239,8 +2162,7 @@ modified them.
 |file (default) |The file to write the report to. | |entity-report.txt
 |=====================================================================
 
---report-integrity (--ri)
-+++++++++++++++++++++++++
+==== --report-integrity (--ri)
 
 Produces a list of the referential integrity issues in the data source.
 
@@ -2257,8 +2179,7 @@ Produces a list of the referential integrity issues in the data source.
 |integrity-report.txt
 |=======================================================================
 
-Replication Tasks
-^^^^^^^^^^^^^^^^^
+=== Replication Tasks
 
 These tasks are used for replicating changes between data stores. They
 typically work with change streams and can therefore be coupled with
@@ -2282,8 +2203,7 @@ not support the "full-history" change files.
 For more technical information related to Osmosis, read
 Osmosis/Replication.
 
---merge-replication-files (--mrf)
-+++++++++++++++++++++++++++++++++
+==== --merge-replication-files (--mrf)
 
 Retrieves a set of replication files named by replication sequence
 number from a server, combines them into larger time intervals, sorts
@@ -2306,8 +2226,7 @@ The changes produced by this task are full-history changes.
 config files. | |(current directory)
 |=======================================================================
 
---merge-replication-files-init (--mrfi)
-+++++++++++++++++++++++++++++++++++++++
+==== --merge-replication-files-init (--mrfi)
 
 Initialises a working directory to contain files necessary for use by
 the --merge-replication-files task. This task must be run once to create
@@ -2345,8 +2264,7 @@ https://replicate-sequences.osm.mazdermind.de/[replicate-sequences] tool
 to find a matching file. Take one at least an hour earlier than your
 start date to avoid missing changes.
 
---read-change-interval (--rci)
-++++++++++++++++++++++++++++++
+==== --read-change-interval (--rci)
 
 Retrieves a set of change files named by date from a server, merges them
 into a single stream, and tracks the current timestamp.
@@ -2367,8 +2285,7 @@ on source data).
 config files. | |(current directory)
 |=======================================================================
 
---read-change-interval-init (--rcii)
-++++++++++++++++++++++++++++++++++++
+==== --read-change-interval-init (--rcii)
 
 Initialises a working directory to contain files necessary for use by
 the --read-change-interval task. This task must be run once to create
@@ -2393,8 +2310,7 @@ unlike most tasks accepting dates, this date is specified in UTC.
 |format is "yyyy-MM-dd_HH:mm:ss" |N/A
 |=======================================================================
 
---read-replication-interval (--rri)
-+++++++++++++++++++++++++++++++++++
+==== --read-replication-interval (--rri)
 
 Retrieves a set of replication files named by replication sequence
 number from a server, combines them into a single stream, sorts the
@@ -2419,8 +2335,7 @@ config files. | |(current directory)
 in a single invocation. | |3600
 |=======================================================================
 
---read-replication-interval-init (--rrii)
-+++++++++++++++++++++++++++++++++++++++++
+==== --read-replication-interval-init (--rrii)
 
 Initialises a working directory to contain files necessary for use by
 the --read-replication-interval task. This task must be run once to
@@ -2456,8 +2371,7 @@ http://toolserver.org/~mazder/replicate-sequences/[replicate-sequences]
 tool to find a matching file. Take one at least an hour earlier than
 your start date to avoid missing changes.
 
---read-replication-lag (--rrl)
-++++++++++++++++++++++++++++++
+==== --read-replication-lag (--rrl)
 
 This Task takes the state.txt in an replication working directory and
 compares its timestamp (that's the timestamp of the last chunk of that
@@ -2487,8 +2401,7 @@ config files. | |(current directory)
 |yes, no |no
 |=======================================================================
 
---receive-replication (--rr)
-++++++++++++++++++++++++++++
+==== --receive-replication (--rr)
 
 Reads a replication data feed from a HTTP server typically served by the
 --send-replication-data task. It directly passes the data through a
@@ -2526,8 +2439,7 @@ is mapping the URL into a child path. In that case the path would
 typically be "replication". | |
 |=======================================================================
 
---replicate-apidb (--repa)
-++++++++++++++++++++++++++
+==== --replicate-apidb (--repa)
 
 This task provides replication files for consumers to download. It is
 primarily run against the production API database with the results made
@@ -2590,8 +2502,7 @@ high. Note that an interval may still exceed this value due to the time
 taken to process an interval. | |0
 |=======================================================================
 
---replication-to-change (--rtc)
-+++++++++++++++++++++++++++++++
+==== --replication-to-change (--rtc)
 
 Converts a replication stream to a standard change stream. A replication
 stream uses the final sink task to store state, so this task tracks
@@ -2621,8 +2532,7 @@ previous data.
 |(current directory)
 |=======================================================================
 
---send-replication-sequence (--srs)
-+++++++++++++++++++++++++++++++++++
+==== --send-replication-sequence (--srs)
 
 Exposes a HTTP server that sends replication sequence numbers to
 attached clients notifying them when new replication data is available.
@@ -2671,8 +2581,7 @@ Available since Osmosis 0.41.
 dynamically allocate a port). | |0
 |=======================================================================
 
---send-replication-data (--srd)
-+++++++++++++++++++++++++++++++
+==== --send-replication-data (--srd)
 
 Exposes a HTTP server that sends replication data to attached clients
 available avoiding the need for client-side polling. The data is sent in
@@ -2750,8 +2659,7 @@ allocate a port). | |0
 will be used to obtain updated sequence numbers. | |80
 |=======================================================================
 
---write-replication (--wr)
-++++++++++++++++++++++++++
+==== --write-replication (--wr)
 
 Persists a replication stream into a replication data directory. It is
 typically used to produce the sequenced compressed XML and state files
@@ -2778,14 +2686,12 @@ result, and tracks the current timestamp. Available since osmosis 0.41
 files. | |(current directory)
 |=======================================================================
 
-PBF Binary Tasks
-^^^^^^^^^^^^^^^^
+=== PBF Binary Tasks
 
 The binary tasks are used to read and write binary PBF (Google Protocol
 Buffer) files.
 
---read-pbf (--rb)
-+++++++++++++++++
+==== --read-pbf (--rb)
 
 Reads the current contents of an OSM binary file.
 
@@ -2801,8 +2707,7 @@ Reads the current contents of an OSM binary file.
 |file (default) |The name of the file to be read. | |dump.osmbin
 |===============================================================
 
---read-pbf-fast (--rbf)
-+++++++++++++++++++++++
+==== --read-pbf-fast (--rbf)
 
 Reads the current contents of an OSM binary file. This is the same as
 the standard --read-pbf task except that it allows multiple worker
@@ -2823,8 +2728,7 @@ HTTP/HTTPS URL of remote file |dump.osm.pbf
 |workers |The number of worker threads to use. |>= 1 |1
 |=======================================================================
 
---write-pbf (--wb)
-++++++++++++++++++
+==== --write-pbf (--wb)
 
 Writes data to an OSM binary file.
 
@@ -2869,8 +2773,7 @@ disables compression. These files are about twice as fast to write and
 twice the size. |deflate, none |deflate
 |=======================================================================
 
-Plugin Tasks
-~~~~~~~~~~~~
+== Plugin Tasks
 
 The following tasks are contained in plugins.
 
@@ -2891,8 +2794,7 @@ Einstellungen\\(Username)\\Anwendungsdaten\\Openstreetmap\\Osmosis\\Plugins"
 
 To write your own plugins, see Osmosis/WritingPlugins.
 
---write-osmbin-0.6
-^^^^^^^^^^^^^^^^^^
+=== --write-osmbin-0.6
 
 Write to a directory in link:OSMbin(file_format)#version_1.0[Osmbin
 version 1.0]
@@ -2928,8 +2830,7 @@ org.openstreetmap.osmosis.core.Osmosis --read-xml
 file="../Desktop/hamburg.osm.bz2" --write-osmbin-0.6
 dir="../osmbin-map"_
 
---dataset-osmbin-0.6
-^^^^^^^^^^^^^^^^^^^^
+=== --dataset-osmbin-0.6
 
 Read and write from/to a directory in
 link:OSMbin(file_format)#version_1.0[Osmbin version 1.0] and provide
@@ -2969,8 +2870,7 @@ org.openstreetmap.osmosis.core.Osmosis --read-xml
 file="../Desktop/hamburg.osm.bz2" --dataset-osmbin-0.6
 dir="../osmbin-map"_
 
---reindex-osmbin-0.6
-^^^^^^^^^^^^^^^^^^^^
+=== --reindex-osmbin-0.6
 
 Recreate the .idx -filed for a directory in
 link:OSMbin(file_format)#version_1.0[Osmbin version 1.0]
@@ -2994,8 +2894,7 @@ org.openstreetmap.osm.data.osmbin.v1_0.OsmBinV10Reindexer
 directory-name. |none
 |=======================================================================
 
---read-osmbin-0.6
-^^^^^^^^^^^^^^^^^
+=== --read-osmbin-0.6
 
 Read from a directory in link:OSMbin(file_format)#version_1.0[Osmbin
 version 1.0] -format.
@@ -3019,8 +2918,7 @@ Salesman on Sourceforge]
 directory-name. |none
 |=======================================================================
 
---induce-ways-for-turnrestrictions (-iwtt)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+=== --induce-ways-for-turnrestrictions (-iwtt)
 
 Convert all intersections with Relation:restriction[turn-restrictions]
 from a node into an equivalent number of oneway-streets that can only be
@@ -3042,8 +2940,7 @@ download:
 https://sourceforge.net/project/showfiles.php?group_id=203597&package_id=307161[Traveling
 Salesman on Sourceforge]
 
---simplify
-^^^^^^^^^^
+=== --simplify
 
 The simplify plugin filters to drop some elements in order to simplify
 the data. Currently it does one extremely crude form of simplification.
@@ -3063,8 +2960,7 @@ https://svn.openstreetmap.org/applications/utils/osmosis/plugins/simplify/README
 
 The current simplify task takes no options
 
-Database Login Credentials
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+== Database Login Credentials
 
 All database tasks accept a minimum of four arguments, these are:
 
@@ -3094,8 +2990,7 @@ on the command line separately.
 Command line arguments override the authFile parameters, which in turn
 override the default argument values.
 
-Munin Plugin
-~~~~~~~~~~~~
+== Munin Plugin
 
 Together with the --read-replication-lag-Task Osmosis 0.36 contains a
 http://munin-monitoring.org/[munin] plugin that graphs the replication
@@ -3114,5 +3009,3 @@ instructions:
 5.  edit "/etc/munin/plugin-conf.d/osm-replication.conf" and set the
 workingDirectory
 6.  restart the munin-node
-
-Category:Osmosis
