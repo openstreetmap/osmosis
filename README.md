@@ -29,7 +29,7 @@ for any updates.
 
 * [The project wiki page](http://wiki.openstreetmap.org/wiki/Osmosis) is the best
 place to begin for new users.
-* [Detailed Usage](./doc/usage.adoc) is the main reference for experienced users.
+* [Detailed Usage](./doc/detailed-usage.adoc) is the main reference for experienced users.
 
 ## Installation
 
