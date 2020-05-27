@@ -25,6 +25,10 @@ and transitioned to periodic acceptance of pull requests with tests and minor ve
 Keep an eye on [osmosis-dev list](https://lists.openstreetmap.org/listinfo/osmosis-dev)
 for any updates.
 
+## Usage
+
+* [Detailed Usage](./doc/usage.adoc) - Full details of all tasks and their options.
+
 ## Installation
 
 It is recommended to use a pre-built distribution archive rather than compile
