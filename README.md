@@ -13,9 +13,9 @@ file, components for deriving and applying change sets to data sources,
 components for sorting data, etc. It has been written so that it is easy to add
 new features without re-writing common tasks such as file or database handling.
 
-Some brief build, running and installation notes are provided below, however
-most documentation may be found on
-[the project wiki page](http://wiki.openstreetmap.org/wiki/Osmosis).
+The main point of entry for documentation is
+[the project wiki page](http://wiki.openstreetmap.org/wiki/Osmosis), although
+some information is included below.
 
 ## Status
 
@@ -27,7 +27,9 @@ for any updates.
 
 ## Usage
 
-* [Detailed Usage](./doc/usage.adoc) - Full details of all tasks and their options.
+* [The project wiki page](http://wiki.openstreetmap.org/wiki/Osmosis) is the best
+place to begin for new users.
+* [Detailed Usage](./doc/usage.adoc) is the main reference for experienced users.
 
 ## Installation
 
