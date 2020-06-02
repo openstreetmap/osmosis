@@ -1,8 +1,6 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6;
 
-import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
-import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.database.DatabaseTaskManagerFactory;
 import org.openstreetmap.osmosis.pgsnapshot.common.NodeLocationStoreType;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskConfiguration;
@@ -26,14 +24,9 @@ public class PostgreSqlCopyWriterFactory extends DatabaseTaskManagerFactory {
 	 */
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
-		DatabaseLoginCredentials loginCredentials;
-		DatabasePreferences preferences;
 		NodeLocationStoreType storeType;
 		boolean keepInvalidWays;
-		
-		// Get the task arguments.
-		loginCredentials = getDatabaseLoginCredentials(taskConfig);
-		preferences = getDatabasePreferences(taskConfig);
+
 		storeType = Enum.valueOf(
 				NodeLocationStoreType.class,
 				getStringArgument(taskConfig, ARG_NODE_LOCATION_STORE_TYPE, DEFAULT_NODE_LOCATION_STORE_TYPE));
@@ -41,7 +34,11 @@ public class PostgreSqlCopyWriterFactory extends DatabaseTaskManagerFactory {
 		
 		return new SinkManager(
 			taskConfig.getId(),
-			new PostgreSqlCopyWriter(loginCredentials, preferences,	storeType, keepInvalidWays),
+			new PostgreSqlCopyWriter(
+				getDatabaseLoginCredentials(taskConfig), 
+				getDatabasePreferences(taskConfig),	
+				storeType, 
+				keepInvalidWays),
 			taskConfig.getPipeArgs()
 		);
 	}

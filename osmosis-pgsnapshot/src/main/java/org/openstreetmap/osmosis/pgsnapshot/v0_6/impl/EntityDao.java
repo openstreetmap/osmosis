@@ -1,9 +1,11 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.openstreetmap.osmosis.core.database.FeaturePopulator;
 import org.openstreetmap.osmosis.core.database.SortingStoreRowMapperListener;
@@ -35,6 +37,7 @@ public abstract class EntityDao<T extends Entity> {
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	private ActionDao actionDao;
 	private EntityMapper<T> entityMapper;
+	private boolean logging = false;
 	
 	
 	/**
@@ -46,12 +49,16 @@ public abstract class EntityDao<T extends Entity> {
 	 *            Provides entity type specific JDBC support.
 	 * @param actionDao
 	 *            The dao to use for adding action records to the database.
+	 * @param logging
+	 * 			  Verbose logging directly to the database
 	 */
-	protected EntityDao(JdbcTemplate jdbcTemplate, EntityMapper<T> entityMapper, ActionDao actionDao) {
+	protected EntityDao(JdbcTemplate jdbcTemplate, EntityMapper<T> entityMapper, 
+					ActionDao actionDao, boolean logging) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 		this.entityMapper = entityMapper;
 		this.actionDao = actionDao;
+		this.logging = logging;
 	}
 	
 	
@@ -111,7 +118,9 @@ public abstract class EntityDao<T extends Entity> {
 		args = new HashMap<String, Object>();
 		entityMapper.populateEntityParameters(args, entity);
 		
-		namedParameterJdbcTemplate.update(entityMapper.getSqlInsert(1), args);
+		final String query = entityMapper.getSqlInsert(1);
+		namedParameterJdbcTemplate.update(query, args);
+		this.updateLoggingTable(query, args, 0);
 		
 		actionDao.addAction(entityMapper.getEntityType(), ChangesetAction.CREATE, entity.getId());
 	}
@@ -129,7 +138,9 @@ public abstract class EntityDao<T extends Entity> {
 		args = new HashMap<String, Object>();
 		entityMapper.populateEntityParameters(args, entity);
 		
-		namedParameterJdbcTemplate.update(entityMapper.getSqlUpdate(true), args);
+		final String query = entityMapper.getSqlUpdate(true);
+		namedParameterJdbcTemplate.update(query, args);
+		this.updateLoggingTable(query, args, 1);
 		
 		actionDao.addAction(entityMapper.getEntityType(), ChangesetAction.MODIFY, entity.getId());
 	}
@@ -147,9 +158,28 @@ public abstract class EntityDao<T extends Entity> {
 		args = new HashMap<String, Object>();
 		args.put("id", entityId);
 		
-		namedParameterJdbcTemplate.update(entityMapper.getSqlDelete(true), args);
+		final String query = entityMapper.getSqlDelete(true);
+		namedParameterJdbcTemplate.update(query, args);
+		this.updateLoggingTable(query, args, 2);
 		
 		actionDao.addAction(entityMapper.getEntityType(), ChangesetAction.DELETE, entityId);
+	}
+
+	private void updateLoggingTable(final String query, final Map<String, Object> args, final int action) {
+		if (this.logging) {
+			final Map<String, Object> loggingMap = new HashMap<>(2);
+			loggingMap.put("id", args.getOrDefault("id", -1));
+			loggingMap.put("cid", args.getOrDefault("changesetId", -1));
+			loggingMap.put("cid_time", args.getOrDefault("timestamp", new Date(0)));
+			loggingMap.put("action", action);
+			loggingMap.put("query", query);
+			loggingMap.put("type", entityMapper.getEntityType().getDatabaseValue());
+			loggingMap.put("args", args.entrySet().stream().
+					map(Object::toString).collect(Collectors.joining(",")));
+			namedParameterJdbcTemplate.update(
+					"INSERT INTO sql_changes (entity_id, type, changeset_id, change_time, action, query, arguments) "
+							+ "VALUES (:id, :type, :cid, :cid_time, :action, :query, :args)", loggingMap);
+		}
 	}
 	
 	
