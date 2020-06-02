@@ -1,0 +1,3013 @@
+# Detailed Usage
+
+:toc: macro
+:toclevels: 4
+
+This page describes the complete set of command line options available
+for the Osmosis tool.
+
+toc::[]
+
+== Global Options
+
+[cols=",,",options="header",]
+|=======================================================================
+|Short Option |Long Option |Description
+|-v |-verbose |Specifies that increased logging should be enabled.
+
+|-v x |-verbose x |x is a positive integer specifying the amount of
+increased logging, 0 is equivalent to the -v option alone.
+
+|-q |-quiet |Specifies that reduced logging should be enabled.
+
+|-q x |-quiet x |x is a positive integer specifying the amount of
+increased logging, 0 is equivalent to the -q option alone.
+
+|-p |-plugin |Allows an external plugin to be loaded. is the name of a
+class implementing the com.bretth.osmosis.core.plugin.PluginLoader
+interface. This option may be specified multiple times to load multiple
+plugins.
+|=======================================================================
+
+== Default Arguments
+
+Some tasks can accept un-named or "default" arguments. In the tasks
+description, the argument name will be followed by "(default)".
+
+For example, the --read-xml task has a file argument which may be
+unnamed. The following two command lines are equivalent.
+
+....
+osmosis --read-xml file=myfile.osm --write-null
+....
+
+....
+osmosis --read-xml myfile.osm --write-null
+....
+
+== Built-In Tasks
+
+All tasks default to 0.6 versions from release 0.31 onwards.
+
+0.6 tasks were first introduced in release 0.30. 0.5 tasks were dropped
+as of version 0.36. 0.4 tasks were dropped as of version 0.22.
+
+=== API Database Tasks
+
+The tasks are to be used with the schema that backs the OSM API. These
+tasks support the 0.6 database only, and support both PostgreSQL and
+MySQL variants. It is highly recommended to use PostgreSQL due to the
+better testing it receives.
+
+==== --read-apidb (--rd)
+
+Reads the contents of an API database at a specific point in time.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|dbType |The type of database being used. |postgresql, mysql |postgresql
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |no
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+
+|readAllUsers |If set to yes, the user public edit flag will be ignored
+and user information will be attached to every entity. |yes, no |no
+
+|snapshotInstant |Defines the point in time for which to produce a data
+snapshot. |format is "yyyy-MM-dd_HH:mm:ss" |(now)
+|=======================================================================
+
+==== --read-apidb-current (--rdcur)
+
+Reads the current contents of an API database. Note that this task
+cannot be used as a starting point for replication because it does not
+produce a consistent snapshot.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|dbType |The type of database being used. |postgresql, mysql |postgresql
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+
+|readAllUsers |If set to yes, the user public edit flag will be ignored
+and user information will be attached to every entity. |yes, no |no
+|=======================================================================
+
+==== --write-apidb (--wd)
+
+Populates an empty API database.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|dbType |The type of database being used. (supported in revisions >=
+15078, versions > 3.1) |postgresql, mysql |postgresql
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+
+|lockTables |If yes is specified, tables will be locked during the
+import. This provides measurable performance improvements but prevents
+concurrent queries. |yes, no |yes
+
+|populateCurrentTables |If yes is specified, the current tables will be
+populated after the initial history table population. If only history
+tables are required, this reduces the import time by approximately 80%.
+|yes, no |yes
+|=======================================================================
+
+==== --read-apidb-change (--rdc)
+
+Reads the changes for a specific time interval from an API database.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|outPipe.0 |Produces a change stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|dbType |The type of database being used. |postgresql, mysql |postgresql
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+
+|readAllUsers |If set to yes, the user public edit flag will be ignored
+and user information will be attached to every entity. |yes, no |no
+
+|intervalBegin |Defines the beginning of the interval for which to
+produce a change set. |format is "yyyy-MM-dd_HH:mm:ss" |(1970)
+
+|intervalEnd |Defines the end of the interval for which to produce a
+change set. |format is "yyyy-MM-dd_HH:mm:ss" |(now)
+
+|readFullHistory |0.6 only. If set to yes, complete history for the
+specified time interval is produced instead of a single change per
+entity modified in that interval. This is not useful for standard
+changesets, it is useful if a database replica with full history is
+being produced. Change files produced using this option will likely not
+be able to be processed by most tools supporting the *.osc file format.
+|yes, no |no
+|=======================================================================
+
+==== --write-apidb-change (--wdc)
+
+Applies a changeset to an existing populated API database.
+
+[cols=",",options="header",]
+|===================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream.
+|===================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|dbType |The type of database being used. |postgresql, mysql |postgresql
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+
+|populateCurrentTables |If yes is specified, the current tables will be
+populated after the initial history table population. This is useful if
+only history tables were populated during import. |yes, no |yes
+|=======================================================================
+
+==== --truncate-apidb (--td)
+
+Truncates all current and history tables in an API database.
+
+[cols=",",options="header",]
+|=================
+|Pipe |Description
+|no pipes
+|=================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|dbType |The type of database being used. |postgresql, mysql |postgresql
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+|=======================================================================
+
+=== MySQL Tasks
+
+The MySQL tasks are to be used with the MySQL schema that backs the OSM
+API. Please note that there are no 0.6 versions of these tasks. Instead,
+they are replaced with the "apidb" tasks.
+
+==== --read-mysql (--rm)
+
+Reads the contents of a MySQL database at a specific point in time.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+
+|readAllUsers |If set to yes, the user public edit flag will be ignored
+and user information will be attached to every entity. |yes, no |no
+
+|snapshotInstant |Defines the point in time for which to produce a data
+snapshot. |format is "yyyy-MM-dd_HH:mm:ss" |(now)
+|=======================================================================
+
+==== --read-mysql-current (--rmcur)
+
+Reads the current contents of a MySQL database. Note that this task
+cannot be used as a starting point for replication because it does not
+produce a consistent snapshot.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+
+|readAllUsers |If set to yes, the user public edit flag will be ignored
+and user information will be attached to every entity. |yes, no |no
+|=======================================================================
+
+==== --write-mysql (--wm)
+
+Populates an empty MySQL database.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+
+|lockTables |If yes is specified, tables will be locked during the
+import. This provides measurable performance improvements but prevents
+concurrent queries. |yes, no |yes
+
+|populateCurrentTables |If yes is specified, the current tables will be
+populated after the initial history table population. If only history
+tables are required, this reduces the import time by approximately 80%.
+|yes, no |yes
+|=======================================================================
+
+==== --read-mysql-change (--rmc)
+
+Reads the changes for a specific time interval from a MySQL database.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|outPipe.0 |Produces a change stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+
+|readAllUsers |If set to yes, the user public edit flag will be ignored
+and user information will be attached to every entity. |yes, no |no
+
+|intervalBegin |Defines the beginning of the interval for which to
+produce a change set. |format is "yyyy-MM-dd_HH:mm:ss" |(1970)
+
+|intervalEnd |Defines the end of the interval for which to produce a
+change set. |format is "yyyy-MM-dd_HH:mm:ss" |(now)
+
+|readFullHistory |0.6 only. If set to yes, complete history for the
+specified time interval is produced instead of a single change per
+entity modified in that interval. This is not useful for standard
+changesets, it is useful if a database replica with full history is
+being produced. Change files produced using this option will likely not
+be able to be processed by most tools supporting the *.osc file format.
+|yes, no |no
+|=======================================================================
+
+==== --write-mysql-change (--wmc)
+
+Applies a changeset to an existing populated MySQL database.
+
+[cols=",",options="header",]
+|===================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream.
+|===================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+
+|populateCurrentTables |If yes is specified, the current tables will be
+populated after the initial history table population. This is useful if
+only history tables were populated during import. |yes, no |yes
+|=======================================================================
+
+==== --truncate-mysql (--tm)
+
+Truncates all current and history tables in a MySQL database.
+
+[cols=",",options="header",]
+|=================
+|Pipe |Description
+|no pipes
+|=================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+|=======================================================================
+
+=== XML Tasks
+
+The xml tasks are used to read and write "osm" data files and "osc"
+changeset files.
+
+==== --read-xml (--rx)
+
+Reads the current contents of an OSM XML file.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|file (default) |The name of the osm file to be read, "-" means STDIN. |
+|dump.osm
+
+|enableDateParsing |If set to yes, the dates in the osm xml file will be
+parsed, otherwise all dates will be set to a single time approximately
+equal to application startup. Setting this to no is only useful if the
+input file doesn't contain timestamps. It used to improve performance
+but date parsing now incurs low overhead. |yes, no |yes
+
+|compressionMethod |Specifies the compression method that has been used
+to compress the file. If "auto" is specified, the compression method
+will be automatically determined from the file name (*.gz=gzip,
+*.bz2=bzip2). |auto, none, gzip, bzip2 |auto
+|=======================================================================
+
+==== --fast-read-xml (no short option available)
+
+0.6 only. As per the --read-xml task but using a STAX XML parser instead
+of SAX for improved performance. This has undergone solid testing and
+should be reliable but all xml processing tasks have not yet been
+re-written to use the new implementation thus is not the default yet.
+
+==== --write-xml (--wx)
+
+Writes data to an OSM XML file.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|file (default) |The name of the osm file to be written, "-" means
+STDOUT. | |dump.osm
+
+|compressionMethod |Specifies the compression method that has been used
+to compress the file. If "auto" is specified, the compression method
+will be automatically determined from the file name (*.gz=gzip,
+*.bz2=bzip2). |auto, none, gzip, bzip2 |auto
+|=======================================================================
+
+==== --read-xml-change (--rxc)
+
+Reads the contents of an OSM XML change file.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|outPipe.0 |Produces a change stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|file (default) |The name of the osm change file to be read, "-" means
+STDIN. | |change.osc
+
+|enableDateParsing |If set to yes, the dates in the osm xml file will be
+parsed, otherwise all dates will be set to a single time approximately
+equal to application startup. Setting this to no is only useful if the
+input file doesn't contain timestamps. It used to improve performance
+but date parsing now incurs low overhead. |yes, no |yes
+
+|compressionMethod |Specifies the compression method that has been used
+to compress the file. If "auto" is specified, the compression method
+will be automatically determined from the file name (*.gz=gzip,
+*.bz2=bzip2). |auto, none, gzip, bzip2 |auto
+|=======================================================================
+
+==== --write-xml-change (--wxc)
+
+Writes changes to an OSM XML change file.
+
+[cols=",",options="header",]
+|===================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream.
+|===================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|file (default) |The name of the osm change file to be written, "-"
+means STDOUT. | |change.osc
+
+|compressionMethod |Specifies the compression method that has been used
+to compress the file. If "auto" is specified, the compression method
+will be automatically determined from the file name (*.gz=gzip,
+*.bz2=bzip2). |auto, none, gzip, bzip2 |auto
+|=======================================================================
+
+=== Area Filtering Tasks
+
+These tasks can be used to retrieve data by filtering based on the
+location of interest.
+
+==== --bounding-box (--bb)
+
+Extracts data within a specific bounding box defined by lat/lon
+coordinates.
+
+See also : Osmosis#Extracting_bounding_boxes
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|left |The longitude of the left edge of the box. |-180 to 180 |-180
+
+|right |The longitude of the right edge of the box. |-180 to 180 |180
+
+|top |The latitude of the top edge of the box. |-90 to 90 |90
+
+|bottom |The latitude of the bottom edge of the box. |-90 to 90 |-90
+
+|x1 |Slippy map coordinate of the left edge of the box | |
+
+|y1 |Slippy map coordinate of the top edge of the box | |
+
+|x2 |Slippy map coordinate of the right edge of the box | |x1
+
+|y2 |Slippy map coordinate of the bottom edge of the box | |y1
+
+|zoom |Slippy map zoom | |12
+
+|completeWays |Include all available nodes for ways which have at least
+one node in the bounding box. Supersedes cascadingRelations. |yes, no
+|no
+
+|completeRelations |Include all available relations which are members of
+relations which have at least one member in the bounding box. Implies
+completeWays. Supersedes cascadingRelations. |yes, no |no
+
+|cascadingRelations |If a relation is selected for inclusion, always
+include all its parents as well. Without this flag, whether or not the
+parent of an included relation is included can depend on the order in
+which they appear - if the parent relation is processed but at the time
+it is not known that it will become "relevant" by way of a child
+relation, then it is not included. With this flag, all relations are
+read before a decision is made which ones to include. This flag is not
+required, and will be ignored, if either completeWays or
+completeRelations is set, as those flags automatically create a
+temporary list of all relations and thus allow proper parent selection.
+cascadingRelations, however, uses less resources than those options
+because it only requires temporary storage for relations. |yes, no |no
+
+|idTrackerType |Specifies the memory mechanism for tracking selected
+ids. BitSet is more efficient for very large bounding boxes (where node
+count is greater than 1/32 of maximum node id), IdList will be more
+efficient for all smaller bounding boxes. Dynamic breaks the overall id
+range into small segments and chooses the most efficient of IdList or
+BitSet for that interval. |BitSet, IdList, Dynamic |Dynamic
+
+|clipIncompleteEntities |Specifies what the behaviour should be when
+entities are encountered that have missing relationships with other
+entities. For example, ways with missing nodes, and relations with
+missing members. This occurs most often at the boundaries of selection
+areas, but may also occur due to referential integrity issues in the
+database or inconsistencies in the planet file snapshot creation. If set
+to true the entities are modified to remove the missing references,
+otherwise they're left intact. |true, false |false
+|=======================================================================
+
+If both lat/lon and slippy map coordinates are used then lat/lon
+coordinates are overriden by slippy map coordinates.
+
+==== --bounding-polygon (--bp)
+
+Extracts data within a polygon defined by series of lat/lon coordinates
+loaded from a polygon file.
+
+The format of the polygon file is described at the
+http://www.maproom.psu.edu/dcw/[MapRoom] website, with two exceptions:
+
+* A special extension has been added to this task to support negative
+polygons, these are defined by the addition of a "!" character preceding
+the name of a polygon header within the file. See an example on the
+link:Osmosis/Polygon_Filter_File_Format[ Polygon filter file format]
+page to get a better understanding of how to use negative polygons.
+* The first coordinate pair in the polygon definition is not, as defined
+on the MapRoom site, the polygon centroid; it is the first polygon
+point. The centroid coordinates are not required by Osmosis (nor are
+they expected but they won't break things if present and counted as part
+of the polygon outline).
+* An explicit example is provided on the
+link:Osmosis/Polygon_Filter_File_Format[ Polygon filter file format]
+page.
+* You can find some polygons for european countries at
+https://svn.openstreetmap.org/applications/utils/osm-extract/polygons/[the
+OSM-Subversion]
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|file |The file containing the polygon definition. | |polygon.txt
+
+|completeWays |_See documentation for --bounding-box._ |yes, no |no
+
+|completeRelations |_See documentation for --bounding-box._ |yes, no |no
+
+|cascadingRelations |_See documentation for --bounding-box._ |yes, no
+|no
+
+|idTrackerType |_See documentation for --bounding-box._ |BitSet, IdList,
+Dynamic |Dynamic
+
+|clipIncompleteEntities |_See documentation for --bounding-box._ |true,
+false |false
+|=======================================================================
+
+=== Changeset Derivation and Merging
+
+These tasks provide the glue between osm and osc files by allowing
+changes to be derived from and merged into osm files.
+
+==== --derive-change (--dc)
+
+Compares two data sources and produces a changeset of the differences.
+
+Note that this task requires both input streams to be sorted first by
+type then by id.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|inPipe.1 |Consumes an entity stream.
+|outPipe.0 |Produces a change stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|bufferCapacity |The size of the input buffers. This is defined in terms
+of the number of entity objects to be stored. An entity corresponds to
+an OSM type such as a node. |positive integers |20
+|=======================================================================
+
+==== --apply-change (--ac)
+
+Applies a change stream to a data stream.
+
+Note that this task requires both input streams to be sorted first by
+type then by id.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|inPipe.1 |Consumes a change stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|bufferCapacity |The size of the input buffer. This is defined in terms
+of the number of entity objects to be stored. An entity corresponds to
+an OSM type such as a node. |positive integers |20
+|=======================================================================
+
+=== Pipeline Control
+
+These tasks allow the pipeline structure to be manipulated. These tasks
+do not perform any manipulation of the data flowing through the
+pipeline.
+
+==== --write-null (--wn)
+
+Discards all input data. This is useful for osmosis performance testing
+and for testing the integrity of input files.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|====================================
+
+[cols=",,,",options="header",]
+|================================================
+|Option |Description |Valid Values |Default Value
+|no arguments | | |
+|================================================
+
+==== --write-null-change (--wnc)
+
+Discards all input change data. This is useful for osmosis performance
+testing and for testing the integrity of input files.
+
+[cols=",",options="header",]
+|===================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream.
+|===================================
+
+[cols=",,,",options="header",]
+|================================================
+|Option |Description |Valid Values |Default Value
+|no arguments | | |
+|================================================
+
+==== --buffer (--b)
+
+Allows the pipeline processing to be split across multiple threads. The
+thread for the input task will post data into a buffer of fixed capacity
+and block when the buffer fills. This task creates a new thread that
+reads from the buffer and blocks if no data is available. This is useful
+if multiple CPUs are available and multiple tasks consume significant
+CPU.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|bufferCapacity (default) |The size of the storage buffer. This is
+defined in terms of the number of entity objects to be stored. An entity
+corresponds to an OSM type such as a node. | |100
+|=======================================================================
+
+==== --buffer-change (--bc)
+
+As per --buffer but for a change stream.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream.
+|outPipe.0 |Produces a change stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|bufferCapacity (default) |The size of the storage buffer. This is
+defined in terms of the number of change objects to be stored. A change
+object consists of a single entity with an associated action. | |100
+|=======================================================================
+
+==== --log-progress (--lp)
+
+Logs progress information using jdk logging at info level at regular
+intervals. This can be inserted into the pipeline to allow the progress
+of long running tasks to be tracked.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|interval |The time interval between updates in seconds. | |5
+
+|label |A label that the log messages of this particular logger will be
+prefixed with. | |_empty string_
+|=======================================================================
+
+==== --log-progress-change(--lpc)
+
+Logs progress of a change stream using jdk logging at info level at
+regular intervals. This can be inserted into the pipeline to allow the
+progress of long running tasks to be tracked.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream.
+|outPipe.0 |Produces a change stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|interval |The time interval between updates in seconds. | |5
+
+|label |A label that the log messages of this particular logger will be
+prefixed with. | |_empty string_
+|=======================================================================
+
+==== --tee (--t)
+
+Receives a single stream of data and sends it to multiple destinations.
+This is useful if you wish to read a single source of data and apply
+multiple operations on it.
+
+[cols=",",options="header",]
+|=======================================================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+
+|outPipe.0 |Produces an entity stream.
+
+|... |
+
+|outPipe.n-1 (where n is the number of outputs specified) |Produces an
+entity stream.
+|=======================================================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|outputCount (default) |The number of destinations to write this data
+to. | |2
+|=======================================================================
+
+==== --tee-change (--tc)
+
+Receives a single stream of change data and sends it to multiple
+destinations. This is useful if you wish to read a single source of
+change data and apply multiple operations on it.
+
+[cols=",",options="header",]
+|=======================================================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream.
+
+|outPipe.0 |Produces a change stream.
+
+|... |
+
+|outPipe.n-1 (where n is the number of outputs specified) |Produces a
+change stream.
+|=======================================================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|outputCount (default) |The number of destinations to write this data
+to. | |2
+|=======================================================================
+
+==== --read-empty (--rem)
+
+Produces an empty entity stream. This may be used in conjunction with
+the --merge task to convert a change stream to an entity stream.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|================================================
+|Option |Description |Valid Values |Default Value
+|no arguments | | |
+|================================================
+
+==== --ready-empty-change (--remc)
+
+Produces an empty change stream.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|outPipe.0 |Produces a change stream.
+|====================================
+
+=== Set Manipulation Tasks
+
+These tasks allow bulk operations to be performed which operate on a
+combination of data streams allowing them to be combined or re-arranged
+in some way.
+
+==== --sort (--s)
+
+Sorts all data in an entity stream according to a specified ordering.
+This uses a file-based merge sort keeping memory usage to a minimum and
+allowing arbitrarily large data sets to be sorted.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|type (default) |The ordering to apply to the data. a|
+* TypeThenId - This specifies to sort by the entity type (eg. nodes
+before ways), then by the entity id. This is the ordering a planet file
+contains.
+
+ |TypeThenId
+|=======================================================================
+
+==== --sort-change (--sc)
+
+Sorts all data in a change stream according to a specified ordering.
+This uses a file-based merge sort keeping memory usage to a minimum and
+allowing arbitrarily large data sets to be sorted.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream.
+|outPipe.0 |Produces a change stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|type (default) |The ordering to apply to the data. a|
+* streamable - This specifies to sort by the entity type (eg. nodes
+before ways), then by the entity id. This allows a change to be applied
+to an xml file.
+* seekable - This sorts data so that it can be applied to a database
+without violating referential integrity.
+
+ |streamable
+|=======================================================================
+
+==== --merge (--m)
+
+Merges the contents of two data sources together.
+
+Note that this task requires both input streams to be sorted first by
+type then by id.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|inPipe.1 |Consumes an entity stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|conflictResolutionMethod |The method to use for resolving conflicts
+between data from the two sources. a|
+* version - Choose the entity with the highest version, and second input
+source if both versions are identical.
+* timestamp - Choose the entity with the newest timestamp.
+* lastSource - Choose the entity from the second input source.
+
+ |version
+
+|bufferCapacity |The size of the input buffers. This is defined in terms
+of the number of entity objects to be stored. An entity corresponds to
+an OSM type such as a node. |positive integers |20
+
+|boundRemovedAction |Specifies what to do if the merge task suppresses
+the output of the Bound entity into the resulting stream (see below). a|
+* ignore - Continue processing quietly.
+* warn - Continue processing but emit a warning to the log.
+* fail - Stop processing.
+
+ |warn
+|=======================================================================
+
+Bound entity processing
+
+Since version 0.40, this task has special handling for the Bound
+entities which occur at the beginning of the stream. The processing
+happens as follows:
+
+1.  If neither of the source streams have a Bound entity, no Bound
+entity is emitted to the output stream.
+2.  If both sources have a Bound entity, a Bound entity which
+corresponds to the _union_ of the two source Bounds will be emitted to
+the output stream.
+3.  If one source does have a Bound entity but the other doesn't:
+1.  If the source that doesn't have a Bound is empty (no entities
+whatsoever), the original Bound of the first source is passed through to
+the output stream.
+2.  If the source that doesn't have a Bound is not empty, _no Bound is
+emitted to the output stream_. Additionally, the action specified by the
+"boundRemovedAction" keyword argument (see above) is taken.
+
+==== --merge-change (--mc)
+
+Merges the contents of two changesets together.
+
+Note that this task requires both input streams to be sorted first by
+type then by id.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream.
+|inPipe.1 |Consumes a change stream.
+|outPipe.0 |Produces a change stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|conflictResolutionMethod |The method to use for resolving conflicts
+between data from the two sources. a|
+* version - Choose the entity with the highest version, and second input
+source if both versions are identical.
+* timestamp - Choose the entity with the newest timestamp.
+* lastSource - Choose the entity from the second input source.
+
+ |version
+|=======================================================================
+
+==== --append-change (--apc)
+
+Combines multiple change streams into a single change stream. The data
+from each input is consumed in sequence so that the result is a
+concatenation of data from each source. This output stream stream will
+be unsorted and may need to be fed through a --sort-change task.
+
+This task is intended for use with full history change files. If delta
+change files are being used (ie. only one change per entity per file),
+then the --merge-change task may be more appropriate.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream.
+|...
+|inPipe.n-1 |Consumes a change stream.
+|outPipe.0 |Produces a change stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|sourceCount |The number of change streams to be appended. |A positive
+integer. |2
+
+|bufferCapacity |The size of the input buffers. This is defined in terms
+of the number of entity objects to be stored. An entity corresponds to
+an OSM type such as a node. |positive integers |20
+|=======================================================================
+
+==== --simplify-change (--simc)
+
+Collapses a "full-history" change stream into a "delta" change stream.
+The result of this operation is a change stream guaranteed to contain a
+maximum of one change per entity.
+
+For example, if an entity is created and modified in a single change
+file, this task will modify it to be a single create operation with the
+data of the modify operation.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream.
+|outPipe.0 |Produces a change stream.
+|====================================
+
+[cols=",,,",options="header",]
+|================================================
+|Option |Description |Valid Values |Default Value
+|N/A | | |
+|================================================
+
+==== --convert-change-to-full-history (--cctfh)
+
+Translates a change stream into a "full-history" stream (an entity
+stream potentially containing multiple entity versions; `visible` is
+available in the "meta tags".
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|================================================
+|Option |Description |Valid Values |Default Value
+|N/A | | |
+|================================================
+
+=== Data Manipulation Tasks
+
+These tasks allow the entities being passed through the pipeline to be
+manipulated.
+
+==== --node-key (--nk)
+
+Given a list of "key" tags, this filter passes on only those nodes that
+have at least one of those tags set.
+
+Note that this filter only operates on nodes. All ways and relations are
+filtered out.
+
+This filter will only be available with version >= 0.30 (or the master
+development branch).
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|====================================================
+|Option |Description |Valid Values |Default Value
+|keyList |Comma-separated list of desired keys | |N/A
+|====================================================
+
+==== --node-key-value (--nkv)
+
+Given a list of "key.value" tags, this filter passes on only those nodes
+that have at least one of those tags set.
+
+Note that this filter only operates on nodes. All ways and relations are
+filtered out.
+
+This filter will only be available with version >= 0.30 (or the master
+development branch).
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|keyValueList |Comma-separated list of desired key.value combinations |
+|N/A
+
+|keyValueListFile |The file containing the list of desired key.value
+combinations, one per line | |N/A
+|=======================================================================
+
+==== --way-key (--wk)
+
+Given a list of "key" tags, this filter passes on only those ways that
+have at least one of those tags set.
+
+Note that this filter only operates on ways. All nodes and relations are
+passed on unmodified.
+
+This filter is currently only available in (or the master development
+branch).
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|====================================================
+|Option |Description |Valid Values |Default Value
+|keyList |Comma-separated list of desired keys | |N/A
+|====================================================
+
+==== --way-key-value (--wkv)
+
+Given a list of "key.value" tags, this filter passes on only those ways
+that have at least one of those tags set.
+
+Note that this filter only operates on ways. All nodes and relations are
+passed on unmodified.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|keyValueList |Comma-separated list of desired key.value combinations |
+|highway.motorway,highway.motorway_link,highway.trunk,highway.trunk_link
+(This applies if both keyValueList and keyValueListFile are missing)
+
+|keyValueListFile |The file containing the list of desired key.value
+combinations, one per line | |N/A
+|=======================================================================
+
+==== --tag-filter (--tf)
+
+Filters entities based on their type and optionally based on their tags.
+Can accept or reject entities that match the filter specification.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|filter mode (default) |A two-field dash-separated string which
+specifies accept/reject behavior and the entity type on which this
+filter operates. |accept-nodes, accept-ways, accept-relations,
+reject-nodes, reject-ways, reject-relations |empty string
+|=======================================================================
+
+All keyword arguments are interpreted as tag patterns in the form
+"key=value". When an entity has a tag that matches one of these
+patterns, the entity is accepted or rejected according to the filter
+mode. Each tag-filter task filters only the entity type specified in its
+mode string, passing all other entity types through without touching
+them. If no tag patterns are specified, the filter matches all entities
+of the given type. Within a particular tag pattern, multiple values can
+be specified for a single key using a comma-separated list. The wildcard
+value of * (a single asterisk) matches any value.
+
+The value list separator character, key/value separator character, and
+wildcard character ( , = * respectively) can be included in keys or
+values using the following escape sequences:
+
+[cols=",",options="header",]
+|==============================
+|Escape sequence |Replaced with
+|%a |*
+|%c |,
+|%e |=
+|%s |space
+|%% |literal '%' symbol
+|==============================
+
+In practice, there are only limited circumstances where you must escape
+these characters:
+
+* = must be escaped in tag keys
+* , must be escaped in tag values
+* * only needs to be escaped for tag values that consist of a single *
+* % and space must always be escaped.
+
+Example usage:
+
+....
+osmosis \
+  --read-xml input.osm \
+  --tf accept-ways highway=* \ 
+  --tf reject-ways highway=motorway,motorway_link \
+  --tf reject-relations \
+  --used-node \
+  --write-xml output.osm
+....
+
+This will keep only ways with tag highway=(anything), then among those
+retained ways it will reject the ones where the highway tag has the
+value motorway or motorway_link. All relations are discarded, then all
+nodes which are not in the ways are discarded. The remaining entities
+are written out in XML. In other words, it produces a file containing
+all highways except motorways or motorway links, as well as the nodes
+that make up those highways.
+
+Note that each each tag-filter task can accept more than one tag
+pattern, and will accept/reject an entity if it matches any of those
+supplied tag patterns. For example, the following command will produce a
+file containing all POI nodes with amenity, sport, or leisure tags:
+
+`osmosis \` +
+` --read-pbf switzerland.osm.pbf \` +
+` --tf accept-nodes sport=* amenity=* leisure=* \` +
+` --tf reject-ways \` +
+` --tf reject-relations \` +
+` --write-xml switzerland-poi.osm.xml`
+
+You may need to work on two separate entity streams and merge them after
+filtering, especially where the used-node task is involved. If both
+inputs for the merge are coming from the same thread (e.g. using the tee
+task followed by the merge task), Osmosis will experience deadlock and
+the operation will never finish. One solution to this deadlock problem
+is to read the data in two separate tasks. The following command will
+produce an output file containing all amenity nodes, as well as all
+motorways and any nodes referenced by the motorways.
+
+....
+../osmosis/bin/osmosis \ 
+  --rx input.osm \
+  --tf reject-relations \
+  --tf accept-nodes amenity=* \
+  --tf reject-ways \
+  \
+  --rx input.osm \
+  --tf reject-relations \
+  --tf accept-ways highway=motorway \
+  --used-node \ 
+  \
+  --merge \
+  --wx amenity-and-motorway.osm
+....
+
+==== --used-node (--un)
+
+Restricts output of nodes to those that are used in ways and relations.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|idTrackerType |Specifies the memory mechanism for tracking selected
+ids. BitSet is more efficient for very large bounding boxes (where node
+count is greater than 1/32 of maximum node id), IdList will be more
+efficient for all smaller bounding boxes. |BitSet, IdList, Dynamic
+|Dynamic
+|=======================================================================
+
+==== --used-way (--uw)
+
+Restricts output of ways to those that are used in relations.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|idTrackerType |Specifies the memory mechanism for tracking selected
+ids. BitSet is more efficient for very large bounding boxes (where node
+count is greater than 1/32 of maximum node id), IdList will be more
+efficient for all smaller bounding boxes. |BitSet, IdList, Dynamic
+|Dynamic
+|=======================================================================
+
+==== --tag-transform (--tt)
+
+Transform the tags in the input stream according to the rules specified
+in a transform file.
+
+More details are available in the Osmosis/TagTransform documentation.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|file |The name of the file containing the transform description. |
+|transform.xml
+
+|stats |The name of a file to output statistics of match hit counts to.
+| |N/A
+|=======================================================================
+
+=== PostGIS Tasks (Snapshot Schema)
+
+Osmosis provides a PostGIS schema for storing a snapshot of OSM data.
+All geo-spatial aspects of the data are stored using PostGIS geometry
+data types. Node locations are always stored as a point. Ways are
+related to nodes as in the normal API schema, however they may
+optionally have bounding box and/or full linestring columns added as
+well allowing a full set of geo-spatial operations to be performed on
+them.
+
+Note that all tags are stored in hstore columns. If separate tags tables
+are required, check the "Simple Schema" tasks instead.
+
+To perform queries on this schema, see link:#Dataset_Tasks[#Dataset
+Tasks].
+
+The schema creation scripts can be found in the scripts directory within
+the osmosis distribution. These scripts are:
+
+* pgsnapshot_schema_0.6.sql - Builds the minimal schema.
+* pgsnapshot_schema_0.6_action.sql - Adds the optional "action" table
+which allows derivative tables to be kept up to date when diffs are
+applied.
+* pgsnapshot_schema_0.6_bbox.sql - Adds the optional bbox column to the
+way table.
+* pgsnapshot_schema_0.6_linestring.sql - Adds the optional linestring
+column to the way table.
+* pgsnapshot_load_0.6.sql - A sample data load script suitable for
+loading the COPY files created by the --write-pgsql-dump task.
+
+Osmosis_PostGIS_Setup describes a procedure for setting up
+Postgresql/PostGIS for use with osmosis.
+
+==== --write-pgsql (--wp)
+
+Populates an empty PostGIS database with a "simple" schema. A schema
+creation script is available in the osmosis script directory.
+
+The schema has a number of optional columns and tables that can be
+optionally installed with additional schema creation scripts. This task
+queries the schema to automatically detect which of those features is
+installed.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|postgresSchema |The database schema to use on Postgresql. This value is
+pre-pended to search_path variable. | |(blank)
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+
+|nodeLocationStoreType |This option only takes effect if at least one of
+the linestring or bbox columns exists on the ways table. Geometry
+builders require knowledge of all node locations. This option specifies
+how those nodes are temporarily stored. If you have large amounts of
+memory (at least 64GB of system memory, a 64-bit JVM and at least 50GB
+of JVM RAM specified with the -Xmx option) you may use the "InMemory"
+option. Otherwise you must choose between the "TempFile" option which is
+much slower but still faster than relying on the default database
+geometry building implementation, or the "CompactTempFile" option which
+is more efficient for smaller datasets. |"InMemory", "TempFile",
+"CompactTempFile" |"CompactTempFile"
+
+|keepInvalidWays |Invalid ways are ways with less than two nodes in
+them. These ways generate invalid linestrings which can cause problems
+when running spatial queries. If this option is set to "no" then they
+are silently discarded. Note that invalid linestrings can come from
+other sources like ways with multiple nodes at the same location, but
+these are not currently detected and will be included. |yes, no |yes
+|=======================================================================
+
+==== --write-pgsql-dump (--wpd)
+
+Writes a set of data files suitable for loading a PostGIS database with
+a "simple" schema using COPY statements. A schema creation script is
+available in the osmosis script directory. A load script is also
+available which will invoke the COPY statements and update all indexes
+and special index support columns appropriately. This option should be
+used on large import data (like the planet file), since it is much
+faster than --write-pgsql
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|directory |The name of the directory to write the data files into. |
+|pgimport
+
+|enableBboxBuilder |If yes is specified, the task will build the bbox
+geometry column using a java-based solution instead of running a
+post-import query. Using this option provides significant performance
+improvements compared to the query approach. |yes, no |no
+
+|enableLinestringBuilder |As per the enableBboxBuilder option but for
+the linestring geometry column. |yes, no |no
+
+|nodeLocationStoreType |This option only takes effect if at least one of
+the enableBboxBuilder and enableLinestringBuilder options are enabled.
+Both geometry builder implementations require knowledge of all node
+locations. This option specifies how those nodes are temporarily stored.
+If you have large amounts of memory (at least 64GB of system memory, a
+64-bit JVM and at least 50GB of JVM RAM specified with the -Xmx option)
+you may use the "InMemory" option. Otherwise you must choose between the
+"TempFile" option which is much slower but still faster than relying on
+the default database geometry building implementation, or the
+"CompactTempFile" option which is more efficient for smaller datasets.
+|"InMemory", "TempFile", "CompactTempFile" |"CompactTempFile"
+
+|keepInvalidWays |Invalid ways are ways with less than two nodes in
+them. These ways generate invalid linestrings which can cause problems
+when running spatial queries. If this option is set to "no" then they
+are silently discarded. Note that invalid linestrings can come from
+other sources like ways with multiple nodes at the same location, but
+these are not currently detected and will be included. |yes, no |yes
+|=======================================================================
+
+==== --truncate-pgsql (--tp)
+
+Truncates all tables in a PostGIS with a "simple" schema.
+
+[cols=",",options="header",]
+|=================
+|Pipe |Description
+|no pipes
+|=================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|postgresSchema |The database schema to use on Postgresql. This value is
+pre-pended to search_path variable. | |(blank)
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+|=======================================================================
+
+==== --read-pgsql (--rp)
+
+Reads the contents of a PostGIS database with a "simple" schema.
+
+[cols=",",options="header",]
+|==============================
+|Pipe |Description
+|outPipe.0 |Produces a dataset.
+|==============================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|postgresSchema |The database schema to use on Postgresql. This value is
+pre-pended to search_path variable. | |(blank)
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+|=======================================================================
+
+==== --write-pgsql-change (--wpc)
+
+Write changes to PostGIS database with "simple" schema.
+
+[cols=",",options="header",]
+|===================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream.
+|===================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|postgresSchema |The database schema to use on Postgresql. This value is
+pre-pended to search_path variable. | |(blank)
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+
+|keepInvalidWays |Invalid ways are ways with less than two nodes in
+them. These ways generate invalid linestrings which can cause problems
+when running spatial queries. If this option is set to "no" then they
+are silently discarded. Note that invalid linestrings can come from
+other sources like ways with multiple nodes at the same location, but
+these are not currently detected and will be included. |yes, no |yes
+|=======================================================================
+
+=== PostGIS Tasks (Simple Schema)
+
+This is effectively an older version of the snapshot schema where tags
+are still stored in separate tags tables instead of hstore columns. It
+is recommended to use the newer "Snapshot Schema" versions of these
+tasks where possible due to the improved performance they provide.
+
+To perform queries on this schema, see link:#Dataset_Tasks[#Dataset
+Tasks].
+
+The schema creation scripts can be found in the scripts directory within
+the osmosis distribution. These scripts are:
+
+* pgsimple_schema_0.6.sql - Builds the minimal schema.
+* pgsimple_schema_0.6_action.sql - Adds the optional "action" table
+which allows derivative tables to be kept up to date when diffs are
+applied.
+* pgsimple_schema_0.6_bbox.sql - Adds the optional bbox column to the
+way table.
+* pgsimple_schema_0.6_linestring.sql - Adds the optional linestring
+column to the way table.
+* pgsimple_load_0.6.sql - A sample data load script suitable for loading
+the COPY files created by the --write-pgsimp-dump task.
+
+Osmosis_PostGIS_Setup describes a procedure for setting up
+Postgresql/PostGIS for use with osmosis.
+
+==== --write-pgsimp (--ws)
+
+Populates an empty PostGIS database with a "simple" schema. A schema
+creation script is available in the osmosis script directory.
+
+The schema has a number of optional columns and tables that can be
+optionally installed with additional schema creation scripts. This task
+queries the schema to automatically detect which of those features is
+installed.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+
+|nodeLocationStoreType |This option only takes effect if at least one of
+the linestring or bbox columns exists on the ways table. Geometry
+builders require knowledge of all node locations. This option specifies
+how those nodes are temporarily stored. If you have large amounts of
+memory (at least 6GB of system memory, a 64-bit JVM and at least 4GB of
+JVM RAM specified with the -Xmx option) you may use the "InMemory"
+option. Otherwise you must choose between the "TempFile" option which is
+much slower but still faster than relying on the default database
+geometry building implementation, or the "CompactTempFile" option which
+is more efficient for smaller datasets. |"InMemory", "TempFile",
+"CompactTempFile" |"CompactTempFile"
+|=======================================================================
+
+==== --write-pgsimp-dump (--wsd)
+
+Writes a set of data files suitable for loading a PostGIS database with
+a "simple" schema using COPY statements. A schema creation script is
+available in the osmosis script directory. A load script is also
+available which will invoke the COPY statements and update all indexes
+and special index support columns appropriately. This option should be
+used on large import data (like the planet file), since it is much
+faster than --write-pgsql
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|directory |The name of the directory to write the data files into. |
+|pgimport
+
+|enableBboxBuilder |If yes is specified, the task will build the bbox
+geometry column using a java-based solution instead of running a
+post-import query. Using this option provides significant performance
+improvements compared to the query approach. |yes, no |no
+
+|enableLinestringBuilder |As per the enableBboxBuilder option but for
+the linestring geometry column. |yes, no |no
+
+|nodeLocationStoreType |This option only takes effect if at least one of
+the enableBboxBuilder and enableLinestringBuilder options are enabled.
+Both geometry builder implementations require knowledge of all node
+locations. This option specifies how those nodes are temporarily stored.
+If you have large amounts of memory (at least 6GB of system memory, a
+64-bit JVM and at least 4GB of JVM RAM specified with the -Xmx option)
+you may use the "InMemory" option. Otherwise you must choose between the
+"TempFile" option which is much slower but still faster than relying on
+the default database geometry building implementation, or the
+"CompactTempFile" option which is more efficient for smaller datasets.
+|"InMemory", "TempFile", "CompactTempFile" |"CompactTempFile"
+|=======================================================================
+
+==== --truncate-pgsimp (--ts)
+
+Truncates all tables in a PostGIS with a "simple" schema.
+
+[cols=",",options="header",]
+|=================
+|Pipe |Description
+|no pipes
+|=================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+|=======================================================================
+
+==== --read-pgsimp (--rs)
+
+Reads the contents of a PostGIS database with a "simple" schema.
+
+[cols=",",options="header",]
+|==============================
+|Pipe |Description
+|outPipe.0 |Produces a dataset.
+|==============================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+|=======================================================================
+
+==== --write-pgsimp-change (--wsc)
+
+Write changes to PostGIS database with "simple" schema.
+
+[cols=",",options="header",]
+|===================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream.
+|===================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+|=======================================================================
+
+=== API Tasks
+
+These tasks provide the ability to interact directly with the OSM API.
+This is the API that is used directly by editors such as JOSM.
+
+==== --read-api (--ra)
+
+Retrieves the contents of a bounding box from the API. This is subject
+to the bounding box size limitations imposed by the API.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|left |The longitude of the left edge of the box. |-180 to 180 |-180
+
+|right |The longitude of the right edge of the box. |-180 to 180 |180
+
+|top |The latitude of the top edge of the box. |-90 to 90 |90
+
+|bottom |The latitude of the bottom edge of the box. |-90 to 90 |-90
+
+|url |The url of the API server. |
+|https://www.openstreetmap.org/api/0.6
+|=======================================================================
+
+==== --upload-xml-change
+
+Uploade a changeset to an existing populated API server via HTTP.
+
+* *since* Osmosis 0.31.3
+* Support: User:MarcusWolschon
+
+[cols=",",options="header",]
+|===================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream.
+|===================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|server |The server to upload to. |
+|https://api.openstreetmap.org/api/0.6
+
+|user |The api user name. | |argument is required
+
+|password |The api password. | |argument is required
+|=======================================================================
+
+=== Dataset Tasks
+
+Dataset tasks are those that act on on the generic dataset interface
+exposed by several data stores. For example the
+link:#PostGIS_Tasks[#PostGIS Tasks]. These tasks allow data queries and
+data manipulation to be performed in a storage method agnostic manner.
+
+==== --dataset-bounding-box (--dbb)
+
+Extracts data within a specific bounding box defined by lat/lon
+coordinates. This differs from the --bounding-box task in that it
+operates on a dataset instead of an entity stream, in other words it
+uses the features of the underlying database to perform a spatial query
+instead of examining all nodes in a complete stream.
+
+This implementation will never clip ways at box boundaries, and
+depending on the underlying implementation may detect ways crossing a
+box without having any nodes within that box.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes a dataset.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|====================================================================
+|Option |Description |Valid Values |Default Value
+|left |The longitude of the left edge of the box. |-180 to 180 |-180
+|right |The longitude of the right edge of the box. |-180 to 180 |180
+|top |The latitude of the top edge of the box. |-90 to 90 |90
+|bottom |The latitude of the bottom edge of the box. |-90 to 90 |-90
+|completeWays |Include all nodes for all included ways. |yes, no |no
+|====================================================================
+
+==== --dataset-dump (--dd)
+
+Converts an entire dataset to an entity stream.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes a dataset.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|================================================
+|Option |Description |Valid Values |Default Value
+|no arguments | | |
+|================================================
+
+=== Reporting Tasks
+
+These tasks provide summaries of data processed by the pipeline.
+
+==== --report-entity (--re)
+
+Produces a summary report of each entity type and the users that last
+modified them.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=====================================================================
+|Option |Description |Valid Values |Default Value
+|file (default) |The file to write the report to. | |entity-report.txt
+|=====================================================================
+
+==== --report-integrity (--ri)
+
+Produces a list of the referential integrity issues in the data source.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|file (default) |The file to write the report to. |
+|integrity-report.txt
+|=======================================================================
+
+=== Replication Tasks
+
+These tasks are used for replicating changes between data stores. They
+typically work with change streams and can therefore be coupled with
+other change stream tasks depending on the job to be performed. However
+some tasks work with replication streams which are change streams that
+propagate additional replication state tracking metadata. Tasks
+producing and consuming replication streams cannot be connected to tasks
+supporting standard change streams.
+
+There are two major types of change files:
+
+* Delta - Contain minimal changes to update a dataset. This implies a
+maximum of 1 change per entity.
+* Full-History - Contain the full set of historical changes. This
+implies that there may be multiple changes per entity. Note that the
+replication stream tasks work on full-history data.
+
+All change tasks support the "delta" style of changesets. Some tasks do
+not support the "full-history" change files.
+
+For more technical information related to Osmosis, read
+Osmosis/Replication.
+
+==== --merge-replication-files (--mrf)
+
+Retrieves a set of replication files named by replication sequence
+number from a server, combines them into larger time intervals, sorts
+the result, and tracks the current timestamp. This is the task used to
+create the aggregated hour and day replication files based on minute
+files.
+
+The changes produced by this task are full-history changes.
+
+[cols=",",options="header",]
+|=================
+|Pipe |Description
+|N/A |
+|=================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|workingDirectory (default) |The directory containing the state and
+config files. | |(current directory)
+|=======================================================================
+
+==== --merge-replication-files-init (--mrfi)
+
+Initialises a working directory to contain files necessary for use by
+the --merge-replication-files task. This task must be run once to create
+the directory structure and the configuration file manually edited to
+contain the required settings.
+
+[cols=",",options="header",]
+|=================
+|Pipe |Description
+|n/a
+|=================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|workingDirectory (default) |The directory to populate with state and
+config files. | |(current directory)
+|=======================================================================
+
+Note: This will create a configuration.txt and a download.lock file in
+the . Then you need to manually edit the configuration.txt file and
+change the url to the one of minute or hourly replicate (eg :
+baseUrl=https://planet.openstreetmap.org/replication/minute/ for the web
+or baseUrl=file:///your/replicate-folder for local filesystem) You will
+need to edit the configuration file to specify the time interval to
+group changes by.
+
+If no state.txt file exists, the first invocation will result in the
+latest state file being downloaded. If you wish to start from a known
+point you need to download from
+https://planet.openstreetmap.org/replication/minute/ the state file of
+the start date you want for your replication put it into your with name
+state.txt. You can use the
+https://replicate-sequences.osm.mazdermind.de/[replicate-sequences] tool
+to find a matching file. Take one at least an hour earlier than your
+start date to avoid missing changes.
+
+==== --read-change-interval (--rci)
+
+Retrieves a set of change files named by date from a server, merges them
+into a single stream, and tracks the current timestamp.
+
+The changes produced by this task are typically delta changes (depends
+on source data).
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|outPipe.0 |Produces a change stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|workingDirectory (default) |The directory containing the state and
+config files. | |(current directory)
+|=======================================================================
+
+==== --read-change-interval-init (--rcii)
+
+Initialises a working directory to contain files necessary for use by
+the --read-change-interval task. This task must be run once to create
+the directory structure and the configuration file manually edited to
+contain the required settings.
+
+[cols=",",options="header",]
+|=================
+|Pipe |Description
+|n/a
+|=================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|workingDirectory (default) |The directory to populate with state and
+config files. | |(current directory)
+
+|initialDate |The timestamp to begin replication from. Only changesets
+containing data after this timestamp will be downloaded. Note that
+unlike most tasks accepting dates, this date is specified in UTC.
+|format is "yyyy-MM-dd_HH:mm:ss" |N/A
+|=======================================================================
+
+==== --read-replication-interval (--rri)
+
+Retrieves a set of replication files named by replication sequence
+number from a server, combines them into a single stream, sorts the
+result, and tracks the current timestamp. Available since osmosis 0.32.
+
+The changes produced by this task are typically full-history changes
+(depends on source data).
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|outPipe.0 |Produces a change stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|workingDirectory (default) |The directory containing the state and
+config files. | |(current directory)
+
+|maxInterval |Defines the maximum time interval in seconds to download
+in a single invocation. | |3600
+|=======================================================================
+
+==== --read-replication-interval-init (--rrii)
+
+Initialises a working directory to contain files necessary for use by
+the --read-replication-interval task. This task must be run once to
+create the directory structure and the configuration file manually
+edited to contain the required settings.
+
+[cols=",",options="header",]
+|=================
+|Pipe |Description
+|n/a
+|=================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|workingDirectory (default) |The directory to populate with config
+files. | |(current directory)
+|=======================================================================
+
+Note: This will create a configuration.txt and a download.lock file in
+the . Then you need to manually edit the configuration.txt file and
+change the url to the one of minute or hourly replicate (eg :
+baseUrl=https://planet.openstreetmap.org/minute-replicate for the web or
+baseUrl=file:///your/replicate-folder for local filesystem)
+
+If no state.txt file exists, the first invocation of
+--read-replication-interval will result in the latest state file being
+downloaded. If you wish to start from a known point you need to download
+from https://planet.openstreetmap.org/minute-replicate the state file of
+the start date you want for your replication put it into your with name
+state.txt. You can use the
+http://toolserver.org/~mazder/replicate-sequences/[replicate-sequences]
+tool to find a matching file. Take one at least an hour earlier than
+your start date to avoid missing changes.
+
+==== --read-replication-lag (--rrl)
+
+This Task takes the state.txt in an replication working directory and
+compares its timestamp (that's the timestamp of the last chunk of that
+that osmosis downloaded) with the timestamp of the servers state.txt
+(that's the timestamp of the last chunk of that that the server has
+produced). It then calculates the difference and prints it to stdout.
+Running osmosis with the -q option will prevent logging output from
+being displayed unless an error occurs.
+
+A sample invocation may look like
+
+`osmosis -q --read-replication-lag humanReadable=yes workingDirectory=/osm/diffs`
+
+[cols=",",options="header",]
+|=================
+|Pipe |Description
+|n/a
+|=================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|workingDirectory (default) |The directory to populate with state and
+config files. | |(current directory)
+
+|humanReadable |print the replication lag in a human readable format
+|yes, no |no
+|=======================================================================
+
+==== --receive-replication (--rr)
+
+Reads a replication data feed from a HTTP server typically served by the
+--send-replication-data task. It directly passes the data through a
+replication stream to a task supporting changes with replication
+extensions such as --replication-to-change. This is intended for use by
+clients requiring access to highly current data that the existing
+--replicate-change-interval cannot achieve with its polling technique.
+
+As with all replication stream tasks, it operates using a constant
+streaming technique that sends data to downstream tasks in multiple
+sequences. Each sequence will include an initialize/complete method
+call. The initialize method is where state information is exchanged, and
+the complete call is where data is persisted/committed. The final
+release method call will not be occur until the pipeline shuts down.
+
+Available since osmosis 0.41.
+
+[cols=",",options="header",]
+|================================================================
+|Pipe |Description
+|outPipe.0 |Produces a change stream with replication extensions.
+|================================================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|host |The name of the server to connect to. | |localhost
+
+|port |The port number on the server to connect to (0 will dynamically
+allocate a port). | |0
+
+|pathPrefix |The leading path for the URL to connect to. This is only
+required if the replication server is proxied behind a web server that
+is mapping the URL into a child path. In that case the path would
+typically be "replication". | |
+|=======================================================================
+
+==== --replicate-apidb (--repa)
+
+This task provides replication files for consumers to download. It is
+primarily run against the production API database with the results made
+available on the planet server. This task must be used in conjunction
+with a sink task supporting replication extensions such as
+--write-replication. By default it will extract a single set of data
+from the database and pass it downstream, however it may be run in a
+continuous loop mode by setting the iterations argument.
+
+All changes will be sorted by type, then id, then version.
+
+The behaviour of this task changed in version 0.41 to send data to a
+separate sink task. Previously the --write-replication functionality was
+incorporated in this task.
+
+[cols=",",options="header",]
+|================================================================
+|Pipe |Description
+|outPipe.0 |Produces a change stream with replication extensions.
+|================================================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|authFile a| | |N/A
+
+|host |The database host server. | |localhost
+
+|database |The database instance. | |osm
+
+|user |The database user name. | |osm
+
+|password |The database password. | |(blank)
+
+|validateSchemaVersion |If yes is specified, the task will validate the
+current schema version before accessing the database. |yes, no |yes
+
+|allowIncorrectSchemaVersion |If validateSchemaVersion is yes, this
+option controls the result of a schema version check failure. If this
+option is yes, a warning is displayed and execution continues. If this
+option is no, an error is displayed and the program aborts. |yes, no
+|yes
+
+|readAllUsers |If set to yes, the user public edit flag will be ignored
+and user information will be attached to every entity. |yes, no |no
+
+|iterations |The number of replication intervals to perform. 0 means
+infinite. | |1
+
+|minInterval |The minimum interval to wait between replication intervals
+in milliseconds. A non-zero value prevents the task running in a tight
+loop and places an upper limit on the rate of replication intervals
+generated. | |0
+
+|maxInterval |The maximum interval to wait between replication intervals
+in milliseconds if no data is available. A non-zero value prevents large
+numbers of empty files being generated in periods of inactivity, but may
+lead to clients thinking they are lagging the server if it is set too
+high. Note that an interval may still exceed this value due to the time
+taken to process an interval. | |0
+|=======================================================================
+
+==== --replication-to-change (--rtc)
+
+Converts a replication stream to a standard change stream. A replication
+stream uses the final sink task to store state, so this task tracks
+state using a standard state.txt file in a similar way to other tasks
+such as --read-replication-interval. The change data is then sent to the
+standard downstream change tasks.
+
+The downstream tasks must support multiple sequences which not all
+change sink tasks do. For example, it doesn't make sense for
+--write-xml-change to receive multiple sequences because it will keep
+opening the same XML file and overwriting the data from the previous
+sequence. Other tasks such as --write-pgsql-change are writing changes
+to a database and can support multiple sequences without overwriting
+previous data.
+
+[cols=",",options="header",]
+|===============================================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream with replication extensions.
+|outPipe.0 |Produces a (standard) change stream.
+|===============================================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|workingDirectory (default) |The directory to write the state file. |
+|(current directory)
+|=======================================================================
+
+==== --send-replication-sequence (--srs)
+
+Exposes a HTTP server that sends replication sequence numbers to
+attached clients notifying them when new replication data is available.
+The data is sent in a streamy fashion with the connection held open and
+new records sent as new replication numbers are created.
+
+This task is not intended for direct consumption by consumers. It is
+used by other tasks such as --send-replication-data which sends the
+actual replication data to clients. It detects new replication numbers
+by being inserted in the middle of a continuous replication pipeline.
+For example, it can be inserted between --replicate-apidb running in
+loop mode and --write-replication, and will run for as long as
+--replicate-apidb keeps the replication stream open.
+
+The URLs served by this task are:
+
+* /statistics - Displays global counters for the server.
+* /sequenceNumber/current - Returns the current sequence number. This
+number is guaranteed to be available.
+* /sequenceNumber/current/tail - As per above, but the connection is
+held open and new sequence numbers are returned as they become
+available.
+* /sequenceNumber/ - Returns the sequence number specified by . It will
+block if the number is not yet available, but will error if is more than
+1 greater than current. This is not useful on its own, but provided for
+consistency with other URLs.
+* /sequenceNumber//tail - As per above, but the connection is held open
+and new sequence numbers are returned as they become available.
+
+All data is sent using HTTP chunked encoding. Each sequence number is
+sent within its own chunk.
+
+Available since Osmosis 0.41.
+
+[cols=",",options="header",]
+|================================================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream with replication extensions.
+|outPipe.0 |Produces a change stream with replication extensions.
+|================================================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|port (default) |The TCP port to listen for new connections on (0 will
+dynamically allocate a port). | |0
+|=======================================================================
+
+==== --send-replication-data (--srd)
+
+Exposes a HTTP server that sends replication data to attached clients
+available avoiding the need for client-side polling. The data is sent in
+a streamy fashion with the connection held open and new records sent as
+new replication data is created. It is intended for cases where the
+replication interval is less than 1 minute and the
+--read-replication-interval task is unsuitable.
+
+The data sent by this task can be consumed by the --receive-replication
+task.
+
+The URLs served by this task are:
+
+* /replicationState/current - Returns the state of the current
+replication sequence. The data associated with this state is guaranteed
+to be available.
+* /replicationState/current/tail - As per above, but the connection is
+held open and new state information is returned as it becomes available.
+* /replicationState/ - Returns the state of the sequence identified by .
+It will block if the number is not yet available, but will error if is
+more than 1 greater than current.
+* /replicationState//tail - As per above, but the connection is held
+open and new state data is returned as it becomes available.
+* /replicationState/ - Returns the state of the replication sequence at
+or immediately prior to the specified time.
+* /replicationState//tail - As per above, but the connection is held
+open and new state information is returned as it becomes available.
+* /replicationData/current - Returns the state and data of the current
+replication sequence.
+* /replicationData/current/tail - As per above, but the connection is
+held open and new state data and associated data is returned as it
+becomes available.
+* /replicationData/ - Returns the state and data of the sequence
+identified by . It will block if the number is not yet available, but
+will error if is more than 1 greater than current.
+* /replicationData//tail - As per above, but the connection is held open
+and new state data and associated data is returned as it becomes
+available.
+* /replicationData/ - Returns the state and data of the replication
+sequence at or immediately prior to the specified time.
+* /replicationData//tail - As per above, but the connection is held open
+and new state data and associated data is returned as it becomes
+available.
+
+The statistics and replicationState URLs provide data in "text/plain"
+format and can be viewed directly in a web browser. The replicationData
+URLs provide data in "application/octet-stream" format and must be
+treated as binary, with the state "headers" containing data in java
+properties format, and the replication data itself encoded in *.osc
+format using gzip compression.
+
+All data is sent using HTTP chunked encoding, however it cannot be
+assumed that data is aligned with chunks. Each set of state data and
+replication data is preceeded by a numeric base-10 ASCII length field
+terminated by a CRLF pair.
+
+Available since Osmosis 0.41.
+
+[cols=",",options="header",]
+|=================
+|Pipe |Description
+|N/A |
+|=================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|dataDirectory (default) |The directory containing replication files. |
+|(current directory)
+
+|port |The TCP port to listen for new connections on (0 will dynamically
+allocate a port). | |0
+
+|notificationPort |The --send-replication-sequence task TCP port that
+will be used to obtain updated sequence numbers. | |80
+|=======================================================================
+
+==== --write-replication (--wr)
+
+Persists a replication stream into a replication data directory. It is
+typically used to produce the sequenced compressed XML and state files
+produced on the planet server and made available for clients to consume.
+Multiple replication sequences will be written to separate consecutively
+numbered files along with a corresponding state text file. This works
+with tasks such as --replicate-apidb.
+
+Retrieves a set of replication files named by replication sequence
+number from a server, combines them into a single stream, sorts the
+result, and tracks the current timestamp. Available since osmosis 0.41
+(the functionality was previously built into --replicate-apidb).
+
+[cols=",",options="header",]
+|===============================================================
+|Pipe |Description
+|inPipe.0 |Consumes a change stream with replication extensions.
+|===============================================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|workingDirectory (default) |The directory to write the state and data
+files. | |(current directory)
+|=======================================================================
+
+=== PBF Binary Tasks
+
+The binary tasks are used to read and write binary PBF (Google Protocol
+Buffer) files.
+
+==== --read-pbf (--rb)
+
+Reads the current contents of an OSM binary file.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|===============================================================
+|Option |Description |Valid Values |Default Value
+|file (default) |The name of the file to be read. | |dump.osmbin
+|===============================================================
+
+==== --read-pbf-fast (--rbf)
+
+Reads the current contents of an OSM binary file. This is the same as
+the standard --read-pbf task except that it allows multiple worker
+threads to be utilised to improve performance.
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|file (default) |The name of the file to be read. |Local path to file or
+HTTP/HTTPS URL of remote file |dump.osm.pbf
+
+|workers |The number of worker threads to use. |>= 1 |1
+|=======================================================================
+
+==== --write-pbf (--wb)
+
+Writes data to an OSM binary file.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|file (default) |The name of the file to be written. | |dump.osm.pbf
+
+|batchlimit |Block size used when compressing. This is a reasonable
+default. Batchlimits that are too big may cause files to exceed the
+defined filesize limits. |Integer value. |8000
+
+|omitmetadata |Omit non-geographic metadata on OSM entities. This
+includes version number and timestamp of the last edit to the entity as
+well as the user name and id of the last modifier. Omitting this
+metadata can save 15% of the file size when exporting to software that
+does not need this data. |true, false |false
+
+|usedense |Nodes can be represented in a regular format or a dense
+format. The dense format is about 30% smaller, but more complex. To make
+it easier to interoperate with (future) software that chooses to not
+implement the dense format, the dense format may be disabled. |true,
+false |true
+
+|granularity |The granularity or precision used to store coordinates.
+The default of 100 nanodegrees is the highest precision used by OSM,
+corresponding to about 1.1cm at the equator. In the current osmosis
+implementation, the granularity must be a multiple of 100. If map data
+is going to be exported to software that does not need the full
+precision, increasing the granularity to 10000 nanodegrees can save
+about 10% of the file size, while still having 1.1m precision. |Integer
+value. |100
+
+|compress |'deflate' uses deflate compression on each block. 'none'
+disables compression. These files are about twice as fast to write and
+twice the size. |deflate, none |deflate
+|=======================================================================
+
+== Plugin Tasks
+
+The following tasks are contained in plugins.
+
+They can be added to osmosis by installing the specified plugin in one
+of the pathes below or by adding it to the command-line via the "-P"
+-option.
+
+To install these tasks, copy the specified zip-file into
+
+* ~/.openstreetmap/osmosis/plugins (Linux) or
+* "C:\\Documents and Settings\\(Username)\\Application
+Data\\Openstreetmap\\Osmosis\\Plugins" (english Windows) or
+* "C:\\Dokumente und
+Einstellungen\\(Username)\\Anwendungsdaten\\Openstreetmap\\Osmosis\\Plugins"
+(german Windows) or
+* the current directoy or
+* the subdirectory plugins in the current directory
+
+To write your own plugins, see Osmosis/WritingPlugins.
+
+=== --write-osmbin-0.6
+
+Write to a directory in link:OSMbin(file_format)#version_1.0[Osmbin
+version 1.0]
+
+* plugin-zip: *libosm_osmosis_plugins.zip* (Part of
+link:Traveling_Salesman[Traveling Salesman])
+* download:
+https://sourceforge.net/project/showfiles.php?group_id=203597&package_id=307161[Traveling
+Salesman on Sourceforge] (soon)
+* documentation:
+http://apps.sourceforge.net/mediawiki/travelingsales/index.php?title=OsmosisTask/write-osmbin-0.6[Traveling
+Salesman - Wiki]
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|dir |The name of the directory to be written to. Will be created if
+needed. Will append/update if osmbin-data exists. |Any valid
+directory-name. |none
+|=======================================================================
+
+Example:
+
+* _java -classpath
+lib/jpf.jar:lib/commons-logging-1.0.4.jar:lib/osmosis.jar
+org.openstreetmap.osmosis.core.Osmosis --read-xml
+file="../Desktop/hamburg.osm.bz2" --write-osmbin-0.6
+dir="../osmbin-map"_
+
+=== --dataset-osmbin-0.6
+
+Read and write from/to a directory in
+link:OSMbin(file_format)#version_1.0[Osmbin version 1.0] and provide
+random access to it for further tasks
+
+* plugin-zip: *libosm_osmosis_plugins.zip* (Part of
+link:Traveling_Salesman[Traveling Salesman])
+* download:
+https://sourceforge.net/project/showfiles.php?group_id=203597&package_id=307161[Traveling
+Salesman on Sourceforge]
+* documentation:
+http://apps.sourceforge.net/mediawiki/travelingsales/index.php?title=OsmosisTask/dataset-osmbin-0.6[Traveling
+Salesman - Wiki]
+
+*this task is not yet finished.* It provides random access but the
+bulk-methods iterate() and iterateBoundingBox() are not yet implemented.
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|dir |The name of the directory to be written to. Will be created if
+needed. Will append/update if osmbin-data exists. |Any valid
+directory-name. |none
+|=======================================================================
+
+Example:
+
+* _java -classpath
+lib/jpf.jar:lib/commons-logging-1.0.4.jar:lib/osmosis.jar
+org.openstreetmap.osmosis.core.Osmosis --read-xml
+file="../Desktop/hamburg.osm.bz2" --dataset-osmbin-0.6
+dir="../osmbin-map"_
+
+=== --reindex-osmbin-0.6
+
+Recreate the .idx -filed for a directory in
+link:OSMbin(file_format)#version_1.0[Osmbin version 1.0]
+
+* plugin-zip: *libosm_osmosis_plugins.zip* (Part of
+link:Traveling_Salesman[Traveling Salesman])
+* download:
+https://sourceforge.net/project/showfiles.php?group_id=203597&package_id=307161[Traveling
+Salesman on Sourceforge]
+* documentation:
+http://apps.sourceforge.net/mediawiki/travelingsales/index.php?title=OsmosisTask/reindex-osmbin-0.6[Traveling
+Salesman - Wiki]
+* this task can also be run standalong. as _java -jar libosm.jar
+org.openstreetmap.osm.data.osmbin.v1_0.OsmBinV10Reindexer
+(directory-name)_
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|dir |The name of the directory to be reindexed. |Any valid
+directory-name. |none
+|=======================================================================
+
+=== --read-osmbin-0.6
+
+Read from a directory in link:OSMbin(file_format)#version_1.0[Osmbin
+version 1.0] -format.
+
+plugin-zip: *TravelingSalesman_OsmosisPlugins.zip*
+
+download:
+https://sourceforge.net/project/showfiles.php?group_id=203597&package_id=307161[Traveling
+Salesman on Sourceforge]
+
+[cols=",",options="header",]
+|====================================
+|Pipe |Description
+|outPipe.0 |Creates an entity stream.
+|====================================
+
+[cols=",,,",options="header",]
+|=======================================================================
+|Option |Description |Valid Values |Default Value
+|dir |The name of the directory to be read from. |Any valid
+directory-name. |none
+|=======================================================================
+
+=== --induce-ways-for-turnrestrictions (-iwtt)
+
+Convert all intersections with Relation:restriction[turn-restrictions]
+from a node into an equivalent number of oneway-streets that can only be
+traveled as allowed by the turn-restriction. This is meant to be a
+preprocessing-step for routers that cannot deal with restrictions/cost
+on graph-nodes.
+
+status:
+http://sourceforge.net/tracker2/?func=detail&aid=2612536&group_id=203597&atid=986234[planned
+task]
+
+documentation:
+http://apps.sourceforge.net/mediawiki/travelingsales/index.php?title=OsmosisTask/induce-ways-for-turnrestrictions[in
+Traveling Salesman Wiki]
+
+plugin-zip: *TravelingSalesman_OsmosisPlugins.zip*
+
+download:
+https://sourceforge.net/project/showfiles.php?group_id=203597&package_id=307161[Traveling
+Salesman on Sourceforge]
+
+=== --simplify
+
+The simplify plugin filters to drop some elements in order to simplify
+the data. Currently it does one extremely crude form of simplification.
+It drops all nodes apart from the start and end nodes of every way.
+
+* Source code & build script:
+https://svn.openstreetmap.org/applications/utils/osmosis/plugins/simplify/
+* Some more information:
+https://svn.openstreetmap.org/applications/utils/osmosis/plugins/simplify/README.txt[README.txt]
+
+[cols=",",options="header",]
+|=====================================
+|Pipe |Description
+|inPipe.0 |Consumes an entity stream.
+|outPipe.0 |Produces an entity stream.
+|=====================================
+
+The current simplify task takes no options
+
+== Database Login Credentials
+
+All database tasks accept a minimum of four arguments, these are:
+
+* authFile
+* host
+* database
+* user
+* password
+* dbType
+
+If no arguments are passed, then the default values for host, database,
+user and password apply.
+
+If authFile is supplied, it must point to a properties file with name
+value pairs specifying host, database, user and password. For example:
+
+`host=localhost` +
+`database=osm` +
+`user=osm` +
+`password=mypassword` +
+`dbType=postgresql`
+
+Note that the properties file doesn't have to contain all parameters, it
+may contain only the password leaving other parameters to be specified
+on the command line separately.
+
+Command line arguments override the authFile parameters, which in turn
+override the default argument values.
+
+== Munin Plugin
+
+Together with the --read-replication-lag-Task Osmosis 0.36 contains a
+http://munin-monitoring.org/[munin] plugin that graphs the replication
+lag, that's the time difference between the local state-file and the
+state of the server.
+
+To enable it, locate the munin files in your distribution. They are
+located in a subdir named "script/munin/" and follow the following
+instructions:
+
+1.  copy "osm-replication-lag" to "/usr/share/munin/plugins"
+2.  make "/usr/share/munin/plugins/osm-replication-lag" executable
+3.  symlink "/usr/share/munin/plugins/osm-replication-lag" to
+"/etc/munin/plugins"
+4.  copy "osm-replication.conf" to "/etc/munin/plugin-conf.d"
+5.  edit "/etc/munin/plugin-conf.d/osm-replication.conf" and set the
+workingDirectory
+6.  restart the munin-node
