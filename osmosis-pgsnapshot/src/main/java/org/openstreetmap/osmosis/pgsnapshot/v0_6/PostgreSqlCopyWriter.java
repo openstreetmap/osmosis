@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
+import org.openstreetmap.osmosis.core.database.DatabaseLocker;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
@@ -36,7 +37,8 @@ public class PostgreSqlCopyWriter implements Sink {
 	private boolean populateLinestring;
 	private boolean keepInvalidWays;
 	private boolean initialized;
-	
+	private DatabaseContext dbCtx;
+	private DatabaseLocker locker;
 	
 	/**
 	 * Creates a new instance.
@@ -59,7 +61,8 @@ public class PostgreSqlCopyWriter implements Sink {
 		this.preferences = preferences;
 		this.storeType = storeType;
 		this.keepInvalidWays = keepInvalidWays;
-		
+		this.dbCtx = new DatabaseContext(loginCredentials);
+		this.locker = new DatabaseLocker(dbCtx.getDataSource(), true);
 		copyFileset = new TempCopyFileset();
 	}
 	
@@ -68,12 +71,9 @@ public class PostgreSqlCopyWriter implements Sink {
 		if (!initialized) {
 			LOG.fine("Initializing the database and temporary processing files.");
 			
-			try (DatabaseContext dbCtx = new DatabaseContext(loginCredentials)) {
-				DatabaseCapabilityChecker capabilityChecker = new DatabaseCapabilityChecker(dbCtx);
-
-				populateBbox = capabilityChecker.isWayBboxSupported();
-				populateLinestring = capabilityChecker.isWayLinestringSupported();
-			}
+			DatabaseCapabilityChecker capabilityChecker = new DatabaseCapabilityChecker(this.dbCtx);
+			populateBbox = capabilityChecker.isWayBboxSupported();
+			populateLinestring = capabilityChecker.isWayLinestringSupported();
 
 			copyFilesetBuilder =
 				new CopyFilesetBuilder(copyFileset, populateBbox, populateLinestring, storeType, keepInvalidWays);
@@ -81,7 +81,8 @@ public class PostgreSqlCopyWriter implements Sink {
 			copyFilesetLoader = new CopyFilesetLoader(loginCredentials, preferences, copyFileset);
 			
 			LOG.fine("Processing input data, building geometries and creating database load files.");
-			
+
+			this.locker.lockDatabase(this.getClass().getSimpleName());
 			initialized = true;
 		}
 	}
@@ -129,7 +130,8 @@ public class PostgreSqlCopyWriter implements Sink {
 			copyFilesetBuilder = null;
 		}
 		copyFileset.close();
-		
+		this.locker.unlockDatabase();
+		this.dbCtx.close();
 		initialized = false;
 	}
 }

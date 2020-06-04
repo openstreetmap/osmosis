@@ -3,8 +3,10 @@ package org.openstreetmap.osmosis.pgsnapshot.v0_6;
 
 import org.openstreetmap.osmosis.core.container.v0_6.Dataset;
 import org.openstreetmap.osmosis.core.container.v0_6.DatasetContext;
+import org.openstreetmap.osmosis.core.database.DatabaseLocker;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
+import org.openstreetmap.osmosis.pgsnapshot.common.DatabaseContext;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.impl.PostgreSqlDatasetContext;
 import org.openstreetmap.osmosis.core.task.v0_6.DatasetSink;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableDatasetSource;
@@ -49,9 +51,12 @@ public class PostgreSqlDatasetReader implements RunnableDatasetSource, Dataset {
 	 */
 	@Override
 	public void run() {
-		try {
+		try (DatabaseContext context = new DatabaseContext(this.loginCredentials);
+				DatabaseLocker locker = new DatabaseLocker(context.getDataSource(), false)) {
+			locker.lockDatabase(this.getClass().getSimpleName());
 			datasetSink.process(this);
-			
+		} catch (final Exception e) {
+			throw new RuntimeException(e);
 		} finally {
 			datasetSink.close();
 		}

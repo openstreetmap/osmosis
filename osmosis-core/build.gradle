@@ -8,6 +8,8 @@ dependencies {
     compile group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: dependencyVersionWoodstoxCore
     compile group: 'org.codehaus.woodstox', name: 'stax2-api', version: dependencyVersionWoodstoxStax2
     compile group: 'org.apache.commons', name: 'commons-compress', version: dependencyVersionCommonsCompress
+    compile group: 'xerces', name: 'xercesImpl', version: dependencyVersionXerces
+    compile group: 'org.springframework', name: 'spring-jdbc', version: dependencyVersionSpring
 }
 
 /*

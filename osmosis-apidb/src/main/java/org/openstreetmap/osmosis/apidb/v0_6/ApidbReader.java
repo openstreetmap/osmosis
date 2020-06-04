@@ -11,6 +11,7 @@ import org.openstreetmap.osmosis.apidb.v0_6.impl.EntitySnapshotReader;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.SchemaVersionValidator;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
+import org.openstreetmap.osmosis.core.database.DatabaseLocker;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.domain.v0_6.Bound;
@@ -95,13 +96,17 @@ public class ApidbReader implements RunnableSource {
      * Reads all data from the database and send it to the sink.
      */
     public void run() {
-        try (DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials)) {
+		try (DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials);
+				DatabaseLocker locker = new DatabaseLocker(dbCtx.getDataSource(), false)) {
         	dbCtx.executeWithinTransaction(new TransactionCallbackWithoutResult() {
 				@Override
 				protected void doInTransactionWithoutResult(TransactionStatus arg0) {
+					locker.lockDatabase(this.getClass().getSimpleName());
 					runImpl(dbCtx);
 				}
         	});
-        }
+		} catch (final Exception e) {
+			throw new RuntimeException(e);
+		}
     }
 }

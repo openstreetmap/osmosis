@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
+import org.openstreetmap.osmosis.core.database.DatabaseLocker;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
@@ -43,7 +44,7 @@ public class PostgreSqlChangeWriter implements ChangeSink {
  	private long earliestTimestamp = 9999999999999L;
 	private long latestTimestamp = 0L;
 	private final Map<String, Integer> modifications;
-	
+	private final DatabaseLocker locker;
 	
 	/**
 	 * Creates a new instance.
@@ -64,7 +65,7 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 			DatabasePreferences preferences, boolean keepInvalidWays, boolean logging) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		changeWriter = new ChangeWriter(dbCtx, logging);
-		actionWriterMap = new HashMap<ChangeAction, ActionChangeWriter>();
+		actionWriterMap = new HashMap<>();
 		actionWriterMap.put(ChangeAction.Create, 
 				new ActionChangeWriter(changeWriter, ChangeAction.Create, keepInvalidWays));
 		actionWriterMap.put(ChangeAction.Modify, 
@@ -76,13 +77,14 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 		appliedChangeSets = new HashSet<>();
 		modifications = new HashMap<>();
 		initialized = false;
+		locker = new DatabaseLocker(dbCtx.getDataSource(), true);
 	}
 	
 	
 	private void initialize() {
 		if (!initialized) {
+			this.locker.lockDatabase(this.getClass().getSimpleName());
 			dbCtx.beginTransaction();
-			
 			initialized = true;
 		}
 	}
@@ -164,6 +166,9 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	 * {@inheritDoc}
 	 */
 	public void close() {
+		// now that we are finished, unlock the database
+		this.locker.unlockDatabase();
+
 		changeWriter.release();
 		
 		dbCtx.close();
