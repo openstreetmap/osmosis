@@ -1,7 +1,7 @@
-# Detailed Usage
-
 :toc: macro
 :toclevels: 4
+
+# Detailed Usage
 
 This page describes the complete set of command line options available
 for the Osmosis tool.
