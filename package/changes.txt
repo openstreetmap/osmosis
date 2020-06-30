@@ -1,3 +1,8 @@
+0.48.1
+Added advanced database logging for PgSnapshot module (#67)
+Updated usage docs (#68, #69)
+Added database locking functionality (#70)
+
 0.48.0
 Improve replication state handling with single-file steps and custom state (#63)
 Add HTTP to osmosis-pbf2 module (#62)
