@@ -116,7 +116,7 @@ public final class Fileformat {
   /**
    * Protobuf type {@code OSMPBF.Blob}
    */
-  public  static final class Blob extends
+  public static final class Blob extends
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:OSMPBF.Blob)
       BlobOrBuilder {
@@ -231,6 +231,7 @@ public final class Fileformat {
      * <code>optional bytes raw = 1;</code>
      * @return Whether the raw field is set.
      */
+    @java.lang.Override
     public boolean hasRaw() {
       return ((bitField0_ & 0x00000001) != 0);
     }
@@ -242,6 +243,7 @@ public final class Fileformat {
      * <code>optional bytes raw = 1;</code>
      * @return The raw.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString getRaw() {
       return raw_;
     }
@@ -256,6 +258,7 @@ public final class Fileformat {
      * <code>optional int32 raw_size = 2;</code>
      * @return Whether the rawSize field is set.
      */
+    @java.lang.Override
     public boolean hasRawSize() {
       return ((bitField0_ & 0x00000002) != 0);
     }
@@ -267,6 +270,7 @@ public final class Fileformat {
      * <code>optional int32 raw_size = 2;</code>
      * @return The rawSize.
      */
+    @java.lang.Override
     public int getRawSize() {
       return rawSize_;
     }
@@ -281,6 +285,7 @@ public final class Fileformat {
      * <code>optional bytes zlib_data = 3;</code>
      * @return Whether the zlibData field is set.
      */
+    @java.lang.Override
     public boolean hasZlibData() {
       return ((bitField0_ & 0x00000004) != 0);
     }
@@ -292,6 +297,7 @@ public final class Fileformat {
      * <code>optional bytes zlib_data = 3;</code>
      * @return The zlibData.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString getZlibData() {
       return zlibData_;
     }
@@ -306,6 +312,7 @@ public final class Fileformat {
      * <code>optional bytes lzma_data = 4;</code>
      * @return Whether the lzmaData field is set.
      */
+    @java.lang.Override
     public boolean hasLzmaData() {
       return ((bitField0_ & 0x00000008) != 0);
     }
@@ -317,6 +324,7 @@ public final class Fileformat {
      * <code>optional bytes lzma_data = 4;</code>
      * @return The lzmaData.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString getLzmaData() {
       return lzmaData_;
     }
@@ -331,6 +339,7 @@ public final class Fileformat {
      * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
      * @return Whether the oBSOLETEBzip2Data field is set.
      */
+    @java.lang.Override
     @java.lang.Deprecated public boolean hasOBSOLETEBzip2Data() {
       return ((bitField0_ & 0x00000010) != 0);
     }
@@ -342,6 +351,7 @@ public final class Fileformat {
      * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
      * @return The oBSOLETEBzip2Data.
      */
+    @java.lang.Override
     @java.lang.Deprecated public com.google.protobuf.ByteString getOBSOLETEBzip2Data() {
       return oBSOLETEBzip2Data_;
     }
@@ -769,6 +779,7 @@ public final class Fileformat {
        * <code>optional bytes raw = 1;</code>
        * @return Whether the raw field is set.
        */
+      @java.lang.Override
       public boolean hasRaw() {
         return ((bitField0_ & 0x00000001) != 0);
       }
@@ -780,6 +791,7 @@ public final class Fileformat {
        * <code>optional bytes raw = 1;</code>
        * @return The raw.
        */
+      @java.lang.Override
       public com.google.protobuf.ByteString getRaw() {
         return raw_;
       }
@@ -825,6 +837,7 @@ public final class Fileformat {
        * <code>optional int32 raw_size = 2;</code>
        * @return Whether the rawSize field is set.
        */
+      @java.lang.Override
       public boolean hasRawSize() {
         return ((bitField0_ & 0x00000002) != 0);
       }
@@ -836,6 +849,7 @@ public final class Fileformat {
        * <code>optional int32 raw_size = 2;</code>
        * @return The rawSize.
        */
+      @java.lang.Override
       public int getRawSize() {
         return rawSize_;
       }
@@ -878,6 +892,7 @@ public final class Fileformat {
        * <code>optional bytes zlib_data = 3;</code>
        * @return Whether the zlibData field is set.
        */
+      @java.lang.Override
       public boolean hasZlibData() {
         return ((bitField0_ & 0x00000004) != 0);
       }
@@ -889,6 +904,7 @@ public final class Fileformat {
        * <code>optional bytes zlib_data = 3;</code>
        * @return The zlibData.
        */
+      @java.lang.Override
       public com.google.protobuf.ByteString getZlibData() {
         return zlibData_;
       }
@@ -934,6 +950,7 @@ public final class Fileformat {
        * <code>optional bytes lzma_data = 4;</code>
        * @return Whether the lzmaData field is set.
        */
+      @java.lang.Override
       public boolean hasLzmaData() {
         return ((bitField0_ & 0x00000008) != 0);
       }
@@ -945,6 +962,7 @@ public final class Fileformat {
        * <code>optional bytes lzma_data = 4;</code>
        * @return The lzmaData.
        */
+      @java.lang.Override
       public com.google.protobuf.ByteString getLzmaData() {
         return lzmaData_;
       }
@@ -990,6 +1008,7 @@ public final class Fileformat {
        * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
        * @return Whether the oBSOLETEBzip2Data field is set.
        */
+      @java.lang.Override
       @java.lang.Deprecated public boolean hasOBSOLETEBzip2Data() {
         return ((bitField0_ & 0x00000010) != 0);
       }
@@ -1001,6 +1020,7 @@ public final class Fileformat {
        * <code>optional bytes OBSOLETE_bzip2_data = 5 [deprecated = true];</code>
        * @return The oBSOLETEBzip2Data.
        */
+      @java.lang.Override
       @java.lang.Deprecated public com.google.protobuf.ByteString getOBSOLETEBzip2Data() {
         return oBSOLETEBzip2Data_;
       }
@@ -1135,7 +1155,7 @@ public final class Fileformat {
   /**
    * Protobuf type {@code OSMPBF.BlobHeader}
    */
-  public  static final class BlobHeader extends
+  public static final class BlobHeader extends
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:OSMPBF.BlobHeader)
       BlobHeaderOrBuilder {
@@ -1235,6 +1255,7 @@ public final class Fileformat {
      * <code>required string type = 1;</code>
      * @return Whether the type field is set.
      */
+    @java.lang.Override
     public boolean hasType() {
       return ((bitField0_ & 0x00000001) != 0);
     }
@@ -1242,6 +1263,7 @@ public final class Fileformat {
      * <code>required string type = 1;</code>
      * @return The type.
      */
+    @java.lang.Override
     public java.lang.String getType() {
       java.lang.Object ref = type_;
       if (ref instanceof java.lang.String) {
@@ -1260,6 +1282,7 @@ public final class Fileformat {
      * <code>required string type = 1;</code>
      * @return The bytes for type.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString
         getTypeBytes() {
       java.lang.Object ref = type_;
@@ -1280,6 +1303,7 @@ public final class Fileformat {
      * <code>optional bytes indexdata = 2;</code>
      * @return Whether the indexdata field is set.
      */
+    @java.lang.Override
     public boolean hasIndexdata() {
       return ((bitField0_ & 0x00000002) != 0);
     }
@@ -1287,6 +1311,7 @@ public final class Fileformat {
      * <code>optional bytes indexdata = 2;</code>
      * @return The indexdata.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString getIndexdata() {
       return indexdata_;
     }
@@ -1297,6 +1322,7 @@ public final class Fileformat {
      * <code>required int32 datasize = 3;</code>
      * @return Whether the datasize field is set.
      */
+    @java.lang.Override
     public boolean hasDatasize() {
       return ((bitField0_ & 0x00000004) != 0);
     }
@@ -1304,6 +1330,7 @@ public final class Fileformat {
      * <code>required int32 datasize = 3;</code>
      * @return The datasize.
      */
+    @java.lang.Override
     public int getDatasize() {
       return datasize_;
     }
@@ -1776,6 +1803,7 @@ public final class Fileformat {
        * <code>optional bytes indexdata = 2;</code>
        * @return Whether the indexdata field is set.
        */
+      @java.lang.Override
       public boolean hasIndexdata() {
         return ((bitField0_ & 0x00000002) != 0);
       }
@@ -1783,6 +1811,7 @@ public final class Fileformat {
        * <code>optional bytes indexdata = 2;</code>
        * @return The indexdata.
        */
+      @java.lang.Override
       public com.google.protobuf.ByteString getIndexdata() {
         return indexdata_;
       }
@@ -1816,6 +1845,7 @@ public final class Fileformat {
        * <code>required int32 datasize = 3;</code>
        * @return Whether the datasize field is set.
        */
+      @java.lang.Override
       public boolean hasDatasize() {
         return ((bitField0_ & 0x00000004) != 0);
       }
@@ -1823,6 +1853,7 @@ public final class Fileformat {
        * <code>required int32 datasize = 3;</code>
        * @return The datasize.
        */
+      @java.lang.Override
       public int getDatasize() {
         return datasize_;
       }
