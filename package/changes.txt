@@ -1,3 +1,7 @@
+0.48.2
+Update for protobuf package 3.12.2 in Debian (#71)
+ChangeSimplifierImpl no longer squashes changes of different types but same id (#72)
+
 0.48.1
 Added advanced database logging for PgSnapshot module (#67)
 Updated usage docs (#68, #69)
