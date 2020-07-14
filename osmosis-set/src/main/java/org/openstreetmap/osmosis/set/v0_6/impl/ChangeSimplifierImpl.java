@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
+import org.openstreetmap.osmosis.core.domain.v0_6.EntityType;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSink;
 import org.openstreetmap.osmosis.core.task.v0_6.ChangeSinkChangeSource;
@@ -81,14 +82,15 @@ public class ChangeSimplifierImpl implements ChangeSinkChangeSource {
 		// then we must process the current changes.
 		if (currentChanges.size() > 0) {
 			long currentId;
-			
+			EntityType currentEntityType;
 			currentId = currentChanges.get(0).getEntityContainer().getEntity().getId();
-			
-			if (currentId != change.getEntityContainer().getEntity().getId()) {
+			currentEntityType = currentChanges.get(0).getEntityContainer().getEntity().getType();
+
+			if (currentId != change.getEntityContainer().getEntity().getId()
+					|| currentEntityType != change.getEntityContainer().getEntity().getType()) {
 				flushCurrentChanges();
 			}
 		}
-		
 		currentChanges.add(change);
 	}
 
