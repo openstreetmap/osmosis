@@ -53,7 +53,7 @@ DROP TABLE IF EXISTS state;
   write_lock BOOLEAN NOT NULL DEFAULT(false)
 );
 
- DROP FUNCTION IF EXIST lock_database(TEXT, TEXT, TEXT);
+ DROP FUNCTION IF EXISTS lock_database(TEXT, TEXT, TEXT);
 CREATE OR REPLACE FUNCTION lock_database(new_process TEXT, new_source TEXT, new_location TEXT, request_write_lock BOOLEAN) RETURNS INT AS $$
   DECLARE locked_id INT;
   DECLARE current_id INT;
