@@ -122,7 +122,7 @@ public class FastXmlParser {
 			} else if (reader.getEventType() == XMLStreamConstants.END_ELEMENT) {
 				level--;
 			}
-			reader.nextTag();
+			reader.next();
 		} while (level > 0);
 	}
 
@@ -416,21 +416,24 @@ public class FastXmlParser {
 					sink.process(new BoundContainer(readBounds(generator)));
 				}
 
-				while (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {			
-					// Node, way, relation
-					if (reader.getLocalName().equals(ELEMENT_NAME_NODE)) {
-						sink.process(new NodeContainer(readNode()));
-					} else if (reader.getLocalName().equals(ELEMENT_NAME_WAY)) {
-						sink.process(new WayContainer(readWay()));
-					} else if (reader.getLocalName().equals(ELEMENT_NAME_RELATION)) {
-						sink.process(new RelationContainer(readRelation()));
-					} else {
-						readUnknownElement();
+				while(reader.hasNext()) {
+					if (reader.getEventType() == XMLStreamConstants.START_ELEMENT) {
+						// Node, way, relation
+						if (reader.getLocalName().equals(ELEMENT_NAME_NODE)) {
+							sink.process(new NodeContainer(readNode()));
+						} else if (reader.getLocalName().equals(ELEMENT_NAME_WAY)) {
+							sink.process(new WayContainer(readWay()));
+						} else if (reader.getLocalName().equals(ELEMENT_NAME_RELATION)) {
+							sink.process(new RelationContainer(readRelation()));
+						} else {
+							readUnknownElement();
+						}
+						continue;
 					}
+					reader.next();
 				}
-
 			} else {
-				throw new XMLStreamException();
+				throw new XMLStreamException("Expected <osm>");
 			}
 		} catch (Exception e) {
 			throw new OsmosisRuntimeException(e);
