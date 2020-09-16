@@ -410,21 +410,19 @@ public class ApidbWriter implements Sink, EntityProcessor {
      * @param node The node containing the data to be inserted.
      */
     private void populateNodeParameters(PreparedStatement statement, int initialIndex, Node node) {
-        int prmIndex;
-
-        prmIndex = initialIndex;
+        int prmIndex = initialIndex;
 
         assertEntityHasTimestamp(node);
 
         try {
-            statement.setLong(prmIndex++, node.getId());
-            statement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
-            statement.setInt(prmIndex++, node.getVersion());
-            statement.setBoolean(prmIndex++, true);
-            statement.setLong(prmIndex++, node.getChangesetId());
-            statement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
-            statement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
-            statement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
+            statement.setLong(++prmIndex, node.getId());
+            statement.setTimestamp(++prmIndex, new Timestamp(node.getTimestamp().getTime()));
+            statement.setInt(++prmIndex, node.getVersion());
+            statement.setBoolean(++prmIndex, true);
+            statement.setLong(++prmIndex, node.getChangesetId());
+            statement.setInt(++prmIndex, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
+            statement.setInt(++prmIndex, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
+            statement.setLong(++prmIndex, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a node.", e);
@@ -450,18 +448,16 @@ public class ApidbWriter implements Sink, EntityProcessor {
      * @param way The way containing the data to be inserted.
      */
     private void populateWayParameters(PreparedStatement statement, int initialIndex, Way way) {
-        int prmIndex;
-
-        prmIndex = initialIndex;
+        int prmIndex = initialIndex;
 
         assertEntityHasTimestamp(way);
 
         try {
-            statement.setLong(prmIndex++, way.getId());
-            statement.setTimestamp(prmIndex++, new Timestamp(way.getTimestamp().getTime()));
-            statement.setInt(prmIndex++, way.getVersion());
-            statement.setBoolean(prmIndex++, true);
-            statement.setLong(prmIndex++, way.getChangesetId());
+            statement.setLong(++prmIndex, way.getId());
+            statement.setTimestamp(++prmIndex, new Timestamp(way.getTimestamp().getTime()));
+            statement.setInt(++prmIndex, way.getVersion());
+            statement.setBoolean(++prmIndex, true);
+            statement.setLong(++prmIndex, way.getChangesetId());
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a way.", e);
@@ -477,18 +473,16 @@ public class ApidbWriter implements Sink, EntityProcessor {
      */
     private void populateEntityTagParameters(PreparedStatement statement, int initialIndex,
         DbFeatureHistory<DbFeature<Tag>> dbEntityTag) {
-        int prmIndex;
+        int prmIndex = initialIndex;
         Tag tag;
-
-        prmIndex = initialIndex;
 
         tag = dbEntityTag.getFeature().getFeature();
 
         try {
-            statement.setLong(prmIndex++, dbEntityTag.getFeature().getEntityId());
-            statement.setString(prmIndex++, tag.getKey());
-            statement.setString(prmIndex++, tag.getValue());
-            statement.setInt(prmIndex++, dbEntityTag.getVersion());
+            statement.setLong(++prmIndex, dbEntityTag.getFeature().getEntityId());
+            statement.setString(++prmIndex, tag.getKey());
+            statement.setString(++prmIndex, tag.getValue());
+            statement.setInt(++prmIndex, dbEntityTag.getVersion());
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for an entity tag.", e);
@@ -504,15 +498,13 @@ public class ApidbWriter implements Sink, EntityProcessor {
      */
     private void populateWayNodeParameters(PreparedStatement statement, int initialIndex,
         DbFeatureHistory<DbOrderedFeature<WayNode>> dbWayNode) {
-        int prmIndex;
-
-        prmIndex = initialIndex;
+        int prmIndex = initialIndex;
 
         try {
-            statement.setLong(prmIndex++, dbWayNode.getFeature().getEntityId());
-            statement.setLong(prmIndex++, dbWayNode.getFeature().getFeature().getNodeId());
-            statement.setInt(prmIndex++, dbWayNode.getFeature().getSequenceId());
-            statement.setInt(prmIndex++, dbWayNode.getVersion());
+            statement.setLong(++prmIndex, dbWayNode.getFeature().getEntityId());
+            statement.setLong(++prmIndex, dbWayNode.getFeature().getFeature().getNodeId());
+            statement.setInt(++prmIndex, dbWayNode.getFeature().getSequenceId());
+            statement.setInt(++prmIndex, dbWayNode.getVersion());
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a way node.", e);
@@ -527,18 +519,16 @@ public class ApidbWriter implements Sink, EntityProcessor {
      * @param relation The way containing the data to be inserted.
      */
     private void populateRelationParameters(PreparedStatement statement, int initialIndex, Relation relation) {
-        int prmIndex;
-
-        prmIndex = initialIndex;
+        int prmIndex = initialIndex;
 
         assertEntityHasTimestamp(relation);
 
         try {
-            statement.setLong(prmIndex++, relation.getId());
-            statement.setTimestamp(prmIndex++, new Timestamp(relation.getTimestamp().getTime()));
-            statement.setInt(prmIndex++, relation.getVersion());
-            statement.setBoolean(prmIndex++, true);
-            statement.setLong(prmIndex++, relation.getChangesetId());
+            statement.setLong(++prmIndex, relation.getId());
+            statement.setTimestamp(++prmIndex, new Timestamp(relation.getTimestamp().getTime()));
+            statement.setInt(++prmIndex, relation.getVersion());
+            statement.setBoolean(++prmIndex, true);
+            statement.setLong(++prmIndex, relation.getChangesetId());
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a relation.", e);
@@ -554,20 +544,18 @@ public class ApidbWriter implements Sink, EntityProcessor {
      */
     private void populateRelationMemberParameters(PreparedStatement statement, int initialIndex,
         DbFeatureHistory<DbOrderedFeature<RelationMember>> dbRelationMember) {
-        int prmIndex;
+        int prmIndex = initialIndex;
         RelationMember relationMember;
-
-        prmIndex = initialIndex;
 
         relationMember = dbRelationMember.getFeature().getFeature();
 
         try {
-            statement.setLong(prmIndex++, dbRelationMember.getFeature().getEntityId());
-            statement.setString(prmIndex++, memberTypeRenderer.render(relationMember.getMemberType()));
-            statement.setLong(prmIndex++, relationMember.getMemberId());
-            statement.setInt(prmIndex++, dbRelationMember.getFeature().getSequenceId());
-            statement.setString(prmIndex++, relationMember.getMemberRole());
-            statement.setInt(prmIndex++, dbRelationMember.getVersion());
+            statement.setLong(++prmIndex, dbRelationMember.getFeature().getEntityId());
+            statement.setString(++prmIndex, memberTypeRenderer.render(relationMember.getMemberType()));
+            statement.setLong(++prmIndex, relationMember.getMemberId());
+            statement.setInt(++prmIndex, dbRelationMember.getFeature().getSequenceId());
+            statement.setString(++prmIndex, relationMember.getMemberRole());
+            statement.setInt(++prmIndex, dbRelationMember.getVersion());
 
         } catch (SQLException e) {
             throw new OsmosisRuntimeException("Unable to set a prepared statement parameter for a relation member.", e);
