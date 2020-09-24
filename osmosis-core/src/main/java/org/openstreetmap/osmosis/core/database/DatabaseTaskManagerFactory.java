@@ -24,6 +24,7 @@ public abstract class DatabaseTaskManagerFactory extends TaskManagerFactory {
 
         // Create a new credential object with default values.
         loginCredentials = new DatabaseLoginCredentials(DatabaseConstants.TASK_DEFAULT_HOST,
+        		DatabaseConstants.TASK_DEFAULT_PORT,
                 DatabaseConstants.TASK_DEFAULT_DATABASE, DatabaseConstants.TASK_DEFAULT_USER,
                 DatabaseConstants.TASK_DEFAULT_PASSWORD, DatabaseConstants.TASK_DEFAULT_FORCE_UTF8,
                 DatabaseConstants.TASK_DEFAULT_PROFILE_SQL, DatabaseConstants.TASK_DEFAULT_DB_TYPE);
@@ -43,6 +44,8 @@ public abstract class DatabaseTaskManagerFactory extends TaskManagerFactory {
         // command line.
         loginCredentials.setHost(getStringArgument(taskConfig, DatabaseConstants.TASK_ARG_HOST, loginCredentials
                 .getHost()));
+        loginCredentials.setPort(getStringArgument(taskConfig, DatabaseConstants.TASK_ARG_PORT, loginCredentials
+                .getPort()));
         loginCredentials.setDatabase(getStringArgument(taskConfig, DatabaseConstants.TASK_ARG_DATABASE,
                 loginCredentials.getDatabase()));
         loginCredentials.setUser(getStringArgument(taskConfig, DatabaseConstants.TASK_ARG_USER, loginCredentials

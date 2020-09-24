@@ -234,6 +234,7 @@ public class OsmosisExtractApiDb {
 
 		System.out.println("Configuration");
 		System.out.println("\thost: " + configuration.getHost());
+		System.out.println("\tport: " + configuration.getPort());
 		System.out.println("\tdatabase: " + configuration.getDatabase());
 		System.out.println("\tuser: " + configuration.getUser());
 		System.out.println("\tpassword: " + configuration.getPassword());

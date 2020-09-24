@@ -10,6 +10,7 @@ public class DatabaseLoginCredentials {
 
 	private String datasourceJndiLocation;
     private String host;
+    private String port;
     private String database;
     private String user;
     private String password;
@@ -35,6 +36,8 @@ public class DatabaseLoginCredentials {
 	 * 
 	 * @param host
 	 *            The server hosting the database.
+	 * @param port
+	 *            The port the database is running on. Defaults to 5432.
 	 * @param database
 	 *            The database instance.
 	 * @param user
@@ -50,9 +53,10 @@ public class DatabaseLoginCredentials {
 	 * @param dbType
 	 *            The database type.
 	 */
-    public DatabaseLoginCredentials(String host, String database, String user, String password, boolean forceUtf8,
+    public DatabaseLoginCredentials(String host, String port, String database, String user, String password, boolean forceUtf8,
             boolean profileSql, DatabaseType dbType) {
         this.host = host;
+        this.port = port;
         this.database = database;
         this.user = user;
         this.password = password;
@@ -61,7 +65,7 @@ public class DatabaseLoginCredentials {
         this.dbType = dbType;
         this.postgresSchema = "";
     }
-    
+
     
 	/**
 	 * Gets the location of the datasource in JNDI. If null, new connections
@@ -82,7 +86,8 @@ public class DatabaseLoginCredentials {
     public String getHost() {
         return host;
     }
-
+    
+    
     /**
      * Updates the host.
      * 
@@ -90,6 +95,24 @@ public class DatabaseLoginCredentials {
      */
     public void setHost(String host) {
         this.host = host;
+    }
+
+    /**
+     * Returns the port.
+     * 
+     * @return The port.
+     */
+    public String getPort() {
+        return port;
+    }
+
+    /**
+     * Updates the port.
+     * 
+     * @param port The new port.
+     */
+    public void setPort(String port) {
+        this.port = port;
     }
 
     /**

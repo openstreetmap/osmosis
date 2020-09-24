@@ -34,12 +34,14 @@ public final class DataSourceFactory {
         switch (credentials.getDbType()) {
         case POSTGRESQL:
         	dataSource.setDriverClassName("org.postgresql.Driver");
-        	dataSource.setUrl("jdbc:postgresql://" + credentials.getHost() + "/" + credentials.getDatabase()
+        	dataSource.setUrl("jdbc:postgresql://" + credentials.getHost() + ":" 
+        	+ credentials.getPort() + "/" + credentials.getDatabase()
         			/*+ "?loglevel=2"*/);
         	break;
         case MYSQL:
         	dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        	dataSource.setUrl("jdbc:mysql://" + credentials.getHost() + "/" + credentials.getDatabase());
+        	dataSource.setUrl("jdbc:mysql://" + credentials.getHost() + ":"
+        	+ credentials.getPort() + "/" + credentials.getDatabase());
             break;
         default:
             throw new OsmosisRuntimeException("Unknown database type " + credentials.getDbType() + ".");

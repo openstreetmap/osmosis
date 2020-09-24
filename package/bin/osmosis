@@ -45,11 +45,11 @@ Example Usage
 
 Import a planet file into a local PostgreSQL database.
 
-osmosis --read-xml file=~/osm/planbet/planet.osm --write-apidb host="x" database="x" user="x" password="x"
+osmosis --read-xml file=~/osm/planbet/planet.osm --write-apidb host="x" port="x" database="x" user="x" password="x"
 
 Export a planet file from a local PostgreSQL database.
 
-osmosis --read-apidb host="x" database="x" user="x" password="x" --write-xml file="planet.osm"
+osmosis --read-apidb host="x" port="x" database="x" user="x" password="x" --write-xml file="planet.osm"
 
 Derive a change set between two planet files.
 
@@ -57,7 +57,7 @@ osmosis --read-xml file="planet2.osm" --read-xml file="planet1.osm" --derive-cha
 
 Derive a change set between a planet file and a database.
 
-osmosis --read-mysql host="x" database="x" user="x" password="x" --read-xml file="planet1.osm" --derive-change --write-xml-change file="planetdiff-1-2.osc"
+osmosis --read-mysql host="x" port="x" database="x" user="x" password="x" --read-xml file="planet1.osm" --derive-change --write-xml-change file="planetdiff-1-2.osc"
 
 Apply a change set to a planet file.
 

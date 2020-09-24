@@ -14,6 +14,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
  * The recognised properties are:
  * <ul>
  * <li>host</li>
+ * <li>port</li>
  * <li>database</li>
  * <li>user</li>
  * <li>password</li>
@@ -25,6 +26,7 @@ import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 public class AuthenticationPropertiesLoader {
 
     private static final String KEY_HOST = "host";
+    private static final String KEY_PORT = "port";
     private static final String KEY_DATABASE = "database";
     private static final String KEY_USER = "user";
     private static final String KEY_PASSWORD = "password";
@@ -68,6 +70,9 @@ public class AuthenticationPropertiesLoader {
 
         if (properties.containsKey(KEY_HOST)) {
             loginCredentials.setHost(properties.getProperty(KEY_HOST));
+        }
+        if (properties.containsKey(KEY_PORT)) {
+            loginCredentials.setPort(properties.getProperty(KEY_PORT));
         }
         if (properties.containsKey(KEY_DATABASE)) {
             loginCredentials.setDatabase(properties.getProperty(KEY_DATABASE));
