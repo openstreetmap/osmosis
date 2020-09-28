@@ -45,6 +45,7 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 	private long latestTimestamp = 0L;
 	private final Map<String, Integer> modifications;
 	private final DatabaseLocker locker;
+	private boolean logging = false;
 	
 	/**
 	 * Creates a new instance.
@@ -78,6 +79,7 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 		modifications = new HashMap<>();
 		initialized = false;
 		locker = new DatabaseLocker(dbCtx.getDataSource(), true);
+		this.logging = logging;
 	}
 	
 	
@@ -138,15 +140,16 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 		
 		changeWriter.complete();
 
-		// on complete write to the changes table
-		dbCtx.getJdbcTemplate().execute(String.format("INSERT INTO replication_changes "
-                + "(nodes_added, nodes_modified, nodes_deleted, "
+		if (this.logging) {
+			// on complete write to the changes table
+			dbCtx.getJdbcTemplate().execute(String.format("INSERT INTO replication_changes "
+				+ "(nodes_added, nodes_modified, nodes_deleted, "
 				+ "ways_added, ways_modified, ways_deleted, "
 				+ "relations_added, relations_modified, relations_deleted, "
 				+ "changesets_applied, earliest_timestamp, latest_timestamp) "
-                + "VALUES "
-                + "(%s, %s, %s, %s, %s, %s, %s, %s, %s, ARRAY[%s]::BIGINT[], '%s', '%s')",
-                modifications.getOrDefault(EntityType.Node.name() + "-" + ChangeAction.Create, 0),
+				+ "VALUES "
+				+ "(%s, %s, %s, %s, %s, %s, %s, %s, %s, ARRAY[%s]::BIGINT[], '%s', '%s')",
+				modifications.getOrDefault(EntityType.Node.name() + "-" + ChangeAction.Create, 0),
 				modifications.getOrDefault(EntityType.Node.name() + "-" + ChangeAction.Modify, 0),
 				modifications.getOrDefault(EntityType.Node.name() + "-" + ChangeAction.Delete, 0),
 				modifications.getOrDefault(EntityType.Way.name() + "-" + ChangeAction.Create, 0),
@@ -157,6 +160,7 @@ public class PostgreSqlChangeWriter implements ChangeSink {
 				modifications.getOrDefault(EntityType.Relation.name() + "-" + ChangeAction.Delete, 0),
 		appliedChangeSets.stream().map(id -> id + "").collect(Collectors.joining(",")),
 				FORMATTER.format(new Date(earliestTimestamp)), FORMATTER.format(new Date(latestTimestamp))));
+		}
 		
 		dbCtx.commitTransaction();
 	}
