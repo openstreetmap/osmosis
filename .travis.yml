@@ -3,3 +3,8 @@ services:
 
 script:
   - ./docker.sh ./gradlew build
+
+cache:
+  directories:
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
