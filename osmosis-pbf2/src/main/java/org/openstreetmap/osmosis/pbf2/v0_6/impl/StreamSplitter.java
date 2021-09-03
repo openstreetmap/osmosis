@@ -8,11 +8,9 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import crosby.binary.Fileformat;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.lifecycle.Closeable;
-import org.openstreetmap.osmosis.osmbinary.Fileformat;
-import org.openstreetmap.osmosis.osmbinary.Fileformat.BlobHeader;
-
 
 /**
  * Parses a PBF data stream and extracts the raw data of each blob in sequence
@@ -43,17 +41,15 @@ public class StreamSplitter implements Iterator<RawBlob>, Closeable {
 	}
 
 
-	private BlobHeader readHeader(int headerLength) throws IOException {
+	private Fileformat.BlobHeader readHeader(int headerLength) throws IOException {
 		byte[] headerBuffer = new byte[headerLength];
 		dis.readFully(headerBuffer);
 
-		BlobHeader blobHeader = Fileformat.BlobHeader.parseFrom(headerBuffer);
-
-		return blobHeader;
+		return Fileformat.BlobHeader.parseFrom(headerBuffer);
 	}
 
 
-	private byte[] readRawBlob(BlobHeader blobHeader) throws IOException {
+	private byte[] readRawBlob(Fileformat.BlobHeader blobHeader) throws IOException {
 		byte[] rawBlob = new byte[blobHeader.getDatasize()];
 
 		dis.readFully(rawBlob);
@@ -78,7 +74,7 @@ public class StreamSplitter implements Iterator<RawBlob>, Closeable {
 			if (log.isLoggable(Level.FINER)) {
 				log.finer("Reading header for blob " + dataBlockCount++);
 			}
-			BlobHeader blobHeader = readHeader(headerLength);
+			Fileformat.BlobHeader blobHeader = readHeader(headerLength);
 
 			if (log.isLoggable(Level.FINER)) {
 				log.finer("Processing blob of type " + blobHeader.getType() + ".");

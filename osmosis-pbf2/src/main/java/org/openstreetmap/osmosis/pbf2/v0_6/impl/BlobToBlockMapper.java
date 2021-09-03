@@ -2,9 +2,9 @@
 package org.openstreetmap.osmosis.pbf2.v0_6.impl;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import crosby.binary.Fileformat;
+import crosby.binary.Osmformat;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.osmbinary.Fileformat;
-import org.openstreetmap.osmosis.osmbinary.Osmformat;
 
 import java.util.function.Function;
 

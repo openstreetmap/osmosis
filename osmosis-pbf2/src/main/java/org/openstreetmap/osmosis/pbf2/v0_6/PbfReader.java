@@ -12,11 +12,11 @@ import java.util.concurrent.Executors;
 import java.util.function.Supplier;
 
 import com.google.common.util.concurrent.MoreExecutors;
+import crosby.binary.Osmformat;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
-import org.openstreetmap.osmosis.osmbinary.Osmformat;
 import org.openstreetmap.osmosis.pbf2.v0_6.impl.HeaderBoundReader;
 import org.openstreetmap.osmosis.pbf2.v0_6.impl.HeaderMetadataReader;
 import org.openstreetmap.osmosis.pbf2.v0_6.impl.HeaderSeeker;

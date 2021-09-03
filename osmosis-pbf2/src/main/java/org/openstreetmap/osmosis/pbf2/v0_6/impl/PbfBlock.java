@@ -1,12 +1,12 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pbf2.v0_6.impl;
 
-import org.openstreetmap.osmosis.osmbinary.Osmformat;
+import crosby.binary.Osmformat;
 
 import java.util.Optional;
 
 /**
- * Contains the results of parsing a {@link org.openstreetmap.osmosis.osmbinary.Fileformat.Blob}.
+ * Contains the results of parsing a {@link crosby.binary.Fileformat.Blob}.
  */
 public class PbfBlock {
     private Optional<Osmformat.HeaderBlock> headerBlock;

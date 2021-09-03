@@ -1,6 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pbf2.v0_6.impl;
 
+import crosby.binary.Osmformat;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
@@ -12,15 +13,6 @@ import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.domain.v0_6.RelationMember;
 import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
-import org.openstreetmap.osmosis.osmbinary.Osmformat;
-import org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo;
-import org.openstreetmap.osmosis.osmbinary.Osmformat.DenseNodes;
-import org.openstreetmap.osmosis.osmbinary.Osmformat.Info;
-import org.openstreetmap.osmosis.osmbinary.Osmformat.Node;
-import org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveGroup;
-import org.openstreetmap.osmosis.osmbinary.Osmformat.Relation;
-import org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType;
-import org.openstreetmap.osmosis.osmbinary.Osmformat.Way;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -88,8 +80,8 @@ public class PbfBlobDecoder implements Runnable {
 	}
 
 
-	private CommonEntityData buildCommonEntityData(long entityId, List<Integer> keys, List<Integer> values, Info info,
-			PbfFieldDecoder fieldDecoder) {
+	private CommonEntityData buildCommonEntityData(long entityId, List<Integer> keys, List<Integer> values,
+			Osmformat.Info info, PbfFieldDecoder fieldDecoder) {
 		OsmUser user;
 		CommonEntityData entityData;
 
@@ -121,8 +113,8 @@ public class PbfBlobDecoder implements Runnable {
 	}
 
 
-	private void processNodes(List<Node> nodes, PbfFieldDecoder fieldDecoder) {
-		for (Node node : nodes) {
+	private void processNodes(List<Osmformat.Node> nodes, PbfFieldDecoder fieldDecoder) {
+		for (Osmformat.Node node : nodes) {
 			org.openstreetmap.osmosis.core.domain.v0_6.Node osmNode;
 			CommonEntityData entityData;
 
@@ -143,7 +135,7 @@ public class PbfBlobDecoder implements Runnable {
 	}
 
 
-	private void processNodes(DenseNodes nodes, PbfFieldDecoder fieldDecoder) {
+	private void processNodes(Osmformat.DenseNodes nodes, PbfFieldDecoder fieldDecoder) {
 		List<Long> idList = nodes.getIdList();
 		List<Long> latList = nodes.getLatList();
 		List<Long> lonList = nodes.getLonList();
@@ -156,7 +148,7 @@ public class PbfBlobDecoder implements Runnable {
 
 		Iterator<Integer> keysValuesIterator = nodes.getKeysValsList().iterator();
 
-		DenseInfo denseInfo;
+		Osmformat.DenseInfo denseInfo;
 		if (nodes.hasDenseinfo()) {
 			denseInfo = nodes.getDenseinfo();
 		} else {
@@ -229,8 +221,8 @@ public class PbfBlobDecoder implements Runnable {
 	}
 
 
-	private void processWays(List<Way> ways, PbfFieldDecoder fieldDecoder) {
-		for (Way way : ways) {
+	private void processWays(List<Osmformat.Way> ways, PbfFieldDecoder fieldDecoder) {
+		for (Osmformat.Way way : ways) {
 			org.openstreetmap.osmosis.core.domain.v0_6.Way osmWay;
 			CommonEntityData entityData;
 
@@ -273,7 +265,7 @@ public class PbfBlobDecoder implements Runnable {
 	}
 
 	private void buildRelationMembers(org.openstreetmap.osmosis.core.domain.v0_6.Relation relation,
-			List<Long> memberIds, List<Integer> memberRoles, List<MemberType> memberTypes,
+			List<Long> memberIds, List<Integer> memberRoles, List<Osmformat.Relation.MemberType> memberTypes,
 			PbfFieldDecoder fieldDecoder) {
 
 		List<RelationMember> members = relation.getMembers();
@@ -286,23 +278,23 @@ public class PbfBlobDecoder implements Runnable {
 
 		Iterator<Long> memberIdIterator = memberIds.iterator();
 		Iterator<Integer> memberRoleIterator = memberRoles.iterator();
-		Iterator<MemberType> memberTypeIterator = memberTypes.iterator();
+		Iterator<Osmformat.Relation.MemberType> memberTypeIterator = memberTypes.iterator();
 
 		// Build up the list of relation members for the way. The member ids are
 		// delta encoded meaning that each id is stored as a delta against
 		// the previous one.
 		long memberId = 0;
 		while (memberIdIterator.hasNext()) {
-			MemberType memberType = memberTypeIterator.next();
+			Osmformat.Relation.MemberType memberType = memberTypeIterator.next();
 			memberId += memberIdIterator.next();
 			EntityType entityType;
 			RelationMember member;
 
-			if (memberType == MemberType.NODE) {
+			if (memberType == Osmformat.Relation.MemberType.NODE) {
 				entityType = EntityType.Node;
-			} else if (memberType == MemberType.WAY) {
+			} else if (memberType == Osmformat.Relation.MemberType.WAY) {
 				entityType = EntityType.Way;
-			} else if (memberType == MemberType.RELATION) {
+			} else if (memberType == Osmformat.Relation.MemberType.RELATION) {
 				entityType = EntityType.Relation;
 			} else {
 				throw new OsmosisRuntimeException("Member type of " + memberType + " is not supported.");
@@ -315,8 +307,8 @@ public class PbfBlobDecoder implements Runnable {
 	}
 
 
-	private void processRelations(List<Relation> relations, PbfFieldDecoder fieldDecoder) {
-		for (Relation relation : relations) {
+	private void processRelations(List<Osmformat.Relation> relations, PbfFieldDecoder fieldDecoder) {
+		for (Osmformat.Relation relation : relations) {
 			org.openstreetmap.osmosis.core.domain.v0_6.Relation osmRelation;
 			CommonEntityData entityData;
 
@@ -343,7 +335,7 @@ public class PbfBlobDecoder implements Runnable {
 	private void processOsmPrimitives(Osmformat.PrimitiveBlock block) {
 		PbfFieldDecoder fieldDecoder = new PbfFieldDecoder(block);
 
-		for (PrimitiveGroup primitiveGroup : block.getPrimitivegroupList()) {
+		for (Osmformat.PrimitiveGroup primitiveGroup : block.getPrimitivegroupList()) {
 			log.finer("Processing OSM primitive group.");
 			processNodes(primitiveGroup.getDense(), fieldDecoder);
 			processNodes(primitiveGroup.getNodesList(), fieldDecoder);

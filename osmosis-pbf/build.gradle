@@ -1,7 +1,7 @@
 dependencies {
     compile project(':osmosis-core')
-    compile project(':osmosis-osm-binary')
     compile group: 'com.google.protobuf', name: 'protobuf-java', version: dependencyVersionProtobuf
+    compile group: 'org.openstreetmap.pbf', name: 'osmpbf', version: dependencyVersionOsmPbf
     testCompile project(':osmosis-testutil')
     testCompile project(':osmosis-xml')
 }

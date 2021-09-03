@@ -1,12 +1,9 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pbf2.v0_6.impl;
 
+import crosby.binary.Osmformat;
+
 import java.util.Date;
-
-import org.openstreetmap.osmosis.osmbinary.Osmformat.PrimitiveBlock;
-import org.openstreetmap.osmosis.osmbinary.Osmformat.StringTable;
-
-
 
 /**
  * Manages decoding of the lower level PBF data structures.
@@ -30,13 +27,13 @@ public class PbfFieldDecoder {
 	 * @param primitiveBlock
 	 *            The primitive block containing the fields to be decoded.
 	 */
-	public PbfFieldDecoder(PrimitiveBlock primitiveBlock) {
+	public PbfFieldDecoder(Osmformat.PrimitiveBlock primitiveBlock) {
 		this.coordGranularity = primitiveBlock.getGranularity();
 		this.coordLatitudeOffset = primitiveBlock.getLatOffset();
 		this.coordLongitudeOffset = primitiveBlock.getLonOffset();
 		this.dateGranularity = primitiveBlock.getDateGranularity();
 
-		StringTable stringTable = primitiveBlock.getStringtable();
+		Osmformat.StringTable stringTable = primitiveBlock.getStringtable();
 		strings = new String[stringTable.getSCount()];
 		for (int i = 0; i < strings.length; i++) {
 			strings[i] = stringTable.getS(i).toStringUtf8();
