@@ -1,4 +1,4 @@
 dependencies {
-    compile project(':osmosis-core')
-    compile group: 'junit', name: 'junit', version: dependencyVersionJunit
+    implementation project(':osmosis-core')
+    implementation group: 'junit', name: 'junit', version: dependencyVersionJunit
 }

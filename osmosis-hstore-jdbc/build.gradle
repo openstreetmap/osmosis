@@ -1,5 +1,5 @@
 dependencies {
-    compile group: 'org.postgresql', name: 'postgresql', version: dependencyVersionPostgreSql
+    implementation group: 'org.postgresql', name: 'postgresql', version: dependencyVersionPostgreSql
 }
 
 // Disable checkstyle because this is external code.

@@ -31,8 +31,8 @@ def artefactPrefix = 'osmosis-' + version
 
 task distZip(type: Zip) {
     description = 'Builds a zip file containing a self-contained distribution of the application.'
-    archiveName = artefactPrefix + '.zip'
-    destinationDir = new File(projectDir, 'build/distribution')
+    archiveFileName = artefactPrefix + '.zip'
+    destinationDirectory = new File(projectDir, 'build/distribution')
     from('.') {
     	exclude 'build*'
     	exclude 'ivy.xml'
@@ -43,8 +43,8 @@ distZip.dependsOn syncLibs
 
 task distTgz(type: Tar) {
     description = 'Builds a tgz file containing a self-contained distribution of the application.'
-    archiveName = artefactPrefix + '.tgz'
-    destinationDir = new File(projectDir, 'build/distribution')
+    archiveFileName = artefactPrefix + '.tgz'
+    destinationDirectory = new File(projectDir, 'build/distribution')
     compression = Compression.GZIP
     from('.') {
     	exclude 'build*'

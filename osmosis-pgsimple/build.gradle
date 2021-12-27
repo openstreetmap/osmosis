@@ -4,10 +4,10 @@ configurations {
 }
 
 dependencies {
-    compile project(':osmosis-core')
-    compile group: 'net.postgis', name: 'postgis-jdbc', version: dependencyVersionPostGis
-    compile group: 'org.postgresql', name: 'postgresql', version: dependencyVersionPostgreSql
-    testCompile project(':osmosis-dataset')
-    testCompile project(':osmosis-testutil')
-    testCompile project(':osmosis-xml')
+    implementation project(':osmosis-core')
+    implementation group: 'net.postgis', name: 'postgis-jdbc', version: dependencyVersionPostGis
+    implementation group: 'org.postgresql', name: 'postgresql', version: dependencyVersionPostgreSql
+    testImplementation project(':osmosis-dataset')
+    testImplementation project(':osmosis-testutil')
+    testImplementation project(':osmosis-xml')
 }

@@ -1,5 +1,5 @@
 dependencies {
-    compile project(':osmosis-core')
-    compile project(':osmosis-set')
-    compile project(':osmosis-xml')
+    implementation project(':osmosis-core')
+    implementation project(':osmosis-set')
+    implementation project(':osmosis-xml')
 }

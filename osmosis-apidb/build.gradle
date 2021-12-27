@@ -1,10 +1,10 @@
 dependencies {
-    compile project(':osmosis-core')
-    compile project(':osmosis-replication')
-    compile project(':osmosis-xml')
-    compile group: 'commons-dbcp', name: 'commons-dbcp', version: dependencyVersionCommonsDbcp
-    compile group: 'org.springframework', name: 'spring-jdbc', version: dependencyVersionSpring
-    runtime group: 'org.postgresql', name: 'postgresql', version: dependencyVersionPostgreSql
-    runtime group: 'mysql', name: 'mysql-connector-java', version: dependencyVersionMySql
-    testCompile project(':osmosis-testutil')
+    implementation project(':osmosis-core')
+    implementation project(':osmosis-replication')
+    implementation project(':osmosis-xml')
+    implementation group: 'commons-dbcp', name: 'commons-dbcp', version: dependencyVersionCommonsDbcp
+    implementation group: 'org.springframework', name: 'spring-jdbc', version: dependencyVersionSpring
+    runtimeOnly group: 'org.postgresql', name: 'postgresql', version: dependencyVersionPostgreSql
+    runtimeOnly group: 'mysql', name: 'mysql-connector-java', version: dependencyVersionMySql
+    testImplementation project(':osmosis-testutil')
 }

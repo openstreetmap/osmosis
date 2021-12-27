@@ -3,7 +3,7 @@ buildscript {
 		jcenter()
 	}
 	dependencies {
-		classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+		classpath 'com.github.jengelman.gradle.plugins:shadow:6.1.0'
 	}
 }
 
@@ -62,7 +62,7 @@ configure(javaProjects) {
 	}
 
 	dependencies {
-		testCompile group: 'junit', name: 'junit', version: dependencyVersionJunit
+		testImplementation group: 'junit', name: 'junit', version: dependencyVersionJunit
 	}
 
 	checkstyle {
@@ -87,7 +87,7 @@ configure(javaProjects) {
 	}
 
 	shadowJar {
-		baseName = project.name
+		archiveBaseName = project.name
 		mergeServiceFiles()
 		transform(com.github.jengelman.gradle.plugins.shadow.transformers.AppendingTransformer) {
 			resource = 'reference.conf'

@@ -1,10 +1,10 @@
 dependencies {
-    compile project(':osmosis-core')
-    compile group: 'com.google.guava', name: 'guava', version: dependencyVersionGuava
-    compile group: 'com.google.protobuf', name: 'protobuf-java', version: dependencyVersionProtobuf
-    compile group: 'commons-io', name: 'commons-io', version: dependencyVersionCommonsIo
-    compile group: 'org.openstreetmap.pbf', name: 'osmpbf', version: dependencyVersionOsmPbf
-    testCompile project(':osmosis-pbf')
-    testCompile project(':osmosis-testutil')
-    testCompile project(':osmosis-xml')
+    implementation project(':osmosis-core')
+    implementation group: 'com.google.guava', name: 'guava', version: dependencyVersionGuava
+    implementation group: 'com.google.protobuf', name: 'protobuf-java', version: dependencyVersionProtobuf
+    implementation group: 'commons-io', name: 'commons-io', version: dependencyVersionCommonsIo
+    implementation group: 'org.openstreetmap.pbf', name: 'osmpbf', version: dependencyVersionOsmPbf
+    testImplementation project(':osmosis-pbf')
+    testImplementation project(':osmosis-testutil')
+    testImplementation project(':osmosis-xml')
 }
