@@ -1,10 +1,9 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsimple.common;
 
-import org.postgis.LinearRing;
-import org.postgis.Point;
-import org.postgis.Polygon;
-
+import net.postgis.jdbc.geometry.LinearRing;
+import net.postgis.jdbc.geometry.Point;
+import net.postgis.jdbc.geometry.Polygon;
 
 /**
  * Builds PostGIS Polygon objects based on a series of points.

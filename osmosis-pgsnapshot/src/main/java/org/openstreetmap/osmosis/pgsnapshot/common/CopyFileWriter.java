@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import net.postgis.jdbc.geometry.Geometry;
+import net.postgis.jdbc.geometry.binary.BinaryWriter;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.lifecycle.Completable;
-import org.postgis.Geometry;
-import org.postgis.binary.BinaryWriter;
 import org.postgresql.util.PGobject;
 
 

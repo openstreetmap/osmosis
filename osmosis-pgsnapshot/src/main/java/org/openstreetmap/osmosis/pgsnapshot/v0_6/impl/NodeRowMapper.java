@@ -4,9 +4,9 @@ package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import net.postgis.jdbc.PGgeometry;
+import net.postgis.jdbc.geometry.Point;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
-import org.postgis.PGgeometry;
-import org.postgis.Point;
 
 
 /**

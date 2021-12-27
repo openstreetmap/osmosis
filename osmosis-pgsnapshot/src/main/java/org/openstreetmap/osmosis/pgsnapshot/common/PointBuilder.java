@@ -1,8 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.common;
 
-import org.postgis.Point;
-
+import net.postgis.jdbc.geometry.Point;
 
 /**
  * Builds PostGIS Point objects based on a set of coordinates.

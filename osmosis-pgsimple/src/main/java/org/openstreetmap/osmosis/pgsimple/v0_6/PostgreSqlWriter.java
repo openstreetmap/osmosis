@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import net.postgis.jdbc.geometry.Geometry;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
@@ -42,7 +43,6 @@ import org.openstreetmap.osmosis.pgsimple.v0_6.impl.UserDao;
 import org.openstreetmap.osmosis.pgsimple.v0_6.impl.WayGeometryBuilder;
 import org.openstreetmap.osmosis.pgsimple.v0_6.impl.WayMapper;
 import org.openstreetmap.osmosis.pgsimple.v0_6.impl.WayNodeMapper;
-import org.postgis.Geometry;
 
 
 /**

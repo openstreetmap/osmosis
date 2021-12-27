@@ -1,6 +1,6 @@
 configurations {
     // Exclude unnecessary postgis stub classes.
-    all*.exclude group: 'org.postgis', module: 'postgis-stubs'
+    all*.exclude group: 'net.postgis', module: 'postgis-stubs'
 }
 
 dependencies {

@@ -4,6 +4,10 @@ package org.openstreetmap.osmosis.pgsimple.v0_6.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.postgis.jdbc.geometry.LineString;
+import net.postgis.jdbc.geometry.LinearRing;
+import net.postgis.jdbc.geometry.Point;
+import net.postgis.jdbc.geometry.Polygon;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
@@ -15,10 +19,6 @@ import org.openstreetmap.osmosis.pgsimple.common.NodeLocation;
 import org.openstreetmap.osmosis.pgsimple.common.NodeLocationStore;
 import org.openstreetmap.osmosis.pgsimple.common.NodeLocationStoreType;
 import org.openstreetmap.osmosis.pgsimple.common.PersistentNodeLocationStore;
-import org.postgis.LineString;
-import org.postgis.LinearRing;
-import org.postgis.Point;
-import org.postgis.Polygon;
 
 
 /**

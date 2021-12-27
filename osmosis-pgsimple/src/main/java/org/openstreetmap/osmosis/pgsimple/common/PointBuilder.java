@@ -1,7 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsimple.common;
 
-import org.postgis.Point;
+import net.postgis.jdbc.geometry.Point;
 
 
 /**

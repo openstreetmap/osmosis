@@ -3,9 +3,9 @@ package org.openstreetmap.osmosis.pgsnapshot.v0_6.impl;
 
 import java.util.Map;
 
+import net.postgis.jdbc.PGgeometry;
 import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.pgsnapshot.common.PointBuilder;
-import org.postgis.PGgeometry;
 import org.springframework.jdbc.core.RowMapper;
 
 

@@ -8,12 +8,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import net.postgis.jdbc.PGgeometry;
+import net.postgis.jdbc.geometry.Geometry;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
-import org.postgis.Geometry;
-import org.postgis.PGgeometry;
-
 
 /**
  * Reads and writes way attributes to jdbc classes.
