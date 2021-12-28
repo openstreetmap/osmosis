@@ -1,6 +1,3 @@
-plugins {
-    id 'java-library'
-}
 configurations {
     // Exclude because Stax is included in the JDK from java 1.6 onwards.
     all*.exclude group: 'javax.xml.stream', module: 'stax-api'
@@ -10,7 +7,7 @@ dependencies {
     implementation group: 'net.sf.jpf', name: 'jpf', version: dependencyVersionJpf
     implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: dependencyVersionWoodstoxCore
     implementation group: 'org.codehaus.woodstox', name: 'stax2-api', version: dependencyVersionWoodstoxStax2
-    api group: 'org.apache.commons', name: 'commons-compress', version: dependencyVersionCommonsCompress
+    implementation group: 'org.apache.commons', name: 'commons-compress', version: dependencyVersionCommonsCompress
     implementation group: 'xerces', name: 'xercesImpl', version: dependencyVersionXerces
     implementation group: 'org.springframework', name: 'spring-jdbc', version: dependencyVersionSpring
 }
