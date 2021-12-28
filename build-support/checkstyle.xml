@@ -4,6 +4,8 @@
     "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 
 <module name="Checker">
+    <!-- Override the default tab width of 8 so it aligns with standard eclipse formatting. -->
+    <property name="tabWidth" value="4"/>
 
     <!-- Checks whether files end with a new line.                        -->
     <!-- See http://checkstyle.sf.net/config_misc.html#NewlineAtEndOfFile -->
@@ -35,9 +37,6 @@
     </module>
 
     <module name="TreeWalker">
-        <!-- Override the default tab width of 8 so it aligns with standard eclipse formatting. -->
-        <property name="tabWidth" value="4"/>
-
         <!-- Checks for Javadoc comments.                     -->
         <!-- See http://checkstyle.sf.net/config_javadoc.html -->
         <module name="JavadocMethod">
