@@ -204,7 +204,7 @@ public class DatabaseContext implements AutoCloseable {
 	 * @param columns
 	 *            The columns to be loaded (optional).
 	 */
-    public void loadCopyFile(File copyFile, String tableName, String ... columns) {
+    public void loadCopyFile(File copyFile, String tableName, String... columns) {
     	CopyManager copyManager;
 
 		StringBuilder copyStatement = new StringBuilder();
