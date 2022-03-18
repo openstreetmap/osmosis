@@ -35,6 +35,7 @@ import org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo;
 import org.openstreetmap.osmosis.osmbinary.StringTable;
 import org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType;
 import org.openstreetmap.osmosis.osmbinary.file.BlockOutputStream;
+import org.openstreetmap.osmosis.osmbinary.file.CompressFlags;
 import org.openstreetmap.osmosis.osmbinary.file.FileBlock;
 
 /**
@@ -461,8 +462,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
       }
       Osmformat.HeaderBlock message = headerblock.build();
       try {
-          output.write(FileBlock.newInstance("OSMHeader", message
-                  .toByteString(), null));
+          output.write(FileBlock.newInstance("OSMHeader", message.toByteString(), null), CompressFlags.NONE);
       } catch (IOException e) {
           throw new OsmosisRuntimeException("Unable to write OSM header.", e);
       }
