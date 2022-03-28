@@ -1,5 +1,5 @@
 # Osmosis
-[![Build Status](https://travis-ci.org/openstreetmap/osmosis.svg?branch=master)](https://travis-ci.org/openstreetmap/osmosis)
+![Build Status](https://github.com/openstreetmap/osmosis/actions/workflows/continous-integration.yml/badge.svg)
 
 ## Overview
 

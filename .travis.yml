@@ -1,5 +1,0 @@
-services:
-  - docker
-
-script:
-  - ./docker.sh ./gradlew build
