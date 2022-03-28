@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import crosby.binary.BinaryParser;
+import crosby.binary.Osmformat;
 import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
@@ -22,10 +24,6 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
-
-import org.openstreetmap.osmosis.osmbinary.BinaryParser;
-import org.openstreetmap.osmosis.osmbinary.Osmformat;
-import org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo;
 
 /** Class that reads and parses binary files and sends the contained entities to the sink. */
 public class OsmosisBinaryParser extends BinaryParser {
@@ -91,7 +89,7 @@ public class OsmosisBinaryParser extends BinaryParser {
         // Stuff for dense info
         long lasttimestamp = 0, lastchangeset = 0;
         int lastuserSid = 0, lastuid = 0;
-        DenseInfo di = null;
+        Osmformat.DenseInfo di = null;
         if (nodes.hasDenseinfo()) {
           di = nodes.getDenseinfo();
         }

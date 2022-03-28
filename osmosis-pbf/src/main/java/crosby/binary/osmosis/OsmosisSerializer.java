@@ -9,6 +9,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import crosby.binary.BinarySerializer;
+import crosby.binary.Osmformat;
+import crosby.binary.StringTable;
+import crosby.binary.file.BlockOutputStream;
+import crosby.binary.file.FileBlock;
 import org.openstreetmap.osmosis.core.OsmosisConstants;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.container.v0_6.BoundContainer;
@@ -28,14 +33,6 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
-
-import org.openstreetmap.osmosis.osmbinary.BinarySerializer;
-import org.openstreetmap.osmosis.osmbinary.Osmformat;
-import org.openstreetmap.osmosis.osmbinary.Osmformat.DenseInfo;
-import org.openstreetmap.osmosis.osmbinary.StringTable;
-import org.openstreetmap.osmosis.osmbinary.Osmformat.Relation.MemberType;
-import org.openstreetmap.osmosis.osmbinary.file.BlockOutputStream;
-import org.openstreetmap.osmosis.osmbinary.file.FileBlock;
 
 /**
  * Receives data from the Osmosis pipeline and stores it in the PBF format.
@@ -100,7 +97,7 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
             }
         }
         private static final int MAXWARN = 100;
-        public void serializeMetadataDense(DenseInfo.Builder b, List<? extends Entity> entities) {
+        public void serializeMetadataDense(Osmformat.DenseInfo.Builder b, List<? extends Entity> entities) {
 			if (omit_metadata) {
 				return;
 			}
@@ -213,8 +210,6 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
         
         /**
          *  Serialize all nodes in the non-dense format.
-         * 
-         * @param parentbuilder Add to this PrimitiveBlock.
          */
         public Osmformat.PrimitiveGroup serializeNonDense() {
           if (contents.size() == 0) {
@@ -312,11 +307,11 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
                     bi.addMemids(id - lastid);
                     lastid = id;
                     if (j.getMemberType() == EntityType.Node) {
-                        bi.addTypes(MemberType.NODE);
+                        bi.addTypes(Osmformat.Relation.MemberType.NODE);
                     } else if (j.getMemberType() == EntityType.Way) {
-                        bi.addTypes(MemberType.WAY);
+                        bi.addTypes(Osmformat.Relation.MemberType.WAY);
                     } else if (j.getMemberType() == EntityType.Relation) {
-                        bi.addTypes(MemberType.RELATION);
+                        bi.addTypes(Osmformat.Relation.MemberType.RELATION);
                     } else {
                         assert (false); // Software bug: Unknown entity.
                     }

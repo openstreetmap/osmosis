@@ -1,15 +1,15 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pbf2.v0_6.impl;
 
+import crosby.binary.Fileformat;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.osmbinary.Fileformat;
 
 import java.util.function.Function;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
 /**
- * Obtains the raw uncompressed data from a {@link org.openstreetmap.osmosis.osmbinary.Fileformat.Blob}.
+ * Obtains the raw uncompressed data from a {@link Fileformat.Blob}.
  */
 public class BlobDecompressor implements Function<Fileformat.Blob, byte[]> {
     @Override

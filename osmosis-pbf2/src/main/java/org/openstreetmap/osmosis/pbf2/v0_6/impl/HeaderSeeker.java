@@ -1,8 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pbf2.v0_6.impl;
 
+import crosby.binary.Osmformat;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
-import org.openstreetmap.osmosis.osmbinary.Osmformat;
 
 import java.util.Optional;
 import java.util.function.Function;
