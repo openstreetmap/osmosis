@@ -47,4 +47,4 @@ See [Development](./doc/development.md) for details.
 
 ## Issue Tracking
 
-See https://trac.openstreetmap.org/query?status=!closed&component=osmosis
+See https://github.com/openstreetmap/osmosis/issues
