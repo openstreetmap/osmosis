@@ -191,9 +191,12 @@ public class WayGeometryBuilder implements Closeable {
 	 * 
 	 * @param way
 	 *            The way to create the linestring for.
+	 * @param enableKeepPartialLinestring
+	 *            If true, the way linestring is build even on invalid or missing
+	 *            nodes.
 	 * @return The linestring representing the way.
 	 */
-	public LineString createWayLinestring(Way way) {
+	public LineString createWayLinestring(Way way, boolean enableKeepPartialLinestring) {
 		List<Point> linePoints;
 		int numValidNodes = 0;
 		
@@ -207,7 +210,9 @@ public class WayGeometryBuilder implements Closeable {
 				numValidNodes++;
 				linePoints.add(new Point(nodeLocation.getLongitude(), nodeLocation.getLatitude()));
 			} else {
-				return null;
+				if (!enableKeepPartialLinestring) {
+					return null;
+				}
 			}
 		}
 	

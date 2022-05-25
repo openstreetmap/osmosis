@@ -37,6 +37,9 @@ public class PostgreSqlDumpWriter implements Sink {
 	 *            processing instead of relying on the database to build them
 	 *            after import. This increases processing but is faster than
 	 *            relying on the database.
+	 * @param enableKeepPartialLinestring
+	 *            If true, the way linestring is build even on invalid or missing
+	 *            nodes.
 	 * @param storeType
 	 *            The node location storage type used by the geometry builders.
 	 * @param keepInvalidWays
@@ -46,14 +49,16 @@ public class PostgreSqlDumpWriter implements Sink {
 	 */
 	public PostgreSqlDumpWriter(
 			File filePrefix, boolean enableBboxBuilder,
-			boolean enableLinestringBuilder, NodeLocationStoreType storeType, 
-			boolean keepInvalidWays) {
+			boolean enableLinestringBuilder,
+			boolean enableKeepPartialLinestring,
+			NodeLocationStoreType storeType, boolean keepInvalidWays) {
 		DirectoryCopyFileset copyFileset;
 		
 		copyFileset = new DirectoryCopyFileset(filePrefix);
 		
 		copyFilesetBuilder =
-			new CopyFilesetBuilder(copyFileset, enableBboxBuilder, enableLinestringBuilder, storeType, keepInvalidWays);
+			new CopyFilesetBuilder(copyFileset, enableBboxBuilder, enableLinestringBuilder,
+				enableKeepPartialLinestring, storeType, keepInvalidWays);
 	}
     
     

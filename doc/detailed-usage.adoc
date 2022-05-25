@@ -1680,6 +1680,12 @@ improvements compared to the query approach. |yes, no |no
 |enableLinestringBuilder |As per the enableBboxBuilder option but for
 the linestring geometry column. |yes, no |no
 
+|enableKeepPartialLinestring |This option affects how linestrings are
+built from option enableLinestringBuilder. When an invalid or a missing
+node location is encountered the linestring is not built by default.
+Enabling this option keeps it as a partial linestring. It will result in
+a different geometry than the original one. |yes, no |no
+
 |nodeLocationStoreType |This option only takes effect if at least one of
 the enableBboxBuilder and enableLinestringBuilder options are enabled.
 Both geometry builder implementations require knowledge of all node
@@ -1891,6 +1897,12 @@ much slower but still faster than relying on the default database
 geometry building implementation, or the "CompactTempFile" option which
 is more efficient for smaller datasets. |"InMemory", "TempFile",
 "CompactTempFile" |"CompactTempFile"
+
+|enableKeepPartialLinestring |This option affects how linestrings are
+built. When an invalid or a missing node location is encountered the
+linestring is not built by default. Enabling this option keeps it as a
+partial linestring. It will result in a different geometry than the
+original one. |yes, no |no
 |=======================================================================
 
 ==== --write-pgsimp-dump (--wsd)
@@ -1923,6 +1935,12 @@ improvements compared to the query approach. |yes, no |no
 |enableLinestringBuilder |As per the enableBboxBuilder option but for
 the linestring geometry column. |yes, no |no
 
+|enableKeepPartialLinestring |This option affects how linestrings are
+built from option enableLinestringBuilder. When an invalid or a missing
+node location is encountered the linestring is not built by default.
+Enabling this option keeps it as a partial linestring. It will result in
+a different geometry than the original one. |yes, no |no
+
 |nodeLocationStoreType |This option only takes effect if at least one of
 the enableBboxBuilder and enableLinestringBuilder options are enabled.
 Both geometry builder implementations require knowledge of all node
@@ -1934,6 +1952,12 @@ you may use the "InMemory" option. Otherwise you must choose between the
 the default database geometry building implementation, or the
 "CompactTempFile" option which is more efficient for smaller datasets.
 |"InMemory", "TempFile", "CompactTempFile" |"CompactTempFile"
+
+|enableKeepPartialLinestring |This option affects how linestrings are
+built. When an invalid or a missing node location is encountered the
+linestring is not built by default. Enabling this option keeps it as a
+partial linestring. It will result in a different geometry than the
+original one. |yes, no |no
 |=======================================================================
 
 ==== --truncate-pgsimp (--ts)

@@ -18,9 +18,11 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkManager;
 public class PostgreSqlWriterFactory extends DatabaseTaskManagerFactory {
 	private static final String ARG_ENABLE_BBOX_BUILDER = "enableBboxBuilder";
 	private static final String ARG_ENABLE_LINESTRING_BUILDER = "enableLinestringBuilder";
+	private static final String ARG_ENABLE_KEEP_PARTIAL_LINESTRING = "enableKeepPartialLinestring";
 	private static final String ARG_NODE_LOCATION_STORE_TYPE = "nodeLocationStoreType";
 	private static final boolean DEFAULT_ENABLE_BBOX_BUILDER = false;
 	private static final boolean DEFAULT_ENABLE_LINESTRING_BUILDER = false;
+	private static final boolean DEFAULT_ENABLE_KEEP_PARTIAL_LINESTRING = false;
 	private static final String DEFAULT_NODE_LOCATION_STORE_TYPE = "CompactTempFile";
 	
 	/**
@@ -32,6 +34,7 @@ public class PostgreSqlWriterFactory extends DatabaseTaskManagerFactory {
 		DatabasePreferences preferences;
 		boolean enableBboxBuilder;
 		boolean enableLinestringBuilder;
+		boolean enableKeepPartialLinestring;
 		NodeLocationStoreType storeType;
 		
 		// Get the task arguments.
@@ -40,13 +43,16 @@ public class PostgreSqlWriterFactory extends DatabaseTaskManagerFactory {
 		enableBboxBuilder = getBooleanArgument(taskConfig, ARG_ENABLE_BBOX_BUILDER, DEFAULT_ENABLE_BBOX_BUILDER);
 		enableLinestringBuilder = getBooleanArgument(
 				taskConfig, ARG_ENABLE_LINESTRING_BUILDER, DEFAULT_ENABLE_LINESTRING_BUILDER);
+		enableKeepPartialLinestring = getBooleanArgument(
+				taskConfig, ARG_ENABLE_KEEP_PARTIAL_LINESTRING, DEFAULT_ENABLE_KEEP_PARTIAL_LINESTRING);
 		storeType = Enum.valueOf(
 				NodeLocationStoreType.class,
 				getStringArgument(taskConfig, ARG_NODE_LOCATION_STORE_TYPE, DEFAULT_NODE_LOCATION_STORE_TYPE));
 		
 		return new SinkManager(
 			taskConfig.getId(),
-			new PostgreSqlWriter(loginCredentials, preferences, enableBboxBuilder, enableLinestringBuilder, storeType),
+			new PostgreSqlWriter(loginCredentials, preferences, enableBboxBuilder, enableLinestringBuilder,
+				enableKeepPartialLinestring, storeType),
 			taskConfig.getPipeArgs()
 		);
 	}

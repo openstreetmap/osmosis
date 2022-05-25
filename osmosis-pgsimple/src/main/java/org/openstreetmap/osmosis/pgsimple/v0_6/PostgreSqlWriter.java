@@ -70,6 +70,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	private DatabaseContext dbCtx;
 	private boolean enableBboxBuilder;
 	private boolean enableLinestringBuilder;
+	private boolean enableKeepPartialLinestring;
 	private SchemaVersionValidator schemaVersionValidator;
 	private IndexManager indexManager;
 	private List<Node> nodeBuffer;
@@ -129,16 +130,21 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 	 *            processing instead of relying on the database to build them
 	 *            after import. This increases processing but is faster than
 	 *            relying on the database.
+	 * @param enableKeepPartialLinestring
+	 *            If true, the way linestring is build even on invalid or missing
+	 *            nodes.
 	 * @param storeType
 	 *            The node location storage type used by the geometry builders.
 	 */
 	public PostgreSqlWriter(
 			DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
-			boolean enableBboxBuilder, boolean enableLinestringBuilder, NodeLocationStoreType storeType) {
+			boolean enableBboxBuilder, boolean enableLinestringBuilder,
+			boolean enableKeepPartialLinestring, NodeLocationStoreType storeType) {
 		dbCtx = new DatabaseContext(loginCredentials);
 		
 		this.enableBboxBuilder = enableBboxBuilder;
 		this.enableLinestringBuilder = enableLinestringBuilder;
+		this.enableKeepPartialLinestring = enableKeepPartialLinestring;
 		
 		schemaVersionValidator = new SchemaVersionValidator(dbCtx, preferences);
 		indexManager = new IndexManager(dbCtx, !enableBboxBuilder, !enableLinestringBuilder);
@@ -387,7 +393,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 					geometries.add(wayGeometryBuilder.createWayBbox(way));
 				}
 				if (enableLinestringBuilder) {
-					geometries.add(wayGeometryBuilder.createWayLinestring(way));
+					geometries.add(wayGeometryBuilder.createWayLinestring(way, enableKeepPartialLinestring));
 				}
 				prmIndex = wayBuilder.populateEntityParameters(bulkWayStatement, prmIndex, way, geometries);
 			}
@@ -416,7 +422,7 @@ public class PostgreSqlWriter implements Sink, EntityProcessor {
 					geometries.add(wayGeometryBuilder.createWayBbox(way));
 				}
 				if (enableLinestringBuilder) {
-					geometries.add(wayGeometryBuilder.createWayLinestring(way));
+					geometries.add(wayGeometryBuilder.createWayLinestring(way, enableKeepPartialLinestring));
 				}
 				wayBuilder.populateEntityParameters(singleWayStatement, 1, way, geometries);
 				

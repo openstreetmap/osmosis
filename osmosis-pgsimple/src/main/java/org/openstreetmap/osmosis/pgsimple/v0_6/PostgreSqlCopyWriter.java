@@ -34,6 +34,7 @@ public class PostgreSqlCopyWriter implements Sink {
 	private NodeLocationStoreType storeType;
 	private boolean populateBbox;
 	private boolean populateLinestring;
+	private boolean enableKeepPartialLinestring;
 	private boolean initialized;
 	
 	
@@ -46,13 +47,17 @@ public class PostgreSqlCopyWriter implements Sink {
 	 *            Contains preferences configuring database behaviour.
 	 * @param storeType
 	 *            The node location storage type used by the geometry builders.
+	 * @param enableKeepPartialLinestring
+	 *            If true, the way linestring is build even on invalid or missing
+	 *            nodes.
 	 */
 	public PostgreSqlCopyWriter(
 			DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
-			NodeLocationStoreType storeType) {
+			NodeLocationStoreType storeType, boolean enableKeepPartialLinestring) {
 		this.loginCredentials = loginCredentials;
 		this.preferences = preferences;
 		this.storeType = storeType;
+		this.enableKeepPartialLinestring = enableKeepPartialLinestring;
 		
 		copyFileset = new TempCopyFileset();
 	}
@@ -69,7 +74,8 @@ public class PostgreSqlCopyWriter implements Sink {
 				populateLinestring = capabilityChecker.isWayLinestringSupported();				
 
 				copyFilesetBuilder =
-					new CopyFilesetBuilder(copyFileset, populateBbox, populateLinestring, storeType);
+					new CopyFilesetBuilder(copyFileset, populateBbox, populateLinestring, enableKeepPartialLinestring,
+						storeType);
 				
 				copyFilesetLoader = new CopyFilesetLoader(loginCredentials, preferences, copyFileset);
 				
