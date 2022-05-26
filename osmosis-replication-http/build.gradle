@@ -1,7 +1,0 @@
-dependencies {
-    implementation project(':osmosis-core')
-    implementation project(':osmosis-replication')
-    implementation project(':osmosis-xml')
-    implementation group: 'io.netty', name: 'netty', version: dependencyVersionNetty
-    testImplementation project(':osmosis-testutil')
-}

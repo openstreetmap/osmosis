@@ -14,7 +14,6 @@ dependencies {
     runtime project(':osmosis-pgsimple')
     runtime project(':osmosis-pgsnapshot')
     runtime project(':osmosis-replication')
-    runtime project(':osmosis-replication-http')
     runtime project(':osmosis-set')
     runtime project(':osmosis-tagfilter')
     runtime project(':osmosis-tagtransform')
