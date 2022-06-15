@@ -35,6 +35,7 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 	
 	private boolean enableBboxBuilder;
 	private boolean enableLinestringBuilder;
+	private boolean enableKeepPartialLinestring;
 	private WayGeometryBuilder wayGeometryBuilder;
 	private CompletableContainer writerContainer;
 	private MemberTypeValueMapper memberTypeValueMapper;
@@ -66,14 +67,19 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 	 *            processing instead of relying on the database to build them
 	 *            after import. This increases processing but is faster than
 	 *            relying on the database.
+	 * @param enableKeepPartialLinestring
+	 *            If true, the way linestring is build even on invalid or missing
+	 *            nodes.
 	 * @param storeType
 	 *            The node location storage type used by the geometry builders.
 	 */
 	public CopyFilesetBuilder(
 			CopyFileset copyFileset, boolean enableBboxBuilder,
-			boolean enableLinestringBuilder, NodeLocationStoreType storeType) {
+			boolean enableLinestringBuilder, boolean enableKeepPartialLinestring,
+			NodeLocationStoreType storeType) {
 		this.enableBboxBuilder = enableBboxBuilder;
 		this.enableLinestringBuilder = enableLinestringBuilder;
+		this.enableKeepPartialLinestring = enableKeepPartialLinestring;
 		
 		writerContainer = new CompletableContainer();
 		
@@ -184,7 +190,7 @@ public class CopyFilesetBuilder implements Sink, EntityProcessor {
 				wayWriter.writeField(wayGeometryBuilder.createWayBbox(way));
 			}
 			if (enableLinestringBuilder) {
-				wayWriter.writeField(wayGeometryBuilder.createWayLinestring(way));
+				wayWriter.writeField(wayGeometryBuilder.createWayLinestring(way, enableKeepPartialLinestring));
 			}
 			wayWriter.endRecord();
 			

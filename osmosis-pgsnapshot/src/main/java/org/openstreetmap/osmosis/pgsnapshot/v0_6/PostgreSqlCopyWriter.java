@@ -35,6 +35,7 @@ public class PostgreSqlCopyWriter implements Sink {
 	private NodeLocationStoreType storeType;
 	private boolean populateBbox;
 	private boolean populateLinestring;
+	private boolean enableKeepPartialLinestring;
 	private boolean keepInvalidWays;
 	private boolean initialized;
 	private DatabaseContext dbCtx;
@@ -49,6 +50,9 @@ public class PostgreSqlCopyWriter implements Sink {
 	 *            Contains preferences configuring database behaviour.
 	 * @param storeType
 	 *            The node location storage type used by the geometry builders.
+	 * @param enableKeepPartialLinestring
+	 *            If true, the way linestring is build even on invalid or missing
+	 *            nodes.
 	 * @param keepInvalidWays
 	 *            If true, zero and single node ways are kept. Otherwise they are
 	 *            silently dropped to avoid putting invalid geometries into the 
@@ -56,10 +60,11 @@ public class PostgreSqlCopyWriter implements Sink {
 	 */
 	public PostgreSqlCopyWriter(
 			DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
-			NodeLocationStoreType storeType, boolean keepInvalidWays) {
+			boolean enableKeepPartialLinestring, NodeLocationStoreType storeType, boolean keepInvalidWays) {
 		this.loginCredentials = loginCredentials;
 		this.preferences = preferences;
 		this.storeType = storeType;
+		this.enableKeepPartialLinestring = enableKeepPartialLinestring;
 		this.keepInvalidWays = keepInvalidWays;
 		this.dbCtx = new DatabaseContext(loginCredentials);
 		this.locker = new DatabaseLocker(dbCtx.getDataSource(), true);
@@ -76,7 +81,8 @@ public class PostgreSqlCopyWriter implements Sink {
 			populateLinestring = capabilityChecker.isWayLinestringSupported();
 
 			copyFilesetBuilder =
-				new CopyFilesetBuilder(copyFileset, populateBbox, populateLinestring, storeType, keepInvalidWays);
+				new CopyFilesetBuilder(copyFileset, populateBbox, populateLinestring, enableKeepPartialLinestring,
+					storeType, keepInvalidWays);
 			
 			copyFilesetLoader = new CopyFilesetLoader(loginCredentials, preferences, copyFileset);
 			

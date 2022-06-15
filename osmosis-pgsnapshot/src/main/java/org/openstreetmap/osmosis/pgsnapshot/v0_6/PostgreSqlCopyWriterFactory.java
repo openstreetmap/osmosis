@@ -16,6 +16,8 @@ import org.openstreetmap.osmosis.core.pipeline.v0_6.SinkManager;
 public class PostgreSqlCopyWriterFactory extends DatabaseTaskManagerFactory {
 	private static final String ARG_NODE_LOCATION_STORE_TYPE = "nodeLocationStoreType";
 	private static final String DEFAULT_NODE_LOCATION_STORE_TYPE = "CompactTempFile";
+	private static final String ARG_ENABLE_KEEP_PARTIAL_LIENSTRING = "enableKeepPartialLinestring";
+	private static final boolean DEFAULT_ENABLE_KEEP_PARTIAL_LIENSTRING = false;
 	private static final String ARG_KEEP_INVALID_WAYS = "keepInvalidWays";
 	private static final boolean DEFAULT_KEEP_INVALID_WAYS = true;
 	
@@ -24,9 +26,12 @@ public class PostgreSqlCopyWriterFactory extends DatabaseTaskManagerFactory {
 	 */
 	@Override
 	protected TaskManager createTaskManagerImpl(TaskConfiguration taskConfig) {
+		boolean enableKeepPartialLinestring;
 		NodeLocationStoreType storeType;
 		boolean keepInvalidWays;
 
+		enableKeepPartialLinestring = getBooleanArgument(taskConfig, ARG_ENABLE_KEEP_PARTIAL_LIENSTRING,
+			DEFAULT_ENABLE_KEEP_PARTIAL_LIENSTRING);
 		storeType = Enum.valueOf(
 				NodeLocationStoreType.class,
 				getStringArgument(taskConfig, ARG_NODE_LOCATION_STORE_TYPE, DEFAULT_NODE_LOCATION_STORE_TYPE));
@@ -37,6 +42,7 @@ public class PostgreSqlCopyWriterFactory extends DatabaseTaskManagerFactory {
 			new PostgreSqlCopyWriter(
 				getDatabaseLoginCredentials(taskConfig), 
 				getDatabasePreferences(taskConfig),	
+				enableKeepPartialLinestring,
 				storeType, 
 				keepInvalidWays),
 			taskConfig.getPipeArgs()
