@@ -539,18 +539,4 @@ public class DatabaseContext implements AutoCloseable {
             throw new OsmosisRuntimeException("Unable to check for the existence of table " + tableName + ".", e);
         }
     }
-
-    /**
-     * Enforces cleanup of any remaining resources during garbage collection. This is a safeguard
-     * and should not be required if release is called appropriately.
-     * 
-     * @throws Throwable If a problem occurs during finalization.
-     */
-    @Override
-    protected void finalize() throws Throwable {
-        close();
-
-        super.finalize();
-    }
-
 }
