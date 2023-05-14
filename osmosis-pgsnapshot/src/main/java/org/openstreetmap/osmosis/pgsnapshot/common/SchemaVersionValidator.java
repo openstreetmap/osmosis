@@ -1,6 +1,8 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.pgsnapshot.common;
 
+import java.util.Objects;
+
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -61,7 +63,10 @@ public class SchemaVersionValidator {
 		if (preferences.getValidateSchemaVersion()) {
 			int dbVersion;
 			
-			dbVersion = jdbcTemplate.queryForObject(SELECT_SQL, Integer.class);
+			dbVersion = Objects.requireNonNull(
+				jdbcTemplate.queryForObject(SELECT_SQL, Integer.class),
+				"Schema version was not found"
+			);
 			
 			if (dbVersion != expectedVersion) {
 				throw new OsmosisRuntimeException(
