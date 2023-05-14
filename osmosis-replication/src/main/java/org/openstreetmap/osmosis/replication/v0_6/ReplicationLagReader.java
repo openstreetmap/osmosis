@@ -89,8 +89,8 @@ public class ReplicationLagReader implements RunnableTask {
 				
 				// more than a day
 				Object[] args = {
-					new Long(lag / 86400), 
-					new Long((lag % 86400) / 3600)
+					Long.valueOf(lag / 86400),
+					Long.valueOf((lag % 86400) / 3600)
 				};
 				System.out.println(
 					new MessageFormat("{0} day(s) and {1} hour(s)").format(args)
@@ -100,8 +100,8 @@ public class ReplicationLagReader implements RunnableTask {
 				
 				// morte than an hour
 				Object[] args = {
-					new Long(lag / 3600), 
-					new Long((lag % 3600) / 60)
+					Long.valueOf(lag / 3600),
+					Long.valueOf((lag % 3600) / 60)
 				};
 				System.out.println(
 					new MessageFormat("{0} hour(s) and {1} minute(s)").format(args)
@@ -111,8 +111,8 @@ public class ReplicationLagReader implements RunnableTask {
 				
 				// more than a minute
 				Object[] args = {
-					new Long(lag / 60), 
-					new Long(lag % 60)
+					Long.valueOf(lag / 60),
+					Long.valueOf(lag % 60)
 				};
 				System.out.println(
 					new MessageFormat("{0} minute(s) and {1} second(s)").format(args)
@@ -120,7 +120,7 @@ public class ReplicationLagReader implements RunnableTask {
 				
 			} else {
 				Object[] args = {
-					new Long(lag)
+					Long.valueOf(lag)
 				};
 				
 				// just some seconds

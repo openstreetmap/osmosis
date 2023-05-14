@@ -35,19 +35,19 @@ public class ElementWriter {
         // with the exception of tab, carriage return and line feed.
         for (int i = 0; i <= 0x1F; i++) {
         	if (i != 0x9 && i != 0xA && i != 0xD) {
-        		XML_ENCODING.put(new Character((char) i), "");
+        		XML_ENCODING.put(Character.valueOf((char) i), "");
         	}
         }
-        XML_ENCODING.put(new Character((char) 0x7F), "");
+        XML_ENCODING.put(Character.valueOf((char) 0x7F), "");
         
-        XML_ENCODING.put(new Character('<'), "&lt;");
-        XML_ENCODING.put(new Character('>'), "&gt;");
-        XML_ENCODING.put(new Character('"'), "&quot;");
-        XML_ENCODING.put(new Character('\''), "&apos;");
-        XML_ENCODING.put(new Character('&'), "&amp;");
-        XML_ENCODING.put(new Character('\n'), "&#xA;");
-        XML_ENCODING.put(new Character('\r'), "&#xD;");
-        XML_ENCODING.put(new Character('\t'), "&#x9;");
+        XML_ENCODING.put(Character.valueOf('<'), "&lt;");
+        XML_ENCODING.put(Character.valueOf('>'), "&gt;");
+        XML_ENCODING.put(Character.valueOf('"'), "&quot;");
+        XML_ENCODING.put(Character.valueOf('\''), "&apos;");
+        XML_ENCODING.put(Character.valueOf('&'), "&amp;");
+        XML_ENCODING.put(Character.valueOf('\n'), "&#xA;");
+        XML_ENCODING.put(Character.valueOf('\r'), "&#xD;");
+        XML_ENCODING.put(Character.valueOf('\t'), "&#x9;");
     }
 
     /**
@@ -128,7 +128,7 @@ public class ElementWriter {
         for (int i = 0; i < data.length(); ++i) {
             char currentChar = data.charAt(i);
 
-            String replacement = XML_ENCODING.get(new Character(currentChar));
+            String replacement = XML_ENCODING.get(Character.valueOf(currentChar));
 
             if (replacement != null) {
                 if (buffer == null) {
