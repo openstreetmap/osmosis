@@ -66,14 +66,6 @@ public class DatabaseContext implements AutoCloseable {
         }
     }
 
-	/**
-	 * Returns the DataSource associated with this database context.
-	 *
-	 * @return {@link DataSource}
-	 */
-	public DataSource getDataSource() {
-		return this.dataSource;
-	}
 
 	/**
 	 * Begins a new database transaction. This is not required if
