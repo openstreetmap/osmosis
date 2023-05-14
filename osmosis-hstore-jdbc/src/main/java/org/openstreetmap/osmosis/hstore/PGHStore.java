@@ -21,8 +21,6 @@
 */
 package org.openstreetmap.osmosis.hstore;
 
-import java.io.Serializable;
-
 import java.sql.SQLException;
 
 import java.util.Set;
@@ -39,7 +37,7 @@ import org.postgresql.util.PGobject;
 /**
  * This implements a class that handles the PostgreSQL contrib/hstore type
  */
-public class PGHStore extends PGobject implements Serializable, Cloneable, Map<String, String>
+public class PGHStore extends PGobject implements Map<String, String>
 {
     private final static long serialVersionUID = 1;
     private Map<String, String> _map;
