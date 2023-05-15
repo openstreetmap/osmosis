@@ -2,8 +2,6 @@
 package crosby.binary.osmosis;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 import org.openstreetmap.osmosis.core.pipeline.common.TaskConfiguration;
 import org.openstreetmap.osmosis.core.pipeline.common.TaskManager;
@@ -35,13 +33,7 @@ public class OsmosisReaderFactory extends TaskManagerFactory {
         file = new File(fileName);
 
         // Build the task object.
-        try {
-            task = new OsmosisReader(new FileInputStream(file));
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
-        }
+        task = new OsmosisReader(file);
 
         return new RunnableSourceManager(taskConfig.getId(), task, taskConfig
                 .getPipeArgs());
