@@ -68,12 +68,12 @@ configure(javaProjects) {
 
 	// Build javadoc and source jars and include in published artifacts.
 	task javadocJar(type: Jar, dependsOn: javadoc) {
-		classifier = 'javadoc'
+		archiveClassifier = 'javadoc'
 		from 'build/docs/javadoc'
 	}
 	task sourcesJar(type: Jar) {
 		from sourceSets.main.allSource
-		classifier = 'sources'
+		archiveClassifier = 'sources'
 	}
 	artifacts {
 	    archives jar
