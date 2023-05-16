@@ -1,10 +1,6 @@
 buildscript {
 	repositories {
 		mavenCentral()
-		jcenter()
-	}
-	dependencies {
-		classpath 'com.github.jengelman.gradle.plugins:shadow:6.1.0'
 	}
 }
 
@@ -44,7 +40,6 @@ configure(javaProjects) {
 	apply plugin: 'java'
 	apply plugin: 'maven-publish'
 	apply plugin: 'signing'
-	apply plugin: 'com.github.johnrengelman.shadow'
 
 	sourceCompatibility = 1.8
 
@@ -85,15 +80,6 @@ configure(javaProjects) {
 
 	    archives javadocJar
 	    archives sourcesJar
-	}
-
-	shadowJar {
-		archiveBaseName = project.name
-		mergeServiceFiles()
-		transform(com.github.jengelman.gradle.plugins.shadow.transformers.AppendingTransformer) {
-			resource = 'reference.conf'
-		}
-		zip64 = true
 	}
 
 	// Sign all published artifacts if signing is enabled.
