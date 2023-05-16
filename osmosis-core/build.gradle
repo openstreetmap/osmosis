@@ -38,6 +38,7 @@ task generateJavaSources {
 }
 // Define task dependency to ensure constants file is always up to date.
 compileJava.dependsOn generateJavaSources
+sourcesJar.dependsOn generateJavaSources
 
 
 /*
@@ -68,3 +69,4 @@ task generateResources {
 }
 // Define task dependency to ensure constants file is always up to date.
 processResources.dependsOn generateResources
+sourcesJar.dependsOn generateResources
