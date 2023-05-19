@@ -39,6 +39,7 @@ public abstract class Entity implements Storeable {
 	 *            The id of the changeset that this version of the entity was created by.
 	 * @deprecated As of 0.40, replaced by Entity(entityData).
 	 */
+	@Deprecated
 	public Entity(long id, int version, Date timestamp, OsmUser user, long changesetId) {
 		entityData = new CommonEntityData(id, version, timestamp, user, changesetId);
 	}
@@ -60,6 +61,7 @@ public abstract class Entity implements Storeable {
 	 *            The id of the changeset that this version of the entity was created by.
 	 * @deprecated As of 0.40, replaced by Entity(entityData).
 	 */
+	@Deprecated
 	public Entity(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId) {
 		entityData = new CommonEntityData(id, version, timestampContainer, user, changesetId);
 	}
@@ -82,6 +84,7 @@ public abstract class Entity implements Storeable {
 	 *            The tags to apply to the object.
 	 * @deprecated As of 0.40, replaced by Entity(entityData).
 	 */
+	@Deprecated
 	public Entity(long id, int version, Date timestamp, OsmUser user, long changesetId, Collection<Tag> tags) {
 		entityData = new CommonEntityData(id, version, timestamp, user, changesetId, tags);
 	}
@@ -105,6 +108,7 @@ public abstract class Entity implements Storeable {
 	 *            The tags to apply to the object.
 	 * @deprecated As of 0.40, replaced by Entity(entityData).
 	 */
+	@Deprecated
 	public Entity(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
 			Collection<Tag> tags) {
 		entityData = new CommonEntityData(id, version, timestampContainer, user, changesetId, tags);

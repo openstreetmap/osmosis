@@ -40,6 +40,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            The id of the changeset that this version of the entity was created by.
 	 * @deprecated As of 0.40, replaced by Way(entityData).
 	 */
+	@Deprecated
 	public Way(long id, int version, Date timestamp, OsmUser user, long changesetId) {
 		// Chain to the more specific constructor
 		this(id, version, new SimpleTimestampContainer(timestamp), user, changesetId);
@@ -62,6 +63,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            The id of the changeset that this version of the entity was created by.
 	 * @deprecated As of 0.40, replaced by Way(entityData).
 	 */
+	@Deprecated
 	public Way(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId) {
 		super(id, version, timestampContainer, user, changesetId);
 		
@@ -101,6 +103,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            The way nodes to apply to the object
 	 * @deprecated As of 0.40, replaced by Way(entityData, wayNodes).
 	 */
+	@Deprecated
 	public Way(long id, int version, Date timestamp, OsmUser user, long changesetId, Collection<Tag> tags,
 			List<WayNode> wayNodes) {
 		// Chain to the more specific constructor
@@ -128,6 +131,7 @@ public class Way extends Entity implements Comparable<Way> {
 	 *            The way nodes to apply to the object
 	 * @deprecated As of 0.40, replaced by Way(entityData, wayNodes).
 	 */
+	@Deprecated
 	public Way(
 			long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
 			Collection<Tag> tags, List<WayNode> wayNodes) {
