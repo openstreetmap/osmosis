@@ -41,7 +41,7 @@ configure(javaProjects) {
 	apply plugin: 'maven-publish'
 	apply plugin: 'signing'
 
-	sourceCompatibility = 1.8
+	sourceCompatibility = 17
 
 	test {
 		/*
