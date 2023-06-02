@@ -9,7 +9,7 @@ apply plugin: 'idea'
 /* Build collections containing each type of project.  These collections will
  * be used to apply common configurations to projects of the same type.
  */
-def packageProjects = allprojects.findAll { project -> project.path.equals(':package') }
+def packageProjects = allprojects.findAll { project -> project.path.equals(':osmosis') }
 def buildProjects = allprojects.findAll { project -> project.path.equals(':build-support') }
 def dockerProjects = allprojects.findAll { project -> project.path.equals(':db-server') }
 // Java projects are all those that aren't in the previous collections.

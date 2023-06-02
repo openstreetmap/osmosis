@@ -1,0 +1,24 @@
+plugins {
+    id 'application'
+}
+
+application {
+    mainClass = 'org.openstreetmap.osmosis.core.Osmosis'
+}
+
+dependencies {
+    implementation project(':osmosis-apidb')
+    implementation project(':osmosis-areafilter')
+    implementation project(':osmosis-core')
+    implementation project(':osmosis-dataset')
+    implementation project(':osmosis-extract')
+    implementation project(':osmosis-pbf')
+    implementation project(':osmosis-pbf2')
+    implementation project(':osmosis-pgsimple')
+    implementation project(':osmosis-pgsnapshot')
+    implementation project(':osmosis-replication')
+    implementation project(':osmosis-set')
+    implementation project(':osmosis-tagfilter')
+    implementation project(':osmosis-tagtransform')
+    implementation project(':osmosis-xml')
+}
