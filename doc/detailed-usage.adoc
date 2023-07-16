@@ -1684,7 +1684,9 @@ the linestring geometry column. |yes, no |no
 built from option enableLinestringBuilder. When an invalid or a missing
 node location is encountered the linestring is not built by default.
 Enabling this option keeps it as a partial linestring. It will result in
-a different geometry than the original one. |yes, no |no
+a different geometry than the original one. If the original geometry is
+a loop the imported geometry is a loop, even in case of faulty start and
+end. |yes, no |no
 
 |nodeLocationStoreType |This option only takes effect if at least one of
 the enableBboxBuilder and enableLinestringBuilder options are enabled.
@@ -1902,7 +1904,8 @@ is more efficient for smaller datasets. |"InMemory", "TempFile",
 built. When an invalid or a missing node location is encountered the
 linestring is not built by default. Enabling this option keeps it as a
 partial linestring. It will result in a different geometry than the
-original one. |yes, no |no
+original one. If the original geometry is a loop the imported geometry
+is a loop, even in case of faulty start and end. |yes, no |no
 |=======================================================================
 
 ==== --write-pgsimp-dump (--wsd)
@@ -1939,7 +1942,9 @@ the linestring geometry column. |yes, no |no
 built from option enableLinestringBuilder. When an invalid or a missing
 node location is encountered the linestring is not built by default.
 Enabling this option keeps it as a partial linestring. It will result in
-a different geometry than the original one. |yes, no |no
+a different geometry than the original one. If the original geometry is
+a loop the imported geometry is a loop, even in case of faulty start and
+end. |yes, no |no
 
 |nodeLocationStoreType |This option only takes effect if at least one of
 the enableBboxBuilder and enableLinestringBuilder options are enabled.
@@ -1957,7 +1962,8 @@ the default database geometry building implementation, or the
 built. When an invalid or a missing node location is encountered the
 linestring is not built by default. Enabling this option keeps it as a
 partial linestring. It will result in a different geometry than the
-original one. |yes, no |no
+original one. If the original geometry is a loop the imported geometry
+is a loop, even in case of faulty start and end. |yes, no |no
 |=======================================================================
 
 ==== --truncate-pgsimp (--ts)

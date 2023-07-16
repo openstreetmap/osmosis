@@ -213,6 +213,12 @@ public class WayGeometryBuilder implements Closeable {
 				}
 			}
 		}
+		
+		if (enableKeepPartialLinestring && way.isClosed() && linePoints.size() > 1
+			&& !linePoints.get(0).equals(linePoints.get(linePoints.size() - 1))) {
+			linePoints.add(linePoints.get(0));
+		}
+		
 		return createLinestring(linePoints);
 	}
 	
