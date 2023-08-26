@@ -66,14 +66,6 @@ public class DatabaseContext implements AutoCloseable {
         }
     }
 
-	/**
-	 * Returns the DataSource associated with this database context.
-	 *
-	 * @return {@link DataSource}
-	 */
-	public DataSource getDataSource() {
-		return this.dataSource;
-	}
 
 	/**
 	 * Begins a new database transaction. This is not required if
@@ -237,19 +229,4 @@ public class DatabaseContext implements AutoCloseable {
     		throw new OsmosisRuntimeException("Unable to process COPY file " + copyFile + ".", e);
     	}
     }
-    
-
-    /**
-     * Enforces cleanup of any remaining resources during garbage collection. This is a safeguard
-     * and should not be required if release is called appropriately.
-     * 
-     * @throws Throwable If a problem occurs during finalization.
-     */
-    @Override
-    protected void finalize() throws Throwable {
-        close();
-
-        super.finalize();
-    }
-
 }

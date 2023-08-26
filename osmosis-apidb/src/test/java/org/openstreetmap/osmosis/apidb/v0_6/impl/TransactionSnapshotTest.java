@@ -24,8 +24,8 @@ public class TransactionSnapshotTest {
 		Assert.assertEquals("xMax is incorrect.", 5678, snapshot.getXMax());
 		Assert.assertEquals("xIpList is incorrect.",
 				Arrays.asList(new Long[] {
-						new Long(101112), new Long(131415),
-						new Long(161718) }),
+						Long.valueOf(101112), Long.valueOf(131415),
+						Long.valueOf(161718) }),
 				snapshot.getXIpList());
 	}
 }

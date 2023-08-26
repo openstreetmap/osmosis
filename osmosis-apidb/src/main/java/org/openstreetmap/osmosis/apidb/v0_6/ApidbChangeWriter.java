@@ -4,13 +4,11 @@ package org.openstreetmap.osmosis.apidb.v0_6;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openstreetmap.osmosis.apidb.common.DatabaseContext2;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.ActionChangeWriter;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.ChangeWriter;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.SchemaVersionValidator;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
-import org.openstreetmap.osmosis.core.database.DatabaseLocker;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.task.common.ChangeAction;
@@ -29,8 +27,6 @@ public class ApidbChangeWriter implements ChangeSink {
     private final Map<ChangeAction, ActionChangeWriter> actionWriterMap;
 
     private final SchemaVersionValidator schemaVersionValidator;
-    private final DatabaseContext2 dbCtx;
-    private final DatabaseLocker locker;
 
     /**
      * Creates a new instance.
@@ -43,14 +39,12 @@ public class ApidbChangeWriter implements ChangeSink {
     public ApidbChangeWriter(DatabaseLoginCredentials loginCredentials, DatabasePreferences preferences,
             boolean populateCurrentTables) {
         changeWriter = new ChangeWriter(loginCredentials, populateCurrentTables);
-        actionWriterMap = new HashMap<>();
+        actionWriterMap = new HashMap<ChangeAction, ActionChangeWriter>();
         actionWriterMap.put(ChangeAction.Create, new ActionChangeWriter(changeWriter, ChangeAction.Create));
         actionWriterMap.put(ChangeAction.Modify, new ActionChangeWriter(changeWriter, ChangeAction.Modify));
         actionWriterMap.put(ChangeAction.Delete, new ActionChangeWriter(changeWriter, ChangeAction.Delete));
 
         schemaVersionValidator = new SchemaVersionValidator(loginCredentials, preferences);
-        dbCtx = new DatabaseContext2(loginCredentials);
-        locker = new DatabaseLocker(dbCtx.getDataSource(), true);
     }
 
     /**
@@ -65,7 +59,6 @@ public class ApidbChangeWriter implements ChangeSink {
      */
     public void process(ChangeContainer change) {
         ChangeAction action;
-        this.locker.lockDatabase(this.getClass().getSimpleName());
 
         // Verify that the schema version is supported.
         schemaVersionValidator.validateVersion(ApidbVersionConstants.SCHEMA_MIGRATIONS);
@@ -92,8 +85,6 @@ public class ApidbChangeWriter implements ChangeSink {
      * {@inheritDoc}
      */
     public void close() {
-        this.locker.unlockDatabase();
         changeWriter.close();
-        this.dbCtx.close();
     }
 }

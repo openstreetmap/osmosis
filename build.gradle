@@ -1,10 +1,6 @@
 buildscript {
 	repositories {
 		mavenCentral()
-		jcenter()
-	}
-	dependencies {
-		classpath 'com.github.jengelman.gradle.plugins:shadow:6.1.0'
 	}
 }
 
@@ -13,7 +9,7 @@ apply plugin: 'idea'
 /* Build collections containing each type of project.  These collections will
  * be used to apply common configurations to projects of the same type.
  */
-def packageProjects = allprojects.findAll { project -> project.path.equals(':package') }
+def packageProjects = allprojects.findAll { project -> project.path.equals(':osmosis') }
 def buildProjects = allprojects.findAll { project -> project.path.equals(':build-support') }
 def dockerProjects = allprojects.findAll { project -> project.path.equals(':db-server') }
 // Java projects are all those that aren't in the previous collections.
@@ -44,9 +40,8 @@ configure(javaProjects) {
 	apply plugin: 'java'
 	apply plugin: 'maven-publish'
 	apply plugin: 'signing'
-	apply plugin: 'com.github.johnrengelman.shadow'
 
-	sourceCompatibility = 1.8
+	sourceCompatibility = 17
 
 	test {
 		/*
@@ -73,27 +68,18 @@ configure(javaProjects) {
 
 	// Build javadoc and source jars and include in published artifacts.
 	task javadocJar(type: Jar, dependsOn: javadoc) {
-		classifier = 'javadoc'
+		archiveClassifier = 'javadoc'
 		from 'build/docs/javadoc'
 	}
 	task sourcesJar(type: Jar) {
 		from sourceSets.main.allSource
-		classifier = 'sources'
+		archiveClassifier = 'sources'
 	}
 	artifacts {
 	    archives jar
 
 	    archives javadocJar
 	    archives sourcesJar
-	}
-
-	shadowJar {
-		archiveBaseName = project.name
-		mergeServiceFiles()
-		transform(com.github.jengelman.gradle.plugins.shadow.transformers.AppendingTransformer) {
-			resource = 'reference.conf'
-		}
-		zip64 = true
 	}
 
 	// Sign all published artifacts if signing is enabled.

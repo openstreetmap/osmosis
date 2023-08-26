@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.dbcp.BasicDataSource;
 import org.openstreetmap.osmosis.core.OsmosisRuntimeException;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
@@ -66,14 +64,6 @@ public class DatabaseContext2 implements AutoCloseable {
         }
     }
 
-	/**
-	 * Retrieves the data source associated with this database context.
-	 *
-	 * @return {@link DataSource}
-	 */
-	public DataSource getDataSource() {
-		return this.dataSource;
-	}
 
 	private OsmosisRuntimeException createUnknownDbTypeException() {
 		return new OsmosisRuntimeException("Unknown database type " + dbType + ".");
@@ -355,18 +345,4 @@ public class DatabaseContext2 implements AutoCloseable {
 			DataSourceUtils.releaseConnection(connection, dataSource);
 		}
     }
-
-    /**
-     * Enforces cleanup of any remaining resources during garbage collection. This is a safeguard
-     * and should not be required if release is called appropriately.
-     * 
-     * @throws Throwable If a problem occurs during finalization.
-     */
-    @Override
-    protected void finalize() throws Throwable {
-        close();
-
-        super.finalize();
-    }
-
 }

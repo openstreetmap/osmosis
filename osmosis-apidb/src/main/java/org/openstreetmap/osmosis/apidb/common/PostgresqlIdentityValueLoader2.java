@@ -1,6 +1,7 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.apidb.common;
 
+import java.util.Objects;
 
 /**
  * Postgresql implementation of an identity value loader.
@@ -34,7 +35,10 @@ public class PostgresqlIdentityValueLoader2 implements IdentityValueLoader {
 	 * @return The newly inserted id.
 	 */
 	public long getLastInsertId() {
-		return dbCtx.getJdbcTemplate().queryForObject(SQL_SELECT_LAST_INSERT_ID, Long.class);
+		return Objects.requireNonNull(
+			dbCtx.getJdbcTemplate().queryForObject(SQL_SELECT_LAST_INSERT_ID, Long.class),
+			"Last insert ID was not found"
+		);
 	}
 
 

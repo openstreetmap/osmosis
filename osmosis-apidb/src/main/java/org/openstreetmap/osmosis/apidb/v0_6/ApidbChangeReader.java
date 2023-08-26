@@ -9,7 +9,6 @@ import org.openstreetmap.osmosis.apidb.v0_6.impl.AllEntityDao;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.DeltaToDiffReader;
 import org.openstreetmap.osmosis.apidb.v0_6.impl.SchemaVersionValidator;
 import org.openstreetmap.osmosis.core.container.v0_6.ChangeContainer;
-import org.openstreetmap.osmosis.core.database.DatabaseLocker;
 import org.openstreetmap.osmosis.core.database.DatabaseLoginCredentials;
 import org.openstreetmap.osmosis.core.database.DatabasePreferences;
 import org.openstreetmap.osmosis.core.lifecycle.ReleasableIterator;
@@ -75,24 +74,12 @@ public class ApidbChangeReader implements RunnableChangeSource {
 	 */
     protected void runImpl(DatabaseContext2 dbCtx) {
     	try {
-    		AllEntityDao entityDao;
-
     		changeSink.initialize(Collections.<String, Object>emptyMap());
 
 	        new SchemaVersionValidator(loginCredentials, preferences)
 	                .validateVersion(ApidbVersionConstants.SCHEMA_MIGRATIONS);
 
-	        entityDao = new AllEntityDao(dbCtx.getJdbcTemplate());
-
-	        try (ReleasableIterator<ChangeContainer> reader = entityDao.getHistory(intervalBegin, intervalEnd)) {
-	        	ReleasableIterator<ChangeContainer> i;
-	        	
-	        	if (fullHistory) {
-	        		i = reader;
-	        	} else {
-	        		i = new DeltaToDiffReader(reader);
-	        	}
-
+	        try (ReleasableIterator<ChangeContainer> i = getHistory(dbCtx)) {
 	        	while (i.hasNext()) {
 	        		changeSink.process(i.next());
 	        	}
@@ -104,23 +91,32 @@ public class ApidbChangeReader implements RunnableChangeSource {
     		changeSink.close();
     	}
     }
+
+
+	private ReleasableIterator<ChangeContainer> getHistory(DatabaseContext2 dbCtx) {
+		AllEntityDao entityDao = new AllEntityDao(dbCtx.getJdbcTemplate());
+
+		ReleasableIterator<ChangeContainer> reader = entityDao.getHistory(intervalBegin, intervalEnd);
+
+		if (fullHistory) {
+			return reader;
+		} else {
+			return new DeltaToDiffReader(reader);
+		}
+	}
     
 
     /**
      * Reads all data from the database and send it to the sink.
      */
     public void run() {
-        try (DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials);
-				DatabaseLocker locker = new DatabaseLocker(dbCtx.getDataSource(), false)) {
+        try (DatabaseContext2 dbCtx = new DatabaseContext2(loginCredentials)) {
         	dbCtx.executeWithinTransaction(new TransactionCallbackWithoutResult() {
 				@Override
 				protected void doInTransactionWithoutResult(TransactionStatus arg0) {
-					locker.lockDatabase(this.getClass().getSimpleName());
 					runImpl(dbCtx);
 				} });
 
-        } catch (final Exception e) {
-        	throw new RuntimeException(e);
-		}
+        }
     }
 }

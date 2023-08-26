@@ -1,8 +1,9 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package crosby.binary.osmosis;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 
 import crosby.binary.file.BlockInputStream;
@@ -16,17 +17,17 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
  */
 public class OsmosisReader implements RunnableSource {
 	
-	private Sink sink;
+    private File pbfFile;
+    private OsmosisBinaryParser parser;
+    private Sink sink;
 	
     /**
      * Make a reader based on a target input stream. 
-     * @param input The input stream to read from. 
+     * @param pbfFile The PBF file to read from.
      */
-    public OsmosisReader(InputStream input) {
-        if (input == null) {
-            throw new Error("Null input");
-        }
-        this.input = input;
+    public OsmosisReader(File pbfFile) {
+        this.pbfFile = pbfFile;
+
         parser = new OsmosisBinaryParser();
     }
 
@@ -40,8 +41,10 @@ public class OsmosisReader implements RunnableSource {
     public void run() {
         try {
         	sink.initialize(Collections.<String, Object>emptyMap());
-        	
-            (new BlockInputStream(input, parser)).process();
+
+            try (BlockInputStream blockInputStream = new BlockInputStream(new FileInputStream(pbfFile), parser)) {
+                blockInputStream.process();
+            }
             
         } catch (IOException e) {
             throw new OsmosisRuntimeException("Unable to process PBF stream", e);
@@ -49,8 +52,4 @@ public class OsmosisReader implements RunnableSource {
         	sink.close();
         }
     }
-    /** Store the input stream we're using. */
-    InputStream input;
-    /** The binary parser object. */
-    OsmosisBinaryParser parser;
 }

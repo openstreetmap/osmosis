@@ -39,6 +39,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *            The id of the changeset that this version of the entity was created by.
 	 * @deprecated As of 0.40, replaced by Relation(entityData).
 	 */
+	@Deprecated
 	public Relation(long id, int version, Date timestamp, OsmUser user, long changesetId) {
 		// Chain to the more-specific constructor
 		this(id, version, new SimpleTimestampContainer(timestamp), user, changesetId);
@@ -61,6 +62,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *            The id of the changeset that this version of the entity was created by.
 	 * @deprecated As of 0.40, replaced by Relation(entityData).
 	 */
+	@Deprecated
 	public Relation(long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId) {
 		super(id, version, timestampContainer, user, changesetId);
 		
@@ -100,6 +102,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *            The members to apply to the object.
 	 * @deprecated As of 0.40, replaced by Relation(entityData, members).
 	 */
+	@Deprecated
 	public Relation(
 			long id, int version, Date timestamp, OsmUser user, long changesetId, Collection<Tag> tags,
 			List<RelationMember> members) {
@@ -128,6 +131,7 @@ public class Relation extends Entity implements Comparable<Relation> {
 	 *            The members to apply to the object.
 	 * @deprecated As of 0.40, replaced by Relation(entityData, members).
 	 */
+	@Deprecated
 	public Relation(
 			long id, int version, TimestampContainer timestampContainer, OsmUser user, long changesetId,
 			Collection<Tag> tags, List<RelationMember> members) {

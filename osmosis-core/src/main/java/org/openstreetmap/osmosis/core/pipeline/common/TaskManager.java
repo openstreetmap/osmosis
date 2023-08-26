@@ -122,7 +122,7 @@ public abstract class TaskManager {
 			if (pipeArgName.indexOf(pipeArgumentPrefix) == 0) {
 				Integer pipeIndex;
 				
-				pipeIndex = new Integer(
+				pipeIndex = Integer.valueOf(
 					getPipeIndex(pipeArgName.substring(pipeArgumentPrefix.length()))
 				);
 				
@@ -155,7 +155,7 @@ public abstract class TaskManager {
 	 */
 	protected Task getInputTask(PipeTasks pipeTasks, int pipeIndex, Class<? extends Task> requiredTaskType) {
 		Task inputTask;
-		Integer pipeIndexO = new Integer(pipeIndex);
+		Integer pipeIndexO = Integer.valueOf(pipeIndex);
 		
 		// We use the specified pipe name if it exists, otherwise we get the
 		// next available default pipe.
@@ -180,7 +180,7 @@ public abstract class TaskManager {
 	 *            The index of the pipe on the current task.
 	 */
 	protected void setOutputTask(PipeTasks pipeTasks, Task outputTask, int pipeIndex) {
-		Integer pipeIndexO = new Integer(pipeIndex);
+		Integer pipeIndexO = Integer.valueOf(pipeIndex);
 		
 		// We use the specified pipe name if it exists, otherwise we register
 		// using the next available default pipe name.

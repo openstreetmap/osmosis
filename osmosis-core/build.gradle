@@ -1,17 +1,3 @@
-configurations {
-    // Exclude because Stax is included in the JDK from java 1.6 onwards.
-    all*.exclude group: 'javax.xml.stream', module: 'stax-api'
-}
-
-dependencies {
-    implementation group: 'net.sf.jpf', name: 'jpf', version: dependencyVersionJpf
-    implementation group: 'com.fasterxml.woodstox', name: 'woodstox-core', version: dependencyVersionWoodstoxCore
-    implementation group: 'org.codehaus.woodstox', name: 'stax2-api', version: dependencyVersionWoodstoxStax2
-    implementation group: 'org.apache.commons', name: 'commons-compress', version: dependencyVersionCommonsCompress
-    implementation group: 'xerces', name: 'xercesImpl', version: dependencyVersionXerces
-    implementation group: 'org.springframework', name: 'spring-jdbc', version: dependencyVersionSpring
-}
-
 /*
  * Define a custom task to automatically generate the OsmosisConstants file
  * and update the java compilation task to depend on it.
@@ -41,33 +27,4 @@ task generateJavaSources {
 }
 // Define task dependency to ensure constants file is always up to date.
 compileJava.dependsOn generateJavaSources
-
-
-/*
- * Define a custom task to automatically generate the plugin.xml file
- * and update the copy resources task to depend on it.
- */
-task generateResources {
-	description = 'Generates the plugin.xml file with the current version number.'
-
-	// Build file objects for our template file, and output java file.
-    def commonPathPrefix = "$projectDir/src/main/resources/org/openstreetmap/osmosis/core/plugin/plugin.xml"
-    def outputFile = new File(commonPathPrefix)
-    def inputFile = new File(commonPathPrefix + ".template")
-
-    /* 
-     * Declare inputs and outputs of the task to allow gradle to determine if
-     * it is up to date.
-     */
-    inputs.file inputFile
-    outputs.file outputFile
-
-    doLast {
-        // Insert the version string into the constants file.
-        def fileContent = inputFile.getText()
-        fileContent = fileContent.replace("no-version-specified", version)
-        outputFile.write(fileContent)
-    }
-}
-// Define task dependency to ensure constants file is always up to date.
-processResources.dependsOn generateResources
+sourcesJar.dependsOn generateJavaSources

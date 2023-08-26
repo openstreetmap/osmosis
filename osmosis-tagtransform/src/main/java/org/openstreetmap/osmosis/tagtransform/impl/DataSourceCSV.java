@@ -43,10 +43,8 @@ public class DataSourceCSV implements DataSource {
                     .collect(Collectors.toList());
             
             try(InputStreamReader fis = new InputStreamReader(new FileInputStream(new File(parentDirectory, file)))) {
-                CSVRecord fallbackRecord = CSVParser.parse(attributes.getNamedItem("fallback").getTextContent(), CSVFormat.newFormat(',')
-                    .withDelimiter(',')
-                    .withQuote('"')
-                    .withQuoteMode(QuoteMode.MINIMAL))
+                CSVFormat format = CSVFormat.Builder.create().setDelimiter(',').setQuote('"').setQuoteMode(QuoteMode.MINIMAL).build();
+                CSVRecord fallbackRecord = CSVParser.parse(attributes.getNamedItem("fallback").getTextContent(), format)
                         .iterator().next();
                 this.fallback = new String[fallbackRecord.size()];
                 for(int i = 0; i < fallback.length; i++) {

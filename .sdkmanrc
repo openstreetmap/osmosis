@@ -1,0 +1,3 @@
+# Using Temurin distribution by Eclipse
+# https://whichjdk.com/.
+java=17.0.7-tem

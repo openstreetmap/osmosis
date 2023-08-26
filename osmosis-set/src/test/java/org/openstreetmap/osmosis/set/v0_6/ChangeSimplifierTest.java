@@ -123,22 +123,23 @@ public class ChangeSimplifierTest extends AbstractDataTest {
 	 */
 	@Test
 	public void badSortOrderVersion() throws Exception {
-		ChangeSimplifier simplifier = new ChangeSimplifier();
-		simplifier.setChangeSink(new NullChangeWriter());
-		simplifier.initialize(new HashMap<String, Object>());
-		Node node;
+		try (ChangeSimplifier simplifier = new ChangeSimplifier()) {
+			simplifier.setChangeSink(new NullChangeWriter());
+			simplifier.initialize(new HashMap<String, Object>());
+			Node node;
 
-		node = new Node(new CommonEntityData(1, 2, new Date(), OsmUser.NONE, 2), 1, 1);
-		simplifier.process(new ChangeContainer(new NodeContainer(node), ChangeAction.Modify));
-
-		try {
-			node = new Node(new CommonEntityData(1, 1, new Date(), OsmUser.NONE, 1), 1, 1);
+			node = new Node(new CommonEntityData(1, 2, new Date(), OsmUser.NONE, 2), 1, 1);
 			simplifier.process(new ChangeContainer(new NodeContainer(node), ChangeAction.Modify));
-		} catch (OsmosisRuntimeException e) {
-			if (e.getMessage().startsWith("Pipeline entities are not sorted")) {
-				return;
+
+			try {
+				node = new Node(new CommonEntityData(1, 1, new Date(), OsmUser.NONE, 1), 1, 1);
+				simplifier.process(new ChangeContainer(new NodeContainer(node), ChangeAction.Modify));
+			} catch (OsmosisRuntimeException e) {
+				if (e.getMessage().startsWith("Pipeline entities are not sorted")) {
+					return;
+				}
+				throw e;
 			}
-			throw e;
 		}
 		Assert.fail("Expected exception not thrown");
 	}
@@ -151,22 +152,23 @@ public class ChangeSimplifierTest extends AbstractDataTest {
 	 */
 	@Test
 	public void badSortOrderId() throws Exception {
-		ChangeSimplifier simplifier = new ChangeSimplifier();
-		simplifier.setChangeSink(new NullChangeWriter());
-		simplifier.initialize(new HashMap<String, Object>());
-		Node node;
+		try (ChangeSimplifier simplifier = new ChangeSimplifier()) {
+			simplifier.setChangeSink(new NullChangeWriter());
+			simplifier.initialize(new HashMap<String, Object>());
+			Node node;
 
-		node = new Node(new CommonEntityData(2, 2, new Date(), OsmUser.NONE, 2), 1, 1);
-		simplifier.process(new ChangeContainer(new NodeContainer(node), ChangeAction.Modify));
-
-		try {
-			node = new Node(new CommonEntityData(1, 2, new Date(), OsmUser.NONE, 1), 1, 1);
+			node = new Node(new CommonEntityData(2, 2, new Date(), OsmUser.NONE, 2), 1, 1);
 			simplifier.process(new ChangeContainer(new NodeContainer(node), ChangeAction.Modify));
-		} catch (OsmosisRuntimeException e) {
-			if (e.getMessage().startsWith("Pipeline entities are not sorted")) {
-				return;
+
+			try {
+				node = new Node(new CommonEntityData(1, 2, new Date(), OsmUser.NONE, 1), 1, 1);
+				simplifier.process(new ChangeContainer(new NodeContainer(node), ChangeAction.Modify));
+			} catch (OsmosisRuntimeException e) {
+				if (e.getMessage().startsWith("Pipeline entities are not sorted")) {
+					return;
+				}
+				throw e;
 			}
-			throw e;
 		}
 		Assert.fail("Expected exception not thrown");
 	}
@@ -179,23 +181,24 @@ public class ChangeSimplifierTest extends AbstractDataTest {
 	 */
 	@Test
 	public void badSortOrderType() throws Exception {
-		ChangeSimplifier simplifier = new ChangeSimplifier();
-		simplifier.setChangeSink(new NullChangeWriter());
-		simplifier.initialize(new HashMap<String, Object>());
-		Node node;
-		Way way;
-		
-		way = new Way(new CommonEntityData(2, 2, new Date(), OsmUser.NONE, 2));
-		simplifier.process(new ChangeContainer(new WayContainer(way), ChangeAction.Modify));
+		try (ChangeSimplifier simplifier = new ChangeSimplifier()) {
+			simplifier.setChangeSink(new NullChangeWriter());
+			simplifier.initialize(new HashMap<String, Object>());
+			Node node;
+			Way way;
+			
+			way = new Way(new CommonEntityData(2, 2, new Date(), OsmUser.NONE, 2));
+			simplifier.process(new ChangeContainer(new WayContainer(way), ChangeAction.Modify));
 
-		try {
-			node = new Node(new CommonEntityData(1, 2, new Date(), OsmUser.NONE, 1), 1, 1);
-			simplifier.process(new ChangeContainer(new NodeContainer(node), ChangeAction.Modify));
-		} catch (OsmosisRuntimeException e) {
-			if (e.getMessage().startsWith("Pipeline entities are not sorted")) {
-				return;
+			try {
+				node = new Node(new CommonEntityData(1, 2, new Date(), OsmUser.NONE, 1), 1, 1);
+				simplifier.process(new ChangeContainer(new NodeContainer(node), ChangeAction.Modify));
+			} catch (OsmosisRuntimeException e) {
+				if (e.getMessage().startsWith("Pipeline entities are not sorted")) {
+					return;
+				}
+				throw e;
 			}
-			throw e;
 		}
 		Assert.fail("Expected exception not thrown");
 	}
