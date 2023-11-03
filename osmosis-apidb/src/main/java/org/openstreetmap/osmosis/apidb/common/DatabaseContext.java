@@ -451,6 +451,7 @@ public class DatabaseContext implements AutoCloseable {
      * 
      * @deprecated Use {@link #close()} instead.
      */
+    @Deprecated
     public void release() {
     	close();
     }

@@ -279,6 +279,7 @@ public class DatabaseContext2 implements AutoCloseable {
      * 
      * @deprecated Use {@link #close()} instead.
      */
+	@Deprecated
     public void release() {
     	close();
     }
