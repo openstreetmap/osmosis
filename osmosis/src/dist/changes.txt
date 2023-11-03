@@ -1,8 +1,17 @@
-Pending changes
+0.49
 Use GitHub actions instead of Travis CI for continuous integration.
 Improve Gradle performance by enabling parallel execution, build cache and on-demand configuration.
-Replace osmosis-osm-binary package with dependency on org.openstreetmap.pbf:osmpbf from Maven Central.  Note that the org.openstreetmap.pbf:osmpbf dependency will break compatibility with Android 7 and earlier.
+Replace osmosis-osm-binary package with dependency on org.openstreetmap.pbf:osmpbf from Maven Central.
+Add enableKeepPartialLinestring option for pgsnapshot/pgsimple tasks.
+Revert the database locking functionality which fails in CI.
+Upgrade to PostgreSQL 15.1.
+Remove Java Plugin Framework support (standard Osmosis plugin support remains).
 Remove the replication-http package including --receive-replication and send-replication-xxx tasks.
+Upgrade to Java 17.
+Eliminate use of finalize.
+Ensure PBF file is closed after reading completes.
+Remove shadow jar and jcenter plugins from build.
+Build distribution using the Gradle Application plugin instead of custom scripts.
 
 0.48.3
 Fix broken SQL code in pgsnapshot_schema_0.6_changes.sql (#73)
