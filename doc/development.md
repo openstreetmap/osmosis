@@ -46,4 +46,4 @@ sub-directory of package.  On a UNIX-like environment use the "osmosis" script,
 on a Windows environment use the "osmosis.bat" script.
 
 Distribution archives in zip and tar gzipped formats are contained in the
-`package/build/distribution` directory.
+`osmosis/build/distributions` directory.
