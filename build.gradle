@@ -37,11 +37,22 @@ subprojects {
 // Apply common configurations to all projects supporting Java.
 configure(javaProjects) {
 	apply plugin: 'checkstyle'
-	apply plugin: 'java'
+	apply plugin: 'java-library'
 	apply plugin: 'maven-publish'
 	apply plugin: 'signing'
 
 	sourceCompatibility = 17
+
+	java {
+		withJavadocJar()
+		withSourcesJar()
+	}
+
+	javadoc {
+		if(JavaVersion.current().isJava9Compatible()) {
+			options.addBooleanOption('html5', true)
+		}
+	}
 
 	test {
 		/*
@@ -66,32 +77,11 @@ configure(javaProjects) {
 		configProperties.samedir = configFile.parentFile
 	}
 
-	// Build javadoc and source jars and include in published artifacts.
-	task javadocJar(type: Jar, dependsOn: javadoc) {
-		archiveClassifier = 'javadoc'
-		from 'build/docs/javadoc'
-	}
-	task sourcesJar(type: Jar) {
-		from sourceSets.main.allSource
-		archiveClassifier = 'sources'
-	}
-	artifacts {
-	    archives jar
-
-	    archives javadocJar
-	    archives sourcesJar
-	}
-
-	// Sign all published artifacts if signing is enabled.
-	signing {
-		sign configurations.archives
-		required = Boolean.valueOf(osmosisSigningEnabled)
-	}
-
 	// Configure the maven-publish plugin to upload artifacts to the Sonatype repository.
 	publishing {
 		publications {
 			mavenJava(MavenPublication) {
+				from components.java
 				pom {
 					name = project.name
 					packaging = 'jar'
@@ -131,5 +121,10 @@ configure(javaProjects) {
 				}
 			}
 		}
+	}
+
+	// Sign all published artifacts if signing is enabled.
+	signing {
+		sign publishing.publications.mavenJava
 	}
 }
