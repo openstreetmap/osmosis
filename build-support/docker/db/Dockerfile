@@ -1,7 +1,7 @@
 FROM fedora:38
 
 # Install UTF8 locale support
-RUN dnf install -y langpacks-en.noarch
+RUN dnf install -y glibc-langpack-en
 
 # Install PostgreSQL
 RUN dnf install -y postgresql-server postgresql-contrib
