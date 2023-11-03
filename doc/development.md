@@ -9,7 +9,7 @@ required to run the full build and test suite.
 
 Osmosis is built using the [Gradle build tool](http://gradle.org).  Gradle itself
 does not need to be installed because the `gradlew` script will install Gradle on
-first usage.  The only requirements are a 1.7 JDK, and an Internet connection.
+first usage.  The only requirements are a 1.17 JDK, and an Internet connection.
 Note that in the docker environment all downloads will still occur and be cached
 in your home directory.
 
