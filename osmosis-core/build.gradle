@@ -1,3 +1,7 @@
+dependencies {
+    implementation group: 'net.sf.jpf', name: 'jpf', version: dependencyVersionJpf
+}
+
 /*
  * Define a custom task to automatically generate the OsmosisConstants file
  * and update the java compilation task to depend on it.
