@@ -6,7 +6,7 @@ import org.java.plugin.Plugin;
 
 /**
  * The core plugin entry point.
- * 
+ *
  * @author Marcus Wolschon
  */
 public class CorePlugin extends Plugin {

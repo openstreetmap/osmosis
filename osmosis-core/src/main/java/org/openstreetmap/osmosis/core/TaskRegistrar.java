@@ -60,7 +60,7 @@ public class TaskRegistrar {
 
 	/**
 	 * Returns the configured task manager factory register configured.
-	 * 
+	 *
 	 * @return The task manager factory register.
 	 */
 	public TaskManagerFactoryRegister getFactoryRegister() {
@@ -71,7 +71,7 @@ public class TaskRegistrar {
 	/**
 	 * Initialises factories for all tasks. Loads additionally specified plugins
 	 * as well as default tasks.
-	 * 
+	 *
 	 * @param plugins
 	 *            The class names of all plugins to be loaded.
 	 */
@@ -83,14 +83,14 @@ public class TaskRegistrar {
 		for (String plugin : plugins) {
 			loadPlugin(plugin);
 		}
-		
+
 		// Register the plugins loaded via JPF.
 		loadJPFPlugins();
 	}
 
 	/**
 	 * Loads a plugin manually.
-	 * 
+	 *
 	 * @param pluginLoader The pluginLoader that you wish to load.
 	 */
 	public void loadPlugin(final PluginLoader pluginLoader) {
@@ -105,39 +105,38 @@ public class TaskRegistrar {
 
 	private void loadBuiltInPlugins() {
 		final String pluginResourceName = "osmosis-plugins.conf";
-		
+
 		try {
 			for (URL pluginConfigurationUrl : Collections.list(Thread.currentThread()
 					.getContextClassLoader().getResources(pluginResourceName))) {
 				BufferedReader pluginReader;
-				
+
 				LOG.finer("Loading plugin configuration file from url " + pluginConfigurationUrl + ".");
-				
+
 				try (InputStream pluginInputStream = pluginConfigurationUrl.openStream()) {
 					if (pluginInputStream == null) {
 						throw new OsmosisRuntimeException("Cannot open URL " + pluginConfigurationUrl + ".");
 					}
-					
+
 					pluginReader = new BufferedReader(new InputStreamReader(pluginInputStream));
-					
+
 					for (;;) {
 						String plugin;
-						
+
 						plugin = pluginReader.readLine();
 						if (plugin == null) {
 							break;
 						}
-						
+
 						plugin = plugin.trim();
 						if (!plugin.isEmpty()) {
 							LOG.finer("Loading plugin via loader " + plugin + ".");
-							
+
 							loadPlugin(plugin);
 						}
 					}
 				}
 			}
-			
 		} catch (IOException e) {
 			throw new OsmosisRuntimeException(
 					"Unable to load the plugins based on " + pluginResourceName
@@ -148,22 +147,22 @@ public class TaskRegistrar {
 
 	/**
 	 * Loads the tasks implemented as plugins.
-	 * 
+	 *
 	 */
 	private void loadJPFPlugins() {
 		PluginManager pluginManager;
-		
+
 		// Create a new JPF plugin manager.
 		pluginManager = ObjectFactory.newInstance().createManager();
-		
+
 		// Search known locations for plugin files.
 		LOG.fine("Searching for JPF plugins.");
 		List<PluginLocation> locations = gatherJpfPlugins();
-		
+
 		// Register the core plugin.
 		LOG.fine("Registering the core plugin.");
 		registerCorePlugin(pluginManager);
-		
+
 		// Register all located plugins.
 		LOG.fine("Registering the extension plugins.");
 		if (locations.size() == 0) {
@@ -171,7 +170,7 @@ public class TaskRegistrar {
 		   return;
 		}
 		registerJpfPlugins(pluginManager, locations);
-		
+
 		// Initialise all of the plugins that have been registered.
 		LOG.fine("Activating the plugins.");
 		// load plugins for the task-extension-point
@@ -198,7 +197,7 @@ public class TaskRegistrar {
 
 	/**
 	 * Register the core plugin from which other plugins will extend.
-	 * 
+	 *
 	 * @param pluginManager
 	 *            The plugin manager to register the plugin with.
 	 */
@@ -206,22 +205,22 @@ public class TaskRegistrar {
 		try {
 			URL core;
 			PluginDescriptor coreDescriptor;
-			
+
 			// Get the plugin configuration file.
 			core = getClass().getResource("/org/openstreetmap/osmosis/core/plugin/plugin.xml");
 			LOG.finest("Plugin URL: " + core);
-			
+
 			// Register the core plugin in the plugin registry.
 			pluginManager.getRegistry().register(new URL[] {core});
-			
+
 			// Get the plugin descriptor from the registry.
 			coreDescriptor = pluginManager.getRegistry().getPluginDescriptor(
 					"org.openstreetmap.osmosis.core.plugin.Core");
-			
+
 			// Enable the plugin.
 			pluginManager.enablePlugin(coreDescriptor, true);
 			pluginManager.activatePlugin("org.openstreetmap.osmosis.core.plugin.Core");
-			
+
 		} catch (ManifestProcessingException e) {
 			throw new OsmosisRuntimeException("Unable to register core plugin.", e);
 		} catch (PluginLifecycleException e) {
@@ -232,7 +231,7 @@ public class TaskRegistrar {
 
 	/**
 	 * Register the given JPF-plugins with the {@link PluginManager}.
-	 * 
+	 *
 	 * @param locations
 	 *            the plugins found
 	 */
@@ -304,7 +303,7 @@ public class TaskRegistrar {
 
 	/**
 	 * Loads the tasks associated with a plugin (old plugin-api).
-	 * 
+	 *
 	 * @param plugin
 	 *            The plugin loader class name.
 	 */
@@ -322,7 +321,7 @@ public class TaskRegistrar {
 
 	/**
 	 * Load the given plugin, old API or new JPF.
-	 * 
+	 *
 	 * @param pluginClassName
 	 *            the name of the class to instantiate
 	 * @param classLoader
