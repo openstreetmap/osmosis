@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.openstreetmap.osmosis</groupId>
+  <artifactId>osmosis</artifactId>
+  <version>0.49.2</version>
+  <packaging>pom</packaging>
+
+  <name>osmosis</name>
+  <description>Osmosis is a Java application and library for processing OSM data.</description>
+  <url>http://wiki.openstreetmap.org/wiki/Osmosis</url>
+
+  <licenses>
+    <license>
+      <name>Public Domain</name>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>brett</id>
+      <name>Brett Henderson</name>
+      <email>brett@bretth.com</email>
+    </developer>
+  </developers>
+
+  <scm>
+    <url>https://github.com/openstreetmap/osmosis</url>
+    <connection>git://github.com/openstreetmap/osmosis.git</connection>
+    <developerConnection>ssh://git@github.com/openstreetmap/osmosis.git</developerConnection>
+  </scm>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+    <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
+
+    <exec-maven-plugin.version>3.1.0</exec-maven-plugin.version>
+    <maven-clean-plugin.version>3.2.0</maven-clean-plugin.version>
+
+    <java.min.version>17</java.min.version>
+
+    <commons-codec.version>1.16.0</commons-codec.version>
+    <commons-compress.version>1.24.0</commons-compress.version>
+    <commons-csv.version>1.10.0</commons-csv.version>
+    <commons-dbcp.version>1.4</commons-dbcp.version>
+    <commons-io.version>2.15.0</commons-io.version>
+    <guava.version>32.1.3-jre</guava.version>
+    <jpf.version>1.5</jpf.version>
+    <junit.version>4.13.2</junit.version>
+    <mysql.version>8.0.33</mysql.version>
+    <osmpbf.version>1.5.0</osmpbf.version>
+    <postgis.version>2021.1.0</postgis.version>
+    <postgresql.version>42.6.0</postgresql.version>
+    <protobuf.version>3.25.0</protobuf.version>
+    <spring.version>5.3.30</spring.version>
+
+    <osmosis-apidb.skip-tests>true</osmosis-apidb.skip-tests>
+    <osmosis-areafilter.skip-tests>false</osmosis-areafilter.skip-tests>
+    <osmosis-core.skip-tests>false</osmosis-core.skip-tests>
+    <osmosis-dataset.skip-tests>false</osmosis-dataset.skip-tests>
+    <osmosis-extract.skip-tests>true</osmosis-extract.skip-tests>
+    <osmosis-hstore-jdbc.skip-tests>false</osmosis-hstore-jdbc.skip-tests>
+    <osmosis-pbf.skip-tests>false</osmosis-pbf.skip-tests>
+    <osmosis-pbf2.skip-tests>false</osmosis-pbf2.skip-tests>
+    <osmosis-pgsimple.skip-tests>true</osmosis-pgsimple.skip-tests>
+    <osmosis-pgsnapshot.skip-tests>true</osmosis-pgsnapshot.skip-tests>
+    <osmosis-replication.skip-tests>false</osmosis-replication.skip-tests>
+    <osmosis-set.skip-tests>true</osmosis-set.skip-tests>
+    <osmosis-tagfilter.skip-tests>false</osmosis-tagfilter.skip-tests>
+    <osmosis-tagtransform.skip-tests>false</osmosis-tagtransform.skip-tests>
+    <osmosis-testutil.skip-tests>false</osmosis-testutil.skip-tests>
+    <osmosis-xml.skip-tests>false</osmosis-xml.skip-tests>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+          <configuration>
+            <source>${java.min.version}</source>
+            <target>${java.min.version}</target>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <modules>
+    <module>osmosis-apidb</module>
+    <module>osmosis-areafilter</module>
+    <module>osmosis-core</module>
+    <module>osmosis-dataset</module>
+    <module>osmosis-extract</module>
+    <module>osmosis-hstore-jdbc</module>
+    <module>osmosis-pbf</module>
+    <module>osmosis-pbf2</module>
+    <module>osmosis-pgsimple</module>
+    <module>osmosis-pgsnapshot</module>
+    <module>osmosis-replication</module>
+    <module>osmosis-set</module>
+    <module>osmosis-tagfilter</module>
+    <module>osmosis-tagtransform</module>
+    <module>osmosis-testutil</module>
+    <module>osmosis-xml</module>
+  </modules>
+</project>
