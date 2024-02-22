@@ -9,8 +9,8 @@ package org.openstreetmap.osmosis.core.util;
  * @author Brett Henderson
  */
 public final class FixedPrecisionCoordinateConvertor {
-	private static final int PRECISION = 7;
-	private static final int MULTIPLICATION_FACTOR = calculateMultiplicationFactor();
+	private static final int PRECISION = 10;
+	private static final long MULTIPLICATION_FACTOR = calculateMultiplicationFactor();
 	
 	
 	/**
@@ -27,8 +27,8 @@ public final class FixedPrecisionCoordinateConvertor {
 	 * 
 	 * @return The double to fixed multiplication factor.
 	 */
-	private static int calculateMultiplicationFactor() {
-		int result;
+	private static long calculateMultiplicationFactor() {
+		long result;
 		
 		result = 1;
 		
@@ -47,10 +47,10 @@ public final class FixedPrecisionCoordinateConvertor {
 	 *            The double coordinate value.
 	 * @return The fixed coordinate value.
 	 */
-	public static int convertToFixed(double coordinate) {
-		int result;
+	public static long convertToFixed(double coordinate) {
+		long result;
 		
-		result = (int) Math.round(coordinate * MULTIPLICATION_FACTOR);
+		result = (long) Math.round(coordinate * MULTIPLICATION_FACTOR);
 		
 		return result;
 	}
@@ -63,7 +63,7 @@ public final class FixedPrecisionCoordinateConvertor {
 	 *            The fixed coordinate value.
 	 * @return The double coordinate value.
 	 */
-	public static double convertToDouble(int coordinate) {
+	public static double convertToDouble(long coordinate) {
 		double result;
 		
 		result = ((double) coordinate) / MULTIPLICATION_FACTOR;

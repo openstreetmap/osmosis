@@ -192,8 +192,8 @@ public class Node extends Entity implements Comparable<Node> {
 	public Node(StoreReader sr, StoreClassRegister scr) {
 		super(sr, scr);
 
-		this.latitude = FixedPrecisionCoordinateConvertor.convertToDouble(sr.readInteger());
-		this.longitude = FixedPrecisionCoordinateConvertor.convertToDouble(sr.readInteger());
+		this.latitude = FixedPrecisionCoordinateConvertor.convertToDouble(sr.readLong());
+		this.longitude = FixedPrecisionCoordinateConvertor.convertToDouble(sr.readLong());
 	}
 
 
@@ -204,8 +204,8 @@ public class Node extends Entity implements Comparable<Node> {
 	public void store(StoreWriter sw, StoreClassRegister scr) {
 		super.store(sw, scr);
 
-		sw.writeInteger(FixedPrecisionCoordinateConvertor.convertToFixed(latitude));
-		sw.writeInteger(FixedPrecisionCoordinateConvertor.convertToFixed(longitude));
+		sw.writeLong(FixedPrecisionCoordinateConvertor.convertToFixed(latitude));
+		sw.writeLong(FixedPrecisionCoordinateConvertor.convertToFixed(longitude));
 	}
 
 

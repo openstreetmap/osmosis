@@ -83,11 +83,15 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 	 * @param initialOffset
 	 *            The buffer offset to begin writing at.
 	 */
-	private void writeIntToBuffer(int value, byte[] buffer, int initialOffset) {
+	private void writeLongToBuffer(long value, byte[] buffer, int initialOffset) {
 		int offset;
 		
 		offset = initialOffset;
-		
+
+		buffer[offset++] = (byte) (value >>> 56);
+		buffer[offset++] = (byte) (value >>> 48);
+		buffer[offset++] = (byte) (value >>> 40);
+		buffer[offset++] = (byte) (value >>> 32);
 		buffer[offset++] = (byte) (value >>> 24);
 		buffer[offset++] = (byte) (value >>> 16);
 		buffer[offset++] = (byte) (value >>> 8);
@@ -104,13 +108,17 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 	 *            The buffer offset to begin reading from.
 	 * @return The integer.
 	 */
-	private int readIntFromBuffer(byte[] buffer, int initialOffset) {
+	private long readLongFromBuffer(byte[] buffer, int initialOffset) {
 		int offset;
 		
 		offset = initialOffset;
-		
+
 		return (
-			buffer[offset++] << 24)
+			buffer[offset++] << 56)
+			+ ((buffer[offset++] & 0xFF) << 48)
+			+ ((buffer[offset++] & 0xFF) << 40)
+			+ ((buffer[offset++] & 0xFF) << 32)
+			+ ((buffer[offset++] & 0xFF) << 24)
 			+ ((buffer[offset++] & 0xFF) << 16)
 			+ ((buffer[offset++] & 0xFF) << 8)
 			+ (buffer[offset++] & 0xFF);
@@ -141,12 +149,12 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 		bufferOffset = (int) ((nodeId - (bufferIndex * BUFFER_ELEMENT_COUNT)) * NODE_DATA_SIZE);
 		
 		buffer[bufferOffset++] = 1;
-		writeIntToBuffer(
+		writeLongToBuffer(
 				FixedPrecisionCoordinateConvertor.convertToFixed(nodeLocation.getLongitude()), buffer, bufferOffset);
-		bufferOffset += 4;
-		writeIntToBuffer(
+		bufferOffset += 8;
+		writeLongToBuffer(
 				FixedPrecisionCoordinateConvertor.convertToFixed(nodeLocation.getLatitude()), buffer, bufferOffset);
-		bufferOffset += 4;
+		bufferOffset += 8;
 	}
 	
 	
@@ -174,13 +182,13 @@ public class InMemoryNodeLocationStore implements NodeLocationStore {
 			validFlag = buffer[bufferOffset++];
 			
 			if (validFlag != 0) {
-				int longitude;
-				int latitude;
+				long longitude;
+				long latitude;
 				
-				longitude = readIntFromBuffer(buffer, bufferOffset);
-				bufferOffset += 4;
-				latitude = readIntFromBuffer(buffer, bufferOffset);
-				bufferOffset += 4;
+				longitude = readLongFromBuffer(buffer, bufferOffset);
+				bufferOffset += 8;
+				latitude = readLongFromBuffer(buffer, bufferOffset);
+				bufferOffset += 8;
 				
 				nodeLocation = new NodeLocation(
 					FixedPrecisionCoordinateConvertor.convertToDouble(longitude),

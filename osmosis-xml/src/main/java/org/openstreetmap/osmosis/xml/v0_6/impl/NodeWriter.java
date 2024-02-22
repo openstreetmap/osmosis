@@ -37,10 +37,10 @@ public class NodeWriter extends EntityWriter {
 		
 		tagWriter = new TagWriter("tag", indentLevel + 1);
 		
-		// Only write the first 7 decimal places.
+		// Only write the first 10 decimal places.
 		// Write in US locale so that a '.' is used as the decimal separator.
 		numberFormat = new DecimalFormat(
-			"0.#######;-0.#######",
+			"0.##########;-0.##########",
 			new DecimalFormatSymbols(Locale.US)
 		);
 	}

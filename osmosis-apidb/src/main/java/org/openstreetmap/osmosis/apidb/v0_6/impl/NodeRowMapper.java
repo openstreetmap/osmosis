@@ -38,8 +38,8 @@ public class NodeRowMapper implements RowMapperListener<CommonEntityData> {
 		double longitude;
 		Node node;
 		
-		latitude = FixedPrecisionCoordinateConvertor.convertToDouble(resultSet.getInt("latitude"));
-        longitude = FixedPrecisionCoordinateConvertor.convertToDouble(resultSet.getInt("longitude"));
+		latitude = FixedPrecisionCoordinateConvertor.convertToDouble(resultSet.getLong("latitude"));
+        longitude = FixedPrecisionCoordinateConvertor.convertToDouble(resultSet.getLong("longitude"));
 		
         node = new Node(data, latitude, longitude);
         

@@ -24,6 +24,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
+import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
 /** Class that reads and parses binary files and sends the contained entities to the sink. */
 public class OsmosisBinaryParser extends BinaryParser {
@@ -65,7 +66,8 @@ public class OsmosisBinaryParser extends BinaryParser {
         // double latitude, double longitude
         Node tmp;
         long id = i.getId();
-        double latf = parseLat(i.getLat()), lonf = parseLon(i.getLon());
+        double latf = FixedPrecisionCoordinateConvertor.convertToDouble(i.getLat());
+        double lonf = FixedPrecisionCoordinateConvertor.convertToDouble(i.getLon());
 
         if (i.hasInfo()) {
           Osmformat.Info info = i.getInfo();
@@ -102,7 +104,9 @@ public class OsmosisBinaryParser extends BinaryParser {
             lastLon = lon;
             long id = nodes.getId(i) + lastId;
             lastId = id;
-            double latf = parseLat(lat), lonf = parseLon(lon);
+            double latf = FixedPrecisionCoordinateConvertor.convertToDouble(lat);
+            double lonf = FixedPrecisionCoordinateConvertor.convertToDouble(lon);
+
             // If empty, assume that nothing here has keys or vals.
             if (nodes.getKeysValsCount() > 0) {
                 while (nodes.getKeysVals(j) != 0) {
@@ -154,7 +158,9 @@ public class OsmosisBinaryParser extends BinaryParser {
             		if (index < i.getLatCount() && index < i.getLonCount()) {
 	            	    long lat = lastLat + i.getLat(index);
 	            	    long lon = lastLon + i.getLon(index);
-	            	    node = new WayNode(identifier, parseLat(lat), parseLon(lon));
+                        double latf = FixedPrecisionCoordinateConvertor.convertToDouble(lat);
+                        double lonf = FixedPrecisionCoordinateConvertor.convertToDouble(lon);
+	            	    node = new WayNode(identifier, latf, lonf);
 	            	    lastLat = lat;
 	            	    lastLon = lon;
             		} else {

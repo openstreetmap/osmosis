@@ -33,6 +33,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
+import org.openstreetmap.osmosis.core.util.FixedPrecisionCoordinateConvertor;
 
 /**
  * Receives data from the Osmosis pipeline and stores it in the PBF format.
@@ -186,8 +187,8 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
               
               for (Node i : contents) {
                 long id = i.getId();
-                int lat = mapDegrees(i.getLatitude());
-                int lon = mapDegrees(i.getLongitude());
+                long lat = FixedPrecisionCoordinateConvertor.convertToFixed(i.getLatitude());
+                long lon = FixedPrecisionCoordinateConvertor.convertToFixed(i.getLongitude());
                 bi.addId(id - lastid);
                 lastid = id;
                 bi.addLon(lon - lastlon);
@@ -221,8 +222,8 @@ public class OsmosisSerializer extends BinarySerializer implements Sink {
           .newBuilder();
           for (Node i : contents) {
             long id = i.getId();
-            int lat = mapDegrees(i.getLatitude());
-            int lon = mapDegrees(i.getLongitude());
+            long lat = FixedPrecisionCoordinateConvertor.convertToFixed(i.getLatitude());
+            long lon = FixedPrecisionCoordinateConvertor.convertToFixed(i.getLongitude());
             Osmformat.Node.Builder bi = Osmformat.Node.newBuilder();
             bi.setId(id);
             bi.setLon(lon);

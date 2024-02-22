@@ -162,8 +162,8 @@ public class PersistentNodeLocationStore implements NodeLocationStore {
 			// Write the node data. Prefix with a non-zero byte to identify that
 			// data is available for this node.
 			dataOutStream.writeByte(1);
-			dataOutStream.writeInt(FixedPrecisionCoordinateConvertor.convertToFixed(nodeLocation.getLongitude()));
-			dataOutStream.writeInt(FixedPrecisionCoordinateConvertor.convertToFixed(nodeLocation.getLatitude()));
+			dataOutStream.writeLong(FixedPrecisionCoordinateConvertor.convertToFixed(nodeLocation.getLongitude()));
+			dataOutStream.writeLong(FixedPrecisionCoordinateConvertor.convertToFixed(nodeLocation.getLatitude()));
 			currentFileOffset += NODE_DATA_SIZE;
 			
 		} catch (IOException e) {
@@ -199,8 +199,8 @@ public class PersistentNodeLocationStore implements NodeLocationStore {
 				
 				if (validFlag != 0) {
 					nodeLocation = new NodeLocation(
-						FixedPrecisionCoordinateConvertor.convertToDouble(dataInStream.readInt()),
-						FixedPrecisionCoordinateConvertor.convertToDouble(dataInStream.readInt())
+						FixedPrecisionCoordinateConvertor.convertToDouble(dataInStream.readLong()),
+						FixedPrecisionCoordinateConvertor.convertToDouble(dataInStream.readLong())
 					); 
 				}
 				

@@ -328,9 +328,9 @@ public class ChangeWriter implements Completable {
                 updateNodeStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
                 updateNodeStatement.setBoolean(prmIndex++, visible);
                 updateNodeStatement.setLong(prmIndex++, node.getChangesetId());
-                updateNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
+                updateNodeStatement.setLong(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
                         .getLatitude()));
-                updateNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
+                updateNodeStatement.setLong(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
                         .getLongitude()));
                 updateNodeStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node
                         .getLongitude()));
@@ -351,9 +351,9 @@ public class ChangeWriter implements Completable {
                 insertNodeStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
                 insertNodeStatement.setBoolean(prmIndex++, visible);
                 insertNodeStatement.setLong(prmIndex++, node.getChangesetId());
-                insertNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
+                insertNodeStatement.setLong(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
                         .getLatitude()));
-                insertNodeStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
+                insertNodeStatement.setLong(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
                         .getLongitude()));
                 insertNodeStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node
                         .getLongitude()));
@@ -410,9 +410,9 @@ public class ChangeWriter implements Completable {
                     updateNodeCurrentStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
                     updateNodeCurrentStatement.setBoolean(prmIndex++, visible);
                     updateNodeCurrentStatement.setLong(prmIndex++, node.getChangesetId());
-                    updateNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
+                    updateNodeCurrentStatement.setLong(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
                             .getLatitude()));
-                    updateNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
+                    updateNodeCurrentStatement.setLong(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
                             .getLongitude()));
                     updateNodeCurrentStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(),
                             node.getLongitude()));
@@ -432,9 +432,9 @@ public class ChangeWriter implements Completable {
                     insertNodeCurrentStatement.setTimestamp(prmIndex++, new Timestamp(node.getTimestamp().getTime()));
                     insertNodeCurrentStatement.setBoolean(prmIndex++, visible);
                     insertNodeCurrentStatement.setLong(prmIndex++, node.getChangesetId());
-                    insertNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
+                    insertNodeCurrentStatement.setLong(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
                             .getLatitude()));
-                    insertNodeCurrentStatement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
+                    insertNodeCurrentStatement.setLong(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node
                             .getLongitude()));
                     insertNodeCurrentStatement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(),
                             node.getLongitude()));

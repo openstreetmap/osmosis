@@ -422,8 +422,8 @@ public class ApidbWriter implements Sink, EntityProcessor {
             statement.setInt(prmIndex++, node.getVersion());
             statement.setBoolean(prmIndex++, true);
             statement.setLong(prmIndex++, node.getChangesetId());
-            statement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
-            statement.setInt(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
+            statement.setLong(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLatitude()));
+            statement.setLong(prmIndex++, FixedPrecisionCoordinateConvertor.convertToFixed(node.getLongitude()));
             statement.setLong(prmIndex++, tileCalculator.calculateTile(node.getLatitude(), node.getLongitude()));
 
         } catch (SQLException e) {

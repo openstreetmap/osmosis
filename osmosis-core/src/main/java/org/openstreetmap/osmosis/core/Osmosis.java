@@ -76,7 +76,7 @@ public final class Osmosis {
 		// Configure the new logging level.
 		configureLoggingLevel(commandLineParser.getLogLevelIndex());
 		
-		LOG.info("Osmosis Version " + OsmosisConstants.VERSION);
+		LOG.info("Osmosis Version (LDBV-Version) " + OsmosisConstants.VERSION);
 		taskRegistrar = new TaskRegistrar();
 		taskRegistrar.initialize(commandLineParser.getPlugins());
 		

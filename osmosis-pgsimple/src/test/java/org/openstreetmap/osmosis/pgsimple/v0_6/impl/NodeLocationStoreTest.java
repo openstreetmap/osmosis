@@ -27,8 +27,8 @@ public class NodeLocationStoreTest {
 			// Stores typically use fixed precision storage therefore ensure we
 			// have a good spread of values.
 			// The longitude and latitude must be different values to ensure they don't get mixed up.
-			longitude = FixedPrecisionCoordinateConvertor.convertToDouble(1 << (i % 32));
-			latitude = FixedPrecisionCoordinateConvertor.convertToDouble(1 << ((i + 1) % 32));
+			longitude = FixedPrecisionCoordinateConvertor.convertToDouble(1 << (i % 64));
+			latitude = FixedPrecisionCoordinateConvertor.convertToDouble(1 << ((i + 1) % 64));
 			
 			// Add the location to the store but leave every node invalid.
 			store.addLocation(i * 2, new NodeLocation(longitude, latitude));
@@ -44,8 +44,8 @@ public class NodeLocationStoreTest {
 			// Stores typically use fixed precision storage therefore ensure we
 			// have a good spread of values.
 			// The longitude and latitude must be different values to ensure they don't get mixed up.
-			longitude = FixedPrecisionCoordinateConvertor.convertToDouble(1 << (i % 32));
-			latitude = FixedPrecisionCoordinateConvertor.convertToDouble(1 << ((i + 1) % 32));
+			longitude = FixedPrecisionCoordinateConvertor.convertToDouble(1 << (i % 64));
+			latitude = FixedPrecisionCoordinateConvertor.convertToDouble(1 << ((i + 1) % 64));
 			
 			location = store.getNodeLocation(i * 2);
 			Assert.assertTrue("The node location should be valid.", location.isValid());
