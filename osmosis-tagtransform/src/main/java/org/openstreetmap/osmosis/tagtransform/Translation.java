@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface Translation {
 
-	Collection<Match> match(Map<String, String> tags, TTEntityType entityType, String uname, int uid);
+	Collection<Match> match(long id, Map<String, String> tags, TTEntityType entityType, String uname, int uid);
 
 
 	Map<String, DataSource> getDataSources();

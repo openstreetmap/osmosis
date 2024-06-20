@@ -186,5 +186,19 @@
     </output>
   </translation>
  -->
-
+  <translation>
+    <name>Add tag to feature identified by id</name>
+    <description>Add a tag to a specific feature, if it does not exist already</description>
+    <match type="way" mode="and">
+      <ids>
+        <id>4</id>
+        <id>5</id>
+      </ids>
+      <notag k="highway" v=".*"/>
+    </match>
+    <output>
+      <copy-all/>
+      <tag k="highway" v="secondary"/>
+    </output>
+  </translation>
 </translations>
