@@ -1,7 +1,7 @@
 name: Continuous Integration
 on: [push, pull_request]
 jobs:
-  Continous-Integration:
+  Continuous-Integration:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
