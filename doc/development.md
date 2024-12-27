@@ -1,7 +1,7 @@
 # Development
 
 The easiest way to perform a full Osmosis build is to use the docker-based
-development environment.  If you have docker and docker-compose installed,
+development environment.  If you have docker and docker compose plugin installed,
 simply run the following command to build and launch a shell with everything
 required to run the full build and test suite.
 

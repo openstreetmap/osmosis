@@ -12,7 +12,7 @@ if [ ! -d "${gradleUserDir}" ]; then
 fi
 
 # Launch our docker build container interactively and destroy on exit.
-runCommand="docker-compose run --rm build"
+runCommand="docker compose run --rm build"
 if [ $# -eq 0 ]; then
     ${runCommand} /bin/bash
 else
@@ -20,4 +20,4 @@ else
 fi
 
 # Remove remaining containers (e.g. db server)
-docker-compose down -v
+docker compose down -v
