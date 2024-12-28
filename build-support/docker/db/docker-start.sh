@@ -1,9 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 DATADIR="/var/lib/pgsql/data"
 
 # test if DATADIR has content
 if [ ! "$(ls -A $DATADIR)" ]; then
+	# Create directory for the pgsql lock file. If we don't create this the lock file creation fails and the server startup fails.
+	# This has only been required since Fedora 41 (not required in Fedora 38).
+	mkdir /var/run/postgresql
+	chown postgres:postgres /var/run/postgresql
+
 	echo "Initializing Postgres Database at $DATADIR"
 	su postgres sh -lc "initdb --encoding=UTF-8 --locale=en_US.UTF-8"
 
