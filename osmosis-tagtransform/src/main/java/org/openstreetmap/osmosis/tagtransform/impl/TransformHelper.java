@@ -116,6 +116,7 @@ public abstract class TransformHelper<T extends Task & Initializable> implements
 		Entity entity = entityContainer.getEntity();
 		Collection<Tag> entityTags = entity.getTags();
 		EntityType entityType = entity.getType();
+		long id = entity.getId();
 
 		// Store the tags in a map keyed by tag key.
 		Map<String, String> tagMap = new HashMap<String, String>();
@@ -125,7 +126,7 @@ public abstract class TransformHelper<T extends Task & Initializable> implements
 
 		// Apply tag transformations.
 		for (Translation translation : translations) {
-			Collection<Match> matches = translation.match(tagMap, TTEntityType.fromEntityType06(entityType), entity
+			Collection<Match> matches = translation.match(id, tagMap, TTEntityType.fromEntityType06(entityType), entity
 					.getUser().getName(), entity.getUser().getId());
 			if (matches == null || matches.isEmpty()) {
 				continue;

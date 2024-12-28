@@ -1,41 +1,27 @@
 // This software is released into the Public Domain.  See copying.txt for details.
 package org.openstreetmap.osmosis.tagtransform.impl;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
-
 import org.openstreetmap.osmosis.tagtransform.Match;
 import org.openstreetmap.osmosis.tagtransform.Matcher;
 import org.openstreetmap.osmosis.tagtransform.TTEntityType;
 
+import java.util.*;
 
-public class NoTagMatcher implements Matcher {
 
-	private Pattern keyPattern;
-	private Pattern valuePattern;
+public class IdMatcher implements Matcher {
+
+	private Set<Long> ids;
 	private long matchHits;
 
-
-	public NoTagMatcher(String keyPattern, String valuePattern) {
-		this.keyPattern = Pattern.compile(keyPattern);
-		this.valuePattern = Pattern.compile(valuePattern);
+	IdMatcher(Set<Long> ids) {
+		this.ids = ids;
 	}
-
 
 	@Override
 	public Collection<Match> match(long id, Map<String, String> tags, TTEntityType type, String uname, int uid) {
-		// loop through the tags to find matches
-		for (Entry<String, String> tag : tags.entrySet()) {
-			java.util.regex.Matcher keyMatch = keyPattern.matcher(tag.getKey());
-			java.util.regex.Matcher valueMatch = valuePattern.matcher(tag.getValue());
-			if (keyMatch.matches() && valueMatch.matches()) {
-				return null;
-			}
+		if (!ids.contains(id))  {
+			return null;
 		}
-
 		matchHits += 1;
 		return Collections.singleton(NULL_MATCH);
 	}
@@ -44,10 +30,18 @@ public class NoTagMatcher implements Matcher {
 	@Override
 	public void outputStats(StringBuilder output, String indent) {
 		output.append(indent);
-		output.append("NoTag[");
-		output.append(keyPattern.pattern());
-		output.append(",");
-		output.append(valuePattern.pattern());
+		output.append("Ids[");
+		int i = 0;
+		for (Long id: ids) {
+			if (++i>1) {
+				output.append(",");
+			}
+			if (i>5) {
+				output.append("...");
+				break;
+			}
+			output.append(id);
+		}
 		output.append("]: ");
 		output.append(matchHits);
 		output.append('\n');
