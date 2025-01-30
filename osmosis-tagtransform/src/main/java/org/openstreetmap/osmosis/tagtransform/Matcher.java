@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface Matcher {
 
-	Collection<Match> match(Map<String, String> tags, TTEntityType type, String uname, int uid);
+	Collection<Match> match(long id, Map<String, String> tags, TTEntityType type, String uname, int uid);
 
 
 	void outputStats(StringBuilder output, String indent);
